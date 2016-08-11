@@ -31,6 +31,7 @@ RETURNS TABLE (EmailId          Integer
              , Host TVarChar, Port TVarChar, Mail TVarChar
              , UserName TVarChar, PasswordValue TVarChar, DirectoryMail TVarChar
 
+             , isMultiLoad      Boolean   -- Много раз загружать прайс
              , isBeginMove      Boolean   -- !!!захардкодил!!! переносить прайс в актуальные цены и "другие" данные (а сама загрузка выполняется всегда)
               )
 AS
@@ -129,6 +130,7 @@ BEGIN
           , '..\Прайсы\inbox'        :: TVarChar AS DirectoryMail
 */
 
+          , gpSelect.isMultiLoad
           , TRUE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены и "другие" данные (а сама загрузка выполняется всегда)
 
      FROM tmpEmail AS gpGet_Host
@@ -191,6 +193,7 @@ UNION ALL
           , gpGet_Password.Value  AS PasswordValue
           , gpGet_Directory.Value AS DirectoryMail
 
+          , gpSelect.isMultiLoad
           , TRUE AS isBeginMove -- !!!захардкодил!!! переносить прайс в актуальные цены и "другие" данные (а сама загрузка выполняется всегда)
 
      FROM tmpEmail AS gpGet_Host

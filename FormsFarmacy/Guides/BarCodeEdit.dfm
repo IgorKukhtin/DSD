@@ -76,12 +76,12 @@
   object cxLabel2: TcxLabel
     Left = 40
     Top = 100
-    Caption = #1058#1086#1074#1072#1088#9
+    Caption = #1058#1086#1074#1072#1088
   end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 152
-    Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1082' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090#9
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
   end
   object ceDiscountExternal: TcxButtonEdit
     Left = 40
@@ -159,7 +159,7 @@
       item
         Name = 'inGoodsId'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -167,7 +167,7 @@
       item
         Name = 'inObjectId'
         Value = Null
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -216,14 +216,14 @@
       item
         Name = 'GoodsId'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -231,14 +231,14 @@
       item
         Name = 'ObjectId'
         Value = Null
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectName'
         Value = Null
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -266,7 +266,7 @@
     Left = 328
     Top = 64
   end
-  object GoodsGuides: TdsdGuides
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoods
     FormNameParam.Value = 'TGoodsLiteForm'
@@ -278,7 +278,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -287,7 +287,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGuides
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -296,7 +296,7 @@
     Left = 121
     Top = 99
   end
-  object DiscountExternalGuides: TdsdGuides
+  object GuidesDiscountExternal: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceDiscountExternal
     FormNameParam.Value = 'TDiscountExternal_ObjectForm'
@@ -308,7 +308,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -317,7 +317,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

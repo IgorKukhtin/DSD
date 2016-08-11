@@ -45,6 +45,7 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    GoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

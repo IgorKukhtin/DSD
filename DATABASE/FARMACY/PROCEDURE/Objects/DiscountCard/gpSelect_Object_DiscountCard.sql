@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_DiscountCard(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ObjectId Integer, ObjectName TVarChar
-               ) AS
+             , isErased Boolean
+              ) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -19,6 +20,8 @@ BEGIN
         , Object_DiscountCard.ValueData      AS Name
         , Object_Object.Id                   AS ObjectId
         , Object_Object.ValueData            AS ObjectName
+
+        , Object_DiscountCard.isErased
 
    FROM Object AS Object_DiscountCard
       LEFT JOIN ObjectLink AS ObjectLink_Object

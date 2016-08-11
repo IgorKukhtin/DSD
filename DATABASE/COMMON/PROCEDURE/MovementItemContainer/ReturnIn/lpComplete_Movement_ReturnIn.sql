@@ -353,7 +353,7 @@ BEGIN
      -- !!!пересчитали!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, vbExtraChargesPercent - vbDiscountPercent)
      FROM MovementItem
-     WHERE MovementItem.MovementId = ioId
+     WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Master();
 
 

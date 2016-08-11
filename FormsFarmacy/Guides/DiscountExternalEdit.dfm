@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  <'#1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
-  ClientHeight = 418
+  ClientHeight = 300
   ClientWidth = 388
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
   end
   object cxButton1: TcxButton
-    Left = 90
-    Top = 367
+    Left = 82
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 240
-    Top = 367
+    Left = 232
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,57 +63,35 @@
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 147
+    Top = 152
     Caption = #1057#1077#1088#1074#1080#1089
   end
   object ceService: TcxTextEdit
     Left = 40
-    Top = 167
+    Top = 172
     TabOrder = 7
     Width = 296
   end
   object cxLabel2: TcxLabel
     Left = 40
-    Top = 98
+    Top = 103
     Caption = 'URL'
   end
   object ceURL: TcxTextEdit
     Left = 40
-    Top = 120
+    Top = 125
     TabOrder = 9
     Width = 296
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 195
+    Top = 200
     Caption = #1055#1086#1088#1090
   end
   object cePort: TcxTextEdit
     Left = 40
-    Top = 215
+    Top = 220
     TabOrder = 11
-    Width = 296
-  end
-  object cxLabel5: TcxLabel
-    Left = 40
-    Top = 251
-    Caption = #1051#1086#1075#1080#1085
-  end
-  object ceUserName: TcxTextEdit
-    Left = 40
-    Top = 271
-    TabOrder = 13
-    Width = 296
-  end
-  object cxLabel6: TcxLabel
-    Left = 40
-    Top = 307
-    Caption = #1055#1072#1088#1086#1083#1100
-  end
-  object cePassword: TcxTextEdit
-    Left = 40
-    Top = 327
-    TabOrder = 15
     Width = 296
   end
   object ActionList: TActionList
@@ -200,26 +178,10 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserName'
-        Value = Null
-        Component = ceUserName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPassword'
-        Value = Null
-        Component = cePassword
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
-    Top = 120
+    Top = 165
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -276,20 +238,6 @@
         Name = 'Port'
         Value = Null
         Component = cePort
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserName'
-        Value = Null
-        Component = ceUserName
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Password'
-        Value = Null
-        Component = cePassword
         DataType = ftString
         MultiSelectSeparator = ','
       end>

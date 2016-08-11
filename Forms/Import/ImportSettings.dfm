@@ -5,7 +5,7 @@ inherited ImportSettingsForm: TImportSettingsForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1200
-  ExplicitHeight = 377
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -216,6 +216,13 @@ inherited ImportSettingsForm: TImportSettingsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object isMultiLoad: TcxGridDBColumn
+            Caption = #1047#1072#1075#1088#1091#1078#1072#1090#1100' '#1055#1088#1072#1081#1089' > 1 '#1088#1072#1079#1072
+            DataBinding.FieldName = 'isMultiLoad'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object clisErased: TcxGridDBColumn
@@ -945,6 +952,15 @@ inherited ImportSettingsForm: TImportSettingsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'CheckTime'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMultiLoad'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMultiLoad'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

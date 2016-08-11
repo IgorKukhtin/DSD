@@ -32,6 +32,12 @@ BEGIN
                                                , inUserId                := vbUserId
                                                 ) AS tmp;
 
+-- дл€ отладки
+if inSession = '5'
+then
+    RAISE EXCEPTION 'gpInsertUpdate_Movement_Tax_From_Kind - Adim';
+    -- 'ѕовторите действие через 3 мин.'
+end if;
 
   
 END;

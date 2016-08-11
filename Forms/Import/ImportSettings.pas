@@ -74,6 +74,7 @@ type
     bbProtocolMaster: TdxBarButton;
     clEmailKindName: TcxGridDBColumn;
     EmailChoiceForm: TOpenChoiceForm;
+    isMultiLoad: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -76,7 +76,7 @@
   object cxLabel2: TcxLabel
     Left = 40
     Top = 97
-    Caption = #1055#1086#1076#1082#1083#1102#1095#1077#1085#1080#1077' '#1082' '#1087#1088#1086#1075#1088#1072#1084#1084#1077' '#1076#1080#1089#1082#1086#1085#1090#1085#1099#1093' '#1082#1072#1088#1090#9
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
   end
   object ActionList: TActionList
     Left = 272
@@ -142,7 +142,7 @@
       item
         Name = 'inObjectId'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -191,14 +191,14 @@
       item
         Name = 'ObjectId'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectName'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -226,7 +226,7 @@
     Left = 328
     Top = 64
   end
-  object DiscountExternalGuides: TdsdGuides
+  object GuidesDiscountExternal: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceDiscountExternal
     FormNameParam.Value = 'TDiscountExternal_ObjectForm'
@@ -238,7 +238,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -247,7 +247,7 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = DiscountExternalGuides
+        Component = GuidesDiscountExternal
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

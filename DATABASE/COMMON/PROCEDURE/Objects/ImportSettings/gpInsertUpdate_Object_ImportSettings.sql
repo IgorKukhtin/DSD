@@ -1,10 +1,6 @@
 -- Function: gpInsertUpdate_Object_ImportSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, TVarChar, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Tfloat, Boolean, TVarChar, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar, TBlob, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, Tfloat, TVarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, Tfloat, TVarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer,Integer, Integer, Boolean, TVarChar, TBlob, TVarChar, TVarChar, TFloat, Boolean, TVarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
@@ -20,9 +16,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inHDR                     Boolean   ,    -- 
     IN inDirectory               TVarChar  ,    --  
     IN inQuery                   TBlob     , 
-    IN inStartTime               TVarChar ,
-    IN inEndTime                 TVarChar ,
+    IN inStartTime               TVarChar  ,
+    IN inEndTime                 TVarChar  ,
     IN inTime                    TFloat    ,
+    IN inIsMultiLoad             Boolean   ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -64,10 +61,13 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_ImportSettings_HDR(), ioId, inHDR);
 
+   -- сохранили свойство <Много раз загружать прайс>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ImportSettings_MultiLoad(), ioId, inIsMultiLoad);
+
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ImportSettings_StartRow(), ioId, inStartRow);
+   PERFORM lpInsertUpdate_ObjecTFloat(zc_ObjecTFloat_ImportSettings_StartRow(), ioId, inStartRow);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ImportSettings_Time(), ioId, inTime);
+   PERFORM lpInsertUpdate_ObjecTFloat(zc_ObjecTFloat_ImportSettings_Time(), ioId, inTime);
 
    IF COALESCE(inStartTime,'') <> '' 
    THEN 

@@ -789,19 +789,23 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -817,6 +821,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -824,12 +829,14 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -837,6 +844,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -909,6 +917,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -916,6 +925,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -923,6 +933,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -944,12 +955,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -957,18 +970,21 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupName'
@@ -976,6 +992,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -987,12 +1004,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1000,12 +1019,14 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1013,6 +1034,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OKPO'
@@ -1020,12 +1042,14 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'OKPO'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1037,12 +1061,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1050,6 +1076,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'ContractKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1061,19 +1088,23 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inContractId'
           Value = 0
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1085,12 +1116,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1098,6 +1131,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1109,10 +1143,12 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       IdFieldName = 'Id'
@@ -1138,12 +1174,14 @@ object ContractConditionValueForm: TContractConditionValueForm
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       IdFieldName = 'Id'
@@ -1218,7 +1256,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     Top = 208
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_Contract'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1228,6 +1266,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -1272,6 +1311,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -1279,6 +1319,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1287,6 +1328,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberArchive'
@@ -1295,6 +1337,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'InvNumberArchive'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1303,6 +1346,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccount'
@@ -1310,6 +1354,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'BankAccount'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSigningDate'
@@ -1318,6 +1363,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'SigningDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -1326,6 +1372,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1334,6 +1381,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         ComponentItem = 'EndDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1341,6 +1389,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -1348,6 +1397,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1355,6 +1405,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractKindId'
@@ -1362,6 +1413,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'ContractKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1369,6 +1421,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'PaidKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1376,6 +1429,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAreaId'
@@ -1383,6 +1437,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'AreaId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractArticleId'
@@ -1390,6 +1445,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'ContractArticleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindId'
@@ -1397,6 +1453,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankId'
@@ -1404,6 +1461,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'BankId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -1420,22 +1478,26 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindCode'
         Value = '2'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindCode'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -1452,22 +1514,26 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindCode'
         Value = '1'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindCode'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 592
@@ -1484,22 +1550,26 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindCode'
         Value = '4'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindCode'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -1516,22 +1586,26 @@ object ContractConditionValueForm: TContractConditionValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindCode'
         Value = '3'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindCode'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractStateKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 560

@@ -41,6 +41,7 @@ type
     Directory     : string;    // путь, в который должны попасть xls файлы перед загрузкой в программу
     StartTime     : TDateTime; // Время начала активной проверки
     EndTime       : TDateTime; // Время окончания активной проверки
+    isMultiLoad   : Boolean;   // Много раз загружать прайс
 
     zc_Enum_EmailKind_InPrice    : integer;
     zc_Enum_EmailKind_IncomeMMO  : integer;
@@ -266,6 +267,7 @@ begin
           vbArrayImportSettings[i].ContactPersonName:=DataSet.FieldByName('ContactPersonName').asString;
           vbArrayImportSettings[i].ContractId   :=DataSet.FieldByName('ContractId').asInteger;
           vbArrayImportSettings[i].ContractName :=DataSet.FieldByName('ContractName').asString;
+          vbArrayImportSettings[i].isMultiLoad  :=DataSet.FieldByName('isMultiLoad').asBoolean;
 
           vbArrayImportSettings[i].zc_Enum_EmailKind_InPrice   := DataSet.FieldByName('zc_Enum_EmailKind_InPrice').asInteger;
           vbArrayImportSettings[i].zc_Enum_EmailKind_IncomeMMO := DataSet.FieldByName('zc_Enum_EmailKind_IncomeMMO').asInteger;
@@ -475,6 +477,7 @@ begin
 
                             // ТОЛЬКО если "сегодня" не было загрузки JurPos или это ПРИХОД
                             if (fGet_LoadPriceList (vbArrayImportSettings[JurPos].JuridicalId, vbArrayImportSettings[JurPos].ContractId) = 0)
+                             or(vbArrayImportSettings[JurPos].isMultiLoad = TRUE)
                              or(vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
                             then
                             begin

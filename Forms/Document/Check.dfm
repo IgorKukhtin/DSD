@@ -58,7 +58,7 @@ inherited CheckForm: TCheckForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn [0]
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -73,7 +73,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 45
           end
-          object colName: TcxGridDBColumn
+          object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -81,7 +81,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 222
           end
-          object colChangePercent: TcxGridDBColumn
+          object colChangePercent: TcxGridDBColumn [2]
             Caption = '% c'#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -92,7 +92,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 74
           end
-          object colAmount: TcxGridDBColumn
+          object colAmount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -103,7 +103,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colAmountOrder: TcxGridDBColumn
+          object colAmountOrder: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -114,7 +114,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 73
           end
-          object colPrice: TcxGridDBColumn
+          object colPrice: TcxGridDBColumn [5]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -125,7 +125,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 60
           end
-          object colPriceSale: TcxGridDBColumn
+          object colPriceSale: TcxGridDBColumn [6]
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'PriceSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -136,7 +136,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 74
           end
-          object colSummChangePercent: TcxGridDBColumn
+          object colSummChangePercent: TcxGridDBColumn [7]
             Caption = #1057#1091#1084#1084#1072' '#1057#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -147,7 +147,7 @@ inherited CheckForm: TCheckForm
             Options.Editing = False
             Width = 65
           end
-          object colSumm: TcxGridDBColumn
+          object colSumm: TcxGridDBColumn [8]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -157,6 +157,25 @@ inherited CheckForm: TCheckForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object List_UID: TcxGridDBColumn [9]
+            Caption = 'UID '#1101#1083#1077#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'List_UID'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end

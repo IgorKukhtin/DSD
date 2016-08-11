@@ -36,10 +36,6 @@ type
     ceURL: TcxTextEdit;
     cxLabel4: TcxLabel;
     cePort: TcxTextEdit;
-    cxLabel5: TcxLabel;
-    ceUserName: TcxTextEdit;
-    cxLabel6: TcxLabel;
-    cePassword: TcxTextEdit;
   private
     { Private declarations }
   public

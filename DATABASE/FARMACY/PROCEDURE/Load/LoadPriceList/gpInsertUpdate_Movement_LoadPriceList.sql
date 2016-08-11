@@ -84,7 +84,10 @@ BEGIN
   IF COALESCE (vbLoadPriceListId, 0) = 0 THEN
      INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
                         VALUES (inJuridicalId, inContractId, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
-  /*ELSE
+  ELSE
+      -- иначе запишем что его надо перенести
+      UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId;
+     /*
       -- иначе в протокол запишем что типа Insert
       UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
   END IF;

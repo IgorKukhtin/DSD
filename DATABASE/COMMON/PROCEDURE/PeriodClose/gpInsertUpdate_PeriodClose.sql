@@ -64,6 +64,7 @@ BEGIN
 
    -- для Админа  - Все Права
    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+      OR vbUserId = 9464 -- Рудик Н.В.
    THEN vbAccessKeyId:= 0;
    ELSE vbAccessKeyId:= (SELECT AccessKeyId_PeriodClose FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PeriodClose <> 0 AND UserId = vbUserId GROUP BY AccessKeyId_PeriodClose);
    END IF;

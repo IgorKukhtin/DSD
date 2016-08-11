@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ContactPersonMail TVarChar,
                EmailId Integer, EmailName TVarChar,
                EmailKindId Integer, EmailKindName TVarChar,
-               isErased boolean) AS
+               isMultiLoad Boolean,
+               isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -59,9 +60,15 @@ BEGIN
            , Object_EmailKind.Id         AS EmailKindId
            , Object_EmailKind.ValueData  AS EmailKindName
 
+           , COALESCE (ObjectBoolean_MultiLoad.ValueData, FALSE) :: Boolean AS isMultiLoad
+
            , Object_ImportSettings_View.isErased
            
        FROM Object_ImportSettings_View
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_MultiLoad
+                                   ON ObjectBoolean_MultiLoad.ObjectId = Object_ImportSettings_View.Id
+                                  AND ObjectBoolean_MultiLoad.DescId   = zc_ObjectBoolean_ImportSettings_MultiLoad()
+
            LEFT JOIN ObjectDate AS ObjectDate_StartTime 
                                 ON ObjectDate_StartTime.ObjectId = Object_ImportSettings_View.Id
                                AND ObjectDate_StartTime.DescId = zc_ObjectDate_ImportSettings_StartTime()

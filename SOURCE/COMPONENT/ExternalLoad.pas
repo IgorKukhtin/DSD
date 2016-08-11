@@ -711,7 +711,7 @@ begin
                   if fErr = false then
                   begin
                       ForceDirectories(ExtractFilePath(saFound[i]) + cArchive);
-                      RenameFile(saFound[i], ExtractFilePath(saFound[i]) + cArchive + '\' + FormatDateTime('yyyy_mm_dd_', Date) + ExtractFileName(saFound[i]));
+                      RenameFile(saFound[i], ExtractFilePath(saFound[i]) + cArchive + '\' + FormatDateTime('yyyy_mm_dd_hh_mm_', Now) + ExtractFileName(saFound[i]));
                       if FileExists(saFound[i]) then
                          SysUtils.DeleteFile(saFound[i]);
                   end;

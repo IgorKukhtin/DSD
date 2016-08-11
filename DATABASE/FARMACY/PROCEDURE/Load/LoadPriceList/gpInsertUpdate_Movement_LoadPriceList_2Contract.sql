@@ -99,8 +99,10 @@ BEGIN
         IF COALESCE (vbLoadPriceListId1, 0) = 0 THEN
             INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
                                VALUES (inJuridicalId, inContractId1, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
-        /*ELSE
-            -- иначе в протокол запишем что типа Insert
+        ELSE
+            -- иначе запишем что его надо перенести
+            UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId1;
+            /*-- иначе в протокол запишем что типа Insert
             UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId1;*/
         END IF;
 
@@ -120,8 +122,10 @@ BEGIN
         IF COALESCE (vbLoadPriceListId2, 0) = 0 THEN
             INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
                                VALUES (inJuridicalId, inContractId2, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
-        /*ELSE
-            -- иначе в протокол запишем что типа Insert
+        ELSE
+            -- иначе запишем что его надо перенести
+            UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId2;
+            /*-- иначе в протокол запишем что типа Insert
             UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId2;*/
         END IF;
 

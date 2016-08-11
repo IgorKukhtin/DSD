@@ -169,6 +169,7 @@ BEGIN
                       GROUP BY MovementItem.ObjectId
                              , MILinkObject_GoodsKind.ObjectId
                              , MIFloat_Price.ValueData
+                             , MIFloat_ChangePercent.ValueData
                      )
    , tmpMI_parent_find AS (SELECT tmp.MovementItemId
                                 , tmpMI_parent.GoodsId
@@ -471,6 +472,7 @@ BEGIN
                       GROUP BY MovementItem.ObjectId
                              , MILinkObject_GoodsKind.ObjectId
                              , MIFloat_Price.ValueData
+                             , MIFloat_ChangePercent.ValueData
                      )
    , tmpMI_parent_find AS (SELECT tmp.MovementItemId
                                 , tmpMI_parent.GoodsId

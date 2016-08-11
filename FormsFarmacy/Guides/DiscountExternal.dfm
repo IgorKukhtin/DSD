@@ -52,6 +52,7 @@ object DiscountExternalForm: TDiscountExternalForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 37
@@ -62,7 +63,7 @@ object DiscountExternalForm: TDiscountExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 223
+        Width = 200
       end
       object clURL: TcxGridDBColumn
         DataBinding.FieldName = 'URL'
@@ -88,27 +89,13 @@ object DiscountExternalForm: TDiscountExternalForm
         Options.Editing = False
         Width = 80
       end
-      object clUserName: TcxGridDBColumn
-        Caption = #1051#1086#1075#1080#1085
-        DataBinding.FieldName = 'UserName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object clPassword: TcxGridDBColumn
-        Caption = #1055#1072#1088#1086#1083#1100
-        DataBinding.FieldName = 'Password'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
       object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
         Width = 55
       end
       object clErased: TcxGridDBColumn
@@ -268,6 +255,7 @@ object DiscountExternalForm: TDiscountExternalForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -409,22 +397,6 @@ object DiscountExternalForm: TDiscountExternalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Port'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UserName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UserName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Password'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Password'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

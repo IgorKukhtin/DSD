@@ -46,8 +46,6 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPort: TcxGridDBColumn;
-    clUserName: TcxGridDBColumn;
-    clPassword: TcxGridDBColumn;
     Id: TcxGridDBColumn;
   private
     { Private declarations }

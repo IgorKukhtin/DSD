@@ -351,7 +351,7 @@ begin
           try
             Item         := CardSaleRequestItem.Create;
             //ИД строки в учетной системе
-            Item.ItemId:='1';
+            Item.ItemId:= CheckCDS.FieldByName('List_UID').AsString;
             //Код карточки
             Item.MdmCode := lCardNumber;
             //Штрих код товара

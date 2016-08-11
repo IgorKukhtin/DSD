@@ -10,7 +10,8 @@ uses
   cxDBData, Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  cxPCdxBarPopupMenu, cxImageComboBox, cxCurrencyEdit, dxSkinsdxBarPainter;
 
 type
   TCheckDeferredForm = class(TCheckVIPForm)

@@ -3,7 +3,7 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082'  <'#1055#1088#1086#1077#1082#1090#1099' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
   ClientHeight = 332
-  ClientWidth = 435
+  ClientWidth = 450
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 435
+    Width = 450
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 778
+    ExplicitWidth = 435
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -96,31 +96,12 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
         VisibleForCustomization = False
         Width = 80
       end
-      object clUserName: TcxGridDBColumn
-        Caption = #1051#1086#1075#1080#1085
-        DataBinding.FieldName = 'UserName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 80
-      end
-      object clPassword: TcxGridDBColumn
-        Caption = #1055#1072#1088#1086#1083#1100
-        DataBinding.FieldName = 'Password'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        VisibleForCustomization = False
-        Width = 80
-      end
       object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
         Width = 55
       end
       object clErased: TcxGridDBColumn
@@ -263,6 +244,7 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -404,22 +386,6 @@ object DiscountExternal_ObjectForm: TDiscountExternal_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Port'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UserName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UserName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Password'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Password'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_DiscountExternal()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternal (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternal (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternal (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountExternal(
  INOUT ioId                            Integer   , -- ключ объекта
@@ -9,8 +11,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountExternal(
     IN inURL                           TVarChar  , --
     IN inService                       TVarChar  , -- 
     IN inPort                          TVarChar  , -- 
-    IN inUser                          TVarChar  , -- 
-    IN inPassword                      TVarChar  , -- 
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -24,23 +24,17 @@ BEGIN
    vbUserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_DiscountExternal());
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_DiscountExternal());
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_DiscountExternal(), vbCode_calc, inName);
 
- 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_DiscountExternal_URL(), ioId, inURL);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_DiscountExternal_Service(), ioId, inService);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_DiscountExternal_Port(), ioId, inPort);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_DiscountExternal_User(), ioId, inUser);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_DiscountExternal_Password(), ioId, inPassword);
- 
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

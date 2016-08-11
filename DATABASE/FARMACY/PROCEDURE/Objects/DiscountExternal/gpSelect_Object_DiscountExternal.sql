@@ -10,8 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Service TVarChar
              , Port TVarChar
              , UserName TVarChar
-             , Password TVarChar
-               ) AS
+              ) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -25,8 +24,8 @@ BEGIN
         , ObjectString_URL.ValueData       AS URL
         , ObjectString_Service.ValueData   AS Service
         , ObjectString_Port.ValueData      AS Port
-        , ObjectString_User.ValueData      AS UserName
-        , ObjectString_Password.ValueData  AS Password
+
+        , Object_DiscountExternal.isErased
 
    FROM Object AS Object_DiscountExternal
       LEFT JOIN ObjectString AS ObjectString_URL
@@ -38,13 +37,6 @@ BEGIN
       LEFT JOIN ObjectString AS ObjectString_Port
                              ON ObjectString_Port.ObjectId = Object_DiscountExternal.Id 
                             AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
-      LEFT JOIN ObjectString AS ObjectString_User
-                             ON ObjectString_User.ObjectId = Object_DiscountExternal.Id 
-                            AND ObjectString_User.DescId = zc_ObjectString_DiscountExternal_User()
-      LEFT JOIN ObjectString AS ObjectString_Password
-                             ON ObjectString_Password.ObjectId = Object_DiscountExternal.Id 
-                            AND ObjectString_Password.DescId = zc_ObjectString_DiscountExternal_Password()
-
    WHERE Object_DiscountExternal.DescId = zc_Object_DiscountExternal()
   ;
   

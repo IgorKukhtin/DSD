@@ -279,10 +279,12 @@ type
     N99: TMenuItem;
     N100: TMenuItem;
     N101: TMenuItem;
-    N102: TMenuItem;
+    miDiscountExternal: TMenuItem;
     N103: TMenuItem;
     actConfirmedKind: TdsdOpenForm;
     N98: TMenuItem;
+    actDiscountExternalTools: TdsdOpenForm;
+    miDiscountExternalTools: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

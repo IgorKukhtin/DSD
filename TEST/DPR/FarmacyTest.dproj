@@ -1377,8 +1377,8 @@
 				<Form>OverSettingsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas">
-				<Form>DiscountExternalEditForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas">
+				<Form>DiscountExternalToolsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCard.pas">
@@ -1393,8 +1393,8 @@
 				<Form>BarCodeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternal.pas">
-				<Form>DiscountExternalForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools_Object.pas">
+				<Form>DiscountExternalTools_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountCardEdit.pas">
@@ -1407,6 +1407,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Kind\ConfirmedKind.pas">
 				<Form>ConfirmedKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternal.pas">
+				<Form>DiscountExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas">
+				<Form>DiscountExternalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\DiscountExternalTools.pas">
+				<Form>DiscountExternalToolsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

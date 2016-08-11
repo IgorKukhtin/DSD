@@ -94,7 +94,7 @@ BEGIN
           -- временная таблица "база" документов
           CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, DocumentTaxKindId Integer) ON COMMIT DROP;
           -- временная таблица "база" строчной части
-          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat, MovementId_Tax Integer) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmpMI (GoodsId Integer, GoodsKindId Integer, Price TFloat, CountForPrice TFloat, Amount_Tax TFloat, Amount_TaxCorrective TFloat, MovementId_Tax Integer, MovementItemId_err Integer) ON COMMIT DROP;
           -- временная таблица - существующие документы "Корректировки" - !!!только сводные!!!
           CREATE TEMP TABLE _tmpMovementCorrective (MovementId Integer, MovementId_Tax Integer) ON COMMIT DROP;
           -- временная таблица - привязка "Корректировки" к "Налоговой" - !!!только сводные!!!
@@ -606,7 +606,7 @@ BEGIN
               WHERE _tmpMovement.DescId = zc_Movement_ReturnIn()
              )*/
       -- Результат - строчная часть
-      INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective, MovementId_Tax)
+      INSERT INTO _tmpMI (GoodsId, GoodsKindId, Price, CountForPrice, Amount_Tax, Amount_TaxCorrective, MovementId_Tax, MovementItemId_err)
          SELECT tmpMI.GoodsId
               , tmpMI.GoodsKindId
               , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
@@ -620,6 +620,7 @@ BEGIN
               , CASE WHEN tmpMI.Amount_Sale > 0 THEN tmpMI.Amount_Sale ELSE 0 END AS Amount_Tax
               , tmpMI.Amount_ReturnIn + CASE WHEN tmpMI.Amount_Sale < 0 THEN -1 * tmpMI.Amount_Sale ELSE 0 END AS Amount_TaxCorrective
               , tmpMI.MovementId_Tax
+              , tmpMI.MovementItemId_err
          FROM (SELECT tmpMI_all.GoodsId
                     , tmpMI_all.GoodsKindId
                     , tmpMI_all.Price
@@ -627,6 +628,7 @@ BEGIN
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN tmpMI_all.Amount_Sale - tmpMI_all.Amount_ReturnIn ELSE tmpMI_all.Amount_Sale END AS Amount_Sale
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN 0 ELSE tmpMI_all.Amount_ReturnIn END AS Amount_ReturnIn
                     , tmpMI_all.MovementId_Tax
+                    , tmpMI_all.MovementItemId_err
                FROM (SELECT CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                                       THEN CASE WHEN _tmpMovement_find.MovementId > 0
                                                      THEN vbMovementId_Tax
@@ -634,18 +636,25 @@ BEGIN
                                            END
                                  ELSE vbMovementId_Tax
                             END AS MovementId_Tax
+                          , MAX (CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                           THEN CASE WHEN COALESCE (_tmpMovement_find.MovementId, 0) = 0 AND COALESCE (MovementLinkMovement.MovementChildId, 0) = 0
+                                                          THEN MovementItem.Id
+                                                     ELSE 0
+                                                END
+                                      ELSE 0
+                                 END) AS MovementItemId_err
                           , MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                       -- в налоговых цены всегда будут без НДС
-                                      THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId = zc_Movement_Sale()  THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                      WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId <> zc_Movement_Sale() THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                      THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                      WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                                  END
                                          / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
-                                 ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId = zc_Movement_Sale()  
+                                 ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                                 THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                           WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId <> zc_Movement_Sale()  
+                                           WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                            ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                       END
@@ -687,11 +696,11 @@ BEGIN
                           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                   ON MovementFloat_ChangePercent.MovementId = _tmpMovement.MovementId
                                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                                                 AND _tmpMovement.DescId <> zc_Movement_Sale()
+                                                 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                                     AND _tmpMovement.DescId = zc_Movement_Sale()
+                                                     AND _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                      GROUP BY CASE WHEN _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
                                         THEN CASE WHEN _tmpMovement_find.MovementId > 0
                                                        THEN vbMovementId_Tax
@@ -703,14 +712,14 @@ BEGIN
                             , MILinkObject_GoodsKind.ObjectId
                             , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                         -- в налоговых цены всегда будут без НДС
-                                        THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId = zc_Movement_Sale()  THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                                        WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId <> zc_Movement_Sale() THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                        THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                        WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                                    END
                                            / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
-                                   ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId = zc_Movement_Sale()  
+                                   ELSE CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND _tmpMovement.DescId     IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                                   THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                                             WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId <> zc_Movement_Sale()  
+                                             WHEN MovementFloat_ChangePercent.ValueData <> 0 AND _tmpMovement.DescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                                   THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                                              ELSE COALESCE (MIFloat_Price.ValueData, 0)
                                         END
@@ -1240,7 +1249,22 @@ end if;
                                                     , inUserId     := inUserId)
             FROM (SELECT DISTINCT _tmpMICorrective.MovementId_Corrective AS MovementId FROM _tmpMICorrective) AS tmp;
          --
-         outMessageText:= (SELECT _tmpRes.MessageText FROM _tmpRes WHERE _tmpRes.MessageText <> '' LIMIT 1);
+         outMessageText:= COALESCE ((SELECT _tmpRes.MessageText FROM _tmpRes WHERE _tmpRes.MessageText <> '' LIMIT 1), '')
+                       || CASE WHEN EXISTS (SELECT 1 FROM _tmpMI WHERE _tmpMI.Amount_TaxCorrective <> 0 AND _tmpMI.MovementItemId_err <> 0)
+                                    THEN CHR (13) || 'Возврат № <' || COALESCE ((SELECT Movement.InvNumber FROM _tmpMI INNER JOIN MovementItem AS MI ON MI.Id = _tmpMI.MovementItemId_err INNER JOIN Movement ON Movement.Id = MI.MovementId WHERE _tmpMI.Amount_TaxCorrective <> 0 AND _tmpMI.MovementItemId_err <> 0 ORDER BY _tmpMI.MovementItemId_err LIMIT 1), '') || '>'
+                                                  || ' от <' || COALESCE ((SELECT DATE (Movement.OperDate) :: TVarChar FROM _tmpMI INNER JOIN MovementItem AS MI ON MI.Id = _tmpMI.MovementItemId_err INNER JOIN Movement ON Movement.Id = MI.MovementId WHERE _tmpMI.Amount_TaxCorrective <> 0 AND _tmpMI.MovementItemId_err <> 0 ORDER BY _tmpMI.MovementItemId_err LIMIT 1), '') || '>'
+                                                  || ' для товара <' || lfGet_Object_ValueData ((SELECT _tmpMI.GoodsId FROM _tmpMI WHERE _tmpMI.Amount_TaxCorrective <> 0 AND _tmpMI.MovementItemId_err <> 0 ORDER BY _tmpMI.MovementItemId_err LIMIT 1)) || '>'
+                                                  || ' + <' || lfGet_Object_ValueData ((SELECT _tmpMI.GoodsKindId FROM _tmpMI WHERE _tmpMI.Amount_TaxCorrective <> 0 AND _tmpMI.MovementItemId_err <> 0 ORDER BY _tmpMI.MovementItemId_err LIMIT 1)) || '>'
+                                                  || ' не привязан к налоговой .'
+                               ELSE ''
+                          END;
+/*
+if inUserId = 5 
+then
+    RAISE EXCEPTION '<%>', outMessageText;
+    -- 'Повторите действие через 3 мин.'
+end if;
+*/
      END IF;
 
 

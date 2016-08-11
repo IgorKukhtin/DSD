@@ -31,7 +31,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     ceDiscountExternal: TcxButtonEdit;
-    DiscountExternalGuides: TdsdGuides;
+    GuidesDiscountExternal: TdsdGuides;
     cxLabel2: TcxLabel;
   private
     { Private declarations }

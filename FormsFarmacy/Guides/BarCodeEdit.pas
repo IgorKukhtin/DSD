@@ -31,11 +31,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     ceGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
+    GuidesGoods: TdsdGuides;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     ceDiscountExternal: TcxButtonEdit;
-    DiscountExternalGuides: TdsdGuides;
+    GuidesDiscountExternal: TdsdGuides;
   private
     { Private declarations }
   public

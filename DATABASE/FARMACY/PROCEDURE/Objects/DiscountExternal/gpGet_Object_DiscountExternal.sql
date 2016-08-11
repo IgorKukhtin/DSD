@@ -7,16 +7,13 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiscountExternal(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , URL TVarChar
+             , URL     TVarChar
              , Service TVarChar
-             , Port TVarChar
-             , UserName TVarChar
-             , Password TVarChar
-)
+             , Port    TVarChar
+              )
 AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountExternal());
 
@@ -31,14 +28,7 @@ BEGIN
            , CAST ('' AS TVarChar)  AS URL
            , CAST ('' AS TVarChar)  AS Service
            , CAST ('' AS TVarChar)  AS Port
-           , CAST ('' AS TVarChar)  AS UserName
-           , CAST ('' AS TVarChar)  AS Password
- /*          , CAST ('http://exim.demo.mdmworld.com/CardService.asmx?WSDL' AS TVarChar)  AS URL
-           , CAST ('CardService' AS TVarChar)  AS Service
-           , CAST ('CardServiceSoap' AS TVarChar)  AS Port
-           , CAST ('PANI' AS TVarChar)  AS UserName
-           , CAST ('pass' AS TVarChar)  AS Password*/
-;
+         ;
    ELSE
        RETURN QUERY
        SELECT
@@ -49,8 +39,6 @@ BEGIN
            , ObjectString_URL.ValueData       AS URL
            , ObjectString_Service.ValueData   AS Service
            , ObjectString_Port.ValueData      AS Port
-           , ObjectString_User.ValueData      AS UserName
-           , ObjectString_Password.ValueData  AS Password
 
        FROM Object AS Object_DiscountExternal
             LEFT JOIN ObjectString AS ObjectString_URL
@@ -62,13 +50,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Port
                                    ON ObjectString_Port.ObjectId = Object_DiscountExternal.Id 
                                   AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
-            LEFT JOIN ObjectString AS ObjectString_User
-                                   ON ObjectString_User.ObjectId = Object_DiscountExternal.Id 
-                                  AND ObjectString_User.DescId = zc_ObjectString_DiscountExternal_User()
-            LEFT JOIN ObjectString AS ObjectString_Password
-                                   ON ObjectString_Password.ObjectId = Object_DiscountExternal.Id 
-                                  AND ObjectString_Password.DescId = zc_ObjectString_DiscountExternal_Password()
-          
        WHERE Object_DiscountExternal.Id = inId;
    END IF;
 

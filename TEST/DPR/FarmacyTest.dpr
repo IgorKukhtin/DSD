@@ -435,14 +435,17 @@ uses
   Color in '..\..\FormsFarmacy\System\Color.pas' {ColorForm: TParentForm},
   OverSettingsEdit in '..\..\FormsFarmacy\Guides\OverSettingsEdit.pas' {OverSettingsEditForm: TParentForm},
   OverSettings in '..\..\FormsFarmacy\Guides\OverSettings.pas' {OverSettingsForm: TParentForm},
-  DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
+  DiscountExternalToolsEdit in '..\..\FormsFarmacy\Guides\DiscountExternalToolsEdit.pas' {DiscountExternalToolsEditForm: TParentForm},
   DiscountCard in '..\..\FormsFarmacy\Guides\DiscountCard.pas' {DiscountCardForm: TParentForm},
   BarCodeEdit in '..\..\FormsFarmacy\Guides\BarCodeEdit.pas' {BarCodeEditForm: TParentForm},
   BarCode in '..\..\FormsFarmacy\Guides\BarCode.pas' {BarCodeForm: TParentForm},
-  DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
+  DiscountExternalTools_Object in '..\..\FormsFarmacy\Guides\DiscountExternalTools_Object.pas' {DiscountExternalTools_ObjectForm: TParentForm},
   DiscountCardEdit in '..\..\FormsFarmacy\Guides\DiscountCardEdit.pas' {DiscountCardEditForm: TParentForm},
   DiscountExternal_Object in '..\..\FormsFarmacy\Guides\DiscountExternal_Object.pas' {DiscountExternal_ObjectForm: TParentForm},
-  ConfirmedKind in '..\..\FormsFarmacy\Kind\ConfirmedKind.pas' {ConfirmedKindForm: TParentForm};
+  ConfirmedKind in '..\..\FormsFarmacy\Kind\ConfirmedKind.pas' {ConfirmedKindForm: TParentForm},
+  DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
+  DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
+  DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -94,7 +94,7 @@ BEGIN
                        THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                   ELSE MIMaster.Amount
              END :: TVarChar                                           AS OperCount
-           , (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()  
+           , (CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                         THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                    WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()  
                         THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -115,7 +115,7 @@ BEGIN
                        -- åñëè öåíû c ÍÄÑ
                        THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
              END 
-           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()  
+           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()  
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -134,7 +134,7 @@ BEGIN
              -- ***Ñóììà ñ ÍÄÑ
              CAST ((
              CAST (
-             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -167,7 +167,7 @@ BEGIN
                        -- åñëè öåíû c ÍÄÑ
                        THEN 1 / (1 + MovementFloat_VATPercent.ValueData / 100)
              END 
-           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+           * CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -185,7 +185,7 @@ BEGIN
              -- Ñóììà ñ ÍÄÑ
            , CAST ((
              CAST (
-             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId = zc_Movement_Sale()
+             CASE WHEN MIFloat_ChangePercent.ValueData       <> 0 AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                        THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                   WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_Sale()
                        THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -349,7 +349,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                         ON MIFloat_ChangePercent.MovementItemId = MIMaster.Id
                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-                                       AND Movement.DescId = zc_Movement_Sale()
+                                       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MIMaster.Id
