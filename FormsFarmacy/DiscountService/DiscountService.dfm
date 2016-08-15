@@ -50,7 +50,7 @@ object DiscountServiceForm: TDiscountServiceForm
     Top = 24
   end
   object spGet_DiscountExternal: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_DiscountExternal'
+    StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
     DataSets = <>
     OutputType = otResult
     Params = <

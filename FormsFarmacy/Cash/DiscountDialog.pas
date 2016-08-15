@@ -38,19 +38,23 @@ begin
   //
   if Key > 0
   then
-      if trim (edCardNumber.Text) <> ''
-      then // проверка карты + сохраним "текущие" параметры-Main
+      if trim (edCardNumber.Text) <> '' then
+      begin
+           //обновим "нужные" параметры-Main ***20.07.16
+           DiscountServiceForm.pGetDiscountExternal (Key, trim (edCardNumber.Text));
+           // проверка карты + сохраним "текущие" параметры-Main
            if DiscountServiceForm.fCheckCard (lMsg
-                                             ,DiscountExternalGuides.Params.ParamByName('URL').Value
-                                             ,DiscountExternalGuides.Params.ParamByName('Service').Value
-                                             ,DiscountExternalGuides.Params.ParamByName('Port').Value
-                                             ,DiscountExternalGuides.Params.ParamByName('UserName').Value
-                                             ,DiscountExternalGuides.Params.ParamByName('Password').Value
+                                             ,DiscountServiceForm.gURL
+                                             ,DiscountServiceForm.gService
+                                             ,DiscountServiceForm.gPort
+                                             ,DiscountServiceForm.gUserName
+                                             ,DiscountServiceForm.gPassword
                                              ,trim (edCardNumber.Text)
-                                             ,DiscountExternalGuides.Params.ParamByName('Key').Value
+                                             ,Key
                                              )
            then ModalResult:=mrOk
-           else // ??? еще раз ругнутьс€
+           else ;// ??? еще раз ругнутьс€
+      end
       else begin ActiveControl:=edCardNumber;ShowMessage ('ќшибка.«начение <є дисконтной карты> не определено');end
   else begin ActiveControl:=ceDiscountExternal;
              ShowMessage ('¬нимание.«начение <ѕроект> не установлено.');
@@ -67,12 +71,6 @@ Begin
       begin
           ceDiscountExternal.Text:= ADiscountExternalName;
           DiscountExternalGuides.Params.ParamByName('TextValue').Value:=ADiscountExternalName;
-          // так криво восстановим "текущие" параметры
-          DiscountExternalGuides.Params.ParamByName('URL').Value       := DiscountServiceForm.gURL;
-          DiscountExternalGuides.Params.ParamByName('Service').Value   := DiscountServiceForm.gService;
-          DiscountExternalGuides.Params.ParamByName('Port').Value      := DiscountServiceForm.gPort;
-          DiscountExternalGuides.Params.ParamByName('UserName').Value  := DiscountServiceForm.gUserName;
-          DiscountExternalGuides.Params.ParamByName('Password').Value  := DiscountServiceForm.gPassword;
       end;
       //
       Result := ShowModal = mrOK;

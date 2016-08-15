@@ -126,7 +126,7 @@ BEGIN
 
 
      -- !!!надо определить - есть ли скидка в цене!!!
-     IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_OrderExternal())
+     IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal())
      THEN
      vbIsChangePrice:= vbPaidKindId <> zc_Enum_PaidKind_SecondForm()
                     OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)

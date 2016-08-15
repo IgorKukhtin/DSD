@@ -36,7 +36,9 @@ BEGIN
       outBarCode:= '4820043368310'; -- 6155
       outBarCode:= '4820043368167'; -- 6161
       outBarCode:= '4820043367832'; -- 6167
-      -- outCardNumber:= 4820043367665;
+      -- outCardNumber:= 4820043367665
+      -- outCardNumber:= 4820043368815
+      -- outCardNumber:= 4820043368662
 */
 
 END;

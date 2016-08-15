@@ -127,7 +127,8 @@ inherited CheckVIPForm: TCheckVIPForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -138,16 +139,25 @@ inherited CheckVIPForm: TCheckVIPForm
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Width = 190
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            Options.Editing = False
             Width = 47
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            Options.Editing = False
             Width = 46
           end
           object colPriceSale: TcxGridDBColumn
@@ -156,6 +166,7 @@ inherited CheckVIPForm: TCheckVIPForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
             Width = 85
           end
           object colChangePercent: TcxGridDBColumn
@@ -164,6 +175,7 @@ inherited CheckVIPForm: TCheckVIPForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
             Width = 45
           end
           object colSummChangePercent: TcxGridDBColumn
@@ -172,6 +184,7 @@ inherited CheckVIPForm: TCheckVIPForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Options.Editing = False
             Width = 70
           end
         end

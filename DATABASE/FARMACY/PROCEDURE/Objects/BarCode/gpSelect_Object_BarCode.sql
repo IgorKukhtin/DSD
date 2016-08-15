@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_BarCode(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, BarCodeName TVarChar,
-               GoodsId Integer, GoodsName TVarChar,
+               GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                ObjectId Integer, ObjectName TVarChar,
                isErased boolean) AS
 $BODY$
@@ -22,6 +22,7 @@ BEGIN
            , Object_BarCode.ValueData    AS BarCodeName
          
            , Object_Goods.Id             AS GoodsId
+           , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName 
                      
            , Object_Object.Id            AS ObjectId

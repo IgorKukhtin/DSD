@@ -131,51 +131,6 @@ inherited DiscountDialogForm: TDiscountDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'URL'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'URL'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Service'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Service'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Port'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Port'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UserName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'UserName'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Password'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Password'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 48

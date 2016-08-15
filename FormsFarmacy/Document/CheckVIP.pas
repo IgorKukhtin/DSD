@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, cxImageComboBox, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxButtonEdit;
 
 type
   TCheckVIPForm = class(TAncestorDBGridForm)

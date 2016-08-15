@@ -1877,7 +1877,7 @@ begin
         MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').AsFloat;
         MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').AsFloat;
         //***10.08.16
-        MyVipListCDS.FieldByName('List_UID').asString := ADS.FieldByName('ListUID').AsString;
+        MyVipListCDS.FieldByName('List_UID').asString := ADS.FieldByName('List_UID').AsString;
 
         MyVipListCDS.Post;
         ADS.Next;

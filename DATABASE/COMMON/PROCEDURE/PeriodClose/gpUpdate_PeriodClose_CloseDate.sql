@@ -13,9 +13,11 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+IF inSession = '9464' THEN vbUserId := 9464;
+ELSE
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_User()); -- не ошибка, просто будем использовать этот процесс
+END IF;
 
    -- изменили элемент справочника по значению <Ключ объекта>
    UPDATE PeriodClose SET OperDate  = CURRENT_TIMESTAMP

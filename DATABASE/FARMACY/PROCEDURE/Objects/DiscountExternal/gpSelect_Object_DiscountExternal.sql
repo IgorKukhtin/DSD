@@ -9,12 +9,24 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , URL TVarChar
              , Service TVarChar
              , Port TVarChar
-             , UserName TVarChar
+             , isErased Boolean
               ) AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DiscountExternal());
+     vbUserId := lpGetUserBySession (inSession);
+
+     vbUnitKey := COALESCE (lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+     IF vbUnitKey = '' THEN
+        vbUnitKey := '0';
+     END IF;   
+     vbUnitId := vbUnitKey :: Integer;
+
 
    RETURN QUERY 
    SELECT Object_DiscountExternal.Id             AS Id
@@ -38,7 +50,16 @@ BEGIN
                              ON ObjectString_Port.ObjectId = Object_DiscountExternal.Id 
                             AND ObjectString_Port.DescId = zc_ObjectString_DiscountExternal_Port()
    WHERE Object_DiscountExternal.DescId = zc_Object_DiscountExternal()
-  ;
+     AND (vbUnitId = 0
+       OR Object_DiscountExternal.Id IN (SELECT ObjectLink_DiscountExternal.ChildObjectId
+                                         FROM ObjectLink AS ObjectLink_Unit
+                                              INNER JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                                                    ON ObjectLink_DiscountExternal.ObjectId = ObjectLink_Unit.ObjectId
+                                                                   AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountExternalTools_DiscountExternal()
+                                         WHERE ObjectLink_Unit.DescId        = zc_ObjectLink_DiscountExternalTools_Unit()
+                                           AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                                        )
+         );
   
 END;
 $BODY$
