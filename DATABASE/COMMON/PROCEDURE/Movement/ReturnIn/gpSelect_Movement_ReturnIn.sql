@@ -118,7 +118,7 @@ BEGIN
            , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
 
            , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
-           , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
+           , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -272,9 +272,9 @@ BEGIN
             LEFT JOIN MovementDate AS MD_StartSale
                                    ON MD_StartSale.MovementId =  Movement_Promo.Id
                                   AND MD_StartSale.DescId = zc_MovementDate_StartSale()
-            LEFT JOIN MovementDate AS MD_EndSale
-                                   ON MD_EndSale.MovementId =  Movement_Promo.Id
-                                  AND MD_EndSale.DescId = zc_MovementDate_EndSale()
+            LEFT JOIN MovementDate AS MD_EndReturn
+                                   ON MD_EndReturn.MovementId =  Movement_Promo.Id
+                                  AND MD_EndReturn.DescId = zc_MovementDate_EndReturn()
 
      WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)

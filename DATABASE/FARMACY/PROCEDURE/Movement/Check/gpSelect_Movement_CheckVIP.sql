@@ -17,6 +17,9 @@ RETURNS TABLE (
   CashMemberId Integer,
   CashMember TVarCHar,
   Bayer TVarChar,
+  BayerPhone TVarChar,
+  InvNumberOrder TVarChar,
+  ConfirmedKindName TVarChar,
   DiscountExternalId Integer,
   DiscountExternalName TVarChar,
   DiscountCardNumber TVarChar
@@ -73,6 +76,11 @@ BEGIN
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
             , Object_CashMember.ValueData                AS CashMember
 	    , MovementString_Bayer.ValueData             AS Bayer
+
+            , MovementString_BayerPhone.ValueData        AS BayerPhone
+            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+            , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
+
 	    , Object_DiscountExternal.Id                 AS DiscountExternalId
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
 	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
@@ -123,6 +131,17 @@ BEGIN
 	    LEFT JOIN MovementString AS MovementString_Bayer
                                      ON MovementString_Bayer.MovementId = Movement.Id
                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+             LEFT JOIN MovementString AS MovementString_BayerPhone
+                                      ON MovementString_BayerPhone.MovementId = Movement.Id
+                                     AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
+
+             LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
+                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                          ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+             LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
        ;
 
 END;

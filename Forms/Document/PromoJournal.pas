@@ -52,6 +52,7 @@ type
     mactUpdate_Movement_Promo_Data_all: TMultiAction;
     colChangePercentName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    EndReturn: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,44 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Promo()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (
-Integer    , -- Ключ объекта <Документ продажи>
-    TVarChar   , -- Номер документа
-    TDateTime  , -- Дата документа
-    Integer    , -- Вид акции
-    Integer    , -- Прайс лист
-    TDateTime  , -- Дата начала акции
-    TDateTime  , -- Дата окончания акции
-    TDateTime  , -- Дата начала отгрузки по акционной цене
-    TDateTime  , -- Дата окончания отгрузки по акционной цене
-    TDateTime  , -- Дата начала расч. продаж до акции
-    TDateTime  , -- Дата окончания расч. продаж до акции
-    TFloat     , -- Стоимость участия в акции
-    TVarChar   , -- Примечание
-    Integer    , -- Рекламная поддержка
-    Integer    , -- Подразделение
-    Integer    , -- Ответственный представитель коммерческого отдела
-    Integer    , -- Ответственный представитель маркетингового отдела	
-    Integer );  -- пользователь
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (
-Integer    , -- Ключ объекта <Документ продажи>
-    TVarChar   , -- Номер документа
-    TDateTime  , -- Дата документа
-    Integer    , -- Вид акции
-    Integer    , -- Прайс лист
-    TDateTime  , -- Дата начала акции
-    TDateTime  , -- Дата окончания акции
-    TDateTime  , -- Дата начала отгрузки по акционной цене
-    TDateTime  , -- Дата окончания отгрузки по акционной цене
-    TDateTime  , -- Дата начала расч. продаж до акции
-    TDateTime  , -- Дата окончания расч. продаж до акции
-    TFloat     , -- Стоимость участия в акции
-    TVarChar   , -- Примечание
-    TVarChar   , -- Примечание (Общее)
-    Integer    , -- Подразделение
-    Integer    , -- Ответственный представитель коммерческого отдела
-    Integer    , -- Ответственный представитель маркетингового отдела	
-    Integer );  -- пользователь
-    
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
@@ -49,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inEndPromo              TDateTime  , -- Дата окончания акции
     IN inStartSale             TDateTime  , -- Дата начала отгрузки по акционной цене
     IN inEndSale               TDateTime  , -- Дата окончания отгрузки по акционной цене
+    IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
@@ -78,6 +42,16 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Неверный формат окончания отгрузки по акционной цене <%>.', inEndSale;
     END IF;
+    -- проверка
+    IF inEndReturn <> DATE_TRUNC ('DAY', inEndReturn)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Неверный формат окончания возвратов по акционной цене <%>.', inEndReturn;
+    END IF;
+    -- проверка
+    IF COALESCE (inEndReturn, zc_DateStart()) < COALESCE (inEndSale, zc_DateEnd())
+    THEN
+        RAISE EXCEPTION 'Ошибка.Дата окончания возвратов по акционной цене <%> НЕ может быть раньше чем Дата окончания отгрузки по акционной цене <%>.', DATE (inEndReturn), DATE (inEndSale);
+    END IF;
 
     
     -- определяем признак Создание/Корректировка
@@ -93,6 +67,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKind(), ioId, inPromoKindId);
     -- Прайс лист
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
+
     -- Дата начала акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartPromo(), ioId, inStartPromo);
     -- Дата окончания акции
@@ -101,16 +76,20 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartSale(), ioId, inStartSale);
     -- Дата окончания отгрузки по акционной цене
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndSale(), ioId, inEndSale);
+    -- Дата окончания возвратов по акционной цене
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndReturn(), ioId, inEndReturn);
     -- Дата начала расч. продаж до акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
     -- Дата окончания расч. продаж до акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
+
     -- Стоимость участия в акции
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
     -- Примечание (Общее)
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentMain(), ioId, inCommentMain);
+
     -- Подразделение
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     -- Ответственный представитель коммерческого отдела

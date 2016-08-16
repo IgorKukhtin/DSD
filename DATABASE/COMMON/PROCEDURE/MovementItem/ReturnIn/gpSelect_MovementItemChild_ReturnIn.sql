@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, ParentId Integer, Amount TFloat
              , ToName TVarChar
              , JuridicalName TVarChar
              , DescName_Sale TVarChar
+             , ChangePercent_Sale TFloat, MovementPromo_Sale TVarChar
              , isError  Boolean
              , isErased Boolean
               )
@@ -112,6 +113,9 @@ BEGIN
             , Object_Juridical.ValueData                     AS JuridicalName
 
             , MovementDesc_Sale.ItemName                     AS DescName_Sale
+            , MIFloat_ChangePercent.ValueData                AS ChangePercent_Sale
+            , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo_Sale
+
             , CASE WHEN MISale.Id > 0
                    AND (MISale.isErased = TRUE
                      OR MISale.ObjectId                               <> tmpMI.GoodsId
@@ -205,6 +209,14 @@ BEGIN
                                        ON MLO_Contract_Tax.MovementId = Movement_Tax.Id 
                                       AND MLO_Contract_Tax.DescId = zc_MovementLinkObject_Contract()
           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_Tax ON View_Contract_InvNumber_Tax.ContractId = MLO_Contract_Tax.ObjectId
+
+          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                      ON MIFloat_ChangePercent.MovementItemId = MISale.Id
+                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+          LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                      ON MIFloat_PromoMovement.MovementItemId = MISale.Id
+                                     AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+          LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovement.ValueData :: Integer
         ;
                      
 END;

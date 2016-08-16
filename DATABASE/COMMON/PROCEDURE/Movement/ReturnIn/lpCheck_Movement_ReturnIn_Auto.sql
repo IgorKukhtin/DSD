@@ -54,7 +54,7 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
          -- таблица
-         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat)  ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, MovementId_sale Integer, isErased Boolean)  ON COMMIT DROP;
          -- Данные
          INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original)
                  SELECT MI.Id AS MovementItemId, MI.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -101,6 +101,7 @@ BEGIN
                           , tmpMaster AS (SELECT tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
                                                , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN tmp.OperCount_Partner ELSE tmp.OperCount END) AS Amount
                                           FROM _tmpItem AS tmp
+                                          WHERE COALESCE (tmp.isErased, FALSE) = FALSE
                                           GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
                                          UNION ALL
                                           SELECT -1 * tmp.GoodsId, 0 AS GoodsKindId, 0 AS Price_original, -1 * tmp.Amount AS Amount

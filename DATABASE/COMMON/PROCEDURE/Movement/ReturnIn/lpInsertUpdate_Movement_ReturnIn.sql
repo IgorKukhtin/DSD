@@ -137,11 +137,15 @@ BEGIN
      PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_CurrencyValue(), ioId, inCurrencyValue);   
 
 
-     -- !!!пересчитали!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, inChangePercent)
-     FROM MovementItem
-     WHERE MovementItem.MovementId = ioId
-       AND MovementItem.DescId = zc_MI_Master();
+     IF inOperDatePartner < '01.08.2016' OR inPaidKindId = zc_Enum_PaidKind_SecondForm()
+        OR NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
+     THEN
+         -- !!!пересчитали!!!
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, inChangePercent)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = ioId
+           AND MovementItem.DescId = zc_MI_Master();
+     END IF;
 
 
      -- пересчитали Итоговые суммы по накладной

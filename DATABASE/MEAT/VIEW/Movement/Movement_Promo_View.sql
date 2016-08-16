@@ -18,6 +18,7 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
       , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
       , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
+      , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене
       , MovementDate_OperDateStart.ValueData        AS OperDateStart      --Дата начала расч. продаж до акции
       , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
       , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
@@ -57,6 +58,9 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementDate AS MovementDate_EndSale
                                 ON MovementDate_EndSale.MovementId =  Movement_Promo.Id
                                AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+        LEFT JOIN MovementDate AS MovementDate_EndReturn
+                               ON MovementDate_EndReturn.MovementId =  Movement_Promo.Id
+                              AND MovementDate_EndReturn.DescId = zc_MovementDate_EndReturn()
                                
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                 ON MovementDate_OperDateStart.MovementId =  Movement_Promo.Id

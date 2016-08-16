@@ -56,25 +56,31 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
          -- таблица - текущие возвраты***
-         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat)  ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, MovementId_sale Integer, isErased Boolean) ON COMMIT DROP;
      END IF;
-         -- таблица
+
+         -- очистили
          DELETE FROM _tmpItem;
          -- текущие возвраты - сформировали один раз***
-         INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original)
-            SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                 , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN 0 ELSE MI.Amount END AS OperCount
-                 , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData ELSE 0 END AS OperCount_Partner
-                 , COALESCE (MIF_Price.ValueData, 0)         AS Price_original
+         INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original, MovementId_sale, isErased)
+            SELECT MI.Id, MI.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                 , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN 0                           ELSE MI.Amount END AS OperCount
+                 , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData ELSE 0         END AS OperCount_Partner
+                 , COALESCE (MIF_Price.ValueData, 0)      AS Price_original
+                 , COALESCE (MIF_MovementId.ValueData, 0) AS MovementId_sale
+                 , MI.isErased
             FROM MovementItem AS MI
                  LEFT JOIN Movement ON Movement.Id = MI.MovementId
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                  LEFT JOIN MovementItemFloat AS MIF_AmountPartner ON MIF_AmountPartner.MovementItemId = MI.Id AND MIF_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                  LEFT JOIN MovementItemFloat AS MIF_Price ON MIF_Price.MovementItemId = MI.Id AND MIF_Price.DescId = zc_MIFloat_Price()
-            WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
-              AND (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN 0 ELSE MI.Amount END <> 0
-                OR CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData ELSE 0 END <> 0
-                  );
+                 LEFT JOIN MovementItemFloat AS MIF_MovementId ON MIF_MovementId.MovementItemId = MI.Id AND MIF_MovementId.DescId = zc_MIFloat_MovementId()
+            WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master()
+              -- AND MI.isErased = FALSE
+              -- AND (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN 0 ELSE MI.Amount END <> 0
+              --   OR CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData ELSE 0 END <> 0
+              --     )
+            ;
 
      -- таблица
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult_ReturnIn_Auto'))
@@ -107,10 +113,7 @@ BEGIN
 
      -- если - использовать "основание № (продажа)" для привязки к накладной "продажа"
      IF TRUE = (SELECT MovementBoolean.ValueData FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_List())
-        AND EXISTS (SELECT 1 FROM _tmpItem
-                                   INNER JOIN MovementItemFloat AS MIFloat_MovementId
-                                                               ON MIFloat_MovementId.MovementItemId = _tmpItem.MovementItemId
-                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId())
+        AND EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.MovementId_sale <> 0 AND _tmpItem.isErased = FALSE)
      THEN
          -- параметры из документа
          vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
@@ -123,11 +126,10 @@ BEGIN
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN _tmpItem.OperCount_Partner ELSE _tmpItem.OperCount END AS Amount
                                    , _tmpItem.Price_original                               AS Price_original
-                                   , COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer AS MovementId_sale
+                                   , _tmpItem.MovementId_sale
                               FROM _tmpItem
-                                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                               ON MIFloat_MovementId.MovementItemId = _tmpItem.MovementItemId
-                                                              AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                              WHERE _tmpItem.isErased = FALSE
+                                AND 0 <> CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN _tmpItem.OperCount_Partner ELSE _tmpItem.OperCount END
                              )
                 -- текущий возврат - группируется
               , tmpMI AS (SELECT MIN (tmpMI_all.MovementItemId) AS MovementItemId
@@ -298,7 +300,10 @@ BEGIN
                SELECT tmp1.MovementItemId, tmp1.GoodsId, tmp1.GoodsKindId, tmp1.Price_original, tmp1.Amount - COALESCE (tmp2.Amount, 0) AS Amount
                FROM (SELECT MIN (tmp.MovementItemId) AS MovementItemId, tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
                           , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN tmp.OperCount_Partner ELSE tmp.OperCount END) AS Amount
-                     FROM _tmpItem AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
+                     FROM _tmpItem AS tmp
+                     WHERE tmp.isErased = FALSE
+                       AND 0 <> CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN tmp.OperCount_Partner ELSE tmp.OperCount END
+                     GROUP BY tmp.GoodsId, tmp.GoodsKindId, tmp.Price_original
                     ) AS tmp1
                     LEFT JOIN (SELECT tmp.GoodsId, tmp.GoodsKindId_return AS GoodsKindId, tmp.Price_original, SUM (tmp.Amount) AS Amount
                                FROM _tmpResult_ReturnIn_Auto AS tmp GROUP BY tmp.GoodsId, tmp.GoodsKindId_return, tmp.Price_original
@@ -639,15 +644,14 @@ BEGIN
 
 
      -- !!!синхронизируем zc_MI_Master и zc_MI_Child!!!
-     UPDATE MovementItem SET ObjectId = tmp.ObjectId
-                           , isErased = tmp.isErased
-     FROM (SELECT MI_Master.Id, MI_Master.ObjectId, MI_Master.isErased FROM MovementItem AS MI_Master WHERE MI_Master.MovementId = inMovementId AND MI_Master.DescId = zc_MI_Master()
-          ) AS tmp
+     UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
+                           , isErased = _tmpItem.isErased
+     FROM _tmpItem
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Child()
-       AND MovementItem.ParentId   = tmp.Id
-       AND (MovementItem.ObjectId  <> tmp.ObjectId
-         OR MovementItem.isErased  <> tmp.isErased)
+       AND MovementItem.ParentId   = _tmpItem.MovementItemId
+       AND (MovementItem.ObjectId  <> _tmpItem.GoodsId
+         OR MovementItem.isErased  <> _tmpItem.isErased)
       ;
 
      -- !!!сохранение!!!
@@ -659,13 +663,13 @@ BEGIN
                                                        , inMovementId_sale     := COALESCE (tmp.MovementId_sale, 0)
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
+                                                       -- , inIsRightsAll         := FALSE
                                                        , inIsRightsAll         := CASE WHEN inUserId = zfCalc_UserAdmin() :: Integer THEN TRUE ELSE FALSE END
                                                         )
-     FROM (WITH MI_Master AS (SELECT MovementItem.Id, MovementItem.ObjectId AS GoodsId
-                              FROM MovementItem
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId     = zc_MI_Master()
-                                AND MovementItem.isErased   = FALSE
+     FROM (WITH MI_Master AS (SELECT _tmpItem.MovementItemId AS Id, _tmpItem.GoodsId
+                              FROM _tmpItem
+                              WHERE _tmpItem.isErased = FALSE
+                                AND 0 <> CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN _tmpItem.OperCount_Partner ELSE _tmpItem.OperCount END
                              )
                , MI_Child AS (SELECT MovementItem.Id, MovementItem.ParentId
                                    , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MIFloat_MovementItemId.ValueData ORDER BY MovementItem.Id)  = 1
@@ -699,6 +703,51 @@ BEGIN
            FROM MI_Master
                 LEFT JOIN MI_All ON MI_All.ParentId = MI_Master.Id
           ) AS tmp;
+
+     -- Ошибка - № 120523 от 06.08.2016 код 41
+     -- !!!в Мастере меняется скидка + ставится Акция!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), _tmpItem.MovementItemId, CASE WHEN MovementDate_OperDatePartner.ValueData < '01.08.2016' THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) WHEN tmp.MovementItemId_sale > 0 THEN COALESCE (MIFloat_ChangePercent.ValueData, 0) ELSE COALESCE (MovementFloat_ChangePercent.ValueData, 0) END)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), _tmpItem.MovementItemId, COALESCE (tmp.MovementId_promo, 0))
+     FROM _tmpItem
+          LEFT JOIN  (SELECT MIFloat_PromoMovement.ValueData               AS MovementId_promo
+                           , _tmpResult_ReturnIn_Auto.MovementItemId_sale  AS MovementItemId_sale
+                           , _tmpResult_ReturnIn_Auto.GoodsId, _tmpResult_ReturnIn_Auto.GoodsKindId_return, _tmpResult_ReturnIn_Auto.Price_original
+                           , ROW_NUMBER() OVER (PARTITION BY _tmpResult_ReturnIn_Auto.GoodsId, _tmpResult_ReturnIn_Auto.GoodsKindId_return, _tmpResult_ReturnIn_Auto.Price_original
+                                                ORDER BY COALESCE (MIFloat_PromoMovement.ValueData, 0) DESC) AS Ord
+                      FROM _tmpResult_ReturnIn_Auto
+                           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                       ON MIFloat_PromoMovement.MovementItemId = _tmpResult_ReturnIn_Auto.MovementItemId_sale
+                                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                     ) AS tmp ON tmp.GoodsId            = _tmpItem.GoodsId
+                             AND tmp.GoodsKindId_return = _tmpItem.GoodsKindId
+                             AND tmp.Price_original     = _tmpItem.Price_original
+                             AND tmp.Ord                = 1
+          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                      ON MIFloat_ChangePercent.MovementItemId = tmp.MovementItemId_sale
+                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = inMovementId
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                 ON MovementDate_OperDatePartner.MovementId = inMovementId
+                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+          ;
+     -- !!!в Movement ставится Акция!!!
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), tmp.MovementId, CASE WHEN tmp_find.MovemenId_max > 0 THEN TRUE ELSE FALSE END)
+           , lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Promo(), tmp.MovementId, CASE WHEN tmp_find.MovemenId_max = tmp_find.MovemenId_min THEN tmp_find.MovemenId_max ELSE NULL END :: Integer)
+     FROM (SELECT inMovementId AS MovementId) AS tmp
+          LEFT JOIN
+          (SELECT MAX (MIFloat_PromoMovement.ValueData) AS MovemenId_max, MIN (MIFloat_PromoMovement.ValueData) AS MovemenId_min
+           FROM _tmpItem
+                INNER JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                             ON MIFloat_PromoMovement.MovementItemId = _tmpItem.MovementItemId
+                                            AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                            AND MIFloat_PromoMovement.ValueData > 0
+           WHERE _tmpItem.isErased = FALSE
+             AND 0 <> CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN _tmpItem.OperCount_Partner ELSE _tmpItem.OperCount END
+             AND _tmpItem.MovementId_sale <> 0
+          ) AS tmp_find ON 1 = 1
+          ;
 
 
      -- !!!вернули ОШИБКУ, если есть!!!

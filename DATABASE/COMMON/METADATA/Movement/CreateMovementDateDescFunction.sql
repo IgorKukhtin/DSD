@@ -106,6 +106,10 @@ INSERT INTO MovementDateDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_MovementDate_EndSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_EndSale', 'Дата окончания отгрузки по акционной цене' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndSale');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_EndReturn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndReturn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_EndReturn', 'Дата окончания возвратов по акционной цене' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndReturn');
   
   
 /*-------------------------------------------------------------------------------

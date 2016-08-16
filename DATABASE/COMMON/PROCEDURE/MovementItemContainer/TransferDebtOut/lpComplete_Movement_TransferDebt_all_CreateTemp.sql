@@ -15,7 +15,9 @@ BEGIN
                                , AccountId_From Integer, AccountId_To Integer, ContainerId_From Integer, ContainerId_To Integer
                                , ContainerId_Summ Integer, GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
-                               , AccountId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
+                               , AccountId_Summ Integer, InfoMoneyId_Summ Integer
+                               , isErased Boolean -- используется только в lpCheck_Movement_ReturnIn_Auto
+                                ) ON COMMIT DROP;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

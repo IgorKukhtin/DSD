@@ -2,8 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1244
-  ExplicitLeft = -420
-  ExplicitTop = -226
+  ExplicitLeft = -471
+  ExplicitTop = -102
   ExplicitWidth = 1260
   ExplicitHeight = 683
   PixelsPerInch = 96
@@ -460,6 +460,25 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object ChangePercent_Sale: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object childDescName_Sale: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'

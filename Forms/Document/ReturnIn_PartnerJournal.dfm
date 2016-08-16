@@ -3,7 +3,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -113
   ExplicitWidth = 1122
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -13,17 +12,15 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Height = 393
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 478
+    ExplicitHeight = 393
     ClientRectBottom = 393
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1106
-      ExplicitHeight = 478
+      ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Width = 1106
         Height = 393
-        ExplicitLeft = -3
-        ExplicitTop = -6
         ExplicitWidth = 1106
         ExplicitHeight = 393
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -286,7 +283,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             DataBinding.FieldName = 'TotalSummChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -536,8 +533,6 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitLeft = -71
-    ExplicitWidth = 1177
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS

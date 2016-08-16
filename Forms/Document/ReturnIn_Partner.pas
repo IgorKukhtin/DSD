@@ -198,6 +198,8 @@ type
     SaleChoiceGuides: TdsdGuides;
     actSaleJournalChoice: TOpenChoiceForm;
     ChangePercent: TcxGridDBColumn;
+    ChangePercent_Sale: TcxGridDBColumn;
+    MovementPromo_Sale: TcxGridDBColumn;
   private
     { Private declarations }
   public

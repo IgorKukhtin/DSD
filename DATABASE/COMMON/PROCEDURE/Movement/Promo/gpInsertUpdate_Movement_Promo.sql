@@ -1,70 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Promo()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
-    Integer    , -- Ключ объекта <Документ продажи>
-    TVarChar   , -- Номер документа
-    TDateTime  , -- Дата документа
-    Integer    , -- Вид акции
-    TDateTime  , -- Дата начала акции
-    TDateTime  , -- Дата окончания акции
-    TDateTime  , -- Дата начала отгрузки по акционной цене
-    TDateTime  , -- Дата окончания отгрузки по акционной цене
-    TDateTime  , -- Дата начала расч. продаж до акции
-    TDateTime  , -- Дата окончания расч. продаж до акции
-    TFloat     , -- Стоимость участия в акции
-    TVarChar   , -- Примечание
-    Integer    , -- Рекламная поддержка
-    Integer    , -- Подразделение
-    Integer    , -- Ответственный представитель коммерческого отдела
-    Integer    , -- Ответственный представитель маркетингового отдела	
-    TVarChar     -- сессия пользователя
-
-);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
-    Integer    , -- Ключ объекта <Документ продажи>
-    TVarChar   , -- Номер документа
-    TDateTime  , -- Дата документа
-    Integer    , -- Вид акции
-    Integer    , -- Прайс Лист
-    TDateTime  , -- Дата начала акции
-    TDateTime  , -- Дата окончания акции
-    TDateTime  , -- Дата начала отгрузки по акционной цене
-    TDateTime  , -- Дата окончания отгрузки по акционной цене
-    TDateTime  , -- Дата начала расч. продаж до акции
-    TDateTime  , -- Дата окончания расч. продаж до акции
-    TFloat     , -- Стоимость участия в акции
-    TVarChar   , -- Примечание
-    Integer    , -- Рекламная поддержка
-    Integer    , -- Подразделение
-    Integer    , -- Ответственный представитель коммерческого отдела
-    Integer    , -- Ответственный представитель маркетингового отдела	
-    TVarChar     -- сессия пользователя
-
-);
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (
-    Integer    , -- Ключ объекта <Документ продажи>
-    TVarChar   , -- Номер документа
-    TDateTime  , -- Дата документа
-    Integer    , -- Вид акции
-    Integer    , -- Прайс Лист
-    TDateTime  , -- Дата начала акции
-    TDateTime  , -- Дата окончания акции
-    TDateTime  , -- Дата начала отгрузки по акционной цене
-    TDateTime  , -- Дата окончания отгрузки по акционной цене
-    TDateTime  , -- Дата начала расч. продаж до акции
-    TDateTime  , -- Дата окончания расч. продаж до акции
-    TFloat     , -- Стоимость участия в акции
-    TVarChar   , -- Примечание
-    TVarChar   , -- Примечание (Общее)
-    Integer    , -- Подразделение
-    Integer    , -- Ответственный представитель коммерческого отдела
-    Integer    , -- Ответственный представитель маркетингового отдела	
-    TVarChar     -- сессия пользователя
-
-);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -76,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inEndPromo              TDateTime  , -- Дата окончания акции
     IN inStartSale             TDateTime  , -- Дата начала отгрузки по акционной цене
     IN inEndSale               TDateTime  , -- Дата окончания отгрузки по акционной цене
+    IN inEndReturn             TDateTime  , -- Дата окончания возвратов по акционной цене
     IN inOperDateStart         TDateTime  , -- Дата начала расч. продаж до акции
     IN inOperDateEnd           TDateTime  , -- Дата окончания расч. продаж до акции
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
@@ -86,7 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела	
     IN inSession               TVarChar     -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -104,6 +42,7 @@ BEGIN
                                         , inEndPromo       := inEndPromo        --Дата окончания акции
                                         , inStartSale      := inStartSale       --Дата начала отгрузки по акционной цене
                                         , inEndSale        := inEndSale         --Дата окончания отгрузки по акционной цене
+                                        , inEndReturn      := inEndReturn       --Дата окончания возвратов по акционной цене
                                         , inOperDateStart  := inOperDateStart   --Дата начала расч. продаж до акции
                                         , inOperDateEnd    := inOperDateEnd     --Дата окончания расч. продаж до акции
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции

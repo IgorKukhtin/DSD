@@ -18,14 +18,16 @@ BEGIN
      CREATE TEMP TABLE _tmpItemPartnerTo (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_ProfitLoss_10700 Integer, ContainerId_ProfitLoss_10800 Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_SummIn_60000 Integer, ContainerId_SummOut_60000 Integer, AccountId_SummIn_60000 Integer, AccountId_SummOut_60000 Integer, ContainerId_GoodsPartner Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , ContainerId_Goods Integer, ContainerId_Goods_Alternative Integer, ContainerId_SummIn_60000 Integer, ContainerId_SummOut_60000 Integer, AccountId_SummIn_60000 Integer, AccountId_SummOut_60000 Integer, ContainerId_GoodsPartner Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, ChangePercent TFloat, isChangePrice Boolean
                                , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, tmpOperSumm_Partner_original TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
                                , ContainerId_ProfitLoss_10700 Integer
                                , ContainerId_Partner Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_To Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
                                , PartionGoodsId Integer, PartionMovementId Integer
-                               , PriceListPrice TFloat, Price TFloat, Price_original TFloat, CountForPrice TFloat) ON COMMIT DROP;
+                               , PriceListPrice TFloat, Price TFloat, Price_original TFloat, CountForPrice TFloat
+                               , isErased Boolean -- используется только в lpCheck_Movement_ReturnIn_Auto
+                                ) ON COMMIT DROP;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

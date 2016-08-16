@@ -92,7 +92,7 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
-          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS  isDiscountPrice
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -118,8 +118,8 @@ BEGIN
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
-                           ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                          AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
+                                  ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
@@ -938,16 +938,16 @@ BEGIN
              -- расчет цены с НДС и скидкой, до 4 знаков
            , CASE WHEN vbPriceWithVAT <> TRUE
                   THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
-                                         * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!для НАЛ учитываем!!!
+                                         * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
                                                      THEN (1 - vbDiscountPercent / 100)
-                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!для НАЛ учитываем!!!
+                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
                                                      THEN (1 + vbExtraChargesPercent / 100)
                                                 ELSE 1
                                            END
                              AS NUMERIC (16, 4))
-                  ELSE CAST (tmpMI.Price * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!для НАЛ не учитываем!!!
+                  ELSE CAST (tmpMI.Price * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
                                                      THEN (1 - vbDiscountPercent / 100)
-                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!для НАЛ не учитываем!!!
+                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
                                                      THEN (1 + vbExtraChargesPercent / 100)
                                                 ELSE 1
                                            END
@@ -983,7 +983,7 @@ BEGIN
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем!!!
+                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
                               THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -1173,4 +1173,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 377284, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 377284, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 2>";

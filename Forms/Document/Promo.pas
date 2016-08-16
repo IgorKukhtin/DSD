@@ -214,6 +214,8 @@ type
     actInsertUpdate_Movement_PromoPartnerFromRetail: TdsdExecStoredProc;
     spInsertUpdate_Movement_PromoPartnerFromRetail: TdsdStoredProc;
     dxBarButton12: TdxBarButton;
+    deEndReturn: TcxDateEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

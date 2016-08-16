@@ -25,6 +25,8 @@ $BODY$
     DECLARE vbExtraChargesPercent TFloat;
     DECLARE vbPaidKindId Integer;
     DECLARE vbContractId Integer;
+    DECLARE vbIsChangePrice Boolean;
+    DECLARE vbIsDiscountPrice Boolean;
 
     DECLARE vbOperSumm_MVAT TFloat;
     DECLARE vbOperSumm_PVAT TFloat;
@@ -59,7 +61,8 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)     AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)      AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)      AS ContractId
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
+            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -82,6 +85,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+                                  ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -90,6 +96,22 @@ BEGIN
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
                               AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL*/
      WHERE Movement.Id = inMovementId;
+
+
+     -- !!!надо определить - есть ли скидка в цене!!!
+     vbIsChangePrice:= vbIsDiscountPrice = TRUE
+                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                    OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
+                        AND EXISTS (SELECT 1
+                                    FROM MovementItem
+                                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                     ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId = zc_MI_Master()
+                                      AND MovementItem.isErased = FALSE
+                                      AND COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
+                                   ));
 
 
     -- очень важная проверка
@@ -555,9 +577,11 @@ BEGIN
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , MovementItem.MovementId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                  , CASE WHEN vbDiscountPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
+                              THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_ReturnIn()
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN vbExtraChargesPercent <> 0 AND vbPaidKindId <> zc_Enum_PaidKind_SecondForm() -- !!!для НАЛ не учитываем!!!
+                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_ReturnIn()
                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
@@ -573,6 +597,10 @@ BEGIN
                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                               -- AND MIFloat_Price.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -614,11 +642,7 @@ BEGIN
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
-
     RETURN NEXT Cursor2;
-
-
-
 
 END;
 $BODY$
@@ -649,4 +673,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId := 672146, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId:= 672146, inSession:= '2'); FETCH ALL "<unnamed portal 2>";

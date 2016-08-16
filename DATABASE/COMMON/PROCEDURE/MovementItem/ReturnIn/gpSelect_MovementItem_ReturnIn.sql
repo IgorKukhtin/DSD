@@ -226,13 +226,22 @@ BEGIN
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                     )
      , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
+                           , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
+                           , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
                            , SUM (MovementItem.Amount) AS Amount
                       FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                       ON MIFloat_PromoMovement.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
+                        AND MovementItem.Amount     <> 0
                       GROUP BY MovementItem.ParentId
-                      )
+                     )
 
        SELECT
              0                          AS Id
@@ -340,7 +349,12 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
+           , (CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
+                        THEN 'Œÿ»¡ ¿ : '
+                   ELSE ''
+              END
+           || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
+             ) :: TVarChar AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
            
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
@@ -507,14 +521,23 @@ BEGIN
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
                   FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate) AS lfSelect
                  )
-     , tmpMIChild AS (SELECT MovementItem.ParentId    AS MI_ParentId
-                           , SUM(MovementItem.Amount) AS Amount
+     , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
+                           , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
+                           , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
+                           , SUM (MovementItem.Amount) AS Amount
                       FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                       ON MIFloat_PromoMovement.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
+                                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
+                        AND MovementItem.Amount     <> 0
                       GROUP BY MovementItem.ParentId
-                      )
+                     )
 
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
@@ -563,7 +586,12 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
+           , (CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
+                        THEN 'Œÿ»¡ ¿ : '
+                   ELSE ''
+              END
+           || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+             ) :: TVarChar AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
 
            , tmpMIChild.Amount       :: TFloat   AS AmountChild

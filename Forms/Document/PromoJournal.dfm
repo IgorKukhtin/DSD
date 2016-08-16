@@ -2,7 +2,7 @@ inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -73,6 +73,14 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 72
+          end
+          object EndReturn: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090#1099' '#1087#1086
+            DataBinding.FieldName = 'EndReturn'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1074#1086#1079#1074#1088#1072#1090#1086#1074' '#1087#1086' '#1072#1082#1094#1080#1086#1085#1085#1086#1081' '#1094#1077#1085#1077
+            Width = 70
           end
           object colCostPromo: TcxGridDBColumn
             Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
@@ -210,17 +218,20 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction [22]
@@ -247,6 +258,7 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Comment'
@@ -254,6 +266,7 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = MasterCDS
           ComponentItem = 'Comment'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CommentMain'
@@ -261,10 +274,12 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = MasterCDS
           ComponentItem = 'CommentMain'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactUpdate_Movement_Promo_Data: TMultiAction
       Category = 'Update_Promo_Data'
@@ -301,10 +316,12 @@ inherited PromoJournalForm: TPromoJournalForm
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'isFirst'
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = actUpdate_Movement_Promo_Data
           ToParam.ComponentItem = 'Enabled'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProcList = <>
@@ -364,6 +381,7 @@ inherited PromoJournalForm: TPromoJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -371,6 +389,7 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -378,6 +397,7 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -385,6 +405,7 @@ inherited PromoJournalForm: TPromoJournalForm
           Component = chbPeriodForOperDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -400,6 +421,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -407,6 +429,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -414,6 +437,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPeriodForOperDate'
@@ -421,6 +445,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = chbPeriodForOperDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   inherited BarManager: TdxBarManager
@@ -566,6 +591,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
@@ -589,6 +615,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -605,6 +632,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -612,6 +640,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 488
@@ -628,6 +657,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -635,6 +665,7 @@ inherited PromoJournalForm: TPromoJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 488

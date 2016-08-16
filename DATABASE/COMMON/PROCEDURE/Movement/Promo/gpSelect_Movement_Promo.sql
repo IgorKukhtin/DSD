@@ -23,6 +23,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , EndPromo         TDateTime   --Дата окончания акции
              , StartSale        TDateTime   --Дата начала отгрузки по акционной цене
              , EndSale          TDateTime   --Дата окончания отгрузки по акционной цене
+             , EndReturn        TDateTime   --Дата окончания возвратов по акционной цене
              , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
              , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
              , CostPromo        TFloat      --Стоимость участия в акции
@@ -65,6 +66,7 @@ BEGIN
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене
           , Movement_Promo.EndSale            --Дата окончания отгрузки по акционной цене
+          , Movement_Promo.EndReturn          --Дата окончания возвратов по акционной цене
           , Movement_Promo.OperDateStart      --Дата начала расч. продаж до акции
           , Movement_Promo.OperDateEnd        --Дата окончания расч. продаж до акции
           , Movement_Promo.CostPromo          --Стоимость участия в акции
@@ -117,7 +119,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
@@ -126,4 +127,4 @@ ALTER FUNCTION gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, 
  13.10.15                                                                        *
 */
 
--- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2015', inEndDate:= '30.11.2015', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inSession:= zfCalc_UserAdmin())

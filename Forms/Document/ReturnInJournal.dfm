@@ -3,7 +3,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientHeight = 535
   ClientWidth = 1114
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -113
   ExplicitWidth = 1130
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -13,17 +12,17 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Height = 393
     TabOrder = 3
     ExplicitWidth = 1114
-    ExplicitHeight = 478
+    ExplicitHeight = 393
     ClientRectBottom = 393
     ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1114
-      ExplicitHeight = 478
+      ExplicitHeight = 393
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 393
         ExplicitWidth = 1114
-        ExplicitHeight = 478
+        ExplicitHeight = 393
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -284,7 +283,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             DataBinding.FieldName = 'TotalSummChange'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -537,8 +536,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitLeft = -63
-    ExplicitWidth = 1177
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
