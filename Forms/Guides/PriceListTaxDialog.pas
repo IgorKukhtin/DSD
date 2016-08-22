@@ -29,14 +29,14 @@ type
     cxButton2: TcxButton;
     cxLabel3: TcxLabel;
     ActionList: TActionList;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
+    actDataSetRefresh: TdsdDataSetRefresh;
+    actFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     edOperDate: TcxDateEdit;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    actUpdate: TdsdInsertUpdateGuides;
     Код: TcxLabel;
     edPriceListFrom: TcxButtonEdit;
     cePriceTax: TcxCurrencyEdit;
@@ -47,6 +47,7 @@ type
     cxLabel8: TcxLabel;
     cxLabel1: TcxLabel;
     edOperDateFrom: TcxDateEdit;
+    mactUpdate: TMultiAction;
   private
     { Private declarations }
   public

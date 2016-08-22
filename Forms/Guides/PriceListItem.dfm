@@ -178,7 +178,7 @@ object PriceListItemForm: TPriceListItemForm
     object edShowDate: TcxDateEdit
       Left = 433
       Top = 9
-      EditValue = 42339d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -198,7 +198,7 @@ object PriceListItemForm: TPriceListItemForm
   object edOperDate: TcxDateEdit
     Left = 679
     Top = 35
-    EditValue = 42235d
+    EditValue = 42370d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
@@ -421,12 +421,14 @@ object PriceListItemForm: TPriceListItemForm
       FormName = 'TPriceListGoodsItemForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PriceListId'
           Value = '0'
           Component = PriceListGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
@@ -434,12 +436,14 @@ object PriceListItemForm: TPriceListItemForm
           Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -447,6 +451,7 @@ object PriceListItemForm: TPriceListItemForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -490,6 +495,7 @@ object PriceListItemForm: TPriceListItemForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -497,6 +503,7 @@ object PriceListItemForm: TPriceListItemForm
           Component = ClientDataSet
           ComponentItem = 'ObjectId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -505,6 +512,7 @@ object PriceListItemForm: TPriceListItemForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -517,12 +525,14 @@ object PriceListItemForm: TPriceListItemForm
       FormName = 'TPriceListTaxDialogForm'
       FormNameParam.Value = 'TPriceListTaxDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PriceListId'
           Value = '0'
           Component = PriceListGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListName'
@@ -530,12 +540,14 @@ object PriceListItemForm: TPriceListItemForm
           Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = edOperDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -563,17 +575,20 @@ object PriceListItemForm: TPriceListItemForm
           Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowDate'
           Value = 42339d
           Component = edShowDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.Name = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.Value = 'PrintObjectHistory_PriceListItem'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -590,6 +605,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -597,6 +613,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = edShowDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -604,6 +621,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144
@@ -645,6 +663,7 @@ object PriceListItemForm: TPriceListItemForm
     Key = '0'
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -654,6 +673,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -662,6 +682,7 @@ object PriceListItemForm: TPriceListItemForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 16
@@ -677,6 +698,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
@@ -684,6 +706,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -691,13 +714,15 @@ object PriceListItemForm: TPriceListItemForm
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -706,26 +731,30 @@ object PriceListItemForm: TPriceListItemForm
         ComponentItem = 'ValuePrice'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsLast'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'StartDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = ClientDataSet
         ComponentItem = 'EndDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -733,6 +762,7 @@ object PriceListItemForm: TPriceListItemForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -755,6 +785,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -762,6 +793,7 @@ object PriceListItemForm: TPriceListItemForm
         Component = edShowDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 144

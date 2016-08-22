@@ -304,7 +304,7 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                            ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                           AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                           GROUP BY MovementItem.ObjectId
@@ -312,14 +312,37 @@ BEGIN
                                  , COALESCE (MIFloat_Price.ValueData, 0)
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
+
+, tmpPriceList_EDI AS (-- цены из прайса напрямую, (т.к. теперь в EDI.zc_MIFloat_Price - хранится "их" цена
+                       SELECT DISTINCT
+                              tmpMI_EDI.GoodsId
+                            , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
+                       FROM tmpMI_EDI
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                  ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpMI_EDI.GoodsId
+                                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                  ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                                                 AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                   AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                      )
             -- поиск для Товаров из EDI - MovementItemId из заявки
           , tmpMI_EDI_find AS (SELECT tmpMI_EDI.GoodsId
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
                                     , tmpMI_EDI.PriceEDI
+                                    , tmpPriceList_EDI.PriceListPrice
                                     , tmpMI_EDI.CountForPrice
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
+                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                                                     , tmpMI.GoodsId
                                                     , tmpMI.GoodsKindId
@@ -342,7 +365,7 @@ BEGIN
                                , COALESCE (tmpMI.Summ, 0)          AS Summ
                                , tmpMI_EDI_find.Amount             AS AmountEDI
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_EDI_find.GoodsKindId)     AS GoodsKindId
-                               , COALESCE (tmpMI.Price, 0)                                    AS Price
+                               , COALESCE (tmpMI.Price, tmpMI_EDI_find.PriceListPrice)        AS Price
                                , COALESCE (tmpMI.PriceEDI, tmpMI_EDI_find.PriceEDI)           AS PriceEDI
                                , COALESCE (tmpMI.CountForPrice, tmpMI_EDI_find.CountForPrice) AS CountForPrice
 
@@ -719,14 +742,36 @@ BEGIN
                                  , COALESCE (MIFloat_Price.ValueData, 0)
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
+, tmpPriceList_EDI AS (-- цены из прайса напрямую, (т.к. теперь в EDI.zc_MIFloat_Price - хранится "их" цена
+                       SELECT DISTINCT
+                              tmpMI_EDI.GoodsId
+                            , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS PriceListPrice
+                       FROM tmpMI_EDI
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                  ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpMI_EDI.GoodsId
+                                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                  ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                                                 AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                   AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                      )
             -- поиск для Товаров из EDI - MovementItemId из заявки
           , tmpMI_EDI_find AS (SELECT tmpMI_EDI.GoodsId
                                     , tmpMI_EDI.Amount
                                     , tmpMI_EDI.GoodsKindId
                                     , tmpMI_EDI.PriceEDI
+                                    , tmpPriceList_EDI.PriceListPrice
                                     , tmpMI_EDI.CountForPrice
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
+                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                                                     , tmpMI.GoodsId
                                                     , tmpMI.GoodsKindId
@@ -750,8 +795,8 @@ BEGIN
                                , COALESCE (tmpMI.ChangePercent, 0) AS ChangePercent
                                , tmpMI_EDI_find.Amount             AS AmountEDI
                                , COALESCE (tmpMI.GoodsKindId, tmpMI_EDI_find.GoodsKindId)     AS GoodsKindId
-                               , COALESCE (tmpMI.Price, 0)         AS Price
-                               , COALESCE (tmpMI.PriceEDI, tmpMI_EDI_find.PriceEDI) AS PriceEDI
+                               , COALESCE (tmpMI.Price, tmpMI_EDI_find.PriceListPrice)        AS Price
+                               , COALESCE (tmpMI.PriceEDI, tmpMI_EDI_find.PriceEDI)           AS PriceEDI
                                , COALESCE (tmpMI.CountForPrice, tmpMI_EDI_find.CountForPrice) AS CountForPrice
 
                                , tmpMI.MovementId_Promo                                       AS MovementId_Promo

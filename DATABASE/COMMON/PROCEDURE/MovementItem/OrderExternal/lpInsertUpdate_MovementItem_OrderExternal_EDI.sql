@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MovementItem_OrderExternal_EDI()
+ -- Function: lpInsertUpdate_MovementItem_OrderExternal_EDI()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_OrderExternal_EDI (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, TFloat, TFloat, Integer);
 

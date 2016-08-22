@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Check (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Check (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Check(
@@ -17,7 +16,7 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
-     vbUserId := inSession;
+     vbUserId := lpGetUserBySession (inSession);
 
      vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
      IF vbUnitKey = '' THEN

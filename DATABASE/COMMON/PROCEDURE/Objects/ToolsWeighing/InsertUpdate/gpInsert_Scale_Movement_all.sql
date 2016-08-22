@@ -730,12 +730,14 @@ BEGIN
                                                         , inGoodsId             := tmp.GoodsId
                                                         , inAmount              := tmp.Amount
                                                         , inAmountPartner       := tmp.Amount
+                                                        , inChangePercent       := tmp.ChangePercent
                                                         , inPrice               := tmp.Price
                                                         , inCountForPrice       := tmp.CountForPrice
                                                         , inHeadCount           := 0
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAssetId             := NULL
+                                                        , inMovementId_Promo    := tmp.MovementId_Promo :: Integer
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_SendOnPrice()
@@ -837,6 +839,8 @@ BEGIN
                      , tmp.ChangePercentAmount
                      , tmp.Price
                      , tmp.CountForPrice
+                     , MAX (tmp.ChangePercent)       AS ChangePercent    -- используется только для возврата
+                     , MAX (tmp.MovementId_Promo)    AS MovementId_Promo -- используется только для возврата
                      , SUM (tmp.BoxCount)     AS BoxCount
                      , SUM (tmp.Count)        AS Count
                      , SUM (tmp.CountPack)    AS CountPack
@@ -888,6 +892,9 @@ BEGIN
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_Price.ValueData, 0)               END AS Price
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0)       END AS CountForPrice
 
+                           , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent    -- используется только для возврата
+                           , COALESCE (MIFloat_PromoMovement.ValueData, 0)       AS MovementId_Promo -- используется только для возврата
+
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
                            , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
@@ -937,6 +944,15 @@ BEGIN
                                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                                       AND vbMovementDescId NOT IN (zc_Movement_Inventory())
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                       ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                                      AND vbMovementDescId = zc_Movement_ReturnIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                                       ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                                      AND vbMovementDescId = zc_Movement_ReturnIn()
 
                            LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                                          ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
@@ -988,6 +1004,9 @@ BEGIN
 
                            , tmpMI.Price
                            , tmpMI.CountForPrice
+
+                           , 0                                                   AS ChangePercent    -- используется только для возврата
+                           , 0                                                   AS MovementId_Promo -- используется только для возврата
 
                            , COALESCE (MIFloat_BoxCount.ValueData, 0)            AS BoxCount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count

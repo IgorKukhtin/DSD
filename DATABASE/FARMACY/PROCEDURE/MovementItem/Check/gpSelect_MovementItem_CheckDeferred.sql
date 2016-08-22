@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , PriceSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
+             , AmountOrder TFloat
              , List_UID TVarChar
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -38,16 +40,16 @@ BEGIN
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                  AND MovementBoolean_Deferred.ValueData = TRUE 
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                       WHERE Movement.DescId = zc_Movement_Check()
-                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                         AND MovementBoolean_Deferred.ValueData = True 
-                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
-                              OR 
-                              vbUnitId = 0))
-
+                      WHERE Movement.DescId = zc_Movement_Check()
+                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                        AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
+                          OR vbUnitId = 0)
+                     )
+       -- –ÂÁÛÎ¸Ú‡Ú
        SELECT
              MovementItem.Id          AS Id,
              MovementItem.MovementId  AS MovementId 
@@ -61,10 +63,17 @@ BEGIN
            , MIFloat_PriceSale.ValueData         AS PriceSale
            , MIFloat_ChangePercent.ValueData     AS ChangePercent
            , MIFloat_SummChangePercent.ValueData AS SummChangePercent
+           , MIFloat_AmountOrder.ValueData       AS AmountOrder
            , MIString_UID.ValueData              AS List_UID
+           , MovementItem.isErased
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.isErased   = FALSE
                                  
+          LEFT JOIN MovementItemFloat AS MIFloat_AmountOrder
+                                      ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                     AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -90,12 +99,12 @@ BEGIN
           LEFT JOIN MovementItemString AS MIString_UID
                                        ON MIString_UID.MovementItemId = MovementItem.Id
                                       AND MIString_UID.DescId = zc_MIString_UID()
-     WHERE MovementItem.isErased = false;
+     WHERE MovementItem.isErased = FALSE;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -104,9 +113,8 @@ ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
  08.04.16         *
  03.07.15                                                                       * 
  25.05.15                         *
- 
+
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_MovementItem_CheckDeferred ('3')
--- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

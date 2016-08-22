@@ -1,34 +1,41 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (
-  Integer   , -- Ключ объекта <Документ ЧЕК>
-  Integer   , -- Ключ объекта <Подразделение>
-  TDateTime , --Дата/время документа
-  TVarChar  , --Покупатель ВИП 
-  TVarChar);
+-- Function: gpInsertUpdate_Movement_Check_Site()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_Site (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_Site(
  INOUT ioId                Integer   , -- Ключ объекта <Документ ЧЕК>
     IN inUnitId            Integer   , -- Ключ объекта <Подразделение>
-    IN inDate              TDateTime , --Дата/время документа
-    IN inBayer             TVarChar  , --Покупатель ВИП 
+    IN inDate              TDateTime , -- Дата/время документа
+    IN inBayer             TVarChar  , -- Покупатель ВИП 
+    IN inBayerPhone        TVarChar  , -- Контактный телефон (Покупателя)
+    IN inInvNumberOrder    TVarChar  , -- Номер заказа (с сайта)
+    IN inManagerName       TVarChar  , -- Менеджер – Вип
+    -- IN inConfirmedKindName   TVarChar  , -- Статус заказа (Состояние VIP-чека)
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
+
    DECLARE vbInvNumber Integer;
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
+   DECLARE vbManagerId Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
-    vbUserId := inSession;
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
+    vbUserId := lpGetUserBySession (inSession);
 
     IF inDate is null
     THEN
         inDate := CURRENT_TIMESTAMP::TDateTime;
     END IF;
     
+    -- определяем признак Создание/Корректировка
+    vbIsInsert:= COALESCE (ioId, 0) = 0;
+
     IF COALESCE(ioId,0) = 0
     THEN
         SELECT 
@@ -51,24 +58,50 @@ BEGIN
         WHERE 
             Movement_Check_View.Id = ioId;
     END IF;
+
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Check(), vbInvNumber::TVarChar, inDate, NULL);
+
+
+    -- поиск менеджера
+    IF TRIM (inManagerName) <> ''
+    THEN
+        vbManagerId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = zfConvert_StringToNumber (TRIM (inManagerName)) AND Object.DescId = zc_Object_Member() AND zfConvert_StringToNumber (inManagerName) <> 0);
+        -- vbManagerId:= (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inManagerName) AND Object.DescId = zc_Object_Member());
+    END IF;
+    -- сохранили связь с менеджером
+    IF COALESCE (vbManagerId,0) <> 0
+    THEN
+        -- сохранили менеджера
+        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, vbManagerId);
+    END IF;
+
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
-    --прописываем ФИО покупателя
-    PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
-    --Отмечаем документ как отложенный
-    PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, True);      
+    -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_UnComplete());
+    -- сохранили ФИО покупателя
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Bayer(), ioId, inBayer);
+    -- сохранили Контактный телефон (Покупателя)
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BayerPhone(), ioId, inBayerPhone);
+    -- сохранили Номер заказа (с сайта)
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
+    -- Отмечаем документ как отложенный
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Deferred(), ioId, TRUE);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_Check_Site (Integer,Integer,TDateTime,TVarChar,TVarChar) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
  17.12.15                                                                       *
-
 */
---Select * from gpInsertUpdate_Movement_Check_Site(ioId := 0, inUnitId := 183293, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inSession := '3'::TVarChar);
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Movement_Check_Site (ioId := 0, inUnitId := 183292, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inBayerPhone:= '11-22-33', inInvNumberOrder:= '12345', inManagerName:= '5', inSession := '3'::TVarChar); -- Аптека_1 пр_Правды_6

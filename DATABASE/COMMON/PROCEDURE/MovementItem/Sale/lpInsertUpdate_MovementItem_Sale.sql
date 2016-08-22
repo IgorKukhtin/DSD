@@ -81,15 +81,20 @@ BEGIN
      
 
      -- !!!замена для акции!!
-     IF outMovementId_Promo > 0 THEN
+     IF outMovementId_Promo > 0
+     THEN
         IF COALESCE (ioId, 0) = 0 AND vbTaxPromo <> 0
         THEN
-            ioPrice:= outPricePromo;
-        ELSE IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo AND vbTaxPromo <> 0
+              -- меняется значение
+             ioPrice:= outPricePromo;
+
+        ELSE -- только проверка
+             IF ioId <> 0 AND (ioPrice + 0.06) < outPricePromo AND vbTaxPromo <> 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Для товара = <%> <%> необходимо ввести акционную цену = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId), TFloat (outPricePromo);
              END IF;
         END IF;
+
      -- ELSE !!!обратно из прайса пока не реализовал!!!!
      END IF;
 

@@ -39,7 +39,7 @@ type
     ExecuteDialog: TExecuteDialog;
     clTotalSummChangePercent: TcxGridDBColumn;
     clDiscountCardName: TcxGridDBColumn;
-    cxDiscountCard_ObjectName: TcxGridDBColumn;
+    DiscountExternalName: TcxGridDBColumn;
     IsDeferred: TcxGridDBColumn;
     BayerPhone: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;

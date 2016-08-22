@@ -477,10 +477,10 @@ BEGIN
 
 
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 1.1. - ALL PARAM !!!!!!!!
+                -- !!!!! 2.1. - ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                -- курсор2 - все продажи для ОДНОГО элемента возврата
+                -- курсор2.1. - все продажи для ОДНОГО элемента возврата
                 OPEN curMI_Sale FOR
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
@@ -492,7 +492,7 @@ BEGIN
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
                   ;
 
-                -- начало цикла по курсору2 - продажи
+                -- начало цикла по курсору2.1. - продажи
                 LOOP
                     -- данные по продажам
                     FETCH curMI_Sale INTO vbMovementId_sale, vbMovementItemId_sale, vbAmount_sale;
@@ -516,19 +516,19 @@ BEGIN
                     END IF;
 
 
-                END LOOP; -- финиш цикла по курсору2 - продажи
-                CLOSE curMI_Sale; -- закрыли курсор2 - продажи
+                END LOOP; -- финиш цикла по курсору2.1. - продажи
+                CLOSE curMI_Sale; -- закрыли курсор2.1. - продажи
 
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 1.1. - END ALL PARAM !!!!!!!!
+                -- !!!!! 2.1. - END ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 IF vbAmount <> 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 1.2. - ALL PARAM !!!!!!!!
+                -- !!!!! 2.2. - ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                -- курсор2 - все продажи для ОДНОГО элемента возврата
+                -- курсор2.2. - все продажи для ОДНОГО элемента возврата
                 OPEN curMI_Sale_two FOR
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
@@ -540,7 +540,7 @@ BEGIN
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
                   ;
 
-                -- начало цикла по курсору2 - продажи
+                -- начало цикла по курсору2.2. - продажи
                 LOOP
                     -- данные по продажам
                     FETCH curMI_Sale_two INTO vbMovementId_sale, vbMovementItemId_sale, vbAmount_sale;
@@ -565,21 +565,21 @@ BEGIN
                     END IF;
 
 
-                END LOOP; -- финиш цикла по курсору2 - продажи
-                CLOSE curMI_Sale_two; -- закрыли курсор2 - продажи
+                END LOOP; -- финиш цикла по курсору2.2. - продажи
+                CLOSE curMI_Sale_two; -- закрыли курсор2.2. - продажи
 
                 END IF; -- IF vbAmount > 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 1.2. - End ALL PARAM !!!!!!!!
+                -- !!!!! 2.2. - End ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /*
                 IF vbAmount > 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 2 - NOT vbPartnerId!!!!!
+                -- !!!!! 2.3. - NOT vbPartnerId!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                -- курсор3 - все продажи для ОДНОГО элемента возврата
+                -- курсор2.3. - все продажи для ОДНОГО элемента возврата
                 OPEN curMI_Sale_two FOR
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
@@ -590,7 +590,7 @@ BEGIN
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
                   ;
 
-                -- начало цикла по курсору3 - продажи
+                -- начало цикла по курсору2.3. - продажи
                 LOOP
                     -- данные по продажам
                     FETCH curMI_Sale_two INTO vbMovementId_sale, vbMovementItemId_sale, vbAmount_sale;
@@ -615,12 +615,12 @@ BEGIN
                     END IF;
 
 
-                END LOOP; -- финиш цикла по курсору3 - продажи
-                CLOSE curMI_Sale_two; -- закрыли курсор3 - продажи
+                END LOOP; -- финиш цикла по курсору2.3. - продажи
+                CLOSE curMI_Sale_two; -- закрыли курсор2.3. - продажи
 
                 END IF; -- IF vbAmount > 0 THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 2 - End vbGoodsKindId AND NOT vbPartnerId!!!!!
+                -- !!!!! 2.3. - End - NOT vbPartnerId!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!
 */
 

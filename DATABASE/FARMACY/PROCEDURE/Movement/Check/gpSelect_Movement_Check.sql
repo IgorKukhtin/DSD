@@ -14,22 +14,17 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSumm TFloat, TotalSummChangePercent TFloat
              , UnitName TVarChar, CashRegisterName TVarChar, PaidTypeName TVarChar
              , CashMember TVarChar, Bayer TVarChar, FiscalCheckNumber TVarChar, NotMCS Boolean, IsDeferred Boolean
-             , DiscountCardName TVarChar, DiscountCard_ObjectName TVarChar
+             , DiscountCardName TVarChar, DiscountExternalName TVarChar
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
-)
-
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
-   DECLARE vbReteilId Integer;   
+   DECLARE vbRetailId Integer;   
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
@@ -38,7 +33,7 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- определяем Торговую сеть входящего подразделения
-     vbReteilId:= CASE WHEN vbUserId = 3
+     vbRetailId:= CASE WHEN vbUserId = 3
                   THEN vbObjectId
                   ELSE
                   (SELECT ObjectLink_Juridical_Retail.ChildObjectId
@@ -51,6 +46,7 @@ BEGIN
                    )
                    END;
 
+     -- Результат
      RETURN QUERY
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
@@ -70,26 +66,26 @@ BEGIN
            , Movement_Check.UnitName
            , Movement_Check.CashRegisterName
            , Movement_Check.PaidTypeName
-           , Movement_Check.CashMember
+           , CASE WHEN Movement_Check.InvNumberOrder <> '' AND COALESCE (Movement_Check.CashMember, '') = '' THEN zc_Member_Site() ELSE Movement_Check.CashMember END :: TVarChar AS CashMember
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
            , Movement_Check.IsDeferred
            , Movement_Check.DiscountCardName
-           , Object_Object.ValueData   AS DiscountCard_ObjectName
+           , Object_DiscountExternal.ValueData AS DiscountExternalName
            , Movement_Check.BayerPhone
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
-             LEFT JOIN ObjectLink AS ObjectLink_Object
-                                  ON ObjectLink_Object.ObjectId = Movement_Check.DiscountCardId
-                                 AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
-             LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                  ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId
+                                 AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
+             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
                            
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
-         AND (vbReteilId = vbObjectId)
+         AND (vbRetailId = vbObjectId)
 ;
 
 END;

@@ -34,7 +34,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
      -- !!!протокол через свойства конкретного объекта!!!
-     IF vbIsInsert=True 
+     IF vbIsInsert = TRUE
      THEN
        -- сохранили свойство <Дата создания>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -48,15 +48,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  01.07.14                                                        *
-
-
 */
 
 -- тест

@@ -12,7 +12,7 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.RefreshAction = actDataSetRefresh
   AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -21,7 +21,7 @@
     Top = 234
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides
+    Action = mactUpdate
     Default = True
     ModalResult = 8
     TabOrder = 1
@@ -31,7 +31,7 @@
     Top = 234
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = actFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -117,25 +117,21 @@
   object ActionList: TActionList
     Left = 304
     Top = 8
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <
-        item
-        end
-        item
-        end>
+      StoredProcList = <>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdFormClose1: TdsdFormClose
+    object actFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+    object actUpdate: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -145,6 +141,17 @@
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+    end
+    object mactUpdate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1091' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1055#1088#1072#1081#1089#1072' '#1080' % ?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1080#1083#1072#1089#1100' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1055#1088#1072#1081#1089#1072' '#1080' %'
+      Caption = 'OK'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -158,6 +165,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListFromId'
@@ -165,6 +173,7 @@
         Component = PriceListGuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListToId'
@@ -172,6 +181,7 @@
         Component = PriceListGuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -179,13 +189,15 @@
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDateFrom'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateFrom
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTax'
@@ -193,6 +205,7 @@
         Component = cePriceTax
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 275
@@ -206,6 +219,7 @@
         Component = PriceListGuidesTo
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
@@ -214,20 +228,23 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
-        Value = Null
+        Value = 'NULL'
         Component = edOperDateFrom
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 136
@@ -256,6 +273,7 @@
     LookupControl = edPriceListFrom
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -265,6 +283,7 @@
         Component = PriceListGuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -273,6 +292,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 8
@@ -282,6 +302,7 @@
     LookupControl = edPriceListTo
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -291,6 +312,7 @@
         Component = PriceListGuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -299,6 +321,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 56
     Top = 160

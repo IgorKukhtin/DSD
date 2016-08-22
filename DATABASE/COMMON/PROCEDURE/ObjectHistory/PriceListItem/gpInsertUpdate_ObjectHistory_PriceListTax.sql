@@ -1,15 +1,14 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListTax(Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListTax(
     IN inId                         Integer,    -- ключ объекта <Элемент прайс-листа>
     IN inPriceListFromId            Integer,    -- Прайс-лист
     IN inPriceListToId              Integer,    -- Прайс-лист
-    IN inOperDate                   TDateTime,  -- Дата действия прайс-листа
-    IN inOperDateFrom               TDateTime,  -- Дата действия прайс-листа
-    IN inTax                        TFloat,     -- Значение цены
+    IN inOperDate                   TDateTime,  -- Изменение цены с
+    IN inOperDateFrom               TDateTime,  -- Дата цены основания
+    IN inTax                        TFloat,     -- (-)% Скидки (+)% Наценки
     IN inSession                    TVarChar    -- сессия пользователя
 )
   RETURNS VOID AS
@@ -21,11 +20,38 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
+   -- Проверка
+   IF COALESCE (inPriceListFromId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист основание>.';
+   END IF;
+
+   -- Проверка
+   IF COALESCE (inPriceListToId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не определено значение <Прайс-лист результат>.';
+   END IF;
+
+   -- Проверка
+   IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Изменение цены с> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+   END IF;
+
+   -- Проверка
+   IF inOperDateFrom < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
+   THEN
+       RAISE EXCEPTION 'Ошибка.Значение <Дата цены основания> не может быть раньше чем <%>.', DATE (DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH');
+   END IF;
+
+
+   -- Изменение ВСЕХ цен
    PERFORM  lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := inId
                                                      , inPriceListId := inPriceListToId
                                                      , inGoodsId     := ObjectLink_PriceListItem_Goods.ChildObjectId
                                                      , inOperDate    := inOperDate
-                                                     , inValue       := CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData+(ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax/100) AS Numeric (16,2)) ::TFloat
+                                                     , inValue       := CAST (ObjectHistoryFloat_PriceListItem_Value.ValueData
+                                                                           + (ObjectHistoryFloat_PriceListItem_Value.ValueData * inTax / 100) AS Numeric (16,2)) ::TFloat
                                                      , inUserId      := vbUserId)
 
               FROM ObjectLink AS ObjectLink_PriceListItem_PriceList

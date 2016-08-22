@@ -58,16 +58,25 @@ inherited MainCashForm: TMainCashForm
         object CheckGridColAmount: TcxGridDBColumn
           Caption = #1050#1086#1083'-'#1074#1086
           DataBinding.FieldName = 'Amount'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 58
         end
         object CheckGridColPrice: TcxGridDBColumn
           Caption = #1062#1077#1085#1072
           DataBinding.FieldName = 'Price'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 55
         end
         object CheckGridColSumm: TcxGridDBColumn
           Caption = #1057#1091#1084#1084#1072
           DataBinding.FieldName = 'Summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 58
         end
         object CheckGridColPriceSale: TcxGridDBColumn
@@ -93,6 +102,14 @@ inherited MainCashForm: TMainCashForm
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           Width = 70
+        end
+        object CheckGridColAmountOrder: TcxGridDBColumn
+          Caption = #1047#1072#1082#1072#1079
+          DataBinding.FieldName = 'AmountOrder'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Width = 45
         end
       end
       object CheckGridLevel: TcxGridLevel
@@ -745,23 +762,26 @@ inherited MainCashForm: TMainCashForm
     TabOrder = 3
     Visible = False
     object Label1: TLabel
-      Left = 16
-      Top = 0
-      Width = 53
-      Height = 13
-      Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+      Left = 1
+      Top = 1
+      Width = 71
+      Height = 15
+      Align = alLeft
+      Caption = '     '#1052#1077#1085#1077#1076#1078#1077#1088' '
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblCashMember: TLabel
-      Left = 80
-      Top = 0
-      Width = 12
-      Height = 13
+      Left = 72
+      Top = 1
+      Width = 360
+      Height = 15
+      Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
@@ -769,25 +789,31 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 13
     end
     object Label2: TLabel
       Left = 432
-      Top = 0
-      Width = 61
-      Height = 13
-      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+      Top = 1
+      Width = 64
+      Height = 15
+      Align = alRight
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblBayer: TLabel
       Left = 496
-      Top = 0
-      Width = 12
-      Height = 13
+      Top = 1
+      Width = 268
+      Height = 15
+      Align = alRight
+      AutoSize = False
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
@@ -795,6 +821,7 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
+      ExplicitLeft = 495
     end
   end
   object pnlDiscount: TPanel [4]
@@ -808,23 +835,26 @@ inherited MainCashForm: TMainCashForm
     TabOrder = 4
     Visible = False
     object Label3: TLabel
-      Left = 16
-      Top = 2
-      Width = 37
-      Height = 13
-      Caption = #1055#1088#1086#1077#1082#1090
+      Left = 1
+      Top = 1
+      Width = 55
+      Height = 16
+      Align = alLeft
+      Caption = '     '#1055#1088#1086#1077#1082#1090' '
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountExternalName: TLabel
-      Left = 80
+      Left = 56
       Top = 1
-      Width = 12
-      Height = 14
+      Width = 376
+      Height = 16
+      Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
@@ -832,25 +862,31 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 14
     end
     object Label5: TLabel
       Left = 432
-      Top = 2
-      Width = 111
-      Height = 13
-      Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099
+      Top = 1
+      Width = 114
+      Height = 16
+      Align = alRight
+      Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099' '
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
-      Left = 550
+      Left = 546
       Top = 1
-      Width = 12
-      Height = 14
+      Width = 218
+      Height = 16
+      Align = alRight
+      AutoSize = False
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
@@ -858,6 +894,7 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitLeft = 545
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1005,7 +1042,7 @@ inherited MainCashForm: TMainCashForm
           Name = 'CashMember'
           Value = Null
           Component = FormParams
-          ComponentItem = 'CashMember'
+          ComponentItem = 'ManagerName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1030,6 +1067,30 @@ inherited MainCashForm: TMainCashForm
           Value = Null
           Component = FormParams
           ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberOrder'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1166,6 +1227,16 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 118
       OnExecute = actSetDiscountExternalExecute
     end
+    object actSetConfirmedKind_UnComplete: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      OnExecute = actSetConfirmedKind_UnCompleteExecute
+    end
+    object actSetConfirmedKind_Complete: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      OnExecute = actSetConfirmedKind_CompleteExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1266,7 +1337,7 @@ inherited MainCashForm: TMainCashForm
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
-    Filter = 'Remains > 0 or Reserved <> 0'
+    Filter = 'Remains <> 0 or Reserved <> 0'
     Filtered = True
     FieldDefs = <>
     IndexDefs = <>
@@ -1301,6 +1372,18 @@ inherited MainCashForm: TMainCashForm
     end
     object VIP1: TMenuItem
       Action = actSetVIP
+    end
+    object VIP3: TMenuItem
+      Action = actSetConfirmedKind_Complete
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' VIP '#1095#1077#1082' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+    end
+    object VIP4: TMenuItem
+      Action = actSetConfirmedKind_UnComplete
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' VIP '#1095#1077#1082' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+    end
+    object N12: TMenuItem
+      Caption = '-'
+      Visible = False
     end
     object VIP2: TMenuItem
       Action = actSetDiscountExternal
@@ -1358,20 +1441,13 @@ inherited MainCashForm: TMainCashForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'BayerName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CashMember'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'ManagerName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerName'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1389,6 +1465,24 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'DiscountCardNumber'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1474,6 +1568,10 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'SummChangePercent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountOrder'
         DataType = ftFloat
       end
       item
@@ -1700,14 +1798,14 @@ inherited MainCashForm: TMainCashForm
     Interval = 360000
     OnTimer = TimerSaveAllTimer
     Left = 32
-    Top = 24
+    Top = 40
   end
   object TimerMoneyInCash: TTimer
     Enabled = False
     Interval = 25000
     OnTimer = TimerMoneyInCashTimer
-    Left = 408
-    Top = 56
+    Left = 376
+    Top = 64
   end
   object spUpdate_UnitForFarmacyCash: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_UnitForFarmacyCash'
@@ -1722,7 +1820,50 @@ inherited MainCashForm: TMainCashForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 136
-    Top = 176
+    Left = 448
+    Top = 80
+  end
+  object TimerBlinkVIP: TTimer
+    Enabled = False
+    OnTimer = TimerBlinkVIPTimer
+    Left = 320
+    Top = 96
+  end
+  object spGet_BlinkVIP: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Check_ConfirmedKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outMovementId_list'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 136
+  end
+  object spUpdate_ConfirmedKind: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_ConfirmedKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioConfirmedKindName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 136
   end
 end
