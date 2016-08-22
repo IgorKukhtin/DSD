@@ -104,7 +104,7 @@ inherited CheckForm: TCheckForm
             Width = 73
           end
           object colAmountOrder: TcxGridDBColumn [4]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1103#1074#1082#1072
+            Caption = #1050#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -314,7 +314,7 @@ inherited CheckForm: TCheckForm
     object cxLabel7: TcxLabel
       Left = 586
       Top = 36
-      Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
+      Caption = #8470' '#1082#1072#1088#1090#1099
     end
     object edDiscountCard: TcxTextEdit
       Left = 586
@@ -352,7 +352,7 @@ inherited CheckForm: TCheckForm
   object cxLabel8: TcxLabel [6]
     Left = 586
     Top = 76
-    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
+    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
   end
   object edConfirmedKind: TcxTextEdit [7]
     Left = 586
@@ -508,6 +508,10 @@ inherited CheckForm: TCheckForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -524,7 +528,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -540,7 +544,7 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
@@ -548,8 +552,15 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object dxBarButton1: TdxBarButton
       Action = actEditDocument

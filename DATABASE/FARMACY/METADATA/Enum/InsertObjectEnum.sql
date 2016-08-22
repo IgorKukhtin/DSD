@@ -421,6 +421,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_MCS');
@@ -543,6 +544,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Price');
@@ -665,6 +667,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Inventory');
@@ -806,6 +809,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_MinimumLot');
@@ -929,6 +933,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_IsUpload');
@@ -1056,6 +1061,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Goods_IsSpecCondition');
@@ -1187,6 +1193,7 @@ BEGIN
                                                               inStartTime    := NULL::TVarChar,
                                                               inEndTime      := NULL::TVarChar,
                                                               inTime         := 0,
+                                                              inIsMultiLoad  := (SELECT ValueData FROM ObjectBoolean WHERE ObjectId = vbImportSettingId AND DescId = zc_ObjectBoolean_ImportSettings_MultiLoad()),
                                                               inSession      := vbUserId::TVarChar);
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_Promo');
@@ -1287,6 +1294,13 @@ BEGIN
     PERFORM gpInsertUpdate_DefaultValue(ioId := COALESCE(vbId,0), inDefaultKeyId := vbDefaultKeyId, inUserKey := 0, inDefaultValue := zc_Enum_ImportSetting_Promo()::TBlob, inSession := ''::TVarChar);
 END $$;
 
+
+DO $$
+BEGIN
+     -- !!! Статус заказа
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_UnComplete(), inDescId:= zc_Object_ConfirmedKind(), inCode:= 1, inName:= 'Не подтвержден', inEnumName:= 'zc_Enum_ConfirmedKind_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_Complete(),   inDescId:= zc_Object_ConfirmedKind(), inCode:= 2, inName:= 'Подтвержден'   , inEnumName:= 'zc_Enum_ConfirmedKind_Complete');
+END $$;
 
 /*-------------------------------------------------------------------------------*/
 /*

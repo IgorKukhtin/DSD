@@ -51,9 +51,15 @@ BEGIN
            , 0::TFloat AS BAZOP0
            , 0::TFloat AS ZVILN
            , 0::TFloat AS EXPORT
-           , 0::TFloat AS PZOB
+           , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
+                       THEN 5
+                  ELSE 0
+             END ::TFloat AS PZOB
            , 0::TFloat AS NREZ
-           , 0::TFloat AS KOR
+           , CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
+                       THEN 1
+                  ELSE 0
+             END :: TFloat AS KOR
            , NULL::TFloat AS WMDTYPE
            , CASE WHEN Movement.DescId = zc_Movement_Tax() AND MovementBoolean_Electron.ValueData = TRUE
                        THEN 'оме'

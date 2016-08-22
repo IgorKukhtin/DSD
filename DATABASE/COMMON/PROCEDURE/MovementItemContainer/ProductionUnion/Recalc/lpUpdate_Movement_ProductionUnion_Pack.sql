@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_Movement_ProductionUnion_Pack(
     IN inUserId       Integer     -- Пользователь
 )                              
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDelete Boolean, DescId_mi Integer, MovementItemId Integer, ContainerId Integer
-             , OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat
+             , OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat, OperCount_Weight_two TFloat
              , ReceiptCode_master Integer, ReceiptName_master TVarChar
              , GoodsCode_master Integer, GoodsName_master TVarChar, GoodsKindName_master TVarChar
              , GoodsCode Integer, GoodsName TVarChar
@@ -26,12 +26,12 @@ BEGIN
          DELETE FROM _tmpResult_child;
      ELSE
          -- таблица - 
-         CREATE TEMP TABLE _tmpResult (MovementId Integer, OperDate TDateTime, MovementItemId Integer, ContainerId Integer, GoodsId Integer, ReceiptId_in Integer, GoodsId_child Integer, DescId_mi Integer, OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat, isDelete Boolean) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpResult (MovementId Integer, OperDate TDateTime, MovementItemId Integer, ContainerId Integer, GoodsId Integer, ReceiptId_in Integer, GoodsId_child Integer, DescId_mi Integer, OperCount TFloat, OperCount_Weight TFloat, OperCount_two TFloat, OperCount_Weight_two TFloat, isDelete Boolean) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpResult_child (MovementId Integer, OperDate TDateTime, MovementItemId_master Integer, MovementItemId Integer, ContainerId_master Integer, ContainerId Integer, GoodsId Integer, OperCount TFloat, isDelete Boolean) ON COMMIT DROP;
      END IF;
 
      -- данные по приход/расход "цех Упаковки" + найденные MovementItemId (!!!для zc_MI_Child!!! здесь не определяется)
-     INSERT INTO _tmpResult (MovementId, OperDate, MovementItemId, ContainerId, GoodsId, ReceiptId_in, GoodsId_child, DescId_mi, OperCount, OperCount_Weight, OperCount_two, isDelete)
+     INSERT INTO _tmpResult (MovementId, OperDate, MovementItemId, ContainerId, GoodsId, ReceiptId_in, GoodsId_child, DescId_mi, OperCount, OperCount_Weight, OperCount_two, OperCount_Weight_two, isDelete)
              WITH tmpUnit AS (SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8457) AS lfSelect -- Склады База + Реализации
                              UNION
                               SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect -- Возвраты общие
@@ -180,10 +180,15 @@ BEGIN
                , COALESCE (tmpReceipt.ReceiptId, 0)                                             AS ReceiptId_in
                , COALESCE (ObjectLink_Receipt_Goods_parent.ChildObjectId, tmpMI_result.GoodsId) AS GoodsId_child
                , tmpMI_result.DescId_mi
+
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN tmpMI_result.OperCount - COALESCE (tmpMI_child_result.OperCount, 0) ELSE 0 END AS OperCount
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN tmpMI_result.OperCount - COALESCE (tmpMI_child_result.OperCount, 0) ELSE 0 END
                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS OperCount_Weight
+
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN COALESCE (tmpMI_child_result.OperCount, 0) ELSE tmpMI_result.OperCount END AS OperCount_two
+               , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN COALESCE (tmpMI_child_result.OperCount, 0) ELSE tmpMI_result.OperCount END
+               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS OperCount_Weight_two
+
                , FALSE AS isDelete
           FROM tmpMI_result
                LEFT JOIN tmpMI_child_result ON tmpMI_child_result.ContainerId = tmpMI_result.ContainerId
@@ -219,6 +224,7 @@ BEGIN
                , CASE WHEN tmpMI_child_result.OperCount > COALESCE (tmpMI_result.OperCount, 0) THEN tmpMI_child_result.OperCount - COALESCE (tmpMI_result.OperCount, 0) ELSE 0 END AS OperCount
                , 0 AS OperCount_Weight -- не нужен
                , tmpMI_child_result.OperCount AS OperCount_two -- информативно, для теста
+               , 0 AS OperCount_Weight_two -- не нужен
                , FALSE AS isDelete
           FROM tmpMI_child_result
                LEFT JOIN tmpMI_result ON tmpMI_result.ContainerId = tmpMI_child_result.ContainerId
@@ -237,6 +243,7 @@ BEGIN
                , 0 AS OperCount            -- не нужен
                , 0 AS OperCount_Weight     -- не нужен
                , 0 AS OperCount_two        -- не нужен
+               , 0 AS OperCount_Weight_two -- не нужен
                , FALSE AS isDelete
           FROM tmpMI_all
           WHERE tmpMI_all.DescId_mi = zc_MI_Child()
@@ -253,6 +260,7 @@ BEGIN
                , 0 AS OperCount
                , 0 AS OperCount_Weight
                , 0 AS OperCount_two
+               , 0 AS OperCount_Weight_two
                , TRUE AS isDelete
           FROM tmpMI_all
                LEFT JOIN tmpMI_list ON tmpMI_list.MovementId = tmpMI_all.MovementId
@@ -271,6 +279,7 @@ BEGIN
                , 0 AS OperCount
                , 0 AS OperCount_Weight
                , 0 AS OperCount_two
+               , 0 AS OperCount_Weight_two
                , TRUE AS isDelete
           FROM tmpMI_all
                LEFT JOIN tmpMI_list ON tmpMI_list.MovementItemId = tmpMI_all.MovementItemId
@@ -312,7 +321,11 @@ BEGIN
                        SELECT tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child FROM tmpResult_master WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0 GROUP BY tmpResult_master.OperDate, tmpResult_master.GoodsId
                       )
           , tmpAll_total AS (-- итог по будущим zc_MI_Master, если бы товаром был "из чего будет делаться"
-                             SELECT tmpResult_master.OperDate, tmpAll.GoodsId_child, SUM (tmpResult_master.OperCount_Weight) AS OperCount_Weight
+                             SELECT tmpResult_master.OperDate, tmpAll.GoodsId_child
+                                  , SUM (CASE WHEN tmpResult_master.OperCount_Weight <> 0
+                                                   THEN tmpResult_master.OperCount_Weight
+                                              ELSE tmpResult_master.OperCount_Weight_two
+                                         END) AS OperCount_Weight
                              FROM tmpAll
                                   INNER JOIN tmpResult_master ON tmpResult_master.GoodsId = tmpAll.GoodsId AND tmpResult_master.OperDate = tmpAll.OperDate
                              GROUP BY tmpResult_master.OperDate, tmpAll.GoodsId_child
@@ -326,7 +339,13 @@ BEGIN
                                    , tmpResult_MI_find.MovementItemId AS MovementItemId
                                    , tmpResult_child.ContainerId      AS ContainerId
                                    , tmpResult_child.GoodsId          AS GoodsId
-                                   , CASE WHEN tmpAll_total.OperCount_Weight = 0 THEN tmpResult_child.OperCount ELSE CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight / tmpAll_total.OperCount_Weight AS NUMERIC(16, 4)) END AS OperCount
+                                   , CASE WHEN tmpAll_total.OperCount_Weight = 0
+                                               THEN tmpResult_child.OperCount
+                                          ELSE CASE WHEN tmpResult_master.OperCount_Weight <> 0
+                                                         THEN CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight / tmpAll_total.OperCount_Weight AS NUMERIC(16, 4))
+                                                    ELSE CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight_two / tmpAll_total.OperCount_Weight AS NUMERIC(16, 4))
+                                               END
+                                     END AS OperCount
                                    , FALSE AS isPeresort
                               FROM tmpResult_child
                                    INNER JOIN tmpAll_total     ON tmpAll_total.GoodsId_child     = tmpResult_child.GoodsId
@@ -436,9 +455,22 @@ BEGIN
                                 ;
      END IF;
      -- Проверка - элементы - Child
-     IF EXISTS (SELECT 1 FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
+     IF 1=0 OR EXISTS (SELECT 1 FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
      THEN
-         RAISE EXCEPTION 'Error. Child.Amount < 0 : (%) <%>  <%> Amount = <%> Count = <%> <%>'
+         RAISE EXCEPTION 'Error. Child.Amount < 0 : * % * % *** (%)+(%)=(%) <%>  <%> Amount = <%> Count = <%> <%>'
+                               , (SELECT STRING_AGG (_tmpResult_child.ContainerId_master :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853)
+                               , (SELECT STRING_AGG (_tmpResult_child.OperCount :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853)
+                               -- , (SELECT sum (_tmpResult_child.OperCount) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 )
+                               -- , (SELECT count(*) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 )
+                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 and _tmpResult_child.ContainerId_master = 119924)
+                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 and _tmpResult_child.ContainerId_master = 451446)
+
+                               , (SELECT MIN (_tmpResult_child.ContainerId_master) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.ContainerId IN
+                                 (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
+                                 )
+                               , (SELECT MAX (_tmpResult_child.ContainerId_master) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.ContainerId IN
+                                 (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
+                                 )
                                , (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)
                                , lfGet_Object_ValueData ((SELECT _tmpResult_child.GoodsId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
                                , lfGet_Object_ValueData ((SELECT CLO_GoodsKind.ObjectId FROM _tmpResult_child LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpResult_child.ContainerId AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1))
@@ -724,7 +756,7 @@ END;$BODY$
 */
 
 -- тест
--- select * from lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= true, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '14.08.2016', inEndDate:= '14.08.2016', inUnitId:= 8451, inUserId:= zc_Enum_Process_Auto_Pack())
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки

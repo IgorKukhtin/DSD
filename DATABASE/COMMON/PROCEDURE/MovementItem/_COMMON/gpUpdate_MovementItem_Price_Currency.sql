@@ -105,15 +105,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 10.10.14                                                       * add box
- 08.02.14                                        * была ошибка с lpInsertUpdate_MovementItem_Sale
- 04.02.14                        * add lpInsertUpdate_MovementItem_Sale
- 08.09.13                                        * add zc_MIFloat_AmountChangePercent
- 02.09.13                                        * add zc_MIFloat_ChangePercentAmount
- 13.08.13                                        * add RAISE EXCEPTION
- 09.07.13                                        * add IF inGoodsId <> 0
- 18.07.13         * add inAssetId
- 13.07.13         *
+ 02.12.14                                        *
 */
 
 -- тест

@@ -24,14 +24,12 @@ RETURNS TABLE (
   DiscountExternalName TVarChar,
   DiscountCardNumber TVarChar
  )
-
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
@@ -74,7 +72,7 @@ BEGIN
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
-            , Object_CashMember.ValueData                AS CashMember
+           , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 	    , MovementString_Bayer.ValueData             AS Bayer
 
             , MovementString_BayerPhone.ValueData        AS BayerPhone

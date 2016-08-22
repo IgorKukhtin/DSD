@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn_Value()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,12 +9,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inMovementId_Promo    Integer   , -- 
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer
@@ -36,6 +39,12 @@ BEGIN
                                               , inAssetId            := inAssetId
                                               , inUserId             := inUserId
                                                ) AS tmp;
+
+     -- !!!пока криво!!! - еще раз сохранили свойство <(-)% Скидки (+)% Наценки> + на всякий случай SELECT ...
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, CASE WHEN inMovementId_Promo > 0 THEN inChangePercent ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) END);
+     -- !!!пока криво!!! - сохранили свойство <MovementId-Акция>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, inMovementId_Promo);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

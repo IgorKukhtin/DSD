@@ -34,4 +34,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Movement_ProductionUnion_Pack (inStartDate:= '01.07.2015', inEndDate:= '19.07.2015', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin()) -- ÷ех ”паковки
+-- SELECT * FROM gpUpdate_Movement_ProductionUnion_Pack (inStartDate:= '14.08.2016', inEndDate:= '14.08.2016', inUnitId:= 8451, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar) -- ÷ех ”паковки

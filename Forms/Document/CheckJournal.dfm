@@ -4,9 +4,10 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -101
+  ExplicitLeft = -58
+  ExplicitTop = -132
   ExplicitWidth = 847
-  ExplicitHeight = 592
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -52,18 +53,22 @@ inherited CheckJournalForm: TCheckJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
           inherited colInvNumber: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 99
           end
           inherited colOperDate: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 111
@@ -71,6 +76,7 @@ inherited CheckJournalForm: TCheckJournalForm
           object colCashNumber: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
@@ -78,6 +84,7 @@ inherited CheckJournalForm: TCheckJournalForm
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 72
@@ -87,6 +94,7 @@ inherited CheckJournalForm: TCheckJournalForm
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
@@ -110,13 +118,24 @@ inherited CheckJournalForm: TCheckJournalForm
           object colBayer: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'Bayer'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 87
           end
+          object BayerPhone: TcxGridDBColumn
+            Caption = #1058#1077#1083'. ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            DataBinding.FieldName = 'BayerPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+            Options.Editing = False
+            Width = 102
+          end
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
@@ -124,18 +143,20 @@ inherited CheckJournalForm: TCheckJournalForm
           object colFiscalCheckNumber: TcxGridDBColumn
             Caption = #8470' '#1092#1080#1089#1082#1072#1083#1100#1085#1086#1075#1086' '#1095#1077#1082#1072
             DataBinding.FieldName = 'FiscalCheckNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
           object colNotMCS: TcxGridDBColumn
             Caption = #1053#1077' '#1076#1083#1103' '#1053#1058#1047
             DataBinding.FieldName = 'NotMCS'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 51
           end
-          object cxDiscountCard_ObjectName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090'.'#1082#1072#1088#1090')'
-            DataBinding.FieldName = 'DiscountCard_ObjectName'
+          object DiscountExternalName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1077#1082#1090
+            DataBinding.FieldName = 'DiscountExternalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1077#1082#1090' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')'
@@ -143,7 +164,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 120
           end
           object clDiscountCardName: TcxGridDBColumn
-            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
+            Caption = #8470' '#1082#1072#1088#1090#1099
             DataBinding.FieldName = 'DiscountCardName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -157,15 +178,6 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 65
-          end
-          object BayerPhone: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083'. ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'BayerPhone'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' ('#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
-            Options.Editing = False
-            Width = 102
           end
           object InvNumberOrder: TcxGridDBColumn
             Caption = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'

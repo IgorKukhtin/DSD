@@ -1,4 +1,6 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_Site(Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+-- Function: gpInsertUpdate_MovementItem_Check_Site()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_Site (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_Site(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -39,6 +41,9 @@ BEGIN
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
+    -- сохранили свойство <Кол-во заявка>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), ioId, inAmount);
+
     -- сохранили свойство <Цена>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      
@@ -61,4 +66,6 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_Site(Integer, Integer, Integer,
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
  17.12.2015                                                                      *
 */
--- Select * from gpInsertUpdate_MovementItem_Check_Site(ioId := 0, inMovementId := 506887, inGoodsId := 364, inAmount :=1::TFloat, inPrice := 1.0::TFloat, inSession := '3'::TVarChar)
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_Check_Site (ioId:= 0, inMovementId:= 2335122, inGoodsId:= 51922, inAmount:= 10, inPrice:= 1, inSession := '3')

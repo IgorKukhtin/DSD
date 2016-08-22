@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -14,21 +14,26 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inNotMCS              Boolean   , -- Не участвует в расчете НТЗ
     IN inDiscountExternalId  Integer   , -- Проект дисконтных карт
     IN inDiscountCardNumber  TVarChar  , -- № Дисконтной карты
+    IN inBayerPhone          TVarChar  , -- Контактный телефон (Покупателя)
+    IN inConfirmedKindName   TVarChar  , -- Статус заказа (Состояние VIP-чека)
+    IN inInvNumberOrder      TVarChar  , -- Номер заказа (с сайта)
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
+
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbInvNumber Integer;
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
 BEGIN
-
     -- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderInternal());
-    vbUserId := inSession;
+    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
+    vbUserId := lpGetUserBySession (inSession);
 
     vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
     IF vbUnitKey = '' THEN
@@ -45,6 +50,9 @@ BEGIN
         inDate := CURRENT_TIMESTAMP::TDateTime;
     END IF;
     
+    -- определяем признак Создание/Корректировка
+    vbIsInsert:= COALESCE (ioId, 0) = 0;
+
     IF COALESCE(ioId,0) = 0
     THEN
         SELECT 
@@ -67,13 +75,15 @@ BEGIN
         WHERE 
             Movement_Check_View.Id = ioId;
     END IF;
+
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Check(), vbInvNumber::TVarChar, inDate, NULL);
 
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, vbUnitId);
-	
-    --сохранили связь с кассовым аппаратом
+
+    -- сохранили связь с кассовым аппаратом
     IF COALESCE(inCashRegister,'') <> ''
     THEN
         vbCashRegisterId := gpGet_Object_CashRegister_By_Serial(inSerial := inCashRegister,
@@ -82,43 +92,52 @@ BEGIN
     END IF;
     
     -- сохранили отметку <Не участвует в расчете НТЗ>
-    PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_NotMCS(),ioId,inNotMCS);
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_NotMCS(), ioId, inNotMCS);
     
     -- сохранили Номер чека в кассовом аппарате
     PERFORM lpInsertUpdate_MovementString(zc_MovementString_FiscalCheckNumber(),ioId,inFiscalCheckNumber);
     
-    -- сохранили связь с <Тип полаты>
+    -- сохранили связь с <Тип оплаты>
     IF inPaidType <> -1
     THEN
-        if inPaidType = 0 then
-            PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_Cash());
-        ELSEIF inPaidType = 1 THEN
-            PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_Card());
+        if inPaidType = 0
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_Cash());
+        ELSEIF inPaidType = 1
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidType(),ioId,zc_Enum_PaidType_Card());
         ELSE
             RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
         END IF;
     END IF;
     
-    -- сохранили связь с менеджером и покупателем
-    IF COALESCE (inManagerId,0) <> 0 THEN
-        -- Приписываем менеджера
+    -- сохранили связь с менеджером и покупателем + <Статус заказа (Состояние VIP-чека)>
+    IF COALESCE (inManagerId,0) <> 0
+    THEN
+        -- сохранили менеджера
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, inManagerId);
-        -- прописываем ФИО покупателя
+        -- сохранили ФИО покупателя
         PERFORM lpInsertUpdate_MovementString(zc_MovementString_Bayer(), ioId, inBayer);
         -- Отмечаем документ как отложенный
-        PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, True);      
+        PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, TRUE);
+        -- !!! только 1 раз!!! сохранили
+        IF vbIsInsert = TRUE
+        THEN
+            -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKind(), ioId, zc_Enum_ConfirmedKind_Complete());
+        END IF;
+
     END IF;
  
     -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId));
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, CASE WHEN inDiscountExternalId > 0 THEN lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId) ELSE 0 END);
 
     -- сохранили протокол
-    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+    PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -126,3 +145,6 @@ ALTER FUNCTION gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar
  20.07.16                                        *
  03.11.15                                                                       *
 */
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Movement_Check_ver2 (ioId := 0, inUnitId := 183293, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inSession := '3'::TVarChar);

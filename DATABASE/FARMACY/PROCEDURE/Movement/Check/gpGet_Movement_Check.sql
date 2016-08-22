@@ -39,20 +39,20 @@ BEGIN
            , Movement_Check.CashRegisterName
            , Movement_Check.PaidKindName
            , Movement_Check.PaidTypeName
-           , Movement_Check.CashMember
+           , CASE WHEN Movement_Check.InvNumberOrder <> '' AND COALESCE (Movement_Check.CashMember, '') = '' THEN zc_Member_Site() ELSE Movement_Check.CashMember END :: TVarChar AS CashMember
            , Movement_Check.Bayer
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
-           , (Movement_Check.DiscountCardName ||' '||COALESCE(Object_Object.ValueData,'')) ::TVarChar
+           , (Movement_Check.DiscountCardName || ' ' || COALESCE (Object_DiscountExternal.ValueData, '')) :: TVarChar AS DiscountCardName
            , Movement_Check.BayerPhone
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
 
         FROM Movement_Check_View AS Movement_Check
-             LEFT JOIN ObjectLink AS ObjectLink_Object
-                                  ON ObjectLink_Object.ObjectId = Movement_Check.DiscountCardId
-                                 AND ObjectLink_Object.DescId = zc_ObjectLink_DiscountCard_Object()
-             LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
+                                  ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId
+                                 AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
+             LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
 
        WHERE Movement_Check.Id =  inMovementId;
 
@@ -60,7 +60,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Check (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

@@ -10,7 +10,7 @@ $BODY$
 BEGIN
 
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-    IF zc_IsLockTableCycle() = TRUE
+    /*IF zc_IsLockTableCycle() = TRUE
     THEN
         vbLock := FALSE;
         WHILE NOT vbLock LOOP
@@ -26,11 +26,11 @@ BEGIN
     THEN
         PERFORM MovementItemReport.* FROM MovementItemReport WHERE MovementItemReport.MovementId = inMovementId FOR UPDATE;
     END IF;
-    END IF;
+    END IF;*/
 
 
     -- Удалить все проводки для отчета
-    DELETE FROM MovementItemReport WHERE MovementId = inMovementId;
+    -- DELETE FROM MovementItemReport WHERE MovementId = inMovementId;
 
 END;
 $BODY$

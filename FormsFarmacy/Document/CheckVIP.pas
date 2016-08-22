@@ -46,6 +46,11 @@ type
     colPriceSale: TcxGridDBColumn;
     colChangePercent: TcxGridDBColumn;
     colSummChangePercent: TcxGridDBColumn;
+    BayerPhone: TcxGridDBColumn;
+    InvNumberOrder: TcxGridDBColumn;
+    ConfirmedKindName: TcxGridDBColumn;
+    colAmountOrder: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -127,7 +127,10 @@ BEGIN
      END IF;
      
      -- !!! Типы документов - !!! Элементы справочника добавляет Пользователь!!!
-     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
+     IF EXISTS (SELECT Id FROM Object WHERE DescId = zc_Object_DocumentKind() AND ObjectCode = 1)
+     THEN
+         PERFORM lpUpdate_Object_Enum_byCode (inCode:= 1, inDescId:= zc_Object_DocumentKind(), inEnumName:= 'zc_Enum_DocumentKind_CuterWeight');
+     END IF;
 
 
      -- !!! Типы аналитик для проводок
@@ -814,12 +817,6 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_InBuh()    , inDescId:= zc_Object_ReestrKind(), inCode:= 3, inName:= 'Получено в бухгалтерию', inEnumName:= 'zc_Enum_ReestrKind_InBuh');
 END $$;
 
-DO $$
-BEGIN
-     -- !!! Статус заказа
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_UnComplete()  , inDescId:= zc_Object_ConfirmedKind(), inCode:= 1, inName:= 'Не подтвержден'    , inEnumName:= 'zc_Enum_ConfirmedKind_UnComplete');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_Complete(), inDescId:= zc_Object_ConfirmedKind(), inCode:= 2, inName:= 'Подтвержден'           , inEnumName:= 'zc_Enum_ConfirmedKind_Complete');
-END $$;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -40,6 +40,7 @@ $BODY$
   DECLARE vbVATPercent_pl TFloat;
   DECLARE vbVATPercent TFloat;
   DECLARE vbChangePercent TFloat;
+  DECLARE vbOperDate_promo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
@@ -60,6 +61,10 @@ BEGIN
      -- определяется
      vbIsB:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (300364, 442931, 343951, zc_Enum_Role_Admin())); -- Склад Специй (Баранченко) + Накладные полный доступ СЫРЬЕ - Кисличная Т.А. + Экономист (производство)
 
+     -- Дата для поиска акций - <Дата покупателя>
+     vbOperDate_promo:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner());
+
+
      -- находим ...
      vbMovementId_parent:= (SELECT COALESCE (Movement.ParentId, 0) FROM Movement WHERE Movement.Id = inMovementId);
      -- меняется параметр
@@ -78,7 +83,16 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+       WITH -- Акции по товарам на дату
+            tmpPromo AS (SELECT tmp.*
+                         FROM lpSelect_Movement_Promo_Data_all (inOperDate   := vbOperDate_promo
+                                                              , inPartnerId  := vbPartnerId
+                                                              , inContractId := vbContractId
+                                                              , inUnitId     := vbUnitId
+                                                              , inIsReturn   := TRUE
+                                                               ) AS tmp
+                        )
+          , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.Amount                           AS Amount
                            , MovementItem.ObjectId                         AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -590,7 +604,7 @@ BEGIN
                         THEN 'ОШИБКА : '
                    ELSE ''
               END
-           || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale)
+           || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
              ) :: TVarChar AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
 

@@ -35,6 +35,11 @@ type
     DISCOUNTID : Integer;     //Id Проекта дисконтных карт
     DISCOUNTN  : String[254]; //Название Проекта дисконтных карт
     DISCOUNT   : String[50];  //№ Дисконтной карты
+    //***16.08.16
+    BAYERPHONE  : String[50];  //Контактный телефон (Покупателя) - BayerPhone
+    CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+    NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
+
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -49,6 +54,8 @@ type
     PRICESALE: Currency;    // Цена без скидки
     CHPERCENT: Currency;    // % Скидки
     SUMMCH: Currency;       // Сумма Скидки
+    //***19.08.16
+    AMOUNTORD: Currency;    // Кол-во заявка
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -201,6 +208,7 @@ type
     CheckGridColPriceSale: TcxGridDBColumn;
     CheckGridColChangePercent: TcxGridDBColumn;
     CheckGridColSummChangePercent: TcxGridDBColumn;
+    CheckGridColAmountOrder: TcxGridDBColumn;
     pnlDiscount: TPanel;
     Label3: TLabel;
     lblDiscountExternalName: TLabel;
@@ -208,6 +216,14 @@ type
     lblDiscountCardNumber: TLabel;
     VIP2: TMenuItem;
     actSetDiscountExternal: TAction;
+    TimerBlinkVIP: TTimer;
+    spGet_BlinkVIP: TdsdStoredProc;
+    actSetConfirmedKind_UnComplete: TAction;
+    actSetConfirmedKind_Complete: TAction;
+    N12: TMenuItem;
+    VIP3: TMenuItem;
+    VIP4: TMenuItem;
+    spUpdate_ConfirmedKind: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -249,7 +265,10 @@ type
     procedure actSelectLocalVIPCheckExecute(Sender: TObject);
     procedure actCheckConnectionExecute(Sender: TObject);
     procedure actSetDiscountExternalExecute(Sender: TObject);  //***20.07.16
-    procedure CheckCDSBeforePost(DataSet: TDataSet); //***10.08.16
+    procedure CheckCDSBeforePost(DataSet: TDataSet);
+    procedure TimerBlinkVIPTimer(Sender: TObject);
+    procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
+    procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject); //***10.08.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -264,6 +283,11 @@ type
 
     VipCDS, VIPListCDS: TClientDataSet;
     VIPForm: TParentForm;
+    // для мигания кнопки
+    fBlinkVIP : Boolean;
+    time_onBlink:TDateTime;
+    MovementId_BlinkVIP:String;
+    procedure SetBlinkVIP (isRefresh : boolean);
 
     procedure SetSoldRegim(const Value: boolean);
     // процедура обновляет параметры для введения нового чека
@@ -287,7 +311,8 @@ type
     function InitLocalStorage: Boolean;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: integer; AManagerName: String;
-      ABayerName: String; ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+      ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder: String;
+      ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
     //сохраняет чек в реальную базу
     procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
@@ -426,13 +451,17 @@ begin
   //if CheckCDS.IsEmpty then exit;
   if MessageDlg('Очистить все?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
   //Вернуть товар в верхний грид
-  FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('CheckId').Value   := 0;
   FormParams.ParamByName('ManagerId').Value := 0;
   FormParams.ParamByName('BayerName').Value := '';
   //***20.07.16
-  FormParams.ParamByName('DiscountExternalId').Value := 0;
+  FormParams.ParamByName('DiscountExternalId').Value   := 0;
   FormParams.ParamByName('DiscountExternalName').Value := '';
-  FormParams.ParamByName('DiscountCardNumber').Value := '';
+  FormParams.ParamByName('DiscountCardNumber').Value   := '';
+  //***16.08.16
+  FormParams.ParamByName('BayerPhone').Value        := '';
+  FormParams.ParamByName('ConfirmedKindName').Value := '';
+  FormParams.ParamByName('InvNumberOrder').Value    := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -496,8 +525,16 @@ begin
     lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
     pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
 
-    lblCashMember.Caption := FormParams.ParamByName('CashMember').AsString;
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
+    if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
+    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString;
+    if (FormParams.ParamByName('InvNumberOrder').AsString <> '')
+    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+
     lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
+    if (FormParams.ParamByName('BayerPhone').AsString <> '')
+    then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
+
     pnlVIP.Visible := true;
   End;
   if not gc_User.Local then
@@ -521,6 +558,7 @@ begin
   //
   TimerMoneyInCash.Enabled:=True;
 end;
+
 procedure TMainCashForm.TimerMoneyInCashTimer(Sender: TObject);
 begin
   lblMoneyInCash.Caption := '0.00';
@@ -586,10 +624,15 @@ begin
                    FormParams.ParamByName('ManagerId').Value,
                    FormParams.ParamByName('ManagerName').Value,
                    FormParams.ParamByName('BayerName').Value,
+                   //***16.08.16
+                   FormParams.ParamByName('BayerPhone').Value,
+                   FormParams.ParamByName('ConfirmedKindName').Value,
+                   FormParams.ParamByName('InvNumberOrder').Value,
                    //***20.07.16
                    FormParams.ParamByName('DiscountExternalId').Value,
                    FormParams.ParamByName('DiscountExternalName').Value,
                    FormParams.ParamByName('DiscountCardNumber').Value,
+
                    True,
                    CheckNumber,
                    UID) then
@@ -706,6 +749,8 @@ begin
         checkCDS.FieldByName('PriceSale').asCurrency         :=VipList.FieldByName('PriceSale').AsFloat;
         checkCDS.FieldByName('ChangePercent').asCurrency     :=VipList.FieldByName('ChangePercent').AsFloat;
         checkCDS.FieldByName('SummChangePercent').asCurrency :=VipList.FieldByName('SummChangePercent').AsFloat;
+        //***19.08.16
+        checkCDS.FieldByName('AmountOrder').asCurrency :=VipList.FieldByName('AmountOrder').AsFloat;
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := VipList.FieldByName('List_UID').AsString;
 
@@ -729,6 +774,121 @@ end;
 procedure TMainCashForm.actSetFocusExecute(Sender: TObject);
 begin
   ActiveControl := lcName;
+end;
+
+procedure TMainCashForm.actSetConfirmedKind_CompleteExecute(Sender: TObject);
+var UID: String;
+    lConfirmedKindName:String;
+begin
+  if FormParams.ParamByName('CheckId').Value = 0 then
+  begin
+       ShowMessage('Ошибка.VIP-чек не загружен.');
+       exit
+  end;
+
+  // Изменили <Статус заказа> и получили его название
+  with spUpdate_ConfirmedKind do
+  try
+      ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
+      ParamByName('ioConfirmedKindName').Value := 'zc_Enum_ConfirmedKind_Complete';
+      Execute;
+      lConfirmedKindName:=ParamByName('ioConfirmedKindName').Value;
+  except
+        ShowMessage('Ошибка.Нет связи с сервером');
+  end;
+
+  if lConfirmedKindName = '' then
+  begin
+        ShowMessage('Ошибка.Нельзя изменить статус чека');
+        exit;
+  end;
+
+  FormParams.ParamByName('ConfirmedKindName').Value:= lConfirmedKindName;
+
+  if SaveLocal(CheckCDS
+              ,FormParams.ParamByName('ManagerId').Value
+              ,FormParams.ParamByName('ManagerName').Value
+              ,FormParams.ParamByName('BayerName').Value
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,lConfirmedKindName
+              ,FormParams.ParamByName('InvNumberOrder').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
+              ,False,'',UID)
+  then begin
+    SaveReal(UID);
+    //
+    NewCheck(False);
+    //
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString
+                   + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString
+                   + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+  End;
+
+  //
+  SetBlinkVIP (true);
+
+end;
+
+procedure TMainCashForm.actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
+var UID: String;
+    lConfirmedKindName:String;
+begin
+  if FormParams.ParamByName('CheckId').Value = 0 then
+  begin
+       ShowMessage('Ошибка.VIP-чек не загружен.');
+       exit
+  end;
+
+  // Изменили <Статус заказа> и получили его название
+  with spUpdate_ConfirmedKind do
+  try
+      ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
+      ParamByName('ioConfirmedKindName').Value := 'zc_Enum_ConfirmedKind_UnComplete';
+      Execute;
+      lConfirmedKindName:=ParamByName('ioConfirmedKindName').Value;
+  except
+        ShowMessage('Ошибка.Нет связи с сервером');
+  end;
+
+  if lConfirmedKindName = '' then
+  begin
+        ShowMessage('Ошибка.Нельзя изменить статус чека');
+        exit;
+  end;
+
+  FormParams.ParamByName('ConfirmedKindName').Value:= lConfirmedKindName;
+
+  if SaveLocal(CheckCDS
+              ,FormParams.ParamByName('ManagerId').Value
+              ,FormParams.ParamByName('ManagerName').Value
+              ,FormParams.ParamByName('BayerName').Value
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,lConfirmedKindName
+              ,FormParams.ParamByName('InvNumberOrder').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
+              ,False,'',UID)
+  then begin
+    SaveReal(UID);
+    //
+    NewCheck(False);
+    //
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString
+                   + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString
+                   + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+  End;
+
+  //
+  SetBlinkVIP (true);
 end;
 
 //***20.07.16
@@ -764,16 +924,28 @@ procedure TMainCashForm.actSetVIPExecute(Sender: TObject);
 var
   ManagerID:Integer;
   ManagerName,BayerName: String;
+  ConfirmedKindName_calc: String;
   UID: String;
 begin
-  If Not VIPDialogExecute(ManagerID,ManagerName,BayerName) then exit;
-  FormParams.ParamByName('ManagerId').Value := ManagerId;
+  if not VIPDialogExecute(ManagerID,ManagerName,BayerName) then exit;
+  //
+  FormParams.ParamByName('ManagerId').Value   := ManagerId;
   FormParams.ParamByName('ManagerName').Value := ManagerName;
-  FormParams.ParamByName('BayerName').Value := BayerName;
+  FormParams.ParamByName('BayerName').Value   := BayerName;
+  if FormParams.ParamByName('ConfirmedKindName').Value = ''
+  then FormParams.ParamByName('ConfirmedKindName').Value:= 'подтвержден';
+  ConfirmedKindName_calc:=FormParams.ParamByName('ConfirmedKindName').Value;
+  //
   if SaveLocal(CheckCDS,ManagerId,ManagerName,BayerName
-              ,FormParams.ParamByName('DiscountExternalId').Value   //***20.07.16
-              ,FormParams.ParamByName('DiscountExternalName').Value //***20.07.16
-              ,FormParams.ParamByName('DiscountCardNumber').Value   //***20.07.16
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,ConfirmedKindName_calc
+              ,FormParams.ParamByName('InvNumberOrder').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
               ,False,'',UID)
   then begin
     NewCheck(False);
@@ -896,11 +1068,14 @@ begin
   OnCLoseQuery := ParentFormCloseQuery;
   OnShow := ParentFormShow;
   TimerSaveAll.Enabled := true;
+
+  TimerBlinkVIP.Enabled := true;
+  SetBlinkVIP (true);
 end;
 
 function TMainCashForm.InitLocalStorage: Boolean;
-var fields11,fields12,fields13: TVKDBFFieldDefs;
-    fields21,fields22,fields23,fields24: TVKDBFFieldDefs;
+var fields11, fields12, fields13, fields14, fields15, fields16: TVKDBFFieldDefs;
+    fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
     DS.DBFFileName := AnsiString(AFileName);
@@ -930,6 +1105,10 @@ begin
     AddIntField(FLocalDataBaseHead,'DISCOUNTID');    //Id Проекта дисконтных карт
     AddStrField(FLocalDataBaseHead,'DISCOUNTN',254); //Название Проекта дисконтных карт
     AddStrField(FLocalDataBaseHead,'DISCOUNT',50);   //№ Дисконтной карты
+    //***16.08.16
+    AddStrField(FLocalDataBaseHead,'BAYERPHONE',50); //Контактный телефон (Покупателя) - BayerPhone
+    AddStrField(FLocalDataBaseHead,'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+    AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -979,6 +1158,42 @@ begin
                end;
                FLocalDataBaseHead.AddFields(fields13,1000);
            end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('BAYERPHONE') = nil then
+          begin
+               fields14:=TVKDBFFieldDefs.Create(self);
+               with fields14.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'BAYERPHONE';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields14,1000);
+           end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('CONFIRMED') = nil then
+          begin
+               fields15:=TVKDBFFieldDefs.Create(self);
+               with fields15.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'CONFIRMED';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields15,1000);
+           end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('NUMORDER') = nil then
+          begin
+               fields16:=TVKDBFFieldDefs.Create(self);
+               with fields16.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'NUMORDER';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields16,1000);
+           end;
            //
            FLocalDataBaseHead.Close;
   end;// !!!добавляем НОВЫЕ поля
@@ -998,6 +1213,8 @@ begin
     AddFloatField(FLocalDataBaseBody,'PRICESALE'); //Цена без скидки
     AddFloatField(FLocalDataBaseBody,'CHPERCENT'); //% Скидки
     AddFloatField(FLocalDataBaseBody,'SUMMCH');    //Сумма Скидки
+    //***19.08.16
+    AddFloatField(FLocalDataBaseBody,'AMOUNTORD'); //Кол-во заявка
     //***10.08.16
     AddStrField(FLocalDataBaseBody,'LIST_UID',50); //UID строки
     try
@@ -1051,18 +1268,31 @@ begin
                     dec := 4;
                end;
                FLocalDataBaseBody.AddFields(fields23,1000);
-           end;
-           //***10.08.16
-          if FLocalDataBaseBody.FindField('LIST_UID') = nil then
+          end;
+          //***19.08.16
+          if FLocalDataBaseBody.FindField('AMOUNTORD') = nil then
           begin
                fields24:=TVKDBFFieldDefs.Create(self);
                with fields24.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'AMOUNTORD';
+                    field_type := 'N';
+                    len := 10;
+                    dec := 4;
+               end;
+               FLocalDataBaseBody.AddFields(fields24,1000);
+          end;
+          //***10.08.16
+          if FLocalDataBaseBody.FindField('LIST_UID') = nil then
+          begin
+               fields25:=TVKDBFFieldDefs.Create(self);
+               with fields25.Add as TVKDBFFieldDef do
                begin
                     Name := 'LIST_UID';
                     field_type := 'C';
                     len := 50;
                end;
-               FLocalDataBaseBody.AddFields(fields24,1000);
+               FLocalDataBaseBody.AddFields(fields25,1000);
           end;
           //
           FLocalDataBaseBody.Close;
@@ -1094,7 +1324,11 @@ begin
       //***20.07.16
      (FLocalDataBaseHead.FindField('DISCOUNTID') = nil) or
      (FLocalDataBaseHead.FindField('DISCOUNTN') = nil) or
-     (FLocalDataBaseHead.FindField('DISCOUNT') = nil)
+     (FLocalDataBaseHead.FindField('DISCOUNT') = nil) or
+      //***16.08.16
+     (FLocalDataBaseHead.FindField('BAYERPHONE') = nil) or
+     (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
+     (FLocalDataBaseHead.FindField('NUMORDER') = nil)
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
     Exit;
@@ -1112,6 +1346,8 @@ begin
      (FLocalDataBaseBody.FindField('PRICESALE') = nil) or
      (FLocalDataBaseBody.FindField('CHPERCENT') = nil) or
      (FLocalDataBaseBody.FindField('SUMMCH') = nil) or
+      //***19.08.16
+     (FLocalDataBaseBody.FindField('AMOUNTORD') = nil) or
       //***10.08.16
      (FLocalDataBaseBody.FindField('LIST_UID') = nil)
   then begin
@@ -1216,6 +1452,8 @@ begin
         checkCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
         checkCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
         checkCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+        //***19.08.16
+        checkCDS.FieldByName('AmountOrder').asCurrency       :=0;
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
         checkCDS.Post;
@@ -1442,6 +1680,10 @@ begin
   FormParams.ParamByName('DiscountExternalId').Value := 0;
   FormParams.ParamByName('DiscountExternalName').Value := '';
   FormParams.ParamByName('DiscountCardNumber').Value := '';
+  //***16.08.16
+  FormParams.ParamByName('BayerPhone').Value        := '';
+  FormParams.ParamByName('ConfirmedKindName').Value := '';
+  FormParams.ParamByName('InvNumberOrder').Value    := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -1801,7 +2043,8 @@ begin
 end;
 
 function TMainCashForm.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AManagerName: String;
-  ABayerName: String; ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+  ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder: String;
+  ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
   NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
   NextVIPId: integer;
@@ -1849,6 +2092,10 @@ begin
     MyVipCDS.FieldByName('DiscountExternalId').AsInteger  := ADiscountExternalId;
     MyVipCDS.FieldByName('DiscountExternalName').AsString := ADiscountExternalName;
     MyVipCDS.FieldByName('DiscountCardNumber').AsString   := ADiscountCardNumber;
+    //***16.08.16
+    MyVipCDS.FieldByName('BayerPhone').AsString        := ABayerPhone;
+    MyVipCDS.FieldByName('ConfirmedKindName').AsString := AConfirmedKindName;
+    MyVipCDS.FieldByName('InvNumberOrder').AsString    := AInvNumberOrder;
 
     MyVipCDS.Post;
 
@@ -1876,6 +2123,8 @@ begin
         MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').AsFloat;
         MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').AsFloat;
         MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').AsFloat;
+        //***19.08.16
+        MyVipListCDS.FieldByName('AmountOrder').asCurrency       := ADS.FieldByName('AmountOrder').AsFloat;
         //***10.08.16
         MyVipListCDS.FieldByName('List_UID').asString := ADS.FieldByName('List_UID').AsString;
 
@@ -1925,7 +2174,11 @@ begin
                                          //***20.07.16
                                          ADiscountExternalId,                     //Id Проекта дисконтных карт
                                          ADiscountExternalName,                   //Название Проекта дисконтных карт
-                                         ADiscountCardNumber                      //№ Дисконтной карты
+                                         ADiscountCardNumber,                     //№ Дисконтной карты
+                                         //***20.07.16
+                                         ABayerPhone,                             //Контактный телефон (Покупателя) - BayerPhone
+                                         AConfirmedKindName,                      //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+                                         AInvNumberOrder                          //Номер заказа (с сайта) - InvNumberOrder
                                         ]);
       End
       else
@@ -1945,6 +2198,10 @@ begin
         FLocalDataBaseHead.FieldByName('DISCOUNTID').Value := ADiscountExternalId;   //Id Проекта дисконтных карт
         FLocalDataBaseHead.FieldByName('DISCOUNTN').Value  := ADiscountExternalName; //Название Проекта дисконтных карт
         FLocalDataBaseHead.FieldByName('DISCOUNT').Value   := ADiscountCardNumber;   //№ Дисконтной карты
+        //***16.08.16
+        FLocalDataBaseHead.FieldByName('BAYERPHONE').Value := ABayerPhone;        //Контактный телефон (Покупателя) - BayerPhone
+        FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName; //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+        FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;    //Номер заказа (с сайта) - InvNumberOrder
 
         FLocalDataBaseHead.post;
       End;
@@ -1981,9 +2238,11 @@ begin
                                            ADS.FieldByName('Amount').asCurrency,       //Кол-во
                                            ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
                                            //***20.07.16
-                                           ADS.FieldByName('PriceSale').asCurrency,        // Цена без скидки
-                                           ADS.FieldByName('ChangePercent').asCurrency,    // % Скидки
+                                           ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
+                                           ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
                                            ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
+                                           //***19.08.16
+                                           ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
                                            //***10.08.16
                                            ADS.FieldByName('List_UID').AsString // Сумма Скидки
                                            ]);
@@ -2153,6 +2412,51 @@ begin
 end;
 
 
+procedure TMainCashForm.TimerBlinkVIPTimer(Sender: TObject);
+begin
+  SetBlinkVIP (false);
+
+  if fBlinkVIP = true
+  then if btnVIP.Colors.NormalText <> clDefault
+       then begin btnVIP.Colors.NormalText:= clDefault; btnVIP.Colors.Default := clDefault; end
+       else begin Beep; btnVIP.Colors.NormalText:= clYellow; btnVIP.Colors.Default := clRed; end
+  else begin btnVIP.Colors.NormalText := clDefault; btnVIP.Colors.Default := clDefault; end;
+end;
+
+procedure TMainCashForm.SetBlinkVIP (isRefresh : boolean);
+var lMovementId_BlinkVIP : String;
+begin
+  // если прошло > 100 сек - захардкодил
+  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+
+  try
+      //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
+      time_onBlink:= now;
+
+      //Получили список ВСЕХ документов - с типом "Не подтвержден"
+      spGet_BlinkVIP.Execute;
+      lMovementId_BlinkVIP:=spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
+
+      // в этом случае кнопка будет мигать
+      fBlinkVIP:= lMovementId_BlinkVIP <> '';
+
+      // если сюда дошли, значит ON-line режим режим для VIP-чеков
+      Self.Caption := 'Продажа';
+
+      //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
+      if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
+      then begin
+                // Сохранили список ВСЕХ документов - с типом "Не подтвержден"
+                MovementId_BlinkVIP:= lMovementId_BlinkVIP;
+                // "не самое долгое" обновление грида
+                StartRefreshDiffThread;
+      end;
+
+  except
+        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков'
+  end;
+end;
+
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 begin
   //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
@@ -2213,6 +2517,10 @@ begin
               DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
               DISCOUNTN  := trim(FieldByName('DISCOUNTN').AsString);
               DISCOUNT   := trim(FieldByName('DISCOUNT').AsString);
+              //***16.08.16
+              BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
+              CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
+              NUMORDER   := trim(FieldByName('NUMORDER').AsString);
 
               FNeedSaveVIP := (MANAGER <> 0);
             end;
@@ -2236,6 +2544,8 @@ begin
                   PRICESALE := FieldByName('PRICESALE').asCurrency;
                   CHPERCENT := FieldByName('CHPERCENT').asCurrency;
                   SUMMCH    := FieldByName('SUMMCH').asCurrency;
+                  //***19.08.16
+                  AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
                   //***10.08.16
                   LIST_UID  := trim(FieldByName('LIST_UID').asString);
                 End;
@@ -2290,6 +2600,10 @@ begin
                 //***20.07.16
                 dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
                 dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
+                //***16.08.16
+                dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
+                dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
+                dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
 
                 dsdSave.Execute(False,False);
                 SetShapeState(clBlack);
@@ -2329,6 +2643,8 @@ begin
                 dsdSave.Params.AddParam('inPriceSale',ftFloat,ptInput,Null);
                 dsdSave.Params.AddParam('inChangePercent',ftFloat,ptInput,Null);
                 dsdSave.Params.AddParam('inSummChangePercent',ftFloat,ptInput,Null);
+                //***19.08.16
+                //dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
                 //***10.08.16
                 dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
 
@@ -2342,6 +2658,8 @@ begin
                   dsdSave.ParamByName('inPriceSale').Value :=  Body[I].PRICESALE;
                   dsdSave.ParamByName('inChangePercent').Value :=  Body[I].CHPERCENT;
                   dsdSave.ParamByName('inSummChangePercent').Value :=  Body[I].SUMMCH;
+                  //***19.08.16
+                  //dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
                   //***10.08.16
                   dsdSave.ParamByName('inList_UID').Value :=  Body[I].LIST_UID;
 
@@ -2561,7 +2879,7 @@ begin
       EnterCriticalSection(csCriticalSection);
       try
         SetShapeState(clRed);
-        MainCashForm.spSelect_CashRemains_Diff.Execute(False,False);
+        MainCashForm.spSelect_CashRemains_Diff.Execute(False,False,False);
         SetShapeState(clBlue);
         Synchronize(UpdateRemains);
         SetShapeState(clWhite);

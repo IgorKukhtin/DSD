@@ -322,11 +322,11 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
-                                      ON MovementBoolean_Promo.MovementId =  Movement.Id
+                                      ON MovementBoolean_Promo.MovementId =  Movement_Parent.Id
                                      AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Promo
-                                           ON MovementLinkMovement_Promo.MovementId = Movement.Id
+                                           ON MovementLinkMovement_Promo.MovementId = Movement_Parent.Id
                                           AND MovementLinkMovement_Promo.DescId = zc_MovementLinkMovement_Promo()
             LEFT JOIN Movement AS Movement_Promo ON Movement_Promo.Id = MovementLinkMovement_Promo.MovementChildId
             LEFT JOIN MovementDate AS MD_StartSale
