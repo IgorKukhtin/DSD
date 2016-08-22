@@ -2,6 +2,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
   Caption = #1060#1086#1088#1084#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
   ClientHeight = 399
   ClientWidth = 714
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 730
   ExplicitHeight = 437
   PixelsPerInch = 96
@@ -211,6 +212,73 @@ inherited PriceListLoadForm: TPriceListLoadForm
       ImageIndex = 2
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
+    object actGetMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetMovement
+      StoredProcList = <
+        item
+          StoredProc = spGetMovement
+        end>
+      Caption = #1086#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 8
+    end
+    object actOpenMovementPriceList: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 8
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object MacGetMovement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetMovement
+        end
+        item
+          Action = actOpenMovementPriceList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 8
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -238,6 +306,14 @@ inherited PriceListLoadForm: TPriceListLoadForm
         item
           Visible = True
           ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGetMovement'
         end
         item
           Visible = True
@@ -274,6 +350,10 @@ inherited PriceListLoadForm: TPriceListLoadForm
     end
     object bbDelete: TdxBarButton
       Action = actDeletePriceListLoad
+      Category = 0
+    end
+    object bbGetMovement: TdxBarButton
+      Action = MacGetMovement
       Category = 0
     end
   end
@@ -338,6 +418,47 @@ inherited PriceListLoadForm: TPriceListLoadForm
       end>
     PackSize = 1
     Left = 216
+    Top = 72
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 432
+    Top = 120
+  end
+  object spGetMovement: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_by_LoadPriceList'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 424
     Top = 72
   end
 end
