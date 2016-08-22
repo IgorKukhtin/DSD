@@ -142,6 +142,7 @@ type
     procedure LoadSendOnPriceFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSignInternalFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadStorage_ObjectFormTest;
@@ -791,6 +792,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovement_PeriodDialogForm');
 end;
 
+procedure TLoadFormTest.LoadSignInternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSignInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSignInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSignInternalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSignInternalEditForm');
+end;
 
 
 procedure TLoadFormTest.LoadPersonalReportFormTest;

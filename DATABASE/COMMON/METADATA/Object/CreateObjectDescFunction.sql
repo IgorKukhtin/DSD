@@ -712,6 +712,16 @@ CREATE OR REPLACE FUNCTION zc_Object_PartionGoods() RETURNS integer AS $BODY$BEG
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_PartionGoods', 'Партии товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionGoods');
 
+
+CREATE OR REPLACE FUNCTION zc_Object_SignInternal() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SignInternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_SignInternal', 'Модель электронной подписи' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SignInternal');
+
+CREATE OR REPLACE FUNCTION zc_Object_SignInternalItem() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SignInternalItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_SignInternalItem', 'Элементы моделей электронных подписей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SignInternalItem');
+
+
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
