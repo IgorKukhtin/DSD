@@ -1,19 +1,26 @@
 inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1086#1082
-  ClientWidth = 594
-  ExplicitWidth = 610
+  ClientHeight = 319
+  ClientWidth = 563
+  ExplicitWidth = 579
+  ExplicitHeight = 357
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 594
-    ExplicitWidth = 507
-    ClientRectRight = 594
+    Width = 563
+    Height = 293
+    ExplicitWidth = 563
+    ExplicitHeight = 293
+    ClientRectBottom = 293
+    ClientRectRight = 563
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 507
-      ExplicitHeight = 282
+      ExplicitWidth = 563
+      ExplicitHeight = 293
       inherited cxGrid: TcxGrid
-        Width = 594
-        ExplicitWidth = 507
+        Width = 563
+        Height = 293
+        ExplicitWidth = 563
+        ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -76,6 +83,15 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 133
           end
+          object clErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
         end
       end
     end
@@ -112,12 +128,14 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       FormName = 'TUnitTreeForm'
       FormNameParam.Value = 'TUnitTreeForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -125,6 +143,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
           Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -136,12 +155,14 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       FormName = 'TJuridicalForm'
       FormNameParam.Value = 'TJuridicalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -149,6 +170,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -160,12 +182,14 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       FormName = 'TMarginCategoryForm'
       FormNameParam.Value = 'TMarginCategoryForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MarginCategoryId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -173,8 +197,40 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
           Component = MasterCDS
           ComponentItem = 'MarginCategoryName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -197,6 +253,22 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -226,6 +298,14 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
           ItemName = 'dxBarStatic'
         end>
     end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MarginCategoryLink'
@@ -238,6 +318,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginCategoryId'
@@ -245,6 +326,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         Component = MasterCDS
         ComponentItem = 'MarginCategoryId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -252,6 +334,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -259,15 +342,34 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
     Top = 88
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 136
   end
 end

@@ -3,23 +3,23 @@ inherited MarginCategoryForm: TMarginCategoryForm
   ClientHeight = 338
   ClientWidth = 579
   ExplicitWidth = 595
-  ExplicitHeight = 373
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 579
     Height = 312
-    ExplicitWidth = 480
+    ExplicitWidth = 579
     ExplicitHeight = 312
     ClientRectBottom = 312
     ClientRectRight = 579
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 480
+      ExplicitWidth = 579
       ExplicitHeight = 312
       inherited cxGrid: TcxGrid
         Width = 579
         Height = 312
-        ExplicitWidth = 480
+        ExplicitWidth = 579
         ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -55,6 +55,15 @@ inherited MarginCategoryForm: TMarginCategoryForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object clErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
         end
       end
     end
@@ -70,6 +79,37 @@ inherited MarginCategoryForm: TMarginCategoryForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'actInsertUpdate'
+      DataSource = MasterDS
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
       DataSource = MasterDS
     end
   end
@@ -99,6 +139,18 @@ inherited MarginCategoryForm: TMarginCategoryForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -122,6 +174,14 @@ inherited MarginCategoryForm: TMarginCategoryForm
           ItemName = 'dxBarStatic'
         end>
     end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MarginCategory'
@@ -134,6 +194,7 @@ inherited MarginCategoryForm: TMarginCategoryForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -141,6 +202,7 @@ inherited MarginCategoryForm: TMarginCategoryForm
         Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -149,18 +211,21 @@ inherited MarginCategoryForm: TMarginCategoryForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPercent'
@@ -169,6 +234,7 @@ inherited MarginCategoryForm: TMarginCategoryForm
         ComponentItem = 'Percent'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisSite'
@@ -177,9 +243,27 @@ inherited MarginCategoryForm: TMarginCategoryForm
         ComponentItem = 'isSite'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
     Top = 88
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 144
   end
 end

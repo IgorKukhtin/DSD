@@ -3,7 +3,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   ClientHeight = 341
   ClientWidth = 800
   ExplicitWidth = 816
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -87,6 +87,15 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
             Options.Editing = False
             Width = 70
           end
+          object clErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
         end
       end
       object cxLabel1: TcxLabel
@@ -137,6 +146,37 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       Caption = 'actInsertUpdate'
       DataSource = MasterDS
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -153,6 +193,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 80
   end
@@ -166,6 +207,22 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -221,6 +278,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       Visible = ivAlways
       Control = ceMarginCategory
     end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem'
@@ -233,6 +298,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMinPrice'
@@ -241,6 +307,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         ComponentItem = 'MinPrice'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginPercent'
@@ -249,6 +316,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         ComponentItem = 'MarginPercent'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginCategoryId'
@@ -256,12 +324,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -272,6 +342,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
     LookupControl = ceMarginCategory
     FormNameParam.Value = 'TMarginCategoryForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMarginCategoryForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -280,6 +351,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         Value = Null
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -287,12 +359,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         Component = MarginCategoryGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 48
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -300,5 +374,22 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       end>
     Left = 200
     Top = 128
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 120
   end
 end
