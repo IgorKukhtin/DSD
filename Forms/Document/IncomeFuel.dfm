@@ -260,11 +260,12 @@ object IncomeFuelForm: TIncomeFuelForm
       ImageIndex = 0
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 301
+        Top = 231
         Width = 1052
-        Height = 123
+        Height = 145
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 248
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -408,19 +409,21 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 293
+        Top = 223
         Width = 1052
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 293
       end
       object cxGrid: TcxGrid
         Left = 0
         Top = 105
         Width = 1052
-        Height = 188
+        Height = 118
         Align = alClient
         TabOrder = 2
+        ExplicitHeight = 188
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -796,18 +799,19 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 424
+        Top = 376
         Width = 1052
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridSign
+        ExplicitTop = 424
       end
       object cxGridSign: TcxGrid
         Left = 0
-        Top = 432
+        Top = 384
         Width = 1052
-        Height = 89
+        Height = 137
         Align = alBottom
         TabOrder = 5
         LookAndFeel.NativeStyle = False
@@ -1000,8 +1004,8 @@ object IncomeFuelForm: TIncomeFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 539
-    Top = 81
+    Left = 515
+    Top = 129
     DockControlHeights = (
       0
       0
@@ -1080,6 +1084,30 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           Visible = True
           ItemName = 'bbMIChildProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISign'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISignNO'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSignProtocolOpenForm'
         end
         item
           Visible = True
@@ -1188,6 +1216,18 @@ object IncomeFuelForm: TIncomeFuelForm
       Action = RouteMemberChoiceForm
       Category = 0
     end
+    object bbSignProtocolOpenForm: TdxBarButton
+      Action = SignProtocolOpenForm
+      Category = 0
+    end
+    object bbInsertUpdateMISign: TdxBarButton
+      Action = actInsertUpdateMISign
+      Category = 0
+    end
+    object bbInsertUpdateMISignNO: TdxBarButton
+      Action = actInsertUpdateMISignNO
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1201,13 +1241,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 630
-    Top = 91
+    Left = 638
+    Top = 131
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 593
-    Top = 89
+    Top = 129
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1649,6 +1689,36 @@ object IncomeFuelForm: TIncomeFuelForm
         end>
       isShowModal = False
     end
+    object SignProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'SignInternalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object SignInternalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1675,6 +1745,38 @@ object IncomeFuelForm: TIncomeFuelForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_No
+        end
+        item
+          StoredProc = spSelectMISign
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISign: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign
+        end
+        item
+          StoredProc = spSelectMISign
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
     end
   end
   object MasterDS: TDataSource
@@ -3187,5 +3289,53 @@ object IncomeFuelForm: TIncomeFuelForm
     PackSize = 1
     Left = 492
     Top = 616
+  end
+  object spInsertUpdateMISign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 603
+  end
+  object spInsertUpdateMISign_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 563
   end
 end

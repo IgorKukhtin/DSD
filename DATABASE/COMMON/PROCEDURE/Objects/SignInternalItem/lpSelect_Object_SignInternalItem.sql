@@ -47,7 +47,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_SignInternalItem_SignInternal 
                              ON ObjectLink_SignInternalItem_SignInternal.ChildObjectId = Object_SignInternal.Id 
                             AND ObjectLink_SignInternalItem_SignInternal.DescId = zc_ObjectLink_SignInternalItem_SignInternal()
-        LEFT JOIN Object AS Object_SignInternalItem ON Object_SignInternalItem.Id = ObjectLink_SignInternalItem_SignInternal.ObjectId
+        Inner JOIN Object AS Object_SignInternalItem ON Object_SignInternalItem.Id = ObjectLink_SignInternalItem_SignInternal.ObjectId
+                                                    AND Object_SignInternalItem.isErased = False
 
         LEFT JOIN ObjectLink AS ObjectLink_SignInternalItem_User 
                              ON ObjectLink_SignInternalItem_User.ObjectId = Object_SignInternalItem.Id

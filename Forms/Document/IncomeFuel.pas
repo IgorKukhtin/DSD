@@ -196,6 +196,14 @@ type
     SignInternalChoiceForm: TOpenChoiceForm;
     sclUserName: TcxGridDBColumn;
     sclisSign: TcxGridDBColumn;
+    SignProtocolOpenForm: TdsdOpenForm;
+    bbSignProtocolOpenForm: TdxBarButton;
+    spInsertUpdateMISign: TdsdStoredProc;
+    actInsertUpdateMISign: TdsdExecStoredProc;
+    bbInsertUpdateMISign: TdxBarButton;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    actInsertUpdateMISignNO: TdsdExecStoredProc;
+    bbInsertUpdateMISignNO: TdxBarButton;
   private
   public
   end;

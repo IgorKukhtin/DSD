@@ -56,7 +56,7 @@ BEGIN
                           , Object_Insert.ObjectCode            AS InsertCode
                           , Object_Insert.ValueData             AS InsertName
                           , MIDate_Insert.ValueData             AS InsertDate
-                     FROM (SELECT FALSE AS isErased UNION ALL SELECT TRUE AS isErased WHERE TRUE = TRUE) AS tmpIsErased
+                     FROM (SELECT FALSE AS isErased UNION ALL SELECT TRUE AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                          JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                           AND MovementItem.DescId     = zc_MI_Sign()
                                           AND MovementItem.isErased   = tmpIsErased.isErased
@@ -76,7 +76,7 @@ BEGIN
        , tmpSignInternal.SignInternalId 
        , tmpSignInternal.SignInternalName
        
-       , COALESCE (tmpMISign.Amount,tmpSignInternal.Code) :: TFloat AS Amount  -- AS SignInternalItemCode
+       , CASE WHEN COALESCE (tmpMISign.Amount,0) = 0 THEN tmpSignInternal.Code ELSE COALESCE (tmpMISign.Amount,0) END  :: TFloat AS Amount  -- AS SignInternalItemCode
        , tmpSignInternal.UserId
        , tmpSignInternal.UserCode
        , tmpSignInternal.UserName
