@@ -65,6 +65,14 @@ object SignInternalForm: TSignInternalForm
       object clMovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MovementDescChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -73,6 +81,14 @@ object SignInternalForm: TSignInternalForm
       object clObjectDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
         DataBinding.FieldName = 'ObjectDescName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ObjectDescChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -81,6 +97,7 @@ object SignInternalForm: TSignInternalForm
       object clUnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
         DataBinding.FieldName = 'UnitCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -175,11 +192,12 @@ object SignInternalForm: TSignInternalForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 155
+        Width = 208
       end
       object cxUserCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1083#1100#1079'.'
         DataBinding.FieldName = 'UserCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -198,6 +216,23 @@ object SignInternalForm: TSignInternalForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 239
+      end
+      object cxMemberName: TcxGridDBColumn
+        Caption = #1060#1080#1079'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'MemberName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Caption = 'UserForm'
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 239
       end
       object cxisErased: TcxGridDBColumn
@@ -232,6 +267,12 @@ object SignInternalForm: TSignInternalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 112
+      end
+      object cxUserId: TcxGridDBColumn
+        DataBinding.FieldName = 'UserId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 60
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -928,13 +969,67 @@ object SignInternalForm: TSignInternalForm
         item
           StoredProc = spErasedUnErasedSignInternalItem
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1084#1086#1076#1077#1083#1080' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1084#1086#1076#1077#1083#1080' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ChildDS
+    end
+    object ObjectDescChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TObjectDescForm'
+      FormName = 'TObjectDescForm'
+      FormNameParam.Value = 'TObjectDescForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectDescId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ObjectDescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object MovementDescChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'MovementDescChoiceForm'
+      FormName = 'TMovementDescForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementDescId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementDescName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object spSelect: TdsdStoredProc
@@ -1022,11 +1117,11 @@ object SignInternalForm: TSignInternalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Code'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1138,13 +1233,7 @@ object SignInternalForm: TSignInternalForm
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableViewReceiptChild
-    OnDblClickActionList = <
-      item
-        Action = actUpdate
-      end
-      item
-        Action = dsdChoiceGuides
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -1195,8 +1284,8 @@ object SignInternalForm: TSignInternalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 448
-    Top = 360
+    Left = 456
+    Top = 384
   end
   object PeriodChoice: TPeriodChoice
     Left = 856
@@ -1220,7 +1309,7 @@ object SignInternalForm: TSignInternalForm
     Top = 265
   end
   object spErasedUnErasedSignInternalItem: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_SignInternalItem'
+    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1237,7 +1326,7 @@ object SignInternalForm: TSignInternalForm
     Top = 480
   end
   object spErasedUnErasedSignInternal: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_SignInternal'
+    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <

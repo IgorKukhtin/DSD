@@ -81,18 +81,6 @@ object SignInternalEditForm: TSignInternalEditForm
     Top = 155
     Caption = #1042#1080#1076' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
   end
-  object ceObjectDesc: TcxButtonEdit
-    Left = 10
-    Top = 178
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 309
-  end
   object cxLabel7: TcxLabel
     Left = 10
     Top = 211
@@ -107,7 +95,7 @@ object SignInternalEditForm: TSignInternalEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 309
   end
   object cxLabel3: TcxLabel
@@ -118,6 +106,18 @@ object SignInternalEditForm: TSignInternalEditForm
   object ceComment: TcxTextEdit
     Left = 10
     Top = 289
+    TabOrder = 12
+    Width = 309
+  end
+  object ceObjectDesc: TcxButtonEdit
+    Left = 10
+    Top = 178
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 13
     Width = 309
   end
@@ -186,6 +186,7 @@ object SignInternalEditForm: TSignInternalEditForm
         Value = Null
         Component = MovementDescGuides
         ComponentItem = 'Key'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -194,6 +195,7 @@ object SignInternalEditForm: TSignInternalEditForm
         Value = Null
         Component = ObjectDescGuides
         ComponentItem = 'Key'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -343,7 +345,6 @@ object SignInternalEditForm: TSignInternalEditForm
         Value = ''
         Component = MovementDescGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -366,20 +367,19 @@ object SignInternalEditForm: TSignInternalEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TObjectDescForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
         Component = ObjectDescGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
-        Value = ''
+        Value = 'null'
         Component = ObjectDescGuides
         ComponentItem = 'TextValue'
         DataType = ftString

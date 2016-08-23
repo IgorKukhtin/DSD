@@ -32,13 +32,13 @@ type
     ceMovementDesc: TcxButtonEdit;
     MovementDescGuides: TdsdGuides;
     cxLabel6: TcxLabel;
-    ceObjectDesc: TcxButtonEdit;
     ObjectDescGuides: TdsdGuides;
     cxLabel7: TcxLabel;
     ceUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     ceComment: TcxTextEdit;
+    ceObjectDesc: TcxButtonEdit;
   private
     { Private declarations }
   public
