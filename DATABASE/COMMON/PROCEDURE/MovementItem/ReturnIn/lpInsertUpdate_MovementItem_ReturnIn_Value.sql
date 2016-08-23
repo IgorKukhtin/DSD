@@ -41,9 +41,9 @@ BEGIN
                                                ) AS tmp;
 
      -- !!!пока криво!!! - еще раз сохранили свойство <(-)% Скидки (+)% Наценки> + на всякий случай SELECT ...
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, CASE WHEN inMovementId_Promo > 0 THEN inChangePercent ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) END);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, CASE WHEN inMovementId_Promo > 0 THEN COALESCE (inChangePercent, 0) ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) END);
      -- !!!пока криво!!! - сохранили свойство <MovementId-Акция>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, inMovementId_Promo);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (inMovementId_Promo, 0));
 
 END;
 $BODY$

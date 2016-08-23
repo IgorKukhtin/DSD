@@ -1,14 +1,5 @@
 -- Function: gpInsert_Scale_MI()
-/*
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar);
-*/
--- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TVarChar, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Boolean, TVarChar);
+
 DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
@@ -100,9 +91,9 @@ BEGIN
      IF vbMovementDescId IN (zc_Movement_ReturnIn())
      THEN
          SELECT tmp.MovementId
-              , CASE WHEN /*tmp.TaxPromo <> 0*/ AND (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT()) = TRUE
+              , CASE WHEN /*tmp.TaxPromo <> 0 AND*/ (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT()) = TRUE
                           THEN tmp.PriceWithVAT
-                     WHEN /*tmp.TaxPromo <> 0*/ AND 1=1
+                     WHEN /*tmp.TaxPromo <> 0 AND*/ 1=1
                           THEN tmp.PriceWithOutVAT
                      ELSE 0 -- ???может надо будет взять из прайса когда была акция ИЛИ любой продажи под эту акцию???
                 END
@@ -115,7 +106,7 @@ BEGIN
                                            , inGoodsId      := inGoodsId
                                            , inGoodsKindId  := inGoodsKindId
                                            , inIsReturn     := TRUE
-                                            ) AS tmp
+                                            ) AS tmp;
      END IF;
 
 
@@ -256,7 +247,7 @@ BEGIN
                                                                                   END
                                                        , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                        , inBoxId               := vbBoxId
-                                                       , inMovementId_Promo    := inMovementId_Promo
+                                                       , inMovementId_Promo    := COALESCE (inMovementId_Promo, 0)
                                                        , inIsBarCode           := inIsBarCode
                                                        , inSession             := inSession
                                                         );
