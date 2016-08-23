@@ -73,6 +73,7 @@ object SignInternalEditForm: TSignInternalEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 309
   end

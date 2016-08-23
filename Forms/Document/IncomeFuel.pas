@@ -181,6 +181,21 @@ type
     bbMIProtocol: TdxBarButton;
     bbMIChildProtocol: TdxBarButton;
     bbRouteMember: TdxBarButton;
+    SignDS: TDataSource;
+    SignCDS: TClientDataSet;
+    cxGridSign: TcxGrid;
+    cxGridDBTableViewSign: TcxGridDBTableView;
+    sclCode: TcxGridDBColumn;
+    sclSignInternalName: TcxGridDBColumn;
+    sclAmount: TcxGridDBColumn;
+    sclisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter2: TcxSplitter;
+    dsdDBViewAddOnSign: TdsdDBViewAddOn;
+    spSelectMISign: TdsdStoredProc;
+    SignInternalChoiceForm: TOpenChoiceForm;
+    sclUserName: TcxGridDBColumn;
+    sclisSign: TcxGridDBColumn;
   private
   public
   end;
