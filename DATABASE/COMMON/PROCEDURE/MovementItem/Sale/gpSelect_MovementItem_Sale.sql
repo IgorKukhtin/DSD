@@ -38,10 +38,11 @@ $BODY$
    DECLARE vbPartnerId Integer;
    DECLARE vbContractId Integer;
    DECLARE vbChangePercent TFloat;
+   DECLARE vbOperDate_promo TDateTime;
+
    DECLARE vbPriceWithVAT Boolean;
    DECLARE vbPriceWithVAT_pl Boolean;
    DECLARE vbVATPercent_pl TFloat;
-   DECLARE vbOperDate_promo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
@@ -81,6 +82,7 @@ BEGIN
      vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      -- (-)% Скидки (+)% Наценки
      vbChangePercent:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent());
+
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- Цены с НДС (прайс)
@@ -277,7 +279,7 @@ BEGIN
                                                              AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                        WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
                                        )
-
+       -- Результат
        SELECT
              0                          AS Id
            , 0                          AS LineNum

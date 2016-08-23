@@ -118,7 +118,7 @@ BEGIN
                            )
       SELECT Movement.Id                                AS Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
-           , Movement.InvNumber                         AS InvNumber
+           , tmpMovement_total.InvNumber :: TVarChar    AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , CASE WHEN MovementDate_OperDateMark.ValueData >= Movement.OperDate THEN 'Дата маркировки : ' || (DATE (MovementDate_OperDateMark.ValueData) :: TVarChar) ELSE '' END AS OperDateMark
@@ -162,6 +162,7 @@ BEGIN
            , vbIsOrderByLine                            AS isOrderByLine
 
        FROM (SELECT inMovementId AS MovementId
+                  , STRING_AGG (COALESCE (Movement.InvNumber, '*'), '; ')           AS InvNumber
                   , SUM (COALESCE (MovementFloat_TotalCount.ValueData, 0))         AS TotalCount
                   , SUM (COALESCE (MovementFloat_TotalCountKg.ValueData, 0))       AS TotalCountKg
                   , SUM (COALESCE (MovementFloat_TotalCountSh.ValueData, 0))       AS TotalCountSh
@@ -171,6 +172,7 @@ BEGIN
                   , SUM (COALESCE (MovementFloat_TotalSummPVAT.ValueData) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) AS SummVAT
                   , SUM (COALESCE (MovementFloat_TotalSumm.ValueData, 0))          AS TotalSumm
              FROM tmpMovement
+                  LEFT JOIN Movement ON Movement.Id =  tmpMovement.MovementId
                   LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                           ON MovementFloat_TotalCount.MovementId =  tmpMovement.MovementId
                                          AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()

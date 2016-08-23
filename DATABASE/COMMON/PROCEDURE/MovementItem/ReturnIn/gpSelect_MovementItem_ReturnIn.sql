@@ -35,29 +35,40 @@ $BODY$
   DECLARE vbMovementId_parent Integer;
   DECLARE vbIsB Boolean;
 
+  DECLARE vbUnitId Integer;
+  DECLARE vbPartnerId Integer;
+  DECLARE vbContractId Integer;
+  DECLARE vbChangePercent TFloat;
+  DECLARE vbOperDate_promo TDateTime;
+
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbPriceWithVAT_pl Boolean;
   DECLARE vbVATPercent_pl TFloat;
   DECLARE vbVATPercent TFloat;
-  DECLARE vbChangePercent TFloat;
-  DECLARE vbOperDate_promo TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- Подразделение
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To);
+     -- Контрагент
+     vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     -- Договор
+     vbContractId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract());
      -- (-)% Скидки (+)% Наценки
      vbChangePercent:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_ChangePercent());
+
      -- Цены с НДС
      vbPriceWithVAT:= (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT());
      -- % с НДС
      vbVATPercent:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_VATPercent());
-
      -- Цены с НДС (прайс)
      vbPriceWithVAT_pl:= COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.ObjectId = inPriceListId AND OB.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()), FALSE);
      -- Цены (прайс)
      vbVATPercent_pl:= 1 + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = inPriceListId AND ObjectFloat.DescId = zc_ObjectFloat_PriceList_VATPercent()), 0) / 100;
+
      -- определяется
      vbIsB:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (300364, 442931, 343951, zc_Enum_Role_Admin())); -- Склад Специй (Баранченко) + Накладные полный доступ СЫРЬЕ - Кисличная Т.А. + Экономист (производство)
 
@@ -256,7 +267,7 @@ BEGIN
                         AND MovementItem.Amount     <> 0
                       GROUP BY MovementItem.ParentId
                      )
-
+       -- Результат
        SELECT
              0                          AS Id
            , 0 :: Integer               AS LineNum
@@ -267,11 +278,15 @@ BEGIN
 
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , CASE WHEN vbPriceWithVAT = FALSE THEN tmpPrice.Price_Pricelist
+
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  WHEN vbPriceWithVAT = FALSE THEN tmpPrice.Price_Pricelist
                   WHEN vbPriceWithVAT = TRUE  THEN tmpPrice.Price_Pricelist_vat
              END :: TFloat              AS Price
-           , CAST (NULL AS TFloat)      AS CountForPrice
-           , vbChangePercent            AS ChangePercent
+           , CAST (1 AS TFloat)         AS CountForPrice
+
+           , CASE WHEN COALESCE (tmpPromo.isChangePercent, TRUE) = TRUE THEN vbChangePercent ELSE 0 END :: TFloat AS ChangePercent
 
            , CAST (tmpPrice.Price_Pricelist AS TFloat)     AS Price_Pricelist
            , CAST (tmpPrice.Price_Pricelist_vat AS TFloat) AS Price_Pricelist_vat
@@ -291,8 +306,11 @@ BEGIN
            , CAST (0  AS Integer)       AS MovementId_Partion
            , CAST ('' AS TVarChar)  	AS PartionMovementName
 
-           , CAST ('' AS TVarChar)      AS MovementPromo
-           , CAST (NULL AS TFloat)      AS PricePromo
+           , tmpPromo.MovementPromo
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , 0 :: TFloat AS AmountChild
            , 0 :: TFloat AS AmountChildDiff
@@ -302,6 +320,10 @@ BEGIN
        FROM tmpGoods
             LEFT JOIN tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                            AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpGoods.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpGoods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
 
