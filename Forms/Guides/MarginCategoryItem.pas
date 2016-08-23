@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxLabel, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TMarginCategoryItemForm = class(TAncestorEnumForm)
@@ -26,6 +26,11 @@ type
     ceMarginCategory: TcxButtonEdit;
     bbGuides: TdxBarControlContainerItem;
     RefreshDispatcher: TRefreshDispatcher;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public

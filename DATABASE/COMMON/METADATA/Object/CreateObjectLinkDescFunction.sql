@@ -1275,6 +1275,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PartionRemains_PartionGoods() RETURNS I
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartionRemains_PartionGoods', 'Связь с Партиями товаров', zc_Object_PartionRemains(), zc_Object_PartionGoods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionRemains_PartionGoods');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SignInternalItem_SignInternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternalItem_SignInternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SignInternalItem_SignInternal', 'Связь с Модель электронной подписи', zc_Object_SignInternalItem(), zc_Object_SignInternal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternalItem_SignInternal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SignInternalItem_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternalItem_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SignInternalItem_User', 'Связь с Пользователь', zc_Object_SignInternalItem(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternalItem_User');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SignInternal_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternal_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SignInternal_Object', 'Связь с Подразделения/Ведомости начисления', zc_Object_SignInternal(), NULL WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternal_Object');
+
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

@@ -301,7 +301,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
           Name = 'Id'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'PriceListId'
           MultiSelectSeparator = ','
         end>
       isShowModal = False

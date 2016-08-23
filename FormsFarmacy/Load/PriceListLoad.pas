@@ -33,6 +33,12 @@ type
     actDeletePriceListLoad: TdsdExecStoredProc;
     bbDelete: TdxBarButton;
     spDelete: TdsdStoredProc;
+    actOpenMovementPriceList: TdsdInsertUpdateAction;
+    FormParams: TdsdFormParams;
+    MacGetMovement: TMultiAction;
+    spGetMovement: TdsdStoredProc;
+    actGetMovement: TdsdExecStoredProc;
+    bbGetMovement: TdxBarButton;
   private
     { Private declarations }
   public

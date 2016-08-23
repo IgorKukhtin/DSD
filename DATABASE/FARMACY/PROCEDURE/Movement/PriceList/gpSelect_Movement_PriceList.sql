@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalId Integer, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
+             , PriceListId Integer
               )
 
 AS
@@ -45,6 +46,8 @@ BEGIN
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
+   
+           , LoadPriceList.Id                     AS PriceListId
 
        FROM Movement 
             JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId 
@@ -69,6 +72,9 @@ BEGIN
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+
+            LEFT JOIN LoadPriceList ON LoadPriceList.JuridicalId = Object_Juridical.Id
+                                   AND LoadPriceList.ContractId  = Object_Contract.Id
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PriceList();
 

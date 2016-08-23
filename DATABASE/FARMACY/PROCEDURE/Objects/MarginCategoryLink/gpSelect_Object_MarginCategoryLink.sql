@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryLink(
 RETURNS TABLE (Id Integer, MarginCategoryId Integer, MarginCategoryName TVarChar
              , UnitId Integer, UnitName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , isSite Boolean
+             , isErased boolean
 ) AS
 $BODY$BEGIN
 
@@ -24,8 +25,10 @@ $BODY$BEGIN
         Object_MarginCategoryLink.UnitName, 
         Object_MarginCategoryLink.JuridicalId, 
         Object_MarginCategoryLink.JuridicalName,
-        COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite
+        COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite,
+        MarginCategoryLink.isErased 
     FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink
+          LEFT JOIN Object AS MarginCategoryLink ON MarginCategoryLink.Id = Object_MarginCategoryLink.Id
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
                                   ON ObjectBoolean_Site.ObjectId = Object_MarginCategoryLink.MarginCategoryId
                                  AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site()

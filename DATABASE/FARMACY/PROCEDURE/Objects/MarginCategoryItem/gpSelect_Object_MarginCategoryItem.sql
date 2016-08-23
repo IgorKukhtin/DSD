@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryItem(
 )
 RETURNS TABLE (Id Integer, MarginPercent TFloat, MinPrice TFloat
              , isSite Boolean
+             , isErased boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime) AS
 $BODY$BEGIN
@@ -22,6 +23,7 @@ $BODY$BEGIN
        , Object_MarginCategoryItem.MinPrice      AS MinPrice
       
        , COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite
+       , MarginCategoryItem.isErased          AS isErased
 
        , Object_Insert.ValueData              AS InsertName
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
@@ -29,7 +31,7 @@ $BODY$BEGIN
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
     FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
-
+          LEFT JOIN Object AS MarginCategoryItem ON MarginCategoryItem.Id = Object_MarginCategoryItem.Id
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                                ON ObjectDate_Protocol_Insert.ObjectId = Object_MarginCategoryItem.Id
                               AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()

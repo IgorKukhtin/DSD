@@ -848,7 +848,9 @@ uses
   InvoiceJournalChoice in '..\..\Forms\Document\InvoiceJournalChoice.pas' {InvoiceJournalChoiceForm: TParentForm},
   IncomeAssetJournal in '..\..\Forms\Document\IncomeAssetJournal.pas' {IncomeAssetJournalForm: TParentForm},
   IncomeAsset in '..\..\Forms\Document\IncomeAsset.pas' {IncomeAssetForm: TParentForm},
-  AssetPlace_Object in '..\..\Forms\Guides\AssetPlace_Object.pas' {AssetPlace_ObjectForm: TParentForm};
+  AssetPlace_Object in '..\..\Forms\Guides\AssetPlace_Object.pas' {AssetPlace_ObjectForm: TParentForm},
+  SignInternal in '..\..\Forms\Guides\SignInternal.pas' {SignInternalForm: TParentForm},
+  SignInternalEdit in '..\..\Forms\Guides\SignInternalEdit.pas' {SignInternalEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

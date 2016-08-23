@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TMarginCategoryForm = class(TAncestorEnumForm)
@@ -21,6 +21,12 @@ type
     actInsertUpdate: TdsdUpdateDataSet;
     colPercent: TcxGridDBColumn;
     colisSite: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetUnErased: TdxBarButton;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxLabel, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TMarginCategoryLinkForm = class(TAncestorEnumForm)
@@ -24,6 +24,11 @@ type
     actChoiceMarginCategory: TOpenChoiceForm;
     actChoiceUnit: TOpenChoiceForm;
     actChoiceJuridical: TOpenChoiceForm;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public
