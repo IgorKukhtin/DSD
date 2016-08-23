@@ -73,20 +73,20 @@ BEGIN
 
 
   SELECT COALESCE (tmpMISign.Id,0) AS Id 
-       , tmpSignInternal.SignInternalId 
-       , tmpSignInternal.SignInternalName
+       , COALESCE (tmpSignInternal.SignInternalId, tmpMISign.SignInternalId) AS SignInternalId
+       , COALESCE (tmpSignInternal.SignInternalName, tmpMISign.SignInternalName) :: TVarChar AS SignInternalName
        
        , CASE WHEN COALESCE (tmpMISign.Amount,0) = 0 THEN tmpSignInternal.Code ELSE COALESCE (tmpMISign.Amount,0) END  :: TFloat AS Amount  -- AS SignInternalItemCode
-       , tmpSignInternal.UserId
-       , tmpSignInternal.UserCode
-       , tmpSignInternal.UserName
+       , COALESCE (tmpSignInternal.UserId,tmpMISign.InsertId)    AS UserId
+       , COALESCE (tmpSignInternal.UserCode, tmpMISign.InsertCode) AS UserCode
+       , COALESCE (tmpSignInternal.UserName, tmpMISign.InsertName)  :: TVarChar AS UserName
  
        , COALESCE (tmpMISign.InsertName, Null):: TVarChar   AS InsertName
        , COALESCE (tmpMISign.InsertDate, Null):: TDateTime  AS InsertDate
        
        , CASE WHEN COALESCE (tmpMISign.Amount,0) = 0 THEN False ELSE TRUE END isSign   --подписан / не подписан
    FROM tmpSignInternal
-     LEFT JOIN tmpMISign ON tmpMISign.SignInternalId = tmpSignInternal.SignInternalId
+     FULL JOIN tmpMISign ON tmpMISign.SignInternalId = tmpSignInternal.SignInternalId
                         AND tmpMISign.InsertId = tmpSignInternal.UserId
        
       ;
