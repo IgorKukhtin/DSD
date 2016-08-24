@@ -3,7 +3,7 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
   ClientHeight = 319
   ClientWidth = 563
   ExplicitWidth = 579
-  ExplicitHeight = 357
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -264,10 +264,6 @@ inherited MarginCategoryLinkForm: TMarginCategoryLinkForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

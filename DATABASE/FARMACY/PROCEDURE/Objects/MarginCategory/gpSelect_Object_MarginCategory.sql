@@ -8,9 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategory(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Percent TFloat
              , isSite Boolean
-             , isErased boolean) AS
-$BODY$BEGIN
-
+             , isErased boolean)
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
@@ -31,11 +32,8 @@ $BODY$BEGIN
    WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginCategory(TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_MarginCategory (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -44,8 +42,7 @@ ALTER FUNCTION gpSelect_Object_MarginCategory(TVarChar)
  13.04.16         *
  05.04.16         *
  09.04.15                         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MarginCategory('2')
+-- SELECT * FROM gpSelect_Object_MarginCategory ('2')

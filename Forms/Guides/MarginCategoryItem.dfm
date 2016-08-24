@@ -3,7 +3,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   ClientHeight = 341
   ClientWidth = 800
   ExplicitWidth = 816
-  ExplicitHeight = 379
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -225,19 +225,15 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         end
         item
           Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
         end
         item
           Visible = True

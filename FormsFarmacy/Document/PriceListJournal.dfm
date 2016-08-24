@@ -4,7 +4,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
   ClientWidth = 593
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 609
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -171,6 +171,12 @@ inherited PriceListJournalForm: TPriceListJournalForm
   inherited Panel: TPanel
     Width = 593
     ExplicitWidth = 593
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -205,6 +211,28 @@ inherited PriceListJournalForm: TPriceListJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TPriceListForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -288,10 +316,10 @@ inherited PriceListJournalForm: TPriceListJournalForm
     object actOpenPriceListLoad: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1082#1088#1099#1090#1100
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1079#1072#1075#1088#1091#1078#1077#1085#1085#1086#1075#1086' '#1087#1088#1072#1081#1089#1072
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
       ShortCut = 13
-      ImageIndex = 8
+      ImageIndex = 28
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
       FormNameParam.DataType = ftString
@@ -371,6 +399,19 @@ inherited PriceListJournalForm: TPriceListJournalForm
           ItemName = 'bbEdit'
         end
         item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -379,25 +420,16 @@ inherited PriceListJournalForm: TPriceListJournalForm
           ItemName = 'bbOpenPriceListLoad'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTax: TdxBarButton

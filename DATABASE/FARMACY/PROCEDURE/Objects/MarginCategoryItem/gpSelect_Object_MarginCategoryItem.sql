@@ -10,9 +10,10 @@ RETURNS TABLE (Id Integer, MarginPercent TFloat, MinPrice TFloat
              , isSite Boolean
              , isErased boolean
              , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime) AS
-$BODY$BEGIN
-
+             , UpdateName TVarChar, UpdateDate TDateTime)
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
@@ -54,17 +55,11 @@ $BODY$BEGIN
                                  AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site() 
 
    WHERE Object_MarginCategoryItem.MarginCategoryId = inMarginCategoryId
-
-
-
-;
+ ;
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginCategoryItem(Integer, TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_MarginCategoryItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -72,8 +67,7 @@ ALTER FUNCTION gpSelect_Object_MarginCategoryItem(Integer, TVarChar)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  05.04.16         *
  09.04.15                         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MarginCategoryItem('2') 
+-- SELECT * FROM gpSelect_Object_MarginCategoryItem (1, '2') 
