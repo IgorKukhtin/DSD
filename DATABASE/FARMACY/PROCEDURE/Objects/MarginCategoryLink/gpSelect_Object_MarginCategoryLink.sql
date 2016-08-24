@@ -1,6 +1,6 @@
---Function: gpSelect_Object_MarginCategoryItem(TVarChar)
+--Function: gpSelect_Object_MarginCategoryLink (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryLink(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryLink (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryLink(
     IN inSession          TVarChar       -- сессия пользователя
@@ -10,9 +10,10 @@ RETURNS TABLE (Id Integer, MarginCategoryId Integer, MarginCategoryName TVarChar
              , UnitId Integer, UnitName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , isSite Boolean
              , isErased boolean
-) AS
-$BODY$BEGIN
-
+              )
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
@@ -36,11 +37,8 @@ $BODY$BEGIN
 ;
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginCategoryLink(TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_MarginCategoryLink (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -48,8 +46,7 @@ ALTER FUNCTION gpSelect_Object_MarginCategoryLink(TVarChar)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.04.16         *
  09.04.15                         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MarginCategoryLink('2')
+-- SELECT * FROM gpSelect_Object_MarginCategoryLink ('2')

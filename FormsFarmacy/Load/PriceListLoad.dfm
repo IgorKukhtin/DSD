@@ -1,24 +1,24 @@
 inherited PriceListLoadForm: TPriceListLoadForm
   Caption = #1060#1086#1088#1084#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
   ClientHeight = 399
-  ClientWidth = 714
+  ClientWidth = 788
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 730
-  ExplicitHeight = 437
+  ExplicitWidth = 804
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 714
+    Width = 788
     Height = 373
     ExplicitWidth = 714
     ExplicitHeight = 373
     ClientRectBottom = 373
-    ClientRectRight = 714
+    ClientRectRight = 788
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 714
       ExplicitHeight = 373
       inherited cxGrid: TcxGrid
-        Width = 714
+        Width = 788
         Height = 373
         ExplicitWidth = 714
         ExplicitHeight = 373
@@ -275,9 +275,9 @@ inherited PriceListLoadForm: TPriceListLoadForm
         item
           Action = actRefresh
         end>
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 8
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+      ImageIndex = 28
     end
   end
   inherited MasterDS: TDataSource
@@ -301,11 +301,11 @@ inherited PriceListLoadForm: TPriceListLoadForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbOpen'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbDelete'
+          ItemName = 'bbGetMovement'
         end
         item
           Visible = True
@@ -313,7 +313,15 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end
         item
           Visible = True
-          ItemName = 'bbGetMovement'
+          ItemName = 'bbOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
         end
         item
           Visible = True
@@ -329,7 +337,7 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbLoadPriceList'
         end
         item
           Visible = True
@@ -337,7 +345,11 @@ inherited PriceListLoadForm: TPriceListLoadForm
         end
         item
           Visible = True
-          ItemName = 'bbLoadPriceList'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbOpen: TdxBarButton
