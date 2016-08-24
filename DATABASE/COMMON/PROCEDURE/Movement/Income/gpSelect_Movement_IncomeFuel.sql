@@ -44,6 +44,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , FuelReal       TFloat -- Кол-во л. (заправка)
              , PriceCalc      TFloat -- Цена заправки
              , SummReal       TFloat -- Сумма заправки
+
+             , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
+             , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
               )
 AS
 $BODY$
@@ -212,6 +215,9 @@ BEGIN
              -- Сумма заправки
            , MovementFloat_TotalSumm.ValueData AS SummReal
 
+           , tmpSign.strSign
+           , tmpSign.strSignNo
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
@@ -323,6 +329,8 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement.Id ) AS tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи
 
        WHERE COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
          -- AND View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401() -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
