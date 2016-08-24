@@ -201,6 +201,7 @@ type
     PanelInvNumberTransport: TPanel;
     isBarCode: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
+    SpeedButton1: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -228,6 +229,7 @@ type
     procedure EditBarCodeTransportExit(Sender: TObject);
     procedure EditBarCodeTransportPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -487,6 +489,16 @@ begin
           end;
           lParams.Free;
      end;
+end;
+//------------------------------------------------------------------------------------------------
+procedure TMainForm.SpeedButton1Click(Sender: TObject);
+begin
+     if DialogMovementDescForm.Execute('isUpdateUnit') then
+     begin
+          DMMainScaleForm.gpUpdate_Scale_Movement(ParamsMovement);
+          WriteParamsMovement;
+     end;
+     myActiveControl;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.GetParams_MovementDesc(BarCode: String):Boolean;

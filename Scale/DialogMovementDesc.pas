@@ -59,6 +59,7 @@ type
     isEditBarCode: Boolean;
     isOrderExternal: Boolean;
     isBarCodeMaster: Boolean;
+    isUpdateUnit: Boolean;
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
@@ -76,14 +77,27 @@ uses dmMainScale,GuidePartner;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
+     isUpdateUnit:= BarCode = 'isUpdateUnit';
+     //
      CopyValuesParamsFrom(ParamsMovement,ParamsMovement_local);
-
      // !!!обязательно обнулили!!!
      ParamsMovement_local.ParamByName('MovementId_get').AsInteger:= 0;
+     //
+     if isUpdateUnit = True then
+     begin BarCode:='';
+           // если это изменение
+           ParamsMovement_local.ParamByName('isMovementId_check').asBoolean:= TRUE;
+     end;
 
      isEditPartnerCodeExit:= FALSE;
      ParamsMovement_local.ParamByName('isGetPartner').AsBoolean:= false;
 
+     if  isUpdateUnit = TRUE
+     then begin
+               MessagePanel.Font.Style:=[fsBold];
+               MessagePanel.Caption:='Изменение текущего взвешивания.';
+     end
+     else
      if   (ParamsMovement_local.ParamByName('MovementId').AsInteger <> 0)
        and(ParamsMovement_local.ParamByName('isMovementId_check').asBoolean = FALSE)
      then begin
@@ -154,6 +168,20 @@ begin
      //
      Result:=(IsOrderExternal=true)and(CDS.FieldByName('MovementDescId').AsInteger>0)and(ActiveControl=DBGrid);
      if not Result then exit;
+
+     //если режим Update, т.е. BarCode = 'isUpdateUnit'
+     if isUpdateUnit = TRUE
+     then begin
+         Result:= (CDS.FieldByName('MovementDescId').asInteger                    = ParamsMovement.ParamByName('MovementDescId').AsInteger)
+              and (ParamsMovement_local.ParamByName('calcPartnerId').AsInteger    = ParamsMovement.ParamByName('calcPartnerId').AsInteger)
+              and (ParamsMovement_local.ParamByName('OrderExternalId').AsInteger  = ParamsMovement.ParamByName('OrderExternalId').AsInteger)
+                 ;
+         if not Result then
+         begin
+              ShowMessage('Ошибка.В выбранном режиме можно исправить ТОЛЬКО склад.');
+              exit;
+         end;
+     end;
 
      //!!!обнуляется т.к.было изменение MovementDescId!!!
      if  (CDS.FieldByName('MovementDescId').asInteger<>ParamsMovement.ParamByName('MovementDescId').AsInteger)
