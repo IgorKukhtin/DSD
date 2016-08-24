@@ -2,7 +2,7 @@ object IncomeFuelForm: TIncomeFuelForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
-  ClientHeight = 597
+  ClientHeight = 661
   ClientWidth = 1052
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -247,12 +247,12 @@ object IncomeFuelForm: TIncomeFuelForm
     Left = 0
     Top = 116
     Width = 1052
-    Height = 481
+    Height = 545
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 481
+    ClientRectBottom = 545
     ClientRectRight = 1052
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -260,11 +260,12 @@ object IncomeFuelForm: TIncomeFuelForm
       ImageIndex = 0
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 288
+        Top = 231
         Width = 1052
-        Height = 169
+        Height = 145
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 248
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -408,19 +409,21 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 280
+        Top = 223
         Width = 1052
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 293
       end
       object cxGrid: TcxGrid
         Left = 0
         Top = 105
         Width = 1052
-        Height = 175
+        Height = 118
         Align = alClient
         TabOrder = 2
+        ExplicitHeight = 188
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -796,6 +799,123 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
+        Top = 376
+        Width = 1052
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridSign
+        ExplicitTop = 424
+      end
+      object cxGridSign: TcxGrid
+        Left = 0
+        Top = 384
+        Width = 1052
+        Height = 137
+        Align = alBottom
+        TabOrder = 5
+        LookAndFeel.NativeStyle = False
+        object cxGridDBTableViewSign: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = SignDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Active = True
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.IncSearch = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object sclisSign: TcxGridDBColumn
+            Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
+            DataBinding.FieldName = 'isSign'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 73
+          end
+          object sclCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 39
+          end
+          object sclSignInternalName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'SignInternalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = SignInternalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 295
+          end
+          object sclAmount: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object sclUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
+          end
+          object sclInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 188
+          end
+          object sclInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 145
+          end
+          object sclisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableViewSign
+        end
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
         Top = 97
         Width = 1052
         Height = 8
@@ -884,8 +1004,8 @@ object IncomeFuelForm: TIncomeFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 539
-    Top = 81
+    Left = 515
+    Top = 129
     DockControlHeights = (
       0
       0
@@ -964,6 +1084,30 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           Visible = True
           ItemName = 'bbMIChildProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISign'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMISignNO'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSignProtocolOpenForm'
         end
         item
           Visible = True
@@ -1072,6 +1216,18 @@ object IncomeFuelForm: TIncomeFuelForm
       Action = RouteMemberChoiceForm
       Category = 0
     end
+    object bbSignProtocolOpenForm: TdxBarButton
+      Action = SignProtocolOpenForm
+      Category = 0
+    end
+    object bbInsertUpdateMISign: TdxBarButton
+      Action = actInsertUpdateMISign
+      Category = 0
+    end
+    object bbInsertUpdateMISignNO: TdxBarButton
+      Action = actInsertUpdateMISignNO
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1085,13 +1241,13 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 630
-    Top = 91
+    Left = 638
+    Top = 131
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 593
-    Top = 89
+    Top = 129
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1183,6 +1339,9 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           StoredProc = spGetInfo
+        end
+        item
+          StoredProc = spSelectMISign
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1529,6 +1688,95 @@ object IncomeFuelForm: TIncomeFuelForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object SignProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'SignInternalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object SignInternalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'SignInternalChoiceForm'
+      FormName = 'TSignInternalForm'
+      FormNameParam.Value = 'TSignInternalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'SignInternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = SignCDS
+          ComponentItem = 'SignInternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_No
+        end
+        item
+          StoredProc = spSelectMISign
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISign: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign
+        end
+        item
+          StoredProc = spSelectMISign
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 58
     end
   end
   object MasterDS: TDataSource
@@ -2573,8 +2821,8 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 84
-    Top = 438
+    Left = 92
+    Top = 478
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Child'
@@ -2789,8 +3037,8 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 494
-    Top = 388
+    Left = 470
+    Top = 420
   end
   object spGetInfo: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_IncomeFuel'
@@ -2984,5 +3232,110 @@ object IncomeFuelForm: TIncomeFuelForm
     SummaryItemList = <>
     Left = 256
     Top = 199
+  end
+  object SignDS: TDataSource
+    DataSet = SignCDS
+    Left = 620
+    Top = 614
+  end
+  object SignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 560
+    Top = 616
+  end
+  object dsdDBViewAddOnSign: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewSign
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 416
+    Top = 623
+  end
+  object spSelectMISign: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_IncomeFuel_Sign'
+    DataSet = SignCDS
+    DataSets = <
+      item
+        DataSet = SignCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 492
+    Top = 616
+  end
+  object spInsertUpdateMISign: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
+    Top = 603
+  end
+  object spInsertUpdateMISign_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 640
+    Top = 563
   end
 end

@@ -30,10 +30,10 @@ BEGIN
        , Object_SignInternal.ValueData  AS Name
               
        , ObjectFloat_MovementDesc.ValueData AS MovementDescId
-       , Object_MovementDesc.ValueData      AS MovementDescName
+       , Object_MovementDesc.ItemName       AS MovementDescName
 
        , ObjectFloat_ObjectDesc.ValueData   AS ObjectDescId
-       , Object_ObjectDesc.ValueData        AS ObjectDescName
+       , Object_ObjectDesc.ItemName         AS ObjectDescName
 
        , ObjectString_Comment.ValueData     AS Comment
       
@@ -51,12 +51,12 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc
                               ON ObjectFloat_MovementDesc.ObjectId = Object_SignInternal.Id
                              AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_SignInternal_MovementDesc()
-        LEFT JOIN Object AS Object_MovementDesc ON Object_MovementDesc.Id = ObjectFloat_MovementDesc.ValueData :: integer
+        LEFT JOIN MovementDesc AS Object_MovementDesc ON Object_MovementDesc.Id = ObjectFloat_MovementDesc.ValueData :: integer
             
         LEFT JOIN ObjectFloat AS ObjectFloat_ObjectDesc
                               ON ObjectFloat_ObjectDesc.ObjectId = Object_SignInternal.Id
                              AND ObjectFloat_ObjectDesc.DescId = zc_ObjectFloat_SignInternal_ObjectDesc()
-        LEFT JOIN Object AS Object_ObjectDesc ON Object_ObjectDesc.Id = ObjectFloat_ObjectDesc.ValueData :: integer
+        LEFT JOIN ObjectDesc AS Object_ObjectDesc ON Object_ObjectDesc.Id = ObjectFloat_ObjectDesc.ValueData :: integer
 
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_SignInternal.Id 

@@ -91,6 +91,9 @@ type
     cxBranchName: TcxGridDBColumn;
     cxUnitName: TcxGridDBColumn;
     cxPositionName: TcxGridDBColumn;
+    MovementDescChoiceForm: TOpenChoiceForm;
+    ObjectDescChoiceForm: TOpenChoiceForm;
+    cxUserId: TcxGridDBColumn;
   private
     { Private declarations }
   public

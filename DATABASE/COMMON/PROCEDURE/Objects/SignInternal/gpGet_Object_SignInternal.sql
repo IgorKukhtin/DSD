@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_SignInternal(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , MovementDescId Tfloat, MovementDescName TVarChar
-             , ObjectDescId  Tfloat, ObjectDescName TVarChar
+             , MovementDescId Integer, MovementDescName TVarChar
+             , ObjectDescId  Integer, ObjectDescName TVarChar
              , Comment TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , isErased Boolean
@@ -26,10 +26,10 @@ $BODY$BEGIN
            , lfGet_ObjectCode(0, zc_Object_SignInternal()) AS Code
            , CAST ('' as TVarChar)  AS Name
 
-           , CAST (0 as TFloat)     AS MovementDescId
-           , CAST ('' as TVarChar)   AS MovementDescName
-           , CAST (0 as TFloat)     AS ObjectDescId
-           , CAST ('' as TVarChar)   AS ObjectDescName
+           , CAST (0 as Integer)     AS MovementDescId
+           , CAST (Null as TVarChar)  AS MovementDescName
+           , CAST (0 as Integer)     AS ObjectDescId
+           , CAST (Null as TVarChar)  AS ObjectDescName
 
            , CAST ('' as TVarChar)   AS Comment
                       
@@ -46,11 +46,11 @@ $BODY$BEGIN
            , Object_SignInternal.ObjectCode AS Code
            , Object_SignInternal.ValueData  AS Name
 
-           , ObjectFloat_MovementDesc.ValueData AS MovementDescId
-           , Object_MovementDesc.ValueData      AS MovementDescName
+           , ObjectFloat_MovementDesc.ValueData :: integer AS MovementDescId
+           , Object_MovementDesc.ItemName       AS MovementDescName
 
-           , ObjectFloat_ObjectDesc.ValueData   AS ObjectDescId
-           , Object_ObjectDesc.ValueData        AS ObjectDescName
+           , ObjectFloat_ObjectDesc.ValueData :: integer   AS ObjectDescId
+           , Object_ObjectDesc.ItemName         AS ObjectDescName
 
            , ObjectString_Comment.ValueData     AS Comment
                       
@@ -64,12 +64,12 @@ $BODY$BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc
                                   ON ObjectFloat_MovementDesc.ObjectId = Object_SignInternal.Id
                                  AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_SignInternal_MovementDesc()
-            LEFT JOIN Object AS Object_MovementDesc ON Object_MovementDesc.Id = ObjectFloat_MovementDesc.ValueData :: integer
+            LEFT JOIN MovementDesc AS Object_MovementDesc ON Object_MovementDesc.Id = ObjectFloat_MovementDesc.ValueData :: integer
             
             LEFT JOIN ObjectFloat AS ObjectFloat_ObjectDesc
                                   ON ObjectFloat_ObjectDesc.ObjectId = Object_SignInternal.Id
                                  AND ObjectFloat_ObjectDesc.DescId = zc_ObjectFloat_SignInternal_ObjectDesc()
-            LEFT JOIN Object AS Object_ObjectDesc ON Object_ObjectDesc.Id = ObjectFloat_ObjectDesc.ValueData :: integer
+            LEFT JOIN ObjectDesc AS Object_ObjectDesc ON Object_ObjectDesc.Id = ObjectFloat_ObjectDesc.ValueData :: integer
 
 
             LEFT JOIN ObjectString AS ObjectString_Comment
@@ -98,4 +98,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_SignInternal (2, '')
+-- SELECT * FROM gpGet_Object_SignInternal (0, '3')
