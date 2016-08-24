@@ -70,25 +70,6 @@ BEGIN
    WHERE Object_SignInternal.DescId = zc_Object_SignInternal()
 --     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
 
-      UNION ALL
-       SELECT 
-             0 AS Id
-           , NULL :: Integer AS Code
-           , '”ƒ¿À»“‹' :: TVarChar AS Name
-
-           , 0 :: Tfloat   AS MovementDescId
-           , 0 :: TVarChar AS MovementDescName
-
-           , 0 :: Tfloat   AS ObjectDescId
-           , 0 :: TVarChar AS ObjectDescName
-
-           , 0 :: TVarChar AS Comment
-       
-           , 0 AS UnitId 
-           , 0 AS UnitCode
-           , '' :: TVarChar AS UnitName
-
-           , FALSE AS isErased
   ;
   
 END;
