@@ -47,6 +47,7 @@ type
     function gpInsertUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     function gpInsert_Scale_MI(var execParamsMovement:TParams;var execParamsMI:TParams): Boolean;
     function gpInsert_Movement_all(var execParamsMovement:TParams): Boolean;
+    function gpUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
     //
     // Scale
     function gpUpdate_Scale_Movement_Transport(execParamsMovement:TParams): Boolean;
@@ -432,6 +433,28 @@ begin
          ShowMessage('Ошибка получения - gpInsert_Movement_all');
        end;}
     end;
+    Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleForm.gpUpdate_Scale_Movement(var execParamsMovement:TParams): Boolean;
+begin
+    Result:=false;
+    with spSelect do begin
+       StoredProcName:='gpUpdate_Scale_Movement';
+       OutputType:=otResult;
+       Params.Clear;
+       Params.AddParam('inId', ftInteger, ptInputOutput, execParamsMovement.ParamByName('MovementId').AsInteger);
+       Params.AddParam('inMovementDescId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescId').AsInteger);
+       Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
+       Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+       //try
+         Execute;
+       {except
+         Result := '';
+         ShowMessage('Ошибка получения - gpInsertUpdate_Scale_Movement');
+       end;}
+    end;
+    //
     Result:=true;
 end;
 {------------------------------------------------------------------------}
@@ -908,6 +931,7 @@ begin
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String): Boolean;
+var MovementDescId_old:Integer;
 begin
     with spSelect do
     begin
@@ -923,11 +947,16 @@ begin
          Result:=DataSet.RecordCount=1;
        with execParams do
        begin
+         MovementDescId_old:=ParamByName('MovementDescId').AsInteger;
+         //
          ParamByName('MovementId_get').AsInteger:= DataSet.FieldByName('MovementId_get').asInteger;//документ взвешивания !!!только для заявки!!!, потом переносится в MovementId
          ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
-         ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
-         ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
-         ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
+         if (MovementDescId_old <> DataSet.FieldByName('MovementDescId').asInteger) or (ParamByName('FromId').AsInteger = 0) then
+         begin
+              ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+              ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+              ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
+         end;
          ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
          ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
          ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;

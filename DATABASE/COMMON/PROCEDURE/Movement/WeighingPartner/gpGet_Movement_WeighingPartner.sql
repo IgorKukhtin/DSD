@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartionGoods TVarChar
              , WeighingNumber TFloat, InvNumberTransport TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , MovementDescId Integer
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -67,6 +68,8 @@ BEGIN
              , MovementFloat_VATPercent.ValueData             AS VATPercent
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
 
+             , MovementFloat_MovementDesc.ValueData :: Integer AS MovementDescId
+
              , Object_From.Id                       AS FromId
              , Object_From.ValueData                AS FromName
              , Object_To.Id                         AS ToId
@@ -118,6 +121,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                    ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                   AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
