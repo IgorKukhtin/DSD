@@ -153,6 +153,13 @@ type
     macSUpdate_ChangePrice: TMultiAction;
     bbUpdate_ChangePrice: TdxBarButton;
     macUpdate_ChangePrice: TMultiAction;
+    clstrSign: TcxGridDBColumn;
+    clstrSignNo: TcxGridDBColumn;
+    spInsertUpdateMISign: TdsdStoredProc;
+    actInsertUpdateMISign0: TdsdExecStoredProc;
+    actInsertUpdateMISign1: TMultiAction;
+    actInsertUpdateMISignList: TMultiAction;
+    bb: TdxBarButton;
   private
   public
   end;
