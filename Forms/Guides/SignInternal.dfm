@@ -182,17 +182,12 @@ object SignInternalForm: TSignInternalForm
       object cxCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 70
-      end
-      object cxName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 208
       end
       object cxUserCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1083#1100#1079'.'
@@ -253,7 +248,7 @@ object SignInternalForm: TSignInternalForm
         Width = 138
       end
       object cxUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1083#1100#1079'.'
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -261,7 +256,7 @@ object SignInternalForm: TSignInternalForm
         Width = 151
       end
       object cxBranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083' '#1087#1086#1083#1100#1079'.'
+        Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -273,6 +268,13 @@ object SignInternalForm: TSignInternalForm
         Visible = False
         VisibleForCustomization = False
         Width = 60
+      end
+      object cxName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 208
       end
     end
     object cxGridLevel2: TcxGridLevel

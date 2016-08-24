@@ -265,7 +265,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 145
         Align = alBottom
         TabOrder = 0
-        ExplicitTop = 248
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -414,7 +413,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 293
       end
       object cxGrid: TcxGrid
         Left = 0
@@ -423,7 +421,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 118
         Align = alClient
         TabOrder = 2
-        ExplicitHeight = 188
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -805,7 +802,6 @@ object IncomeFuelForm: TIncomeFuelForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridSign
-        ExplicitTop = 424
       end
       object cxGridSign: TcxGrid
         Left = 0
@@ -866,7 +862,7 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 295
+            Width = 278
           end
           object sclAmount: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
@@ -879,9 +875,11 @@ object IncomeFuelForm: TIncomeFuelForm
           object sclUserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 134
           end
           object sclInsertName: TcxGridDBColumn
