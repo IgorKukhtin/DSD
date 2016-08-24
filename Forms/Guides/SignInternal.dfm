@@ -180,7 +180,7 @@ object SignInternalForm: TSignInternalForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object cxCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = #8470' '#1087'/'#1087
         DataBinding.FieldName = 'Code'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 2
