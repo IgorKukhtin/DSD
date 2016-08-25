@@ -2630,7 +2630,7 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 534
+    Left = 558
     Top = 248
   end
   object spUnErasedMIMaster: TdsdStoredProc

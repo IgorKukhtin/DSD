@@ -204,6 +204,9 @@ type
     spInsertUpdateMISign_No: TdsdStoredProc;
     actInsertUpdateMISignNO: TdsdExecStoredProc;
     bbInsertUpdateMISignNO: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
   private
   public
   end;
