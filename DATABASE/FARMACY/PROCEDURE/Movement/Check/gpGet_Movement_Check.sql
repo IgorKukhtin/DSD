@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
+             , ConfirmedKindClientName TVarChar
 )
 AS
 $BODY$
@@ -47,7 +48,7 @@ BEGIN
            , Movement_Check.BayerPhone
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
-
+           , Movement_Check.ConfirmedKindClientName
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId

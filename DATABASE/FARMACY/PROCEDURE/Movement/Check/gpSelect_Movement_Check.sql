@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , BayerPhone TVarChar
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
+             , ConfirmedKindClientName TVarChar
               )
 AS
 $BODY$
@@ -76,6 +77,7 @@ BEGIN
            , Movement_Check.BayerPhone
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
+           , Movement_Check.ConfirmedKindClientName
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -96,6 +98,7 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 25.08.16         *
  21.07.16         *
  05.05.16         *
  07.08.15                                                                        *

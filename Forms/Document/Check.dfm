@@ -1,5 +1,7 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
+  ExplicitWidth = 845
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -350,16 +352,31 @@ inherited CheckForm: TCheckForm
     Width = 212
   end
   object cxLabel8: TcxLabel [6]
-    Left = 586
+    Left = 477
     Top = 76
     Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
   end
   object edConfirmedKind: TcxTextEdit [7]
-    Left = 586
+    Left = 477
     Top = 92
+    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 212
+    Width = 160
+  end
+  object edConfirmedKindClient: TcxTextEdit [8]
+    Left = 641
+    Top = 92
+    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 160
+  end
+  object cxLabel11: TcxLabel [9]
+    Left = 641
+    Top = 76
+    Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083'.)'
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased
@@ -740,6 +757,13 @@ inherited CheckForm: TCheckForm
         Name = 'ConfirmedKindName'
         Value = Null
         Component = edConfirmedKind
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindClientName'
+        Value = Null
+        Component = edConfirmedKindClient
         DataType = ftString
         MultiSelectSeparator = ','
       end>

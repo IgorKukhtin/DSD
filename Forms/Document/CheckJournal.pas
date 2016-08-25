@@ -44,6 +44,7 @@ type
     BayerPhone: TcxGridDBColumn;
     InvNumberOrder: TcxGridDBColumn;
     ConfirmedKindName: TcxGridDBColumn;
+    ConfirmedKindClientName: TcxGridDBColumn;
   private
     { Private declarations }
   public

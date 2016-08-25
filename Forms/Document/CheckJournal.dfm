@@ -4,10 +4,8 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -58
-  ExplicitTop = -132
   ExplicitWidth = 847
-  ExplicitHeight = 589
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -196,6 +194,15 @@ inherited CheckJournalForm: TCheckJournalForm
             HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
             Options.Editing = False
             Width = 80
+          end
+          object ConfirmedKindClientName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088'. '#1082#1083'.)'
+            DataBinding.FieldName = 'ConfirmedKindClientName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+            Options.Editing = False
+            Width = 102
           end
         end
       end
