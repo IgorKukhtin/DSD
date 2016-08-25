@@ -25,6 +25,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
    OUT outMovementId_Partion    Integer   , -- 
    OUT outPartionMovementName   TVarChar  , -- 
+   OUT outMovementPromo         TVarChar  , -- 
+   OUT outPricePromo            TFloat    , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
