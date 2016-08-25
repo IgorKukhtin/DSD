@@ -20,6 +20,7 @@ RETURNS TABLE (
   BayerPhone TVarChar,
   InvNumberOrder TVarChar,
   ConfirmedKindName TVarChar,
+  ConfirmedKindClientName TVarChar,
   DiscountExternalId Integer,
   DiscountExternalName TVarChar,
   DiscountCardNumber TVarChar
@@ -78,6 +79,7 @@ BEGIN
             , MovementString_BayerPhone.ValueData        AS BayerPhone
             , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
             , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
+            , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
 
 	    , Object_DiscountExternal.Id                 AS DiscountExternalId
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
@@ -140,6 +142,11 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
              LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
+                                          ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
+                                         AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
+             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
        ;
 
 END;

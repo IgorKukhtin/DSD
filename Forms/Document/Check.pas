@@ -45,6 +45,8 @@ type
     cxLabel8: TcxLabel;
     edConfirmedKind: TcxTextEdit;
     List_UID: TcxGridDBColumn;
+    edConfirmedKindClient: TcxTextEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

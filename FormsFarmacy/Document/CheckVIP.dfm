@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 417
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -62,6 +62,13 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'ConfirmedKindName'
             HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
             Width = 55
+          end
+          object ConfirmedKindClientName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090'. '#1079'. ('#1054#1090#1087#1088'.)'
+            DataBinding.FieldName = 'ConfirmedKindClientName'
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+            Options.Editing = False
+            Width = 98
           end
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088

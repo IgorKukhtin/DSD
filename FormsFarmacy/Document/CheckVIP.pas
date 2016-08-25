@@ -51,6 +51,7 @@ type
     ConfirmedKindName: TcxGridDBColumn;
     colAmountOrder: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
+    ConfirmedKindClientName: TcxGridDBColumn;
   private
     { Private declarations }
   public

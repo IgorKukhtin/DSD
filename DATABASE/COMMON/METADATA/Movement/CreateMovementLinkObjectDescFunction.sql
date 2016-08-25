@@ -302,6 +302,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ConfirmedKind() RETURNS Integer
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_ConfirmedKind', 'Статус заказа (Состояние VIP-чека)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ConfirmedKindClient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKindClient'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_ConfirmedKindClient', 'Статус заказа (Отправлен клиенту)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKindClient');
 
 /*-------------------------------------------------------------------------------
 
@@ -309,6 +312,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 25.08.16         * zc_MovementLinkObject_ConfirmedKindClient
  21.07.16         * zc_MovementLinkObject_discountcard
  13.06.16         * zc_MovementLinkObject_DocumentKind 
  10.12.15                                                                       *zc_MovementLinkObject_ChangeIncomePaymentKind

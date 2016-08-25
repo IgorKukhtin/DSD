@@ -35,6 +35,7 @@ SELECT
            , MovementString_BayerPhone.ValueData     AS BayerPhone
            , MovementString_InvNumberOrder.ValueData AS InvNumberOrder
            , Object_ConfirmedKind.ValueData          AS ConfirmedKindName
+           , Object_ConfirmedKindClient.ValueData    AS ConfirmedKindClientName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -109,6 +110,10 @@ SELECT
                                          AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
              LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
                        
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
+                                          ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
+                                         AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
+             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
 
         WHERE Movement.DescId = zc_Movement_Check();
 
