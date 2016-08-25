@@ -45,7 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MIAmount TFloat,  AmountPartner TFloat
              , RealWeight TFloat,CountTare TFloat, WeightTare TFloat
              , HeadCount TFloat, BoxCount TFloat, BoxNumber TFloat
-             , LevelNumber TFloat, ChangePercentAmount TFloat
+             , LevelNumber TFloat, ChangePercentAmount TFloat, ChangePercent_mi TFloat
              , Price TFloat, CountForPrice TFloat
              , PartionGoodsDate  TDateTime
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -53,6 +53,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MeasureName TVarChar, BoxName TVarChar
              , PriceListName TVarChar
              , isBarCode Boolean
+             , MovementPromo TVarChar
              , isErased Boolean
               )
 AS
@@ -195,15 +196,16 @@ BEGIN
                   , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
                   , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
 
-                  , COALESCE (MIFloat_HeadCount.ValueData, 0)::TFloat           AS HeadCount
-                  , COALESCE (MIFloat_BoxCount.ValueData, 0)::TFloat            AS BoxCount
+                  , MIFloat_HeadCount.ValueData                  AS HeadCount
+                  , MIFloat_BoxCount.ValueData                   AS BoxCount
       
-                  , COALESCE (MIFloat_BoxNumber.ValueData, 0)::TFloat  AS BoxNumber
-                  , COALESCE (MIFloat_LevelNumber.ValueData, 0)::TFloat AS LevelNumber
+                  , MIFloat_BoxNumber.ValueData                  AS BoxNumber
+                  , MIFloat_LevelNumber.ValueData                AS LevelNumber
 
-                  , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0)::TFloat AS ChangePercentAmount
-                  , COALESCE (MIFloat_Price.ValueData, 0) ::TFloat		  AS Price
-                  , COALESCE (MIFloat_CountForPrice.ValueData, 0) ::TFloat	  AS CountForPrice
+                  , MIFloat_ChangePercentAmount.ValueData        AS ChangePercentAmount
+                  , MIFloat_ChangePercent.ValueData              AS ChangePercent_mi
+                  , MIFloat_Price.ValueData                      AS Price
+                  , MIFloat_CountForPrice.ValueData              AS CountForPrice
            
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()):: TDateTime AS PartionGoodsDate
 
@@ -216,6 +218,8 @@ BEGIN
                   , COALESCE (Object_PriceList.ValueData , '')::TVarChar       AS PriceListName
 
                   , COALESCE (MIBoolean_BarCode.ValueData, FALSE) :: Boolean AS isBarCode
+
+                  , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
 
                   , MovementItem.isErased
 
@@ -245,7 +249,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
-            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
 
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
@@ -410,8 +414,16 @@ BEGIN
                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                                                  
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
-                                              ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                        ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+            LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovement.ValueData :: Integer
+
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -490,4 +502,4 @@ ALTER FUNCTION gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Int
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

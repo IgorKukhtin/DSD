@@ -152,6 +152,7 @@ type
     OrderChoiceGuides: TdsdGuides;
     HeaderSaver3: THeaderSaver;
     spUpdateMovement_Order: TdsdStoredProc;
+    ChangePercent: TcxGridDBColumn;
   private
   public
   end;

@@ -108,6 +108,8 @@ type
     GuidesGoods: TdsdGuides;
     isBarCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    ChangePercent_mi: TcxGridDBColumn;
+    MovementPromo: TcxGridDBColumn;
   private
   public
   end;
