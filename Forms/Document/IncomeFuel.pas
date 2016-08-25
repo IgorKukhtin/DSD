@@ -155,7 +155,6 @@ type
     colStartOdometre: TcxGridDBColumn;
     colEndOdometre: TcxGridDBColumn;
     cxGridLevelInfo: TcxGridLevel;
-    cxSplitter1: TcxSplitter;
     spGetInfo: TdsdStoredProc;
     InfoCDS: TClientDataSet;
     InfoDS: TDataSource;
@@ -183,19 +182,10 @@ type
     bbRouteMember: TdxBarButton;
     SignDS: TDataSource;
     SignCDS: TClientDataSet;
-    cxGridSign: TcxGrid;
-    cxGridDBTableViewSign: TcxGridDBTableView;
-    sclCode: TcxGridDBColumn;
-    sclSignInternalName: TcxGridDBColumn;
-    sclAmount: TcxGridDBColumn;
-    sclisErased: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
     cxSplitter2: TcxSplitter;
     dsdDBViewAddOnSign: TdsdDBViewAddOn;
     spSelectMISign: TdsdStoredProc;
     SignInternalChoiceForm: TOpenChoiceForm;
-    sclUserName: TcxGridDBColumn;
-    sclisSign: TcxGridDBColumn;
     SignProtocolOpenForm: TdsdOpenForm;
     bbSignProtocolOpenForm: TdxBarButton;
     spInsertUpdateMISign: TdsdStoredProc;
@@ -207,6 +197,17 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    cxGridSign: TcxGrid;
+    cxGridDBTableViewSign: TcxGridDBTableView;
+    sclisSign: TcxGridDBColumn;
+    sclCode: TcxGridDBColumn;
+    sclSignInternalName: TcxGridDBColumn;
+    sclAmount: TcxGridDBColumn;
+    sclUserName: TcxGridDBColumn;
+    sclInsertName: TcxGridDBColumn;
+    sclInsertDate: TcxGridDBColumn;
+    sclisErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
   private
   public
   end;

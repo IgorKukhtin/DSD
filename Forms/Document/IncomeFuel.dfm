@@ -2,7 +2,7 @@ object IncomeFuelForm: TIncomeFuelForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
-  ClientHeight = 661
+  ClientHeight = 514
   ClientWidth = 1052
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -247,24 +247,27 @@ object IncomeFuelForm: TIncomeFuelForm
     Left = 0
     Top = 116
     Width = 1052
-    Height = 545
+    Height = 398
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 545
+    ExplicitHeight = 545
+    ClientRectBottom = 398
     ClientRectRight = 1052
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 521
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 231
+        Top = 66
         Width = 1052
-        Height = 145
+        Height = 308
         Align = alBottom
         TabOrder = 0
+        ExplicitTop = 216
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -408,19 +411,21 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 223
+        Top = 58
         Width = 1052
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 223
       end
       object cxGrid: TcxGrid
         Left = 0
         Top = 105
         Width = 1052
-        Height = 118
+        Height = 103
         Align = alClient
         TabOrder = 2
+        ExplicitHeight = 192
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -794,23 +799,31 @@ object IncomeFuelForm: TIncomeFuelForm
           GridView = cxGridDBTableViewInfo
         end
       end
-      object cxSplitter1: TcxSplitter
+      object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 376
+        Top = 97
         Width = 1052
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salBottom
-        Control = cxGridSign
+        AlignSplitter = salTop
+        Control = cxGrid1
       end
+    end
+    object cxTabSheetSign: TcxTabSheet
+      Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 2
+      ExplicitHeight = 521
       object cxGridSign: TcxGrid
         Left = 0
-        Top = 384
+        Top = 0
         Width = 1052
-        Height = 137
-        Align = alBottom
-        TabOrder = 5
+        Height = 374
+        Align = alClient
+        TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitLeft = 192
+        ExplicitTop = 32
+        ExplicitHeight = 605
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -911,15 +924,6 @@ object IncomeFuelForm: TIncomeFuelForm
           GridView = cxGridDBTableViewSign
         end
       end
-      object cxSplitter2: TcxSplitter
-        Left = 0
-        Top = 97
-        Width = 1052
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salTop
-        Control = cxGrid1
-      end
     end
   end
   object FormParams: TdsdFormParams
@@ -1001,8 +1005,8 @@ object IncomeFuelForm: TIncomeFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 515
-    Top = 129
+    Left = 451
+    Top = 121
     DockControlHeights = (
       0
       0
@@ -1523,6 +1527,7 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object RouteMemberChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072')>'
@@ -1640,6 +1645,7 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object MIChildProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1052#1072#1088#1096#1088#1091#1090#1086#1074' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1052#1072#1088#1096#1088#1091#1090#1086#1074' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074')>'
@@ -1670,6 +1676,7 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object MIProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -1700,7 +1707,9 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object SignProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetSign
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
       ImageIndex = 34
@@ -1757,7 +1766,9 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object actInsertUpdateMISignNO: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = cxTabSheetSign
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMISign_No
       StoredProcList = <
@@ -1773,7 +1784,9 @@ object IncomeFuelForm: TIncomeFuelForm
     end
     object actInsertUpdateMISign: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = cxTabSheetSign
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMISign
       StoredProcList = <
@@ -2054,8 +2067,8 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 287
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 684
-    Top = 82
+    Left = 676
+    Top = 130
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeMemberFuel'
@@ -2830,8 +2843,8 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 92
-    Top = 478
+    Left = 100
+    Top = 438
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Child'
@@ -3244,18 +3257,17 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object SignDS: TDataSource
     DataSet = SignCDS
-    Left = 620
-    Top = 614
+    Left = 868
+    Top = 294
   end
   object SignCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 560
-    Top = 616
+    Left = 824
+    Top = 296
   end
   object dsdDBViewAddOnSign: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewSign
     OnDblClickActionList = <
       item
       end>
@@ -3268,8 +3280,8 @@ object IncomeFuelForm: TIncomeFuelForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 416
-    Top = 623
+    Left = 864
+    Top = 335
   end
   object spSelectMISign: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_IncomeFuel_Sign'
@@ -3296,8 +3308,8 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 492
-    Top = 616
+    Left = 964
+    Top = 344
   end
   object spInsertUpdateMISign: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
@@ -3320,8 +3332,8 @@ object IncomeFuelForm: TIncomeFuelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 696
-    Top = 603
+    Left = 968
+    Top = 291
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
