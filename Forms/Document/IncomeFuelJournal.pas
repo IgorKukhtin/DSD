@@ -159,7 +159,12 @@ type
     actInsertUpdateMISign0: TdsdExecStoredProc;
     actInsertUpdateMISign1: TMultiAction;
     actInsertUpdateMISignList: TMultiAction;
-    bb: TdxBarButton;
+    bbSignList: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;
