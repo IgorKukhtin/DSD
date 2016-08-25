@@ -72,8 +72,8 @@ BEGIN
                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                           ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()

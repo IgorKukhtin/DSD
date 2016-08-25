@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , RealWeight TFloat, CountTare TFloat, WeightTare TFloat
              , Count TFloat, Count_mi TFloat, HeadCount TFloat, HeadCount_mi TFloat, BoxCount TFloat, BoxCount_mi TFloat
              , BoxNumber TFloat, LevelNumber TFloat
-             , ChangePercentAmount TFloat, AmountChangePercent TFloat
+             , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
              , PartionGoodsDate TDateTime
              , GoodsKindName TVarChar, MeasureName TVarChar
@@ -44,7 +44,6 @@ BEGIN
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = tmpIsErased.isErased
-                          
                            LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                        ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
@@ -73,9 +72,7 @@ BEGIN
                                                                ON MIFloat_PriceWithOutVAT.MovementItemId = tmpMIPromo_all.MovementItemId
                                                               AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
                              )
-
-
-     
+       -- Результат     
        SELECT
              tmpMI.MovementItemId :: Integer  AS Id
            , Object_Goods.ObjectCode          AS GoodsCode
@@ -105,6 +102,7 @@ BEGIN
            , CASE WHEN tmpMI.ChangePercentAmount = 0 THEN NULL ELSE tmpMI.ChangePercentAmount END :: TFloat AS ChangePercentAmount
            , CASE WHEN tmpMI.AmountChangePercent = 0 THEN NULL ELSE tmpMI.AmountChangePercent END :: TFloat AS AmountChangePercent
 
+           , tmpMI.ChangePercent :: TFloat AS ChangePercent
            , CASE WHEN tmpMI.Price = 0 THEN NULL ELSE tmpMI.Price END :: TFloat                 AS Price
            , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
            
@@ -118,7 +116,7 @@ BEGIN
            , CASE WHEN tmpMI.InsertDate = zc_DateStart() THEN NULL ELSE tmpMI.InsertDate END :: TDateTime AS InsertDate
            , CASE WHEN tmpMI.UpdateDate = zc_DateStart() THEN NULL ELSE tmpMI.UpdateDate END :: TDateTime AS UpdateDate
             
-           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndSale) AS MovementPromo
+           , zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, CASE WHEN MovementFloat_MovementDesc.ValueData = zc_Movement_ReturnIn() THEN Movement_Promo_View.EndReturn ELSE Movement_Promo_View.EndSale END) AS MovementPromo
            , tmpMIPromo.PricePromo :: TFloat AS PricePromo
 
            , tmpMI.isBarCode
@@ -154,6 +152,7 @@ BEGIN
 
                   , tmpMI.ChangePercentAmount
                   , SUM (tmpMI.AmountChangePercent) AS AmountChangePercent
+                  , tmpMI.ChangePercent
                   , tmpMI.Price
                   , tmpMI.CountForPrice
     
@@ -195,6 +194,7 @@ BEGIN
                   , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                   , 0 AmountChangePercent
 
+                  , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                   , COALESCE (MIFloat_Price.ValueData, 0) 		  AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
@@ -211,7 +211,7 @@ BEGIN
 
                   , MovementItem.isErased
                   
-                  ,  MIFloat_PromoMovementId.ValueData AS MovementPromoId
+                  ,  MIFloat_PromoMovement.ValueData AS MovementPromoId
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -235,6 +235,12 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -284,10 +290,7 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PriceList
                                                    ON MILinkObject_PriceList.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PriceList.DescId = zc_MILinkObject_PriceList()
-                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
-                                              ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                             AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
-                
+
             UNION ALL
              SELECT CASE WHEN inShowAll = TRUE THEN MovementItem.Id ELSE 0 END :: Integer AS MovementItemId
                   , MovementItem.ObjectId AS GoodsId
@@ -315,6 +318,7 @@ BEGIN
                   , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                   , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
 
+                  , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                   , COALESCE (MIFloat_Price.ValueData, 0) 		  AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
            
@@ -331,7 +335,7 @@ BEGIN
 
                   , MovementItem.isErased
                  
-                  ,  MIFloat_PromoMovementId.ValueData AS MovementPromoId
+                  , MIFloat_PromoMovement.ValueData :: Integer AS MovementPromoId
 
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                   INNER JOIN Movement ON Movement.Id = inMovementId
@@ -357,6 +361,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                               ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_CountPack
                                               ON MIFloat_CountPack.MovementItemId = MovementItem.Id
@@ -388,9 +395,9 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_PriceList
                                                    ON MILinkObject_PriceList.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PriceList.DescId = zc_MILinkObject_PriceList()
-                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovementId
-                                              ON MIFloat_PromoMovementId.MovementItemId = MovementItem.Id
-                                             AND MIFloat_PromoMovementId.DescId = zc_MIFloat_PromoMovementId()
+                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
                   
 
             ) AS tmpMI
@@ -399,6 +406,7 @@ BEGIN
                    , tmpMI.WeightTare
                    , tmpMI.BoxNumber
                    , tmpMI.ChangePercentAmount
+                   , tmpMI.ChangePercent
                    , tmpMI.Price
                    , tmpMI.CountForPrice
                    , tmpMI.PartionGoodsDate
@@ -434,6 +442,10 @@ BEGIN
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
+                                    ON MovementFloat_MovementDesc.MovementId =  inMovementId
+                                   AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
 
      ;
 

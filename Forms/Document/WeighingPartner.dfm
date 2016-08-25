@@ -780,6 +780,17 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
+          object ChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object PricePromo: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
@@ -870,7 +881,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Top = 63
     Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 100
   end
   object edInvNumberOrder: TcxButtonEdit

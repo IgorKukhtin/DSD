@@ -679,7 +679,7 @@ BEGIN
                                                              AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                        WHERE COALESCE(ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId ,0)<>0 OR COALESCE(ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId,0) <> 0 
                                        )
-
+       -- Результат     
        SELECT
              tmpMI_Goods.MovementItemId             AS Id
            , CAST (row_number() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum

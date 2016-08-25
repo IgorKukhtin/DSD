@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+   OUT outMovementId_Promo   Integer   ,
+   OUT outPricePromo         TFloat    ,
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS RECORD AS

@@ -74,44 +74,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = miAmount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = LevelNumber
         end
         item
           Format = ',0.####'
@@ -122,26 +85,6 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end
         item
           Format = ',0.####'
@@ -172,44 +115,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
           Column = miAmount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = LevelNumber
         end
         item
           Format = ',0.####'
@@ -220,26 +126,6 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colCount
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
         end
         item
           Format = ',0.####'
@@ -493,6 +379,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
         DataBinding.FieldName = 'ChangePercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -508,6 +397,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -595,9 +487,31 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Options.Editing = False
         Width = 64
       end
+      object ChangePercent_mi: TcxGridDBColumn
+        Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'. - '#1101#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ChangePercent_mi'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object MovementPromo: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+        DataBinding.FieldName = 'MovementPromo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object miAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'MIAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -606,6 +520,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object RealWeight: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080' '#1074#1079#1074#1077#1096'.'
         DataBinding.FieldName = 'RealWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -616,6 +533,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colCountTare: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099
         DataBinding.FieldName = 'CountTare'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -626,6 +546,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colWeightTare: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1090#1072#1088#1099
         DataBinding.FieldName = 'WeightTare'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -636,6 +559,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object ChangePercentAmount: TcxGridDBColumn
         Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
         DataBinding.FieldName = 'ChangePercentAmount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -646,6 +572,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object AmountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         DataBinding.FieldName = 'AmountPartner'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -656,6 +585,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colCount: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1073#1072#1090#1086#1085#1086#1074
         DataBinding.FieldName = 'Count'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
@@ -667,6 +599,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1092'. '#1103#1097'.'
         DataBinding.FieldName = 'BoxCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -677,6 +612,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object BoxNumber: TcxGridDBColumn
         Caption = #8470' '#1103#1097#1080#1082#1072
         DataBinding.FieldName = 'BoxNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -697,6 +635,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object LevelNumber: TcxGridDBColumn
         Caption = #8470' '#1089#1083#1086#1103
         DataBinding.FieldName = 'LevelNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
@@ -708,6 +649,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object colHeadCount: TcxGridDBColumn
         Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
         DataBinding.FieldName = 'HeadCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
@@ -729,6 +673,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       object Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
         DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -1147,15 +1094,18 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       FormName = 'TIncomeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -1170,17 +1120,20 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       FormName = 'TWeighingPartnerForm'
       FormNameParam.Value = 'TWeighingPartnerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1261,6 +1214,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1268,6 +1222,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -1276,6 +1231,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1288,6 +1244,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1295,6 +1252,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1302,6 +1260,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1322,6 +1281,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1329,6 +1289,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -1336,6 +1297,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1343,6 +1305,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = GuidesGoods
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1350,6 +1313,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
@@ -1365,6 +1329,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -1391,6 +1356,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1410,6 +1376,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1448,6 +1415,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1472,6 +1440,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndtDate'
@@ -1479,6 +1448,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 256
@@ -1489,6 +1459,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1499,6 +1470,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1507,6 +1479,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 608
   end
@@ -1515,6 +1488,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1525,6 +1499,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1533,6 +1508,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 856
     Top = 65535
