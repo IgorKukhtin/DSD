@@ -986,6 +986,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
@@ -1055,6 +1058,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
 

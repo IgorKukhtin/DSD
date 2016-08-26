@@ -285,6 +285,8 @@ type
     N98: TMenuItem;
     actDiscountExternalTools: TdsdOpenForm;
     miDiscountExternalTools: TMenuItem;
+    actPriceGroupSettingsTOP: TdsdOpenForm;
+    N102: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

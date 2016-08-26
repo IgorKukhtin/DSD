@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 226
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1014,7 +1014,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actJuridicalSettings: TdsdOpenForm [93]
+    object actPriceGroupSettingsTOP: TdsdOpenForm [93]
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1094#1077#1085#1086#1074#1099#1093' '#1075#1088#1091#1087#1087' '#1058#1054#1055
+      FormName = 'TPriceGroupSettingsTopForm'
+      FormNameParam.Value = 'TPriceGroupSettingsTopForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actJuridicalSettings: TdsdOpenForm [94]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1076#1083#1103' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
@@ -1025,7 +1036,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actJuridicalSettingsPriceList: TdsdOpenForm [94]
+    object actJuridicalSettingsPriceList: TdsdOpenForm [95]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
@@ -1036,12 +1047,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSaveData: TAction [95]
+    object actSaveData: TAction [96]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093
       OnExecute = actSaveDataExecute
     end
-    object actSearchGoods: TdsdOpenForm [96]
+    object actSearchGoods: TdsdOpenForm [97]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1074' '#1087#1088#1072#1081#1089' - '#1083#1080#1089#1090#1072#1093
@@ -1933,28 +1944,31 @@ inherited MainForm: TMainForm
       object miPriceGroupSettings: TMenuItem [12]
         Action = actPriceGroupSettings
       end
-      object miJuridicalSettings: TMenuItem [13]
+      object N102: TMenuItem [13]
+        Action = actPriceGroupSettingsTOP
+      end
+      object miJuridicalSettings: TMenuItem [14]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [14]
+      object N9: TMenuItem [15]
         Caption = '-'
       end
-      object miImportType: TMenuItem [15]
+      object miImportType: TMenuItem [16]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [16]
+      object miImportSettings: TMenuItem [17]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [17]
+      object miImportExportLink: TMenuItem [18]
         Action = actImportExportLink
       end
-      object FarmacyCash1: TMenuItem [19]
+      object FarmacyCash1: TMenuItem [20]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [21]
+      object N10: TMenuItem [22]
         Caption = '-'
       end
-      object miReprice: TMenuItem [22]
+      object miReprice: TMenuItem [23]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
