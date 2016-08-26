@@ -41,6 +41,8 @@ type
     edContract: TcxButtonEdit;
     GuidesContract: TdsdGuides;
     colRemains: TcxGridDBColumn;
+    actOpenPriceListLoad: TdsdInsertUpdateAction;
+    bbOpenPriceListLoad: TdxBarButton;
   private
     { Private declarations }
   public

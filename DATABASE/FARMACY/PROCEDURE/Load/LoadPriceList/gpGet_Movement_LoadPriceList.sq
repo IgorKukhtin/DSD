@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_LoadPriceList(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime, JuridicalId Integer, JuridicalName TVarChar)
+RETURNS TABLE (Id Integer, OperDate TDateTime, JuridicalId Integer, JuridicalName TVarChar, ContractId Integer)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -23,6 +23,7 @@ BEGIN
            , LoadPriceList.OperDate	 -- Дата документа
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
+           , LoadPriceList.ContractId
        FROM LoadPriceList
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = LoadPriceList.JuridicalId
        WHERE LoadPriceList.Id =  inMovementId;
@@ -36,6 +37,7 @@ ALTER FUNCTION gpGet_Movement_LoadPriceList (Integer, TVarChar) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.08.16         * add ContractId
  01.07.14                                                        *
 */
 
