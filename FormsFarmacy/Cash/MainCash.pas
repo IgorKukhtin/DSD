@@ -39,6 +39,7 @@ type
     BAYERPHONE  : String[50];  //Контактный телефон (Покупателя) - BayerPhone
     CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
+    CONFIRMEDC  : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
 
   end;
   TBodyRecord = record
@@ -311,7 +312,7 @@ type
     function InitLocalStorage: Boolean;
     //Сохранение чека в локальной базе. возвращает УИД
     function SaveLocal(ADS :TClientDataSet; AManagerId: integer; AManagerName: String;
-      ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder: String;
+      ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
       ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
       NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
     //сохраняет чек в реальную базу
@@ -459,9 +460,10 @@ begin
   FormParams.ParamByName('DiscountExternalName').Value := '';
   FormParams.ParamByName('DiscountCardNumber').Value   := '';
   //***16.08.16
-  FormParams.ParamByName('BayerPhone').Value        := '';
-  FormParams.ParamByName('ConfirmedKindName').Value := '';
-  FormParams.ParamByName('InvNumberOrder').Value    := '';
+  FormParams.ParamByName('BayerPhone').Value              := '';
+  FormParams.ParamByName('ConfirmedKindName').Value       := '';
+  FormParams.ParamByName('InvNumberOrder').Value          := '';
+  FormParams.ParamByName('ConfirmedKindClientName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -628,6 +630,7 @@ begin
                    FormParams.ParamByName('BayerPhone').Value,
                    FormParams.ParamByName('ConfirmedKindName').Value,
                    FormParams.ParamByName('InvNumberOrder').Value,
+                   FormParams.ParamByName('ConfirmedKindClientName').Value,
                    //***20.07.16
                    FormParams.ParamByName('DiscountExternalId').Value,
                    FormParams.ParamByName('DiscountExternalName').Value,
@@ -813,6 +816,7 @@ begin
               ,FormParams.ParamByName('BayerPhone').Value
               ,lConfirmedKindName
               ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
                //***20.07.16
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
@@ -871,6 +875,7 @@ begin
               ,FormParams.ParamByName('BayerPhone').Value
               ,lConfirmedKindName
               ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
                //***20.07.16
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
@@ -941,6 +946,7 @@ begin
               ,FormParams.ParamByName('BayerPhone').Value
               ,ConfirmedKindName_calc
               ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
                //***20.07.16
               ,FormParams.ParamByName('DiscountExternalId').Value
               ,FormParams.ParamByName('DiscountExternalName').Value
@@ -1074,7 +1080,7 @@ begin
 end;
 
 function TMainCashForm.InitLocalStorage: Boolean;
-var fields11, fields12, fields13, fields14, fields15, fields16: TVKDBFFieldDefs;
+var fields11, fields12, fields13, fields14, fields15, fields16, fields17: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
@@ -1109,6 +1115,8 @@ begin
     AddStrField(FLocalDataBaseHead,'BAYERPHONE',50); //Контактный телефон (Покупателя) - BayerPhone
     AddStrField(FLocalDataBaseHead,'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
+    AddStrField(FLocalDataBaseHead,'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -1193,6 +1201,18 @@ begin
                     len := 50;
                end;
                FLocalDataBaseHead.AddFields(fields16,1000);
+           end;
+          //***25.08.16
+          if FLocalDataBaseHead.FindField('CONFIRMEDC') = nil then
+          begin
+               fields17:=TVKDBFFieldDefs.Create(self);
+               with fields17.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'CONFIRMEDC';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields17,1000);
            end;
            //
            FLocalDataBaseHead.Close;
@@ -1328,7 +1348,8 @@ begin
       //***16.08.16
      (FLocalDataBaseHead.FindField('BAYERPHONE') = nil) or
      (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
-     (FLocalDataBaseHead.FindField('NUMORDER') = nil)
+     (FLocalDataBaseHead.FindField('NUMORDER') = nil) or
+     (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil)
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
     Exit;
@@ -1684,6 +1705,7 @@ begin
   FormParams.ParamByName('BayerPhone').Value        := '';
   FormParams.ParamByName('ConfirmedKindName').Value := '';
   FormParams.ParamByName('InvNumberOrder').Value    := '';
+  FormParams.ParamByName('ConfirmedKindClientName').Value := '';
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -2043,7 +2065,7 @@ begin
 end;
 
 function TMainCashForm.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AManagerName: String;
-  ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder: String;
+  ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
   ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
   NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
 var
@@ -2096,6 +2118,7 @@ begin
     MyVipCDS.FieldByName('BayerPhone').AsString        := ABayerPhone;
     MyVipCDS.FieldByName('ConfirmedKindName').AsString := AConfirmedKindName;
     MyVipCDS.FieldByName('InvNumberOrder').AsString    := AInvNumberOrder;
+    MyVipCDS.FieldByName('ConfirmedKindClientName').AsString := AConfirmedKindClientName;
 
     MyVipCDS.Post;
 
@@ -2178,7 +2201,8 @@ begin
                                          //***20.07.16
                                          ABayerPhone,                             //Контактный телефон (Покупателя) - BayerPhone
                                          AConfirmedKindName,                      //Статус заказа (Состояние VIP-чека) - ConfirmedKind
-                                         AInvNumberOrder                          //Номер заказа (с сайта) - InvNumberOrder
+                                         AInvNumberOrder,                         //Номер заказа (с сайта) - InvNumberOrder
+                                         AConfirmedKindClientName                 //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
                                         ]);
       End
       else
@@ -2199,9 +2223,10 @@ begin
         FLocalDataBaseHead.FieldByName('DISCOUNTN').Value  := ADiscountExternalName; //Название Проекта дисконтных карт
         FLocalDataBaseHead.FieldByName('DISCOUNT').Value   := ADiscountCardNumber;   //№ Дисконтной карты
         //***16.08.16
-        FLocalDataBaseHead.FieldByName('BAYERPHONE').Value := ABayerPhone;        //Контактный телефон (Покупателя) - BayerPhone
-        FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName; //Статус заказа (Состояние VIP-чека) - ConfirmedKind
-        FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;    //Номер заказа (с сайта) - InvNumberOrder
+        FLocalDataBaseHead.FieldByName('BAYERPHONE').Value := ABayerPhone;              //Контактный телефон (Покупателя) - BayerPhone
+        FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName;       //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+        FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;          //Номер заказа (с сайта) - InvNumberOrder
+        FLocalDataBaseHead.FieldByName('CONFIRMEDC').Value := AConfirmedKindClientName; //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
 
         FLocalDataBaseHead.post;
       End;
@@ -2521,6 +2546,7 @@ begin
               BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
               CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
               NUMORDER   := trim(FieldByName('NUMORDER').AsString);
+              CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
 
               FNeedSaveVIP := (MANAGER <> 0);
             end;

@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -63,13 +63,6 @@ inherited CheckVIPForm: TCheckVIPForm
             HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
             Width = 55
           end
-          object ConfirmedKindClientName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090'. '#1079'. ('#1054#1090#1087#1088'.)'
-            DataBinding.FieldName = 'ConfirmedKindClientName'
-            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
-            Options.Editing = False
-            Width = 98
-          end
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
@@ -117,6 +110,13 @@ inherited CheckVIPForm: TCheckVIPForm
             Caption = #1058#1077#1083'. '#1087#1086#1082'.'
             DataBinding.FieldName = 'BayerPhone'
             Width = 65
+          end
+          object ConfirmedKindClientName: TcxGridDBColumn
+            Caption = #1057#1084#1089
+            DataBinding.FieldName = 'ConfirmedKindClientName'
+            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
+            Options.Editing = False
+            Width = 50
           end
           object colDiscountCardNumber: TcxGridDBColumn
             Caption = #8470' '#1082#1072#1088#1090#1099
@@ -361,6 +361,14 @@ inherited CheckVIPForm: TCheckVIPForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumberOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ConfirmedKindClientName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

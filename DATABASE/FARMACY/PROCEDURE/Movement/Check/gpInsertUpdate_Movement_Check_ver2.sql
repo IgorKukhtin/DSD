@@ -14,9 +14,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inNotMCS              Boolean   , -- Не участвует в расчете НТЗ
     IN inDiscountExternalId  Integer   , -- Проект дисконтных карт
     IN inDiscountCardNumber  TVarChar  , -- № Дисконтной карты
-    IN inBayerPhone          TVarChar  , -- Контактный телефон (Покупателя)
-    IN inConfirmedKindName   TVarChar  , -- Статус заказа (Состояние VIP-чека)
-    IN inInvNumberOrder      TVarChar  , -- Номер заказа (с сайта)
+    IN inBayerPhone          TVarChar  , -- ***Контактный телефон (Покупателя)
+    IN inConfirmedKindName   TVarChar  , -- ***Статус заказа (Состояние VIP-чека)
+    IN inInvNumberOrder      TVarChar  , -- ***Номер заказа (с сайта)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -147,4 +147,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Check_ver2 (ioId := 0, inUnitId := 183293, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inSession := '3'::TVarChar);
+-- SELECT * FROM gpInsertUpdate_Movement_Check_ver2 (ioId := 0, inUnitId := 183293, inDate := NULL::TDateTime, inBayer := 'Test Bayer'::TVarChar, inSession:= zfCalc_UserAdmin());

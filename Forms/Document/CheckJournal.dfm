@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 847
-  ExplicitHeight = 592
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -196,7 +196,7 @@ inherited CheckJournalForm: TCheckJournalForm
             Width = 80
           end
           object ConfirmedKindClientName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088'. '#1082#1083'.)'
+            Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
             DataBinding.FieldName = 'ConfirmedKindClientName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -213,6 +213,12 @@ inherited CheckJournalForm: TCheckJournalForm
     Height = 51
     ExplicitWidth = 831
     ExplicitHeight = 51
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
     object ceUnit: TcxButtonEdit
       Left = 107
       Top = 29
@@ -246,6 +252,28 @@ inherited CheckJournalForm: TCheckJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TCheckForm'
       FormNameParam.Value = 'TCheckForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False

@@ -1298,8 +1298,10 @@ END $$;
 DO $$
 BEGIN
      -- !!! Статус заказа
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_UnComplete(), inDescId:= zc_Object_ConfirmedKind(), inCode:= 1, inName:= 'Не подтвержден', inEnumName:= 'zc_Enum_ConfirmedKind_UnComplete');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_Complete(),   inDescId:= zc_Object_ConfirmedKind(), inCode:= 2, inName:= 'Подтвержден'   , inEnumName:= 'zc_Enum_ConfirmedKind_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_UnComplete(), inDescId:= zc_Object_ConfirmedKind(), inCode:= 1,  inName:= 'Не подтвержден'    , inEnumName:= 'zc_Enum_ConfirmedKind_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_Complete(),   inDescId:= zc_Object_ConfirmedKind(), inCode:= 2,  inName:= 'Подтвержден'       , inEnumName:= 'zc_Enum_ConfirmedKind_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_SmsNo(),      inDescId:= zc_Object_ConfirmedKind(), inCode:= 21, inName:= 'Не отправлено СМС' , inEnumName:= 'zc_Enum_ConfirmedKind_SmsNo');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ConfirmedKind_SmsYes(),     inDescId:= zc_Object_ConfirmedKind(), inCode:= 22, inName:= 'Отправлено СМС'    , inEnumName:= 'zc_Enum_ConfirmedKind_SmsYes');
 END $$;
 
 /*-------------------------------------------------------------------------------*/

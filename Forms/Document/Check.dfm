@@ -1,7 +1,5 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
-  ExplicitWidth = 845
-  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -376,7 +374,7 @@ inherited CheckForm: TCheckForm
     Left = 641
     Top = 76
     Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
-    Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083'.)'
+    Caption = #1057#1090#1072#1090#1091#1089' '#1057#1052#1057
   end
   inherited ActionList: TActionList
     inherited actMISetErased: TdsdUpdateErased

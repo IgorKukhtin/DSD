@@ -1093,6 +1093,14 @@ inherited MainCashForm: TMainCashForm
           ComponentItem = 'InvNumberOrder'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1483,6 +1491,12 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'InvNumberOrder'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedKindClientName'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','

@@ -31,11 +31,13 @@ SELECT
 
            , Object_DiscountCard.Id                     AS DiscountCardId 
            , Object_DiscountCard.ValueData              AS DiscountCardName
-
-           , MovementString_BayerPhone.ValueData     AS BayerPhone
-           , MovementString_InvNumberOrder.ValueData AS InvNumberOrder
-           , Object_ConfirmedKind.ValueData          AS ConfirmedKindName
-           , Object_ConfirmedKindClient.ValueData    AS ConfirmedKindClientName
+           
+           , MovementString_BayerPhone.ValueData             AS BayerPhone
+           , MovementString_InvNumberOrder.ValueData         AS InvNumberOrder
+           , MovementLinkObject_ConfirmedKind.ObjectId       AS ConfirmedKindId
+           , Object_ConfirmedKind.ValueData                  AS ConfirmedKindName
+           , MovementLinkObject_ConfirmedKindClient.ObjectId AS ConfirmedKindId_Client
+           , Object_ConfirmedKindClient.ValueData            AS ConfirmedKindClientName
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -70,7 +72,7 @@ SELECT
 
 			LEFT OUTER JOIN MovementBoolean AS MovementBoolean_Deferred
 			                                ON MovementBoolean_Deferred.MovementId = Movement.Id
-										   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+						       AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
@@ -113,7 +115,7 @@ SELECT
              LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
-             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
+             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId -- COALESCE (MovementLinkObject_ConfirmedKindClient.ObjectId, zc_Enum_ConfirmedKind_SmsNo())
 
         WHERE Movement.DescId = zc_Movement_Check();
 

@@ -77,6 +77,12 @@ BEGIN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CheckMember(), ioId, vbManagerId);
     END IF;
 
+    IF vbIsInsert = TRUE
+    THEN
+        -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ConfirmedKindClient(), ioId, zc_Enum_ConfirmedKind_SmsNo());
+    END IF;
+
     -- сохранили связь с <Подразделением>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
     -- сохранили связь с <Статус заказа (Состояние VIP-чека)>
