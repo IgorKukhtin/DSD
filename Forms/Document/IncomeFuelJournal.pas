@@ -165,6 +165,11 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    spInsertUpdateMISign_No: TdsdStoredProc;
+    actInsertUpdateMISignNO: TdsdExecStoredProc;
+    actInsertUpdateMISignNO1: TMultiAction;
+    actInsertUpdateMISignNOList: TMultiAction;
+    bbSignNOList: TdxBarButton;
   private
   public
   end;
