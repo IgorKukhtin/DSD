@@ -760,8 +760,8 @@ object InvoiceJournalDetailChoiceForm: TInvoiceJournalDetailChoiceForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TOrderIncomeForm'
-      FormNameParam.Value = 'TOrderIncomeForm'
+      FormName = 'TInvoiceForm'
+      FormNameParam.Value = 'TInvoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

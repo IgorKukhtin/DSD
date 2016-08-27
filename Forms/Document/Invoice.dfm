@@ -802,7 +802,7 @@ object InvoiceForm: TInvoiceForm
       end>
     PackSize = 1
     Left = 168
-    Top = 159
+    Top = 183
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2371,8 +2371,8 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
-    Top = 152
+    Left = 96
+    Top = 216
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'

@@ -132,7 +132,7 @@ type
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
-    actAssetChoiceForm: TOpenChoiceForm;
+    actAssetChoiceFormByGoods: TOpenChoiceForm;
     colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
@@ -176,6 +176,7 @@ type
     InsertRecordAsset: TInsertRecord;
     bbInsertAsset: TdxBarButton;
     actUnitChoiceForm: TOpenChoiceForm;
+    actAssetChoiceForm: TOpenChoiceForm;
   private
   public
   end;

@@ -1,30 +1,30 @@
 ﻿inherited ServiceForm: TServiceForm
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-  ClientHeight = 319
+  ClientHeight = 371
   ClientWidth = 612
   AddOnFormData.isSingle = False
   ExplicitWidth = 618
-  ExplicitHeight = 347
+  ExplicitHeight = 399
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 170
-    Top = 285
+    Top = 328
     Width = 74
     Height = 26
     ExplicitLeft = 170
-    ExplicitTop = 285
+    ExplicitTop = 328
     ExplicitWidth = 74
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 314
-    Top = 285
+    Top = 328
     Width = 74
     Height = 26
     ExplicitLeft = 314
-    ExplicitTop = 285
+    ExplicitTop = 328
     ExplicitWidth = 74
     ExplicitHeight = 26
   end
@@ -146,12 +146,12 @@
   end
   object cxLabel10: TcxLabel [17]
     Left = 8
-    Top = 224
+    Top = 272
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [18]
     Left = 8
-    Top = 243
+    Top = 291
     TabOrder = 10
     Width = 591
   end
@@ -232,16 +232,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 29
-    Width = 427
+    Width = 591
   end
   object cxLabel15: TcxLabel [30]
-    Left = 447
-    Top = 183
+    Left = 8
+    Top = 227
     Caption = #8470' '#1076#1086#1082'. '#1057#1095#1077#1090
   end
   object ceInvoice: TcxButtonEdit [31]
-    Left = 447
-    Top = 203
+    Left = 8
+    Top = 247
     Properties.Buttons = <
       item
         Default = True
@@ -249,19 +249,36 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 31
-    Width = 152
+    Width = 273
+  end
+  object cxLabel14: TcxLabel [32]
+    Left = 296
+    Top = 228
+    Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1054#1057')'
+  end
+  object ceAsset: TcxButtonEdit [33]
+    Left = 296
+    Top = 247
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 303
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 14
-    Top = 278
+    Top = 321
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 107
-    Top = 278
+    Top = 321
   end
   inherited ActionList: TActionList
     Left = 426
-    Top = 267
+    Top = 310
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -284,7 +301,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 59
-    Top = 278
+    Top = 321
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Service'
@@ -429,9 +446,17 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 491
-    Top = 274
+    Top = 317
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Service'
@@ -657,9 +682,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetId'
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetName'
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 547
-    Top = 266
+    Top = 309
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -871,7 +911,7 @@
       end>
     ActionItemList = <>
     Left = 264
-    Top = 258
+    Top = 301
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1115,8 +1155,69 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetId'
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AssetName'
+        Value = Null
+        Component = AssetGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 508
-    Top = 192
+    Left = 101
+    Top = 236
+  end
+  object AssetGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAsset
+    FormNameParam.Value = 'TAssetForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TAssetForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AssetGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AssetGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 237
   end
 end

@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
+             , AssetId Integer, AssetName TVarChar
              )
 AS
 $BODY$
@@ -93,6 +94,9 @@ BEGIN
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
 
+           , Object_Asset.Id             AS AssetId
+           , Object_Asset.ValueData      AS AssetName
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -155,6 +159,10 @@ BEGIN
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
  
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
             LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
       ;
@@ -167,6 +175,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.08.16         * add MILinkObject_Asset
  21.07.16         *
  30.04.16         *
  17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner
