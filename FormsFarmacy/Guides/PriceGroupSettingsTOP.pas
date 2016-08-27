@@ -20,6 +20,14 @@ type
     colPercent: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     dsdUpdateDataSet: TdsdUpdateDataSet;
+    InsertRecord: TInsertRecord;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    colisErased: TcxGridDBColumn;
+    bbInsertRecord: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public
