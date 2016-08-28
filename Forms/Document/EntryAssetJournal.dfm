@@ -688,6 +688,9 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
       StoredProcList = <
         item
           StoredProc = spMovementUnComplete
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -702,6 +705,9 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
       StoredProcList = <
         item
           StoredProc = spMovementComplete
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -716,6 +722,9 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
       StoredProcList = <
         item
           StoredProc = spMovementSetErased
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -970,13 +979,6 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLastComplete'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

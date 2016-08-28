@@ -14,9 +14,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_EntryAsset());
 
-     -- Проводим Документ
-     PERFORM lpComplete_Movement_EntryAsset (inMovementId     := inMovementId
-                                            , inUserId         := vbUserId);
+     -- проводим Документ + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_EntryAsset()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
