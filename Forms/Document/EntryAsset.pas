@@ -130,6 +130,8 @@ type
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
     bbUpdateAsset_toGoods: TdxBarButton;
+    chMovementPartionGoods_InvNumber: TcxGridDBColumn;
+    chisErased: TcxGridDBColumn;
   private
   public
   end;

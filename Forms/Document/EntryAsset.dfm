@@ -84,12 +84,12 @@ object EntryAssetForm: TEntryAssetForm
     Left = 0
     Top = 76
     Width = 985
-    Height = 150
+    Height = 175
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 150
+    ClientRectBottom = 175
     ClientRectRight = 985
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -99,7 +99,7 @@ object EntryAssetForm: TEntryAssetForm
         Left = 0
         Top = 0
         Width = 985
-        Height = 126
+        Height = 151
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -270,17 +270,17 @@ object EntryAssetForm: TEntryAssetForm
   end
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 226
+    Top = 251
     Width = 985
-    Height = 3
+    Height = 5
     AlignSplitter = salBottom
-    Control = cxGrid
+    Control = cxGrid1
   end
   object cxGrid1: TcxGrid
     Left = 0
-    Top = 229
+    Top = 256
     Width = 985
-    Height = 229
+    Height = 202
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 7
@@ -397,8 +397,8 @@ object EntryAssetForm: TEntryAssetForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object chPartionGoods: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
+      object chPartionGoodsName: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -413,7 +413,50 @@ object EntryAssetForm: TEntryAssetForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 82
+      end
+      object chStorageName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'StorageName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 141
+      end
+      object chUnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
+        DataBinding.FieldName = 'UnitCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object chUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 150
+      end
+      object chLocationName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+        DataBinding.FieldName = 'LocationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 102
+      end
+      object chMovementPartionGoods_InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'MovementPartionGoods_InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 128
       end
       object chComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -421,6 +464,12 @@ object EntryAssetForm: TEntryAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 303
+      end
+      object chisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Width = 60
       end
     end
     object cxGridLevel1: TcxGridLevel
@@ -768,6 +817,9 @@ object EntryAssetForm: TEntryAssetForm
         end
         item
           StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1805,8 +1857,8 @@ object EntryAssetForm: TEntryAssetForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 864
-    Top = 304
+    Left = 848
+    Top = 288
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_EntryAsset_Child'
@@ -1834,6 +1886,14 @@ object EntryAssetForm: TEntryAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_MI_EntryAsset_Child()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EntryAsset_Child (Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EntryAsset_Child (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EntryAsset_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Главный элемент документа
-    IN inComment             TVarChar ,   -- 
+    IN inPartionGoodsId      Integer   , -- Партия товара
+    IN inAmount              TFloat    , -- Количество
+    IN inComment             TVarChar  , -- Примечание
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -22,7 +24,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_EntryAsset());
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inObjectId, inMovementId, inAmount, inParentId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inPartionGoodsId, inMovementId, inAmount, inParentId);
 
 
      -- сохранили свойство <>
