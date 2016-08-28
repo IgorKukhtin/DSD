@@ -59,7 +59,7 @@ BEGIN
            , Object_Member.ObjectCode        AS MemberCode
            , Object_Member.ValueData         AS MemberName
 
-           , tmpMI.Amount          :: TFloat AS Amount
+           , MovementItem.Amount   :: TFloat AS Amount
            , MIString_Comment.ValueData      AS Comment
            , MIString_PartionGoods.ValueData AS PartionGoods
 
@@ -92,7 +92,7 @@ BEGIN
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND MovementItem.isErased   = False
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MovementItem.ObjectId
-
+ 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
@@ -130,4 +130,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EntryAsset (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_EntryAsset (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
