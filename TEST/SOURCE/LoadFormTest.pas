@@ -53,6 +53,7 @@ type
     procedure LoadDocumentKindFormTest;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadEDIForm;
+    procedure LoadEntryAssetFormTest;
     procedure LoadEmailForm;
     procedure LoadExternalForm;
     procedure LoadFreightFormTest;
@@ -1115,6 +1116,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
+end;
+
+procedure TLoadFormTest.LoadEntryAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEntryAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEntryAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEntryAssetJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEntryAssetJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;

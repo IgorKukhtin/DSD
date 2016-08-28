@@ -130,7 +130,6 @@ type
     bbSetErasedChild: TdxBarButton;
     bbSetUnErasedChild: TdxBarButton;
     bbUpdateAsset_toGoods: TdxBarButton;
-    procedure spInsertUpdateMovementAfterExecute(Sender: TObject);
   private
   public
   end;
@@ -139,13 +138,7 @@ implementation
 
 {$R *.dfm}
 
-iprocedure TEntryAssetForm.spInsertUpdateMovementAfterExecute(Sender: TObject);
-begin
-  inherited;
-
-end;
-
-nitialization
+initialization
   RegisterClass(TEntryAssetForm);
 
 end.

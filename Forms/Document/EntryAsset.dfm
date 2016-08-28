@@ -1,7 +1,7 @@
 object EntryAssetForm: TEntryAssetForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1054#1057' - '#1074#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102' ('#1054#1057')>'
   ClientHeight = 458
   ClientWidth = 985
   Color = clBtnFace
@@ -1109,6 +1109,7 @@ object EntryAssetForm: TEntryAssetForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
+      Action = actAssetChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -1380,7 +1381,6 @@ object EntryAssetForm: TEntryAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    AfterExecute = spInsertUpdateMovementAfterExecute
     Left = 746
     Top = 8
   end
@@ -1418,8 +1418,8 @@ object EntryAssetForm: TEntryAssetForm
       item
       end>
     GetStoredProc = spGet
-    Left = 496
-    Top = 9
+    Left = 520
+    Top = 17
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_EntryAsset'

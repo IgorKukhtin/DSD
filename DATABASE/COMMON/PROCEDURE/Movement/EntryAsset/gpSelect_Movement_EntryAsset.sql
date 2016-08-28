@@ -10,6 +10,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EntryAsset(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , TotalCount TFloat, TotalSumm TFloat
+             , AssetName TVarChar
+             , StorageName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , MemberCode Integer, MemberName TVarChar
+             , Amount TFloat
+             , Comment TVarChar, PartionGoods TVarChar
               )
 AS
 $BODY$
@@ -39,8 +46,22 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+           , Object_Status.ObjectCode        AS StatusCode
+           , Object_Status.ValueData         AS StatusName
+
+           , MovementFloat_TotalCount.ValueData AS TotalCount
+           , MovementFloat_TotalSumm.ValueData  AS TotalSumm
+
+           , Object_Asset.ValueData          AS AssetName
+           , Object_Storage.ValueData        AS StorageName
+           , Object_Unit.ObjectCode          AS UnitCode
+           , Object_Unit.ValueData           AS UnitName
+           , Object_Member.ObjectCode        AS MemberCode
+           , Object_Member.ValueData         AS MemberName
+
+           , tmpMI.Amount          :: TFloat AS Amount
+           , MIString_Comment.ValueData      AS Comment
+           , MIString_PartionGoods.ValueData AS PartionGoods
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -65,6 +86,36 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            -- привязываем строки док-та
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = False
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.ValueData <> ''
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
+                                             ON MILinkObject_Storage.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Storage.DescId = zc_MILinkObject_Storage()
+            LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = MILinkObject_Storage.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Member
+                                             ON MILinkObject_Member.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
+            LEFT JOIN Object AS Object_Member  ON Object_Member.Id  = MILinkObject_Member.ObjectId
+
     ;
   
 END;

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EntryAsset(
     IN inOperDate            TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
