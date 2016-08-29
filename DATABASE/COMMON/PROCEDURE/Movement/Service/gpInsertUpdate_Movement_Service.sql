@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -20,7 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
-    IN inMovementId_Invoice       Integer   , -- документ счет   
+    IN inMovementId_Invoice       Integer   , -- документ счет  
+    IN inAssetId                  Integer   , -- Для ОС
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -105,6 +107,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+
+     -- сохранили связь с <Для ОС>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbMovementItemId, inAssetId);
+
      -- сохранили связь с <Типы условий договоров>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
 
@@ -171,6 +177,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.08.16         * add asset
  29.04.16         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  24.09.14                                        * add inPartnerId

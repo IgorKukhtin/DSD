@@ -1055,6 +1055,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
 

@@ -231,9 +231,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_IncomeAsset() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_IncomeAsset', 'Приход от поставщика (ОС)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_IncomeAsset');
 
+CREATE OR REPLACE FUNCTION zc_Movement_EntryAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_EntryAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_EntryAsset', 'Документ ОС - ввод в эксплуатацию' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EntryAsset');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.08.16         * zc_Movement_EntryAsset
  29.07.16         * zc_Movement_IncomeAsset
  16.07.16         * zc_Movement_Invoice
  06.07.16         * zc_Movement_Over, zc_Movement_OrderIncome

@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
+             , AssetId Integer, AssetName TVarChar
              )
 AS
 $BODY$
@@ -68,6 +69,9 @@ BEGIN
 
            , 0                                AS MovementId_Invoice
            , CAST ('' as TVarChar)            AS InvNumber_Invoice
+
+           , 0                                AS AssetId
+           , CAST ('' as TVarChar)            AS AssetName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
@@ -119,6 +123,9 @@ BEGIN
 
            , Movement_Invoice.Id                 AS MovementId_Invoice
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE(MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
+
+           , Object_Asset.Id             AS AssetId
+           , Object_Asset.ValueData      AS AssetName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -177,6 +184,11 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
             LEFT JOIN (SELECT MovementFloat.ValueData AS MovementServiceId
                             , STRING_AGG ('¹ ' ||CAST(Movement_Income.InvNumber AS TVarChar) || ' oò '|| TO_CHAR(Movement_Income.Operdate , 'DD.MM.YYYY')|| '.' , ', ')  AS strInvNumber

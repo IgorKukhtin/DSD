@@ -737,6 +737,8 @@ type
     N128: TMenuItem;
     actSignInternal: TdsdOpenForm;
     N129: TMenuItem;
+    actEntryAsset: TdsdOpenForm;
+    N133: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Unit()
-
+-- Function: gpGet_Object_Unit()
+ 
 DROP FUNCTION IF EXISTS gpGet_Object_PriceGroupSettings(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_PriceGroupSettings(
-    IN inId          Integer,       -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ 
+    IN inId          Integer,       -- Подразделение 
+    IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Name TVarChar, MinPrice TFloat, Percent TFloat, isErased boolean) AS
 $BODY$
@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbObjectId Integer;
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PriceGroupSettings());
    vbUserId:= inSession;
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
@@ -45,11 +45,11 @@ ALTER FUNCTION gpGet_Object_PriceGroupSettings (integer, TVarChar) OWNER TO post
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Unit('2')

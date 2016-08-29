@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_IncomeAsset()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_IncomeAsset (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeAsset(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inUnitId              Integer   , -- Подразделение
+    IN inAssetId             Integer   , -- Для ОС
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
@@ -40,6 +42,9 @@ BEGIN
      -- сохранили связь с <Подразделения>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
 
+     -- сохранили связь с <Для ОС>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -53,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.08.16         * add AssetId
  06.08.16         *
  29.07.16         * 
 */

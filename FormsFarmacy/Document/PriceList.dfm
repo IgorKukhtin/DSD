@@ -271,6 +271,7 @@ inherited PriceListForm: TPriceListForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -301,12 +302,14 @@ inherited PriceListForm: TPriceListForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -314,6 +317,7 @@ inherited PriceListForm: TPriceListForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -329,6 +333,29 @@ inherited PriceListForm: TPriceListForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actOpenPriceListLoad: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
+      ShortCut = 13
+      ImageIndex = 28
+      FormName = 'TPriceListItemsLoadForm'
+      FormNameParam.Value = 'TPriceListItemsLoadForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PriceListId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      IdFieldName = 'Id'
     end
   end
   inherited MasterDS: TDataSource
@@ -348,6 +375,7 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -355,6 +383,7 @@ inherited PriceListForm: TPriceListForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -362,16 +391,19 @@ inherited PriceListForm: TPriceListForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -445,6 +477,10 @@ inherited PriceListForm: TPriceListForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenPriceListLoad'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -490,6 +526,10 @@ inherited PriceListForm: TPriceListForm
       Visible = ivAlways
       ImageIndex = 41
     end
+    object bbOpenPriceListLoad: TdxBarButton
+      Action = actOpenPriceListLoad
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -498,6 +538,7 @@ inherited PriceListForm: TPriceListForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 830
@@ -519,12 +560,14 @@ inherited PriceListForm: TPriceListForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -532,24 +575,28 @@ inherited PriceListForm: TPriceListForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNamePriceList'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNamePriceListTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNamePriceListBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -572,11 +619,13 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -585,12 +634,14 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -598,6 +649,7 @@ inherited PriceListForm: TPriceListForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -605,12 +657,14 @@ inherited PriceListForm: TPriceListForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -618,12 +672,14 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = GuidesContract
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -631,6 +687,14 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceListId'
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -644,6 +708,7 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -651,6 +716,7 @@ inherited PriceListForm: TPriceListForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -658,6 +724,7 @@ inherited PriceListForm: TPriceListForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -665,6 +732,7 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -672,6 +740,7 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -750,6 +819,7 @@ inherited PriceListForm: TPriceListForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -757,6 +827,7 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -764,6 +835,7 @@ inherited PriceListForm: TPriceListForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -772,6 +844,7 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartionGoodsDate'
@@ -780,48 +853,58 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -837,6 +920,7 @@ inherited PriceListForm: TPriceListForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -874,6 +958,7 @@ inherited PriceListForm: TPriceListForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -884,6 +969,7 @@ inherited PriceListForm: TPriceListForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -893,6 +979,7 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -901,6 +988,7 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 16
@@ -910,6 +998,7 @@ inherited PriceListForm: TPriceListForm
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -919,6 +1008,7 @@ inherited PriceListForm: TPriceListForm
         Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -927,6 +1017,7 @@ inherited PriceListForm: TPriceListForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 32

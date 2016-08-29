@@ -445,7 +445,8 @@ uses
   ConfirmedKind in '..\..\FormsFarmacy\Kind\ConfirmedKind.pas' {ConfirmedKindForm: TParentForm},
   DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
   DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
-  DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm};
+  DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
+  PriceGroupSettingsTOP in '..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas' {PriceGroupSettingsTopForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

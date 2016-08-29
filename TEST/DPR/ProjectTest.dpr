@@ -850,7 +850,9 @@ uses
   IncomeAsset in '..\..\Forms\Document\IncomeAsset.pas' {IncomeAssetForm: TParentForm},
   AssetPlace_Object in '..\..\Forms\Guides\AssetPlace_Object.pas' {AssetPlace_ObjectForm: TParentForm},
   SignInternal in '..\..\Forms\Guides\SignInternal.pas' {SignInternalForm: TParentForm},
-  SignInternalEdit in '..\..\Forms\Guides\SignInternalEdit.pas' {SignInternalEditForm: TParentForm};
+  SignInternalEdit in '..\..\Forms\Guides\SignInternalEdit.pas' {SignInternalEditForm: TParentForm},
+  EntryAsset in '..\..\Forms\Document\EntryAsset.pas' {EntryAssetForm: TParentForm},
+  EntryAssetJournal in '..\..\Forms\Document\EntryAssetJournal.pas' {EntryAssetJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

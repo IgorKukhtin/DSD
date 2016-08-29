@@ -42,6 +42,11 @@ type
     DataSetPost: TDataSetPost;
     colBarCode: TcxGridDBColumn;
     colRemains: TcxGridDBColumn;
+    spGetMovement: TdsdStoredProc;
+    actGetMovement: TdsdExecStoredProc;
+    actOpenMovementPriceList: TdsdInsertUpdateAction;
+    MacGetMovement: TMultiAction;
+    bbGetMovement: TdxBarButton;
   private
     { Private declarations }
   public

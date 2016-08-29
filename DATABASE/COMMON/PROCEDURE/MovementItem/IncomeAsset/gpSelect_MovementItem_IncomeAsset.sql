@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IncomeAsset(
     IN inIsErased         Boolean      , -- 
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , AssetId Integer, AssetName TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat, Price TFloat
              , Amount_parent TFloat, Price_parent TFloat
@@ -59,6 +61,7 @@ BEGIN
 
           ,  tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                            , COALESCE (MILinkObject_Unit.ObjectId, 0)        AS UnitId
                            , MovementItem.Amount 
                            , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
@@ -78,6 +81,9 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
                             LEFT JOIN MovementItemFloat AS MIFloat_Invoice
                                                         ON MIFloat_Invoice.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Invoice.DescId = zc_MIFloat_MovementItemId()
@@ -86,6 +92,7 @@ BEGIN
    , tmpMI_parent AS (SELECT   MovementItem.Id                                 AS MovementItemId
                              , MovementItem.MovementId                         AS MovementId
                              , COALESCE (MILinkObject_Goods.ObjectId,0)        AS GoodsId
+                             , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                              , COALESCE (MILinkObject_Unit.ObjectId, 0)        AS UnitId
                              , MovementItem.Amount                             AS Amount
                              , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
@@ -102,7 +109,10 @@ BEGIN
                                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                    ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()                                                                  
+                                                                  AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                   ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()                                                                  
                       WHERE MovementItem.MovementId = inInvoiceId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
@@ -111,6 +121,7 @@ BEGIN
 
    , tmpResult AS (SELECT tmpMI.Id                                                         AS Id
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent.GoodsId)                   AS GoodsId
+                        , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , COALESCE (tmpMI.UnitId, tmpMI_parent.UnitId)                     AS UnitId
                         , tmpMI.Amount                                                     AS Amount
                         , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
@@ -128,6 +139,7 @@ BEGIN
                   UNION ALL
                    SELECT tmpMI.Id                                                         AS Id
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent.GoodsId)                   AS GoodsId
+                        , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , COALESCE (tmpMI.UnitId, tmpMI_parent.UnitId)                     AS UnitId
                         , tmpMI.Amount                                                     AS Amount
                         , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
@@ -152,6 +164,9 @@ BEGIN
            , Object_Goods.ObjectCode    AS GoodsCode
            , Object_Goods.ValueData     AS GoodsName
 
+           , Object_Asset.Id             AS AssetId
+           , Object_Asset.ValueData      AS AssetName
+
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName
 
@@ -175,6 +190,7 @@ BEGIN
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.Id
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI.UnitId 
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI.AssetId 
             -- это док. "Счет"
             LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = tmpMI.MIId_Invoice  
                                                 AND MI_Invoice.isErased = FALSE
@@ -193,6 +209,7 @@ BEGIN
        RETURN QUERY 
        WITH tmpMI_Goods AS (SELECT MovementItem.Id                               AS MovementItemId
                                  , MovementItem.ObjectId                         AS GoodsId
+                                 , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
                                  , MovementItem.Amount                           AS Amount
                                  , COALESCE (MILinkObject_Unit.ObjectId, 0)      AS UnitId
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
@@ -212,6 +229,10 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                         ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                        AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                        ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                       AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
                           )
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
                                 , Container.Amount                            AS Amount
@@ -234,6 +255,9 @@ BEGIN
            , Object_Goods.Id            AS GoodsId
            , Object_Goods.ObjectCode    AS GoodsCode
            , Object_Goods.ValueData     AS GoodsName
+
+           , Object_Asset.Id            AS AssetId
+           , Object_Asset.ValueData     AS AssetName
 
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName
@@ -274,6 +298,7 @@ BEGIN
             --
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Goods.GoodsId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMI_Goods.UnitId
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = tmpMI_Goods.AssetId 
        ;
  
      END IF;
@@ -285,6 +310,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.08.16         *
  29.07.16         *
 */
 

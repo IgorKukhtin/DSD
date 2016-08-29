@@ -2,7 +2,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
-  ClientHeight = 418
+  ClientHeight = 391
   ClientWidth = 1189
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -57,13 +57,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     Left = 0
     Top = 57
     Width = 1189
-    Height = 361
+    Height = 334
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 58
-    ExplicitHeight = 565
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -894,6 +892,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbSignNOList'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -995,6 +997,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbSignNOList: TdxBarButton
+      Action = actInsertUpdateMISignNOList
       Category = 0
     end
   end
@@ -1531,6 +1537,49 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actInsertUpdateMISignNO: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMISign_No
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMISign_No
+        end
+        item
+        end>
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISignNO1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISignNO
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      ImageIndex = 52
+    end
+    object actInsertUpdateMISignNOList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMISignNO1
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1086#1090#1084#1077#1085#1077' '#1087#1086#1076#1087#1080#1089#1072#1085#1080#1103' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1069#1083'. '#1087#1086#1076#1087#1080#1089#1100' '#1091#1073#1088#1072#1085#1072' '#1089#1086' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100' '#1089#1086' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100' '#1089#1086' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 52
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_IncomeFuel'
@@ -1798,5 +1847,29 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     PackSize = 1
     Left = 911
     Top = 192
+  end
+  object spInsertUpdateMISign_No: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSign'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 227
   end
 end

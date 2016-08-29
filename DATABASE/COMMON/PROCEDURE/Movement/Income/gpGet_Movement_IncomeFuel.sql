@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
             
              --, DistanceDiff TFloat
              , DistanceReal   TFloat -- *Пробег общий км
+             , FuelReal       TFloat -- Кол-во л. (заправка)
              , FuelCalc       TFloat -- *Кол-во л. (расч. на пробег ф.км.)
              , FuelRealCalc   TFloat -- *Кол-во л. (использовано)
 
@@ -84,6 +85,7 @@ BEGIN
              , CAST (0 AS TFloat)     AS Distance
 
              , CAST (0 AS TFloat)     AS DistanceReal
+             , CAST (0 AS TFloat)     AS FuelReal
              , CAST (0 AS TFloat)     AS FuelCalc       
              , CAST (0 AS TFloat)     AS FuelRealCalc 
 
@@ -139,6 +141,8 @@ BEGIN
 
              -- *Пробег общий км
            , (COALESCE (MovementFloat_EndOdometre.ValueData , 0) - COALESCE (MovementFloat_StartOdometre.ValueData , 0)) :: TFloat AS DistanceReal
+             -- Кол-во л. (заправка)
+           , COALESCE (MovementItem.Amount, 0) :: TFloat AS FuelReal 
              -- *Кол-во л. (расч. на пробег ф.км.) = пробег ф.км. * норму
            , (MovementFloat_Distance.ValueData * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100)                 :: TFloat AS FuelCalc
              -- *Кол-во л. (использовано) = если есть лимит км. ТОГДА = МИН (пробег ф.км. ИЛИ лимит км.) * норму

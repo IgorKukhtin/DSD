@@ -435,7 +435,7 @@ object IncomeAssetForm: TIncomeAssetForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actAssetChoiceForm
+                Action = actAssetChoiceFormByGoods
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -443,6 +443,21 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 256
+          end
+          object clAssetName: TcxGridDBColumn
+            Caption = #1076#1083#1103' '#1054'C'
+            DataBinding.FieldName = 'AssetName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actAssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object colAmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
@@ -576,9 +591,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1539,7 +1551,7 @@ object IncomeAssetForm: TIncomeAssetForm
         end>
       isShowModal = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm
+    object actAssetChoiceFormByGoods: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1580,7 +1592,7 @@ object IncomeAssetForm: TIncomeAssetForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       View = cxGridDBTableView
-      Action = actAssetChoiceForm
+      Action = actAssetChoiceFormByGoods
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
@@ -1692,8 +1704,71 @@ object IncomeAssetForm: TIncomeAssetForm
           ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AssetId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AssetName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actAssetChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetChoiceForm'
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -1779,6 +1854,14 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2666,6 +2749,14 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssetId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

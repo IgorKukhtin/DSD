@@ -3,9 +3,8 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientHeight = 410
   ClientWidth = 908
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -118
   ExplicitWidth = 924
-  ExplicitHeight = 445
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -101,8 +100,9 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 50
           end
@@ -139,6 +139,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     object edOperDate: TcxDateEdit
       Left = 1
       Top = 22
+      EditValue = 42608d
       Enabled = False
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -265,6 +266,73 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Hint = 'Post'
       DataSource = MasterDS
     end
+    object actGetMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetMovement
+      StoredProcList = <
+        item
+          StoredProc = spGetMovement
+        end>
+      Caption = #1086#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 8
+    end
+    object actOpenMovementPriceList: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 8
+      FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object MacGetMovement: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetMovement
+        end
+        item
+          Action = actOpenMovementPriceList
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
+      ImageIndex = 28
+    end
   end
   inherited MasterDS: TDataSource
     Top = 104
@@ -296,6 +364,18 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGetMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbDeleteGoodsLink'
         end
         item
@@ -321,6 +401,10 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     end
     object bbDeleteGoodsLink: TdxBarButton
       Action = mactGoodsLinkDelete
+      Category = 0
+    end
+    object bbGetMovement: TdxBarButton
+      Action = MacGetMovement
       Category = 0
     end
   end
@@ -369,10 +453,17 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 104
+    Left = 240
+    Top = 128
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -400,8 +491,8 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 32
+    Left = 304
+    Top = 8
   end
   object spUpdatePriceListItem: TdsdStoredProc
     StoredProcName = 'gpUpdate_LoadPriceList_GoodsId'
@@ -427,5 +518,41 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     PackSize = 1
     Left = 224
     Top = 248
+  end
+  object spGetMovement: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_by_LoadPriceList'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 152
   end
 end
