@@ -1,4 +1,4 @@
--- Function: lfGet_Object_PartionGoods_InvNumber (Integer)
+-- Function: lfGet_Object_PartionGoods_InvNumber (Integer) - расчет Инвентарный номер: если Инвентарный номер не установлен и это перемещение на МО
 
 DROP FUNCTION IF EXISTS lfGet_Object_PartionGoods_InvNumber (Integer);
 

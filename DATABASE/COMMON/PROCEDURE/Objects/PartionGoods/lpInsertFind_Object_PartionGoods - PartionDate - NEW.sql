@@ -1,4 +1,5 @@
--- Function: lpInsertFind_Object_PartionGoods (TDateTime, Integer)
+-- Function: lpInsertFind_Object_PartionGoods (TDateTime, Integer) - Доходы + Продукция + Готовая продукция + ПФ/ГП в цехе
+
 
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TDateTime, Integer);
 

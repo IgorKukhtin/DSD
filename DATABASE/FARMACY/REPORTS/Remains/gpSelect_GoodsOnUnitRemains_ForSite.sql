@@ -71,6 +71,8 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
                                 WHERE 
+                                    container.Amount <> 0
+                                    AND
                                     container.descid = zc_container_count()
                                     AND
                                     Container.WhereObjectId = inUnitId)
