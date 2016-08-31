@@ -44,38 +44,36 @@ BEGIN
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                   )
-
- , tmpConteiner AS (SELECT tmpMI.Id AS MIMasterId
+ , tmpContainer AS (SELECT tmpMI.Id AS MIMasterId
                          , CLO_PartionGoods.ObjectId AS PartionGoodsId
                          , Container.Amount 
                          , COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId) AS LocationId
                     FROM tmpMI
-                         LEFT JOIN ContainerLinkObject AS CLO_AssetTo
-                                ON CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
-                               AND CLO_AssetTo.ObjectId = tmpMI.AssetId
+                         INNER JOIN ContainerLinkObject AS CLO_AssetTo
+                                                        ON CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                                                       AND CLO_AssetTo.ObjectId = tmpMI.AssetId
                          INNER JOIN Container ON Container.Id = CLO_AssetTo.ContainerId 
-                                AND Container.DescId = zc_Container_Count()
-                                AND Container.Amount <>0
+                                             AND Container.DescId = zc_Container_Count()
+                                             AND Container.Amount <>0
                          LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
-                                ON CLO_PartionGoods.ContainerId = Container.Id
-                               AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                       ON CLO_PartionGoods.ContainerId = Container.Id
+                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                    
                          LEFT JOIN ContainerLinkObject AS CLO_Member
-                                ON CLO_Member.ContainerId = Container.Id
-                               AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                       ON CLO_Member.ContainerId = Container.Id
+                                                      AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
                          LEFT JOIN ContainerLinkObject AS CLO_Unit
-                                ON CLO_Unit.ContainerId = Container.Id
-                               AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                       ON CLO_Unit.ContainerId = Container.Id
+                                                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                     )
-
    , tmpResult AS (SELECT tmpMI_Child.Id                        AS Id
                         , tmpMI_Child.ParentId                  AS ParentId
                         , COALESCE(tmpMI_Child.isErased, FALSE) AS isErased
-                        , COALESCE (tmpMI_Child.PartionGoodsId, tmpConteiner.PartionGoodsId) AS PartionGoodsId
-                        , COALESCE (tmpMI_Child.Amount, tmpConteiner.Amount)                 AS Amount
-                        , tmpConteiner.LocationId
+                        , COALESCE (tmpMI_Child.PartionGoodsId, tmpContainer.PartionGoodsId) AS PartionGoodsId
+                        , COALESCE (tmpMI_Child.Amount, tmpContainer.Amount)                 AS Amount
+                        , tmpContainer.LocationId
                    FROM tmpMI_Child
-                        FULL JOIN tmpConteiner ON tmpConteiner.MIMasterId = tmpMI_Child.ParentId
+                        FULL JOIN tmpContainer ON tmpContainer.MIMasterId = tmpMI_Child.ParentId
                    )
 
 

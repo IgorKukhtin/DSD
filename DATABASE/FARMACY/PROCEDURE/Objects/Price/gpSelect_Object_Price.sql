@@ -11,9 +11,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Price(Integer, Integer, Boolean,Boolean,
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
     IN inUnitId      Integer,       -- подразделение
-    IN inGoodsId     Integer,       -- NJdfh
-    IN inisShowAll   Boolean,        --True - показать все товары, False - показать только с ценами
-    IN inisShowDel   Boolean,       --True - показать так же удаленные, False - показать только рабочие
+    IN inGoodsId     Integer,       -- Товар
+    IN inisShowAll   Boolean,       -- True - показать все товары, False - показать только с ценами
+    IN inisShowDel   Boolean,       -- True - показать так же удаленные, False - показать только рабочие
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat

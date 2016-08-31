@@ -23,10 +23,37 @@ $BODY$
    DECLARE vbContainerId Integer;
 BEGIN
 
+     -- 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
+                                    )
+    AND inPartionGoodsId <> 0
+     THEN
+         -- !!!обнулили!!!
+         inAccountId:= 0;
+
+                           -- 0)Товар или ОС 1)Подразделение  2)Партия товара 3)Основные средства (для которого закуплено ОС или ТМЦ)
+                           -- 0)Товар или ОС 1)Физ. лицо (МО) 2)Партия товара 3)Основные средства (для которого закуплено ОС или ТМЦ)
+                           -- 0)Товар или ОС 1)Автомобиль     2)Партия товара 3)Основные средства (для которого закуплено ОС или ТМЦ)
+          vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                 , inParentId          := NULL
+                                                 , inObjectId          := inGoodsId
+                                                 , inJuridicalId_basis := NULL
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inDescId_2          := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_2        := inPartionGoodsId
+                                                 , inDescId_3          := zc_ContainerLinkObject_AssetTo()
+                                                 , inObjectId_3        := inAssetId
+                                                  );
+
+     ELSE
      -- 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
           -- 0)Товар 1)Подразделение 2)!Партия товара!
-          -- 0)Товар 1)Сотрудник (МО) 2)!Партия товара!
+          -- 0)Товар 1)Физ. лицо (МО) 2)!Партия товара!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
@@ -42,10 +69,12 @@ BEGIN
                                                  , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                   );
      ELSE
-     -- 20100 Запчасти и Ремонты + 20400 ГСМ
+     -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
-          -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
-          -- 0)Товар 1)Сотрудник (МО) 2)Основные средства(для которого закуплено ТМЦ)
+                                   , zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
+                                    )
+                           -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
+                           -- 0)Товар 1)Физ. лицо (МО) 2)Основные средства(для которого закуплено ТМЦ)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
@@ -63,8 +92,8 @@ BEGIN
      ELSE
      -- 20200 Прочие ТМЦ + 20300 МНМА
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300())
-          -- 0)Товар 1)Подразделение 2)Сотрудник (МО) 3)!Партия товара!
-          -- 0)Товар 1)Автомобиль 2)Сотрудник (МО) 3)!Партия товара!
+          -- 0)Товар 1)Подразделение 2)Физ. лицо (МО) 3)!Партия товара!
+          -- 0)Товар 1)Автомобиль 2)Физ. лицо (МО) 3)!Партия товара!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
@@ -84,8 +113,8 @@ BEGIN
      ELSE
      -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
-          -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
-          -- 0)Товар 1)Сотрудник (МО) 2)Вид товара 3)!!!Партия товара!!!
+          -- 0)Товар 1)Подразделение  2)Вид товара 3)!!!Партия товара!!!
+          -- 0)Товар 1)Физ. лицо (МО) 2)Вид товара 3)!!!Партия товара!!!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
@@ -138,6 +167,7 @@ BEGIN
                                                  , inDescId_2          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
                                                  , inObjectId_2        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
                                                    );
+     END IF;
      END IF;
      END IF;
      END IF;

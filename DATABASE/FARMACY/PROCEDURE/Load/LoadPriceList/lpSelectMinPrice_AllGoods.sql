@@ -50,8 +50,9 @@ BEGIN
     RETURN QUERY
     WITH
     -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
-    PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)
-                     )
+    PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
+  , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar) WHERE vbIsGoodsPromo = TRUE)
+
     -- Установки для юр. лиц (для поставщика определяется договор и т.п)
   , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId)
                          )
@@ -164,9 +165,12 @@ BEGIN
       , ddd.Deferment
       , ddd.PriceListMovementItemId
 
-      , CASE -- если Дней отсрочки по договору = 0 или ТОП-позиция
-             WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+      , CASE -- если Дней отсрочки по договору = 0
+             WHEN ddd.Deferment = 0
                   THEN FinalPrice
+             -- если ТОП-позиция
+             WHEN ddd.isTOP = TRUE
+                  THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
 
@@ -254,7 +258,8 @@ BEGIN
 
        ) AS ddd
        -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту)
-       LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
+       LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+       LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
    )
     -- отсортировали по цене и получили первого
   , MinPriceList AS (SELECT *

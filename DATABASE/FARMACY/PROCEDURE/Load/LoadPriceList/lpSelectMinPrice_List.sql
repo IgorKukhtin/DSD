@@ -74,8 +74,8 @@ BEGIN
     RETURN QUERY
     WITH
     -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
-    PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar)
-                     )
+    PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
+  , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
     -- Установки для юр. лиц (для поставщика определяется договор и т.п) !!!для всех MainJuridicalId!!!
   , JuridicalSettings_all AS (SELECT tmp.JuridicalId, tmp.ContractId, tmp.PriceLimit, tmp.Bonus, tmp.isPriceClose, tmp.isSite
                               FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS tmp
@@ -243,9 +243,12 @@ BEGIN
       , ddd.Deferment
       , ddd.PriceListMovementItemId
 
-      , CASE -- если Дней отсрочки по договору = 0 или ТОП-позиция
-             WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+      , CASE -- если Дней отсрочки по договору = 0
+             WHEN ddd.Deferment = 0
                   THEN FinalPrice
+             -- если ТОП-позиция
+             WHEN ddd.isTOP = TRUE
+                  THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
 
@@ -320,7 +323,8 @@ BEGIN
                                 AND GoodsPromo.JuridicalId = MI_PriceList.JuridicalId
        ) AS ddd
        -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту)
-       LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
+       LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+       LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
    )
 
     -- отсортировали по цене и получили первого

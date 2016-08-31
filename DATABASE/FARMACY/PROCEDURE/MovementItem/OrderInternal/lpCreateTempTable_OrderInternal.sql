@@ -45,7 +45,10 @@ BEGIN
       -- Сохраниели данные
       INSERT INTO _tmpMI 
 
-           WITH PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (inUserId::TVarChar))
+           WITH -- Установки для ценовых групп (если товар с острочкой - тогда этот процент уравновешивает товары с оплатой по факту) !!!внутри проц определяется ObjectId!!!
+                PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (inUserId::TVarChar))
+              , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (inUserId::TVarChar))
+
               , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (inObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
               , MovementItemOrder AS (SELECT MovementItem.*, Object_LinkGoods_View.GoodsMainId, PriceList_GoodsLink.GoodsId
                                       FROM MovementItem    
@@ -98,12 +101,16 @@ BEGIN
             , ddd.ContractName
             , ddd.Deferment
             , ddd.Bonus 
-            , CASE ddd.Deferment 
-                   WHEN 0 THEN 0
+            , CASE WHEN ddd.Deferment = 0
+                        THEN 0
+                   WHEN ddd.isTOP = TRUE
+                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
                    ELSE PriceSettings.Percent
               END :: TFloat AS Percent
-            , CASE WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+            , CASE WHEN ddd.Deferment = 0
                         THEN FinalPrice
+                   WHEN ddd.Deferment = 0 OR ddd.isTOP = TRUE
+                        THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
               END :: TFloat AS SuperFinalPrice   
          FROM 
@@ -191,7 +198,9 @@ BEGIN
    WHERE  COALESCE(JuridicalSettings.isPriceClose, FALSE) <> TRUE 
      ) AS ddd
    
-   LEFT JOIN PriceSettings ON ddd.MinPrice BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice;
+   LEFT JOIN PriceSettings    ON ddd.MinPrice BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+   LEFT JOIN PriceSettingsTOP ON ddd.MinPrice BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+  ;
 
 END;
 $BODY$

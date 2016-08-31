@@ -133,7 +133,6 @@ type
     actAddMask: TdsdExecStoredProc;
     bbAddMask: TdxBarButton;
     actAssetChoiceFormByGoods: TOpenChoiceForm;
-    colAmountRemains: TcxGridDBColumn;
     cxLabel16: TcxLabel;
     ceComment: TcxTextEdit;
     cxLabel25: TcxLabel;

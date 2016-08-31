@@ -223,7 +223,9 @@ BEGIN
      RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
-          WITH  PriceSettings AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval (vbUserId::TVarChar))
+          WITH  PriceSettings    AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsInterval    (vbUserId::TVarChar))
+              , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
+
               , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
   
         SELECT tmpMI.MovementItemId AS MovementItemId
@@ -232,8 +234,13 @@ BEGIN
              , Object_Goods.ValueData     AS GoodsName --_tmpMI.GoodsName
              , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
              , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-              , CASE WHEN COALESCE (ObjectFloat_Deferment.ValueData, 0) = 0 THEN 0
-                   ELSE PriceSettings.Percent END                 :: TFloat AS Percent
+
+             , CASE WHEN COALESCE (ObjectFloat_Deferment.ValueData, 0) = 0
+                         THEN 0
+                    WHEN tmpMI.isTOP = TRUE
+                         THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                    ELSE PriceSettings.Percent
+               END :: TFloat AS Percent
               
               , Object_Juridical.ValueData     AS JuridicalName
               , MIString_Maker.ValueData       AS MakerName
@@ -290,11 +297,10 @@ BEGIN
                          ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
                         AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
             
-             LEFT JOIN PriceSettings ON MIFloat_Price.ValueData BETWEEN PriceSettings.MinPrice AND PriceSettings.MaxPrice
+             LEFT JOIN PriceSettings    ON MIFloat_Price.ValueData BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
+             LEFT JOIN PriceSettingsTOP ON MIFloat_Price.ValueData BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+            ;
 
-          
-             
- ;
      RETURN NEXT Cursor2;
 
 
