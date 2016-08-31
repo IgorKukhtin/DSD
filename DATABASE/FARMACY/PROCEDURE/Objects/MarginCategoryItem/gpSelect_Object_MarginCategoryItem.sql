@@ -1,9 +1,11 @@
 --Function: gpSelect_Object_MarginCategoryItem(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryItem(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryItem(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryItem(
     IN inMarginCategoryId Integer,
+    IN inShowAll          Boolean,       --
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MarginPercent TFloat, MinPrice TFloat
@@ -18,6 +20,7 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
    RETURN QUERY 
+   
    SELECT 
          Object_MarginCategoryItem.Id            AS Id 
        , Object_MarginCategoryItem.MarginPercent AS MarginPercent
@@ -32,7 +35,9 @@ BEGIN
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
 
     FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
-          LEFT JOIN Object AS MarginCategoryItem ON MarginCategoryItem.Id = Object_MarginCategoryItem.Id
+          INNER JOIN Object AS MarginCategoryItem 
+                           ON MarginCategoryItem.Id = Object_MarginCategoryItem.Id
+                          AND (MarginCategoryItem.IsErased = inShowAll OR inShowAll = True)
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                                ON ObjectDate_Protocol_Insert.ObjectId = Object_MarginCategoryItem.Id
                               AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
@@ -55,16 +60,18 @@ BEGIN
                                  AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site() 
 
    WHERE Object_MarginCategoryItem.MarginCategoryId = inMarginCategoryId
+   
  ;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginCategoryItem (Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_MarginCategoryItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.08.16         * 
  05.04.16         *
  09.04.15                         *
 */

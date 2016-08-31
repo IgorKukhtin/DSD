@@ -227,7 +227,28 @@ BEGIN
               , PriceSettingsTOP AS (SELECT * FROM gpSelect_Object_PriceGroupSettingsTOPInterval (vbUserId::TVarChar))
 
               , JuridicalSettings AS (SELECT * FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS T WHERE T.MainJuridicalId = vbMainJuridicalId)
-  
+
+  -- Маркетинговый контракт
+  , GoodsPromo AS (SELECT tmp.JuridicalId
+                        , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
+                        , tmp.MovementId
+                        , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                  )
+
         SELECT tmpMI.MovementItemId AS MovementItemId
              , MI_Child.Id 
              , Object_Goods.ObjectCode    AS GoodsCode
@@ -253,6 +274,11 @@ BEGIN
               , MI_Child.Amount       ::TFLoat          AS Remains
               , MIFloat_Price.ValueData        ::TFLoat            AS Price 
               , MIFloat_JuridicalPrice.ValueData    ::TFLoat       AS SuperFinalPrice
+
+              , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
+              , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
+              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+              , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN MovementItem AS MI_Child 
                                      ON MI_Child.ParentId = tmpMI.MovementItemId
@@ -299,6 +325,10 @@ BEGIN
             
              LEFT JOIN PriceSettings    ON MIFloat_Price.ValueData BETWEEN PriceSettings.MinPrice    AND PriceSettings.MaxPrice
              LEFT JOIN PriceSettingsTOP ON MIFloat_Price.ValueData BETWEEN PriceSettingsTOP.MinPrice AND PriceSettingsTOP.MaxPrice
+
+             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = Object_Juridical.Id
+                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId
+             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
             ;
 
      RETURN NEXT Cursor2;
@@ -587,11 +617,38 @@ BEGIN
 
      -- Результат 2
      OPEN Cursor2 FOR
+    WITH  
+    -- Маркетинговый контракт
+    GoodsPromo AS (SELECT tmp.JuridicalId
+                        , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
+                        , tmp.MovementId
+                        , tmp.ChangePercent
+                   FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= vbOperDate) AS tmp   --CURRENT_DATE
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.GoodsId
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_retail ON ObjectLink_Main_retail.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                                   AND ObjectLink_Main_retail.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_retail ON ObjectLink_Child_retail.ObjectId = ObjectLink_Main_retail.ObjectId
+                                                                                    AND ObjectLink_Child_retail.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_retail.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                  )
+
         SELECT *, CASE WHEN PartionGoodsDate < vbDate180 THEN 456
                      ELSE 0
                 END AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot
               , MIFloat_Remains.ValueData          AS Remains
+
+              , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
+              , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
+              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+              , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
 
         FROM _tmpMI
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
@@ -599,7 +656,12 @@ BEGIN
                                   AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
-                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains();
+                                        AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
+                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId 
+             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+;
    RETURN NEXT Cursor2;
 
   END IF;
@@ -612,6 +674,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.08.16         *
  04.08.16         *
  28.04.16         *
  12.04.16         *

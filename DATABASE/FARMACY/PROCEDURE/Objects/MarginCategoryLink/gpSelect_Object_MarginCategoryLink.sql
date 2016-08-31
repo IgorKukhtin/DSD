@@ -1,8 +1,10 @@
 --Function: gpSelect_Object_MarginCategoryLink (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryLink (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MarginCategoryLink (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryLink(
+    IN inShowAll          Boolean,       --
     IN inSession          TVarChar       -- сессия пользователя
 )
 
@@ -18,6 +20,7 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_MarginCategory());
 
    RETURN QUERY  
+    
    SELECT 
         Object_MarginCategoryLink.Id, 
         Object_MarginCategoryLink.MarginCategoryId, 
@@ -29,7 +32,9 @@ BEGIN
         COALESCE(ObjectBoolean_Site.ValueData, FALSE)   AS isSite,
         MarginCategoryLink.isErased 
     FROM Object_MarginCategoryLink_View AS Object_MarginCategoryLink
-          LEFT JOIN Object AS MarginCategoryLink ON MarginCategoryLink.Id = Object_MarginCategoryLink.Id
+          INNER JOIN Object AS MarginCategoryLink 
+                            ON MarginCategoryLink.Id = Object_MarginCategoryLink.Id
+                           AND (MarginCategoryLink.IsErased = inShowAll OR inShowAll = True)
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
                                   ON ObjectBoolean_Site.ObjectId = Object_MarginCategoryLink.MarginCategoryId
                                  AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_MarginCategory_Site()
@@ -38,12 +43,13 @@ BEGIN
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MarginCategoryLink (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_MarginCategoryLink (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.08.16         * 
  13.04.16         *
  09.04.15                         *
 */
