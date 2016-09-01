@@ -27,6 +27,8 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     bbSetUnErased: TdxBarButton;
     clErased: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
