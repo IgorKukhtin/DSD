@@ -159,6 +159,14 @@ object EntryAssetForm: TEntryAssetForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object AssetCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'AssetCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object clAssetName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1054#1057')'
             DataBinding.FieldName = 'AssetName'
@@ -184,6 +192,28 @@ object EntryAssetForm: TEntryAssetForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object PartionGoods: TcxGridDBColumn
+            Caption = #1048#1085#1074'.'#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object MemberName: TcxGridDBColumn
+            Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072' ('#1052#1054')'
+            DataBinding.FieldName = 'MemberName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actMemberChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
           object StorageName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'StorageName'
@@ -197,7 +227,7 @@ object EntryAssetForm: TEntryAssetForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 100
           end
           object clUnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
@@ -219,28 +249,6 @@ object EntryAssetForm: TEntryAssetForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object MemberName: TcxGridDBColumn
-            Caption = #1060#1080#1079'. '#1083#1080#1094#1086
-            DataBinding.FieldName = 'MemberName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actMemberChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 102
-          end
-          object PartionGoods: TcxGridDBColumn
-            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
-            DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
@@ -333,6 +341,11 @@ object EntryAssetForm: TEntryAssetForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chRemains
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -382,6 +395,11 @@ object EntryAssetForm: TEntryAssetForm
         item
           Format = ',0.00'
           Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chRemains
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -397,13 +415,21 @@ object EntryAssetForm: TEntryAssetForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object chPartionGoodsName: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'PartionGoodsName'
+      object chGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 297
+        Width = 45
+      end
+      object chGoodsName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1059#1089#1083#1091#1075#1080')'
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 200
       end
       object chAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
@@ -413,8 +439,40 @@ object EntryAssetForm: TEntryAssetForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 82
+      end
+      object chRemains: TcxGridDBColumn
+        Caption = #1054#1089#1090#1072#1090#1086#1082
+        DataBinding.FieldName = 'Remains'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
+      object chComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object chMovementPartionGoods_InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'MovementPartionGoods_InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object chLocationName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
+        DataBinding.FieldName = 'LocationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
       object chStorageName: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -422,7 +480,7 @@ object EntryAssetForm: TEntryAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 141
+        Width = 100
       end
       object chUnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
@@ -442,33 +500,21 @@ object EntryAssetForm: TEntryAssetForm
         Options.Editing = False
         Width = 150
       end
-      object chLocationName: TcxGridDBColumn
-        Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
-        DataBinding.FieldName = 'LocationName'
+      object chPartionGoodsName: TcxGridDBColumn
+        Caption = #1048#1085#1074'.'#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'PartionGoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 102
-      end
-      object chMovementPartionGoods_InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
-        DataBinding.FieldName = 'MovementPartionGoods_InvNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 128
-      end
-      object chComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 303
+        Width = 80
       end
       object chisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'isErased'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
     end
@@ -561,6 +607,10 @@ object EntryAssetForm: TEntryAssetForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -631,6 +681,7 @@ object EntryAssetForm: TEntryAssetForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -1599,8 +1650,8 @@ object EntryAssetForm: TEntryAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 286
-    Top = 184
+    Left = 278
+    Top = 152
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -1823,8 +1874,8 @@ object EntryAssetForm: TEntryAssetForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 920
-    Top = 256
+    Left = 360
+    Top = 344
   end
   object DBViewChildAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1850,15 +1901,19 @@ object EntryAssetForm: TEntryAssetForm
         DataSummaryItemIndex = 5
       end>
     SearchAsFilter = False
-    Left = 926
-    Top = 305
+    Left = 406
+    Top = 289
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
     Params = <>
-    Left = 848
-    Top = 288
+    Left = 296
+    Top = 352
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_EntryAsset_Child'
@@ -1916,8 +1971,8 @@ object EntryAssetForm: TEntryAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 788
-    Top = 280
+    Left = 308
+    Top = 296
   end
   object spSelectMIChild: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_EntryAsset_Child'
@@ -1944,8 +1999,8 @@ object EntryAssetForm: TEntryAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 271
+    Left = 224
+    Top = 319
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'

@@ -132,6 +132,10 @@ type
     bbUpdateAsset_toGoods: TdxBarButton;
     chMovementPartionGoods_InvNumber: TcxGridDBColumn;
     chisErased: TcxGridDBColumn;
+    chGoodsCode: TcxGridDBColumn;
+    chRemains: TcxGridDBColumn;
+    chGoodsName: TcxGridDBColumn;
+    AssetCode: TcxGridDBColumn;
   private
   public
   end;

@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_EntryAsset_Child (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_EntryAsset_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>

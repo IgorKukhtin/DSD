@@ -1,4 +1,4 @@
--- Function: lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime)
+-- Function: lpInsertFind_Object_PartionGoods - InvNumber
 
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (Integer, Integer, Integer, TVarChar, TDateTime, TFloat);
 

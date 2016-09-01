@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_EntryAsset_Child(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , Amount TFloat, Comment TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat, Remains TFloat, Comment TVarChar
              , PartionGoodsId Integer, PartionGoodsName TVarChar
              , LocationName TVarChar
              , StorageName TVarChar
@@ -32,9 +33,8 @@ BEGIN
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
-         )
-
-, tmpMI_Child AS (SELECT MovementItem.Id AS Id
+             )
+, tmpMI_Child AS (SELECT MovementItem.Id       AS Id
                        , MovementItem.ParentId AS ParentId
                        , MovementItem.ObjectId AS PartionGoodsId
                        , MovementItem.Amount   AS Amount
@@ -44,13 +44,15 @@ BEGIN
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                   )
- , tmpContainer AS (SELECT tmpMI.Id AS MIMasterId
+ , tmpContainer AS (-- здесь и Товар и ОС и Услуги
+                    SELECT tmpMI.Id                  AS ParentId
                          , CLO_PartionGoods.ObjectId AS PartionGoodsId
-                         , Container.Amount 
+                         , Container.ObjectId        AS GoodsId
+                         , Container.Amount
                          , COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId) AS LocationId
                     FROM tmpMI
                          INNER JOIN ContainerLinkObject AS CLO_AssetTo
-                                                        ON CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                                                        ON CLO_AssetTo.DescId   = zc_ContainerLinkObject_AssetTo()
                                                        AND CLO_AssetTo.ObjectId = tmpMI.AssetId
                          INNER JOIN Container ON Container.Id = CLO_AssetTo.ContainerId 
                                              AND Container.DescId = zc_Container_Count()
@@ -66,20 +68,29 @@ BEGIN
                                                        ON CLO_Unit.ContainerId = Container.Id
                                                       AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                     )
-   , tmpResult AS (SELECT tmpMI_Child.Id                        AS Id
-                        , tmpMI_Child.ParentId                  AS ParentId
-                        , COALESCE(tmpMI_Child.isErased, FALSE) AS isErased
-                        , COALESCE (tmpMI_Child.PartionGoodsId, tmpContainer.PartionGoodsId) AS PartionGoodsId
-                        , COALESCE (tmpMI_Child.Amount, tmpContainer.Amount)                 AS Amount
-                        , tmpContainer.LocationId
+   , tmpResult AS (SELECT tmpMI_Child.Id                         AS Id
+                        , COALESCE (tmpMI_Child.ParentId, tmpContainer.ParentId)                  AS ParentId
+                        , COALESCE (tmpMI_Child.PartionGoodsId, tmpContainer.PartionGoodsId)      AS PartionGoodsId
+                        , COALESCE (tmpContainer.GoodsId, ObjectLink_PartionGoods_Goods.ObjectId) AS GoodsId
+                        , tmpMI_Child.Amount                     AS Amount
+                        , tmpContainer.Amount                    AS Remains
+                        , tmpContainer.LocationId                AS LocationId
+                        , COALESCE (tmpMI_Child.isErased, FALSE) AS isErased
                    FROM tmpMI_Child
-                        FULL JOIN tmpContainer ON tmpContainer.MIMasterId = tmpMI_Child.ParentId
+                        LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Goods
+                                             ON ObjectLink_PartionGoods_Goods.ObjectId = tmpMI_Child.PartionGoodsId
+                                            AND ObjectLink_PartionGoods_Goods.DescId   = zc_ObjectLink_PartionGoods_Goods() 
+                        FULL JOIN tmpContainer ON tmpContainer.PartionGoodsId = tmpMI_Child.PartionGoodsId
+                                              AND tmpContainer.GoodsId        = ObjectLink_PartionGoods_Goods.ObjectId
                    )
-
-
+   -- Результат
    SELECT tmpResult.Id
         , tmpResult.ParentId
+        , Object_Goods.Id            AS GoodsId
+        , Object_Goods.ObjectCode    AS GoodsCode
+        , Object_Goods.ValueData     AS GoodsName
         , tmpResult.Amount
+        , tmpResult.Remains
         , MIString_Comment.ValueData    AS Comment
         , tmpResult.PartionGoodsId
         , Object_PartionGoods.ValueData AS PartionGoodsName
@@ -93,6 +104,7 @@ BEGIN
 
         , tmpResult.isErased
    FROM tmpResult
+        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpResult.PartionGoodsId
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpResult.LocationId
 
@@ -104,15 +116,13 @@ BEGIN
                              ON ObjectLink_PartionGoods_Unit.ObjectId = tmpResult.PartionGoodsId
                             AND ObjectLink_PartionGoods_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_PartionGoods_Unit.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_Storage
                              ON ObjectLink_PartionGoods_Storage.ObjectId = tmpResult.PartionGoodsId
                             AND ObjectLink_PartionGoods_Storage.DescId = zc_ObjectLink_PartionGoods_Storage() 
         LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_PartionGoods_Storage.ChildObjectId
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_MovementId 
-                              ON ObjectFloat_PartionGoods_MovementId.ObjectId = tmpResult.PartionGoodsId
-                             AND ObjectFloat_PartionGoods_MovementId.DescId = zc_ObjectFloat_PartionGoods_MovementId()
-        LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = ObjectFloat_PartionGoods_MovementId.ValueData :: Integer 
+        LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
         LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
 ;
 

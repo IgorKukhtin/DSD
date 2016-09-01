@@ -46,7 +46,7 @@ BEGIN
      -- Проверка
      IF EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
      THEN
-         RAISE EXCEPTION 'Ошибка. Найден документ <Налоговая накладная> № <%> от <%>.', (SELECT MovementString.ValueData FROM MovementLinkMovement AS MLM JOIN MovementString ON MovementString.MovementId = MLM.MovementChildId AND MovementString.DescId = zc_MovementString_InNumberPartner() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
+         RAISE EXCEPTION 'Ошибка. Найден документ <Налоговая накладная> № <%> от <%>.', (SELECT MovementString.ValueData FROM MovementLinkMovement AS MLM JOIN MovementString ON MovementString.MovementId = MLM.MovementChildId AND MovementString.DescId = zc_MovementString_InvNumberPartner() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master())
                                                                                       , DATE ((SELECT Movement.OperDate FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Master()));
      END IF;
 

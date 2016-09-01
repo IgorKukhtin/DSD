@@ -81,7 +81,7 @@ BEGIN
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400()
                                    , zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
                                     )
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -215,6 +215,7 @@ BEGIN
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                  , inObjectId_4 := inInfoMoneyId
                                                   );
+     END IF;
      END IF;
      END IF;
      END IF;

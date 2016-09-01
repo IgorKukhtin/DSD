@@ -70,7 +70,7 @@ BEGIN
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400()
                                    , zc_Enum_InfoMoneyDestination_70100(), zc_Enum_InfoMoneyDestination_70200(), zc_Enum_InfoMoneyDestination_70300(), zc_Enum_InfoMoneyDestination_70400()
                                     )
                            -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
@@ -154,7 +154,7 @@ BEGIN
                                                   );
      -- !!!Other!!!
           -- 0)Товар 1)Подразделение
-          -- 0)Товар 1)Сотрудник (МО)
+          -- 0)Товар 1)Физ. лицо (МО)
      ELSE vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId

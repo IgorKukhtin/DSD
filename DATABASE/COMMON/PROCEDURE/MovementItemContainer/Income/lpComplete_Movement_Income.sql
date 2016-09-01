@@ -468,7 +468,7 @@ BEGIN
                      -- если Вид топлива, иначе - Товар
                    , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId) AS GoodsId
                    , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
-                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
+                   , CASE WHEN MILinkObject_Asset.ObjectId > 0 THEN MILinkObject_Asset.ObjectId WHEN vbMovementDescId = zc_Movement_IncomeAsset() AND Object_Goods.DescId = zc_Object_Asset() THEN Object_Goods.Id ELSE 0 END AS AssetId
                    , COALESCE (MILinkObject_Unit.ObjectId, 0)  AS UnitId_Asset
                    , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
                           WHEN COALESCE (MIString_PartionGoodsCalc.ValueData, '') <> '' THEN MIString_PartionGoodsCalc.ValueData
@@ -520,6 +520,7 @@ BEGIN
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -726,7 +727,14 @@ BEGIN
 
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbOperDate >= zc_DateStart_PartionGoods()
+     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
+                                                   THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
+                                                                                        , inGoodsId       := _tmpItem.GoodsId
+                                                                                        , inUnitId        := _tmpItem.UnitId_Asset
+                                                                                        , inStorageId     := NULL
+                                                                                        , inInvNumber     := NULL
+                                                                                         )
+                                               WHEN vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND vbAccountDirectionId_To = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND (_tmpItem.isPartionCount OR _tmpItem.isPartionSumm)
                                                    THEN lpInsertFind_Object_PartionGoods (inValue:= _tmpItem.PartionGoods)
@@ -739,7 +747,7 @@ BEGIN
 
                                                WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                  OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                 OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                 -- OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
                                                    THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
                                                                                         , inGoodsId       := NULL
                                                                                         , inStorageId     := NULL
@@ -753,7 +761,8 @@ BEGIN
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+        -- OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+        OR vbMovementDescId = zc_Movement_IncomeAsset()
      ;
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId_Detail!!!

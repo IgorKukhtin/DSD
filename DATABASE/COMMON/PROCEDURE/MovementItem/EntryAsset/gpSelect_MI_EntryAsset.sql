@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_EntryAsset(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , AssetId Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , StorageId Integer, StorageName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , MemberId Integer, MemberCode Integer, MemberName TVarChar
@@ -50,12 +50,12 @@ BEGIN
                                                                    ON MILinkObject_Member.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Member.DescId = zc_MILinkObject_Member()
                      )
-  
         -- Результат
         SELECT
              tmpMI.Id
 
            , Object_Asset.Id                 AS AssetId
+           , Object_Asset.ObjectCode         AS AssetCode
            , Object_Asset.ValueData          AS AssetName
 
            , Object_Storage.Id               AS StorageId

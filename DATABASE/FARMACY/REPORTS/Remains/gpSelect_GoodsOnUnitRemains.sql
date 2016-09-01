@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inisPartionPrice   Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId integer, Id integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar
+RETURNS TABLE (ContainerId Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
              
              , Summa TFloat, SummaWithVAT TFloat, SummaWithOutVAT TFloat, SummaSale TFloat
@@ -70,6 +70,7 @@ BEGIN
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
                               , MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
+                              , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END       AS ContainerId
                               , tmpData_all.GoodsId
                               , SUM (tmpData_all.Amount)                                                   AS Amount
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
@@ -81,7 +82,7 @@ BEGIN
                               
                          FROM (
                                  SELECT ContainerCount.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
-                                      , ContainerCount.GoodsId 
+                                      , ContainerCount.ContainerId, ContainerCount.GoodsId 
                                       , ContainerCount.MovementId_Income
                                       , ContainerCount.MovementId_find
                                       , ContainerCount.MovementId
@@ -134,13 +135,14 @@ BEGIN
                                 , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END
                                 , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_Juridical_Income.ObjectId ELSE 0 END
                                 , CASE WHEN inisPartionPrice = TRUE THEN MovementLinkObject_To.ObjectId ELSE 0 END                                                              
-                         HAVING (SUM (tmpData_all.Amount) <> 0)                                
-                          )
-
-
-        SELECT Object_Goods_View.Id                         as Id
-             , Object_Goods_View.GoodsCodeInt ::Integer     as GoodsCode
-             , Object_Goods_View.GoodsName                  as GoodsName
+                                , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END
+                         HAVING SUM (tmpData_all.Amount) <> 0
+                        )
+        -- Результат
+        SELECT tmpData.ContainerId :: Integer AS ContainerId
+             , Object_Goods_View.Id                         AS Id
+             , Object_Goods_View.GoodsCodeInt ::Integer     AS GoodsCode
+             , Object_Goods_View.GoodsName                  AS GoodsName
              , Object_Goods_View.GoodsGroupName             AS GoodsGroupName
              , Object_NDSKind_Income.ValueData              AS NDSKindName
              
@@ -177,8 +179,12 @@ BEGIN
            , (SelectMinPrice_AllGoods_onDate.Price * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat                     AS MinPriceOnDateVAT
            , (SelectMinPrice_AllGoods_onDate.Price * tmpData.Amount * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) :: TFloat    AS MP_SummaVAT
         FROM tmpData
+            LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                       ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
+                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+
             LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
-            LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
+            LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
             LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
             LEFT JOIN Object AS Object_OurJuridical_Income ON Object_OurJuridical_Income.Id = tmpData.OurJuridicalId_Income
 
@@ -191,7 +197,7 @@ BEGIN
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
 
             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                  ON ObjectFloat_NDSKind_NDS.ObjectId = tmpData.NDSKindId_Income
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (tmpData.NDSKindId_Income, ObjectLink_Goods_NDSKind.ChildObjectId)
                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
             LEFT OUTER JOIN Object_Price_View AS Object_Price

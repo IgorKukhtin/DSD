@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1376
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -69,7 +69,7 @@ inherited MainForm: TMainForm
     object actEntryAsset: TdsdOpenForm [0]
       Category = #1054#1057
       MoveParams = <>
-      Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102' ('#1054#1057')'
+      Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
       FormName = 'TEntryAssetJournalForm'
       FormNameParam.Value = 'TEntryAssetJournalForm'
       FormNameParam.DataType = ftString
@@ -179,7 +179,7 @@ inherited MainForm: TMainForm
     object actIncomeAsset: TdsdOpenForm [6]
       Category = #1054#1057
       MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1054#1057')'
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       FormName = 'TIncomeAssetJournalForm'
       FormNameParam.Value = 'TIncomeAssetJournalForm'
       FormNameParam.DataType = ftString

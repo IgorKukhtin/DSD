@@ -171,10 +171,10 @@ BEGIN
       , ddd.PriceListMovementItemId
 
       , CASE -- если Дней отсрочки по договору = 0
-             WHEN ddd.Deferment = 0
+             WHEN 1=0 AND ddd.Deferment = 0
                   THEN FinalPrice
              -- если ТОП-позиция
-             WHEN ddd.isTOP = TRUE
+             WHEN 1=0 AND ddd.isTOP = TRUE
                   THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
@@ -196,7 +196,9 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+          , CASE WHEN 1=1
+                      THEN PriceList.Amount
+                 -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
                  WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
                          -- И учитывается % бонуса из Маркетинговый контракт

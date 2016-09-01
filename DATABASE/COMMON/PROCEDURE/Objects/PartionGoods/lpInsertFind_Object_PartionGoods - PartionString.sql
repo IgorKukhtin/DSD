@@ -1,4 +1,4 @@
--- Function: lpInsertFind_Object_PartionGoods (TVarChar) - ќсновное сырье + ћ€сное сырье + "выборочно"
+-- Function: lpInsertFind_Object_PartionGoods - PartionString - ќсновное сырье + ћ€сное сырье + "выборочно"
 
 DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TVarChar);
 
