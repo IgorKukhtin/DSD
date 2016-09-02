@@ -297,14 +297,12 @@ object IncomeAssetForm: TIncomeAssetForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 326
     ClientRectBottom = 263
     ClientRectRight = 871
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 302
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -312,7 +310,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 302
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -580,7 +577,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitHeight = 258
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -588,7 +584,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 258
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -3047,6 +3042,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3055,98 +3051,7 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentId'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CurrencyDocumentName'
-        Value = ''
-        Component = CurrencyDocumentGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'VATPercent'
-        Value = 0.000000000000000000
-        Component = edVATPercent
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceWithVAT'
-        Value = 'True'
-        Component = edPriceWithVAT
-        DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 364
