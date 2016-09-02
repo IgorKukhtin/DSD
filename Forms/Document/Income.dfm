@@ -3260,6 +3260,7 @@ object IncomeForm: TIncomeForm
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3268,6 +3269,7 @@ object IncomeForm: TIncomeForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3343,22 +3345,6 @@ object IncomeForm: TIncomeForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 484
