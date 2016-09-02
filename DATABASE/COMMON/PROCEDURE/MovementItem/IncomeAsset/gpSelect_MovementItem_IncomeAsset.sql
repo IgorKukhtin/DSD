@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IncomeAsset(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , AssetId Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat, Price TFloat
              , Amount_parent TFloat, Price_parent TFloat
@@ -113,6 +113,7 @@ BEGIN
            , Object_Goods.ValueData     AS GoodsName
 
            , Object_Asset.Id             AS AssetId
+           , Object_Asset.ObjectCode     AS AssetCode
            , Object_Asset.ValueData      AS AssetName
 
            , Object_Unit.Id             AS UnitId

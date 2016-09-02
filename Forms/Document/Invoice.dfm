@@ -373,6 +373,13 @@ object InvoiceForm: TInvoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object AssetCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054'C / '#1052#1053#1052#1040')'
+            DataBinding.FieldName = 'AssetCode'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
           object clAssetName: TcxGridDBColumn
             Caption = #1076#1083#1103' '#1054'C / '#1052#1053#1052#1040
             DataBinding.FieldName = 'AssetName'

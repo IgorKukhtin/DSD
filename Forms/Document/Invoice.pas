@@ -171,6 +171,7 @@ type
     edInvNumberPartner: TcxTextEdit;
     actUpdateAsset_toGoods: TOpenChoiceForm;
     bbUpdateAsset_toGoods: TdxBarButton;
+    AssetCode: TcxGridDBColumn;
   private
   public
   end;

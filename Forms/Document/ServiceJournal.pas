@@ -32,6 +32,7 @@ type
     clInvNumberPartner: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     clCostMovementInvNumber: TcxGridDBColumn;
+    AssetCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

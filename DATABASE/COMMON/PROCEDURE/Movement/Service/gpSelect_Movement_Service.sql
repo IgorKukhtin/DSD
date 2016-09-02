@@ -23,7 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
-             , AssetId Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              )
 AS
 $BODY$
@@ -95,6 +95,7 @@ BEGIN
            , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, COALESCE (MovementString_InvNumberPartner_Invoice.ValueData,'') || '/' || Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvNumber_Invoice
 
            , Object_Asset.Id             AS AssetId
+           , Object_Asset.ObjectCode     AS AssetCode
            , Object_Asset.ValueData      AS AssetName
 
        FROM tmpStatus

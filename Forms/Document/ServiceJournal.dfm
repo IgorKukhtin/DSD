@@ -3,8 +3,9 @@ inherited ServiceJournalForm: TServiceJournalForm
   ClientHeight = 413
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -230
   ExplicitWidth = 1036
-  ExplicitHeight = 451
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -162,6 +163,15 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 112
+          end
+          object AssetCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054'C)'
+            DataBinding.FieldName = 'AssetCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clAssetName: TcxGridDBColumn
             Caption = #1076#1083#1103' '#1054'C'
