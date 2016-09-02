@@ -2765,6 +2765,14 @@
 				<Form>EntryAssetJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas">
+				<Form>Report_MotionGoodsAssetDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsAsset.pas">
+				<Form>Report_MotionGoodsAssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

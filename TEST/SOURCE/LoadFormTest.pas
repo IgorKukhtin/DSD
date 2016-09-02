@@ -114,6 +114,7 @@ type
     procedure LoadQualityNumberFormTest;
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
+    procedure LoadReportAssetFormTest;
     procedure LoadReportBranchFormTest;
     procedure LoadReportSystemFormTest;
     procedure LoadReportBankAccountCashFormTest;
@@ -1550,6 +1551,15 @@ begin
 
 end;
 
+procedure TLoadFormTest.LoadReportAssetFormTest;
+begin
+// exit;
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetDialogForm');
+end;
 
 procedure TLoadFormTest.LoadReportTaraFormTest;
 begin
