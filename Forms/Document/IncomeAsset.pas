@@ -176,6 +176,7 @@ type
     bbInsertAsset: TdxBarButton;
     actUnitChoiceForm: TOpenChoiceForm;
     actAssetChoiceForm: TOpenChoiceForm;
+    AssetCode: TcxGridDBColumn;
   private
   public
   end;

@@ -3,7 +3,7 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 753
   ExplicitWidth = 769
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -232,8 +232,8 @@ inherited PriceListForm: TPriceListForm
           'Top'
           'Width')
       end>
-    Left = 40
-    Top = 40
+    Left = 32
+    Top = 136
   end
   inherited ActionList: TActionList
     Left = 55
@@ -420,6 +420,10 @@ inherited PriceListForm: TPriceListForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -432,10 +436,6 @@ inherited PriceListForm: TPriceListForm
         end
         item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -485,11 +485,11 @@ inherited PriceListForm: TPriceListForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -602,13 +602,13 @@ inherited PriceListForm: TPriceListForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
+    Left = 128
+    Top = 128
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PriceList'
-    Left = 128
-    Top = 56
+    Left = 176
+    Top = 144
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PriceList'

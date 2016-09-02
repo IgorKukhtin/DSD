@@ -297,14 +297,12 @@ object IncomeAssetForm: TIncomeAssetForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 326
     ClientRectBottom = 263
     ClientRectRight = 871
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 302
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -312,7 +310,6 @@ object IncomeAssetForm: TIncomeAssetForm
         Height = 239
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 302
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -444,6 +441,15 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 256
+          end
+          object AssetCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054#1057')'
+            DataBinding.FieldName = 'AssetCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clAssetName: TcxGridDBColumn
             Caption = #1076#1083#1103' '#1054'C'
@@ -580,6 +586,8 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 258
       object cxGrid1: TcxGrid
         Left = 0

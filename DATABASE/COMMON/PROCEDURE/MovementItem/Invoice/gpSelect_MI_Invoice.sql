@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, MIId_OrderIncome Integer, InvNumber_OrderIncome TVarC
              , MeasureId Integer, MeasureName TVarChar
              , NameBeforeId Integer, NameBeforeCode Integer, NameBeforeName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , AssetId Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , isErased Boolean
               )
 AS
@@ -214,6 +214,7 @@ BEGIN
              ) :: TVarChar AS UnitName
 
            , Object_Asset.Id                     AS AssetId
+           , Object_Asset.ObjectCode             AS AssetCode
            , (CASE WHEN tmpResult.Id > 0 AND tmpResult.AssetId <> tmpResult.AssetId_parent AND tmpResult.AssetId_parent > 0 THEN '??? ' ELSE '' END
            || COALESCE (Object_Asset.ValueData, '')
              ) :: TVarChar AS AssetName
