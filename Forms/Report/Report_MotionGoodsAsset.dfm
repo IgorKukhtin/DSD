@@ -25,6 +25,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     Height = 465
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -24
+    ExplicitTop = 60
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -1230,9 +1232,11 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object CountProductionIn_Weight: TcxGridDBColumn
@@ -1245,6 +1249,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object PriceProductionIn: TcxGridDBColumn
@@ -1257,6 +1262,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 45
       end
       object SummProductionIn: TcxGridDBColumn
@@ -1269,6 +1275,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 75
       end
       object CountSendOnPriceOut: TcxGridDBColumn
@@ -1277,9 +1284,11 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object CountSendOnPriceOut_Weight: TcxGridDBColumn
@@ -1292,6 +1301,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object PriceSendOnPriceOut: TcxGridDBColumn
@@ -1304,6 +1314,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 45
       end
       object SummSendOnPriceOut: TcxGridDBColumn
@@ -1316,6 +1327,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 75
       end
       object CountSale: TcxGridDBColumn
@@ -1461,9 +1473,11 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 100
       end
       object CountReturnIn_40208_Weight: TcxGridDBColumn
@@ -1476,6 +1490,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object PriceReturnIn: TcxGridDBColumn
@@ -1511,6 +1526,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object CountLoss: TcxGridDBColumn
@@ -1565,9 +1581,11 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object CountProductionOut_Weight: TcxGridDBColumn
@@ -1580,6 +1598,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object PriceProductionOut: TcxGridDBColumn
@@ -1592,6 +1611,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 45
       end
       object SummProductionOut: TcxGridDBColumn
@@ -1604,6 +1624,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 75
       end
       object CountInventory: TcxGridDBColumn
@@ -2252,7 +2273,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     end
   end
   object cbGoodsKind: TcxCheckBox
-    Left = 93
+    Left = 97
     Top = 87
     Caption = #1087#1086' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = False
@@ -2450,38 +2471,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint2'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Loss'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Inventory'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -2540,18 +2529,22 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     object bbPrint2: TdxBarButton
       Action = actPrint_GP
       Category = 0
+      Visible = ivNever
     end
     object bbPrint3: TdxBarButton
       Action = actPrint_Remains
       Category = 0
+      Visible = ivNever
     end
     object bbPrint_Loss: TdxBarButton
       Action = actPrint_Loss
       Category = 0
+      Visible = ivNever
     end
     object bbPrint_Inventory: TdxBarButton
       Action = actPrint_Inventory
       Category = 0
+      Visible = ivNever
     end
   end
   object ActionList: TActionList
@@ -2743,8 +2736,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1089#1077')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1074#1089#1077')'
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -2830,8 +2823,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1076#1083#1103' '#1074#1089#1077#1093')'
+      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1054#1057
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
