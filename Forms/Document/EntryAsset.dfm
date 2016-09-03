@@ -351,6 +351,11 @@ object EntryAssetForm: TEntryAssetForm
           Format = ',0.####'
           Kind = skSum
           Column = chRemainsSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSumm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -410,6 +415,11 @@ object EntryAssetForm: TEntryAssetForm
           Format = ',0.####'
           Kind = skSum
           Column = chRemainsSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -441,15 +451,33 @@ object EntryAssetForm: TEntryAssetForm
         Options.Editing = False
         Width = 200
       end
+      object chItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object chAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1058#1086#1074#1072#1088'/'#1054#1057')'
         DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 80
+      end
+      object chSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1091#1089#1083#1091#1075#1080')'
+        DataBinding.FieldName = 'Summ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object chRemains: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1054#1089#1090'.)'
@@ -470,6 +498,7 @@ object EntryAssetForm: TEntryAssetForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object chRemainsSumm: TcxGridDBColumn
@@ -480,6 +509,7 @@ object EntryAssetForm: TEntryAssetForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object chComment: TcxGridDBColumn
@@ -1988,6 +2018,15 @@ object EntryAssetForm: TEntryAssetForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Summ'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

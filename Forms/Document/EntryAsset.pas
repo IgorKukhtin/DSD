@@ -138,6 +138,8 @@ type
     AssetCode: TcxGridDBColumn;
     chRemainsSumm: TcxGridDBColumn;
     chPrice: TcxGridDBColumn;
+    chItemName: TcxGridDBColumn;
+    chSumm: TcxGridDBColumn;
   private
   public
   end;
