@@ -43,6 +43,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , PartionMovementId, PartionGoodsId, AssetId
                          , AnalyzerId
                          , IsActive, IsMaster
                           )
@@ -92,10 +93,14 @@ BEGIN
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
 
+             , 0 AS PartionMovementId -- не используется
+             , 0 AS PartionGoodsId    -- будет заполнено !!!только!!! для следующей
+             , 0 AS AssetId           -- будет заполнено !!!только!!! для следующей
+
              , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Продукция OR Доходы + Мясное сырье
                          THEN zc_Enum_AnalyzerId_SaleSumm_10300() -- !!!Сумма, реализация, Скидка дополнительная!!!
                     ELSE 0
-               END AS AnalyzerId
+               END AS AnalyzerId -- заполняется !!!только!!! для текущей
 
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
@@ -163,24 +168,38 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , PartionMovementId, PartionGoodsId, AssetId
+                         , AnalyzerId
                          , IsActive, IsMaster
                           )
          -- 1.2.1. ОПиУ
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
+
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectId -- из предыдущей проводки
-                    ELSE 0 -- значит попадет в ОПиУ
+                    WHEN MILinkObject_Asset.ObjectId > 0
+                         THEN _tmpItem.ObjectId -- дублируем УП, попадет в ОС
+                    ELSE 0 -- значит попадет в ОПиУ или в ОС
                END AS ObjectId
+
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE -- Расходы будущих периодов + Услуги по маркетингу
                          THEN _tmpItem.ObjectDescId -- из предыдущей проводки
+                    WHEN MILinkObject_Asset.ObjectId > 0
+                         THEN zc_Object_InfoMoney() -- дублируем УП, попадет в ОС
                     ELSE 0 -- значит попадет в ОПиУ
                END AS ObjectDescId
+
              , COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
              , COALESCE (MI_Child.Id, _tmpItem.MovementItemId)
 
-             , 0 AS ContainerId                                                     -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId                         -- сформируем позже, или ...
+             , 0 AS ContainerId    -- сформируем позже
+             , 0 AS AccountGroupId -- сформируем позже, или ...
+             , CASE WHEN MILinkObject_Asset.ObjectId > 0
+                         THEN -- определяется сразу здесь
+                              COALESCE ((SELECT tmp.AccountDirectionId FROM lfGet_Object_Unit_byAccountDirection_Asset (_tmpItem.UnitId) AS tmp), 0)
+                    ELSE 0 -- сформируем позже, или ...
+               END AS AccountDirectionId
              , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
                          THEN zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
                     ELSE 0
@@ -220,6 +239,12 @@ BEGIN
              , _tmpItem.ContractId -- из предыдущей проводки
              , _tmpItem.PaidKindId -- из предыдущей проводки
 
+             , 0 AS PartionMovementId                               -- не используется
+             , 0 AS PartionGoodsId                                  -- сформируем позже, надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+             , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId -- надо для Партии услуг (т.е. НЕ списываем в ОПиУ)
+
+             , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -237,7 +262,12 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                               ON MILinkObject_Branch.MovementItemId = MI_Child.Id
                                              AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                              ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
+        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL -- !!!если НЕ перевыставление!!!
+           OR MILinkObject_Asset.ObjectId IS NOT NULL        -- !!!если ОС!!!
        UNION ALL
          -- 1.2.2. Перевыставление затрат на Юр Лицо
         SELECT _tmpItem.MovementDescId
@@ -250,7 +280,7 @@ BEGIN
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
 
-             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId             -- не используется
 
                -- Управленческие группы назначения
              , _tmpItem.InfoMoneyGroupId
@@ -281,6 +311,12 @@ BEGIN
              , ObjectLink_Unit_Contract.ChildObjectId     AS ContractId
              , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
 
+             , 0 AS PartionMovementId -- не используется
+             , 0 AS PartionGoodsId    -- заполнено !!!только!!! для предыдущей
+             , 0 AS AssetId           -- заполнено !!!только!!! для предыдущей
+
+             , 0 AS AnalyzerId -- заполнено !!!только!!! для первой
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -293,8 +329,32 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
-        WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                              ON MILinkObject_Asset.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset() 
+
+        WHERE ObjectLink_Unit_Contract.ChildObjectId > 0 -- !!!если перевыставление!!!
+          AND MILinkObject_Asset.ObjectId IS NULL        -- !!!если НЕ ОС!!!
        ;
+
+
+     -- проверка1 - для ОС
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                                               , zc_Enum_InfoMoneyDestination_70200() -- Капитальный ремонт
+                                                                               , zc_Enum_InfoMoneyDestination_70400() -- Капитальное строительство
+                                                                                ))
+     AND NOT EXISTS (SELECT _tmpItem.AssetId FROM _tmpItem WHERE _tmpItem.AssetId > 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <для Основного средства>.Проведение невозможно.', lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem LIMIT 1));
+     END IF;
+
+     -- проверка2 - для ОС
+     IF EXISTS (SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.AssetId > 0 AND _tmpItem.AccountDirectionId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверно установлено подразделение <%> т.к. нельзя определить направление для счета <%>.Проведение невозможно.', lfGet_Object_ValueData ((SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.AssetId > 0 AND _tmpItem.AccountDirectionId = 0 LIMIT 1)), lfGet_Object_ValueData (zc_Enum_AccountGroup_10000()); -- Необоротные активы
+     END IF;
+
 
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId

@@ -12,7 +12,7 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar);
+     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || ItemName || '>' FROM MovementDesc WHERE Id = inDescId), ''));
 
 END;
 $BODY$

@@ -21,8 +21,21 @@ BEGIN
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+
+     -- 1.1.0. формируются Партии услуг, ЕСЛИ надо ...
+     UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
+                                                                          , inGoodsId       := _tmpItem.InfoMoneyId
+                                                                          , inUnitId        := _tmpItem.UnitId
+                                                                          , inStorageId     := NULL
+                                                                          , inInvNumber     := NULL
+                                                                           )
+     WHERE _tmpItem.AssetId > 0;
+
      -- 1.1.1 определяется AccountDirectionId для проводок суммового учета
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
+                                                           THEN _tmpItem.AccountDirectionId
+
+                                                      WHEN _tmpItem.AssetId <> 0 -- Основные средства
                                                            THEN _tmpItem.AccountDirectionId
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Founder()
@@ -461,6 +474,28 @@ BEGIN
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                             , inDescId_2          := zc_ContainerLinkObject_Branch()
                                                                             , inObjectId_2        := _tmpItem.BranchId_ProfitLoss
+                                                                             )
+                                            WHEN _tmpItem.AssetId <> 0 -- Основные средства
+                                                 THEN -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)УП 3)Партии товара 4)Основные средства (для которого закуплено ОС или ТМЦ) 5)Статьи назначения 6)Статьи назначения(детализация с/с)
+                                                      lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId_Balance
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_Goods()
+                                                                            , inObjectId_1        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Unit()
+                                                                            , inObjectId_2        := _tmpItem.UnitId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                            , inObjectId_3        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_4        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_5          := zc_ContainerLinkObject_PartionGoods()
+                                                                            , inObjectId_5        := _tmpItem.PartionGoodsId
+                                                                            , inDescId_6          := zc_ContainerLinkObject_AssetTo()
+                                                                            , inObjectId_6        := _tmpItem.AssetId
                                                                              )
                                             WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  -- _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
