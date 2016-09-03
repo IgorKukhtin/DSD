@@ -151,9 +151,9 @@ object EntryAssetForm: TEntryAssetForm
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
@@ -427,9 +427,9 @@ object EntryAssetForm: TEntryAssetForm
       OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
@@ -646,8 +646,8 @@ object EntryAssetForm: TEntryAssetForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 30
-    Top = 263
+    Left = 22
+    Top = 295
     DockControlHeights = (
       0
       0
@@ -694,6 +694,19 @@ object EntryAssetForm: TEntryAssetForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedChild'
         end
         item
           BeginGroup = True
@@ -831,8 +844,11 @@ object EntryAssetForm: TEntryAssetForm
       ImageIndex = 64
     end
     object bbInsertRecordChild: TdxBarButton
-      Action = actInsertRecordChild
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
+      Visible = ivAlways
+      ImageIndex = 0
     end
     object bbSetErasedChild: TdxBarButton
       Action = SetErasedChild
@@ -849,6 +865,10 @@ object EntryAssetForm: TEntryAssetForm
       Visible = ivAlways
       ImageIndex = 28
     end
+    object bb: TdxBarButton
+      Action = actShowErasedChild
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -863,12 +883,12 @@ object EntryAssetForm: TEntryAssetForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 81
-    Top = 272
+    Top = 304
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 51
-    Top = 271
+    Top = 295
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -883,6 +903,26 @@ object EntryAssetForm: TEntryAssetForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object actShowErasedChild: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spSelectMIChild
+      StoredProcList = <
+        item
+          StoredProc = spSelectMIChild
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -891,6 +931,9 @@ object EntryAssetForm: TEntryAssetForm
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIChild
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1031,8 +1074,8 @@ object EntryAssetForm: TEntryAssetForm
         item
           StoredProc = spGetTotalSumm
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1384,14 +1427,14 @@ object EntryAssetForm: TEntryAssetForm
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 46
-    Top = 303
+    Left = 110
+    Top = 367
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 16
-    Top = 303
+    Left = 24
+    Top = 343
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1513,7 +1556,7 @@ object EntryAssetForm: TEntryAssetForm
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 238
-    Top = 255
+    Top = 287
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EntryAsset'
@@ -2069,8 +2112,8 @@ object EntryAssetForm: TEntryAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 319
+    Left = 216
+    Top = 343
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2080,7 +2123,7 @@ object EntryAssetForm: TEntryAssetForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2088,7 +2131,7 @@ object EntryAssetForm: TEntryAssetForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2105,7 +2148,7 @@ object EntryAssetForm: TEntryAssetForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2113,7 +2156,7 @@ object EntryAssetForm: TEntryAssetForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
