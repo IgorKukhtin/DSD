@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_EntryAsset_Child(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, ParentId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Remains TFloat, RemainsSumm TFloat, Price TFloat, Comment TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, ItemName TVarChar
+             , Amount TFloat, Summ TFloat, Remains TFloat, RemainsSumm TFloat, Price TFloat, Comment TVarChar
              , PartionGoodsId Integer, PartionGoodsName TVarChar
              , LocationName TVarChar
              , StorageName TVarChar
@@ -128,10 +128,12 @@ BEGIN
         , Object_Goods.Id            AS GoodsId
         , Object_Goods.ObjectCode    AS GoodsCode
         , Object_Goods.ValueData     AS GoodsName
-        , tmpResult.Amount      :: TFloat AS Amount
+        , ObjectDesc.ItemName        AS ItemName
+        , CASE WHEN Object_Goods.DescId <> zc_Object_InfoMoney() THEN tmpResult.Amount ELSE 0 END :: TFloat AS Amount
+        , CASE WHEN Object_Goods.DescId =  zc_Object_InfoMoney() THEN tmpResult.Amount ELSE 0 END :: TFloat AS Summ
         , tmpResult.Remains     :: TFloat AS Remains
         , tmpResult.RemainsSumm :: TFloat AS RemainsSumm
-        , CASE WHEN tmpResult.Amount = 0 THEN tmpResult.RemainsSumm ELSE tmpResult.RemainsSumm / tmpResult.Amount END :: TFloat AS Price
+        , CASE WHEN tmpResult.Remains = 0 THEN tmpResult.RemainsSumm ELSE tmpResult.RemainsSumm / tmpResult.Remains END :: TFloat AS Price
         , MIString_Comment.ValueData    AS Comment
         , tmpResult.PartionGoodsId
         , Object_PartionGoods.ValueData AS PartionGoodsName
@@ -146,6 +148,7 @@ BEGIN
         , tmpResult.isErased
    FROM tmpResult
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
         LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpResult.PartionGoodsId
         LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpResult.LocationId
 
