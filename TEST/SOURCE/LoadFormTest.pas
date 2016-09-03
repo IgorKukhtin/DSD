@@ -1915,6 +1915,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoodsPlaceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGoodsPlaceForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;

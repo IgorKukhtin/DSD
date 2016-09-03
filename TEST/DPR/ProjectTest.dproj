@@ -2765,6 +2765,10 @@
 				<Form>EntryAssetJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AssetGoodsPlace.pas">
+				<Form>AssetGoodsPlaceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas">
 				<Form>Report_MotionGoodsAssetDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>

@@ -853,6 +853,7 @@ uses
   SignInternalEdit in '..\..\Forms\Guides\SignInternalEdit.pas' {SignInternalEditForm: TParentForm},
   EntryAsset in '..\..\Forms\Document\EntryAsset.pas' {EntryAssetForm: TParentForm},
   EntryAssetJournal in '..\..\Forms\Document\EntryAssetJournal.pas' {EntryAssetJournalForm: TParentForm},
+  AssetGoodsPlace in '..\..\Forms\Guides\AssetGoodsPlace.pas' {AssetGoodsPlaceForm: TParentForm},
   Report_MotionGoodsAssetDialog in '..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas' {Report_MotionGoodsAssetDialogForm: TParentForm},
   Report_MotionGoodsAsset in '..\..\Forms\Report\Report_MotionGoodsAsset.pas' {Report_MotionGoodsAssetForm: TParentForm};
 
