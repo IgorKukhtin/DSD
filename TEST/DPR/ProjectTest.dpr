@@ -852,7 +852,9 @@ uses
   SignInternal in '..\..\Forms\Guides\SignInternal.pas' {SignInternalForm: TParentForm},
   SignInternalEdit in '..\..\Forms\Guides\SignInternalEdit.pas' {SignInternalEditForm: TParentForm},
   EntryAsset in '..\..\Forms\Document\EntryAsset.pas' {EntryAssetForm: TParentForm},
-  EntryAssetJournal in '..\..\Forms\Document\EntryAssetJournal.pas' {EntryAssetJournalForm: TParentForm};
+  EntryAssetJournal in '..\..\Forms\Document\EntryAssetJournal.pas' {EntryAssetJournalForm: TParentForm},
+  Report_MotionGoodsAssetDialog in '..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas' {Report_MotionGoodsAssetDialogForm: TParentForm},
+  Report_MotionGoodsAsset in '..\..\Forms\Report\Report_MotionGoodsAsset.pas' {Report_MotionGoodsAssetForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

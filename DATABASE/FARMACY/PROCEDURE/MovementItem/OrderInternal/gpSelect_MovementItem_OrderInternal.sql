@@ -657,9 +657,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = _tmpMI.PriceListMovementItemId
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
-
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId 
+             LEFT JOIN MovementItem ON MovementItem.Id = _tmpMI.MovementItemId
+             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = _tmpMI.JuridicalId
+                                 AND GoodsPromo.GoodsId = MovementItem.ObjectId 
              LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
 ;
    RETURN NEXT Cursor2;

@@ -739,6 +739,9 @@ type
     N129: TMenuItem;
     actEntryAsset: TdsdOpenForm;
     N133: TMenuItem;
+    actReport_MotionGoods_Asset: TdsdOpenForm;
+    OC1: TMenuItem;
+    N134: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

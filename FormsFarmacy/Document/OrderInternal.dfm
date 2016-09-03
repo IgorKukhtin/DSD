@@ -22,7 +22,7 @@ inherited OrderInternalForm: TOrderInternalForm
         Width = 1229
         Height = 203
         ExplicitWidth = 1229
-        ExplicitHeight = 205
+        ExplicitHeight = 203
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -574,7 +574,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 60
           end
           object colOperDatePromo: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085' .'#1082#1086#1085#1090#1088#1072#1082#1090#1072
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'OperDatePromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -611,7 +611,6 @@ inherited OrderInternalForm: TOrderInternalForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 184
       end
     end
   end
