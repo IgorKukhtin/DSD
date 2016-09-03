@@ -775,32 +775,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentVert = vaCenter
         Width = 126
       end
-      object chStorageName: TcxGridDBColumn
-        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'StorageName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object chUnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
-        DataBinding.FieldName = 'UnitCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 45
-      end
-      object chUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
-        Options.Editing = False
-        Width = 150
-      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -834,13 +808,45 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Width = 70
       end
       object PartionGoodsName: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+        Caption = #1048#1085#1074'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'PartionGoodsName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
+      end
+      object MovementPartionGoods_InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'MovementPartionGoods_InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object StorageName: TcxGridDBColumn
+        Caption = #1052#1077#1089#1090#1086' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'StorageName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object clUnitCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'.'
+        DataBinding.FieldName = 'UnitCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
       end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
@@ -1879,17 +1885,11 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       object ContainerId_Summ: TcxGridDBColumn
         Caption = 'Id'
         DataBinding.FieldName = 'ContainerId_Summ'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Enabled = False
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
         Width = 55
       end
       object InfoMoneyCode_Detail: TcxGridDBColumn

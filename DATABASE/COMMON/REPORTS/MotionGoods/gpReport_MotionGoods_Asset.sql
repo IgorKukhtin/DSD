@@ -1,4 +1,4 @@
- -- Function: gpReport_MotionGoods_Asset()
+ -- Function: gpReport_MotionGoods_Asset_NEW()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_Asset (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -23,7 +23,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
-             , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
+             , PartionGoodsId Integer, PartionGoodsName TVarChar 
+             , MovementPartionGoods_InvNumber TVarChar
+             , AssetToName TVarChar
+             , StorageName TVarChar
+             , UnitCode Integer, UnitName TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -147,9 +151,6 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , ContainerId_Summ Integer
              , LineNum Integer
 
-             , StorageName TVarChar
-             , UnitCode Integer, UnitName TVarChar
-             , MovementPartionGoods_InvNumber TVarChar
               )
 AS
 $BODY$
@@ -236,7 +237,10 @@ BEGIN
                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )
-       , tmpReport_all AS (SELECT * FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId, inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId, inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId))
+       , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId
+                                                             , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
+                                                             , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
+                           WHERE tmp.AssetToId  <> 0)
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
@@ -343,18 +347,13 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-        , CASE WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
-                    THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData
-                                                          , inOperDate        := ObjectDate_PartionGoods_Value.ValueData
-                                                          , inPrice           := ObjectFloat_PartionGoods_Price.ValueData
-                                                          , inUnitName_Partion:= Object_Unit.ValueData
-                                                          , inStorageName     := Object_Storage.ValueData
-                                                          , inGoodsName       := ''
-                                                           )
-               ELSE COALESCE (Object_PartionGoods.ValueData, '')
-          END :: TVarChar AS PartionGoodsName
 
+        , COALESCE (Object_PartionGoods.ValueData, '') :: TVarChar AS PartionGoodsName
+        , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
         , Object_AssetTo.ValueData       AS AssetToName
+        , Object_Storage.ValueData       AS StorageName
+        , Object_Unit.ObjectCode         AS UnitCode
+        , Object_Unit.ValueData          AS UnitName
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
         , CAST (tmpMIContainer_group.CountStart * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END          AS TFloat) AS CountStart_Weight
@@ -544,11 +543,8 @@ BEGIN
         , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
-        , Object_Storage.ValueData      AS StorageName
-        , Object_Unit.ObjectCode        AS UnitCode
-        , Object_Unit.ValueData         AS UnitName
-
-        , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
+       -- , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
+       --,Object_PartionGoods.ObjectCode AS Code_PartionGoods, Object_PartionGoods.Id AS Id_PartionGoods
       FROM 
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.ContainerId
@@ -766,16 +762,10 @@ BEGIN
                               ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
                              AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
          LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
-         LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
-                              ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
-                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-         LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
-                               ON ObjectFloat_PartionGoods_Price.ObjectId = tmpMIContainer_group.PartionGoodsId
-                              AND ObjectFloat_PartionGoods_Price.DescId = zc_ObjectFloat_PartionGoods_Price()
---
-        LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
-        LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
---
+
+         LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
+         LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
+
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 
         LEFT JOIN tmpPriceStart ON tmpPriceStart.GoodsId = tmpMIContainer_group.GoodsId
