@@ -346,6 +346,11 @@ object EntryAssetForm: TEntryAssetForm
           Format = ',0.####'
           Kind = skSum
           Column = chRemains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chRemainsSumm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -400,6 +405,11 @@ object EntryAssetForm: TEntryAssetForm
           Format = ',0.####'
           Kind = skSum
           Column = chRemains
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = chRemainsSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -439,10 +449,10 @@ object EntryAssetForm: TEntryAssetForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 55
       end
       object chRemains: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1054#1089#1090'.)'
         DataBinding.FieldName = 'Remains'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -450,6 +460,27 @@ object EntryAssetForm: TEntryAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        Width = 55
+      end
+      object chPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' ('#1054#1089#1090'.)'
+        DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object chRemainsSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1054#1089#1090'.)'
+        DataBinding.FieldName = 'RemainsSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object chComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
