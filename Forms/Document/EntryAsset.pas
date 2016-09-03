@@ -136,6 +136,8 @@ type
     chRemains: TcxGridDBColumn;
     chGoodsName: TcxGridDBColumn;
     AssetCode: TcxGridDBColumn;
+    chRemainsSumm: TcxGridDBColumn;
+    chPrice: TcxGridDBColumn;
   private
   public
   end;

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_EntryAsset_Child(
 )
 RETURNS TABLE (Id Integer, ParentId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Remains TFloat, Comment TVarChar
+             , Amount TFloat, Remains TFloat, RemainsSumm TFloat, Price TFloat, Comment TVarChar
              , PartionGoodsId Integer, PartionGoodsName TVarChar
              , LocationName TVarChar
              , StorageName TVarChar
@@ -44,11 +44,13 @@ BEGIN
                                              AND MovementItem.DescId     = zc_MI_Child()
                                              AND MovementItem.isErased   = tmpIsErased.isErased
                   )
- , tmpContainer AS (-- здесь и Товар и ОС и Услуги
-                    SELECT tmpMI.Id                  AS ParentId
+ , tmpContainer AS (-- здесь Товар или ОС
+                    SELECT Container.Id
+                         , tmpMI.Id                  AS ParentId
                          , CLO_PartionGoods.ObjectId AS PartionGoodsId
                          , Container.ObjectId        AS GoodsId
                          , Container.Amount
+                         , SUM (COALESCE (Container_Summ.Amount, 0)) AS Summ
                          , COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId) AS LocationId
                     FROM tmpMI
                          INNER JOIN ContainerLinkObject AS CLO_AssetTo
@@ -57,6 +59,9 @@ BEGIN
                          INNER JOIN Container ON Container.Id = CLO_AssetTo.ContainerId 
                                              AND Container.DescId = zc_Container_Count()
                                              AND Container.Amount <>0
+                         LEFT JOIN Container AS Container_Summ
+                                             ON Container_Summ.ParentId = Container.Id
+                                            AND Container_Summ.DescId = zc_Container_Summ()
                          LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
                                                        ON CLO_PartionGoods.ContainerId = Container.Id
                                                       AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -67,6 +72,39 @@ BEGIN
                          LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                        ON CLO_Unit.ContainerId = Container.Id
                                                       AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                    GROUP BY Container.Id
+                           , tmpMI.Id
+                           , CLO_PartionGoods.ObjectId
+                           , Container.ObjectId
+                           , Container.Amount
+                           , COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId)
+                   UNION ALL
+                    -- здесь Услуги
+                    SELECT Container.Id              AS ContainerId
+                         , tmpMI.Id                  AS ParentId
+                         , CLO_PartionGoods.ObjectId AS PartionGoodsId
+                         , CLO_Goods.ObjectId        AS GoodsId
+                         , 0                         AS Amount
+                         , Container.Amount          AS Summ
+                         , CLO_Unit.ObjectId         AS LocationId
+                    FROM tmpMI
+                         INNER JOIN ContainerLinkObject AS CLO_AssetTo
+                                                        ON CLO_AssetTo.DescId   = zc_ContainerLinkObject_AssetTo()
+                                                       AND CLO_AssetTo.ObjectId = tmpMI.AssetId
+                         INNER JOIN Container ON Container.Id = CLO_AssetTo.ContainerId 
+                                             AND Container.DescId = zc_Container_Summ()
+                                             AND Container.Amount <>0
+                         INNER JOIN ContainerLinkObject AS CLO_Goods
+                                                        ON CLO_Goods.ContainerId = Container.Id
+                                                       AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                         INNER JOIN Object ON Object.Id = CLO_Goods.ObjectId AND Object.DescId = zc_Object_InfoMoney()
+                         LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                       ON CLO_PartionGoods.ContainerId = Container.Id
+                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                   
+                         LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                       ON CLO_Unit.ContainerId = Container.Id
+                                                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                     )
    , tmpResult AS (SELECT tmpMI_Child.Id                         AS Id
                         , COALESCE (tmpMI_Child.ParentId, tmpContainer.ParentId)                  AS ParentId
@@ -74,6 +112,7 @@ BEGIN
                         , COALESCE (tmpContainer.GoodsId, ObjectLink_PartionGoods_Goods.ObjectId) AS GoodsId
                         , tmpMI_Child.Amount                     AS Amount
                         , tmpContainer.Amount                    AS Remains
+                        , tmpContainer.Summ                      AS RemainsSumm
                         , tmpContainer.LocationId                AS LocationId
                         , COALESCE (tmpMI_Child.isErased, FALSE) AS isErased
                    FROM tmpMI_Child
@@ -89,8 +128,10 @@ BEGIN
         , Object_Goods.Id            AS GoodsId
         , Object_Goods.ObjectCode    AS GoodsCode
         , Object_Goods.ValueData     AS GoodsName
-        , tmpResult.Amount
-        , tmpResult.Remains
+        , tmpResult.Amount      :: TFloat AS Amount
+        , tmpResult.Remains     :: TFloat AS Remains
+        , tmpResult.RemainsSumm :: TFloat AS RemainsSumm
+        , CASE WHEN tmpResult.Amount = 0 THEN tmpResult.RemainsSumm ELSE tmpResult.RemainsSumm / tmpResult.Amount END :: TFloat AS Price
         , MIString_Comment.ValueData    AS Comment
         , tmpResult.PartionGoodsId
         , Object_PartionGoods.ValueData AS PartionGoodsName
