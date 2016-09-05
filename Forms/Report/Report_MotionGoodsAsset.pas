@@ -102,8 +102,6 @@ type
     cxLabel6: TcxLabel;
     LocationDescName: TcxGridDBColumn;
     LocationCode: TcxGridDBColumn;
-    CarCode: TcxGridDBColumn;
-    CarName: TcxGridDBColumn;
     PriceSendOnPriceIn: TcxGridDBColumn;
     PriceSendOnPriceOut: TcxGridDBColumn;
     CountSendOnPriceIn: TcxGridDBColumn;
@@ -203,7 +201,6 @@ type
     CountOtherIn_by_Weight: TcxGridDBColumn;
     CountOut_by_Weight: TcxGridDBColumn;
     CountOtherOut_by_Weight: TcxGridDBColumn;
-    GoodsKindName_complete: TcxGridDBColumn;
     actPrint_Loss: TdsdPrintAction;
     bbPrint_Loss: TdxBarButton;
     actPrint_Inventory: TdsdPrintAction;
