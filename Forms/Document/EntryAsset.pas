@@ -138,8 +138,8 @@ type
     AssetCode: TcxGridDBColumn;
     chRemainsSumm: TcxGridDBColumn;
     chPrice: TcxGridDBColumn;
-    chItemName: TcxGridDBColumn;
-    chSumm: TcxGridDBColumn;
+    actShowErasedChild: TBooleanStoredProcAction;
+    bb: TdxBarButton;
   private
   public
   end;
