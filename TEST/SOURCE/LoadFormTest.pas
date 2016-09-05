@@ -1553,8 +1553,6 @@ end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;
 begin
-// exit;
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsAssetDialogForm'));

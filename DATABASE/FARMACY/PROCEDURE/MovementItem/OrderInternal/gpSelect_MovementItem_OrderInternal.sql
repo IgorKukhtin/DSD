@@ -255,15 +255,23 @@ BEGIN
              , Object_Goods.ValueData     AS GoodsName --_tmpMI.GoodsName
              , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
              , COALESCE (ObjectFloat_Deferment.ValueData, 0)::Integer AS Deferment
-
+/* * /
              , CASE WHEN COALESCE (ObjectFloat_Deferment.ValueData, 0) = 0
                          THEN 0
                     WHEN tmpMI.isTOP = TRUE
                          THEN COALESCE (PriceSettingsTOP.Percent, 0)
                     ELSE PriceSettings.Percent
                END :: TFloat AS Percent
-              
-              , Object_Juridical.ValueData     AS JuridicalName
+/ */
+             , CASE WHEN COALESCE (ObjectFloat_Deferment.ValueData, 0) = 0 AND tmpMI.isTOP = TRUE
+                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                   WHEN COALESCE (ObjectFloat_Deferment.ValueData, 0) = 0 AND tmpMI.isTOP = FALSE
+                        THEN COALESCE (PriceSettings.Percent, 0)
+                   ELSE 0
+              END :: TFloat AS Percent
+/**/              
+
+             , Object_Juridical.ValueData     AS JuridicalName
               , MIString_Maker.ValueData       AS MakerName
               , Object_Contract.ValueData      AS ContractName
               , COALESCE(MIDate_PartionGoods.ValueData, Null) ::TDateTime AS PartionGoodsDate

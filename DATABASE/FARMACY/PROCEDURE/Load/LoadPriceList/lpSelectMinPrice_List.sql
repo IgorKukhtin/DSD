@@ -242,7 +242,7 @@ BEGIN
       , ddd.JuridicalName 
       , ddd.Deferment
       , ddd.PriceListMovementItemId
-
+/* * /      
       , CASE -- если Дней отсрочки по договору = 0
              WHEN ddd.Deferment = 0
                   THEN FinalPrice
@@ -253,7 +253,18 @@ BEGIN
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
 
         END :: TFloat AS SuperFinalPrice
+/ */     
+      , CASE -- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                  THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+             -- если Дней отсрочки по договору = 0 + НЕ ТОП-позиция = учитывает % из Установки для ценовых групп (что б уравновесить ... )
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                  THEN FinalPrice * (100 + COALESCE (PriceSettings.Percentб 0)) / 100
+             -- иначе НЕ учитывает
+             ELSE FinalPrice
 
+        END :: TFloat AS SuperFinalPrice
+/* */     
       , ddd.isTOP
 
     FROM (SELECT DISTINCT 

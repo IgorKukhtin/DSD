@@ -101,6 +101,7 @@ BEGIN
             , ddd.ContractName
             , ddd.Deferment
             , ddd.Bonus 
+/* * /
             , CASE WHEN ddd.Deferment = 0
                         THEN 0
                    WHEN ddd.isTOP = TRUE
@@ -113,6 +114,20 @@ BEGIN
                         THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
                    ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
               END :: TFloat AS SuperFinalPrice   
+/ */
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                        THEN COALESCE (PriceSettingsTOP.Percent, 0)
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                        THEN COALESCE (PriceSettings.Percent, 0)
+                   ELSE 0
+              END :: TFloat AS Percent
+            , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+                   WHEN ddd.Deferment = 0 OR ddd.isTOP = FALSE
+                        THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+                   ELSE FinalPrice
+              END :: TFloat AS SuperFinalPrice   
+/**/
          FROM 
 
      (SELECT DISTINCT MovementItemOrder.Id
