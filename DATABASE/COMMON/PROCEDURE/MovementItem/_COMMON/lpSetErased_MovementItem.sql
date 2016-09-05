@@ -11,14 +11,15 @@ CREATE OR REPLACE FUNCTION lpSetErased_MovementItem(
 AS
 $BODY$
    DECLARE vbMovementId Integer;
-   DECLARE vbStatusId Integer;
+   DECLARE vbStatusId   Integer;
+   DECLARE vbDescId     Integer;
 BEGIN
   -- устанавливаем новое значение
   outIsErased := TRUE;
 
   -- Обязательно меняем 
   UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
-         RETURNING MovementId INTO vbMovementId;
+         RETURNING MovementId, DescId INTO vbMovementId, vbDescId;
 
   -- проверка - связанные документы Изменять нельзя
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
@@ -27,6 +28,7 @@ BEGIN
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
+     AND vbDescId <> zc_MI_Sign()
      -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
   THEN
       /*IF AND vbStatusId = zc_Enum_Status_Erased() 

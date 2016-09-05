@@ -252,14 +252,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 443
     ClientRectBottom = 409
     ClientRectRight = 1052
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 419
       object cxGridChild: TcxGrid
         Left = 0
         Top = 207
@@ -267,7 +265,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 178
         Align = alBottom
         TabOrder = 0
-        ExplicitTop = 205
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -416,7 +413,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 219
       end
       object cxGrid: TcxGrid
         Left = 0
@@ -425,7 +421,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 94
         Align = alClient
         TabOrder = 2
-        ExplicitHeight = 99
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -812,7 +807,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 2
-      ExplicitHeight = 419
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -821,7 +815,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 419
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -842,25 +835,40 @@ object IncomeFuelForm: TIncomeFuelForm
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object sclisSign: TcxGridDBColumn
+          object sgOrd: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object sgUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object sgOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1076#1077#1081#1089#1090#1074#1080#1103
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
+          end
+          object sgIsSign: TcxGridDBColumn
             Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
             DataBinding.FieldName = 'isSign'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1044#1072'/'#1053#1077#1090')'
-            Width = 73
-          end
-          object sclCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 39
+            Width = 80
           end
           object sclSignInternalName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Caption = #1052#1086#1076#1077#1083#1100
             DataBinding.FieldName = 'SignInternalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -874,39 +882,6 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 278
-          end
-          object sclAmount: TcxGridDBColumn
-            Caption = #8470' '#1087'/'#1087
-            DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 56
-          end
-          object sclUserName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'UserName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 134
-          end
-          object sclInsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 188
-          end
-          object sclInsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 145
           end
           object sclisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -1102,10 +1077,6 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbSignProtocolOpenForm'
         end
         item
@@ -1154,6 +1125,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -1708,8 +1680,8 @@ object IncomeFuelForm: TIncomeFuelForm
       TabSheet = cxTabSheetSign
       MoveParams = <>
       Enabled = False
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080'>'
       ImageIndex = 34
       FormName = 'TMovementItemProtocolForm'
       FormNameParam.Value = 'TMovementItemProtocolForm'
@@ -1774,8 +1746,8 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           StoredProc = spSelectMISign
         end>
-      Caption = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1059#1073#1088#1072#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 52
     end
     object actInsertUpdateMISign: TdsdExecStoredProc
@@ -1790,8 +1762,8 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           StoredProc = spSelectMISign
         end>
-      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
-      Hint = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
+      Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 58
     end
   end
@@ -3262,6 +3234,7 @@ object IncomeFuelForm: TIncomeFuelForm
   end
   object dsdDBViewAddOnSign: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewSign
     OnDblClickActionList = <
       item
       end>

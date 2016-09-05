@@ -1,4 +1,3 @@
-
 -- Function: lpSelect_Object_SignInternalItem (TVarChar)
 
 DROP FUNCTION IF EXISTS lpSelect_Object_SignInternalItem (Integer, Integer, Integer);
@@ -8,38 +7,36 @@ CREATE OR REPLACE FUNCTION lpSelect_Object_SignInternalItem(
     IN inObjectDescId        Integer,
     IN inObjectId            Integer        
 )
-RETURNS TABLE (Code Integer
+RETURNS TABLE (Ord Integer
              , SignInternalId Integer, SignInternalName TVarChar
              , UserId Integer, UserCode Integer, UserName TVarChar
-             ) AS
+              ) AS
 $BODY$
   
 BEGIN
 
    -- Результат
    RETURN QUERY 
-
    SELECT 
-         Object_SignInternalItem.ObjectCode AS Code
-              
-       , Object_SignInternal.Id         AS SignInternalId 
-       , Object_SignInternal.ValueData  AS SignInternalName
+         Object_SignInternalItem.ObjectCode AS Ord
+       , Object_SignInternal.Id             AS SignInternalId
+       , Object_SignInternal.ValueData      AS SignInternalName
 
-       , Object_User.Id            AS UserId
-       , Object_User.ObjectCode    AS UserCode
-       , Object_User.ValueData     AS UserName
+       , Object_User.Id                     AS UserId
+       , Object_User.ObjectCode             AS UserCode
+       , Object_User.ValueData              AS UserName
        
    FROM Object AS Object_SignInternal
-        inner JOIN ObjectFloat AS ObjectFloat_MovementDesc
+        INNER JOIN ObjectFloat AS ObjectFloat_MovementDesc
                               ON ObjectFloat_MovementDesc.ObjectId = Object_SignInternal.Id
                              AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_SignInternal_MovementDesc()
                              AND (ObjectFloat_MovementDesc.ValueData :: integer = inMovementDescId OR inMovementDescId = 0)
-        inner JOIN ObjectFloat AS ObjectFloat_ObjectDesc
+        INNER JOIN ObjectFloat AS ObjectFloat_ObjectDesc
                               ON ObjectFloat_ObjectDesc.ObjectId = Object_SignInternal.Id
                              AND ObjectFloat_ObjectDesc.DescId = zc_ObjectFloat_SignInternal_ObjectDesc()
                              AND (ObjectFloat_ObjectDesc.ValueData :: integer = inObjectDescId OR inObjectDescId = 0)
 
-        inner JOIN ObjectLink AS ObjectLink_SignInternal_Object 
+        INNER JOIN ObjectLink AS ObjectLink_SignInternal_Object 
                              ON ObjectLink_SignInternal_Object.ObjectId = Object_SignInternal.Id
                             AND ObjectLink_SignInternal_Object.DescId = zc_ObjectLink_SignInternal_Object()
                             AND (ObjectLink_SignInternal_Object.ChildObjectId = inObjectId OR inObjectId = 0)
@@ -47,7 +44,7 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_SignInternalItem_SignInternal 
                              ON ObjectLink_SignInternalItem_SignInternal.ChildObjectId = Object_SignInternal.Id 
                             AND ObjectLink_SignInternalItem_SignInternal.DescId = zc_ObjectLink_SignInternalItem_SignInternal()
-        Inner JOIN Object AS Object_SignInternalItem ON Object_SignInternalItem.Id = ObjectLink_SignInternalItem_SignInternal.ObjectId
+        INNER JOIN Object AS Object_SignInternalItem ON Object_SignInternalItem.Id = ObjectLink_SignInternalItem_SignInternal.ObjectId
                                                     AND Object_SignInternalItem.isErased = False
 
         LEFT JOIN ObjectLink AS ObjectLink_SignInternalItem_User 
@@ -61,7 +58,7 @@ BEGIN
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
    WHERE Object_SignInternal.DescId = zc_Object_SignInternal()
-     AND Object_SignInternal.isErased = False
+     AND Object_SignInternal.isErased = FALSE
   ;
   
 END;
@@ -75,10 +72,6 @@ $BODY$
  23.08.16         *
 */
 
-
 -- тест
 -- SELECT * FROM lpSelect_Object_SignInternalItem (1, 43,0)
 -- SELECT * FROM lpSelect_Object_SignInternalItem (0, 43,0)
-
-
-

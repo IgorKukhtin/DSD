@@ -33,6 +33,9 @@ BEGIN
             -- теперь следуюющий
             vbIndex := vbIndex + 1;
         END LOOP;
+    ELSEIF TRIM (inValue) <> '' AND inIndex = 1
+    THEN
+        vbResult:= TRIM (inValue);
     END IF;
 
     RETURN COALESCE (vbResult, '');

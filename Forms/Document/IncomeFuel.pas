@@ -199,13 +199,11 @@ type
     spSelectPrint: TdsdStoredProc;
     cxGridSign: TcxGrid;
     cxGridDBTableViewSign: TcxGridDBTableView;
-    sclisSign: TcxGridDBColumn;
-    sclCode: TcxGridDBColumn;
+    sgIsSign: TcxGridDBColumn;
     sclSignInternalName: TcxGridDBColumn;
-    sclAmount: TcxGridDBColumn;
-    sclUserName: TcxGridDBColumn;
-    sclInsertName: TcxGridDBColumn;
-    sclInsertDate: TcxGridDBColumn;
+    sgOrd: TcxGridDBColumn;
+    sgUserName: TcxGridDBColumn;
+    sgOperDate: TcxGridDBColumn;
     sclisErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
   private
