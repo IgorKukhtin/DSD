@@ -25,8 +25,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     Height = 465
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -24
-    ExplicitTop = 60
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -734,24 +732,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 55
       end
-      object CarCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084'.'
-        DataBinding.FieldName = 'CarCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 45
-      end
-      object CarName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 60
-      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -762,7 +742,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Width = 70
       end
       object GoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1059#1089#1083#1091#1075#1080')'
         DataBinding.FieldName = 'GoodsGroupName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -771,7 +751,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Width = 70
       end
       object AssetToName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1054#1057
+        Caption = #1044#1083#1103' '#1054#1057
         DataBinding.FieldName = 'AssetToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -786,36 +766,30 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Width = 30
       end
       object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1059#1089#1083#1091#1075#1080')'
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 102
       end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
-      end
-      object GoodsKindName_complete: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1043#1055')'
-        DataBinding.FieldName = 'GoodsKindName_complete'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
+        VisibleForCustomization = False
         Width = 70
       end
       object PartionGoodsName: TcxGridDBColumn
-        Caption = #1048#1085#1074'.'#1085#1086#1084#1077#1088
+        Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'PartionGoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 40
+        Width = 60
       end
       object MovementPartionGoods_InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
@@ -862,6 +836,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -877,6 +852,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 30
       end
       object CountStart: TcxGridDBColumn
