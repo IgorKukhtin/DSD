@@ -313,5 +313,5 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '13.07.2016', inEndDate:= '15.07.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
--- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= FALSE, inStartDate:= '13.07.2016', inEndDate:= '15.07.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
+-- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= TRUE, inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
+-- SELECT * FROM lpUpdate_Movement_Send_DocumentKind (inIsUpdate:= FALSE, inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inUnitId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки

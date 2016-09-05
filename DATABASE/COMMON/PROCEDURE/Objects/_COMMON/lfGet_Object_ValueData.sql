@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lfGet_Object_ValueData (IN inId Integer)
 AS
 $BODY$
 BEGIN
-     RETURN COALESCE ((SELECT CASE WHEN ObjectCode <> 0 THEN '(' || ObjectCode :: TVarChar || ')' ELSE '' END || ValueData FROM Object where Id = inId), '');
+     RETURN COALESCE ((SELECT CASE WHEN ObjectCode <> 0 AND DescId NOT IN (zc_Object_User()) THEN '(' || ObjectCode :: TVarChar || ')' ELSE '' END || ValueData FROM Object where Id = inId), '');
           
 END;
 $BODY$
