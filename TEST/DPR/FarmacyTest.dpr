@@ -446,7 +446,9 @@ uses
   DiscountExternal in '..\..\FormsFarmacy\Guides\DiscountExternal.pas' {DiscountExternalForm: TParentForm},
   DiscountExternalEdit in '..\..\FormsFarmacy\Guides\DiscountExternalEdit.pas' {DiscountExternalEditForm: TParentForm},
   DiscountExternalTools in '..\..\FormsFarmacy\Guides\DiscountExternalTools.pas' {DiscountExternalToolsForm: TParentForm},
-  PriceGroupSettingsTOP in '..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas' {PriceGroupSettingsTopForm: TParentForm};
+  PriceGroupSettingsTOP in '..\..\FormsFarmacy\Guides\PriceGroupSettingsTOP.pas' {PriceGroupSettingsTopForm: TParentForm},
+  Report_MovementCheck_UnLiquid in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquid.pas' {Report_MovementCheck_UnLiquidForm: TParentForm},
+  Report_MovementCheck_UnLiquidDialog in '..\..\FormsFarmacy\Report\Report_MovementCheck_UnLiquidDialog.pas' {Report_MovementCheck_UnLiquidDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
