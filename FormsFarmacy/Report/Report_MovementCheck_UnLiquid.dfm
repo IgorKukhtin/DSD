@@ -13,17 +13,17 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 898
+    ExplicitWidth = 941
     ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 941
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 898
+      ExplicitWidth = 941
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 941
         Height = 422
-        ExplicitWidth = 898
+        ExplicitWidth = 941
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -95,6 +95,16 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumma_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSumma
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -170,6 +180,16 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = colSumma_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSumma
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -257,7 +277,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colAmount_Sale1: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1-'#1099#1081' '#1084#1077#1089'.'
             DataBinding.FieldName = 'Amount_Sale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -267,7 +287,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colSumma_Sale1: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1-'#1099#1081' '#1084#1077#1089'.'
             DataBinding.FieldName = 'Summa_Sale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -276,7 +296,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colAmount_Sale3: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2 '#1089#1083#1077#1076'. '#1084#1077#1089'.'
             DataBinding.FieldName = 'Amount_Sale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -286,7 +306,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colSumma_Sale3: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 2 '#1089#1083#1077#1076'. '#1084#1077#1089'.'
             DataBinding.FieldName = 'Summa_Sale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -295,7 +315,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colAmount_Sale6: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1089#1083#1077#1076'. '#1084#1077#1089'.'
             DataBinding.FieldName = 'Amount_Sale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -305,13 +325,34 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
           object colSumma_Sale6: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1089#1083#1077#1076'. '#1084#1077#1089'.'
             DataBinding.FieldName = 'Summa_Sale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object colTotalAmount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'TotalAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Width = 120
+          end
+          object colTotalSumma: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'TotalSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
+            Width = 120
           end
         end
       end
@@ -320,7 +361,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   inherited Panel: TPanel
     Width = 941
     Height = 32
-    ExplicitWidth = 898
+    ExplicitWidth = 941
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
