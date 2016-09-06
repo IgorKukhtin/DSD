@@ -14,6 +14,7 @@ RETURNS TABLE (
   GoodsCode      Integer, 
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
+  NDSKindName TVarChar, 
   
   RemainsStart      TFloat,
   Amount_Sale       TFloat,
@@ -129,7 +130,7 @@ BEGIN
            ,Object_Goods_View.GoodsCodeInt  ::Integer                           AS GoodsCode
            ,Object_Goods_View.GoodsName                                         AS GoodsName
            ,Object_Goods_View.GoodsGroupName                                    AS GoodsGroupName
-          
+           ,Object_Goods_View.NDSKindName
            , tmpRemains.RemainsStart :: TFloat AS RemainsStart
            
            , tmpCheck.Amount_Sale      :: TFloat AS Amount_Sale

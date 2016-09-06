@@ -1,27 +1,27 @@
 inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1053#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091
   ClientHeight = 480
-  ClientWidth = 898
+  ClientWidth = 941
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 914
+  ExplicitWidth = 957
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 898
+    Width = 941
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 898
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 898
+    ClientRectRight = 941
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 898
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 898
+        Width = 941
         Height = 422
         ExplicitWidth = 898
         ExplicitHeight = 422
@@ -226,10 +226,10 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1090#1086#1095#1082#1077' '#1085#1072' '#1085#1072#1095'. '#1076#1072#1090#1091
-            Width = 50
+            Width = 55
           end
           object colPrice_Sale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
             DataBinding.FieldName = 'Price_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -238,87 +238,87 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 58
           end
           object colAmount_Sale: TcxGridDBColumn
-            Caption = #1082#1086#1083' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'Amount_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 100
           end
           object colSumma_Sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'Summa_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object colAmount_Sale1: TcxGridDBColumn
-            Caption = #1082#1086#1083'-'#1074#1086' 1'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Amount_Sale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 100
           end
           object colSumma_Sale1: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' 1'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Summa_Sale1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object colAmount_Sale3: TcxGridDBColumn
-            Caption = #1082#1086#1083'-'#1074#1086' 3'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Amount_Sale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 100
           end
           object colSumma_Sale3: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' 3'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Summa_Sale3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
           object colAmount_Sale6: TcxGridDBColumn
-            Caption = #1082#1086#1083'-'#1074#1086' 6'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Amount_Sale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 100
           end
           object colSumma_Sale6: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' 6'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'. '#1076#1086' '#1085#1072#1095'. '#1076#1072#1090#1099
             DataBinding.FieldName = 'Summa_Sale6'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 100
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 898
+    Width = 941
     Height = 32
     ExplicitWidth = 898
     ExplicitHeight = 32
@@ -626,7 +626,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 432
-    Top = 64
+    Top = 32
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -636,8 +636,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       item
         Component = UnitGuides
       end>
-    Left = 280
-    Top = 64
+    Left = 272
+    Top = 24
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -665,8 +665,8 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 336
-    Top = 64
+    Left = 328
+    Top = 32
   end
   object spGet_UserUnit: TdsdStoredProc
     StoredProcName = 'gpGet_UserUnit'
@@ -689,7 +689,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 64
+    Left = 384
+    Top = 32
   end
 end
