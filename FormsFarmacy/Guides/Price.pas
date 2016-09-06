@@ -76,6 +76,7 @@ type
     ceGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    Color_ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

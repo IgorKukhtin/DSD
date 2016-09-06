@@ -43,6 +43,7 @@ type
     actRefreshIsPartion: TdsdDataSetRefresh;
     cbPartion: TcxCheckBox;
     cbPartionPrice: TcxCheckBox;
+    Color_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

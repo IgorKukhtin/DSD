@@ -112,6 +112,7 @@ type
     colPersentDiff: TcxGridDBColumn;
     spUpdateMovementIncome_OrderExt: TdsdStoredProc;
     HeaderSaver1: THeaderSaver;
+    Color_ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

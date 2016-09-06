@@ -430,6 +430,13 @@ inherited PriceForm: TPriceForm
             Options.Editing = False
             Width = 27
           end
+          object Color_ExpirationDate: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_ExpirationDate'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -1005,6 +1012,172 @@ inherited PriceForm: TPriceForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     DateEdit = deOperDate
+    ColorRuleList = <
+      item
+        ColorColumn = clDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoods_isTop
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoods_PercentMarkup
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsCode
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsGroupName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clGoodsName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clIsClose
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisErased
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisFirst
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisPromo
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisSecond
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisTop
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSDay
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSIsClose
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSNotRecalc
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSPeriod
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clMCSValue
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clNDSKindName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clPercentMarkup
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clPrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clRemainsNotMCS
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clSummaNotMCS
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFix
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFixDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMCSIsCloseDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMCSNotRecalcDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMinExpirationDate
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPercentMarkupDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colRemains
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colTOPDateChange
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = StartDate
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = SummaRemains
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end>
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

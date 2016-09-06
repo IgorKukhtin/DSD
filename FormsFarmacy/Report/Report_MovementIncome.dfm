@@ -1,14 +1,13 @@
 inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   Caption = #1054#1090#1095#1077#1090' '#1055#1088#1080#1093#1086#1076' '#1085#1072' '#1090#1086#1095#1082#1091
-  ClientWidth = 1142
+  ClientWidth = 1065
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -160
-  ExplicitWidth = 1158
+  ExplicitWidth = 1081
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
-    Width = 1142
+    Width = 1065
     Height = 32
     ExplicitWidth = 1142
     ExplicitHeight = 32
@@ -67,19 +66,19 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   end
   inherited PageControl: TcxPageControl [1]
     Top = 58
-    Width = 1142
+    Width = 1065
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1142
     ExplicitHeight = 250
     ClientRectBottom = 250
-    ClientRectRight = 1142
+    ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1142
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
-        Width = 1142
+        Width = 1065
         Height = 250
         ExplicitWidth = 1142
         ExplicitHeight = 250
@@ -233,6 +232,22 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
+          object colPartitionGoods: TcxGridDBColumn
+            Caption = #1057#1077#1088#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
@@ -292,7 +307,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 88
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
@@ -414,6 +429,13 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object Color_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -626,6 +648,144 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
       Action = ExecuteDialog
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = clGoodsGroupName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clNDSKindName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmount
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colExpirationDate
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFromName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colGoodsCode
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colGoodsName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderAmount
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOverAmount
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartitionGoods
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPriceSale
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPrice
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPriceWithVAT
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSumma
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaMargin
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaMarginWithVAT
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaSale
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaWithOutVAT
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaWithOutVATOrder
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaWithOutVATOver
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSummaWithVAT
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = DescName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = InvNumber
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = OperDate
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = OurJuridicalName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PriceWithOutVAT
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ToName
+        ValueColumn = Color_calc
+        ColorValueList = <>
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 456

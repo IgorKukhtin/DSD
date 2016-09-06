@@ -17,6 +17,9 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  ExpirationDate TDateTime,
+  PartionGoods   TVarChar,
+
   FromName       TVarChar,
   ToName         TVarChar,
   OurJuridicalName TVarChar,
@@ -37,7 +40,8 @@ RETURNS TABLE (
   SummaWithVAT       TFloat,
   SummaSale          TFloat,
   SummaMargin        TFloat,
-  SummaMarginWithVAT TFloat
+  SummaMarginWithVAT TFloat,
+  Color_calc         Integer
  -- SummaWithOutVATOrder  TFloat,
  -- SummaWithOutVATOver   TFloat
 
@@ -115,6 +119,8 @@ BEGIN
                   -- , tmpMovementIncome.PriceWithVAT
                    , tmpMovementIncome.NDSKindId
                    , MI_Income.ObjectId                              AS GoodsId
+                   , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) AS ExpirationDate
+                   , COALESCE(MIString_PartionGoods.ValueData, '')              AS PartionGoods
                    , COALESCE (MIFloat_JuridicalPrice.ValueData, 0)  AS Price
                    , COALESCE (MIFloat_PriceWithOutVAT.ValueData, 0) AS PriceWithOutVAT
                    , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)    AS PriceWithVAT                   
@@ -135,7 +141,14 @@ BEGIN
                                          ON MI_Order.MovementId = tmpMovementIncome.Movement_OrderId
                                         AND MI_Order.isErased   = False
                                         AND MI_Order.ObjectId   = MI_Income.ObjectId 
-                                         
+                                       
+                  LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                             ON MIDate_ExpirationDate.MovementItemId = MI_Income.Id
+                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()   
+                  LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                               ON MIString_PartionGoods.MovementItemId = MI_Income.Id
+                                              AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods() 
+
                   -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
                   LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
                                               ON MIFloat_JuridicalPrice.MovementItemId = MI_Income.Id
@@ -166,6 +179,8 @@ BEGIN
                      , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)
                      , COALESCE (MIFloat_PriceSale.ValueData, 0)
                      , CASE WHEN inIsPartion = TRUE THEN tmpMovementIncome.Movement_OrderId ELSE 0 END
+                     , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart())
+                     , COALESCE (MIString_PartionGoods.ValueData, '')
               ) 
               
 
@@ -175,6 +190,8 @@ BEGIN
            , Object_Goods_View.GoodsName                    AS GoodsName
            , Object_Goods_View.GoodsGroupName               AS GoodsGroupName
            , Object_Goods_View.NDSKindName                  AS NDSKindName
+           , tmpData.ExpirationDate    :: TDateTime         AS ExpirationDate
+           , tmpData.PartionGoods      :: TVarChar          AS PartionGoods
 
            , Object_From.ValueData                          AS FromName
            , Object_To.ValueData                            AS ToName
@@ -203,7 +220,8 @@ BEGIN
 
            --, tmpData.SummaWithOutVATOrder ::TFloat AS SummaWithOutVATOrder
            --, CASE WHEN (tmpData.Amount - tmpData.AmountOrder) > 0 THEN (tmpData.SummaWithOutVAT - tmpData.SummaWithOutVATOrder) ELSE 0 END ::TFloat AS SummaWithOutVATOver
-
+           , CASE WHEN tmpData.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_calc                --CURRENT_DATE)  inDateFinal
+ 
         FROM tmpData_1 tmpData 
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
             LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = tmpData.NDSKindId

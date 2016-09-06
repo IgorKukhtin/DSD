@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , isPromo boolean
              , isTop boolean, TOPDateChange TDateTime
              , PercentMarkup TFloat, PercentMarkupDateChange TDateTime
+             , Color_ExpirationDate Integer
              ) AS
 $BODY$
 DECLARE
@@ -92,7 +93,7 @@ BEGIN
                ,NULL::TDateTime                  AS TOPDateChange
                ,NULL::TFloat                     AS PercentMarkup 
                ,NULL::TDateTime                  AS PercentMarkupDateChange
-
+               ,zc_Color_Black()                 AS Color_ExpirationDate 
             WHERE 1=0;
     ELSEIF inisShowAll = True
     THEN
@@ -191,11 +192,13 @@ BEGIN
                , Object_Goods_View.isSecond
                , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
 
-               , Object_Price_View.isTop                AS isTop
-               , Object_Price_View.TopDateChange        AS TopDateChange
+               , Object_Price_View.isTop                   AS isTop
+               , Object_Price_View.TopDateChange           AS TopDateChange
 
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+               
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -303,7 +306,7 @@ tmpContainerRemeins AS (SELECT container.objectid
                , Object_Price_View.MCSNotRecalcDateChange  AS MCSNotRecalcDateChange
                , Object_Price_View.Fix                     AS Fix
                , Object_Price_View.FixDateChange           AS FixDateChange
-               , Object_Remains.MinExpirationDate                AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
+               , Object_Remains.MinExpirationDate          AS MinExpirationDate   --, CASE WHEN inGoodsId = 0 THEN SelectMinPrice_AllGoods.MinExpirationDate ELSE SelectMinPrice_List.PartionGoodsDate END AS MinExpirationDate
                , Object_Remains.Remains                    AS Remains
                , (Object_Remains.Remains * COALESCE (Object_Price_View.Price,0)) ::TFloat AS SummaRemains
 
@@ -322,6 +325,8 @@ tmpContainerRemeins AS (SELECT container.objectid
 
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
@@ -355,6 +360,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.  Âîðîáêàëî À.À. 
+ 06.09.16         *
  11.07.16         *
  04.07.16         *
  30.06.16         *

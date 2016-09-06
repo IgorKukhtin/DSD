@@ -485,6 +485,13 @@
             VisibleForCustomization = False
             Width = 40
           end
+          object Color_ExpirationDate: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_ExpirationDate'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -1478,6 +1485,186 @@
       item
         ColorColumn = clPercentMarkup
         BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clisTop
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = JuridicalPriceWithVAT
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = JuridicalPrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSumm
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatStart
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatNumber
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSertificatEnd
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSaleSumm
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colSalePrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPriceWithVAT
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colReasonDifferencesName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPersentDiff
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPercent
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartnerGoodsName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartnerGoodsCode
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colPartitionGoods
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderSumm
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderPrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colOrderAmount
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMeasure
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colMakerName
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colisSummDiff
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colisAmountDiff
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFix_Price
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colFEA
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colExpirationDate
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colDublePriceColour
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colCode
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAVGIncomePriceWarning
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAVGIncomePrice
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmountManual
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmountDiff
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colAmount
+        ValueColumn = Color_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clPercentMarkup
+        ValueColumn = Color_ExpirationDate
         ColorValueList = <>
       end>
     SummaryItemList = <
