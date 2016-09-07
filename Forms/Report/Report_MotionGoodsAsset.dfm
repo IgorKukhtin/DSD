@@ -25,6 +25,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     Height = 465
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -299
+    ExplicitTop = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -681,6 +683,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       OptionsCustomize.DataRowSizing = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
@@ -706,7 +709,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Width = 100
       end
       object LocationDescName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
         DataBinding.FieldName = 'LocationDescName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -773,9 +776,9 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 102
       end
-      object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsKindName'
+      object GoodsDescName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'GoodsDescName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

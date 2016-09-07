@@ -123,7 +123,7 @@ BEGIN
               END :: TFloat AS Percent
             , CASE WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
                         THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
-                   WHEN ddd.Deferment = 0 OR ddd.isTOP = FALSE
+                   WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
                         THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
                    ELSE FinalPrice
               END :: TFloat AS SuperFinalPrice   
@@ -136,16 +136,21 @@ BEGIN
           , MovementItemLastPriceList_View.PartionGoodsDate
           , min(MovementItemLastPriceList_View.Price) OVER (PARTITION BY MovementItemOrder.Id) AS MinPrice
           , CASE 
-              -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-              WHEN COALESCE (GoodsPrice.isTOP, ObjectBoolean_Goods_TOP.ValueData) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
+              -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+              WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
                    THEN MovementItemLastPriceList_View.Price
                        -- И учитывается % бонуса из Маркетинговый контракт
                      * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-              ELSE (MovementItemLastPriceList_View.Price * (100 - COALESCE(JuridicalSettings.Bonus, 0))/100)::TFloat 
+
+              ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                   (MovementItemLastPriceList_View.Price * (100 - COALESCE(JuridicalSettings.Bonus, 0)) / 100) :: TFloat 
                     -- И учитывается % бонуса из Маркетинговый контракт
-                 * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                  * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END AS FinalPrice          
-          , COALESCE(JuridicalSettings.Bonus, 0)::TFloat AS Bonus
+          , CASE WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= MovementItemLastPriceList_View.Price
+                      THEN 0
+                 ELSE COALESCE(JuridicalSettings.Bonus, 0)
+            END :: TFloat AS Bonus
 
           , MovementItemLastPriceList_View.GoodsId         
           , MovementItemLastPriceList_View.GoodsCode

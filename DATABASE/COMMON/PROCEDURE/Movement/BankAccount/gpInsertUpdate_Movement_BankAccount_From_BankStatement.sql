@@ -45,6 +45,7 @@ BEGIN
                 WHERE Movement.DescId = zc_Movement_BankStatementItem()
                   AND Movement.ParentId = inMovementId
                   AND MLM_Invoice.MovementChildId IS NULL
+                LIMIT 1
                ));
      END IF;
 

@@ -45,7 +45,7 @@ BEGIN
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
                                                  , inDescId_2   := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inObjectId_2 := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
@@ -71,7 +71,7 @@ BEGIN
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
                                                  , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
@@ -96,8 +96,8 @@ BEGIN
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
-                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inDescId_2   := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2 := CASE WHEN inCarId <> 0 THEN inCarId                      WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
@@ -119,8 +119,8 @@ BEGIN
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
-                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inDescId_2   := CASE WHEN inCarId <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2 := CASE WHEN inCarId <> 0 THEN inCarId                      ELSE COALESCE (inUnitId, 0)        END
                                                  , inDescId_3   := zc_ContainerLinkObject_Member()
                                                  , inObjectId_3 := inMemberId
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
@@ -147,7 +147,7 @@ BEGIN
                                                                 , inDescId_2   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                                 , inObjectId_2 := inInfoMoneyId_Detail
                                                                 , inDescId_3   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                                , inObjectId_3 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                                , inObjectId_3 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                                 , inDescId_4   := zc_ContainerLinkObject_GoodsKind()
                                                                 , inObjectId_4 := CASE WHEN COALESCE (inBranchId, 0) IN (0
                                                                                                                        , zc_Branch_Basis()
@@ -209,7 +209,7 @@ BEGIN
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
                                                  , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE COALESCE (inUnitId, 0)        END
+                                                 , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()

@@ -320,8 +320,8 @@ BEGIN
 
 
 
-     -- проверка Сотрудник (если заправка <физ-лицо> и НЕ <Учредитель>)
-     IF vbMemberId_To <> 0 AND vbFounderId_To = 0
+     -- проверка Сотрудник (если заправка <физ-лицо> и НЕ <Учредитель> и НЕ <ОС>)
+     IF vbMemberId_To <> 0 AND vbFounderId_To = 0 AND vbMovementDescId <> zc_Movement_IncomeAsset()
      THEN
          -- проверка
          IF COALESCE ((SELECT View_Personal.PersonalId FROM Object_Personal_View AS View_Personal WHERE View_Personal.MemberId = vbMemberId_To AND View_Personal.isMain = TRUE AND View_Personal.isErased = FALSE LIMIT 1), 0) = 0
@@ -728,6 +728,7 @@ BEGIN
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
+                                                 -- OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                    THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
                                                                                         , inGoodsId       := _tmpItem.GoodsId
                                                                                         , inUnitId        := _tmpItem.UnitId_Asset
@@ -997,7 +998,7 @@ BEGIN
              LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfGet_20401 ON 1 = 1 -- 20401 Общефирменные + ГСМ + ГСМ
              LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_21425()) AS lfGet_21425 ON 1 = 1 -- 20401 Общефирменные + услуги полученные + амортизация транспорт торговых
 
-        WHERE vbMemberId_To <> 0
+        WHERE vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income();
         -- убрал т.к. хоть одна проводка должна быть (!!!для отчетов!!!)
         -- WHERE _tmpItem.OperSumm_Partner <> 0
        ;
@@ -1547,8 +1548,8 @@ BEGIN
      vbObjectExtId_Analyzer:= CASE WHEN vbPartnerId_From <> 0 THEN vbPartnerId_From WHEN vbMemberId_From <> 0 THEN vbMemberId_From WHEN vbCardFuelId_From <> 0 THEN vbCardFuelId_From WHEN vbTicketFuelId_From <> 0 THEN vbTicketFuelId_From END;
 
 
-     -- 3.0.4. !!!Ход конем - удалили, если ПОКУПАТЕЛЮ или заправка Сотрудника или заправка Учредитель!!!
-     DELETE FROM _tmpItem WHERE vbPartnerId_To <> 0 OR vbMemberId_To <> 0;
+     -- 3.0.4. !!!Ход конем - удалили, если ПОКУПАТЕЛЮ или заправка Сотрудника или заправка Учредитель - ТОЛЬКО для прихода!!!
+     DELETE FROM _tmpItem WHERE (vbPartnerId_To <> 0 OR vbMemberId_To <> 0) AND vbMovementDescId = zc_Movement_Income();
 
 
      -- 1.1.1. определяется ContainerId_CountSupplier для !!!забалансовой!!! проводки по количественному учету - долги Поставщику
@@ -1595,7 +1596,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inCarId                  := vbCarId
-                                                                                , inMemberId               := NULL
+                                                                                , inMemberId               := vbMemberId_To
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -1751,7 +1752,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Summ = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                               , inUnitId                 := vbUnitId
                                                                               , inCarId                  := vbCarId
-                                                                              , inMemberId               := NULL
+                                                                              , inMemberId               := vbMemberId_To
                                                                               , inBranchId               := NULL -- эта аналитика нужна для филиала
                                                                               , inJuridicalId_basis      := vbJuridicalId_Basis_To
                                                                               , inBusinessId             := _tmpItem.BusinessId
