@@ -238,7 +238,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 83
+            Width = 95
           end
           object colPartitionGoods: TcxGridDBColumn
             Caption = #1057#1077#1088#1080#1103

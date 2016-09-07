@@ -630,10 +630,6 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -662,7 +658,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 152
+    Left = 224
     Top = 8
   end
   inherited RefreshDispatcher: TRefreshDispatcher

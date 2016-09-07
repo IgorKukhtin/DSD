@@ -11,7 +11,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 781
-  ExplicitHeight = 450
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -527,6 +527,20 @@ inherited MainCashForm: TMainCashForm
           Options.Editing = False
           Width = 30
           IsCaptionAssigned = True
+        end
+        object mainMinExpirationDate: TcxGridDBColumn
+          Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085'. '#1086#1089#1090'.'
+          DataBinding.FieldName = 'MinExpirationDate'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
+          Width = 100
+        end
+        object MainColor_ExpirationDate: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_ExpirationDate'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 30
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -1299,6 +1313,51 @@ inherited MainCashForm: TMainCashForm
       item
         ColorColumn = mainColisPromo
         BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColCode
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColMCSValue
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColName
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColPrice
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainColReserved
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MaincolisFirst
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MaincolisSecond
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = mainColisPromo
+        ValueColumn = MainColor_ExpirationDate
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = mainMinExpirationDate
+        ValueColumn = MainColor_ExpirationDate
         ColorValueList = <>
       end>
     ColumnAddOnList = <>

@@ -13,14 +13,16 @@ RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
-               isPromo boolean
+               isPromo boolean,
+               MinExpirationDate TDateTime,
+               Color_ExpirationDate Integer
                )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
-  DECLARE vbObjectId Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -45,15 +47,33 @@ BEGIN
     AS
     (
         SELECT 
-            SUM(Amount) AS Remains, 
-            container.objectid 
+            SUM(container.Amount) AS Remains, 
+            container.objectid, 
+            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
         FROM container
+          -- находим партию
+          LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                        ON ContainerLinkObject_MovementItem.Containerid =  Container.Id
+                                       AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+          LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+          -- элемент прихода
+          LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+          -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+          LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                      ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                     AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+          -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+          LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                     
+          LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                           ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
         WHERE 
             container.descid = zc_container_count() 
             AND 
             Container. WhereObjectId = vbUnitId
             AND
-            Amount<>0
+            container.Amount<>0
         GROUP BY 
             container.objectid
     ),
@@ -74,7 +94,7 @@ BEGIN
       
 
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved)
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT 
         inCashSessionId                             AS CashSession
        ,GoodsRemains.ObjectId                       AS GoodsId
@@ -83,6 +103,8 @@ BEGIN
             - COALESCE(Reserve.Amount,0))::TFloat   AS Remains
        ,Object_Price_View.MCSValue                  AS MCSValue
        ,Reserve.Amount::TFloat                      AS Reserved
+       ,GoodsRemains.MinExpirationDate              AS MinExpirationDate
+      
     FROM
         GoodsRemains
         LEFT OUTER JOIN Object_Price_View ON GoodsRemains.ObjectId = Object_Price_View.GoodsId
@@ -121,9 +143,11 @@ BEGIN
             COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
             COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
             CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
-            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+            CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
+            CashSessionSnapShot.MinExpirationDate, 
+            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
  
-        FROM
+         FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
@@ -142,7 +166,8 @@ BEGIN
                                     ON ObjectBoolean_Second.ObjectId = Goods.Id
                                    AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()  
 
-            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id         
+            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id  
+         
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -156,6 +181,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 06.09.16         *
  12.04.16         *
  02.11.15                                                                       *NDS
  10.09.15                                                                       *CashSessionSnapShot
