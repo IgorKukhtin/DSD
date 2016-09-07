@@ -51,7 +51,7 @@ type
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     PartionGoodsName: TcxGridDBColumn;
-    AssetName: TcxGridDBColumn;
+    AssetToCode: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
     SummIncome: TcxGridDBColumn;
     CountEnd: TcxGridDBColumn;

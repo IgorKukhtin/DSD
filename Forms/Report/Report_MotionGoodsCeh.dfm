@@ -771,14 +771,22 @@ object Report_MotionGoodsCehForm: TReport_MotionGoodsCehForm
         Options.Editing = False
         Width = 40
       end
-      object AssetName: TcxGridDBColumn
-        Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
-        DataBinding.FieldName = 'AssetName'
+      object AssetToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1054#1057
+        DataBinding.FieldName = 'AssetToCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
+      end
+      object AssetToName: TcxGridDBColumn
+        Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+        DataBinding.FieldName = 'AssetToName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -1960,14 +1968,6 @@ object Report_MotionGoodsCehForm: TReport_MotionGoodsCehForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        VisibleForCustomization = False
-        Width = 55
-      end
-      object AssetToName: TcxGridDBColumn
-        DataBinding.FieldName = 'AssetToName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         VisibleForCustomization = False
         Width = 55
       end

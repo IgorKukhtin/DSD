@@ -1,4 +1,4 @@
- -- Function: gpReport_MotionGoods_Asset_NEW()
+-- Function: gpReport_MotionGoods_Asset_NEW()
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_Asset (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
@@ -24,7 +24,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar 
              , MovementPartionGoods_InvNumber TVarChar
-             , AssetToName TVarChar
+             , AssetToCode Integer, AssetToName TVarChar
              , StorageName TVarChar
              , UnitCode Integer, UnitName TVarChar
 
@@ -350,6 +350,8 @@ BEGIN
 
         , COALESCE (Object_PartionGoods.ValueData, '') :: TVarChar AS PartionGoodsName
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
+
+        , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
         , Object_Storage.ValueData       AS StorageName
         , Object_Unit.ObjectCode         AS UnitCode

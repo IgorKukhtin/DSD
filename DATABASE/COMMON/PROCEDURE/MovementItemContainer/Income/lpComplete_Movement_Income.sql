@@ -728,7 +728,7 @@ BEGIN
 
      -- формируются Партии товара, ЕСЛИ надо ...
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbMovementDescId = zc_Movement_IncomeAsset()
-                                                 -- OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                                                 OR _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                    THEN lpInsertFind_Object_PartionGoods (inMovementId    := inMovementId
                                                                                         , inGoodsId       := _tmpItem.GoodsId
                                                                                         , inUnitId        := _tmpItem.UnitId_Asset
@@ -998,9 +998,9 @@ BEGIN
              LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfGet_20401 ON 1 = 1 -- 20401 Общефирменные + ГСМ + ГСМ
              LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_21425()) AS lfGet_21425 ON 1 = 1 -- 20401 Общефирменные + услуги полученные + амортизация транспорт торговых
 
-        WHERE vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income();
+        WHERE vbMemberId_To <> 0 AND vbMovementDescId = zc_Movement_Income()
         -- убрал т.к. хоть одна проводка должна быть (!!!для отчетов!!!)
-        -- WHERE _tmpItem.OperSumm_Partner <> 0
+        -- AND _tmpItem.OperSumm_Partner <> 0
        ;
 
      -- заполняем таблицу - элементы по Сотруднику (заготовитель), со всеми свойствами для формирования Аналитик в проводках, здесь по !!!InfoMoneyId!!!

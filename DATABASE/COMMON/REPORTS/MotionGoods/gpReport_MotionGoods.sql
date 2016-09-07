@@ -24,7 +24,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
-             , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToName TVarChar
+             , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToCode Integer, AssetToName TVarChar
 
              , CountStart TFloat
              , CountStart_Weight TFloat
@@ -359,6 +359,7 @@ BEGIN
                ELSE COALESCE (Object_PartionGoods.ValueData, '')
           END :: TVarChar AS PartionGoodsName
 
+        , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
 
         , CAST (tmpMIContainer_group.CountStart          AS TFloat) AS CountStart
