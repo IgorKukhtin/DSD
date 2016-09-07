@@ -25,8 +25,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
     Height = 465
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -299
-    ExplicitTop = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -735,6 +733,22 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 55
       end
+      object AssetToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054#1057')'
+        DataBinding.FieldName = 'AssetToCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object AssetToName: TcxGridDBColumn
+        Caption = #1044#1083#1103' '#1054#1057
+        DataBinding.FieldName = 'AssetToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 126
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -753,20 +767,13 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 70
       end
-      object AssetToName: TcxGridDBColumn
-        Caption = #1044#1083#1103' '#1054#1057
-        DataBinding.FieldName = 'AssetToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 126
-      end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 55
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057'/'#1059#1089#1083#1091#1075#1080')'
@@ -774,16 +781,14 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 102
+        Width = 150
       end
       object GoodsDescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'GoodsDescName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        VisibleForCustomization = False
         Width = 70
       end
       object PartionGoodsName: TcxGridDBColumn
@@ -826,15 +831,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 150
-      end
-      object AssetName: TcxGridDBColumn
-        Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
-        DataBinding.FieldName = 'AssetName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -898,7 +894,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -910,7 +905,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -945,7 +939,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -980,6 +973,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1098,6 +1092,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1145,6 +1140,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1156,6 +1152,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1167,6 +1164,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1178,6 +1176,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1189,6 +1188,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1200,6 +1200,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1315,6 +1316,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1326,6 +1328,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1349,6 +1352,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1372,6 +1376,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1395,6 +1400,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1429,6 +1435,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1490,6 +1497,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1821,6 +1829,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1832,6 +1841,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -2723,9 +2733,9 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKindName;Partio' +
-            'nGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyName_all_Detai' +
-            'l'
+            'AssetToName;GoodsGroupNameFull;GoodsGroupName;GoodsName;PartionG' +
+            'oodsName;MovementPartionGoods_InvNumber;InfoMoneyName_all;InfoMo' +
+            'neyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
