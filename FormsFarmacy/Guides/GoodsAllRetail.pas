@@ -16,8 +16,6 @@ uses
 
 type
   TGoodsAllRetailForm = class(TAncestorGuidesForm)
-    bbLabel: TdxBarControlContainerItem;
-    bbJuridical: TdxBarControlContainerItem;
     cxGridGChild1: TcxGrid;
     cxGridDBTableViewChild1: TcxGridDBTableView;
     cxGridLevelChild1: TcxGridLevel;
@@ -46,6 +44,10 @@ type
     LinkId_1: TcxGridDBColumn;
     isUpload_1: TcxGridDBColumn;
     isSpecCondition_1: TcxGridDBColumn;
+    Protocol2OpenForm: TdsdOpenForm;
+    Protocol3OpenForm: TdsdOpenForm;
+    bbProtocol2OpenForm: TdxBarButton;
+    bbProtocol3OpenForm: TdxBarButton;
   private
     { Private declarations }
   public

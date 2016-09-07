@@ -1,4 +1,4 @@
--- Function: lpCheck_Movement_ReturnIn_Auto()
+ -- Function: lpCheck_Movement_ReturnIn_Auto()
 
 DROP FUNCTION IF EXISTS lpCheck_Movement_ReturnIn_Auto (Integer, Integer);
 
@@ -54,13 +54,14 @@ BEGIN
      IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
      THEN
          -- таблица
-         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, MovementId_sale Integer, isErased Boolean)  ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperCount_Partner TFloat, Price_original TFloat, isErased Boolean)  ON COMMIT DROP;
          -- Данные
-         INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original)
+         INSERT INTO _tmpItem (MovementItemId, GoodsId, GoodsKindId, OperCount, OperCount_Partner, Price_original, isErased)
                  SELECT MI.Id AS MovementItemId, MI.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                       , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN 0 ELSE MI.Amount END AS OperCount
                       , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData ELSE 0 END AS OperCount_Partner
                       , COALESCE (MIF_Price.ValueData, 0)         AS Price_original
+                      , MI.isErased
                  FROM MovementItem AS MI
                       LEFT JOIN Movement ON Movement.Id = MI.MovementId
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

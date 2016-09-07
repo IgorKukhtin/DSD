@@ -2493,6 +2493,7 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
       Category = 0
       Hint = '   '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGoodsKind: TdxBarControlContainerItem
       Caption = #1087#1086' '#1042#1080#1076#1072#1084

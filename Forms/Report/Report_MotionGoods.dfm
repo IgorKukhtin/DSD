@@ -809,9 +809,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         Options.Editing = False
         Width = 40
       end
-      object AssetName: TcxGridDBColumn
+      object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1057
-        DataBinding.FieldName = 'AssetToName'
+        DataBinding.FieldName = 'AssetToCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -2490,6 +2490,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Category = 0
       Hint = '   '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbGoodsKind: TdxBarControlContainerItem
       Caption = #1087#1086' '#1042#1080#1076#1072#1084

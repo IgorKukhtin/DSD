@@ -900,6 +900,10 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited ProtocolOpenForm: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'1'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'1'
+    end
     object actGoodsLinkRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -940,6 +944,66 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         end>
       Caption = 'dsdExecStoredProc1'
     end
+    object Protocol2OpenForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'2'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS_1
+          ComponentItem = 'GoodsMainId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS_1
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object Protocol3OpenForm: TdsdOpenForm
+      Category = #1055#1088#1086#1090#1086#1082#1086#1083
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'3'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072'3'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS_2
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS_2
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 104
@@ -961,8 +1025,8 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 736
-    Top = 72
+    Left = 128
+    Top = 128
     DockControlHeights = (
       0
       0
@@ -984,13 +1048,39 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol2OpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol3OpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Visible = ivNever
@@ -1004,17 +1094,13 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
     inherited bbUnErased: TdxBarButton
       Visible = ivNever
     end
-    object bbLabel: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbProtocol2OpenForm: TdxBarButton
+      Action = Protocol2OpenForm
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
-    object bbJuridical: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object bbProtocol3OpenForm: TdxBarButton
+      Action = Protocol3OpenForm
       Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
