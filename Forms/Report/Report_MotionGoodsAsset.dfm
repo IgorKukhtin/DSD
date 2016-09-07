@@ -2749,9 +2749,9 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'AssetToName;GoodsGroupNameFull;GoodsGroupName;GoodsName;PartionG' +
-            'oodsName;MovementPartionGoods_InvNumber;InfoMoneyName_all;InfoMo' +
-            'neyName_all_Detail'
+            'AssettoGroupName;AssetToName;GoodsName;PartionGoodsName;Movement' +
+            'PartionGoods_InvNumber;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
           GridView = cxGridDBTableView
         end>
       Params = <
