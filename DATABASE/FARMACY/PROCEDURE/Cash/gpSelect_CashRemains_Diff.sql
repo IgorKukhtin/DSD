@@ -48,21 +48,41 @@ BEGIN
                            , MCSValue  TFloat
                            , Reserved  TFloat
                            , NewRow    Boolean
-                           , Color_calc Integer) ON COMMIT DROP;    
+                           , Color_calc Integer
+                           , MinExpirationDate TDateTime) ON COMMIT DROP;    
     WITH GoodsRemains
     AS
     (
         SELECT 
-            SUM(Amount) AS Remains, 
-            container.objectid 
+            SUM(container.Amount) AS Remains, 
+            container.objectid,
+            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
         FROM 
             container
+          -- находим партию
+          LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                        ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                       AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+          LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+          -- элемент прихода
+          LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+          -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+          LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                      ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                     AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+          -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+          LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                     
+          LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                           ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
         WHERE 
             container.descid = zc_container_count() 
             AND
             container.WhereObjectId = vbUnitId
             AND 
-            Amount<>0
+            container.Amount<>0
         GROUP BY 
             container.objectid
     ),
@@ -87,14 +107,15 @@ BEGIN
             CashSessionSnapShot.Price,
             CashSessionSnapShot.Remains,
             CashSessionSnapShot.MCSValue,
-            CashSessionSnapShot.Reserved
+            CashSessionSnapShot.Reserved,
+            CashSessionSnapShot.MinExpirationDate
         FROM
             CashSessionSnapShot
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
     )
     --заливаем разницу
-    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc)
+    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc,MinExpirationDate)
     SELECT
         COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId)         AS ObjectId
        ,Object_Goods.ObjectCode::Integer                             AS GoodsCode
@@ -109,6 +130,7 @@ BEGIN
         ELSE FALSE 
         END                                              AS NewRow
        , CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc 
+       , GoodsRemains.MinExpirationDate
     FROM
         GoodsRemains
         FULL OUTER JOIN SESSIONDATA ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
@@ -135,7 +157,8 @@ BEGIN
         Price = _DIFF.Price,
         Remains = _DIFF.Remains,
         MCSValue = _DIFF.MCSValue,
-        Reserved = _DIFF.Reserved
+        Reserved = _DIFF.Reserved,
+        MinExpirationDate = _DIFF.MinExpirationDate
     FROM
         _DIFF
     WHERE
@@ -144,7 +167,7 @@ BEGIN
         CashSessionSnapShot.ObjectId = _DIFF.ObjectId;
     
     --доливаем те, что появились
-    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved)
+    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
@@ -152,6 +175,7 @@ BEGIN
        ,_DIFF.Remains
        ,_DIFF.MCSValue
        ,_DIFF.Reserved
+       ,_DIFF.MinExpirationDate
     FROM
         _DIFF
     WHERE
