@@ -11,14 +11,18 @@ CREATE OR REPLACE FUNCTION gpReport_OrderGoodsSearch(
 RETURNS TABLE (MovementId Integer      --ИД Документа
               ,ItemName TVarChar       --Название(тип) документа
               ,Amount TFloat           --Кол-во товара в документе
+              ,Amount_SpecZakaz TFloat   --Кол-во спецзаказ в заявке внутренней
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
+              ,PartnerGoodsName TVarChar  --Наименование поставщика
+              ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
               ,JuridicalName TVarChar  --Юр. лицо
               ,Price TFloat            --Цена в документе
+              ,PriceWithVAT TFloat     --Цена прихода с НДС 
               ,StatusName TVarChar     --Состояние документа
               ,PriceSale TFloat        --Цена продажи
               ,OrderKindId Integer     --ИД вида заказа
@@ -29,6 +33,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PaymentDate TDateTime   --Дата оплаты
               ,InvNumberBranch TVarChar--№ накладной в аптеке
               ,BranchDate TDateTime    --Дата накладной в аптеке
+              ,InsertDate TDateTime    --Дата (созд.)
               )
 
 
@@ -70,14 +75,19 @@ BEGIN
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 'Продажи касс' ELSE MovementDesc.ItemName END   :: TVarChar AS ItemName
             ,COALESCE(MIFloat_AmountManual.ValueData,
                       MovementItem.Amount)            AS Amount
+            ,CASE WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MovementItem.Amount ELSE 0 END   :: TFloat AS Amount_SpecZakaz
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
+            ,MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
+            ,MI_Income_View.MakerName                 AS MakerName
+
             ,Object_NDSKind.ValueData                 AS NDSKindName
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
             ,Object_From.ValueData                    AS JuridicalName
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0 ELSE MIFloat_Price.ValueData END ::TFloat AS Price
+            ,MI_Income_View.PriceWithVAT   ::TFloat
             ,Status.ValueData                         AS STatusNAme
             ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN MIFloat_Price.ValueData ELSE MIFloat_PriceSale.ValueData END ::TFloat AS PriceSale
             ,Object_OrderKind.Id                      AS OrderKindId
@@ -88,23 +98,39 @@ BEGIN
             ,MovementDate_Payment.ValueData           AS PaymentDate
             ,MovementString_InvNumberBranch.ValueData AS InvNumberBranch
             ,MovementDate_Branch.ValueData            AS BranchDate
+
+            ,MovementDate_Insert.ValueData        AS InsertDate
             
       FROM Movement 
         JOIN Object AS Status 
                     ON Status.Id = Movement.StatusId 
                    AND Status.Id <> zc_Enum_Status_Erased()
+        LEFT JOIN MovementDate AS MovementDate_Insert
+                               ON MovementDate_Insert.MovementId = Movement.Id
+                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                          AND MovementItem.isErased = FALSE
         JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-
         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
         LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
+   /*     LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                         ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+        LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId
+*/
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                              ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                  ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                 AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+        LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = MovementItem.Id
 
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -159,6 +185,7 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                     ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
                                    AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
     WHERE Movement.DescId in (zc_Movement_OrderInternal(), zc_Movement_OrderExternal(), zc_Movement_Income(), zc_Movement_Send(), zc_Movement_Check())
       AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
       AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
@@ -173,6 +200,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 05.09.16         *
  18.07.16         * add zc_Movement_Check
  06.10.15                                                                      *MIFloat_AmountManual
  24.04.15                        *

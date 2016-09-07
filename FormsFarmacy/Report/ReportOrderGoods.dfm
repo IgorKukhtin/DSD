@@ -73,6 +73,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Options.Editing = False
             Width = 68
           end
+          object colPriceWithVAT: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'PriceWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
@@ -95,8 +105,16 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Width = 84
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 46
+          end
+          object colAmount_SpecZakaz: TcxGridDBColumn
+            Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'Amount_SpecZakaz'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -162,6 +180,22 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 105
+          end
+          object colPartnerGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            DataBinding.FieldName = 'PartnerGoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 173
+          end
+          object colMakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object colExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -239,6 +273,14 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
+          end
+          object clInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
           end
         end
       end

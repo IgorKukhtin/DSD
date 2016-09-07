@@ -52,7 +52,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Goods_isTop Boolean
              , Goods_PercentMarkup  TFloat
              , Goods_Price TFloat
-
+             , Color_ExpirationDate  Integer
              )
 AS
 $BODY$
@@ -217,6 +217,7 @@ BEGIN
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
+              , zc_Color_Black()       AS Color_ExpirationDate               --
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -293,6 +294,7 @@ BEGIN
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
 
+              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -446,7 +448,7 @@ BEGIN
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
-
+              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -486,6 +488,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 06.09.16         *
  27.04.16         *
  23.04.16         *
  01.10.15                                                                        *SertificatNumber,SertificatStart,SertificatEnd               

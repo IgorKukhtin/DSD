@@ -1,4 +1,4 @@
-unit Report_MovementIncome;
+unit Report_MovementCheck_UnLiquid;
 
 interface
 
@@ -17,33 +17,29 @@ uses
   dxSkinsdxBarPainter, cxCheckBox;
 
 type
-  TReport_MovementIncomeForm = class(TAncestorReportForm)
+  TReport_MovementCheck_UnLiquidForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
     UnitGuides: TdsdGuides;
     dxBarButton1: TdxBarButton;
+    colGoodsId: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
-    colSumma: TcxGridDBColumn;
-    colSummaSale: TcxGridDBColumn;
-    colSummaMargin: TcxGridDBColumn;
+    colPrice_Sale: TcxGridDBColumn;
+    colSumma_Sale: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clGoodsGroupName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
+    actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
-    cbPartion: TcxCheckBox;
-    cbPartionPrice: TcxCheckBox;
-    Color_calc: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    actRefreshJuridical: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
@@ -51,7 +47,7 @@ type
   end;
 
 var
-  Report_MovementIncomeForm: TReport_MovementIncomeForm;
+  Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm;
 
 implementation
 
@@ -59,5 +55,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_MovementIncomeForm)
+  RegisterClass(TReport_MovementCheck_UnLiquidForm)
 end.

@@ -1,9 +1,9 @@
-object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
+object Report_MovementCheck_UnLiquidDialogForm: TReport_MovementCheck_UnLiquidDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1055#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093'>'
-  ClientHeight = 182
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1053#1077#1083#1080#1082#1074#1080#1076#1085#1086#1084#1091' '#1090#1086#1074#1072#1088#1091'>'
+  ClientHeight = 170
   ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 139
+    Top = 136
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
   end
   object cxButton2: TcxButton
     Left = 223
-    Top = 139
+    Top = 136
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 10
-    Top = 81
+    Top = 78
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 61
+    Top = 58
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object cxLabel6: TcxLabel
@@ -83,11 +83,11 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 175
-    Top = 124
+    Top = 121
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 214
-    Top = 50
+    Top = 47
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -100,7 +100,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 255
-    Top = 96
+    Top = 93
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -138,7 +138,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 22
-    Top = 106
+    Top = 103
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -169,11 +169,11 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 86
-    Top = 74
+    Top = 71
   end
   object ActionList: TActionList
     Left = 155
-    Top = 83
+    Top = 80
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -233,6 +233,6 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
       end>
     PackSize = 1
     Left = 111
-    Top = 116
+    Top = 113
   end
 end

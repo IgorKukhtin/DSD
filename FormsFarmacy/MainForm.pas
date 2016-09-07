@@ -287,6 +287,8 @@ type
     miDiscountExternalTools: TMenuItem;
     actPriceGroupSettingsTOP: TdsdOpenForm;
     N102: TMenuItem;
+    actReport_MovementCheckUnLiquid: TdsdOpenForm;
+    N104: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
