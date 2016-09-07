@@ -49,7 +49,7 @@ type
     LocationName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
+    GoodsDescName: TcxGridDBColumn;
     PartionGoodsName: TcxGridDBColumn;
     AssetName: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;

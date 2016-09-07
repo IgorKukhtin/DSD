@@ -169,7 +169,7 @@ BEGIN
       , ddd.JuridicalName 
       , ddd.Deferment
       , ddd.PriceListMovementItemId
-
+/*      
       , CASE -- если Дней отсрочки по договору = 0
              WHEN 1=0 AND ddd.Deferment = 0
                   THEN FinalPrice
@@ -178,6 +178,17 @@ BEGIN
                   THEN FinalPrice * (100 - COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- иначе учитывает % из Установки для ценовых групп (что б уравновесить ... )
              ELSE FinalPrice * (100 - PriceSettings.Percent) / 100
+
+        END :: TFloat AS SuperFinalPrice
+*/
+      , CASE --- если Дней отсрочки по договору = 0 + ТОП-позиция учитывает % из ... (что б уравновесить ... )
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = TRUE
+                  THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
+             -- если Дней отсрочки по договору = 0 + НЕ ТОП-позиция = учитывает % из Установки для ценовых групп (что б уравновесить ... )
+             WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
+                  THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
+             -- иначе НЕ учитывает
+             ELSE FinalPrice
 
         END :: TFloat AS SuperFinalPrice
 
@@ -196,15 +207,16 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE WHEN 1=1
+          , CASE WHEN 1=0
                       THEN PriceList.Amount
-                 -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
-                    THEN PriceList.Amount
-                         -- И учитывается % бонуса из Маркетинговый контракт
-                       * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-                 -- иначе учитывается бонус
-                 ELSE (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
+                 -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+                 WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+                      THEN PriceList.Amount
+                           -- учитывается % бонуса из Маркетинговый контракт
+                         * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
+                 
+                 ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                      (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
                        -- И учитывается % бонуса из Маркетинговый контракт
                     * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice

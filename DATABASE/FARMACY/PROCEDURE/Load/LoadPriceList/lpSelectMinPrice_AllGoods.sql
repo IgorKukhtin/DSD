@@ -205,13 +205,14 @@ BEGIN
           , PriceList.Id                       AS PriceListMovementItemId
           , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
 
-          , CASE -- если ТОП-позиция или Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
-                 WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) = TRUE OR COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
+          , CASE -- если Цена поставщика >= PriceLimit (до какой цены учитывать бонус при расчете миним. цены)
+                 WHEN COALESCE (JuridicalSettings.PriceLimit, 0) <= PriceList.Amount
                     THEN PriceList.Amount
-                         -- И учитывается % бонуса из Маркетинговый контракт
+                         -- учитывается % бонуса из Маркетинговый контракт
                        * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
-                 -- иначе учитывается бонус
-                 ELSE (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
+
+                 ELSE -- иначе учитывается бонус - для ТОП-позиции или НЕ ТОП-позиции
+                      (PriceList.Amount * (100 - COALESCE (JuridicalSettings.Bonus, 0)) / 100)
                        -- И учитывается % бонуса из Маркетинговый контракт
                     * (1 - COALESCE (GoodsPromo.ChangePercent, 0) / 100)
             END :: TFloat AS FinalPrice

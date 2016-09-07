@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_Asset (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods_Asset(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
@@ -21,7 +20,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
 
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsDescName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar 
              , MovementPartionGoods_InvNumber TVarChar
@@ -162,6 +161,9 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена - Необоротные активы!!!
+    -- IF COALESCE (inAccountGroupId, 0) = 0 THEN inAccountGroupId:= zc_Enum_AccountGroup_10000(); END IF;
+
 
     -- !!!определяется!!!
     vbIsSummIn:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 442647); -- Отчеты руководитель сырья
@@ -185,7 +187,7 @@ BEGIN
         THEN
             INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
                SELECT Object.Id AS LocationId
-                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
+                    , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit()
                            WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
                            WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
                       END AS DescId
@@ -196,13 +198,17 @@ BEGIN
                WHERE Object.Id = inLocationId
               ;
         ELSE
-            WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
-            INSERT INTO _tmpLocation (LocationId)
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit()
-              UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
-              UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
+            -- inLocationId:= -1;
+            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+              SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
+              FROM (SELECT zc_Juridical_Basis() AS LocationId, zc_ContainerLinkObject_Unit() AS DescId
+                   UNION ALL
+                    SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Unit() AS DescId FROM Object WHERE Object.DescId = zc_Object_Unit()
+                   UNION ALL
+                    SELECT Object.Id, zc_ContainerLinkObject_Member() AS DescId FROM Object WHERE Object.DescId = zc_Object_Member()
+                   ) AS tmp
+                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
+             ;
         END IF;
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -227,20 +233,14 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpPriceStart AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inStartDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
+    WITH tmpPriceStart AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)
+         , tmpPriceEnd AS (SELECT NULL :: Integer AS GoodsId, NULL :: TFloat AS Price WHERE 1 = 0)
+         -- !!!криво хардкодим ОС и все что для них!!!
+       , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= -1 * zc_Enum_AccountGroup_10000()
+                                                                 , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
+                                                                 , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
+                           -- WHERE tmp.AssetToId  <> 0
                           )
-         , tmpPriceEnd AS (SELECT lfObjectHistory_PriceListItem.GoodsId
-                                , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
-                           WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
-                          )
-       , tmpReport_all AS (SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate, inAccountGroupId:= inAccountGroupId
-                                                             , inUnitGroupId:= inUnitGroupId, inLocationId:= inLocationId, inGoodsGroupId:= inGoodsGroupId
-                                                             , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp
-                           WHERE tmp.AssetToId  <> 0)
        , tmpReport_summ AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = FALSE OR ContainerId_count <> ContainerId)
        , tmpReport_count AS (SELECT * FROM tmpReport_all WHERE inIsInfoMoney = TRUE AND ContainerId_count = ContainerId)
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
@@ -335,8 +335,9 @@ BEGIN
         , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
 
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
-        , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-        , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
+        , ObjectString_Goods_GroupNameFull.ValueData         AS GoodsGroupNameFull
+        , ObjectDesc_Goods.ItemName      AS GoodsDescName
+        , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)     AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
@@ -718,6 +719,7 @@ BEGIN
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
+        LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
         LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId

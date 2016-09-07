@@ -2,8 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
+  ExplicitTop = -110
   ExplicitWidth = 1245
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -485,10 +486,10 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 80
           end
           object colBonus: TcxGridDBColumn
-            Caption = #1041#1086#1085#1091#1089
+            Caption = '% '#1087#1088#1072#1081#1089#1072
             DataBinding.FieldName = 'Bonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.## %; ; '
+            Properties.DisplayFormat = ',0.#### %;-,0.#### %; ;'
             Options.Editing = False
             Width = 49
           end
@@ -527,12 +528,12 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 57
           end
           object colPercent: TcxGridDBColumn
-            Caption = '% '#1079#1072' '#1086#1090#1089#1088'.'
+            Caption = '% '#1074#1099#1073#1086#1088' '#1092#1072#1082#1090'/'#1086#1090#1089#1088
             DataBinding.FieldName = 'Percent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.## %; ; '
+            Properties.DisplayFormat = ',0.## %;-,0.## %; ;'
             Options.Editing = False
-            Width = 51
+            Width = 70
           end
           object colSuperFinalPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089#1088#1072#1074#1085#1077#1085#1080#1103
@@ -590,10 +591,10 @@ inherited OrderInternalForm: TOrderInternalForm
             Width = 81
           end
           object colChangePercentPromo: TcxGridDBColumn
-            Caption = '%  '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
+            Caption = '% '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
             DataBinding.FieldName = 'ChangePercentPromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.## %; ; '
+            Properties.DisplayFormat = ',0.#### %;-,0.#### %; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

@@ -440,9 +440,13 @@ BEGIN
                                                      AND Container.DescId = zc_Container_Count()
                                        LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                      ON CLO_Account.ContainerId = Container.Id
-                                                                    AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                                                    AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                       LEFT JOIN ContainerLinkObject AS CLO_AssetTo
+                                                                     ON CLO_AssetTo.ContainerId = Container.Id
+                                                                    AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()
                                        LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
                                   WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                                    AND CLO_AssetTo.ContainerId IS NULL -- !!!т.е. без счета ОС!!!
                                     AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
                , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
@@ -465,6 +469,7 @@ BEGIN
                                                    ELSE 0
                                               END) <> 0
                                  )
+        -- Результат
         SELECT COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId
              , tmpContainer.ContainerId_Goods
              , tmpContainer.GoodsId

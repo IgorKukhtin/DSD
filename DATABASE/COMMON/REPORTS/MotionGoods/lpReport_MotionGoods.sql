@@ -94,7 +94,16 @@ RETURNS TABLE (AccountId Integer
               )
 AS
 $BODY$
+   DECLARE vbIsAssetTo Boolean;
 BEGIN
+    -- определяется - надо ли ТОЛЬКО ОС и все что с ними связано
+    IF inAccountGroupId = -1 * zc_Enum_AccountGroup_10000()
+    THEN
+        inAccountGroupId:= 0;
+        vbIsAssetTo:= TRUE;
+    ELSE
+        vbIsAssetTo:= FALSE;
+    END IF;
     -- !!!может так будет быстрее!!!
     inAccountGroupId:= COALESCE (inAccountGroupId, 0);
 
@@ -155,10 +164,20 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                             AND _tmpLocation.ContainerDescId = zc_Container_Count()
-           WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
-              OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                        OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                         ))
+
+                LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
+                                                            AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = ContainerLinkObject.ContainerId
+                                                                 AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+           WHERE (
+                  (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+               OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                         OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                          ))
+                 )
+             AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
+               OR vbIsAssetTo = FALSE)
           ;
     ELSE IF inGoodsId <> 0
          THEN
@@ -203,10 +222,20 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
-                WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
-                   OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                             OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                              ))
+
+                     LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
+                                                                 AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = ContainerLinkObject.ContainerId
+                                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                WHERE (
+                       (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+                    OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                              OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                               ))
+                      )
+                  AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
+                     OR vbIsAssetTo = FALSE)
                ;
          ELSE
              WITH tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
@@ -248,10 +277,19 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
-                WHERE (_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
-                   OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                             OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
-                                                                              ))
+
+                     LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
+                                                                 AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                     LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = ContainerLinkObject.ContainerId
+                                                                      AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+                WHERE ((_tmpLocation.ContainerDescId = zc_Container_Summ() AND tmpAccount.AccountId > 0)
+                    OR (_tmpLocation.ContainerDescId = zc_Container_Count() AND ((CLO_Account.ContainerId > 0 AND inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                              OR (CLO_Account.ContainerId IS NULL AND inAccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
+                                                                               ))
+                      )
+                  AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
+                     OR vbIsAssetTo = FALSE)
                ;
          END IF;
     END IF;
