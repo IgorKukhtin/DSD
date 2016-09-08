@@ -210,6 +210,7 @@ type
     SummSendOnPrice_40200: TcxGridDBColumn;
     CountSendOnPrice_10500_Weight: TcxGridDBColumn;
     CountSendOnPrice_10500: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
   private
   public
   end;

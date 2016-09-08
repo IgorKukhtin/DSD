@@ -742,6 +742,15 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 40
       end
+      object AssetToGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1076#1083#1103' '#1054#1057')'
+        DataBinding.FieldName = 'AssetToGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object AssetToName: TcxGridDBColumn
         Caption = #1044#1083#1103' '#1054#1057
         DataBinding.FieldName = 'AssetToName'
@@ -798,6 +807,13 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object PartionGoodsDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090'.'
+        DataBinding.FieldName = 'PartionGoodsDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
       object MovementPartionGoods_InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1087#1072#1088#1090#1080#1080
@@ -2734,9 +2750,9 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'AssetToName;GoodsGroupNameFull;GoodsGroupName;GoodsName;PartionG' +
-            'oodsName;MovementPartionGoods_InvNumber;InfoMoneyName_all;InfoMo' +
-            'neyName_all_Detail'
+            'AssettoGroupName;AssetToName;GoodsName;PartionGoodsName;Movement' +
+            'PartionGoods_InvNumber;InfoMoneyName_all;InfoMoneyName_all_Detai' +
+            'l'
           GridView = cxGridDBTableView
         end>
       Params = <

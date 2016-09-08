@@ -22,9 +22,11 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsDescName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , Weight TFloat
-             , PartionGoodsId Integer, PartionGoodsName TVarChar 
+             , PartionGoodsId Integer, PartionGoodsName TVarChar
+             , PartionGoodsDate TDateTime             --дата ввода в эксплуатацию 
              , MovementPartionGoods_InvNumber TVarChar
              , AssetToCode Integer, AssetToName TVarChar
+             , AssetToGroupName TVarChar
              , StorageName TVarChar
              , UnitCode Integer, UnitName TVarChar
 
@@ -346,13 +348,15 @@ BEGIN
         , Object_Measure.ValueData       AS MeasureName
         , ObjectFloat_Weight.ValueData   AS Weight
 
-        , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)           AS PartionGoodsId
-
+        , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
         , COALESCE (Object_PartionGoods.ValueData, '') :: TVarChar AS PartionGoodsName
+        , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
+        , Object_AssetToGroup.ValueData  AS AssetToGroupName
+
         , Object_Storage.ValueData       AS StorageName
         , Object_Unit.ObjectCode         AS UnitCode
         , Object_Unit.ValueData          AS UnitName
@@ -749,7 +753,12 @@ BEGIN
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
        LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_group.PartionGoodsId
-        LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+       LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmpMIContainer_group.AssetToId
+
+       LEFT JOIN ObjectLink AS ObjectLink_AssetTo_GoodsGroup
+                            ON ObjectLink_AssetTo_GoodsGroup.ObjectId = Object_AssetTo.Id
+                           AND ObjectLink_AssetTo_GoodsGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+       LEFT JOIN Object AS Object_AssetToGroup ON Object_AssetToGroup.Id = ObjectLink_AssetTo_GoodsGroup.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Goods
                               ON ObjectLink_Goods.ObjectId = tmpMIContainer_group.PartionGoodsId
@@ -762,6 +771,10 @@ BEGIN
                               ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
                              AND ObjectLink_Storage.DescId = zc_ObjectLink_PartionGoods_Storage()
          LEFT JOIN Object AS Object_Storage ON Object_Storage.Id = ObjectLink_Storage.ChildObjectId
+
+         LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                              ON ObjectDate_PartionGoods_Value.ObjectId = tmpMIContainer_group.PartionGoodsId
+                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
          LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
          LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
