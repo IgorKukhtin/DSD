@@ -24,7 +24,7 @@ BEGIN
    vbUserId := inSession;
 
    --проверить что бы связи типа zc_Enum_ImportExportLinkType_UploadCompliance редактировались только админом
-   IF (inImportExportLinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance())
+   IF 1 = 1 AND (inImportExportLinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance())
    THEN
        IF NOT EXISTS (SELECT ObjectLink_UserRole_View.UserId FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin())
        THEN

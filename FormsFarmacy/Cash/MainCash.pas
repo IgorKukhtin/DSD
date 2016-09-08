@@ -2446,7 +2446,7 @@ begin
   if fBlinkVIP = true
   then if btnVIP.Colors.NormalText <> clDefault
        then begin btnVIP.Colors.NormalText:= clDefault; btnVIP.Colors.Default := clDefault; end
-       else begin Beep; btnVIP.Colors.NormalText:= clYellow; btnVIP.Colors.Default := clRed; end
+       else begin {Beep;} btnVIP.Colors.NormalText:= clYellow; btnVIP.Colors.Default := clRed; end
   else begin btnVIP.Colors.NormalText := clDefault; btnVIP.Colors.Default := clDefault; end;
 end;
 

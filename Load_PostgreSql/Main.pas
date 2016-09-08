@@ -198,6 +198,7 @@ type
     cbLastCost: TCheckBox;
     cb100MSec: TCheckBox;
     cbOnlySale: TCheckBox;
+    cbReturnIn_Auto: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -283,6 +284,7 @@ type
     procedure pCompleteDocument_Kopchenie;
     procedure pCompleteDocument_Partion;
     procedure pCompleteDocument_Diff;
+    procedure pCompleteDocument_ReturnIn_Auto;
 
     procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
     procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
@@ -1603,6 +1605,8 @@ procedure TMainForm.StartProcess;
                EndDateCompleteEdit.Text:=DateToStr(Date-1);
 
                UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
+               //Привязка Возвраты
+               cbReturnIn_Auto.Checked:=true;
                //Проводим+Распроводим
                cbComplete.Checked:=true;
                cbUnComplete.Checked:=true;
@@ -2253,6 +2257,9 @@ begin
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
+     //
+     // ВСЕГДА - Привязка Возвраты
+     if (not fStop) then pCompleteDocument_ReturnIn_Auto;
      //
      if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
@@ -20772,6 +20779,114 @@ begin
      pCompleteDocument_List(false, FALSE, TRUE);
      //
      myDisabledCB(cbHistoryCost_diff);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_ReturnIn_Auto;
+  function myAdd :String;
+  begin
+       result:='';
+       if not toSqlQuery.EOF then
+       with toSqlQuery do
+       result:=' select ' + FieldByName('MovementId').AsString
+              +'       ,' + FormatToDateServer_notNULL(FieldByName('OperDate').AsDateTime)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('InvNumber').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('Code').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(myReplaceStr(FieldByName('ItemName').AsString,chr(39),'`'));
+       Gauge.Progress:=Gauge.Progress+1;
+  end;
+var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
+    i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cbReturnIn_Auto.Checked)or(not cbReturnIn_Auto.Enabled) then exit;
+     //
+     myEnabledCB(cbReturnIn_Auto);
+     //
+     // !!!заливка в сибасе!!!
+     fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_ReturnIn_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
+
+     // delete Data on Sybase
+     fromADOConnection.Connected:=false;
+     fExecSqFromQuery('delete dba._pgMovementReComlete');
+
+     SaveRecord:=toSqlQuery.RecordCount;
+     Gauge.Progress:=0;
+     Gauge.MaxValue:=SaveRecord;
+     cbReturnIn_Auto.Caption:='('+IntToStr(SaveRecord)+') !!!Cписок накладных!!!';
+
+     with toSqlQuery do
+        while not EOF do
+        begin
+             // insert into Sybase
+             ExecStr1:='insert into dba._pgMovementReComlete(MovementId,OperDate,InvNumber,Code,ItemName)'
+                     +myAdd;
+             ExecStr2:='';
+             ExecStr3:='';
+             ExecStr4:='';
+             for i:=1 to 100 do
+             begin
+                  Next;
+                  addStr:=myAdd;
+                  if addStr <> '' then
+                  if LengTh(ExecStr1) < 3500
+                  then ExecStr1:=ExecStr1 + ' union all ' + addStr
+                  else if LengTh(ExecStr2) < 3500
+                       then ExecStr2:=ExecStr2 + ' union all ' + addStr
+                        else if LengTh(ExecStr3) < 3500
+                             then ExecStr3:=ExecStr3 + ' union all ' + addStr
+                             else ExecStr4:=ExecStr4 + ' union all ' + addStr;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+             end;
+             fromADOConnection.Connected:=false;
+             fExecSqFromQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
+             Next;
+        end;
+     //
+     fromADOConnection.Connected:=false;
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgMovementReComlete.*');
+        Add('from dba._pgMovementReComlete');
+        Add('order by OperDate,MovementId,InvNumber');
+        Open;
+
+        cbReturnIn_Auto.Caption:='('+IntToStr(RecordCount)+') Привязка Возвраты';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpUpdate_Movement_ReturnIn_isError';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbReturnIn_Auto);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Partion;

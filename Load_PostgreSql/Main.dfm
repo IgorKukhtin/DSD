@@ -2009,7 +2009,7 @@ object MainForm: TMainForm
     end
     object cbComplete_List: TCheckBox
       Tag = 30
-      Left = 6
+      Left = 16
       Top = 482
       Width = 176
       Height = 17
@@ -2059,7 +2059,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 16
       Top = 403
-      Width = 184
+      Width = 80
       Height = 17
       Caption = #1044#1077#1092#1088#1086#1089#1090#1077#1088
       Font.Charset = DEFAULT_CHARSET
@@ -2075,7 +2075,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 16
       Top = 421
-      Width = 79
+      Width = 80
       Height = 17
       Caption = #1059#1087#1072#1082#1086#1074#1082#1072
       Font.Charset = DEFAULT_CHARSET
@@ -2121,11 +2121,12 @@ object MainForm: TMainForm
     end
     object cbHistoryCost_diff: TCheckBox
       Tag = 30
-      Left = 104
-      Top = 421
+      Left = 96
+      Top = 403
       Width = 107
       Height = 17
       Caption = #1089'/'#1089' "'#1054#1082#1088#1091#1075#1083#1077#1085#1080#1103'"'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlight
       Font.Height = -11
@@ -2177,6 +2178,22 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 45
+    end
+    object cbReturnIn_Auto: TCheckBox
+      Tag = 30
+      Left = 96
+      Top = 421
+      Width = 141
+      Height = 17
+      Caption = #1055#1088#1080#1074#1103#1079#1082#1072' '#1042#1086#1079#1074#1088#1072#1090#1099
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlight
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 46
+      OnClick = cbCompleteIncomeBNClick
     end
   end
   object DataSource: TDataSource

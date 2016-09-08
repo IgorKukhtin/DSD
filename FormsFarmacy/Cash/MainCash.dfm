@@ -11,7 +11,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 781
-  ExplicitHeight = 453
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1313,51 +1313,6 @@ inherited MainCashForm: TMainCashForm
       item
         ColorColumn = mainColisPromo
         BackGroundValueColumn = mainColor_calc
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MainColCode
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MainColMCSValue
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MainColName
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MainColPrice
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MainColReserved
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MaincolisFirst
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = MaincolisSecond
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = mainColisPromo
-        ValueColumn = MainColor_ExpirationDate
-        ColorValueList = <>
-      end
-      item
-        ColorColumn = mainMinExpirationDate
-        ValueColumn = MainColor_ExpirationDate
         ColorValueList = <>
       end>
     ColumnAddOnList = <>

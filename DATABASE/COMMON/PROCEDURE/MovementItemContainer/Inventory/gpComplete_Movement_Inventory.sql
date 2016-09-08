@@ -441,12 +441,18 @@ BEGIN
                                        LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                      ON CLO_Account.ContainerId = Container.Id
                                                                     AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
-                                       LEFT JOIN ContainerLinkObject AS CLO_AssetTo
+                                       /*LEFT JOIN ContainerLinkObject AS CLO_AssetTo
                                                                      ON CLO_AssetTo.ContainerId = Container.Id
-                                                                    AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()
+                                                                    AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()*/
+                                       LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                     ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                    AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                       LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId
+
                                        LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId = Container.ObjectId
-                                  WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
-                                    AND CLO_AssetTo.ContainerId IS NULL -- !!!т.е. без счета ОС!!!
+
+                                  WHERE CLO_Account.ContainerId IS NULL                  -- !!!т.е. без счета Транзит!!!
+                                    AND COALESCE (Object_PartionGoods.ObjectCode, 0) = 0 -- !!!т.е. без ОС!!!
                                     AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
                , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods

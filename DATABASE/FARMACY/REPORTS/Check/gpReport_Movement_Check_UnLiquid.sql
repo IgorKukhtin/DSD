@@ -17,9 +17,9 @@ RETURNS TABLE (
   NDSKindName TVarChar, 
   
   RemainsStart      TFloat,
+  Price_Sale        Tfloat,    
   Amount_Sale       TFloat,
   Summa_Sale        TFloat,
-  Price_Sale        Tfloat,    
   Amount_Sale1      TFloat,
   Summa_Sale1       TFloat,
   Amount_Sale3      Tfloat,     
@@ -41,12 +41,18 @@ BEGIN
     -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
+
+    -- отбросили время
+    inStartDate:= DATE_TRUNC ('DAY', inStartDate);
+    inEndDate  := DATE_TRUNC ('DAY', inEndDate);
+
+
     -- Результат
     RETURN QUERY
       WITH 
               tmpRemains AS ( SELECT tmp.GoodsId
                                    , SUM(tmp.RemainsStart) AS RemainsStart
-                              FROM ( SELECT Container.Objectid      AS GoodsId
+                              FROM ( SELECT Container.ObjectId      AS GoodsId
                                           , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                           , Container.Id  AS ContainerId
                                      FROM Container
@@ -62,29 +68,29 @@ BEGIN
                                                                          AND MIContainer.OperDate >= inStartDate
                                      WHERE Container.DescId = zc_Container_Count()
                                        AND Container.WhereObjectId = inUnitId
-                                     GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
+                                     GROUP BY Container.Id, Container.ObjectId, Container.Amount
                                      HAVING Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                                     ) AS tmp
                               GROUP BY tmp.GoodsId
                              )
              
-     , tmpCheck_ALL AS ( SELECT MIContainer.ContainerId
-                              , MI_Check.ObjectId AS GoodsId
+     , tmpCheck_ALL AS ( SELECT MI_Check.ObjectId AS GoodsId
+                              -- , MIContainer.ContainerId
 
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) ELSE 0 END) AS Amount_Sale
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) ELSE 0 END) AS Amount_Sale
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale
 
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '1 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) ELSE 0 END) AS Amount_Sale1
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '1 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale1
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '1 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) ELSE 0 END) AS Amount_Sale1
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '1 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale1
 
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '3 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '1 Month' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) ELSE 0 END) AS Amount_Sale3
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '3 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '1 Month' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale3
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '3 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '1 Month' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) ELSE 0 END) AS Amount_Sale3
+                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '3 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '1 Month' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale3
 
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '3 Month' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) ELSE 0 END) AS Amount_Sale6
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inStartDate - INTERVAL '3 Month' THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale6
+                              , SUM (CASE WHEN Movement_Check.OperDate < inStartDate - INTERVAL '3 Month' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) ELSE 0 END) AS Amount_Sale6
+                              , SUM (CASE WHEN Movement_Check.OperDate < inStartDate - INTERVAL '3 Month' THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS Summa_Sale6
 
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) ELSE 0 END) AS TotalAmount
-                              , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS TotalSumma
+                              , SUM (CASE WHEN Movement_Check.OperDate < inStartDate THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) ELSE 0 END) AS TotalAmount
+                              , SUM (CASE WHEN Movement_Check.OperDate < inStartDate THEN COALESCE (/*-1 * MIContainer.Amount,*/ MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END) AS TotalSumma
 
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -95,18 +101,20 @@ BEGIN
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
                                                      AND MI_Check.isErased = FALSE
+                              -- INNER JOIN tmpRemains ON tmpRemains.GoodsId = MI_Check.ObjectId
+
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
+                              /*LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementItemId = NULL -- MI_Check.Id
+                                                             AND MIContainer.DescId = zc_MIContainer_Count()*/
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inEndDate + INTERVAL '1 Day'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                          GROUP BY MI_Check.ObjectId
-                                , MIContainer.ContainerId
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                               -- , MIContainer.ContainerId
+                         -- HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
 
          , tmpCheck AS ( SELECT tmp.* 
@@ -129,7 +137,7 @@ BEGIN
                                FROM tmpCheck_ALL
                                GROUP BY tmpCheck_ALL.GoodsId
                                ) AS tmp
-                         WHERE tmp.Amount_Sale1=0 OR tmp.Amount_Sale3=0 OR tmp.Amount_Sale6=0
+                         -- WHERE tmp.Amount_Sale1=0 OR tmp.Amount_Sale3=0 OR tmp.Amount_Sale6=0
                          )
        
         SELECT
@@ -160,6 +168,7 @@ BEGIN
 
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpRemains.GoodsId
 
+        WHERE COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) =0
         ORDER BY
             GoodsGroupName, GoodsName;
 END;
