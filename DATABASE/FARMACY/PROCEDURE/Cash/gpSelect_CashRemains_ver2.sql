@@ -14,8 +14,7 @@ RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean,
-               MinExpirationDate TDateTime,
-               Color_ExpirationDate Integer
+               MinExpirationDate TDateTime
                )
 AS
 $BODY$
@@ -142,10 +141,10 @@ BEGIN
             ObjectFloat_NDSKind_NDS.ValueData AS NDS,
             COALESCE(ObjectBoolean_First.ValueData, False)          AS isFirst,
             COALESCE(ObjectBoolean_Second.ValueData, False)         AS isSecond,
-            CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
+            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
-            CashSessionSnapShot.MinExpirationDate, 
-            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+            CashSessionSnapShot.MinExpirationDate 
+           -- CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
  
          FROM
             CashSessionSnapShot
