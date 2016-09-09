@@ -40,6 +40,11 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
+    colMinExpirationDate: TcxGridDBColumn;
+    colOperDate_LastIncome: TcxGridDBColumn;
+    colAmount_LastIncome: TcxGridDBColumn;
+    colPrice_Remains: TcxGridDBColumn;
+    colSumma_Remains: TcxGridDBColumn;
   private
     { Private declarations }
   public

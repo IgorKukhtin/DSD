@@ -237,6 +237,31 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object colMinExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'MinExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object colOperDate_LastIncome: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'OperDate_LastIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
+            Options.Editing = False
+            Width = 80
+          end
+          object colAmount_LastIncome: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
+            DataBinding.FieldName = 'Amount_LastIncome'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
+            Width = 80
+          end
           object colRemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'RemainsStart'
@@ -248,14 +273,30 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             HeaderHint = #1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1090#1086#1095#1082#1077' '#1085#1072' '#1085#1072#1095'. '#1076#1072#1090#1091
             Width = 55
           end
+          object colPrice_Remains: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'Price_Remains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1085#1086#1075#1086' '#1086#1089#1090#1072#1090#1082#1072
+            Width = 60
+          end
+          object colSumma_Remains: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'Summa_Remains'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1085#1077#1083#1080#1082#1074#1080#1076#1085#1086#1075#1086' '#1086#1089#1090#1072#1090#1082#1072
+            Width = 60
+          end
           object colPrice_Sale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'.'
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
             DataBinding.FieldName = 'Price_Sale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 58
+            Width = 73
           end
           object colAmount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
