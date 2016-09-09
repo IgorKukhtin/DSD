@@ -200,13 +200,25 @@ BEGIN
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
         ELSE
-            WITH tmpBranch AS (SELECT TRUE AS Value WHERE 1 = 0 AND NOT EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0))
-            INSERT INTO _tmpLocation (LocationId)
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Unit()
+            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+               SELECT Object.Id
+                    , tmpCLODesc.DescId
+                    , tmpDesc.ContainerDescId
+               FROM Object
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+               WHERE Object.DescId = zc_Object_Member()
+                 AND vbIsSummIn = TRUE
+                 AND 1 = 0
               UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Member()
-              UNION ALL
-               SELECT Id FROM Object INNER JOIN tmpBranch ON tmpBranch.Value = TRUE WHERE DescId = zc_Object_Car();
+               SELECT Object.Id
+                    , tmpCLODesc.DescId
+                    , tmpDesc.ContainerDescId
+               FROM Object
+                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+               WHERE Object.DescId = zc_Object_Car()
+                 AND vbIsSummIn = TRUE;
         END IF;
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!

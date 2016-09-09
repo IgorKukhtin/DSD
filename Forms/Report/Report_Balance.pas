@@ -76,6 +76,8 @@ type
     pvAmountPassiveStart: TcxDBPivotGridField;
     pvAmountActiveEnd: TcxDBPivotGridField;
     pvAmountPassiveEnd: TcxDBPivotGridField;
+    pvByObjectItemName: TcxDBPivotGridField;
+    pvGoodsItemName: TcxDBPivotGridField;
   private
   public
   end;
