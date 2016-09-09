@@ -297,7 +297,7 @@ BEGIN
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpListContainer;
 
-    -- пытаемся найти <Счет> для zc_Container_Count
+    -- 1. пытаемся найти <Счет> для zc_Container_Count
     UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
     FROM _tmpListContainer AS _tmpListContainer_summ
@@ -315,7 +315,7 @@ BEGIN
       AND _tmpListContainer.AccountId = 0
       AND _tmpListContainer_summ.AccountGroupId = zc_Enum_AccountGroup_10000(); -- Необоротные активы
 
-    -- пытаемся найти <Счет> для zc_Container_Count
+    -- 2.1. пытаемся найти <Счет> для zc_Container_Count
     UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
                                , AccountGroupId = _tmpListContainer_summ.AccountGroupId
     FROM _tmpListContainer AS _tmpListContainer_summ
@@ -324,7 +324,17 @@ BEGIN
       AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
       AND _tmpListContainer.AccountId = 0
       AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
-
+      AND _tmpListContainer_summ.Amount <> 0
+   ;
+    -- 2.2. пытаемся найти <Счет> для zc_Container_Count
+    UPDATE _tmpListContainer SET AccountId = _tmpListContainer_summ.AccountId
+                               , AccountGroupId = _tmpListContainer_summ.AccountGroupId
+    FROM _tmpListContainer AS _tmpListContainer_summ
+    WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
+      AND _tmpListContainer.ContainerDescId = zc_Container_Count()
+      AND _tmpListContainer_summ.ContainerDescId = zc_Container_Summ()
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
    ;
 
     -- все ContainerId
