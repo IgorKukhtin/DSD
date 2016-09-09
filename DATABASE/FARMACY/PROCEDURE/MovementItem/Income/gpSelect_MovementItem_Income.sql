@@ -148,7 +148,7 @@ BEGIN
                            )   
                            
     , DublePrice AS        (SELECT MovementItem_Income_View.GoodsId
-                                 , zc_Color_Goods_Additional() AS DublePriceColour
+                                 , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour
                             FROM MovementItem_Income_View
                             WHERE MovementItem_Income_View.MovementId = inMovementId 
                               AND MovementItem_Income_View.isErased   = FALSE
@@ -217,7 +217,7 @@ BEGIN
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
-              , zc_Color_Black()       AS Color_ExpirationDate               --zc_Color_Blue 
+              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_Black() END        AS Color_ExpirationDate               --zc_Color_Blue 
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -331,7 +331,7 @@ BEGIN
                        SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                       )
    , DublePrice AS         (SELECT MovementItem_Income_View.GoodsId
-                                 , zc_Color_Goods_Additional() AS DublePriceColour
+                                 , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour 
                             FROM MovementItem_Income_View
                             WHERE MovementItem_Income_View.MovementId = inMovementId 
                               AND MovementItem_Income_View.isErased   = FALSE

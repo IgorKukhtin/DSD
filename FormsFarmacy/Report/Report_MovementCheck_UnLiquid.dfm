@@ -105,6 +105,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma_Remains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -190,6 +195,11 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumma_Remains
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False

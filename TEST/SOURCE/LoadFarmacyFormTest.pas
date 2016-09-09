@@ -447,6 +447,13 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
+  exit;
+
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));

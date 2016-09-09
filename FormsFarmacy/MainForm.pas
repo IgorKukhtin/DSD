@@ -289,6 +289,8 @@ type
     N102: TMenuItem;
     actReport_MovementCheckUnLiquid: TdsdOpenForm;
     N104: TMenuItem;
+    actReport_Payment_Plan: TdsdOpenForm;
+    N105: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
