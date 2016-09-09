@@ -217,7 +217,7 @@ BEGIN
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
-              , zc_Color_Black()       AS Color_ExpirationDate               --
+              , zc_Color_Black()       AS Color_ExpirationDate               --zc_Color_Blue 
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -288,13 +288,13 @@ BEGIN
               , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
 
-              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
 
-              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -443,12 +443,12 @@ BEGIN
               , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END ::TFloat AS Fix_Price
 
-              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+              , CASE  WHEN Object_Price_View.isTop = TRUE THEN 16440317 WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
-              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId

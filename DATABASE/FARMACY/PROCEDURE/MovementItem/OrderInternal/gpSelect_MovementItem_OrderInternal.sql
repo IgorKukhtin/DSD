@@ -128,8 +128,8 @@ BEGIN
 
            , CASE WHEN tmpMI.isTOP = TRUE
                     OR tmpMI.isUnitTOP = TRUE
-                  THEN 12615935
-                  ELSE 0
+                  THEN 16440317         --12615935                                          ---16440317  - розовый как в приходе ELSE zc_Color_White()
+                  ELSE zc_Color_White() --0
              END                                                    AS isTopColor
            , CEIL(tmpMI.Amount / COALESCE(Object_Goods.MinimumLot, 1)) * COALESCE(Object_Goods.MinimumLot, 1) ::TFloat  AS CalcAmount
            , tmpMI.Amount   ::TFloat                                AS Amount
@@ -152,7 +152,7 @@ BEGIN
            , tmpMI.MakerName                                        AS MakerName
            
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
-           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN 456
+           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor   
            , tmpMI.Remains                                          AS RemainsInUnit
@@ -275,7 +275,7 @@ BEGIN
               , MIString_Maker.ValueData       AS MakerName
               , Object_Contract.ValueData      AS ContractName
               , COALESCE(MIDate_PartionGoods.ValueData, Null) ::TDateTime AS PartionGoodsDate
-              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN 456
+              , CASE WHEN MIDate_PartionGoods.ValueData < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
                 END                            AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData      ::TFLoat     AS MinimumLot
@@ -418,8 +418,8 @@ BEGIN
            , COALESCE(tmpMI.isSecond, tmpGoods.isSecond)             AS isSecond
            , CASE WHEN COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP) = TRUE
                     OR COALESCE (Object_Price_View.isTOP, False) = TRUE
-                  THEN 12615935
-                  ELSE 0
+                  THEN 16440317         --12615935                                                      --16440317  - розовый как в приходе ELSE zc_Color_White()
+                  ELSE zc_Color_White() --0
              END                                                    AS isTopColor
            , COALESCE(tmpMI.Multiplicity, tmpGoods.Multiplicity)    AS Multiplicity
            , tmpMI.CalcAmount
@@ -440,7 +440,7 @@ BEGIN
            , tmpMI.MakerName 
            , tmpMI.SuperFinalPrice 
            , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
-           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN 456
+           , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
                 END AS PartionGoodsDateColor   
            , Remains.Amount                                         AS RemainsInUnit
@@ -647,7 +647,7 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                   )
 
-        SELECT *, CASE WHEN PartionGoodsDate < vbDate180 THEN 456
+        SELECT *, CASE WHEN PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
                      ELSE 0
                 END AS PartionGoodsDateColor      
               , ObjectFloat_Goods_MinimumLot.ValueData           AS MinimumLot

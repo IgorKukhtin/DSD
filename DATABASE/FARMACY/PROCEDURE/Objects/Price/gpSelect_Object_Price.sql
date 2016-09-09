@@ -198,7 +198,7 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
                
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -326,7 +326,7 @@ tmpContainerRemeins AS (SELECT container.objectid
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Red() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid

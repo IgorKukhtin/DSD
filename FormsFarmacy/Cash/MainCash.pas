@@ -226,6 +226,7 @@ type
     VIP4: TMenuItem;
     spUpdate_ConfirmedKind: TdsdStoredProc;
     mainMinExpirationDate: TcxGridDBColumn;
+    MainColor_ExpirationDate: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

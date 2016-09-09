@@ -536,6 +536,12 @@ inherited MainCashForm: TMainCashForm
           HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
           Width = 100
         end
+        object MainColor_ExpirationDate: TcxGridDBColumn
+          DataBinding.FieldName = 'Color_ExpirationDate'
+          Visible = False
+          VisibleForCustomization = False
+          Width = 30
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -1271,46 +1277,55 @@ inherited MainCashForm: TMainCashForm
     ColorRuleList = <
       item
         ColorColumn = MainColCode
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MainColMCSValue
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MainColName
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MainColPrice
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MainColReserved
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MaincolisFirst
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = MaincolisSecond
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = mainColisPromo
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end
       item
         ColorColumn = mainMinExpirationDate
+        ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
       end>
