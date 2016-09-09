@@ -153,6 +153,7 @@ BEGIN
            
            , COALESCE(MIBoolean_Calculated.ValueData , FALSE)       AS isCalculated--
            , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
+                  WHEN tmpMI.isTOP = TRUE OR tmpMI.isUnitTOP = TRUE  THEN 15993821 -- 16440317    -- äëÿ òîï ðîçîâûé øðèôò
                      ELSE 0
                 END                                                 AS PartionGoodsDateColor   
            , tmpMI.Remains                                          AS RemainsInUnit
@@ -271,7 +272,7 @@ BEGIN
               END :: TFloat AS Percent
 /**/              
 
-             , Object_Juridical.ValueData     AS JuridicalName
+              , Object_Juridical.ValueData     AS JuridicalName
               , MIString_Maker.ValueData       AS MakerName
               , Object_Contract.ValueData      AS ContractName
               , COALESCE(MIDate_PartionGoods.ValueData, Null) ::TDateTime AS PartionGoodsDate
@@ -441,6 +442,7 @@ BEGIN
            , tmpMI.SuperFinalPrice 
            , COALESCE(tmpMI.isCalculated, FALSE)                    AS isCalculated
            , CASE WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Blue() --456
+                  WHEN (COALESCE (tmpMI.Goods_isTOP, tmpGoods.Goods_isTOP)= TRUE OR COALESCE (Object_Price_View.isTOP, False)= TRUE) THEN 15993821 -- 16440317    -- äëÿ òîï ðîçîâûé øðèôò
                      ELSE 0
                 END AS PartionGoodsDateColor   
            , Remains.Amount                                         AS RemainsInUnit
@@ -682,6 +684,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 09.09.16         *
  31.08.16         *
  04.08.16         *
  28.04.16         *

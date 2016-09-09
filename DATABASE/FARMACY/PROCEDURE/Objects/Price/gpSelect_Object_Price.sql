@@ -198,7 +198,10 @@ BEGIN
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
                
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                      WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
+                      ELSE zc_Color_Black() 
+                 END     AS Color_ExpirationDate                --vbAVGDateEnd
 
             FROM Object_Goods_View
                 INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
@@ -229,7 +232,7 @@ BEGIN
     ELSE
         RETURN QUERY
         WITH 
-tmpContainerRemeins AS (SELECT container.objectid
+        tmpContainerRemeins AS (SELECT container.objectid
                                      , Sum(COALESCE(container.Amount,0)) ::TFloat AS Remains
                                      , Container.Id   AS  ContainerId
                                 FROM container
@@ -326,7 +329,10 @@ tmpContainerRemeins AS (SELECT container.objectid
                , Object_Price_View.PercentMarkup           AS PercentMarkup
                , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
 
-               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+               , CASE WHEN Object_Remains.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                      WHEN (Object_Price_View.isTop = TRUE OR Object_Goods_View.isTop = TRUE) THEN 15993821 -- розовый
+                      ELSE zc_Color_Black() 
+                 END      AS Color_ExpirationDate                --vbAVGDateEnd
                
             FROM Object_Price_View
                 LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
