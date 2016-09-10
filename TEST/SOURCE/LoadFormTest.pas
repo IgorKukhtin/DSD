@@ -1330,7 +1330,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-// exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsUpakForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsUpakForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsCehForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsCehForm');
+ exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceDialogForm'));
@@ -1343,22 +1353,22 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsUpakForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsUpakForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsCehForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsCehForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsBalanceDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsBalanceDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');

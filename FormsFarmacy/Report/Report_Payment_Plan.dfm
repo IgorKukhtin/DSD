@@ -2,7 +2,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
   ClientHeight = 575
   ClientWidth = 797
-  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 813
   ExplicitHeight = 613
   PixelsPerInch = 96
@@ -11,9 +11,8 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
     Width = 797
     Height = 518
     TabOrder = 3
-    ExplicitTop = 48
     ExplicitWidth = 797
-    ExplicitHeight = 527
+    ExplicitHeight = 518
     ClientRectBottom = 518
     ClientRectRight = 797
     ClientRectTop = 24
@@ -22,47 +21,65 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 797
-      ExplicitHeight = 503
+      ExplicitHeight = 494
       inherited cxGrid: TcxGrid
         Width = 797
         Height = 267
+        ExplicitLeft = -56
+        ExplicitTop = -24
         ExplicitWidth = 797
-        ExplicitHeight = 276
+        ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00'
-              Kind = skSum
               Position = spFooter
-              Column = colPlanAmount
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.00;-,0.00'
+              Position = spFooter
+              Column = SummaSale
             end
             item
               Format = ',0.00;-,0.00'
               Kind = skSum
               Position = spFooter
-              Column = FactAmount
             end
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
-              Position = spFooter
-              Column = colDiffAmount
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PaySumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummaSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
-              Column = colPlanAmount
+              Column = TotalSumm
             end
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
-              Column = FactAmount
+              Column = SummaSale
             end
             item
               Format = '+,0.00;-,0.00;0.00;'
               Kind = skSum
-              Column = colDiffAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = PaySumm
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -73,70 +90,48 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colPlanDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'PlanDate'
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'OperDate'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
-            Width = 61
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 109
           end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            Width = 154
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 249
           end
-          object colPlanAmount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085
-            DataBinding.FieldName = 'PlanAmount'
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 127
           end
-          object colPlanAmountAccum: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'PlanAmountAccum'
+          object PaySumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+            DataBinding.FieldName = 'PaySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
           end
-          object FactAmount: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090
-            DataBinding.FieldName = 'FactAmount'
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
-          end
-          object colFactAmountAccum: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'FactAmountAccum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-          end
-          object colDiffAmount: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072
-            DataBinding.FieldName = 'DiffAmount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
-          end
-          object colDiffAmountAccum: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'DiffAmountAccum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
-          end
-          object colPercentMake: TcxGridDBColumn
-            AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-            Caption = '% '#1074#1099#1087'.'
-            DataBinding.FieldName = 'PercentMake'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00%'
-            HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
-          end
-          object colPercentMakeAccum: TcxGridDBColumn
-            AlternateCaption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
-            Caption = '% '#1074#1099#1087'. '#1089' '#1085#1072#1082#1086#1087#1083'.'
-            DataBinding.FieldName = 'PercentMakeAccum'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00%'
-            HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
-            Width = 72
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 159
           end
         end
       end
@@ -148,7 +143,6 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitTop = 276
       end
       object grChart: TcxGrid
         Left = 0
@@ -157,35 +151,30 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         Height = 219
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 284
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramLine.Active = True
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
           object dgDate: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'plandate'
+            DataBinding.FieldName = 'OperDate'
             DisplayText = #1044#1072#1090#1072
           end
           object dgUnit: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'unitname'
-            DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'JuridicalName'
+            DisplayText = #1055#1086#1089#1090#1072#1074#1097#1080#1082
           end
-          object serPlanAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamount'
-            DisplayText = #1055#1083#1072#1085
+          object serTotalSumm: TcxGridDBChartSeries
+            DataBinding.FieldName = 'TotalSumm'
+            DisplayText = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
           end
-          object serPlanAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamountaccum'
-            DisplayText = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serPaySumm: TcxGridDBChartSeries
+            DataBinding.FieldName = 'PaySumm'
+            DisplayText = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
           end
-          object serFactAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamount'
-            DisplayText = #1060#1072#1082#1090
-          end
-          object serFactAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamountaccum'
-            DisplayText = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serSummaSale: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaSale'
+            DisplayText = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
           end
         end
         object grChartLevel1: TcxGridLevel
@@ -196,7 +185,6 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitHeight = 503
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -207,13 +195,12 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         Groups = <>
         OptionsView.RowGrandTotalWidth = 118
         TabOrder = 0
-        ExplicitHeight = 503
-        object pcolPlanDate: TcxDBPivotGridField
-          AreaIndex = 2
+        object pcolOperDate: TcxDBPivotGridField
+          AreaIndex = 1
           AllowedAreas = [faColumn, faRow, faFilter]
           IsCaptionAssigned = True
-          Caption = #1044#1072#1090#1072
-          DataBinding.FieldName = 'PlanDate'
+          Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
+          DataBinding.FieldName = 'OperDate'
           Visible = True
           UniqueName = #1044#1072#1090#1072
         end
@@ -222,77 +209,68 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
           AllowedAreas = [faColumn, faRow, faFilter]
           IsCaptionAssigned = True
           Caption = #1053#1077#1076#1077#1083#1103
-          DataBinding.FieldName = 'PlanDate'
+          DataBinding.FieldName = 'OperDate'
           GroupInterval = giDateWeekOfYear
           Visible = True
           UniqueName = #1053#1077#1076#1077#1083#1103
         end
-        object pcolUnitName: TcxDBPivotGridField
+        object pcolJuridicalName: TcxDBPivotGridField
           Area = faRow
           AreaIndex = 0
           AllowedAreas = [faColumn, faRow, faFilter]
           IsCaptionAssigned = True
-          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-          DataBinding.FieldName = 'UnitName'
+          Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+          DataBinding.FieldName = 'JuridicalName'
           Visible = True
           UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         end
-        object pcolPlanAmount: TcxDBPivotGridField
+        object pcolTotalSumm: TcxDBPivotGridField
           Area = faData
           AreaIndex = 0
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1055#1083#1072#1085
-          DataBinding.FieldName = 'PlanAmount'
+          Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+          DataBinding.FieldName = 'TotalSumm'
           Visible = True
           UniqueName = #1055#1083#1072#1085
         end
-        object pcolFactAmount: TcxDBPivotGridField
+        object pcolPaySumm: TcxDBPivotGridField
           Area = faData
           AreaIndex = 1
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1060#1072#1082#1090
-          DataBinding.FieldName = 'FactAmount'
+          Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
+          DataBinding.FieldName = 'PaySumm'
           Visible = True
           UniqueName = #1060#1072#1082#1090
         end
-        object pcolDiffAmount: TcxDBPivotGridField
+        object pcolSummaSale: TcxDBPivotGridField
           Area = faData
           AreaIndex = 2
           AllowedAreas = [faFilter, faData]
           IsCaptionAssigned = True
-          Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-          DataBinding.FieldName = 'DiffAmount'
+          Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+          DataBinding.FieldName = 'SummaSale'
           Visible = True
           UniqueName = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077
-        end
-        object pcolDayOfWeek: TcxDBPivotGridField
-          AreaIndex = 1
-          IsCaptionAssigned = True
-          Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
-          DataBinding.FieldName = 'PlanDate'
-          GroupInterval = giDateDayOfWeek
-          Visible = True
-          UniqueName = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 797
-    ExplicitLeft = 8
-    ExplicitTop = -14
     ExplicitWidth = 797
     inherited deStart: TcxDateEdit
       Left = 83
       Top = 3
+      EditValue = 42614d
       ExplicitLeft = 83
       ExplicitTop = 3
     end
     inherited deEnd: TcxDateEdit
       Left = 239
       Top = 3
+      EditValue = 42614d
       ExplicitLeft = 239
       ExplicitTop = 3
       ExplicitWidth = 86
@@ -331,7 +309,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       Properties.ReadOnly = True
       Properties.UseNullString = True
       TabOrder = 5
-      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1102#1088'.'#1083#1080#1094#1086'>'
       Width = 289
     end
   end
@@ -343,20 +321,16 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end>
       Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
         end
         item
           StoredProc = spSelect
@@ -400,12 +374,60 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_Payment_PlanDialogForm'
+      FormNameParam.Value = 'TReport_Payment_PlanDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42614d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42614d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = ''
+          Component = JuridicalGuides
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 128
+    Top = 160
   end
   inherited MasterCDS: TClientDataSet
-    Top = 128
+    Left = 16
+    Top = 152
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Report_Payment_Plan'
@@ -420,31 +442,24 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
+        Name = 'inOurJuridicalId'
         Value = 41395d
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inQuasiSchedule'
-        Value = Null
-        Component = actQuasiSchedule
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
-    Top = 128
+    Top = 160
   end
   inherited BarManager: TdxBarManager
-    Top = 128
+    Top = 184
     DockControlHeights = (
       0
       0
@@ -452,6 +467,14 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -519,12 +542,16 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       Action = actGridToExcelPivot
       Category = 0
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
     Left = 24
-    Top = 176
+    Top = 200
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -532,16 +559,16 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         Component = deStart
       end>
     Left = 88
-    Top = 176
+    Top = 208
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
-    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnitTreeForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -561,40 +588,5 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
         MultiSelectSeparator = ','
       end>
     Left = 536
-  end
-  object rdUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = JuridicalGuides
-      end>
-    Left = 208
-    Top = 200
-  end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 272
-    Top = 168
   end
 end

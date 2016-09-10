@@ -1,4 +1,4 @@
-unit Report_MotionGoodsDialog;
+unit Report_Payment_PlanDialog;
 
 interface
 
@@ -9,10 +9,10 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
 
 type
-  TReport_MotionGoodsDialogForm = class(TParentForm)
+  TReport_Payment_PlanDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -21,32 +21,15 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoods: TcxButtonEdit;
-    edGoodsGroup: TcxButtonEdit;
-    edLocation: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    GuidesGoodsGroup: TdsdGuides;
-    GuidesLocation: TdsdGuides;
-    edUnitGroup: TcxButtonEdit;
+    edJuridical: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
-    GuidesUnitGroup: TdsdGuides;
-    ceAccountGroup: TcxButtonEdit;
-    cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cbInfoMoney: TcxCheckBox;
-    GuidesAccountGroup: TdsdGuides;
-    cxLabel8: TcxLabel;
-    edUnitGroup_by: TcxButtonEdit;
-    GuidesUnitGroup_by: TdsdGuides;
-    cxLabel9: TcxLabel;
-    edLocation_by: TcxButtonEdit;
-    GuidesLocation_by: TdsdGuides;
-    cbAllMO: TcxCheckBox;
-    cbAllAuto: TcxCheckBox;
+    JuridicalGuides: TdsdGuides;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
@@ -58,6 +41,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_MotionGoodsDialogForm);
+  RegisterClass(TReport_Payment_PlanDialogForm);
 
 end.

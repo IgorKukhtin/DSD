@@ -213,6 +213,10 @@ type
     SummSendOnPrice_40200: TcxGridDBColumn;
     CountSendOnPrice_10500_Weight: TcxGridDBColumn;
     CountSendOnPrice_10500: TcxGridDBColumn;
+    cbAllMO: TcxCheckBox;
+    cbAllAuto: TcxCheckBox;
+    actIsAllMO: TdsdDataSetRefresh;
+    actIsAllAuto: TdsdDataSetRefresh;
   private
   public
   end;

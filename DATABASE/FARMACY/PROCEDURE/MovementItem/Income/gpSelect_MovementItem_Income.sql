@@ -148,7 +148,7 @@ BEGIN
                            )   
                            
     , DublePrice AS        (SELECT MovementItem_Income_View.GoodsId
-                                 , zc_Color_Goods_Additional() AS DublePriceColour
+                                 , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour
                             FROM MovementItem_Income_View
                             WHERE MovementItem_Income_View.MovementId = inMovementId 
                               AND MovementItem_Income_View.isErased   = FALSE
@@ -212,12 +212,14 @@ BEGIN
               , Object_Price_View.PercentMarkup  ::TFloat   AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat AS Fix_Price
 
-              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 ELSE zc_Color_White() END AS Color_calc --вроде розовый
+              , zc_Color_White()  AS Color_calc
 
               , tmpGoods.Goods_isTop          ::Boolean
               , tmpGoods.Goods_PercentMarkup  ::TFloat 
               , tmpGoods.Goods_Price          ::TFloat 
-              , zc_Color_Black()       AS Color_ExpirationDate               --zc_Color_Blue 
+              , CASE WHEN (Object_Price_View.isTop = TRUE OR tmpGoods.Goods_isTop = TRUE) THEN 15993821 -- розовый 16440317 
+                     ELSE zc_Color_Black()
+                END        AS Color_ExpirationDate               --zc_Color_Blue 
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -288,13 +290,18 @@ BEGIN
               , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
 
-              , CASE WHEN Object_Price_View.isTop = TRUE THEN 16440317 WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
+              , CASE WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
 
-              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+              , CASE WHEN (Object_Price_View.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
+                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                     WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
+                     WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
+                     ELSE zc_Color_Black()
+                END      AS Color_ExpirationDate
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -331,7 +338,7 @@ BEGIN
                        SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                       )
    , DublePrice AS         (SELECT MovementItem_Income_View.GoodsId
-                                 , zc_Color_Goods_Additional() AS DublePriceColour
+                                 , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour 
                             FROM MovementItem_Income_View
                             WHERE MovementItem_Income_View.MovementId = inMovementId 
                               AND MovementItem_Income_View.isErased   = FALSE
@@ -443,12 +450,17 @@ BEGIN
               , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END ::TFloat AS Fix_Price
 
-              , CASE  WHEN Object_Price_View.isTop = TRUE THEN 16440317 WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
+              , CASE WHEN COALESCE (DublePrice.DublePriceColour, zc_Color_White()) <> zc_Color_White() THEN DublePrice.DublePriceColour ELSE zc_Color_White() END AS Color_calc --вроде розовый
 
               , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) ::Boolean AS Goods_isTop          
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
-              , CASE WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+              , CASE WHEN (Object_Price_View.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
+                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                     WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
+                     WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
+                     ELSE zc_Color_Black()
+                END      AS Color_ExpirationDate                --vbAVGDateEnd
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId

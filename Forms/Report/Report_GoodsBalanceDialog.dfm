@@ -155,15 +155,31 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     TabOrder = 16
     Width = 166
   end
+  object cbAllMO: TcxCheckBox
+    Left = 241
+    Top = 27
+    Caption = #1042#1089#1077' '#1052#1054
+    Properties.ReadOnly = False
+    TabOrder = 17
+    Width = 64
+  end
+  object cbAllAuto: TcxCheckBox
+    Left = 322
+    Top = 27
+    Caption = #1042#1089#1077' '#1040#1074#1090#1086
+    Properties.ReadOnly = False
+    TabOrder = 18
+    Width = 71
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 264
-    Top = 8
+    Left = 240
+    Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 392
-    Top = 24
+    Top = 104
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -175,8 +191,8 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 336
-    Top = 12
+    Left = 304
+    Top = 92
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -186,6 +202,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -193,6 +210,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
@@ -201,6 +219,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -209,6 +228,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
@@ -216,6 +236,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -224,6 +245,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupId'
@@ -231,6 +253,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = GuidesUnitGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitGroupName'
@@ -239,6 +262,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LocationId'
@@ -246,6 +270,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = GuidesLocation
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LocationName'
@@ -254,6 +279,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
@@ -261,6 +287,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -269,6 +296,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isInfoMoney'
@@ -276,6 +304,23 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = cbInfoMoney
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAllMO'
+        Value = Null
+        Component = cbAllMO
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAllAuto'
+        Value = Null
+        Component = cbAllAuto
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 176
@@ -285,6 +330,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -295,6 +341,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -303,6 +350,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 159
@@ -312,6 +360,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -322,6 +371,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -330,6 +380,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 168
@@ -339,6 +390,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -349,6 +401,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -357,6 +410,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 96
@@ -366,6 +420,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     LookupControl = edUnitGroup
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -377,6 +432,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -385,6 +441,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 96
@@ -394,6 +451,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -403,6 +461,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         Component = GuidesAccountGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -411,11 +470,13 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Goods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 45

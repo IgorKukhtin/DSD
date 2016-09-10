@@ -1177,7 +1177,6 @@ inherited OrderInternalForm: TOrderInternalForm
     ColorRuleList = <
       item
         ValueColumn = clPartionGoodsDateColor
-        BackGroundValueColumn = colisTopColor
         ColorValueList = <>
       end
       item

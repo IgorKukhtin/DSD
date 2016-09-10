@@ -694,9 +694,10 @@
       Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
     end
     object edPointNumber: TcxTextEdit
-      Left = 220
-      Top = 64
+      Left = 215
+      Top = 57
       Properties.ReadOnly = False
+      Style.BorderColor = clFuchsia
       TabOrder = 11
       Width = 99
     end

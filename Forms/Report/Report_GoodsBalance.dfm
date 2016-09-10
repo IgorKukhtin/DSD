@@ -1595,12 +1595,28 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072':'
     end
     object cbInfoMoney: TcxCheckBox
-      Left = 221
+      Left = 170
       Top = 30
       Action = actIsInfoMoney
       Properties.ReadOnly = False
       TabOrder = 14
-      Width = 166
+      Width = 154
+    end
+    object cbAllMO: TcxCheckBox
+      Left = 328
+      Top = 30
+      Action = actIsAllMO
+      Properties.ReadOnly = False
+      TabOrder = 15
+      Width = 64
+    end
+    object cbAllAuto: TcxCheckBox
+      Left = 400
+      Top = 30
+      Action = actIsAllAuto
+      Properties.ReadOnly = False
+      TabOrder = 16
+      Width = 71
     end
   end
   object cbGoodsKind: TcxCheckBox
@@ -2056,6 +2072,22 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Name = 'isInfoMoney'
           Value = Null
           Component = cbInfoMoney
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAllMO'
+          Value = Null
+          Component = cbAllMO
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAllAuto'
+          Value = Null
+          Component = cbAllAuto
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2807,6 +2839,32 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actIsAllMO: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1042#1089#1077' '#1052#1054
+      Hint = #1042#1089#1077' '#1052#1054
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actIsAllAuto: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1042#1089#1077' '#1040#1074#1090#1086
+      Hint = #1042#1089#1077' '#1040#1074#1090#1086
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_GoodsBalance'
@@ -2876,6 +2934,22 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Name = 'inIsInfoMoney'
         Value = Null
         Component = cbInfoMoney
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAllMO'
+        Value = Null
+        Component = cbAllMO
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAllAuto'
+        Value = Null
+        Component = cbAllAuto
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3150,8 +3224,8 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 5
+    Left = 416
+    Top = 85
   end
   object FormParams: TdsdFormParams
     Params = <

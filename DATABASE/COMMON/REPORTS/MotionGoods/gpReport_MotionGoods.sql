@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate          TDateTime , --
@@ -15,6 +17,8 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inUnitGroupId_by     Integer,    -- группа подразделений 1
     IN inLocationId_by      Integer,    -- место учета 1
     IN inIsInfoMoney        Boolean,    --
+    IN inIsAllMO            Boolean,    -- все МО
+    IN inIsAllAuto          Boolean,    -- все Авто
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
@@ -796,7 +800,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
