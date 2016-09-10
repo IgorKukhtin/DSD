@@ -34,7 +34,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     clGoodsGroupName: TcxGridDBColumn;
     clNDSKindName: TcxGridDBColumn;
-    Amount_Conteiner: TcxGridDBColumn;
+    Amount_Container: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
     isError: TcxGridDBColumn;

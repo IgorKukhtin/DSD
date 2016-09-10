@@ -3,6 +3,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -253
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -48,7 +49,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa_Conteiner
+              Column = Summa_Container
             end
             item
               Format = ',0.00'
@@ -62,7 +63,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Conteiner
+              Column = Amount_Container
             end
             item
               Format = ',0.####'
@@ -101,7 +102,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa_Conteiner
+              Column = Summa_Container
             end
             item
               Format = ',0.00'
@@ -115,7 +116,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount_Conteiner
+              Column = Amount_Container
             end
             item
               Format = ',0.####'
@@ -204,16 +205,16 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 77
           end
-          object Amount_Conteiner: TcxGridDBColumn
+          object Amount_Container: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1087#1088#1086#1074#1086#1076#1082#1072#1084
-            DataBinding.FieldName = 'Amount_Conteiner'
+            DataBinding.FieldName = 'Amount_Container'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 90
           end
           object Amount_Diff: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1086#1090#1082#1083'.'
@@ -251,9 +252,9 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object Summa_Conteiner: TcxGridDBColumn
+          object Summa_Container: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1086#1074#1086#1076#1082#1072#1084
-            DataBinding.FieldName = 'Summa_Conteiner'
+            DataBinding.FieldName = 'Summa_Container'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -274,7 +275,7 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             DataBinding.FieldName = 'isError'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 58
           end
         end
       end
@@ -546,10 +547,6 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True

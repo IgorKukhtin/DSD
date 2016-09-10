@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpReport_Movement_CheckError (Integer, TDateTime, TDateT
 
 CREATE OR REPLACE FUNCTION  gpReport_Movement_CheckError(
     IN inUnitId           Integer  ,  -- Подразделение
-    IN inDateStart        TDateTime,  -- Дата начала
-    IN inDateFinal        TDateTime,  -- Дата окончания
+    IN inStartDate        TDateTime,  -- Дата начала
+    IN inEndDate        TDateTime,  -- Дата окончания
     IN inIsError          Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -20,10 +20,10 @@ RETURNS TABLE (
   GoodsGroupName   TVarChar, 
   NDSKindName      TVarChar,
   Amount_Movement  TFloat,
-  Amount_Conteiner TFloat,
+  Amount_Container TFloat,
   Price            TFloat,
   Summa_Movement   TFloat,
-  Summa_Conteiner  TFloat,
+  Summa_Container  TFloat,
   Amount_Diff      Tfloat,   
   Summa_Diff       Tfloat,      
   isError          Boolean 
@@ -39,13 +39,14 @@ BEGIN
     -- Результат
     RETURN QUERY
           WITH
-             tmpData AS (SELECT Movement_Check.Id                           AS MovementId
+        tmpMovement AS (SELECT Movement_Check.Operdate
+                              , Movement_Check.InvNumber
+                              , MI_Check.Id                                 AS MovementItemId
                               , MovementLinkObject_Unit.ObjectId            AS UnitId
-                              , CASE WHEN inIsError = TRUE THEN MI_Check.ObjectId ELSE 0 END                        AS GoodsId
+                              , MI_Check.ObjectId                           AS GoodsId
+                              , COALESCE (MIFloat_Price.ValueData, 0)       AS Price
                               , SUM (COALESCE (MI_Check.Amount,0))          AS Amount_Movement
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount_Conteiner
                               , SUM (COALESCE (MI_Check.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0))         AS Summa_Movement
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS Summa_Conteiner
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
@@ -58,47 +59,83 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemContainer AS MIContainer
+                            /*  LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
+                                                             AND MIContainer.DescId = zc_MIContainer_Count() */
                          WHERE Movement_Check.DescId = zc_Movement_Check()
-                           AND Movement_Check.OperDate >= inDateStart AND Movement_Check.OperDate < inDateFinal + INTERVAL '1 DAY'
+                           AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                         GROUP BY Movement_Check.Id               
+                         GROUP BY Movement_Check.Operdate
+                                , Movement_Check.InvNumber               
                                 , MovementLinkObject_Unit.ObjectId
-                                , CASE WHEN inIsError = TRUE THEN MI_Check.ObjectId ELSE 0 END
+                                , MI_Check.ObjectId
+                                , MI_Check.Id 
+                                , COALESCE (MIFloat_Price.ValueData, 0) 
 --                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
+
+      , tmpContainer AS (SELECT tmpMovement.MovementItemId                      AS MovementItemId
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount_Container
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * tmpMovement.Price) AS Summa_Container
+                         FROM tmpMovement
+                              LEFT JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.MovementItemId = tmpMovement.MovementItemId
+                                                             AND MIContainer.DescId = zc_MIContainer_Count()
+                         GROUP BY tmpMovement.MovementItemId  
+                 )
       
-        SELECT Movement_Check.Operdate
-             , Movement_Check.InvNumber
+  , tmpALL AS (SELECT tmp.Operdate
+                    , tmp.InvNumber
+                    , tmp.UnitId
+                    , tmp.GoodsId
+                    , SUM(tmp.Amount_Movement)  AS Amount_Movement
+                    , SUM(tmp.Summa_Movement)   AS Summa_Movement
+                    , SUM(tmp.Amount_Container) AS Amount_Container
+                    , SUM(tmp.Summa_Container)  AS Summa_Container
+               FROM (SELECT tmpMovement.Operdate
+                          , tmpMovement.InvNumber
+                          , tmpMovement.UnitId
+                          , CASE WHEN inIsError = TRUE THEN tmpMovement.GoodsId ELSE 0 END AS GoodsId
+                          , tmpMovement.Amount_Movement
+                          , tmpMovement.Summa_Movement
+                          , tmpContainer.Amount_Container
+                          , tmpContainer.Summa_Container
+                     FROM tmpMovement
+                        LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMovement.MovementItemId
+                     ) AS tmp
+                GROUP BY tmp.Operdate
+                       , tmp.InvNumber
+                       , tmp.UnitId
+                       , tmp.GoodsId
+               )
+
+        SELECT tmpALL.Operdate
+             , tmpALL.InvNumber
              , Object_Unit.ValueData        AS UnitName
              , Object_Juridical.ValueData   AS OurJuridicalName
-             , Object_Goods_View.Id                        AS GoodsId
              , Object_Goods_View.GoodsCodeInt  ::Integer   AS GoodsCode
              , Object_Goods_View.GoodsName                 AS GoodsName
              , Object_Goods_View.GoodsGroupName            AS GoodsGroupName
              , Object_Goods_View.NDSKindName               AS NDSKindName
            
-             , tmpData.Amount_Movement  :: TFloat
-             , tmpData.Amount_Conteiner :: TFloat
-             , CASE WHEN tmpData.Amount_Movement <> 0 THEN tmpData.Summa_Movement / tmpData.Amount_Movement ELSE 0 END :: TFloat AS Price
+             , tmpALL.Amount_Movement  :: TFloat
+             , tmpALL.Amount_Container :: TFloat
+             , CASE WHEN tmpALL.Amount_Movement <> 0 THEN tmpALL.Summa_Movement / tmpALL.Amount_Movement ELSE 0 END :: TFloat AS Price
 
-             , tmpData.Summa_Movement  :: TFloat
-             , tmpData.Summa_Conteiner :: TFloat
+             , tmpALL.Summa_Movement  :: TFloat
+             , tmpALL.Summa_Container :: TFloat
         
-             , (tmpData.tmpData.Amount_Movement - tmpData.Amount_Conteiner) :: TFloat AS Amount_Diff
-             , (tmpData.tmpData.Summa_Movement - tmpData.Summa_Conteiner)   :: TFloat AS Summa_Diff
-             , CASE WHEN (tmpData.tmpData.Amount_Movement - tmpData.Amount_Conteiner) <> 0 THEN TRUE ELSE FALSE END AS isError
+             , (tmpALL.Amount_Movement - tmpALL.Amount_Container) :: TFloat AS Amount_Diff
+             , (tmpALL.Summa_Movement - tmpALL.Summa_Container)   :: TFloat AS Summa_Diff
+             , CASE WHEN (tmpALL.Amount_Movement - tmpALL.Amount_Container) <> 0 THEN TRUE ELSE FALSE END AS isError
   
-        FROM tmpData
-             LEFT JOIN Movement AS Movement_Check ON Movement_Check = tmpData.MovementId
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId 
+        FROM tmpALL
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpALL.UnitId 
              LEFT JOIN ObjectLink AS ObjectLink_Juridical ON ObjectLink_Juridical.ObjectId = Object_Unit.Id 
                                                          AND ObjectLink_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
-             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
+             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpALL.GoodsId
 
        ;
 END;
@@ -108,7 +145,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 14.03.16         *
+ 10.09.16         *
 */
 
 -- тест
