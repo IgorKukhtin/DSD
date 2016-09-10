@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
 )
 RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
              , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
-             , ByObjectName TVarChar, GoodsName TVarChar
+             , ByObjectItemName TVarChar, ByObjectName TVarChar, GoodsItemName TVarChar, GoodsName TVarChar
              , PaidKindName TVarChar
              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
@@ -113,9 +113,12 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName AS InfoMoneyName_Detail
            -- , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
-           --, Object_by.ObjectCode         AS ByObjectCode
+           , ObjectDesc_by.ItemName    AS ByObjectItemName
+           -- , Object_by.ObjectCode         AS ByObjectCode
            , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_by.ValueData) :: TVarChar AS ByObjectName
-           --, Object_Goods.ObjectCode      AS GoodsCode
+
+           , ObjectDesc_Goods.ItemName AS GoodsItemName
+           -- , Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
 
            , Object_PaidKind.ValueData   AS PaidKindName
@@ -249,12 +252,14 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
                                               ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
+                                             AND ContainerLinkObject_Member.ObjectId > 0
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
                                               ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
+                                             AND ContainerLinkObject_Car.ObjectId > 0
                 /*LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()*/
@@ -296,8 +301,13 @@ BEGIN
 
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            -- LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
+           -- LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, CASE WHEN CarId <> 0 THEN CarId WHEN MemberId <> 0 THEN MemberId ELSE UnitId END)))
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
+
+           LEFT JOIN ObjectDesc AS ObjectDesc_by    ON ObjectDesc_by.Id    = Object_by.DescId
+           LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
+
            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = JuridicalBasisId
            LEFT JOIN Object AS Object_Business ON Object_Business.Id = BusinessId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Account_View.PaidKindId
@@ -332,4 +342,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.07.2016', inEndDate:= '31.07.2016', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016', inSession:= zfCalc_UserAdmin())

@@ -192,11 +192,13 @@ BEGIN
                                   ON ObjectFloat_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
-                                                     ON Object_MarginCategoryLink_unit.UnitId = inUnitId
+                                                     ON Object_MarginCategoryLink_unit.UnitId      = inUnitId
                                                     AND Object_MarginCategoryLink_unit.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
+                                                    AND Object_MarginCategoryLink_unit.isErased    = FALSE
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
                                                      ON COALESCE (Object_MarginCategoryLink_all.UnitId, 0) = 0
                                                     AND Object_MarginCategoryLink_all.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
+                                                    AND Object_MarginCategoryLink_all.isErased    = FALSE
                                                     AND Object_MarginCategoryLink_unit.JuridicalId IS NULL
 
             LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink_unit.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)

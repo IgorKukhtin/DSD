@@ -326,4 +326,4 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 
 -- тест
 -- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 4, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
--- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 4797
+-- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 17420 -- "Аптека_1 пр_Правды_6"

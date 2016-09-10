@@ -10,9 +10,10 @@ CREATE OR REPLACE VIEW Object_MarginCategoryLink_View AS
            , Object_Unit.ValueData                                      AS UnitName
            , ObjectLink_MarginCategoryLink_Juridical.ChildObjectId      AS JuridicalId
            , Object_Juridical.ValueData                                 AS JuridicalName
-    
+           , Object_MarginCategoryLink.isErased                         AS isErased
 
      FROM ObjectLink AS ObjectLink_MarginCategoryLink_MarginCategory
+           LEFT JOIN Object AS Object_MarginCategoryLink ON Object_MarginCategoryLink.Id = ObjectLink_MarginCategoryLink_MarginCategory.ObjectId
            LEFT JOIN Object AS Object_MarginCategory ON Object_MarginCategory.Id = ObjectLink_MarginCategoryLink_MarginCategory.ChildObjectId
 
            LEFT JOIN ObjectLink AS ObjectLink_MarginCategoryLink_Unit

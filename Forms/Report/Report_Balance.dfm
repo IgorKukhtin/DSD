@@ -28,7 +28,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -115,16 +115,32 @@ object Report_BalanceForm: TReport_BalanceForm
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
-    object pvObjectDestination: TcxDBPivotGridField
+    object pvByObjectItemName: TcxDBPivotGridField
       AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      DataBinding.FieldName = 'ByObjectItemName'
+      Visible = True
+      UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+    end
+    object pvObjectDestination: TcxDBPivotGridField
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
       DataBinding.FieldName = 'GoodsName'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
+    object pvGoodsItemName: TcxDBPivotGridField
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'GoodsItemName'
+      Visible = True
+      UniqueName = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
     object pvPaidKindName: TcxDBPivotGridField
-      AreaIndex = 3
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1053#1072#1083'/'#1041#1085
       DataBinding.FieldName = 'PaidKindName'
@@ -132,7 +148,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1053#1072#1083'/'#1041#1085
     end
     object pvJuridicalBasisName: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 6
       IsCaptionAssigned = True
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
       DataBinding.FieldName = 'JuridicalBasisName'
@@ -140,7 +156,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
     end
     object pvBusinessName: TcxDBPivotGridField
-      AreaIndex = 5
+      AreaIndex = 7
       IsCaptionAssigned = True
       Caption = #1041#1080#1079#1085#1077#1089
       DataBinding.FieldName = 'BusinessName'
@@ -427,24 +443,28 @@ object Report_BalanceForm: TReport_BalanceForm
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -452,12 +472,14 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = FormParams
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -465,12 +487,14 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountDirectionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountDirectionName'
@@ -478,12 +502,14 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = FormParams
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = FormParams
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -491,12 +517,14 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = FormParams
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessId'
           Value = Null
           Component = FormParams
           ComponentItem = 'BusinessId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BusinessName'
@@ -504,6 +532,7 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = FormParams
           ComponentItem = 'BusinessName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -539,6 +568,7 @@ object Report_BalanceForm: TReport_BalanceForm
       FormName = 'TReport_BalanceDialogForm'
       FormNameParam.Value = 'TReport_BalanceDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -546,6 +576,7 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -553,6 +584,7 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -573,6 +605,7 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -580,6 +613,7 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -596,6 +630,7 @@ object Report_BalanceForm: TReport_BalanceForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -630,18 +665,21 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = PivotAddOn
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RootType'
         Value = '0'
         Component = FormParams
         ComponentItem = 'RootType'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = Null
         Component = FormParams
         ComponentItem = 'AccountGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -649,12 +687,14 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = FormParams
         ComponentItem = 'AccountGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = Null
         Component = FormParams
         ComponentItem = 'AccountDirectionId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
@@ -662,12 +702,14 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = FormParams
         ComponentItem = 'AccountDirectionName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
         Value = Null
         Component = FormParams
         ComponentItem = 'AccountId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -675,12 +717,14 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = FormParams
         ComponentItem = 'AccountName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = Null
         Component = FormParams
         ComponentItem = 'InfoMoneyId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -688,30 +732,35 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = FormParams
         ComponentItem = 'InfoMoneyName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectDirectionId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ObjectDirectionId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectDestinationId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'ObjectDestinationId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'JuridicalBasisId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = Null
         Component = FormParams
         ComponentItem = 'BusinessId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
@@ -719,6 +768,7 @@ object Report_BalanceForm: TReport_BalanceForm
         Component = FormParams
         ComponentItem = 'BusinessName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -729,47 +779,57 @@ object Report_BalanceForm: TReport_BalanceForm
       item
         Name = 'AccountId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 360
     Top = 184
