@@ -1,6 +1,6 @@
 -- Function: gpReport_GoodsBalance()
 
-DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsBalance(
     IN inStartDate          TDateTime , --
@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsBalance(
     IN inGoodsGroupId       Integer,    -- группа товара
     IN inGoodsId            Integer,    -- товар
     IN inIsInfoMoney        Boolean,    --
+    IN inIsAllMO            Boolean,    -- все МО
+    IN inIsAllAuto          Boolean,    -- все Авто
     IN inSession            TVarChar   -- пользователь
 )
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar

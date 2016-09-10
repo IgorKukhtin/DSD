@@ -179,6 +179,10 @@ type
     InfoMoneyName_all_Detail: TcxGridDBColumn;
     actPrintBarCode: TdsdPrintAction;
     bbPrintBarCode: TdxBarButton;
+    actIsAllMO: TdsdDataSetRefresh;
+    actIsAllAuto: TdsdDataSetRefresh;
+    cbAllMO: TcxCheckBox;
+    cbAllAuto: TcxCheckBox;
   private
   public
   end;

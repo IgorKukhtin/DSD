@@ -45,6 +45,8 @@ type
     cxLabel9: TcxLabel;
     edLocation_by: TcxButtonEdit;
     GuidesLocation_by: TdsdGuides;
+    cbAllMO: TcxCheckBox;
+    cbAllAuto: TcxCheckBox;
   private
     { Private declarations }
   public

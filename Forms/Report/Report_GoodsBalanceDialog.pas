@@ -39,6 +39,8 @@ type
     cxLabel7: TcxLabel;
     cbInfoMoney: TcxCheckBox;
     GuidesAccountGroup: TdsdGuides;
+    cbAllMO: TcxCheckBox;
+    cbAllAuto: TcxCheckBox;
   private
     { Private declarations }
   public
