@@ -73,7 +73,6 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPriceSale
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -126,7 +125,6 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colPriceSale
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -233,15 +231,6 @@ inherited Report_MovementCheckErrorForm: TReport_MovementCheckErrorForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object colPriceSale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'PriceSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 58
           end
           object Summa_Movement: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1086#1082'.'

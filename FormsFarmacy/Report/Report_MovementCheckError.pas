@@ -27,7 +27,6 @@ type
     colGoodsName: TcxGridDBColumn;
     Amount_Movement: TcxGridDBColumn;
     Price: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
     Summa_Diff: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
