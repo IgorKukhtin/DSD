@@ -889,6 +889,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMCSForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMCS_LiteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMCS_LiteForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRecalcMCS_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRecalcMCS_DialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceHistoryForm'));

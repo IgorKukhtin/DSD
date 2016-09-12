@@ -200,6 +200,11 @@ type
     ChangePercent: TcxGridDBColumn;
     ChangePercent_Sale: TcxGridDBColumn;
     MovementPromo_Sale: TcxGridDBColumn;
+    bbContractChoice: TdxBarButton;
+    spUpdateMovementContract: TdsdStoredProc;
+    actContractOpenForm: TOpenChoiceForm;
+    macContractOpenForm: TMultiAction;
+    actUpdateMovementContract: TdsdExecStoredProc;
   private
     { Private declarations }
   public
