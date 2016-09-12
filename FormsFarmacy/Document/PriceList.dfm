@@ -3,7 +3,7 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 753
   ExplicitWidth = 769
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -68,6 +68,11 @@ inherited PriceListForm: TPriceListForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
