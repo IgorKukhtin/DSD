@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Pack()         RETURNS Integer A
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Kopchenie()    RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Kopchenie'    AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_Send()         RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_Send'         AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_ReturnIn()     RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_ReturnIn'     AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Auto_ReComplete()   RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Auto_ReComplete'   AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -62,6 +63,13 @@ BEGIN
                                    , inCode:= 1008
                                    , inName:= 'Возврат - привязка к продаже'
                                    , inEnumName:= 'zc_Enum_Process_Auto_ReturnIn');
+
+ -- для 
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Auto_ReComplete()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1009
+                                   , inName:= 'Перепроведение - в закрытом периоде'
+                                   , inEnumName:= 'zc_Enum_Process_Auto_ReComplete');
 
  
 END $$;

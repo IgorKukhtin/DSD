@@ -100,7 +100,7 @@ BEGIN
     IF COALESCE(vbUserMail, '') = '' THEN 
        vbUserMail := '';
     ELSE
-       vbUserMail := ', '||vbUserMail;
+       vbUserMail := ', '|| CASE WHEN LOWER (TRIM (vbUserMail)) = LOWER ('kukhtinigor@gmail.com') THEN 'ashtu777@gmail.com' ELSE vbUserMail END;
     END IF;
     
     -- еще

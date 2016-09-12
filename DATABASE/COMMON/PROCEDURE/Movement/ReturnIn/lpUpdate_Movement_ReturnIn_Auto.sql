@@ -123,7 +123,7 @@ BEGIN
            WITH -- текущий возврат - нашли "ручную" привязку
                 tmpMI_all AS (SELECT _tmpItem.MovementItemId
                                    , _tmpItem.GoodsId
-                                   , _tmpItem.GoodsKindId
+                                   , CASE WHEN _tmpItem.GoodsKindId = 0 THEN zc_GoodsKind_Basis() ELSE _tmpItem.GoodsKindId END AS GoodsKindId
                                    , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN _tmpItem.OperCount_Partner ELSE _tmpItem.OperCount END AS Amount
                                    , _tmpItem.Price_original                               AS Price_original
                                    , _tmpItem.MovementId_sale
@@ -167,7 +167,7 @@ BEGIN
                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                               WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = tmpMI.GoodsKindId
+                               WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = tmpMI.GoodsKindId
                                GROUP BY tmpMI.MovementItemId
                                       , tmpMI.MovementId_sale
                                       , tmpMI.GoodsId
@@ -203,7 +203,7 @@ BEGIN
                                                                     ON MIFloat_Price.MovementItemId = MovementItem.ParentId -- !!!из  "главного"!!!
                                                                    AND MIFloat_Price.DescId         = zc_MIFloat_Price()
                                                                    -- AND MIFloat_Price.ValueData      = tmpMI_sale.Price_original
-                                   WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = tmpMI_sale.GoodsKindId
+                                   WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = tmpMI_sale.GoodsKindId
                                    GROUP BY tmpMI_sale.MovementId_sale
                                           , tmpMI_sale.GoodsId
                                           , tmpMI_sale.GoodsKindId
@@ -487,7 +487,7 @@ BEGIN
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
                    WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
-                     AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId
+                     AND (_tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId OR (_tmpResult_Sale_Auto.GoodsKindId = 0 AND vbGoodsKindId = zc_GoodsKind_Basis()))
                      AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
                      AND _tmpResult_Sale_Auto.PartnerId      = vbPartnerId
                      AND _tmpResult_Sale_Auto.MovementDescId = vbMovementDescId
@@ -535,7 +535,7 @@ BEGIN
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
                    WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
-                     AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId
+                     AND (_tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId OR (_tmpResult_Sale_Auto.GoodsKindId = 0 AND vbGoodsKindId = zc_GoodsKind_Basis()))
                      AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
                      AND _tmpResult_Sale_Auto.PartnerId      = vbPartnerId
                      AND _tmpResult_Sale_Auto.MovementDescId <> vbMovementDescId -- !!!с другим значением!!!
@@ -588,6 +588,7 @@ BEGIN
                    FROM _tmpResult_Sale_Auto
                    WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
                      AND _tmpResult_Sale_Auto.GoodsKindId    <> vbGoodsKindId -- !!!без этого параметра!!!
+                     AND _tmpResult_Sale_Auto.GoodsKindId    <> 0
                      AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
                      AND _tmpResult_Sale_Auto.PartnerId      = vbPartnerId
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
