@@ -60,15 +60,11 @@ BEGIN
  WHERE UserProtocol.OperDate BETWEEN inStartDate AND inEndDate
    AND (UserProtocol.UserId = inUserId OR 0 = inUserId);
 
---inUserId        Integer,    -- пользователь  
-  --  IN inObjectDescId  Integer,    -- тип объекта
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_UserProtocol (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -79,5 +75,4 @@ ALTER FUNCTION gpSelect_UserProtocol (TDateTime, TDateTime, Integer, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 
-                                                                
+-- SELECT * FROM gpSelect_UserProtocol (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 

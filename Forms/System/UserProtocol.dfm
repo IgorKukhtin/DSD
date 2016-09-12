@@ -1,25 +1,25 @@
 inherited UserProtocolForm: TUserProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1096#1080#1073#1086#1082
-  ClientHeight = 323
+  ClientHeight = 319
   ClientWidth = 782
   AddOnFormData.isSingle = False
   ExplicitWidth = 798
-  ExplicitHeight = 361
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 782
-    Height = 266
+    Height = 262
     ExplicitWidth = 782
     ExplicitHeight = 266
-    ClientRectBottom = 266
+    ClientRectBottom = 262
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
       ExplicitHeight = 266
       inherited cxGrid: TcxGrid
         Width = 782
-        Height = 266
+        Height = 262
         ExplicitWidth = 782
         ExplicitHeight = 266
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -43,14 +43,6 @@ inherited UserProtocolForm: TUserProtocolForm
             Options.Editing = False
             Width = 99
           end
-          object clMemberName: TcxGridDBColumn
-            Caption = #1060#1048#1054
-            DataBinding.FieldName = 'MemberName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
           object colProtocolData: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077
             DataBinding.FieldName = 'ProtocolData'
@@ -60,25 +52,26 @@ inherited UserProtocolForm: TUserProtocolForm
             Options.Editing = False
             Width = 505
           end
-          object BranchCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1092'.'
-            DataBinding.FieldName = 'BranchCode'
+          object clMemberName: TcxGridDBColumn
+            Caption = #1060#1048#1054
+            DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 100
           end
-          object BranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
+          object PositionName: TcxGridDBColumn
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 95
           end
           object UnitCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087'.'
             DataBinding.FieldName = 'UnitCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -92,13 +85,22 @@ inherited UserProtocolForm: TUserProtocolForm
             Options.Editing = False
             Width = 102
           end
-          object PositionName: TcxGridDBColumn
-            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-            DataBinding.FieldName = 'PositionName'
+          object BranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092'.'
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 45
+          end
+          object BranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -174,7 +176,8 @@ inherited UserProtocolForm: TUserProtocolForm
     Top = 95
   end
   inherited BarManager: TdxBarManager
-    Top = 55
+    Left = 144
+    Top = 103
     DockControlHeights = (
       0
       0

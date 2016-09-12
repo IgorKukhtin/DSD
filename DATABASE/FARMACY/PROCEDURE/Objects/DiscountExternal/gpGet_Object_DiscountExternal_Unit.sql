@@ -63,10 +63,10 @@ BEGIN
                                  AND ObjectLink_Unit.ChildObjectId = vbUnitId
 
             LEFT JOIN ObjectString AS ObjectString_User
-                                   ON ObjectString_User.ObjectId = Object_DiscountExternalTools.Id 
+                                   ON ObjectString_User.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                   AND ObjectString_User.DescId = zc_ObjectString_DiscountExternalTools_User()
             LEFT JOIN ObjectString AS ObjectString_Password
-                                   ON ObjectString_Password.ObjectId = Object_DiscountExternalTools.Id 
+                                   ON ObjectString_Password.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                   AND ObjectString_Password.DescId = zc_ObjectString_DiscountExternalTools_Password()
 
        WHERE Object_DiscountExternal.Id = inId;
