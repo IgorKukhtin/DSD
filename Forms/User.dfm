@@ -227,14 +227,16 @@ object UserForm: TUserForm
         Images = dmMain.SortImageList
         OptionsCustomize.ColumnHiding = True
         OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Appending = True
         OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsView.ColumnAutoWidth = True
         OptionsView.GroupByBox = False
         OptionsView.HeaderAutoHeight = True
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object colRoleName: TcxGridDBColumn
+        object RoleName: TcxGridDBColumn
           Caption = #1056#1086#1083#1080
           DataBinding.FieldName = 'RoleName'
           PropertiesClassName = 'TcxButtonEditProperties'
@@ -246,9 +248,9 @@ object UserForm: TUserForm
             end>
           Width = 159
         end
-        object colUnitName: TcxGridDBColumn
-          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-          DataBinding.FieldName = 'UnitName'
+        object Name: TcxGridDBColumn
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+          DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
@@ -258,9 +260,9 @@ object UserForm: TUserForm
             end>
           Width = 232
         end
-        object colPeriod: TcxGridDBColumn
+        object CloseDate_excl: TcxGridDBColumn
           Caption = #1055#1077#1088#1080#1086#1076
-          DataBinding.FieldName = 'Period'
+          DataBinding.FieldName = 'CloseDate_excl'
           Width = 68
         end
       end
@@ -867,7 +869,7 @@ object UserForm: TUserForm
   end
   object PeriodCloseCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'UserId'
+    IndexFieldNames = 'UserId_excl'
     MasterFields = 'Id'
     MasterSource = DataSource
     PacketRecords = 0
