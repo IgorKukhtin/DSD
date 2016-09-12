@@ -233,6 +233,60 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
     end
   end
   inherited ActionList: TActionList
+    object macGoodsLinkDeleteSimpl: TMultiAction [0]
+      Category = 'Delete'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'GoodsId'
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'Code'
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = Null
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = MasterCDS
+          ToParam.ComponentItem = 'Name'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDeleteLink
+        end
+        item
+          Action = DataSetPost
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1091' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1091' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 2
+    end
+    object mactGoodsLinkDeleteList: TMultiAction
+      Category = 'Delete'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macGoodsLinkDeleteSimpl
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1089#1074#1103#1079#1077#1081'?'
+      InfoAfterExecute = #1057#1074#1103#1079#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099'!'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 2
+    end
     object mactGoodsLinkDelete: TMultiAction
       Category = 'Delete'
       MoveParams = <
@@ -338,6 +392,31 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1100' '#1090#1086#1074#1072#1088#1072
       ImageIndex = 27
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
+    end
+    object spSetGoodsLink: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGoodsPriceListLink
+      StoredProcList = <
+        item
+          StoredProc = spGoodsPriceListLink
+        end>
+      Caption = 'spSetGoodsLink'
+    end
+    object macSetGoodsLink: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spSetGoodsLink
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1089#1090#1072#1085#1086#1074#1082#1077' '#1089#1074#1103#1079#1077#1081'?'
+      InfoAfterExecute = #1057#1074#1103#1079#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1099'!'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1074#1103#1079#1080' '#1042#1089#1077#1093' '#1090#1086#1074#1072#1088#1086#1074
+      ImageIndex = 27
     end
     object mactChoiceGoodsForm: TMultiAction
       Category = 'DSDLib'
@@ -540,6 +619,17 @@ inherited ChoiceGoodsFromPriceListForm: TChoiceGoodsFromPriceListForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 552
     Top = 200
+  end
+  inherited PopupMenu: TPopupMenu
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N3: TMenuItem
+      Action = macSetGoodsLink
+    end
+    object N4: TMenuItem
+      Action = mactGoodsLinkDeleteList
+    end
   end
   object spSetPriceListLink: TdsdStoredProc
     StoredProcName = 'gpUpdate_LoadPriceList_GoodsId'
