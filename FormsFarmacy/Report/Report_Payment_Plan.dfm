@@ -1,5 +1,5 @@
 inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1086#1087#1083#1072#1090'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1043#1088#1072#1092#1080#1082' '#1087#1088#1086#1075#1085#1086#1079#1080#1088#1091#1077#1084#1099#1093' '#1087#1083#1072#1090#1077#1078#1077#1081'>'
   ClientHeight = 575
   ClientWidth = 797
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -24,9 +24,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       ExplicitHeight = 494
       inherited cxGrid: TcxGrid
         Width = 797
-        Height = 267
-        ExplicitLeft = -56
-        ExplicitTop = -24
+        Height = 288
         ExplicitWidth = 797
         ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -110,7 +108,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 127
@@ -119,7 +117,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'PaySumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
@@ -128,7 +126,7 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 159
@@ -137,18 +135,19 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 267
+        Top = 288
         Width = 797
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
+        ExplicitTop = 267
       end
       object grChart: TcxGrid
         Left = 0
-        Top = 275
+        Top = 296
         Width = 797
-        Height = 219
+        Height = 198
         Align = alBottom
         TabOrder = 2
         object grChartDBChartView1: TcxGridDBChartView
@@ -312,6 +311,25 @@ inherited Report_Payment_PlanForm: TReport_Payment_PlanForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1102#1088'.'#1083#1080#1094#1086'>'
       Width = 289
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     inherited actGridToExcel: TdsdGridToExcel

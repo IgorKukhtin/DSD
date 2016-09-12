@@ -58,6 +58,13 @@ type
     cxLabel6: TcxLabel;
     actRefreshSearch3: TdsdExecStoredProc;
     colPriceWithNDS: TcxGridDBColumn;
+    spSetGoodsLink: TdsdExecStoredProc;
+    macSetGoodsLink: TMultiAction;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    mactGoodsLinkDeleteList: TMultiAction;
+    macGoodsLinkDeleteSimpl: TMultiAction;
+    N4: TMenuItem;
   private
     { Private declarations }
   public
