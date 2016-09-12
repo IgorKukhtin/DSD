@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Inte
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , Comment TVarChar
+             , isError Boolean
              , isEDI Boolean
              , isList Boolean
              , isPromo Boolean
@@ -71,7 +72,7 @@ BEGIN
            , (Movement_Parent.InvNumber || ' от ' || Movement_Parent.OperDate :: Date :: TVarChar ) :: TVarChar AS InvNumber_Parent
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData,   FALSE) :: Boolean AS Checked
            , COALESCE (MovementBoolean_isPartner.ValueData, FALSE) :: Boolean AS isPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
@@ -87,7 +88,7 @@ BEGIN
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSummChange.ValueData        AS TotalSummChange
+           , MovementFloat_TotalSummChange.ValueData    AS TotalSummChange
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , Object_From.Id                             AS FromId
@@ -113,11 +114,12 @@ BEGIN
            , Object_TaxKind.Id                	        AS DocumentTaxKindId
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
            , MovementString_Comment.ValueData           AS Comment
+           , MovementBoolean_Error.ValueData            AS isError
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
 
-           , COALESCE (MovementBoolean_List.ValueData, False) :: Boolean AS isList
+           , COALESCE (MovementBoolean_List.ValueData, FALSE) :: Boolean AS isList
 
-           , COALESCE(MovementBoolean_Promo.ValueData, False) AS isPromo
+           , COALESCE(MovementBoolean_Promo.ValueData, FALSE) AS isPromo
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndReturn.ValueData) AS MovementPromo
 
        FROM (SELECT Movement.id
@@ -140,6 +142,9 @@ BEGIN
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.id = Movement.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Error
+                                      ON MovementBoolean_Error.MovementId =  Movement.Id
+                                     AND MovementBoolean_Error.DescId = zc_MovementBoolean_Error()
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()

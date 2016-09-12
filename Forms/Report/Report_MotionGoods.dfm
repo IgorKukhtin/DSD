@@ -2085,7 +2085,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deStart: TcxDateEdit
       Left = 60
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -2094,7 +2094,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4

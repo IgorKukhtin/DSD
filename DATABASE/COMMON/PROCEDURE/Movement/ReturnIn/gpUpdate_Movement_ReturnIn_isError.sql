@@ -15,14 +15,34 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ReturnIn());
 
-     -- автоматом сформировалась строчная часть - zc_MI_Child
-     outMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', (SELECT OperDate FROM Movement WHERE Id = inMovementId)) - INTERVAL '6 MONTH'
-                                                     , inEndDateSale   := NULL
-                                                     , inMovementId    := inMovementId
-                                                     , inUserId        := vbUserId
-                                                      );
+
+     IF zc_Movement_ReturnIn() <> (SELECT DescId FROM Movement WHERE Id = inMovementId)
+     THEN
+         RAISE EXCEPTION ' zc_Movement_ReturnIn() <> (SELECT DescId FROM Movement WHERE Id = <%>) ', inMovementId;
+     END IF;
+
+
+
+     IF zc_Enum_PaidKind_SecondForm() = (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PaidKind())
+     THEN
+         -- автоматом сформировалась строчная часть - zc_MI_Child
+         outMessageText:= lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := DATE_TRUNC ('MONTH', (SELECT OperDate FROM Movement WHERE Id = inMovementId)) - INTERVAL '6 MONTH'
+                                                         , inEndDateSale   := NULL
+                                                         , inMovementId    := inMovementId
+                                                         , inUserId        := zc_Enum_Process_Auto_ReturnIn()
+                                                          );
+     ELSE
+         -- !!!вернули ОШИБКУ, если есть!!!
+         outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
+                                                        , inUserId        := zc_Enum_Process_Auto_ReturnIn()
+                                                         );
+     END IF;
+
      -- сохранили свойство <Ошибка>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementDate_OperDatePartner(), inMovementId, CASE WHEN outMessageText <> '' THEN TRUE ELSE FALSE END);
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Error(), inMovementId, CASE WHEN outMessageText <> '' THEN TRUE ELSE FALSE END);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, zc_Enum_Process_Auto_ReturnIn(), FALSE);
 
 END;
 $BODY$

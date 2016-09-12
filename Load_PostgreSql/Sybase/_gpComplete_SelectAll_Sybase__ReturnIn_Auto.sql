@@ -30,7 +30,7 @@ BEGIN
      FROM Movement
           INNER JOIN MovementLinkObject AS MLO_PaidKind ON MLO_PaidKind.MovementId = Movement.Id
                                                        AND MLO_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                                       AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+                                                       -- AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
 
           LEFT JOIN MovementBoolean AS MovementBoolean_Error
                                     ON MovementBoolean_Error.MovementId =  Movement.Id
@@ -61,11 +61,15 @@ BEGIN
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+     WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate + INTERVAL '2 DAY'
        AND Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND (MovementItem.MovementId IS NULL OR MovementBoolean_Error.ValueData = TRUE OR MovementBoolean_Error.ValueData IS NULL)
-       AND (MovementItem.MovementId IS NULL OR MovementBoolean_Error.ValueData = TRUE)
+       AND (MovementItem.MovementId IS NULL
+         OR MovementBoolean_Error.ValueData = TRUE
+         OR MovementBoolean_Error.ValueData IS NULL
+         -- OR (MovementBoolean_Error.ValueData IS NULL AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm())
+           )
     ) AS tmp
     ;
 

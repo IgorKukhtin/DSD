@@ -689,12 +689,12 @@ BEGIN
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- Проверка ошибки
-         /*outMessageText:= (SELECT tmp.MessageText FROM lpUpdate_Movement_ReturnIn_Auto (inStartDateSale := CASE WHEN inStartDateSale IS NULL THEN DATE_TRUNC ('MONTH', vbOperDatePartner) - INTERVAL '4 MONTH' ELSE inStartDateSale END
-                                                                                      , inEndDateSale   := NULL
-                                                                                      , inMovementId    := inMovementId*/
          outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
                                                         , inUserId        := inUserId
                                                          );
+         -- сохранили свойство <Ошибка>
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Error(), inMovementId, CASE WHEN outMessageText <> '' OR vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN TRUE ELSE FALSE END);
+
          -- !!!Выход если ошибка!!!
          IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
 
