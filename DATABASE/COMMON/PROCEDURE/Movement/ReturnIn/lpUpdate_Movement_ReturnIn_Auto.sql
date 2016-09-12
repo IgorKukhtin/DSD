@@ -341,7 +341,8 @@ BEGIN
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                         AND MovementLinkObject_To.ObjectId = vbPartnerId
+                                                                         -- !!!т.к. для НАЛ - без проверки!!!
+                                                                         -- AND MovementLinkObject_To.ObjectId = vbPartnerId
                                             -- INNER JOIN _tmpPartner_ReturnIn_Auto AS tmpPartner_list ON tmpPartner_list.PartnerId = MovementLinkObject_To.ObjectId
                                             INNER JOIN Movement ON Movement.Id       = MD_OperDatePartner.MovementId
                                                                AND Movement.DescId   = zc_Movement_Sale()
@@ -423,7 +424,8 @@ BEGIN
                       , tmpMI_sale AS (SELECT tmpMI_sale_all.*
                                        FROM tmpMI_sale_all
                                             INNER JOIN _tmpGoods_ReturnIn_Auto_all ON _tmpGoods_ReturnIn_Auto_all.GoodsId        = tmpMI_sale_all.GoodsId
-                                                                                  AND _tmpGoods_ReturnIn_Auto_all.GoodsKindId    = tmpMI_sale_all.GoodsKindId
+                                                                                  -- !!!т.к. для НАЛ - без проверки!!!
+                                                                                  -- AND _tmpGoods_ReturnIn_Auto_all.GoodsKindId    = tmpMI_sale_all.GoodsKindId
                                                                                   AND _tmpGoods_ReturnIn_Auto_all.Price_original = tmpMI_sale_all.Price_original
                                       )
                    -- находим для продаж - сколько уже привязано в возвратах
@@ -573,20 +575,21 @@ BEGIN
                 -- !!!!! 2.2. - End ALL PARAM !!!!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-/*
-                IF vbAmount > 0 THEN
-                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                -- !!!!! 2.3. - NOT vbPartnerId!!
-                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                -- для НАЛ - ТОЛЬКО
+                IF vbAmount > 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 2.3. - NOT vbGoodsKindId!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 -- курсор2.3. - все продажи для ОДНОГО элемента возврата
                 OPEN curMI_Sale_two FOR
                    SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
                    FROM _tmpResult_Sale_Auto
                    WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
-                     AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId
+                     AND _tmpResult_Sale_Auto.GoodsKindId    <> vbGoodsKindId -- !!!без этого параметра!!!
                      AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
-                     AND _tmpResult_Sale_Auto.PartnerId      <> vbPartnerId -- !!!без этого параметра!!!
+                     AND _tmpResult_Sale_Auto.PartnerId      = vbPartnerId
                    ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
                   ;
 
@@ -622,7 +625,58 @@ BEGIN
                 -- !!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2.3. - End - NOT vbPartnerId!!!!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!
-*/
+
+
+                -- для НАЛ - ТОЛЬКО
+                IF vbAmount > 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 2.4. - NOT vbPartnerId AND vbGoodsKindId!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                -- курсор2.4. - все продажи для ОДНОГО элемента возврата
+                OPEN curMI_Sale_two FOR
+                   SELECT _tmpResult_Sale_Auto.MovementId, _tmpResult_Sale_Auto.MovementItemId, _tmpResult_Sale_Auto.Amount
+                   FROM _tmpResult_Sale_Auto
+                   WHERE _tmpResult_Sale_Auto.GoodsId        = vbGoodsId
+                     -- AND _tmpResult_Sale_Auto.GoodsKindId    = vbGoodsKindId -- !!!без этого параметра!!!
+                     AND _tmpResult_Sale_Auto.Price_original = vbOperPrice
+                     AND _tmpResult_Sale_Auto.PartnerId      <> vbPartnerId -- !!!без этого параметра!!!
+                   ORDER BY _tmpResult_Sale_Auto.OperDate DESC, _tmpResult_Sale_Auto.Amount DESC
+                  ;
+
+                -- начало цикла по курсору2.4. - продажи
+                LOOP
+                    -- данные по продажам
+                    FETCH curMI_Sale_two INTO vbMovementId_sale, vbMovementItemId_sale, vbAmount_sale;
+                    -- если данные закончились, или все кол-во найдено тогда выход
+                    IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+
+                    --
+                    IF vbAmount_sale > vbAmount OR vbAmount < 0
+                    THEN
+                        -- получилось в продаже больше чем искали, !!!сохраняем в табл-результата!!!
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount, vbOperPrice;
+                        -- обнуляем кол-во что бы больше не искать
+                        vbAmount:= 0;
+                    ELSE
+                        -- получилось в продаже меньше чем искали, !!!сохраняем в табл-результата!!!
+                        INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, GoodsKindId_return, Amount, Price_original)
+                           SELECT vbMovementItemId_return, vbMovementId_sale, vbMovementItemId_sale, vbGoodsId, vbGoodsKindId, vbGoodsKindId, vbAmount_sale, vbOperPrice;
+                        -- уменьшаем на кол-во которое нашли и продолжаем поиск
+                        vbAmount:= vbAmount - vbAmount_sale;
+                    END IF;
+
+
+                END LOOP; -- финиш цикла по курсору2.4. - продажи
+                CLOSE curMI_Sale_two; -- закрыли курсор2.4. - продажи
+
+                END IF; -- IF vbAmount > 0 THEN
+                -- !!!!!!!!!!!!!!!!!!!!!!!
+                -- !!!!! 2.4. - End - NOT vbPartnerId!!!!!
+                -- !!!!!!!!!!!!!!!!!!!!!!!
+
 
             END LOOP; -- финиш цикла по курсору1 - возвраты
             CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты
@@ -664,7 +718,7 @@ BEGIN
                                                        , inMovementItemId_sale := COALESCE (tmp.MovementItemId_sale, 0)
                                                        , inUserId              := inUserId
                                                        -- , inIsRightsAll         := FALSE
-                                                       , inIsRightsAll         := CASE WHEN inUserId = zfCalc_UserAdmin() :: Integer THEN TRUE ELSE FALSE END
+                                                       , inIsRightsAll         := CASE WHEN inUserId IN (zfCalc_UserAdmin() :: Integer, zc_Enum_Process_Auto_ReturnIn()) THEN TRUE ELSE FALSE END
                                                         )
      FROM (WITH MI_Master AS (SELECT _tmpItem.MovementItemId AS Id, _tmpItem.GoodsId
                               FROM _tmpItem
@@ -706,7 +760,14 @@ BEGIN
 
      -- Ошибка - № 120523 от 06.08.2016 код 41
      -- !!!в Мастере меняется скидка + ставится Акция!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), _tmpItem.MovementItemId, CASE WHEN MovementDate_OperDatePartner.ValueData < '01.08.2016' THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) WHEN tmp.MovementItemId_sale > 0 THEN COALESCE (MIFloat_ChangePercent.ValueData, 0) ELSE COALESCE (MovementFloat_ChangePercent.ValueData, 0) END)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), _tmpItem.MovementItemId
+                                             , CASE WHEN MovementDate_OperDatePartner.ValueData < '01.08.2016'
+                                                      OR MLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                                                         THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0)
+                                                    WHEN tmp.MovementItemId_sale > 0
+                                                         THEN COALESCE (MIFloat_ChangePercent.ValueData, 0)
+                                                    ELSE COALESCE (MovementFloat_ChangePercent.ValueData, 0)
+                                               END)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), _tmpItem.MovementItemId, COALESCE (tmp.MovementId_promo, 0))
      FROM _tmpItem
           LEFT JOIN  (SELECT MIFloat_PromoMovement.ValueData               AS MovementId_promo
@@ -727,11 +788,14 @@ BEGIN
                                      AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = inMovementId
-                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                 AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = inMovementId
-                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-          ;
+                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+          LEFT JOIN MovementLinkObject AS MLO_PaidKind
+                                       ON MLO_PaidKind.MovementId = inMovementId
+                                      AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
+         ;
      -- !!!в Movement ставится Акция!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), tmp.MovementId, CASE WHEN tmp_find.MovemenId_max > 0 THEN TRUE ELSE FALSE END)
            , lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Promo(), tmp.MovementId, CASE WHEN tmp_find.MovemenId_max = tmp_find.MovemenId_min THEN tmp_find.MovemenId_max ELSE NULL END :: Integer)

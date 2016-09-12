@@ -128,6 +128,7 @@ type
     actSMTPFile: TdsdSMTPFileAction;
     actExport: TMultiAction;
     bbExport: TdxBarButton;
+    isError: TcxGridDBColumn;
   private
     { Private declarations }
   public

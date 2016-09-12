@@ -3,6 +3,7 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
   ClientHeight = 535
   ClientWidth = 1106
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -333
   ExplicitWidth = 1122
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -148,20 +149,27 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 49
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object isError: TcxGridDBColumn [1]
+            Caption = #1054#1096#1080#1073#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          object colOperDatePartner: TcxGridDBColumn [2]
+          object colOperDatePartner: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 70

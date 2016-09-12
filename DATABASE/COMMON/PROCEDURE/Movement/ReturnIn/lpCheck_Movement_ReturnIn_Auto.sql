@@ -13,12 +13,12 @@ $BODY$
    DECLARE vbMovementDescId Integer;
 BEGIN
 
-     -- !!!для ВСЕХ кладовщиков - выход!!! + zc_Enum_Process_Auto_PrimeCost
+     -- !!!для ВСЕХ кладовщиков - выход!!! + убрал zc_Enum_Process_Auto_PrimeCost
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
                 WHERE UserId = inUserId
                   AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9042))
                )
-        OR inUserId IN (zc_Enum_Process_Auto_PrimeCost())
+        -- OR inUserId IN (zc_Enum_Process_Auto_PrimeCost())
      THEN
          outMessageText:= '-1';
          RETURN;
@@ -26,9 +26,11 @@ BEGIN
 
      -- !!!для НАЛ - обнуление и выход!!!
      IF zc_Enum_PaidKind_SecondForm() = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindFrom()))
+    AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
      THEN
+         -- !!!ВРЕМЕННО - НИЧЕГО НЕ ДЕЛАЕМ!!!
          -- !!!обнуление и выход!!!
-         PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := MovementItem.Id
+         /*PERFORM lpInsertUpdate_MovementItem_ReturnIn_Child (ioId                  := MovementItem.Id
                                                            , inMovementId          := inMovementId
                                                            , inParentId            := MovementItem.ParentId
                                                            , inGoodsId             := MovementItem.ObjectId
@@ -41,7 +43,7 @@ BEGIN
          FROM MovementItem
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId     = zc_MI_Child()
-        ;
+        ;*/
          -- выход
          RETURN;
      END IF;
