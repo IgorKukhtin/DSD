@@ -2,10 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
   ClientWidth = 1244
-  ExplicitLeft = -471
-  ExplicitTop = -102
   ExplicitWidth = 1260
-  ExplicitHeight = 683
+  ExplicitHeight = 686
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -688,9 +686,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -2113,7 +2108,90 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object mactPrintPriceCorr: TMultiAction [22]
+    object macContractOpenForm: TMultiAction [22]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actContractOpenForm
+        end
+        item
+          Action = actUpdateMovementContract
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      ImageIndex = 43
+    end
+    object actContractOpenForm: TOpenChoiceForm [23]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      ImageIndex = 43
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterJuridicalId'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = ''
+          Component = JuridicalFromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = ContractTagGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateMovementContract: TdsdExecStoredProc [24]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementContract
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementContract
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+    end
+    object mactPrintPriceCorr: TMultiAction [25]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2127,7 +2205,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
     end
-    object mactPrint: TMultiAction [23]
+    object mactPrint: TMultiAction [26]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2142,7 +2220,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [24]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -2184,7 +2262,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [28]
+    object actTaxJournalChoice: TOpenChoiceForm [31]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2253,7 +2331,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object MIChildProtocolOpenForm: TdsdOpenForm [29]
+    object MIChildProtocolOpenForm: TdsdOpenForm [32]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3011,6 +3089,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbContractOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateAmountPartner'
         end
         item
@@ -3215,6 +3301,10 @@ inherited ReturnInForm: TReturnInForm
     end
     object bbMIChildProtocol: TdxBarButton
       Action = MIChildProtocolOpenForm
+      Category = 0
+    end
+    object bbContractOpenForm: TdxBarButton
+      Action = macContractOpenForm
       Category = 0
     end
   end
@@ -5381,5 +5471,30 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 320
     Top = 576
+  end
+  object spUpdateMovementContract: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 330
+    Top = 208
   end
 end
