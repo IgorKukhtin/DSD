@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1145
   ExplicitWidth = 1161
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -336,6 +336,9 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTaxCorrective: TcxGrid
         Left = 0
         Top = 0
@@ -1869,8 +1872,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         item
           Action = actUpdateMovementContract
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1074' '#1079#1072#1082#1088#1099#1090#1086#1084' '#1087#1077#1088#1080#1086#1076#1077')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1074' '#1079#1072#1082#1088#1099#1090#1086#1084' '#1087#1077#1088#1080#1086#1076#1077')'
       ImageIndex = 43
     end
     object actUpdateMovementContract: TdsdExecStoredProc [10]

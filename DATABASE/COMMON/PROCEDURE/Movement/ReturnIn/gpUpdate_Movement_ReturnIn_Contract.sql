@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_ReturnIn_Contract(
     IN inContractId        Integer               , --
     IN inSession           TVarChar                -- сессия пользователя
 )
-RETURNS Void
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -18,8 +18,14 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementId, inContractId);
 
+     -- Распроводим Документ
+     PERFORM gpReComplete_Movement_ReturnIn (inMovementId     := inMovementId
+                                           , inStartDateSale  := NULL
+                                           , inIsLastComplete := NULL
+                                           , inUserId         := zc_Enum_Process_Auto_ReComplete());
+
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
 END;
 $BODY$
