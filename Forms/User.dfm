@@ -38,9 +38,7 @@ object UserForm: TUserForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -49,62 +47,92 @@ object UserForm: TUserForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Options.Editing = False
+        Width = 26
       end
       object clName: TcxGridDBColumn
         Caption = #1051#1086#1075#1080#1085
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Options.Editing = False
+        Width = 87
       end
       object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Options.Editing = False
+        Width = 87
       end
       object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092'.'
         DataBinding.FieldName = 'BranchCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Options.Editing = False
+        Width = 26
       end
       object BranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 61
       end
       object UnitCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087'.'
         DataBinding.FieldName = 'UnitCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Options.Editing = False
+        Width = 35
       end
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 61
       end
       object PositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 61
       end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Options.Editing = False
+        Width = 47
+      end
+      object UserSign: TcxGridDBColumn
+        Caption = #1069#1083'. '#1087#1086#1076#1087#1080#1089#1100
+        DataBinding.FieldName = 'UserSign'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object UserSeal: TcxGridDBColumn
+        Caption = #1069#1083'. '#1087#1077#1095#1072#1090#1100
+        DataBinding.FieldName = 'UserSeal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object UserKey: TcxGridDBColumn
+        Caption = #1069#1083'. '#1050#1083#1102#1095
+        DataBinding.FieldName = 'UserKey'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -113,6 +141,7 @@ object UserForm: TUserForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
     end
@@ -450,10 +479,12 @@ object UserForm: TUserForm
       FormName = 'TUserEditForm'
       FormNameParam.Value = 'TUserEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -470,6 +501,7 @@ object UserForm: TUserForm
       FormName = 'TUserEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -477,6 +509,7 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -534,12 +567,14 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -547,6 +582,7 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -554,6 +590,7 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -561,6 +598,7 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -568,10 +606,23 @@ object UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+    end
+    object UpdateDataSetUser: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateUser
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateUser
+        end>
+      Caption = 'UpdateDataSetUser'
+      DataSource = DataSource
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -592,12 +643,14 @@ object UserForm: TUserForm
       FormName = 'TRoleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = RoleCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -605,6 +658,7 @@ object UserForm: TUserForm
           Component = RoleCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -615,12 +669,14 @@ object UserForm: TUserForm
       FormName = 'TRoleForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'RoleId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -628,6 +684,7 @@ object UserForm: TUserForm
           Component = PeriodCloseCDS
           ComponentItem = 'RoleName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -638,12 +695,14 @@ object UserForm: TUserForm
       FormName = 'TObject_UnitForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = PeriodCloseCDS
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -651,6 +710,7 @@ object UserForm: TUserForm
           Component = PeriodCloseCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -717,6 +777,7 @@ object UserForm: TUserForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -762,6 +823,7 @@ object UserForm: TUserForm
         Component = RoleCDS
         ComponentItem = 'UserRoleId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inuserid'
@@ -769,6 +831,7 @@ object UserForm: TUserForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inroleid'
@@ -776,6 +839,7 @@ object UserForm: TUserForm
         Component = RoleCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 528
@@ -783,8 +847,8 @@ object UserForm: TUserForm
   end
   object RoleDS: TDataSource
     DataSet = RoleCDS
-    Left = 488
-    Top = 104
+    Left = 472
+    Top = 160
   end
   object RoleCDS: TClientDataSet
     Aggregates = <>
@@ -808,8 +872,8 @@ object UserForm: TUserForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 400
-    Top = 224
+    Left = 384
+    Top = 264
   end
   object PeriodCloseViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -832,8 +896,8 @@ object UserForm: TUserForm
       end>
     Params = <>
     PackSize = 1
-    Left = 528
-    Top = 240
+    Left = 600
+    Top = 144
   end
   object spInsertUpdatePeriodClose: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_PeriodClose'
@@ -846,6 +910,7 @@ object UserForm: TUserForm
         Component = PeriodCloseCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inuserid'
@@ -853,6 +918,7 @@ object UserForm: TUserForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inroleid'
@@ -860,6 +926,7 @@ object UserForm: TUserForm
         Component = PeriodCloseCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inunitid'
@@ -867,6 +934,7 @@ object UserForm: TUserForm
         Component = PeriodCloseCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inperiod'
@@ -874,9 +942,88 @@ object UserForm: TUserForm
         Component = PeriodCloseCDS
         ComponentItem = 'Period'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 576
     Top = 232
+  end
+  object spInsertUpdateUser: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPassword'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'User_'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSign'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UserSign'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSeal'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UserSeal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKey'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UserKey'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 120
+    Top = 224
   end
 end

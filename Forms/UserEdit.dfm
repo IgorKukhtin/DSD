@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-  ClientHeight = 261
-  ClientWidth = 295
+  ClientHeight = 396
+  ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 45
-    Top = 218
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 189
-    Top = 218
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -63,12 +63,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 13
-    Top = 157
+    Top = 151
     Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object edMember: TcxButtonEdit
     Left = 13
-    Top = 180
+    Top = 171
     Properties.Buttons = <
       item
         Default = True
@@ -79,7 +79,7 @@
   end
   object edPassword: TcxTextEdit
     Left = 13
-    Top = 124
+    Top = 121
     Properties.PasswordChar = '*'
     TabOrder = 8
     Width = 273
@@ -88,6 +88,42 @@
     Left = 13
     Top = 101
     Caption = #1055#1072#1088#1086#1083#1100
+  end
+  object cxLabel4: TcxLabel
+    Left = 13
+    Top = 203
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
+  end
+  object edSign: TcxTextEdit
+    Left = 13
+    Top = 224
+    Properties.PasswordChar = '*'
+    TabOrder = 11
+    Width = 273
+  end
+  object edSeal: TcxTextEdit
+    Left = 13
+    Top = 270
+    Properties.PasswordChar = '*'
+    TabOrder = 12
+    Width = 273
+  end
+  object cxLabel5: TcxLabel
+    Left = 13
+    Top = 251
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
+  end
+  object edKey: TcxTextEdit
+    Left = 13
+    Top = 320
+    Properties.PasswordChar = '*'
+    TabOrder = 14
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 13
+    Top = 299
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1099#1081' '#1050#1083#1102#1095
   end
   object ActionList: TActionList
     Left = 269
@@ -108,6 +144,7 @@
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -118,6 +155,7 @@
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -131,12 +169,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -144,6 +184,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPassword'
@@ -151,13 +192,41 @@
         Component = edPassword
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSign'
+        Value = Null
+        Component = edSign
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSeal'
+        Value = Null
+        Component = edSeal
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKey'
+        Value = Null
+        Component = edKey
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
         Value = ''
         Component = MemberGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 213
     Top = 48
   end
@@ -167,6 +236,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 213
     Top = 8
@@ -182,23 +252,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId'
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
@@ -206,13 +280,37 @@
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Password'
         Value = ''
         Component = edPassword
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserSign'
+        Value = Null
+        Component = edSign
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserSeal'
+        Value = Null
+        Component = edSeal
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserKey'
+        Value = Null
+        Component = edKey
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 165
     Top = 136
   end
@@ -221,6 +319,7 @@
     LookupControl = edMember
     FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -229,6 +328,7 @@
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -236,6 +336,7 @@
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 85
     Top = 173

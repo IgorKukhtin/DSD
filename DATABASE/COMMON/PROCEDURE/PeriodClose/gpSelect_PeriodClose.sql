@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
 
              , Period Integer, CloseDate TDateTime, CloseDate_excl TDateTime
-             , UserName TVarChar, OperDate TDateTime
+             , UserId Integer, UserName TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
@@ -80,6 +80,7 @@ BEGIN
              , PeriodClose.CloseDate
              , CASE WHEN Object_User_excl.Id > 0 THEN PeriodClose.CloseDate_excl ELSE NULL END :: TDateTime AS CloseDate_excl
 
+             , Object_User.Id        AS UserId
              , Object_User.ValueData AS UserName
              , PeriodClose.OperDate
 
