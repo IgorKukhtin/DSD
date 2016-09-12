@@ -136,6 +136,7 @@ BEGIN
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Juridical.ChildObjectId
 
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpALL.GoodsId
+        WHERE (tmpALL.Amount_Movement - tmpALL.Amount_Container) <> 0
 
        ;
 END;
