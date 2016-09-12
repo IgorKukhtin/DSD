@@ -60,9 +60,9 @@ type
     UpdateDataSet: TdsdUpdateDataSet;
     OpenChoiceForm: TOpenChoiceForm;
     Panel: TPanel;
-    colRoleName: TcxGridDBColumn;
-    colUnitName: TcxGridDBColumn;
-    colPeriod: TcxGridDBColumn;
+    RoleName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    CloseDate_excl: TcxGridDBColumn;
     ChoiceRole: TOpenChoiceForm;
     PeriodCloseDS: TDataSource;
     PeriodCloseCDS: TClientDataSet;
