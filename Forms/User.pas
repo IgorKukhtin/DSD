@@ -78,6 +78,8 @@ type
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
     User_: TcxGridDBColumn;
+    spInsertUpdateUser: TdsdStoredProc;
+    UpdateDataSetUser: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

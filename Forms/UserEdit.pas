@@ -8,7 +8,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, dsdAddOn, dsdGuides, dsdDB, dsdAction, Vcl.ActnList,
   cxMaskEdit, cxButtonEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit;
+  cxTextEdit, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TUserEditForm = class(TParentForm)
@@ -32,6 +32,12 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     edPassword: TcxTextEdit;
     cxLabel2: TcxLabel;
+    cxLabel4: TcxLabel;
+    edSign: TcxTextEdit;
+    edSeal: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edKey: TcxTextEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public
