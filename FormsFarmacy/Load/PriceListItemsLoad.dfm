@@ -25,6 +25,12 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         ExplicitWidth = 908
         ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.CellAutoHeight = True

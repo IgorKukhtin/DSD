@@ -37,15 +37,70 @@ inherited MCS_LiteForm: TMCS_LiteForm
           inherited clNDSKindName: TcxGridDBColumn
             Options.Editing = False
           end
-          inherited clDateChange: TcxGridDBColumn
+          inherited StartDate: TcxGridDBColumn [13]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited clDateChange: TcxGridDBColumn [14]
             Visible = False
           end
-          inherited clPrice: TcxGridDBColumn
+          inherited clPrice: TcxGridDBColumn [15]
             Visible = False
             Options.Editing = False
           end
-          inherited colFix: TcxGridDBColumn
+          inherited clMCSDateChange: TcxGridDBColumn [16]
+            Visible = False
+          end
+          inherited clMCSValue: TcxGridDBColumn [17]
+          end
+          inherited clMCSPeriod: TcxGridDBColumn [18]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited clMCSDay: TcxGridDBColumn [19]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited clMCSIsClose: TcxGridDBColumn [20]
+          end
+          inherited colMCSIsCloseDateChange: TcxGridDBColumn [21]
+          end
+          inherited clMCSNotRecalc: TcxGridDBColumn [22]
+          end
+          inherited colMCSNotRecalcDateChange: TcxGridDBColumn [23]
+          end
+          inherited colFix: TcxGridDBColumn [24]
             Options.Editing = False
+          end
+          inherited colFixDateChange: TcxGridDBColumn [25]
+          end
+          inherited clisErased: TcxGridDBColumn [26]
+          end
+          inherited clRemainsNotMCS: TcxGridDBColumn [27]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited clSummaNotMCS: TcxGridDBColumn [28]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited colMinExpirationDate: TcxGridDBColumn [29]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited colRemains: TcxGridDBColumn [30]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited SummaRemains: TcxGridDBColumn [31]
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited Color_ExpirationDate: TcxGridDBColumn [32]
+          end
+          inherited clisPromo: TcxGridDBColumn [33]
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -127,6 +182,163 @@ inherited MCS_LiteForm: TMCS_LiteForm
     end
   end
   inherited spInsertUpdate: TdsdStoredProc
+    Params = <
+      item
+        Name = 'ioId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStartDate'
+        Value = 73051d
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValue'
+        Component = MasterCDS
+        ComponentItem = 'MCSValue'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSPeriod'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSDay'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentMarkup'
+        Component = MasterCDS
+        ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSIsClose'
+        Component = MasterCDS
+        ComponentItem = 'MCSIsClose'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSNotRecalc'
+        Component = MasterCDS
+        ComponentItem = 'MCSNotRecalc'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFix'
+        Component = MasterCDS
+        ComponentItem = 'Fix'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTop'
+        Component = MasterCDS
+        ComponentItem = 'isTop'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDateChange'
+        Component = MasterCDS
+        ComponentItem = 'DateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSDateChange'
+        Component = MasterCDS
+        ComponentItem = 'MCSDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSIsCloseDateChange'
+        Component = MasterCDS
+        ComponentItem = 'MCSIsCloseDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMCSNotRecalcDateChange'
+        Component = MasterCDS
+        ComponentItem = 'MCSNotRecalcDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFixDateChange'
+        Component = MasterCDS
+        ComponentItem = 'FixDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate'
+        Component = MasterCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTOPDateChange'
+        Component = MasterCDS
+        ComponentItem = 'TOPDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPercentMarkupDateChange'
+        Component = MasterCDS
+        ComponentItem = 'PercentMarkupDateChange'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
     Left = 264
   end
   inherited spRecalcMCS: TdsdStoredProc

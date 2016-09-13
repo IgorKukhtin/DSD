@@ -1202,8 +1202,8 @@ inherited MainCashForm: TMainCashForm
       MoveParams = <>
       Caption = #1053#1058#1047
       Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
-      FormName = 'TMCSForm'
-      FormNameParam.Value = 'TMCSForm'
+      FormName = 'TMCS_LiteForm'
+      FormNameParam.Value = 'TMCS_LiteForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
