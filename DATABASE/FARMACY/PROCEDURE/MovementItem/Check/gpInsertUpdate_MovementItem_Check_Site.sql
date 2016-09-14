@@ -10,10 +10,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_Site(
     IN inPrice               TFloat    , -- Цена
     IN inSession             TVarChar    -- сессия пользователя
 )
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbAmount_old TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -26,9 +28,9 @@ BEGIN
        (NOT EXISTS(SELECT 1 FROM MovementItem Where Id = ioId))       
     THEN
         SELECT 
-            Id
+            Id, Amount
         INTO 
-            ioId
+            ioId, vbAmount_old
         FROM MovementItem
         WHERE MovementId = inMovementId 
           AND ObjectId = inGoodsId 
@@ -39,7 +41,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount + COALESCE (vbAmount_old, 0), NULL);
 
     -- сохранили свойство <Кол-во заявка>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountOrder(), ioId, inAmount);

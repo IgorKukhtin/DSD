@@ -87,8 +87,8 @@ BEGIN
             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
             , Object_GoodsKind.ValueData                     AS GoodsKindName
 
-            , MIFloat_AmountPartner.ValueData       ::tfloat AS AmountPartner
-            , COALESCE (MIFloat_Price.ValueData, 0) ::tfloat AS Price
+            , MIFloat_AmountPartner.ValueData       ::TFloat AS AmountPartner
+            , COALESCE (MIFloat_Price.ValueData, 0) ::TFloat AS Price
 
             , MISale.Id                                      AS MovementItemId_sale
             , Movement_Sale.Id                               AS MovementId_sale
@@ -119,7 +119,7 @@ BEGIN
             , CASE WHEN MISale.Id > 0
                    AND (MISale.isErased = TRUE
                      OR MISale.ObjectId                               <> tmpMI.GoodsId
-                     OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId
+                     OR (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis() AND MILinkObject_GoodsKind.ObjectId <> 0)
                      OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
                      OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
                      OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
@@ -132,7 +132,7 @@ BEGIN
               END :: Boolean AS isError
             , CASE WHEN MISale.isErased = TRUE
                      OR MISale.ObjectId <> tmpMI.GoodsId
-                     OR COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId
+                     OR (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis() AND MILinkObject_GoodsKind.ObjectId <> 0)
                      OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
                      OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
                      OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
