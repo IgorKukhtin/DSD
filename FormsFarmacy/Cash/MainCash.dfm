@@ -715,7 +715,7 @@ inherited MainCashForm: TMainCashForm
         Width = 34
         Height = 22
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1053#1058#1047
-        Action = actOpenMCSForm
+        Action = actOpenMCS_LiteForm
         LookAndFeel.Kind = lfStandard
         ParentShowHint = False
         ShowHint = True
@@ -1202,6 +1202,18 @@ inherited MainCashForm: TMainCashForm
       MoveParams = <>
       Caption = #1053#1058#1047
       Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      FormName = 'TMCSForm'
+      FormNameParam.Value = 'TMCSForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOpenMCS_LiteForm: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1053#1058#1047
+      Hint = #1056#1077#1077#1089#1090#1088' '#1085#1077#1089#1085#1080#1078#1072#1077#1086#1075#1086' '#1090#1086#1074#1072#1088#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
       FormName = 'TMCS_LiteForm'
       FormNameParam.Value = 'TMCS_LiteForm'
       FormNameParam.DataType = ftString
@@ -1443,6 +1455,12 @@ inherited MainCashForm: TMainCashForm
     end
     object N11: TMenuItem
       Action = actCheckConnection
+    end
+    object N14: TMenuItem
+      Caption = '-'
+    end
+    object N13: TMenuItem
+      Action = actOpenMCSForm
     end
   end
   object FormParams: TdsdFormParams

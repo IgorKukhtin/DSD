@@ -297,7 +297,7 @@ BEGIN
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price          
 
               , CASE WHEN (Object_Price_View.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
-                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                      WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      ELSE zc_Color_Black()
@@ -456,7 +456,7 @@ BEGIN
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
               , CASE WHEN (Object_Price_View.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
-                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() 
+                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                      WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      ELSE zc_Color_Black()
@@ -500,6 +500,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 14.09.16         *
  27.04.16         *
  23.04.16         *
  01.10.15                                                                        *SertificatNumber,SertificatStart,SertificatEnd               
@@ -513,4 +514,4 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1084910, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
---SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1084910, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 1084910, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
