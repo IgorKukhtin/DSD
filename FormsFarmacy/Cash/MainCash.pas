@@ -174,7 +174,7 @@ type
     actSpec: TAction;
     N9: TMenuItem;
     actRefreshLite: TdsdDataSetRefresh;
-    actOpenMCSForm: TdsdOpenForm;
+    actOpenMCS_LiteForm: TdsdOpenForm;
     btnOpenMCSForm: TcxButton;
     spGet_User_IsAdmin: TdsdStoredProc;
     actSetFocus: TAction;
@@ -227,6 +227,9 @@ type
     spUpdate_ConfirmedKind: TdsdStoredProc;
     mainMinExpirationDate: TcxGridDBColumn;
     MainColor_ExpirationDate: TcxGridDBColumn;
+    actOpenMCSForm: TdsdOpenForm;
+    N13: TMenuItem;
+    N14: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

@@ -220,7 +220,7 @@ BEGIN
 
            --, tmpData.SummaWithOutVATOrder ::TFloat AS SummaWithOutVATOrder
            --, CASE WHEN (tmpData.Amount - tmpData.AmountOrder) > 0 THEN (tmpData.SummaWithOutVAT - tmpData.SummaWithOutVATOrder) ELSE 0 END ::TFloat AS SummaWithOutVATOver
-           , CASE WHEN tmpData.ExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_calc                --CURRENT_DATE)  inDateFinal
+           , CASE WHEN tmpData.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_calc                --CURRENT_DATE)  inDateFinal
  
         FROM tmpData_1 tmpData 
             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpData.GoodsId
@@ -228,7 +228,6 @@ BEGIN
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId
             LEFT JOIN Object AS Object_OurJuridical ON Object_OurJuridical.Id = tmpData.OurJuridicalId
-            
         ORDER BY
             GoodsGroupName, GoodsName;
 ----

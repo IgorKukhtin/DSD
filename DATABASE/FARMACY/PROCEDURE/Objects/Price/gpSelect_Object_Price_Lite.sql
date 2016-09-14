@@ -77,90 +77,323 @@ BEGIN
     ELSEIF inisShowAll = True
     THEN
         RETURN QUERY
-            SELECT
-                 Object_Price_View.Id                            AS Id
-               , COALESCE (Object_Price_View.Price,0)            :: TFloat AS Price
-               , COALESCE (Object_Price_View.MCSValue,0)         :: TFloat AS MCSValue
-                             
-               , Object_Goods_View.id                            AS GoodsId
-               , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
-               , Object_Goods_View.GoodsName                     AS GoodsName
-               , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
-               , Object_Goods_View.NDSKindName                   AS NDSKindName
-               , Object_Goods_View.isTop                         AS Goods_isTop
-               , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
-               , Object_Price_View.DateChange                    AS DateChange
-               , Object_Price_View.MCSDateChange                 AS MCSDateChange
-               , COALESCE(Object_Price_View.MCSIsClose,False)    AS MCSIsClose
-               , Object_Price_View.MCSIsCloseDateChange          AS MCSIsCloseDateChange
-               , COALESCE(Object_Price_View.MCSNotRecalc,False)  AS MCSNotRecalc
-               , Object_Price_View.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
-               , COALESCE(Object_Price_View.Fix,False)           AS Fix
-               , Object_Price_View.FixDateChange                 AS FixDateChange
+        WITH 
+        tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId                AS GoodsId
+                          , Object_Goods.ObjectCode                         AS GoodsCode
+                          , Object_Goods.ValueData                          AS GoodsName
+                          , Object_GoodsGroup.ValueData                     AS GoodsGroupName
+                          , Object_NDSKind.ValueData                        AS NDSKindName
+                          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
+                          , ObjectFloat_Goods_PercentMarkup.ValueData          AS PercentMarkup
                  
-               , Object_Goods_View.isErased                      AS isErased 
+                          , Object_Goods.isErased                           AS isErased 
+                      
+                          , COALESCE(ObjectBoolean_Goods_Close.ValueData, false) AS isClose
+                          , COALESCE(ObjectBoolean_First.ValueData, False)       AS isFirst
+                          , COALESCE(ObjectBoolean_Second.ValueData, False)      AS isSecond
 
-               , Object_Goods_View.isClose
-               , Object_Goods_View.isFirst
-               , Object_Goods_View.isSecond
-  
-               , Object_Price_View.isTop                   AS isTop
-               , Object_Price_View.TopDateChange           AS TopDateChange
+                     FROM ObjectLink AS ObjectLink_Goods_Object
+                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
 
-               , Object_Price_View.PercentMarkup           AS PercentMarkup
-               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
-               
-              FROM Object_Goods_View
-                INNER JOIN ObjectLink ON ObjectLink.ObjectId = Object_Goods_View.Id 
-                                     AND ObjectLink.ChildObjectId = vbObjectId
-                LEFT OUTER JOIN Object_Price_View ON Object_Goods_View.id = object_price_view.goodsid
-                                                 AND Object_Price_View.unitid = inUnitId
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                               ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-            WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
-              AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                               ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                               ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
+            
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                               ON ObjectBoolean_First.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
+        
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                               ON ObjectBoolean_Second.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+    
+                        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
+                               ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+
+                     WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId   --????
+                       AND (ObjectLink_Goods_Object.ObjectId = inGoodsId OR inGoodsId = 0)
+                       AND (inisShowDel = True OR Object_Goods.isErased = False)
+                    )
+
+      , tmpPrice AS (SELECT Object_Price.Id                           AS Id
+                          , Price_Goods.ChildObjectId                 AS GoodsId
+                          , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
+                          , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
+                          , price_datechange.valuedata                AS DateChange
+                          , MCS_datechange.valuedata                  AS MCSDateChange
+                          , COALESCE(MCS_isClose.ValueData,False)     AS MCSIsClose
+                          , MCSIsClose_DateChange.valuedata           AS MCSIsCloseDateChange
+                          , COALESCE(MCS_NotRecalc.ValueData,False)   AS MCSNotRecalc
+                          , MCSNotRecalc_DateChange.valuedata         AS MCSNotRecalcDateChange
+                          , COALESCE(Price_Fix.ValueData,False)       AS Fix
+                          , Fix_DateChange.valuedata                  AS FixDateChange
+                          , COALESCE(Price_Top.ValueData,False)       AS isTop
+                          , Price_TOPDateChange.ValueData             AS TopDateChange
+
+                          , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                          , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+                     FROM Object AS Object_Price
+                        INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                    ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
+                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                   AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                        LEFT JOIN ObjectFloat AS Price_Value
+                                    ON Price_Value.ObjectId = Object_Price.Id
+                                   AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                        LEFT JOIN ObjectDate        AS Price_DateChange
+                                    ON Price_DateChange.ObjectId = Object_Price.Id
+                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                        LEFT JOIN ObjectFloat       AS MCS_Value
+                                    ON MCS_Value.ObjectId = Object_Price.Id
+                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                        LEFT JOIN ObjectDate        AS MCS_DateChange
+                                    ON MCS_DateChange.ObjectId = Object_Price.Id
+                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                        LEFT JOIN ObjectLink        AS Price_Goods
+                                    ON Price_Goods.ObjectId = Object_Price.Id
+                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+
+                       LEFT JOIN ObjectBoolean      AS MCS_isClose
+                                    ON MCS_isClose.ObjectId = Object_Price.Id
+                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                        LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
+                                    ON MCSIsClose_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+                        LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
+                                    ON MCS_NotRecalc.ObjectId = Object_Price.Id
+                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                        LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
+                                    ON MCSNotRecalc_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+                        LEFT JOIN ObjectBoolean     AS Price_Fix
+                                    ON Price_Fix.ObjectId = Object_Price.Id
+                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                        LEFT JOIN ObjectDate        AS Fix_DateChange
+                                    ON Fix_DateChange.ObjectId = Object_Price.Id
+                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+                        LEFT JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = Object_Price.Id
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                       LEFT JOIN ObjectDate        AS Price_TOPDateChange
+                                    ON Price_TOPDateChange.ObjectId = Object_Price.Id
+                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+
+                        LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                    ON Price_PercentMarkup.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                        LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
+                                    ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()   
+                     WHERE Object_Price.DescId = zc_Object_Price()
+                    )
+
+            SELECT tmpPrice.Id                       AS Id
+                 , COALESCE (tmpPrice.Price,0)   ::TFloat AS Price
+                 , COALESCE (tmpPrice.MCSValue,0)::TFloat AS MCSValue
+                              
+                 , tmpGoods.GoodsId
+                 , tmpGoods.GoodsCode                     AS GoodsCode
+                 , tmpGoods.GoodsName                     AS GoodsName
+                 , tmpGoods.GoodsGroupName                AS GoodsGroupName
+                 , tmpGoods.NDSKindName                   AS NDSKindName
+                 , tmpGoods.isTop                         AS Goods_isTop
+                 , tmpGoods.PercentMarkup                 AS Goods_PercentMarkup
+                 , tmpPrice.DateChange                    AS DateChange
+                 , tmpPrice.MCSDateChange                 AS MCSDateChange
+                 , COALESCE(tmpPrice.MCSIsClose,False)    AS MCSIsClose
+                 , tmpPrice.MCSIsCloseDateChange          AS MCSIsCloseDateChange
+                 , COALESCE(tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
+                 , tmpPrice.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
+                 , COALESCE(tmpPrice.Fix,False)           AS Fix
+                 , tmpPrice.FixDateChange                 AS FixDateChange
+                 , tmpGoods.isErased                      AS isErased 
+                 , tmpGoods.isClose
+                 , tmpGoods.isFirst
+                 , tmpGoods.isSecond
+                 , tmpPrice.isTop                   AS isTop
+                 , tmpPrice.TopDateChange           AS TopDateChange
+                 , tmpPrice.PercentMarkup           AS PercentMarkup
+                 , tmpPrice.PercentMarkupDateChange AS PercentMarkupDateChange
+                              
+              FROM tmpGoods
+                LEFT OUTER JOIN tmpPrice ON  tmpPrice.goodsid = tmpGoods.GoodsId
             ORDER BY GoodsGroupName, GoodsName;
     ELSE
         RETURN QUERY
-         
-            SELECT
-                 Object_Price_View.Id                      AS Id
-               , COALESCE (Object_Price_View.Price,0)      :: TFloat    AS Price
-               , COALESCE (Object_Price_View.MCSValue,0)   :: TFloat    AS MCSValue
-                                        
-               , Object_Goods_View.id                      AS GoodsId
-               , Object_Goods_View.GoodsCodeInt            AS GoodsCode
-               , Object_Goods_View.GoodsName               AS GoodsName
-               , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
-               , Object_Goods_View.NDSKindName             AS NDSKindName
-               , Object_Goods_View.isTop                   AS Goods_isTop
-               , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
-               , Object_Price_View.DateChange              AS DateChange
-               , Object_Price_View.MCSDateChange           AS MCSDateChange
-               , Object_Price_View.MCSIsClose              AS MCSIsClose
-               , Object_Price_View.MCSIsCloseDateChange    AS MCSIsCloseDateChange
-               , Object_Price_View.MCSNotRecalc            AS MCSNotRecalc
-               , Object_Price_View.MCSNotRecalcDateChange  AS MCSNotRecalcDateChange
-               , Object_Price_View.Fix                     AS Fix
-               , Object_Price_View.FixDateChange           AS FixDateChange
-                              
-               , Object_Goods_View.isErased                AS isErased 
+          WITH 
+        tmpGoods AS (SELECT ObjectLink_Goods_Object.ObjectId                AS GoodsId
+                          , Object_Goods.ObjectCode                         AS GoodsCode
+                          , Object_Goods.ValueData                          AS GoodsName
+                          , Object_GoodsGroup.ValueData                     AS GoodsGroupName
+                          , Object_NDSKind.ValueData                        AS NDSKindName
+                          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
+                          , ObjectFloat_Goods_PercentMarkup.ValueData          AS PercentMarkup
+                 
+                          , Object_Goods.isErased                              AS isErased 
+                      
+                          , COALESCE(ObjectBoolean_Goods_Close.ValueData, false) AS isClose
+                          , COALESCE(ObjectBoolean_First.ValueData, False)       AS isFirst
+                          , COALESCE(ObjectBoolean_Second.ValueData, False)      AS isSecond
 
-               , Object_Goods_View.isClose
-               , Object_Goods_View.isFirst
-               , Object_Goods_View.isSecond
+                     FROM ObjectLink AS ObjectLink_Goods_Object
+                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_Goods_Object.ObjectId
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        
+                        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                               ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                               ON ObjectBoolean_Goods_Close.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close()   
+
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                               ON ObjectBoolean_Goods_TOP.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
             
-               , Object_Price_View.isTop                   AS isTop
-               , Object_Price_View.TopDateChange           AS TopDateChange
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                               ON ObjectBoolean_First.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First() 
+        
+                        LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
+                               ON ObjectBoolean_Second.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second() 
+    
+                        LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
+                               ON ObjectFloat_Goods_PercentMarkup.ObjectId = ObjectLink_Goods_Object.ObjectId 
+                              AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
 
-               , Object_Price_View.PercentMarkup           AS PercentMarkup
-               , Object_Price_View.PercentMarkupDateChange AS PercentMarkupDateChange
+                     WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId 
+                       AND (ObjectLink_Goods_Object.ObjectId = inGoodsId OR inGoodsId = 0)
+                       AND (inisShowDel = True OR Object_Goods.isErased = False)
+                    )
 
-            FROM Object_Price_View
-                LEFT OUTER JOIN Object_Goods_View ON Object_Goods_View.id = object_price_view.goodsid
+      , tmpPrice AS (SELECT Object_Price.Id                           AS Id
+                          , Price_Goods.ChildObjectId                 AS GoodsId
+                          , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
+                          , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
+                          , price_datechange.valuedata                AS DateChange
+                          , MCS_datechange.valuedata                  AS MCSDateChange
+                          , COALESCE(MCS_isClose.ValueData,False)     AS MCSIsClose
+                          , MCSIsClose_DateChange.valuedata           AS MCSIsCloseDateChange
+                          , COALESCE(MCS_NotRecalc.ValueData,False)   AS MCSNotRecalc
+                          , MCSNotRecalc_DateChange.valuedata         AS MCSNotRecalcDateChange
+                          , COALESCE(Price_Fix.ValueData,False)       AS Fix
+                          , Fix_DateChange.valuedata                  AS FixDateChange
+                          , COALESCE(Price_Top.ValueData,False)       AS isTop
+                          , Price_TOPDateChange.ValueData             AS TopDateChange
+
+                          , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                          , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+                     FROM Object AS Object_Price
+                        INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                    ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
+                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                   AND ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                        LEFT JOIN ObjectFloat AS Price_Value
+                                    ON Price_Value.ObjectId = Object_Price.Id
+                                   AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                        LEFT JOIN ObjectDate        AS Price_DateChange
+                                    ON Price_DateChange.ObjectId = Object_Price.Id
+                                   AND Price_DateChange.DescId = zc_ObjectDate_Price_DateChange()
+                        LEFT JOIN ObjectFloat       AS MCS_Value
+                                    ON MCS_Value.ObjectId = Object_Price.Id
+                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                        LEFT JOIN ObjectDate        AS MCS_DateChange
+                                    ON MCS_DateChange.ObjectId = Object_Price.Id
+                                   AND MCS_DateChange.DescId = zc_ObjectDate_Price_MCSDateChange()
+                        LEFT JOIN ObjectLink        AS Price_Goods
+                                    ON Price_Goods.ObjectId = Object_Price.Id
+                                   AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+      
+                       LEFT JOIN ObjectBoolean      AS MCS_isClose
+                                    ON MCS_isClose.ObjectId = Object_Price.Id
+                                   AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()
+                        LEFT JOIN ObjectDate        AS MCSIsClose_DateChange
+                                    ON MCSIsClose_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSIsClose_DateChange.DescId = zc_ObjectDate_Price_MCSIsCloseDateChange()
+                        LEFT JOIN ObjectBoolean     AS MCS_NotRecalc
+                                    ON MCS_NotRecalc.ObjectId = Object_Price.Id
+                                   AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                        LEFT JOIN ObjectDate        AS MCSNotRecalc_DateChange
+                                    ON MCSNotRecalc_DateChange.ObjectId = Object_Price.Id
+                                   AND MCSNotRecalc_DateChange.DescId = zc_ObjectDate_Price_MCSNotRecalcDateChange()
+                        LEFT JOIN ObjectBoolean     AS Price_Fix
+                                    ON Price_Fix.ObjectId = Object_Price.Id
+                                   AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                        LEFT JOIN ObjectDate        AS Fix_DateChange
+                                    ON Fix_DateChange.ObjectId = Object_Price.Id
+                                   AND Fix_DateChange.DescId = zc_ObjectDate_Price_FixDateChange()
+                        LEFT JOIN ObjectBoolean     AS Price_Top
+                                    ON Price_Top.ObjectId = Object_Price.Id
+                                   AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                       LEFT JOIN ObjectDate        AS Price_TOPDateChange
+                                    ON Price_TOPDateChange.ObjectId = Object_Price.Id
+                                   AND Price_TOPDateChange.DescId = zc_ObjectDate_Price_TOPDateChange()     
+
+                        LEFT JOIN ObjectFloat       AS Price_PercentMarkup
+                                    ON Price_PercentMarkup.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                        LEFT JOIN ObjectDate        AS Price_PercentMarkupDateChange
+                                    ON Price_PercentMarkupDateChange.ObjectId = Object_Price.Id
+                                   AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()   
+                     WHERE Object_Price.DescId = zc_Object_Price()
+                    )
+
+      
+            SELECT tmpPrice.Id                           AS Id
+                 , COALESCE (tmpPrice.Price,0)            :: TFloat AS Price
+                 , COALESCE (tmpPrice.MCSValue,0)         :: TFloat AS MCSValue
+                              
+                 , tmpGoods.GoodsId
+                 , tmpGoods.GoodsCode                  AS GoodsCode
+                 , tmpGoods.GoodsName                     AS GoodsName
+                 , tmpGoods.GoodsGroupName                AS GoodsGroupName
+                 , tmpGoods.NDSKindName                   AS NDSKindName
+                 , tmpGoods.isTop                         AS Goods_isTop
+                 , tmpGoods.PercentMarkup                 AS Goods_PercentMarkup
+                 , tmpPrice.DateChange                    AS DateChange
+                 , tmpPrice.MCSDateChange                 AS MCSDateChange
+                 , COALESCE(tmpPrice.MCSIsClose,False)    AS MCSIsClose
+                 , tmpPrice.MCSIsCloseDateChange          AS MCSIsCloseDateChange
+                 , COALESCE(tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
+                 , tmpPrice.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
+                 , COALESCE(tmpPrice.Fix,False)           AS Fix
+                 , tmpPrice.FixDateChange                 AS FixDateChange
+                 , tmpGoods.isErased                      AS isErased 
+                 , tmpGoods.isClose
+                 , tmpGoods.isFirst
+                 , tmpGoods.isSecond
+                 , tmpPrice.isTop                   AS isTop
+                 , tmpPrice.TopDateChange           AS TopDateChange
+                 , tmpPrice.PercentMarkup           AS PercentMarkup
+                 , tmpPrice.PercentMarkupDateChange AS PercentMarkupDateChange
+
+            FROM tmpPrice
+                LEFT OUTER JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
        
-            WHERE Object_Price_View.unitid = inUnitId
-              AND (inisShowDel = True OR Object_Goods_View.isErased = False)
-              AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
     END IF;
 END;

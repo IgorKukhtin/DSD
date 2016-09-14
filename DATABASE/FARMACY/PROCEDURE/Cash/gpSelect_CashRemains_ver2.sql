@@ -145,7 +145,7 @@ BEGIN
             CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
             CashSessionSnapShot.MinExpirationDate, 
-            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + interval '6 MONTH' THEN zc_Color_Blue() ELSE zc_Color_Black() END      AS Color_ExpirationDate                --vbAVGDateEnd
+            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate                --vbAVGDateEnd
  
          FROM
             CashSessionSnapShot
