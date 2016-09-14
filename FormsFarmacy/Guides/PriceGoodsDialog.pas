@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
 
 type
   TPriceGoodsDialogForm = class(TParentForm)
@@ -25,6 +25,11 @@ type
     cxLabel2: TcxLabel;
     ceGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
+    spGet_UserUnit: TdsdStoredProc;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actGet_UserUnit: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
   ClientHeight = 419
   ClientWidth = 758
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 774
   ExplicitHeight = 457
   PixelsPerInch = 96
@@ -25,7 +26,6 @@ inherited MCS_LiteForm: TMCS_LiteForm
       inherited cxGrid: TcxGrid
         Width = 758
         Height = 361
-        ExplicitLeft = 0
         ExplicitWidth = 758
         ExplicitHeight = 361
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -110,6 +110,10 @@ inherited MCS_LiteForm: TMCS_LiteForm
     Enabled = False
     TabOrder = 4
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 83
+    Top = 208
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -128,6 +132,8 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end>
   end
   inherited ActionList: TActionList
+    Left = 63
+    Top = 319
     inherited actStartLoadPrice: TMultiAction
       Enabled = False
     end
@@ -181,10 +187,22 @@ inherited MCS_LiteForm: TMCS_LiteForm
       Enabled = False
     end
   end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
+  end
+  inherited UnitGuides: TdsdGuides
+    Left = 200
+    Top = 8
+  end
+  inherited FormParams: TdsdFormParams
+    Left = 296
+    Top = 96
+  end
   inherited spInsertUpdate: TdsdStoredProc
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -199,6 +217,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inPrice'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
@@ -207,6 +226,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inMCSValue'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSValue'
         DataType = ftFloat
@@ -229,6 +249,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inPercentMarkup'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'PercentMarkup'
         DataType = ftFloat
@@ -237,6 +258,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inGoodsId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
@@ -252,6 +274,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inMCSIsClose'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSIsClose'
         DataType = ftBoolean
@@ -260,6 +283,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inMCSNotRecalc'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalc'
         DataType = ftBoolean
@@ -268,6 +292,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inFix'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Fix'
         DataType = ftBoolean
@@ -276,6 +301,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'inisTop'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'isTop'
         DataType = ftBoolean
@@ -284,6 +310,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'DateChange'
         DataType = ftDateTime
@@ -291,6 +318,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outMCSDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'MCSDateChange'
         DataType = ftDateTime
@@ -298,6 +326,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outMCSIsCloseDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'MCSIsCloseDateChange'
         DataType = ftDateTime
@@ -305,6 +334,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outMCSNotRecalcDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalcDateChange'
         DataType = ftDateTime
@@ -312,6 +342,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outFixDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'FixDateChange'
         DataType = ftDateTime
@@ -319,6 +350,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outStartDate'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -327,6 +359,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outTOPDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'TOPDateChange'
         DataType = ftDateTime
@@ -334,12 +367,16 @@ inherited MCS_LiteForm: TMCS_LiteForm
       end
       item
         Name = 'outPercentMarkupDateChange'
+        Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'PercentMarkupDateChange'
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 264
+  end
+  inherited rdUnit: TRefreshDispatcher
+    Left = 200
   end
   inherited spRecalcMCS: TdsdStoredProc
     Left = 400
@@ -356,7 +393,6 @@ inherited MCS_LiteForm: TMCS_LiteForm
     Params = <
       item
         Name = 'UnitId'
-        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
@@ -370,7 +406,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 160
+    Left = 456
+    Top = 152
   end
 end
