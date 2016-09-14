@@ -1,10 +1,6 @@
  -- Function: gpReport_MotionGoods_NEW()
 
-DROP FUNCTION IF EXISTS gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_MotionGoods_NEW (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate          TDateTime , --
@@ -203,28 +199,33 @@ BEGIN
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
-        ELSE
-            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-               SELECT Object.Id
-                    , tmpCLODesc.DescId
-                    , tmpDesc.ContainerDescId
-               FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
-                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
-               WHERE Object.DescId = zc_Object_Member()
-                 AND vbIsSummIn = TRUE
-                 AND 1 = 0
-              UNION ALL
-               SELECT Object.Id
-                    , tmpCLODesc.DescId
-                    , tmpDesc.ContainerDescId
-               FROM Object
-                    LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
-                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
-               WHERE Object.DescId = zc_Object_Car()
-                 AND vbIsSummIn = TRUE;
         END IF;
     END IF;
+
+    -- добавили
+    INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+       SELECT Object.Id
+            , tmpCLODesc.DescId
+            , tmpDesc.ContainerDescId
+       FROM Object
+            LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+            LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+       WHERE Object.DescId IN (zc_Object_Member(), zc_Object_Personal(), zc_Object_Car())
+         AND vbIsSummIn  = TRUE
+         AND (inIsAllMO  = TRUE
+           OR inIsAllAuto = TRUE)
+      UNION ALL
+       SELECT 0 AS Id
+            , tmpCLODesc.DescId
+            , tmpDesc.ContainerDescId
+       FROM Object
+            LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+            LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+       WHERE Object.Id = zc_Juridical_Basis()
+         AND vbIsSummIn  = TRUE
+         AND (inIsAllMO  = TRUE
+           OR inIsAllAuto = TRUE);
+
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;
 
@@ -264,6 +265,7 @@ BEGIN
                             , COALESCE (tmpReport_summ.ContainerId_count, tmpReport_count.ContainerId_count) AS ContainerId_count
                             , COALESCE (tmpReport_summ.ContainerId,       tmpReport_count.ContainerId)       AS ContainerId
                             , COALESCE (tmpReport_summ.LocationId,        tmpReport_count.LocationId)        AS LocationId
+                            , COALESCE (tmpReport_summ.CarId,             tmpReport_count.CarId)             AS CarId
                             , COALESCE (tmpReport_summ.GoodsId,           tmpReport_count.GoodsId)           AS GoodsId
                             , COALESCE (tmpReport_summ.GoodsKindId,       tmpReport_count.GoodsKindId)       AS GoodsKindId
                             , COALESCE (tmpReport_summ.PartionGoodsId,    tmpReport_count.PartionGoodsId)    AS PartionGoodsId
@@ -570,6 +572,7 @@ BEGIN
         (SELECT (tmpMIContainer_all.AccountId) AS AccountId
               , tmpMIContainer_all.ContainerId
               , tmpMIContainer_all.LocationId
+              , tmpMIContainer_all.CarId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
               , tmpMIContainer_all.PartionGoodsId
@@ -725,6 +728,7 @@ BEGIN
          GROUP BY tmpMIContainer_all.AccountId
                 , tmpMIContainer_all.ContainerId
                 , tmpMIContainer_all.LocationId
+                , tmpMIContainer_all.CarId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
                 , tmpMIContainer_all.PartionGoodsId
@@ -743,11 +747,12 @@ BEGIN
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
         LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
+        -- LEFT JOIN ObjectDesc AS ObjectDesc_find ON ObjectDesc_find.Id = Object_Location_find.DescId
         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
                                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN tmpMIContainer_group.CarId > 0 THEN tmpMIContainer_group.CarId WHEN Object_Location_find.DescId = zc_Object_Car() THEN Object_Location_find.Id END -- CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
+        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN tmpMIContainer_group.LocationId = tmpMIContainer_group.CarId OR Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END -- CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = CASE WHEN tmpMIContainer_group.CarId > 0 THEN zc_Object_Car() ELSE Object_Location_find.DescId END
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -811,4 +816,4 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 
 -- тест
 -- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 0, inUnitGroupId_by:=0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inSession:= zfCalc_UserAdmin())
--- SELECT * from gpReport_MotionGoods (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= TRUE, inSession := zfCalc_UserAdmin());
+-- SELECT * from gpReport_MotionGoods (inStartDate:= '01.09.2016', inEndDate:= '01.09.2016', inAccountGroupId:= 0, inUnitGroupId:= 8459, inLocationId:= 0, inGoodsGroupId:= 1860, inGoodsId:= 1, inUnitGroupId_by:= 0, inLocationId_by:= 0, inIsInfoMoney:= FALSE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := zfCalc_UserAdmin());

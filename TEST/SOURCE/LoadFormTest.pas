@@ -741,17 +741,7 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TActionForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
-  exit;
+//  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));

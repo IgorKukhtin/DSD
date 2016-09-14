@@ -39,7 +39,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
   object deEnd: TcxDateEdit
     Left = 121
     Top = 27
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
@@ -47,7 +47,7 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
   object deStart: TcxDateEdit
     Left = 11
     Top = 27
-    EditValue = 42005d
+    EditValue = 42370d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
@@ -166,10 +166,10 @@ object Report_GoodsBalanceDialogForm: TReport_GoodsBalanceDialogForm
   object cbAllAuto: TcxCheckBox
     Left = 322
     Top = 27
-    Caption = #1042#1089#1077' '#1040#1074#1090#1086
+    Caption = #1042#1089#1077' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
     Properties.ReadOnly = False
     TabOrder = 18
-    Width = 71
+    Width = 118
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

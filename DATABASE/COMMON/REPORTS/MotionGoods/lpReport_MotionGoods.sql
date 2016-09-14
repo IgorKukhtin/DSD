@@ -17,6 +17,7 @@ RETURNS TABLE (AccountId Integer
              , ContainerId_count Integer
              , ContainerId Integer
              , LocationId Integer
+             , CarId Integer
              , GoodsId Integer, GoodsKindId Integer
              , PartionGoodsId Integer, AssetToId Integer
 
@@ -95,7 +96,10 @@ RETURNS TABLE (AccountId Integer
 AS
 $BODY$
    DECLARE vbIsAssetTo Boolean;
+   DECLARE vbIsCLO_Member Boolean;
 BEGIN
+    vbIsCLO_Member:= EXISTS (SELECT 1 FROM _tmpLocation WHERE DescId <> zc_ContainerLinkObject_Unit());
+
     -- определяется - надо ли ТОЛЬКО ОС и все что с ними связано
     IF inAccountGroupId = -1 * zc_Enum_AccountGroup_10000()
     THEN
@@ -117,7 +121,7 @@ BEGIN
 
     -- таблица -
     CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
 
 
     -- группа товаров или товар или все товары из проводок
@@ -133,8 +137,8 @@ BEGIN
                                  ) AS tmp
                                  INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
                            )
-        INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-           SELECT _tmpLocation.LocationId
+           , tmp AS
+          (SELECT _tmpLocation.LocationId
                 , _tmpLocation.ContainerDescId
                 , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
                             THEN ContainerLinkObject.ContainerId
@@ -151,6 +155,8 @@ BEGIN
                        ELSE COALESCE (tmpAccount.AccountGroupId, 0)
                   END AS AccountGroupId
                 , Container.Amount
+                , _tmpLocation.DescId    AS Value1_ch
+                , CLO_Member.ContainerId AS Value2_ch
            FROM _tmpLocation
                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpLocation.LocationId
                                               AND ContainerLinkObject.DescId = _tmpLocation.DescId
@@ -164,6 +170,8 @@ BEGIN
                 LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                             AND _tmpLocation.ContainerDescId = zc_Container_Count()
+                LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = CASE WHEN vbIsCLO_Member = TRUE THEN Container.Id ELSE NULL END
+                                                           AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
 
                 LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
                                                             AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
@@ -178,6 +186,16 @@ BEGIN
                  )
              AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
                OR vbIsAssetTo = FALSE)
+             -- AND ((ContainerLinkObject.DescId <> zc_ContainerLinkObject_Member() AND CLO_Member.ContainerId IS NULL)
+             --  OR ContainerLinkObject.DescId = zc_ContainerLinkObject_Member())
+          )
+
+        -- Результат
+        INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
+           SELECT tmp.LocationId, tmp.ContainerDescId, tmp.ContainerId_count, tmp.ContainerId_begin, tmp.GoodsId, tmp.AccountId, tmp.AccountGroupId, tmp.Amount
+           FROM tmp
+           WHERE ((tmp.Value1_ch <> zc_ContainerLinkObject_Member() AND tmp.Value2_ch IS NULL)
+               OR tmp.Value1_ch = zc_ContainerLinkObject_Member())
           ;
     ELSE IF inGoodsId <> 0
          THEN
@@ -195,7 +213,9 @@ BEGIN
                                       INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
                                 )
              INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-                SELECT _tmpLocation.LocationId
+                SELECT tmp.LocationId, tmp.ContainerDescId, tmp.ContainerId_count, tmp.ContainerId_begin, tmp.GoodsId, tmp.AccountId, tmp.AccountGroupId, tmp.Amount
+                FROM
+               (SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
                                  THEN tmpContainer.ContainerId
@@ -212,6 +232,8 @@ BEGIN
                             ELSE COALESCE (tmpAccount.AccountGroupId, 0)
                        END AS AccountGroupId
                      , Container.Amount
+                     , _tmpLocation.DescId    AS Value1_ch
+                     , CLO_Member.ContainerId AS Value2_ch
                 FROM tmpContainer
                      INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = tmpContainer.ContainerId
                      INNER JOIN _tmpLocation ON _tmpLocation.LocationId = ContainerLinkObject.ObjectId
@@ -222,6 +244,8 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
+                     LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = CASE WHEN vbIsCLO_Member = TRUE THEN Container.Id ELSE NULL END
+                                                                AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
 
                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
@@ -236,7 +260,12 @@ BEGIN
                       )
                   AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
                      OR vbIsAssetTo = FALSE)
-               ;
+                  -- AND ((_tmpLocation.DescId <> zc_ContainerLinkObject_Member() AND CLO_Member.ContainerId IS NULL)
+                  --   OR _tmpLocation.DescId = zc_ContainerLinkObject_Member())
+               ) AS tmp
+                WHERE ((tmp.Value1_ch <> zc_ContainerLinkObject_Member() AND tmp.Value2_ch IS NULL)
+                    OR tmp.Value1_ch = zc_ContainerLinkObject_Member())
+              ;
          ELSE
              WITH tmpAccount AS (SELECT View_Account.AccountGroupId, View_Account.AccountId
                                  FROM (SELECT inAccountGroupId              AS AccountGroupId WHERE inAccountGroupId <> 0
@@ -248,7 +277,9 @@ BEGIN
                                       INNER JOIN Object_Account_View AS View_Account ON View_Account.AccountGroupId = tmp.AccountGroupId
                                 )
              INSERT INTO _tmpListContainer (LocationId, ContainerDescId, ContainerId_count, ContainerId_begin, GoodsId, AccountId, AccountGroupId, Amount)
-                SELECT _tmpLocation.LocationId
+                SELECT tmp.LocationId, tmp.ContainerDescId, tmp.ContainerId_count, tmp.ContainerId_begin, tmp.GoodsId, tmp.AccountId, tmp.AccountGroupId, tmp.Amount
+                FROM
+               (SELECT _tmpLocation.LocationId
                      , _tmpLocation.ContainerDescId
                      , CASE WHEN _tmpLocation.ContainerDescId = zc_Container_Count()
                                  THEN ContainerLinkObject.ContainerId
@@ -265,6 +296,8 @@ BEGIN
                             ELSE COALESCE (tmpAccount.AccountGroupId, 0)
                        END AS AccountGroupId
                      , Container.Amount
+                     , _tmpLocation.DescId    AS Value1_ch
+                     , CLO_Member.ContainerId AS Value2_ch
                 FROM _tmpLocation
                      INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpLocation.LocationId
                                                    AND ContainerLinkObject.DescId = _tmpLocation.DescId
@@ -277,6 +310,8 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
                                                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
+                     LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = CASE WHEN vbIsCLO_Member = TRUE THEN Container.Id ELSE NULL END
+                                                                AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
 
                      LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = ContainerLinkObject.ContainerId
                                                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
@@ -290,6 +325,11 @@ BEGIN
                       )
                   AND (((Object_PartionGoods.ObjectCode > 0 OR CLO_AssetTo.ObjectId > 0 OR tmpAccount.AccountGroupId = zc_Enum_AccountGroup_10000()) AND vbIsAssetTo = TRUE)
                      OR vbIsAssetTo = FALSE)
+                  -- AND ((ContainerLinkObject.DescId <> zc_ContainerLinkObject_Member() AND CLO_Member.ContainerId IS NULL)
+                  --   OR ContainerLinkObject.DescId = zc_ContainerLinkObject_Member())
+               ) AS tmp
+                WHERE ((tmp.Value1_ch <> zc_ContainerLinkObject_Member() AND tmp.Value2_ch IS NULL)
+                    OR tmp.Value1_ch = zc_ContainerLinkObject_Member())
                ;
          END IF;
     END IF;
@@ -338,11 +378,12 @@ BEGIN
    ;
 
     -- все ContainerId
-    INSERT INTO _tmpContainer (ContainerDescId, ContainerId_count, ContainerId_begin, LocationId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
+    INSERT INTO _tmpContainer (ContainerDescId, ContainerId_count, ContainerId_begin, LocationId, CarId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
        SELECT _tmpListContainer.ContainerDescId
             , _tmpListContainer.ContainerId_count
             , _tmpListContainer.ContainerId_begin
-            , _tmpListContainer.LocationId
+            , CASE WHEN _tmpListContainer.LocationId = 0 THEN COALESCE (CLO_Unit.ObjectId, 0) ELSE _tmpListContainer.LocationId END AS LocationId
+            , COALESCE (CLO_Car.ObjectId, 0) AS CarId
             , _tmpListContainer.GoodsId
             , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
             , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
@@ -357,6 +398,10 @@ BEGIN
                                                              AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
             LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = _tmpListContainer.ContainerId_begin
                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+            LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = _tmpListContainer.ContainerId_begin
+                                                    AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+            LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = _tmpListContainer.ContainerId_begin
+                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
        ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -368,6 +413,7 @@ BEGIN
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
+                                       , _tmpContainer.CarId
                                        , _tmpContainer.GoodsId
                                        , _tmpContainer.GoodsKindId
                                        , _tmpContainer.PartionGoodsId
@@ -784,6 +830,7 @@ BEGIN
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
                                          , _tmpContainer.LocationId
+                                         , _tmpContainer.CarId
                                          , _tmpContainer.GoodsId
                                          , _tmpContainer.GoodsKindId
                                          , _tmpContainer.PartionGoodsId
@@ -1181,6 +1228,7 @@ BEGIN
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
+                                       , _tmpContainer.CarId
                                        , _tmpContainer.GoodsId
                                        , _tmpContainer.GoodsKindId
                                        , _tmpContainer.PartionGoodsId
@@ -1265,6 +1313,7 @@ BEGIN
                                          , _tmpContainer.ContainerId_count
                                          , _tmpContainer.ContainerId_begin
                                          , _tmpContainer.LocationId
+                                         , _tmpContainer.CarId
                                          , _tmpContainer.GoodsId
                                          , _tmpContainer.GoodsKindId
                                          , _tmpContainer.PartionGoodsId
@@ -1280,6 +1329,7 @@ BEGIN
               , tmpMIContainer_all.ContainerId_count AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin AS ContainerId
               , tmpMIContainer_all.LocationId
+              , tmpMIContainer_all.CarId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
               , tmpMIContainer_all.PartionGoodsId
@@ -1356,6 +1406,7 @@ BEGIN
                 , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
                 , tmpMIContainer_all.LocationId
+                , tmpMIContainer_all.CarId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
                 , tmpMIContainer_all.PartionGoodsId
@@ -1386,4 +1437,4 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 -- тест
 -- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inAccountGroupId:= 0, inUnitGroupId:= 0, inLocationId:= 0, inGoodsGroupId:= 1832, inGoodsId:= 0, inIsInfoMoney:= FALSE, inUserId:= zfCalc_UserAdmin() :: Integer);
 -- CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
--- SELECT * from lpReport_MotionGoods (inStartDate:= '01.06.2015', inEndDate:= '30.06.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inUserId := zfCalc_UserAdmin() :: Integer);
+-- SELECT * from lpReport_MotionGoods (inStartDate:= '01.09.2016', inEndDate:= '01.09.2016', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1832 , inGoodsId := 0 ,  inIsInfoMoney:= TRUE, inUserId := zfCalc_UserAdmin() :: Integer);

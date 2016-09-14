@@ -68,7 +68,7 @@ BEGIN
     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     -- !!!Временно исправлются ошибки с датами в ценах!!!
     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    IF inSession <> '3'
+    IF 1=1 -- inSession <> '3'
     THEN
     UPDATE  ObjectHistory set EndDate = coalesce (tmp.StartDate, zc_DateEnd())
     FROM (with tmp as (select ObjectHistory_Price.*

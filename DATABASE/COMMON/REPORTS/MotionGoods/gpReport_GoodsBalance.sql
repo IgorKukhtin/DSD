@@ -183,8 +183,7 @@ BEGIN
                     -- LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId) AS tmpDesc ON 1 = 1 -- !!!временно без с/с, для скорости!!!
                     LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1*/
               ;
-        ELSE
-            INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+        /*ELSE
               SELECT tmp.LocationId, tmp.DescId, tmpDesc.ContainerDescId
               FROM
                -- Склад специй и запчастей
@@ -195,9 +194,23 @@ BEGIN
                SELECT Object.Id AS LocationId, zc_ContainerLinkObject_Car() AS DescId  FROM Object WHERE Object.DescId = zc_Object_Car() AND inAccountGroupId = 0 AND inGoodsGroupId = 1941 -- СД-ОБЩАЯ
               ) AS tmp
               LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId WHERE vbIsSummIn = TRUE) AS tmpDesc ON 1 = 1
-             ;
+             ;*/
         END IF;
     END IF;
+
+    -- добавили
+    INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+       SELECT Object.Id
+                    , tmpCLODesc.DescId
+                    , tmpDesc.ContainerDescId
+       FROM Object
+            LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+            LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
+       WHERE Object.DescId IN (zc_Object_Member(), zc_Object_Car())
+         AND vbIsSummIn  = TRUE
+         AND (inIsAllMO  = TRUE
+           OR inIsAllAuto = TRUE);
+
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;
 
@@ -1292,4 +1305,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_GoodsBalance (inStartDate:= '01.07.2015', inEndDate:= '01.07.2015', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inSession := '5');
+-- SELECT * from gpReport_GoodsBalance (inStartDate:= '01.09.2016', inEndDate:= '01.09.2016', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
