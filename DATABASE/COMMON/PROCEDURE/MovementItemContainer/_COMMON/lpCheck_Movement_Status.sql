@@ -45,7 +45,7 @@ BEGIN
   -- END 1.2. проверка <Медок>
 
 
-  IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+  IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
   THEN
 
      -- 2.1.1. проверка для налоговых
@@ -60,7 +60,7 @@ BEGIN
      FROM MovementLinkMovement AS MovementLinkMovement_Master
           INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
                                                         AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
-                                                        AND Movement_DocumentMaster.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_PriceCorrective())
+                                                        AND Movement_DocumentMaster.DescId IN (zc_Movement_Sale(), /*zc_Movement_ReturnIn(), */ zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_PriceCorrective())
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement_DocumentMaster.DescId
           LEFT JOIN MovementString AS MS_InvNumberPartner
                                    ON MS_InvNumberPartner.MovementId = Movement_DocumentMaster.Id
@@ -281,6 +281,7 @@ BEGIN
                                   AND MS_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
      WHERE MovementLinkMovement_Child.MovementChildId = inMovementId
        AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child();
+
      -- проверка - если входит в сводную, то она должна быть распроведена
      IF vbStatusId_Tax = zc_Enum_Status_Complete()
      THEN
