@@ -29,7 +29,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
+             , CURRENT_DATE::TDateTime                          AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
@@ -112,6 +112,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.06.16         * CURRENT_DATE::TDateTime 
  14.06.16         *
  21.03.16         *
  29.07.15                                                                       *

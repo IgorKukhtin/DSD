@@ -35,9 +35,9 @@ BEGIN
         SELECT
             0                                                AS Id
           , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
-          , inOperDate				                         AS OperDate
+          , CURRENT_DATE::TDateTime                          AS OperDate
           , Object_Status.Code               	             AS StatusCode
-          , Object_Status.Name              		         AS StatusName
+          , Object_Status.Name              	             AS StatusName
           , 0::TFloat                                        AS TotalCount
           , 0::TFloat                                        AS TotalSumm
           , 0::TFloat                                        AS TotalSummPrimeCost
@@ -81,5 +81,6 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.09.16         *
  13.10.15                                                                        *
 */

@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_Goods()
  
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Juridical(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Juridical(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
     IN inObjectId    INTEGER , 
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -13,6 +15,7 @@ RETURNS TABLE (Id Integer
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
+             , isErased boolean
 
 ) AS
 $BODY$
@@ -40,10 +43,12 @@ BEGIN
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate
 
-      FROM  ObjectLink AS ObjectLink_Goods_Object
+         , Object_Goods.isErased                   AS isErased 
+      FROM ObjectLink AS ObjectLink_Goods_Object
 
-          LEFT JOIN Object AS Object_Goods 
-                           ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+          INNER JOIN Object AS Object_Goods 
+                            ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
+                           AND (Object_Goods.isErased = inIsErased OR inIsErased = True)
 
           LEFT JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectString.DescId = zc_ObjectString_Goods_Code()
@@ -90,13 +95,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods_Juridical(Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Goods_Juridical(Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.09.16         * 
  10.02.16         * ушли от вьюхи
                     + Акция
  11.11.14                         *

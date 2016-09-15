@@ -1,25 +1,28 @@
 ﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 432
-  ClientWidth = 1180
+  ClientWidth = 1063
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1196
-  ExplicitHeight = 467
+  ExplicitLeft = -30
+  ExplicitWidth = 1079
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1180
+    Width = 1063
     Height = 406
     ExplicitWidth = 1180
     ExplicitHeight = 406
     ClientRectBottom = 406
-    ClientRectRight = 1180
+    ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1180
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 1180
+        Width = 1063
         Height = 406
+        ExplicitLeft = -48
+        ExplicitTop = -3
         ExplicitWidth = 1180
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -123,6 +126,15 @@
             Options.Editing = False
             Width = 101
           end
+          object colisErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
         end
       end
       object edPartnerCode: TcxButtonEdit
@@ -209,6 +221,25 @@
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+    end
+    object actShowErased: TBooleanStoredProcAction [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Enabled = False
@@ -513,6 +544,35 @@
           MultiSelectSeparator = ','
         end>
     end
+    object dsdSetUnErasedGoods: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedGoods
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object dsdSetErasedGoogs: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErasedGoods
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedGoods
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -530,6 +590,14 @@
         Value = ''
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -552,6 +620,26 @@
         item
           Visible = True
           ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedGoogs'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -652,6 +740,18 @@
     object bbSpecCondition: TdxBarButton
       Action = actStartLoadIsSpecCondition
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088'. <'#1057#1087#1077#1094'. '#1091#1089#1083#1086#1074#1080#1103'>'
+      Category = 0
+    end
+    object bbSetErasedGoogs: TdxBarButton
+      Action = dsdSetErasedGoogs
+      Category = 0
+    end
+    object bbSetUnErasedGoods: TdxBarButton
+      Action = dsdSetUnErasedGoods
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -1102,6 +1202,23 @@
       end>
     PackSize = 1
     Left = 824
+    Top = 136
+  end
+  object spErasedUnErasedGoods: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 40
     Top = 136
   end
 end

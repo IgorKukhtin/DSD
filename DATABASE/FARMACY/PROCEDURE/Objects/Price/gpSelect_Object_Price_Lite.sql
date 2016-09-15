@@ -392,7 +392,7 @@ BEGIN
                  , tmpPrice.PercentMarkupDateChange AS PercentMarkupDateChange
 
             FROM tmpPrice
-                LEFT OUTER JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
+                JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
        
             ORDER BY GoodsGroupName, GoodsName;
     END IF;
