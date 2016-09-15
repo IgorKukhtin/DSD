@@ -47,8 +47,9 @@ type
     function InsertUpdateComDoc(ЕлектроннийДокумент
       : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
-    procedure InitializeComSigner(DebugMode: boolean);
-    procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean);
+    procedure InitializeComSigner(DebugMode: boolean; UserSign, UserSeal, UserKey : string);
+    procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey : string );
+
     procedure PutFileToFTP(FileName: string; Directory: string);
     procedure PutStreamToFTP(Stream: TStream; FileName: string;
       Directory: string);
@@ -221,7 +222,11 @@ begin
   P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stComDoc, DebugMode);
+    SignFile(XMLFileName, stComDoc, DebugMode
+           , HeaderDataSet.FieldByName('UserSign').asString
+           , HeaderDataSet.FieldByName('UserSeal').asString
+           , HeaderDataSet.FieldByName('UserKey').asString
+            );
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -708,7 +713,12 @@ begin
 //  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stDeclar, DebugMode);
+    SignFile(XMLFileName, stDeclar, DebugMode
+           , HeaderDataSet.FieldByName('UserSign').asString
+           , HeaderDataSet.FieldByName('UserSeal').asString
+           , HeaderDataSet.FieldByName('UserKey').asString
+            );
+
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -1044,7 +1054,11 @@ begin
 //  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stDeclar, DebugMode);
+    SignFile(XMLFileName, stDeclar, DebugMode
+           , HeaderDataSet.FieldByName('UserSign').asString
+           , HeaderDataSet.FieldByName('UserSeal').asString
+           , HeaderDataSet.FieldByName('UserKey').asString
+            );
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -1332,7 +1346,12 @@ begin
   try
 //  ShowMessage ('start подписать - SignFile : ' + XMLFileName);
     // подписать
-    SignFile(XMLFileName, stDeclar, DebugMode);
+    SignFile(XMLFileName, stDeclar, DebugMode
+           , HeaderDataSet.FieldByName('UserSign').asString
+           , HeaderDataSet.FieldByName('UserSeal').asString
+           , HeaderDataSet.FieldByName('UserKey').asString
+            );
+
 //  ShowMessage ('end подписать - SignFile : ' + XMLFileName);
 
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
@@ -1607,7 +1626,12 @@ begin
   P7SFileName := XMLFileName; //StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
   try
     // подписать
-    SignFile(XMLFileName, stDeclar, DebugMode);
+    SignFile(XMLFileName, stDeclar, DebugMode
+           , HeaderDataSet.FieldByName('UserSign').asString
+           , HeaderDataSet.FieldByName('UserSeal').asString
+           , HeaderDataSet.FieldByName('UserKey').asString
+            );
+
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
       FInsertEDIEvents.ParamByName('inMovementId').Value :=
@@ -2008,7 +2032,7 @@ begin
   end;
 end;
 
-procedure TEDI.InitializeComSigner;
+procedure TEDI.InitializeComSigner (DebugMode: boolean; UserSign, UserSeal, UserKey : string);
 var
   privateKey: string;
   FileName, Error: string;
@@ -2064,7 +2088,10 @@ begin
 
   try
     // Установка ключей
-    FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
+    if UserSign <> ''
+    then FileName := UserSign
+    else FileName := ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2';
+
 	  ComSigner.SetPrivateKeyFile (euKeyTypeAccountant, FileName, '24447183', false); // бухгалтер
     Error := ComSigner.GetLastErrorDescription;
     if Error <> okError then
@@ -2080,8 +2107,11 @@ begin
 
   try
     // Установка ключей
-    FileName := ExtractFilePath(ParamStr(0)) +
-      'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    if UserSeal <> ''
+    then FileName := UserSeal
+    else FileName := ExtractFilePath(ParamStr(0))
+                  + 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
     if Error <> okError then
@@ -2097,8 +2127,10 @@ begin
 
   try
     // Установка ключей
-    FileName := ExtractFilePath(ParamStr(0)) +
-      'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
+    if UserKey <> ''
+    then FileName := UserKey
+    else FileName := ExtractFilePath(ParamStr(0))
+                   + 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2';
 	  ComSigner.SetPrivateKeyFile (euKeyTypeDigitalStamp, FileName, '24447183', false); // Печать
     Error := ComSigner.GetLastErrorDescription;
     if Error <> okError then
@@ -2648,7 +2680,12 @@ begin
   try
 
     // Подписылаем его
-    SignFile(FileName, stComDoc, DebugMode);
+    SignFile(FileName, stComDoc, DebugMode
+           , MovementDataSet.FieldByName('UserSign').asString
+           , MovementDataSet.FieldByName('UserSeal').asString
+           , MovementDataSet.FieldByName('UserKey').asString
+            );
+
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
     FInsertEDIEvents.ParamByName('inEDIEvent').Value :=
       'Документ сформирован и подписан';
@@ -2672,7 +2709,7 @@ begin
   FDirectory := Value;
 end;
 
-procedure TEDI.SignFile(FileName: string; SignType: TSignType; DebugMode: boolean);
+procedure TEDI.SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey : string);
 var
   vbSignType: integer;
   i: integer;
@@ -2681,7 +2718,7 @@ var
   ddd: OleVariant;
 begin
   if VarIsNull(ComSigner) then
-    InitializeComSigner(DebugMode);
+    InitializeComSigner(DebugMode, UserSign, UserSeal, UserKey);
 
   if SignType = stDeclar then
     vbSignType := 1;

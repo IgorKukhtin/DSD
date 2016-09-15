@@ -32,6 +32,10 @@ $BODY$
     DECLARE vbVATPercent TFloat;
     DECLARE vbNotNDSPayer_INN TVarChar;
  
+   DECLARE vbUserSign TVarChar;
+   DECLARE vbUserSeal TVarChar;
+   DECLARE vbUserKey  TVarChar;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
@@ -39,6 +43,24 @@ BEGIN
 
      -- !!!хардкод!!!
      vbNotNDSPayer_INN := '100000000000';
+
+     -- определяется
+     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE 'Ключ - Неграш О.В..ZS2'                                                   END AS UserSign
+          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'   END AS UserSeal
+          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2' END AS UserKey
+            INTO vbUserSign, vbUserSeal, vbUserKey
+     FROM Object AS Object_User
+          LEFT JOIN ObjectString AS ObjectString_UserSign
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                AND ObjectString_UserSign.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserSeal
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                AND ObjectString_UserSeal.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserKey 
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                                AND ObjectString_UserKey.ObjectId = Object_User.Id
+     WHERE Object_User.Id = vbUserId;
+
 
      -- определяется <Налоговый документ> и его параметры
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0)                  AS MovementId_Tax
@@ -285,6 +307,9 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Vat.ValueData, False) AS  isVat
 
+           , vbUserSign AS UserSign
+           , vbUserSeal AS UserSeal
+           , vbUserKey  AS UserKey
 
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
