@@ -70,6 +70,14 @@ type
     bbSpecCondition: TdxBarButton;
     spGetImportSetting_Goods_IsSpecCondition: TdsdStoredProc;
     spDelete_ObjectBoolean_Goods_IsSpecCondition: TdsdStoredProc;
+    actShowErased: TBooleanStoredProcAction;
+    spErasedUnErasedGoods: TdsdStoredProc;
+    dsdSetErasedGoogs: TdsdUpdateErased;
+    dsdSetUnErasedGoods: TdsdUpdateErased;
+    bbSetErasedGoogs: TdxBarButton;
+    bbSetUnErasedGoods: TdxBarButton;
+    bbShowErased: TdxBarButton;
+    colisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public
