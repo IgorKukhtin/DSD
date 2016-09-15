@@ -24,7 +24,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_Inventory_seq') AS TVarChar) AS InvNumber
-             , inOperDate                       AS OperDate
+             , CURRENT_DATE::TDateTime          AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
              , 0 :: TFloat                      AS TotalCount
@@ -77,6 +77,7 @@ ALTER FUNCTION gpGet_Movement_Inventory (Integer, TDateTime, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 15.09.16         * add CURRENT_DATE::TDateTime 
  16.09.15                                                                     * + FullInvent
  11.07.15                                                                     *
  */
