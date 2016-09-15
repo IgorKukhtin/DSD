@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
     IN inIsErased    Boolean ,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, CommonCode Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
              , MakerName TVarChar, MinimumLot TFloat
@@ -27,6 +27,7 @@ BEGIN
       RETURN QUERY 
       SELECT 
            ObjectLink_LinkGoods_GoodsMain.ObjectId AS Id
+         , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
          , MainGoods.Id                            AS GoodsMainId
          , MainGoods.ObjectCode                    AS GoodsMainCode
          , MainGoods.ValueData                     AS GoodsMainName
@@ -88,6 +89,9 @@ BEGIN
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
                          
+          LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
+                                         AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+
       WHERE ObjectLink_Goods_Object.ChildObjectId = inObjectId
      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object();
                          

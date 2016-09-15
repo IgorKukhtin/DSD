@@ -32,6 +32,14 @@
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colCommonCode: TcxGridDBColumn
+            Caption = #1082#1086#1076' '#1052#1086#1088#1080#1086#1085
+            DataBinding.FieldName = 'CommonCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colGoodsMainCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsMainCode'

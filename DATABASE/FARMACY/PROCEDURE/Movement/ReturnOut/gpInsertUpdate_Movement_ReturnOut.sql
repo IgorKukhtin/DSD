@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Movement_ReturnOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
-   (Integer, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+   (Integer, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnOut
+   (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inInvNumberPartner    TVarChar  , -- Номер документа
-    IN inOperDatePartner     TDateTime , -- Дата документа
+    --IN inOperDatePartner     TDateTime , -- Дата документа поставщика -- сохраняется в отдельной процедуре
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -26,9 +28,18 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
      vbUserId := inSession;
 
-     ioId := lpInsertUpdate_Movement_ReturnOut(ioId, inInvNumber, inOperDate
-                                             , inInvNumberPartner, inOperDatePartner, inPriceWithVAT
-                                             , inFromId, inToId, inNDSKindId, inParentId, inReturnTypeId, vbUserId);
+     ioId := lpInsertUpdate_Movement_ReturnOut(ioId
+                                             , inInvNumber
+                                             , inOperDate
+                                             , inInvNumberPartner
+--                                             , inOperDatePartner
+                                             , inPriceWithVAT
+                                             , inFromId
+                                             , inToId
+                                             , inNDSKindId
+                                             , inParentId
+                                             , inReturnTypeId
+                                             , vbUserId);
 
 
 END;
@@ -39,6 +50,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.09.16         *
  06.02.15                         *
 
 */

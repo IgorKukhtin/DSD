@@ -226,8 +226,10 @@ inherited ReturnOutForm: TReturnOutForm
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Top = 22
       Properties.ReadOnly = False
       ExplicitLeft = 8
+      ExplicitTop = 22
       ExplicitWidth = 105
       Width = 105
     end
@@ -237,9 +239,11 @@ inherited ReturnOutForm: TReturnOutForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 114
+      Top = 22
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 114
+      ExplicitTop = 22
     end
     inherited cxLabel2: TcxLabel
       Left = 114
@@ -429,14 +433,15 @@ inherited ReturnOutForm: TReturnOutForm
       Width = 105
     end
     object cxLabel11: TcxLabel
-      Left = 327
+      Left = 330
       Top = 4
       Caption = #1044#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 327
+      Left = 330
       Top = 22
-      EditValue = 42381d
+      Properties.DateOnError = deNull
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 24
@@ -490,7 +495,7 @@ inherited ReturnOutForm: TReturnOutForm
           'Tag'
           'Width')
       end>
-    Left = 40
+    Left = 32
     Top = 432
   end
   inherited ActionList: TActionList
@@ -522,6 +527,7 @@ inherited ReturnOutForm: TReturnOutForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -552,12 +558,14 @@ inherited ReturnOutForm: TReturnOutForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -565,6 +573,7 @@ inherited ReturnOutForm: TReturnOutForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -576,12 +585,14 @@ inherited ReturnOutForm: TReturnOutForm
       FormName = 'TGoodsLiteForm'
       FormNameParam.Value = 'TGoodsLiteForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -589,6 +600,7 @@ inherited ReturnOutForm: TReturnOutForm
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -596,6 +608,7 @@ inherited ReturnOutForm: TReturnOutForm
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -654,6 +667,7 @@ inherited ReturnOutForm: TReturnOutForm
       FormName = 'TReturnOutPartnerDataDialogForm'
       FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InvNumberPartner'
@@ -662,6 +676,7 @@ inherited ReturnOutForm: TReturnOutForm
           ComponentItem = 'InvNumberPartner'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartner'
@@ -670,6 +685,7 @@ inherited ReturnOutForm: TReturnOutForm
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -687,11 +703,12 @@ inherited ReturnOutForm: TReturnOutForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 448
+    Left = 16
+    Top = 384
   end
   inherited MasterCDS: TClientDataSet
-    Left = 96
-    Top = 448
+    Left = 80
+    Top = 392
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnOut'
@@ -702,6 +719,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -709,6 +727,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -716,22 +735,25 @@ inherited ReturnOutForm: TReturnOutForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
   end
   inherited BarManager: TdxBarManager
-    Left = 80
+    Left = 48
     Top = 207
     DockControlHeights = (
       0
@@ -870,14 +892,15 @@ inherited ReturnOutForm: TReturnOutForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
     Left = 782
     Top = 217
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 632
+    Top = 416
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -891,12 +914,14 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -904,36 +929,42 @@ inherited ReturnOutForm: TReturnOutForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncome'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameIncomeBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = Null
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -956,17 +987,20 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -974,6 +1008,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -981,18 +1016,21 @@ inherited ReturnOutForm: TReturnOutForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1000,12 +1038,14 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1013,12 +1053,14 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindId'
         Value = ''
         Component = NDSKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NDSKindName'
@@ -1026,6 +1068,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = NDSKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeInvNumber'
@@ -1033,41 +1076,48 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesIncome
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeMovementId'
         Value = Null
         Component = GuidesIncome
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnTypeId'
         Value = Null
         Component = ReturnTypeGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnTypeName'
         Value = Null
         Component = ReturnTypeGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = Null
         Component = edInvNumberPartner
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
         Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1075,12 +1125,14 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeOperDate'
         Value = 'NULL'
         Component = deIncomeOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1094,6 +1146,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1101,6 +1154,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1108,6 +1162,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -1115,13 +1170,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'inOperDatePartner'
-        Value = ''
-        Component = edOperDatePartner
-        DataType = ftDateTime
-        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
@@ -1129,6 +1178,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1136,6 +1186,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1143,6 +1194,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inNDSKindId'
@@ -1150,6 +1202,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = NDSKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -1157,6 +1210,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReturnTypeId'
@@ -1164,40 +1218,55 @@ inherited ReturnOutForm: TReturnOutForm
         Component = ReturnTypeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = ''
         DataType = ftString
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = ''
+        Component = edOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
-    Left = 160
+    Left = 120
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver
@@ -1228,7 +1297,6 @@ inherited ReturnOutForm: TReturnOutForm
         Control = edInvNumberPartner
       end
       item
-        Control = edOperDatePartner
       end
       item
       end
@@ -1242,7 +1310,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
       end>
-    Left = 232
+    Left = 200
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
@@ -1269,6 +1337,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1276,6 +1345,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1283,6 +1353,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1291,6 +1362,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1299,6 +1371,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -1306,6 +1379,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'ParentId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSumm'
@@ -1313,6 +1387,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountInIncome'
@@ -1320,6 +1395,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'AmountInIncome'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outRemains'
@@ -1327,31 +1403,37 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'Remains'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outWarningColor'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WarningColor'
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         DataType = ftFloat
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end
       item
         Value = Null
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1362,6 +1444,7 @@ inherited ReturnOutForm: TReturnOutForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1369,6 +1452,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1376,6 +1460,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1384,6 +1469,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1392,6 +1478,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 272
@@ -1405,24 +1492,28 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummMVAT'
         Value = Null
         Component = ceTotalSummMVAT
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPVAT'
         Value = Null
         Component = ceTotalSummPVAT
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 420
     Top = 188
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1466,9 +1557,10 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
+    Left = 343
     Top = 208
   end
   object GuidesFrom: TdsdGuides
@@ -1476,6 +1568,7 @@ inherited ReturnOutForm: TReturnOutForm
     LookupControl = edFrom
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1485,6 +1578,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1493,8 +1587,9 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 512
+    Left = 536
     Top = 8
   end
   object GuidesTo: TdsdGuides
@@ -1502,6 +1597,7 @@ inherited ReturnOutForm: TReturnOutForm
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1511,6 +1607,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1519,8 +1616,9 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 680
+    Left = 720
     Top = 8
   end
   object NDSKindGuides: TdsdGuides
@@ -1528,6 +1626,7 @@ inherited ReturnOutForm: TReturnOutForm
     LookupControl = edNDSKind
     FormNameParam.Value = 'TNDSKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TNDSKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1538,6 +1637,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1546,6 +1646,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 48
@@ -1554,6 +1655,7 @@ inherited ReturnOutForm: TReturnOutForm
     KeyField = 'Id'
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1563,6 +1665,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1571,6 +1674,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 671
     Top = 184
@@ -1586,6 +1690,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -1597,6 +1702,7 @@ inherited ReturnOutForm: TReturnOutForm
     isShowModal = True
     FormNameParam.Value = 'TIncomeJournalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TIncomeJournalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1606,6 +1712,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesIncome
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1614,6 +1721,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 8
@@ -1623,6 +1731,7 @@ inherited ReturnOutForm: TReturnOutForm
     LookupControl = edReturnType
     FormNameParam.Value = 'TReturnTypeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TReturnTypeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1633,6 +1742,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1641,6 +1751,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
     Top = 48
@@ -1650,6 +1761,7 @@ inherited ReturnOutForm: TReturnOutForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalCorporateForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalCorporateForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1659,6 +1771,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1667,6 +1780,7 @@ inherited ReturnOutForm: TReturnOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 696
     Top = 56
@@ -1682,25 +1796,25 @@ inherited ReturnOutForm: TReturnOutForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'InvNumberPartner'
+        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDatePartner'
-        Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'OperDatePartner'
+        Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
-    Top = 424
+    Left = 648
+    Top = 256
   end
 end
