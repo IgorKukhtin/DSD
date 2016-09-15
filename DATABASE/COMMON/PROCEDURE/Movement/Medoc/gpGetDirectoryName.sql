@@ -18,9 +18,13 @@ BEGIN
    IF EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0)
    OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 131936) -- Хлеб
    THEN
-       Directory := 'c:\medoc\data\'|| lfGet_Object_ValueData (vbUserId) ||'\';
+       Directory := 'c:\medoc\data\'
+                 || COALESCE ((SELECT '(' || ObjectCode :: TVarChar || ')'  || ValueData FROM Object where Id = vbUserId), '')
+                 || '\';
    ELSE
-       Directory := '\\Axf\общая\'|| lfGet_Object_ValueData (vbUserId) ||'\medoc\data\';
+       Directory := '\\Axf\общая\'
+                 || COALESCE ((SELECT '(' || ObjectCode :: TVarChar || ')'  || ValueData FROM Object where Id = vbUserId), '')
+                 || '\medoc\data\';
    END IF;
       
 END;

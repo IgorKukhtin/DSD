@@ -42,13 +42,42 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isCheck Boolean
              , isElectron Boolean
              , isError Boolean
+             , UserSign TVarChar
+             , UserSeal TVarChar
+             , UserKey  TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
+
+   DECLARE vbUserSign TVarChar;
+   DECLARE vbUserSeal TVarChar;
+   DECLARE vbUserKey  TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_EDI());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_EDI());
+     vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- определяется
+     SELECT CASE WHEN ObjectString_UserSign.ValueData <> '' THEN ObjectString_UserSign.ValueData ELSE 'Ключ - Неграш О.В..ZS2'                                                   END AS UserSign
+          , CASE WHEN ObjectString_UserSeal.ValueData <> '' THEN ObjectString_UserSeal.ValueData ELSE 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2'   END AS UserSeal
+          , CASE WHEN ObjectString_UserKey.ValueData  <> '' THEN ObjectString_UserKey.ValueData  ELSE 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2' END AS UserKey
+            INTO vbUserSign, vbUserSeal, vbUserKey
+     FROM Object AS Object_User
+          LEFT JOIN ObjectString AS ObjectString_UserSign
+                                 ON ObjectString_UserSign.DescId = zc_ObjectString_User_Sign() 
+                                AND ObjectString_UserSign.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserSeal
+                                 ON ObjectString_UserSeal.DescId = zc_ObjectString_User_Seal() 
+                                AND ObjectString_UserSeal.ObjectId = Object_User.Id
+          LEFT JOIN ObjectString AS ObjectString_UserKey 
+                                 ON ObjectString_UserKey.DescId = zc_ObjectString_User_Key() 
+                                AND ObjectString_UserKey.ObjectId = Object_User.Id
+     WHERE Object_User.Id = vbUserId;
+
+
+     --
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -121,6 +150,10 @@ BEGIN
              END :: Boolean AS isCheck
            , COALESCE(MovementBoolean_Electron.ValueData, false) AS isElectron
            , COALESCE(MovementBoolean_Error.ValueData, false) AS isError
+
+           , vbUserSign AS UserSign
+           , vbUserSeal AS UserSeal
+           , vbUserKey  AS UserKey
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

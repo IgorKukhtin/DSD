@@ -52,6 +52,8 @@ type
     JuridicalName: TcxGridDBColumn;
     DiscountExternalCode: TcxGridDBColumn;
     DiscountExternalName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
