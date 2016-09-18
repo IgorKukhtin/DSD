@@ -217,8 +217,8 @@ type
     cbAllAuto: TcxCheckBox;
     actIsAllMO: TdsdDataSetRefresh;
     actIsAllAuto: TdsdDataSetRefresh;
-    actPrint_MO: TdsdPrintAction;
-    actPrint_Auto: TdsdPrintAction;
+    actPrint_MO_Auto: TdsdPrintAction;
+    actPrint_Total: TdsdPrintAction;
     bbPrint_MO: TdxBarButton;
     bbPrint_Auto: TdxBarButton;
   private

@@ -2572,12 +2572,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Category = 0
     end
     object bbPrint_MO: TdxBarButton
-      Action = actPrint_MO
+      Action = actPrint_MO_Auto
       Category = 0
       ImageIndex = 16
     end
     object bbPrint_Auto: TdxBarButton
-      Action = actPrint_Auto
+      Action = actPrint_Total
       Category = 0
       ImageIndex = 16
     end
@@ -3494,21 +3494,20 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Auto: TdsdPrintAction
+    object actPrint_Total: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1040#1074#1090#1086')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1040#1074#1090#1086')'
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1048#1090#1086#1075#1086')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1048#1090#1086#1075#1086')'
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'LocationName;CarName;GoodsGroupNameFull;GoodsGroupName;GoodsName' +
-            ';GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyName_all;In' +
-            'foMoneyName_all_Detail'
+            'LocationDescName;LocationName;GoodsGroupNameFull;GoodsGroupName;' +
+            'GoodsName;GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyNa' +
+            'me_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -3585,25 +3584,25 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1040#1074#1090#1086')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1040#1074#1090#1086')'
+      ReportName = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1048#1090#1086#1075#1086')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1048#1090#1086#1075#1086')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_MO: TdsdPrintAction
+    object actPrint_MO_Auto: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1052#1054')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1052#1054')'
+      Caption = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1052#1054'/'#1040#1074#1090#1086')'
+      Hint = #1054#1090#1095#1077#1090' '#1076#1074#1080#1078#1077#1085#1080#1077' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1052#1054'/'#1040#1074#1090#1086')'
       ImageIndex = 3
       DataSets = <
         item
           UserName = 'frxDBDMaster'
           IndexFieldNames = 
-            'LocationName;GoodsGroupNameFull;GoodsGroupName;GoodsName;GoodsKi' +
-            'ndName;PartionGoodsName;AssetToName;InfoMoneyName_all;InfoMoneyN' +
-            'ame_all_Detail'
+            'LocationDescName;LocationName;GoodsGroupNameFull;GoodsGroupName;' +
+            'GoodsName;GoodsKindName;PartionGoodsName;AssetToName;InfoMoneyNa' +
+            'me_all;InfoMoneyName_all_Detail'
           GridView = cxGridDBTableView
         end>
       Params = <
