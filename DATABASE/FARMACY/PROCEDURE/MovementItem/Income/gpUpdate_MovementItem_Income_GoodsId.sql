@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpUpdate_MovementItem_Income_GoodsId(
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbObjectId    Integer;
    DECLARE vbJuridicalId Integer;
-   DECLARE vbStatusId INTEGER;
-   DECLARE vbInvNumber INTEGER;
+   DECLARE vbStatusId    Integer;
+   DECLARE vbInvNumber   TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());

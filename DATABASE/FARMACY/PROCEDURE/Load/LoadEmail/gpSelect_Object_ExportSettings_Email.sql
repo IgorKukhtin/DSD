@@ -80,7 +80,7 @@ BEGIN
           LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect ON gpSelect.Id = inObjectId
           LEFT JOIN tmpFind ON tmpFind.Id = inObjectId
           LEFT JOIN ObjectString AS ObjectString_ErrorTo
-                                 ON ObjectString_ErrorTo.ObjectId = COALESCE (tmpFind.EmailId gpSelect.EmailId)
+                                 ON ObjectString_ErrorTo.ObjectId = COALESCE (tmpFind.EmailId, gpSelect.EmailId)
                                 AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
                                 AND ObjectString_ErrorTo.ValueData <> ''
 
