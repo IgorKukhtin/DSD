@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
  INOUT ioId                     Integer   , --  люч объекта <Ёлемент документа>
@@ -21,6 +19,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_Partner(
     IN inMovementId_PartionMI   Integer   , -- Id документа продажи строчна€ часть
    OUT outMovementId_Partion    Integer   , -- 
    OUT outPartionMovementName   TVarChar  , -- 
+   OUT outMovementPromo         TVarChar  , -- 
+   OUT outChangePercent         TFloat    , -- (-)% —кидки (+)% Ќаценки
+   OUT outPricePromo            TFloat    , -- 
     IN inSession                TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD AS
@@ -63,7 +64,10 @@ BEGIN
 
      -- сохранили <Ёлемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioId, ioCountForPrice, outAmountSumm
+          , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
+          , tmp.ioChangePercent
+          , tmp.outPricePromo
+            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
@@ -76,6 +80,8 @@ BEGIN
                                               , inPartionGoods       := inPartionGoods
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId
+                                              , ioMovementId_Promo   := NULL
+                                              , ioChangePercent      := NULL
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 

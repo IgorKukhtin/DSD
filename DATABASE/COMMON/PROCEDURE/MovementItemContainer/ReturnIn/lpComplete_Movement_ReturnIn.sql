@@ -355,8 +355,23 @@ BEGIN
         OR NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      THEN
          -- !!!пересчитали!!!
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, vbExtraChargesPercent - vbDiscountPercent)
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id
+                                                 , CASE WHEN vbOperDatePartner < '01.08.2016'
+                                                             THEN vbExtraChargesPercent - vbDiscountPercent
+                                                        WHEN vbPaidKindId = zc_Enum_PaidKind_SecondForm() AND vbOperDate < zc_isReturnInNAL_bySale()
+                                                             THEN vbExtraChargesPercent - vbDiscountPercent
+                                                        WHEN 1=1 AND MIFloat_PromoMovement.ValueData > 0
+                                                             THEN COALESCE (MIFloat_ChangePercent.ValueData, 0)
+                                                        ELSE vbExtraChargesPercent - vbDiscountPercent
+                                                   END
+                                                  )
          FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.DescId = zc_MI_Master();
      END IF;
@@ -686,6 +701,11 @@ BEGIN
 
      -- !!!запуск новой схемы - с привязкой к продажам!!!
      IF zc_isReturnIn_bySale() = TRUE -- OR inUserId = 5
+        -- !!!для ВСЕХ кладовщиков - выход!!! + zc_Enum_Process_Auto_PrimeCost
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
+                        WHERE UserId = inUserId
+                          AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9042))
+                       )
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          -- Проверка ошибки
@@ -699,7 +719,7 @@ BEGIN
          IF outMessageText <> '' AND outMessageText <> '-1' THEN RETURN; END IF;
 
          -- !!!с такой ошибкой - все равно будем проводить!!!
-         IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <%> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.', lfGet_Object_ValueData (inUserId); END IF;
+         IF outMessageText = '-1' THEN outMessageText:= 'Важно.У пользователя <' || lfGet_Object_ValueData (inUserId) || '> нет прав формировать привязку накладной <Возврат от покупателя> к накладной <Продажи>.'; END IF;
 
      END IF;
 

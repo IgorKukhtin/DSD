@@ -763,7 +763,9 @@ BEGIN
      -- !!!в Мастере меняется скидка + ставится Акция!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), _tmpItem.MovementItemId
                                              , CASE WHEN MovementDate_OperDatePartner.ValueData < '01.08.2016'
-                                                      OR MLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+                                                         THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0)
+                                                    WHEN Movement.OperDate < zc_isReturnInNAL_bySale()
+                                                     AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
                                                          THEN COALESCE (MovementFloat_ChangePercent.ValueData, 0)
                                                     WHEN tmp.MovementItemId_sale > 0
                                                          THEN COALESCE (MIFloat_ChangePercent.ValueData, 0)
@@ -790,6 +792,7 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                   ON MovementFloat_ChangePercent.MovementId = inMovementId
                                  AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
+          LEFT JOIN Movement ON Movement.Id = inMovementId
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = inMovementId
                                 AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()

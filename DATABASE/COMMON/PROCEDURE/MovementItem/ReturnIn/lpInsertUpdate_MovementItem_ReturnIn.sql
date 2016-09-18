@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
-   OUT outMovementId_Promo   Integer   ,
+ INOUT ioMovementId_Promo    Integer   ,
+ INOUT ioChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo         TFloat    ,
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -24,6 +26,36 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+     -- параметры акции - на "Дата накладной у контрагента"
+     SELECT tmp.MovementId
+          , CASE WHEN tmp.isChangePercent = TRUE
+                      THEN COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0)
+                 ELSE 0
+            END
+          , inPrice
+            INTO ioMovementId_Promo, ioChangePercent, outPricePromo
+     FROM lpGet_Movement_Promo_Data_all (inOperDate     := (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner())
+                                       , inPartnerId    := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                       , inContractId   := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                       , inUnitId       := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                                       , inGoodsId      := inGoodsId
+                                       , inGoodsKindId  := inGoodsKindId
+                                       , inIsReturn     := TRUE
+                                        ) AS tmp
+     -- !!!только если соответствует цена!!!
+     WHERE inPrice = CASE WHEN TRUE = (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_PriceWithVAT())
+                               THEN tmp.PriceWithVAT
+                          WHEN 1=1
+                               THEN tmp.PriceWithOutVAT
+                          ELSE 0 -- ???может надо будет взять из прайса когда была акция ИЛИ любой продажи под эту акцию???
+                     END
+    ;
+     -- !!!в этом случае - всегда из документа!!!
+     IF zc_isReturnInNAL_bySale() > (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+        OR COALESCE (ioMovementId_Promo, 0) = 0
+     THEN ioChangePercent:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0); END IF;
+
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -46,14 +78,13 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_Partion);
 
 
-     /*IF (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_OperDatePartner()) < '01.08.2016'
-        OR (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind()) = zc_Enum_PaidKind_SecondForm()
-        OR NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)*/
-     IF vbIsInsert = TRUE
-     THEN
-         -- сохранили свойство <(-)% Скидки (+)% Наценки>
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0));
-     END IF;
+
+     -- !!!запуск новой схемы - НАЛ с привязкой к продажам!!!
+     -- сохранили свойство <(-)% Скидки (+)% Наценки> 
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, ioChangePercent);
+     -- сохранили свойство <MovementId-Акция>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (ioMovementId_Promo, 0));
+
 
 
      -- сохранили свойство <Партия товара>

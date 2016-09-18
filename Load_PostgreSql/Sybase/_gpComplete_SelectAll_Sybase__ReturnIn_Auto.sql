@@ -68,6 +68,7 @@ BEGIN
        AND (MovementItem.MovementId IS NULL
          OR MovementBoolean_Error.ValueData = TRUE
          OR MovementBoolean_Error.ValueData IS NULL
+         -- OR MLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
          -- OR (MovementBoolean_Error.ValueData IS NULL AND MLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm())
            )
     ) AS tmp

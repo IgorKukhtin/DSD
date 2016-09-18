@@ -358,6 +358,7 @@ var
 begin
 //fBeginMMO ('price_shapiro@mail.ru', 397826,now); // Приход ММО
 //fBeginMMO ('asnb_documentation@mail.ru', 397826,now); // Приход ММО
+//fBeginMMO ('asnb_documentation@mail.ru', 2367578 ,now); // Приход ММО Фармпланета - 'sender@pharmplanet.com.ua'
 //exit;
      if vbIsBegin = true then exit;
      // запущена обработка

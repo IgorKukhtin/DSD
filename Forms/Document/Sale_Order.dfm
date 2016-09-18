@@ -2,7 +2,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 408
   ClientWidth = 1291
-  ExplicitLeft = -487
+  ExplicitLeft = -501
   ExplicitWidth = 1307
   ExplicitHeight = 443
   PixelsPerInch = 96
@@ -12,17 +12,17 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1291
     Height = 242
     ExplicitTop = 166
-    ExplicitWidth = 1261
+    ExplicitWidth = 1291
     ExplicitHeight = 242
     ClientRectBottom = 242
     ClientRectRight = 1291
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1261
+      ExplicitWidth = 1291
       ExplicitHeight = 218
       inherited cxGrid: TcxGrid
         Width = 1291
         Height = 218
-        ExplicitWidth = 1261
+        ExplicitWidth = 1291
         ExplicitHeight = 218
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -280,7 +280,15 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 62
           end
-          object colPrice: TcxGridDBColumn [15]
+          object colCountForPrice: TcxGridDBColumn [15]
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colPrice: TcxGridDBColumn [16]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -290,33 +298,18 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colCountForPrice: TcxGridDBColumn [16]
-            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colAmountSumm: TcxGridDBColumn [17]
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
+          object PricePromo: TcxGridDBColumn [17]
+            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 50
           end
-          object isCheck_Pricelist: TcxGridDBColumn [18]
-            Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'isCheck_Pricelist'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 61
-          end
-          object Price_Pricelist: TcxGridDBColumn [19]
+          object Price_Pricelist: TcxGridDBColumn [18]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -328,7 +321,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [20]
+          object Price_Pricelist_vat: TcxGridDBColumn [19]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -339,16 +332,23 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object PricePromo: TcxGridDBColumn [21]
-            Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
-            DataBinding.FieldName = 'PricePromo'
+          object isCheck_Pricelist: TcxGridDBColumn [20]
+            Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'isCheck_Pricelist'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 61
+          end
+          object colAmountSumm: TcxGridDBColumn [21]
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 80
           end
           object colHeadCount: TcxGridDBColumn [22]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
@@ -394,10 +394,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          inherited colIsErased: TcxGridDBColumn
-            Width = 25
-          end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object clInfoMoneyCode: TcxGridDBColumn [26]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -406,7 +403,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object clInfoMoneyGroupName: TcxGridDBColumn [27]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -415,7 +412,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object clInfoMoneyDestinationName: TcxGridDBColumn [28]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -424,7 +421,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object clInfoMoneyName: TcxGridDBColumn [29]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -433,7 +430,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 100
           end
-          object clInfoMoneyName_all: TcxGridDBColumn
+          object clInfoMoneyName_all: TcxGridDBColumn [30]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -441,6 +438,17 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object isPeresort: TcxGridDBColumn [31]
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colIsErased: TcxGridDBColumn
+            Width = 25
           end
         end
       end
@@ -450,7 +458,7 @@ inherited Sale_OrderForm: TSale_OrderForm
     Width = 1291
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1261
+    ExplicitWidth = 1291
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8

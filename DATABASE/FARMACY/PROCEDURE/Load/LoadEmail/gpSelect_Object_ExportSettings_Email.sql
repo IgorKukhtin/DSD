@@ -33,6 +33,11 @@ BEGIN
    -- Результат
    RETURN QUERY 
      WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inSession:= inSession) AS tmp WHERE tmp.EmailKindId = zc_Enum_EmailKind_OutOrder())
+        , tmpFind AS (SELECT * FROM gpSelect_Object_ImportSettings_Email (inSession:= inSession) AS tmp
+                      WHERE tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
+                        AND tmp.Id          = inObjectId
+                        AND STRPOS (LOWER (inByMail), LOWER (tmp.Mail)) > 0
+                     )
      SELECT 
             gpGet_Host.EmailId
           , gpGet_Host.EmailName
@@ -73,8 +78,9 @@ BEGIN
           LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
 
           LEFT JOIN gpSelect_Object_ImportSettings (inSession:= inSession) AS gpSelect ON gpSelect.Id = inObjectId
+          LEFT JOIN tmpFind ON tmpFind.Id = inObjectId
           LEFT JOIN ObjectString AS ObjectString_ErrorTo
-                                 ON ObjectString_ErrorTo.ObjectId = gpSelect.EmailId 
+                                 ON ObjectString_ErrorTo.ObjectId = COALESCE (tmpFind.EmailId gpSelect.EmailId)
                                 AND ObjectString_ErrorTo.DescId = zc_ObjectString_Email_ErrorTo()
                                 AND ObjectString_ErrorTo.ValueData <> ''
 
@@ -95,4 +101,5 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367578, inContactPersonId:= 2324911, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3
 -- SELECT * FROM gpSelect_Object_ExportSettings_Email (inObjectId:= 2367552, inContactPersonId:= 2324488, inByDate:= CURRENT_TIMESTAMP, inByMail:= 'info-fk.dp@framco.com.ua', inByFileName:= '', inSession:= zfCalc_UserAdmin()) order by 3

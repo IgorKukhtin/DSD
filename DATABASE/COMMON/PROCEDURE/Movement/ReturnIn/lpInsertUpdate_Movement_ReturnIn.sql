@@ -141,8 +141,23 @@ BEGIN
         OR NOT EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = ioId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      THEN
          -- !!!пересчитали!!!
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id, inChangePercent)
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), MovementItem.Id
+                                                 , CASE WHEN inOperDatePartner < '01.08.2016'
+                                                             THEN inChangePercent
+                                                        WHEN inPaidKindId = zc_Enum_PaidKind_SecondForm() AND inOperDate < zc_isReturnInNAL_bySale()
+                                                             THEN inChangePercent
+                                                        WHEN 1=1 AND MIFloat_PromoMovement.ValueData > 0
+                                                             THEN COALESCE (MIFloat_ChangePercent.ValueData, 0)
+                                                        ELSE inChangePercent
+                                                   END
+                                                  )
          FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
+                                          ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
+                                         AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                          ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                         AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
          WHERE MovementItem.MovementId = ioId
            AND MovementItem.DescId = zc_MI_Master();
      END IF;

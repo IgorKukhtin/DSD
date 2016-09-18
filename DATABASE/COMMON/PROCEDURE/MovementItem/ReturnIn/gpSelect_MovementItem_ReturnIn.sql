@@ -52,7 +52,7 @@ BEGIN
 
 
      -- Подразделение
-     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To);
+     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To());
      -- Контрагент
      vbPartnerId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
      -- Договор
@@ -224,6 +224,7 @@ BEGIN
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
+     -- Цены из прайса
    , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
                        , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
@@ -340,7 +341,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
-           , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (row_number() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
+           , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (ROW_NUMBER() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
@@ -355,7 +356,11 @@ BEGIN
            , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
            , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
 
-           , CASE WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpResult.Price
+                       THEN FALSE
+                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpResult.Price
+                       THEN FALSE
+                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
                     OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
                        THEN FALSE
                   ELSE TRUE
@@ -385,14 +390,24 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , (CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
+           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpResult.ChangePercent <> vbChangePercent)
+                     OR (tmpPromo.isChangePercent = FALSE AND tmpResult.ChangePercent <> 0)
+                        THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
+                   ELSE ''
+              END
+           || CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
                         THEN 'ОШИБКА : '
                    ELSE ''
               END
            || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
              ) :: TVarChar AS MovementPromo
-           , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
-           
+
+           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
+
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
 
@@ -403,6 +418,9 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
@@ -431,7 +449,16 @@ BEGIN
      ELSE
 
      RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
+       WITH -- Акции по товарам на дату
+            tmpPromo AS (SELECT tmp.*
+                         FROM lpSelect_Movement_Promo_Data_all (inOperDate   := vbOperDate_promo
+                                                              , inPartnerId  := vbPartnerId
+                                                              , inContractId := vbContractId
+                                                              , inUnitId     := vbUnitId
+                                                              , inIsReturn   := TRUE
+                                                               ) AS tmp
+                        )
+          , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                            , MovementItem.Amount                           AS Amount
                            , MovementItem.ObjectId                         AS GoodsId
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -552,6 +579,7 @@ BEGIN
                    FROM tmpMI
                         FULL JOIN tmpMI_parent_find ON tmpMI_parent_find.MovementItemId = tmpMI.MovementItemId
                   )
+     -- Цены из прайса
    , tmpPrice AS (SELECT lfSelect.GoodsId    AS GoodsId
                        , CASE WHEN vbPriceWithVAT_pl = FALSE OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice / vbVATPercent_pl END AS Price_PriceList
                        , CASE WHEN vbPriceWithVAT_pl = TRUE  OR vbVATPercent_pl = 0 THEN lfSelect.ValuePrice ELSE lfSelect.ValuePrice * vbVATPercent_pl END AS Price_PriceList_vat
@@ -577,7 +605,7 @@ BEGIN
 
        SELECT
              tmpResult.MovementItemId :: Integer AS Id
-           , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (row_number() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
+           , CASE WHEN tmpResult.MovementItemId <> 0 THEN CAST (ROW_NUMBER() OVER (ORDER BY tmpResult.MovementItemId) AS Integer) ELSE 0 END AS LineNum
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
@@ -592,7 +620,11 @@ BEGIN
            , tmpPrice.Price_Pricelist     :: TFloat AS Price_Pricelist
            , tmpPrice.Price_Pricelist_vat :: TFloat AS Price_Pricelist_vat
 
-           , CASE WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
+           , CASE WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE AND tmpPromo.PriceWithVAT = tmpResult.Price
+                       THEN FALSE
+                  WHEN tmpPromo.TaxPromo <> 0 AND tmpPromo.PriceWithOutVAT = tmpResult.Price
+                       THEN FALSE
+                  WHEN (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist, 0)     AND vbPriceWithVAT = FALSE)
                     OR (COALESCE (tmpResult.Price, 0) = COALESCE (tmpPrice.Price_Pricelist_vat, 0) AND vbPriceWithVAT = TRUE)
                        THEN FALSE
                   ELSE TRUE
@@ -622,13 +654,22 @@ BEGIN
            , tmpResult.MovementId_sale          AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
 
-           , (CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
+           , (CASE WHEN (tmpPromo.isChangePercent = TRUE  AND tmpResult.ChangePercent <> vbChangePercent)
+                     OR (tmpPromo.isChangePercent = FALSE AND tmpResult.ChangePercent <> 0)
+                        THEN 'ОШИБКА <(-)% Скидки (+)% Наценки>'
+                   ELSE ''
+              END
+           || CASE WHEN COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_min, 0) OR COALESCE (tmpResult.MovementId_Promo, 0) <> COALESCE (tmpMIChild.MovementId_promo_max, 0)
                         THEN 'ОШИБКА : '
                    ELSE ''
               END
            || zfCalc_PromoMovementName (NULL, Movement_Promo_View.InvNumber :: TVarChar, Movement_Promo_View.OperDate, Movement_Promo_View.StartSale, Movement_Promo_View.EndReturn)
              ) :: TVarChar AS MovementPromo
-           , tmpMIPromo.PricePromo :: TFloat   AS PricePromo
+           , CASE WHEN 1 = 0 AND tmpMIPromo.PricePromo <> 0 THEN tmpMIPromo.PricePromo
+                  WHEN tmpPromo.TaxPromo <> 0 AND vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT
+                  WHEN tmpPromo.TaxPromo <> 0 THEN tmpPromo.PriceWithOutVAT
+                  ELSE 0
+             END :: TFloat AS PricePromo
 
            , tmpMIChild.Amount       :: TFloat   AS AmountChild
            , (tmpResult.AmountPartner - COALESCE(tmpMIChild.Amount,0)) :: TFloat   AS AmountChildDiff
@@ -640,6 +681,8 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
+                              AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId

@@ -216,7 +216,7 @@ type
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
     ReestrKindGuides: TdsdGuides;
-    colisPeresort: TcxGridDBColumn;
+    isPeresort: TcxGridDBColumn;
   private
     { Private declarations }
   public

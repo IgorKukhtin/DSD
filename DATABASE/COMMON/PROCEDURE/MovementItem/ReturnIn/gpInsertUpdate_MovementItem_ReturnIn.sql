@@ -1,9 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn (Integer, Integer, Integer, TFloat, TFloat, Boolean, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
@@ -18,14 +14,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
    OUT outAmountSumm            TFloat    , -- Сумма расчетная
    OUT outAmountSummVat         TFloat    , -- Сумма с НДС расчетная
     IN inHeadCount              TFloat    , -- Количество голов
-    IN inMovementId_PartionTop  Integer    , -- Id документа продажи из шапки
-    IN inMovementId_PartionMI   Integer    , -- Id документа продажи строчная часть
+    IN inMovementId_PartionTop  Integer   , -- Id документа продажи из шапки
+    IN inMovementId_PartionMI   Integer   , -- Id документа продажи строчная часть
     IN inPartionGoods           TVarChar  , -- Партия товара
     IN inGoodsKindId            Integer   , -- Виды товаров
     IN inAssetId                Integer   , -- Основные средства (для которых закупается ТМЦ)
    OUT outMovementId_Partion    Integer   , -- 
    OUT outPartionMovementName   TVarChar  , -- 
    OUT outMovementPromo         TVarChar  , -- 
+   OUT outChangePercent         TFloat    , -- (-)% Скидки (+)% Наценки
    OUT outPricePromo            TFloat    , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
@@ -74,7 +71,11 @@ BEGIN
 
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioId, ioCountForPrice, outAmountSumm
+          , zfCalc_PromoMovementName (tmp.ioMovementId_Promo, NULL, NULL, NULL, NULL)
+          , tmp.ioChangePercent
+          , tmp.outPricePromo
+            INTO ioId, ioCountForPrice, outAmountSumm, outMovementPromo, outChangePercent, outPricePromo
+
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
                                               , inMovementId         := inMovementId
                                               , inGoodsId            := inGoodsId
@@ -87,6 +88,8 @@ BEGIN
                                               , inPartionGoods       := inPartionGoods
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId
+                                              , ioMovementId_Promo   := NULL
+                                              , ioChangePercent      := NULL
                                               , inUserId             := vbUserId
                                                ) AS tmp;
 

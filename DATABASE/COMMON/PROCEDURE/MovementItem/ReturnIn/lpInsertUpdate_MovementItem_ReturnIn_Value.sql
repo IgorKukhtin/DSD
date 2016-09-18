@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_MovementItem_ReturnIn_Value()
 
--- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn_Value (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn_Value(
@@ -37,13 +36,15 @@ BEGIN
                                               , inPartionGoods       := inPartionGoods
                                               , inGoodsKindId        := inGoodsKindId
                                               , inAssetId            := inAssetId
+                                              , ioMovementId_Promo   := inMovementId_Promo
+                                              , ioChangePercent      := inChangePercent
                                               , inUserId             := inUserId
                                                ) AS tmp;
 
      -- !!!пока криво!!! - еще раз сохранили свойство <(-)% Скидки (+)% Наценки> + на всякий случай SELECT ...
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, CASE WHEN inMovementId_Promo > 0 THEN COALESCE (inChangePercent, 0) ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) END);
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, CASE WHEN inMovementId_Promo > 0 THEN COALESCE (inChangePercent, 0) ELSE COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_ChangePercent()), 0) END);
      -- !!!пока криво!!! - сохранили свойство <MovementId-Акция>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (inMovementId_Promo, 0));
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PromoMovementId(), ioId, COALESCE (inMovementId_Promo, 0));
 
 END;
 $BODY$

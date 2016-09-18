@@ -400,7 +400,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpMI_Goods.MovementItemId             AS Id
-           , CAST (row_number() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -682,7 +682,7 @@ BEGIN
        -- Результат     
        SELECT
              tmpMI_Goods.MovementItemId             AS Id
-           , CAST (row_number() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Goods.MovementItemId) AS Integer) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName

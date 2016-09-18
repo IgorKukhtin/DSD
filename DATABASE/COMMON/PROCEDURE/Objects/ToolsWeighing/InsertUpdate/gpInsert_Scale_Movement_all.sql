@@ -1130,6 +1130,7 @@ BEGIN
               PERFORM lpComplete_Movement_ReturnIn_CreateTemp();
               -- Проводим Документ 
               PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId_begin
+                                                  , inStartDateSale  := NULL
                                                   , inUserId         := vbUserId
                                                   , inIsLastComplete := NULL);
 
