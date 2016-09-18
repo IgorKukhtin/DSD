@@ -19,8 +19,11 @@ BEGIN
 
    
 
-    SELECT lpInsertUpdate_Movement_ReturnOut(0, CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar) , Current_Date
-                                             , NULL::TVarChar, NULL::TDateTime, Movement_Income.PriceWithVAT
+    SELECT lpInsertUpdate_Movement_ReturnOut(0, CAST (NEXTVAL ('movement_ReturnOut_seq') AS TVarChar)
+                                             , Current_Date        --inOperDate
+                                             , NULL::TVarChar
+                                             --, NULL::TDateTime   --inOperDatePartner
+                                             , Movement_Income.PriceWithVAT
                                              , Movement_Income.ToId, Movement_Income.FromId
                                              , Movement_Income.NDSKindId, inParentId, NULL, vbUserId) INTO outId
      FROM  Movement_Income_View AS Movement_Income 
@@ -35,6 +38,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.06.16         * 
  10.02.15                         *
 
 */

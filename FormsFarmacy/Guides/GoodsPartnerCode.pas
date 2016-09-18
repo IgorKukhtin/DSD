@@ -78,6 +78,7 @@ type
     bbSetUnErasedGoods: TdxBarButton;
     bbShowErased: TdxBarButton;
     colisErased: TcxGridDBColumn;
+    colCommonCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,15 +1,16 @@
 -- Function: gpInsertUpdate_Movement_ReturnOut()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
-   (Integer, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-
+   (Integer, TVarChar, TDateTime, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut
+   (Integer, TVarChar, TDateTime, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inInvNumberPartner    TVarChar  , -- Номер документа
-    IN inOperDatePartner     TDateTime , -- Дата документа
+   -- IN inOperDatePartner     TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -41,8 +42,8 @@ BEGIN
 
      -- сохранили связь с <Типом возврата>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReturnType(), ioId, inReturnTypeId);
-     -- 
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+     -- сохраняется в отдельной процедуре
+     --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
 
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
@@ -60,6 +61,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.09.16         *
  06.02.15                         *
 
 */
