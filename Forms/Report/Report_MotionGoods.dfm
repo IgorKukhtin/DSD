@@ -2058,6 +2058,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         VisibleForCustomization = False
         Width = 55
       end
+      object LocationName_inf: TcxGridDBColumn
+        DataBinding.FieldName = 'LocationName_inf'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
