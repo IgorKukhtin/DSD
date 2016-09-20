@@ -60,6 +60,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadKindFormTest;
+    procedure LoadOrderSheduleFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
     procedure LoadObjectUnionFormTest;
@@ -769,6 +770,14 @@ procedure TLoadFormTest.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
+end;
+
+procedure TLoadFormTest.LoadOrderSheduleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderSheduleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderSheduleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderSheduleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderSheduleEditForm');
 end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
