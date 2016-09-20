@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_OrderShedule()
 
 DROP FUNCTION IF EXISTS gpGet_Object_OrderShedule(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_OrderShedule(integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_OrderShedule(
     IN inId          Integer,       -- Подразделение 
+    IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer,
@@ -17,7 +19,44 @@ BEGIN
 
   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_OrderShedule()); 
-   IF COALESCE (inId, 0) = 0
+ IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) <> 0))
+   THEN
+     RETURN QUERY
+       SELECT
+             0           AS Id
+           , lfGet_ObjectCode(0, zc_Object_OrderShedule()) AS Code
+       
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat   AS Value1
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat   AS Value2
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat   AS Value3
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat   AS Value4
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat   AS Value5
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat   AS Value6
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat   AS Value7
+           
+           , Object_Unit.Id             AS UnitId
+           , Object_Unit.ValueData      AS UnitName 
+
+           , Object_Contract.Id         AS ContractId
+           , Object_Contract.ValueData  AS ContractName 
+                     
+           , FALSE     AS isErased
+           
+       FROM Object AS Object_OrderShedule
+           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                                ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
+                               AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_OrderShedule_Contract.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                               AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderShedule_Unit.ChildObjectId           
+                                  
+      WHERE Object_OrderShedule.Id = inMaskId;
+   END IF;
+
+   IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
    THEN
        RETURN QUERY 
        SELECT
@@ -39,8 +78,10 @@ BEGIN
            , CAST ('' as TVarChar) AS ContractName 
            
            , CAST (NULL AS Boolean) AS isErased;
-   
-   ELSE
+  END IF;
+ 
+  IF COALESCE (inId, 0) <> 0
+   THEN
        RETURN QUERY 
        SELECT
              Object_OrderShedule.Id           AS Id

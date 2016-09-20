@@ -310,6 +310,12 @@
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 24
     Top = 238
@@ -324,6 +330,14 @@
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InMaskId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'MaskId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

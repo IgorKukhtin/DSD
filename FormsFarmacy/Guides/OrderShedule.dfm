@@ -12,19 +12,21 @@ object OrderSheduleForm: TOrderSheduleForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 58
     Width = 779
-    Height = 350
+    Height = 318
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 26
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -228,6 +230,55 @@ object OrderSheduleForm: TOrderSheduleForm
       GridView = cxGridDBTableView
     end
   end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 779
+    Height = 32
+    Align = alTop
+    TabOrder = 5
+    ExplicitTop = 2
+    object cxLabel4: TcxLabel
+      Left = 8
+      Top = 7
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object ceUnit: TcxButtonEdit
+      Left = 93
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1058#1080#1087' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099'>'
+      Properties.ReadOnly = True
+      Properties.UseNullString = True
+      TabOrder = 1
+      Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
+      Width = 259
+    end
+  end
+  object cxLabel1: TcxLabel
+    Left = 360
+    Top = 7
+    Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+  end
+  object ceJuridical: TcxButtonEdit
+    Left = 425
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.Nullstring = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1058#1080#1087' '#1091#1089#1090#1072#1085#1086#1074#1086#1082' '#1076#1083#1103' '#1087#1086#1095#1090#1099'>'
+    Properties.ReadOnly = True
+    Properties.UseNullString = True
+    TabOrder = 7
+    Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+    Width = 246
+  end
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -305,6 +356,14 @@ object OrderSheduleForm: TOrderSheduleForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
         end
         item
           BeginGroup = True
@@ -399,6 +458,10 @@ object OrderSheduleForm: TOrderSheduleForm
       Action = ProtocolOpenForm
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -433,8 +496,45 @@ object OrderSheduleForm: TOrderSheduleForm
           Name = 'Id'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormName = 'TOrderSheduleEditForm'
+      FormNameParam.Value = 'TOrderSheduleEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -598,7 +698,7 @@ object OrderSheduleForm: TOrderSheduleForm
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'UnitName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -615,6 +715,22 @@ object OrderSheduleForm: TOrderSheduleForm
       end>
     Params = <
       item
+        Name = 'inUnitId'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = Null
         Component = actShowAll
@@ -623,8 +739,8 @@ object OrderSheduleForm: TOrderSheduleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 224
+    Left = 232
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
@@ -709,5 +825,73 @@ object OrderSheduleForm: TOrderSheduleForm
     SummaryItemList = <>
     Left = 320
     Top = 208
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    Key = '0'
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = UnitGuides
+      end
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 536
+    Top = 160
   end
 end

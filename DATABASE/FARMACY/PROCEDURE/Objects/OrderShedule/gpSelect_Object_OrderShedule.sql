@@ -1,9 +1,11 @@
 -- Function: gpSelect_Object_OrderShedule()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderShedule(
+    IN inUnitId      Integer, 
+    IN inJuridicalId Integer,    
     IN inisShowAll   Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -71,20 +73,20 @@ BEGIN
                      
            , Object_OrderShedule.isErased         AS isErased
 
-           , CASE WHEN Object_OrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
+           , (CASE WHEN Object_OrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value2 in (1,3) THEN 'Вторник,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value3 in (1,3) THEN 'Среда,'       ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value4 in (1,3) THEN 'Четверг,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value5 in (1,3) THEN 'Пятница,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value6 in (1,3) THEN 'Суббота,'     ELSE '' END ||
-             CASE WHEN Object_OrderShedule.Value7 in (1,3) THEN 'Воскресенье'  ELSE '' END         AS Inf_Text1
-           , CASE WHEN Object_OrderShedule.Value1 in (2,3) THEN 'Понедельник,' ELSE '' END ||
+             CASE WHEN Object_OrderShedule.Value7 in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Inf_Text1
+           , (CASE WHEN Object_OrderShedule.Value1 in (2,3) THEN 'Понедельник,' ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value2 in (2,3) THEN 'Вторник,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value3 in (2,3) THEN 'Среда,'       ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value4 in (2,3) THEN 'Четверг,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value5 in (2,3) THEN 'Пятница,'     ELSE '' END ||
              CASE WHEN Object_OrderShedule.Value6 in (2,3) THEN 'Суббота,'     ELSE '' END ||
-             CASE WHEN Object_OrderShedule.Value7 in (2,3) THEN 'Воскресенье'  ELSE '' END         AS Inf_Text2
+             CASE WHEN Object_OrderShedule.Value7 in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Inf_Text2
            
            , CASE WHEN Object_OrderShedule.Value1 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value1 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value1 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc1
            , CASE WHEN Object_OrderShedule.Value2 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value2 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value2 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc2
@@ -100,9 +102,10 @@ BEGIN
                                AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_OrderShedule_Contract.ChildObjectId
            
-           LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
-                                ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
-                               AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+           INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                 ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                                AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+                                AND (ObjectLink_OrderShedule_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_OrderShedule_Unit.ChildObjectId    
 
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
@@ -110,9 +113,10 @@ BEGIN
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
            LEFT JOIN Object AS Object_Unit_Juridical ON Object_Unit_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId       
 
-           LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
-                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+           INNER JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                 ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
            LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId   
 ;
   

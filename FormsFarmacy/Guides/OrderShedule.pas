@@ -20,7 +20,9 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel,
+  Vcl.ExtCtrls;
 
 type
   TOrderSheduleForm = class(TParentForm)
@@ -64,6 +66,16 @@ type
     colValue1: TcxGridDBColumn;
     Color_Calc1: TcxGridDBColumn;
     colInf_Text2: TcxGridDBColumn;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
+    Panel: TPanel;
+    cxLabel4: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

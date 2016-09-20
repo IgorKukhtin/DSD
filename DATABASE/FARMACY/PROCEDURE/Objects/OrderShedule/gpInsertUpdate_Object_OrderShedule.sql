@@ -41,7 +41,7 @@ BEGIN
                     AND ObjectLink_OrderShedule_Contract.ChildObjectId = inContractId
                   ) 
        THEN
-          RAISE EXCEPTION 'Данные не уникальны - Аптека = "%" Договор "%" .', inUnitId, inContractId;
+          RAISE EXCEPTION 'Данные не уникальны - Аптека = "%" Договор "%" .',  lfGet_Object_ValueData(inUnitId), lfGet_Object_ValueData(inContractId);
        END IF;
     END IF;
 
