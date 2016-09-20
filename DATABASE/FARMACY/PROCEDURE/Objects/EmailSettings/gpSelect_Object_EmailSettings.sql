@@ -1,15 +1,18 @@
 -- Function: gpSelect_Object_EmailSettings()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_EmailSettings(
-    IN inEmailId   Integer   ,
+    IN inEmailId       Integer   ,
+    IN inisShowAll     Boolean, 
     IN inSession       TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Value TVarChar
              , EmailId Integer, EmailName TVarChar
              , EmailKindId Integer, EmailKindName TVarChar
              , EmailToolsId Integer, EmailToolsName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
                )
 AS
 $BODY$
@@ -42,39 +45,73 @@ BEGIN
                      FROM tmpEnum
                           LEFT JOIN tmpEmail ON tmpEmail.EmailKindId = tmpEnum.EmailKindId
                     )
-  , tmpObject AS (SELECT Object_EmailSettings.Id             AS EmailSettingsId
+  , tmpObject1 AS (SELECT Object_EmailSettings.Id            AS EmailSettingsId
                        , Object_EmailSettings.ObjectCode     AS EmailSettingsCode
                        , Object_EmailSettings.ValueData      AS EmailSettingsValue
-                       , COALESCE (Object_Email.Id, 0)       AS EmailId
-                       , Object_Email.ValueData              AS EmailName
-                       , Object_EmailTools.Id                AS EmailToolsId
-                       , Object_EmailTools.ValueData         AS EmailToolsName 
+                       , COALESCE (ObjectLink_Email.ChildObjectId, 0)       AS EmailId
+                       , ObjectLink_EmailTools.ChildObjectId                AS EmailToolsId
+                       , COALESCE( ObjectLink_Juridical.ChildObjectId, 0)   AS JuridicalId
+
                   FROM Object AS Object_EmailSettings
                     LEFT JOIN ObjectLink AS ObjectLink_Email
                                          ON ObjectLink_Email.ObjectId = Object_EmailSettings.Id
                                         AND ObjectLink_Email.DescId = zc_ObjectLink_EmailSettings_Email()
-                    LEFT JOIN Object AS Object_Email ON Object_Email.Id = ObjectLink_Email.ChildObjectId
-
+                    
                     LEFT JOIN ObjectLink AS ObjectLink_EmailTools
                                          ON ObjectLink_EmailTools.ObjectId = Object_EmailSettings.Id
                                         AND ObjectLink_EmailTools.DescId = zc_ObjectLink_EmailSettings_EmailTools()
-                    LEFT JOIN Object AS Object_EmailTools ON Object_EmailTools.Id = ObjectLink_EmailTools.ChildObjectId
+           
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                         ON ObjectLink_Juridical.ObjectId = Object_EmailSettings.Id
+                                        AND ObjectLink_Juridical.DescId = zc_ObjectLink_EmailSettings_Juridical()
+
                   WHERE Object_EmailSettings.DescId = zc_Object_EmailSettings()
                   )
+
+  , tmpObject2 AS (SELECT tmpEnumEmail.EmailKindId
+                        , tmpEnumEmail.EmailKindName
+                        , tmpEnumEmail.EmailToolsId
+                        , tmpEnumEmail.EmailToolsName 
+                        , tmpEnumEmail.EmailId
+                        , tmpEnumEmail.EmailName
+                        , COALESCE(Object_Juridical.Id,0)     AS JuridicalId
+                  FROM tmpEnumEmail
+                       left JOIN Object AS Object_Juridical ON Object_Juridical.DescId = zc_Object_Juridical()
+                 WHERE inisShowAll = True
+                  )
+
+  , tmpObject AS (SELECT tmpObject1.EmailSettingsId
+                       , tmpObject1.EmailSettingsCode
+                       , tmpObject1.EmailSettingsValue
+                       , COALESCE (tmpObject1.EmailId, tmpObject2.EmailId)           AS EmailId
+                       , COALESCE (tmpObject1.EmailToolsId, tmpObject2.EmailToolsId) AS EmailToolsId
+                       , COALESCE (tmpObject1.JuridicalId, tmpObject2.JuridicalId)   AS JuridicalId
+
+                  FROM tmpObject1
+                       FULL JOIN tmpObject2 ON tmpObject2.EmailId      = tmpObject1.EmailId
+                                           AND tmpObject2.EmailToolsId = tmpObject1.EmailToolsId
+                                           AND tmpObject2.JuridicalId  = tmpObject1.JuridicalId
+                   )
 
        SELECT tmpObject.EmailSettingsId    AS Id
             , tmpObject.EmailSettingsCode  AS Code
             , tmpObject.EmailSettingsValue AS Value
-            , tmpEnumEmail.EmailId
-            , tmpEnumEmail.EmailName
+            , COALESCE (Object_Email.Id, 0)       AS EmailId
+            , Object_Email.ValueData              AS EmailName
             , tmpEnumEmail.EmailKindId
             , tmpEnumEmail.EmailKindName
-            , tmpEnumEmail.EmailToolsId
-            , tmpEnumEmail.EmailToolsName
-             
+            , Object_EmailTools.Id                AS EmailToolsId
+            , Object_EmailTools.ValueData         AS EmailToolsName
+            , COALESCE(Object_Juridical.Id,0)     AS JuridicalId
+            , Object_Juridical.ValueData          AS JuridicalName            
        FROM tmpEnumEmail
             LEFT JOIN tmpObject ON tmpObject.EmailId      = tmpEnumEmail.EmailId
                                AND tmpObject.EmailToolsId = tmpEnumEmail.EmailToolsId
+
+            LEFT JOIN Object AS Object_Email ON Object_Email.Id = tmpEnumEmail.EmailId
+            LEFT JOIN Object AS Object_EmailTools ON Object_EmailTools.Id = tmpEnumEmail.EmailToolsId
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpObject.JuridicalId
+                                    
        WHERE tmpEnumEmail.EmailId = inEmailId OR inEmailId = 0
       ;
   
@@ -86,6 +123,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.09.16         * add zc_ObjectLink_EmailSettings_Juridical, inisShowAll
  28.06.16         *
  03.03.16         *
 */

@@ -30,6 +30,16 @@ type
     colEmailKindName: TcxGridDBColumn;
     colEmailToolsName: TcxGridDBColumn;
     colEmailName: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    cxLabel1: TcxLabel;
+    bbInsertUpdate: TdxBarButton;
+    spInsertUpdate_Juridical: TdsdStoredProc;
+    actInsertUpdateJuridical0: TdsdExecStoredProc;
+    mactInsertUpdateJuridical1: TMultiAction;
+    macInsertUpdateJuridicalList: TMultiAction;
+    edValue: TcxTextEdit;
   private
     { Private declarations }
   public
