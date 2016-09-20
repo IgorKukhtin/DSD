@@ -46,13 +46,13 @@ BEGIN
              Object_OrderShedule.Id           AS Id
            , Object_OrderShedule.ObjectCode   AS Code
        
-           , '0' ::TFloat   AS Value1
-           , '1' ::TFloat   AS Value2
-           , '2' ::TFloat   AS Value3
-           , '3' ::TFloat   AS Value4
-           , '0' ::TFloat   AS Value5
-           , '0' ::TFloat   AS Value6
-           , '0' ::TFloat   AS Value7
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat   AS Value1
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat   AS Value2
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat   AS Value3
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat   AS Value4
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat   AS Value5
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat   AS Value6
+           , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat   AS Value7
            
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName 

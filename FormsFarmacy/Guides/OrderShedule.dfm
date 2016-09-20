@@ -54,7 +54,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 202
+        Width = 99
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -62,7 +62,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 137
+        Width = 187
       end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -79,7 +79,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 202
+        Width = 109
       end
       object clContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -87,72 +87,74 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 202
+        Width = 115
       end
       object clValue8: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Value8'
+        Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 180
       end
       object colValue1: TcxGridDBColumn
-        Caption = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
+        Caption = #1055#1085
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 25
       end
       object colValue2: TcxGridDBColumn
-        Caption = #1042#1090#1086#1088#1085#1080#1082
+        Caption = #1042#1090
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 59
+        Width = 25
       end
       object colValue3: TcxGridDBColumn
-        Caption = #1057#1088#1077#1076#1072
+        Caption = #1057#1088
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 25
       end
       object colValue4: TcxGridDBColumn
-        Caption = #1063#1077#1090#1074#1077#1088#1075
+        Caption = #1063#1090
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 59
+        Width = 25
       end
       object colValue5: TcxGridDBColumn
-        Caption = #1055#1103#1090#1085#1080#1094#1072
+        Caption = #1055#1090
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 25
       end
       object colValue6: TcxGridDBColumn
-        Caption = #1057#1091#1073#1073#1086#1090#1072
+        Caption = #1057#1073
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 25
       end
       object colValue7: TcxGridDBColumn
-        Caption = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077
+        Caption = #1042#1089
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 110
+        Width = 25
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -162,6 +164,64 @@ object OrderSheduleForm: TOrderSheduleForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object Color_Calc1: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc1'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc2: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc2'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc3: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc3'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc4: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc4'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc5: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc5'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc6: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc6'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object Color_Calc7: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Calc7'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object colInf_Text1: TcxGridDBColumn
+        Caption = #1044#1077#1085#1100' '#1079#1072#1082#1072#1079#1072' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+        DataBinding.FieldName = 'Inf_Text1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Width = 120
+      end
+      object colInf_Text2: TcxGridDBColumn
+        Caption = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+        DataBinding.FieldName = 'Inf_Text2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -608,7 +668,42 @@ object OrderSheduleForm: TOrderSheduleForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = colValue1
+        BackGroundValueColumn = Color_Calc1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue2
+        BackGroundValueColumn = Color_Calc2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue3
+        BackGroundValueColumn = Color_Calc3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue4
+        BackGroundValueColumn = Color_Calc4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue5
+        BackGroundValueColumn = Color_Calc5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue6
+        BackGroundValueColumn = Color_Calc6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = colValue7
+        BackGroundValueColumn = Color_Calc7
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

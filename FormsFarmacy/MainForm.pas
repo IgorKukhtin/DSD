@@ -293,6 +293,8 @@ type
     N105: TMenuItem;
     actReport_MovementCheckErrorForm: TdsdOpenForm;
     N106: TMenuItem;
+    actOrderShedule: TdsdOpenForm;
+    N107: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

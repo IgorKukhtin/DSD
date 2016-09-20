@@ -231,7 +231,7 @@
         Name = 'inValue1'
         Value = ''
         Component = ceValue1
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -239,7 +239,7 @@
         Name = 'inValue2'
         Value = 'False'
         Component = ceValue2
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -247,7 +247,7 @@
         Name = 'inValue3'
         Value = 'False'
         Component = ceValue3
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -255,7 +255,7 @@
         Name = 'inValue4'
         Value = 'False'
         Component = ceValue4
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -263,7 +263,7 @@
         Name = 'inValue5'
         Value = 'False'
         Component = ceValue5
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -271,7 +271,7 @@
         Name = 'inValue6'
         Value = 'False'
         Component = ceValue6
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -279,7 +279,7 @@
         Name = 'inValue7'
         Value = 'False'
         Component = ceValue7
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -288,7 +288,6 @@
         Value = 0.000000000000000000
         Component = UnitGuides
         ComponentItem = 'Key'
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -438,11 +437,11 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
-    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContractChoiceForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TContractForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
