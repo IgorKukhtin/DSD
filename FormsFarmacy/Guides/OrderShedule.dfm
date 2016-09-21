@@ -25,8 +25,6 @@ object OrderSheduleForm: TOrderSheduleForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -236,8 +234,7 @@ object OrderSheduleForm: TOrderSheduleForm
     Width = 779
     Height = 32
     Align = alTop
-    TabOrder = 5
-    ExplicitTop = 2
+    TabOrder = 4
     object cxLabel4: TcxLabel
       Left = 8
       Top = 7

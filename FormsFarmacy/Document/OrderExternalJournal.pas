@@ -38,6 +38,10 @@ type
     ExecuteDialog: TExecuteDialog;
     Comment: TcxGridDBColumn;
     MasterInvNumber: TcxGridDBColumn;
+    colisZakazToday: TcxGridDBColumn;
+    colisDostavkaToday: TcxGridDBColumn;
+    colOperDate_Zakaz: TcxGridDBColumn;
+    colOperDate_Dostavka: TcxGridDBColumn;
   private
     { Private declarations }
   public
