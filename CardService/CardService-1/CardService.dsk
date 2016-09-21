@@ -1,24 +1,24 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\9.0\source\soap\Soap.XSBuiltIns.pas',0,1,1,26,8,0,0,,
-File_1=TSourceModule,'D:\Project-Basis\CardService\CardService-1\uCardService.pas',0,1,40,1,1,0,0,,
-File_2=TSourceModule,'D:\Project-Basis\SOURCE\ParentForm.pas',0,1,1,1,1,0,0,,
-File_3=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdGuides.pas',0,1,262,4,265,0,0,,
-File_4=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\ExternalLoad.pas',0,1,777,35,795,0,0,,{1
-File_5=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdDB.pas',0,1,470,36,485,0,0,,
-File_6=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdAction.pas',0,1,2260,1,2279,0,0,,{1
-File_7=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorData.pas',0,1,1,1,1,0,0,,
-File_8=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorBase.pas',0,1,1,1,1,0,0,,
-File_9=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorReport.pas',0,1,1,1,1,0,0,,
-File_10=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorDBGrid.pas',0,1,1,1,1,0,0,,
-File_11=TSourceModule,'D:\Project-Basis\SOURCE\DataModul.pas',0,1,1,1,1,0,0,,
-File_12=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorJournal.pas',0,1,1,1,1,0,0,,
-File_13=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorDocument.pas',0,1,1,1,1,0,0,,
-File_14=TSourceModule,'D:\Project-Basis\Forms\Import\ImportSettings.pas',0,1,1,1,1,0,0,,
+File_0=TSourceModule,'D:\Project-Basis\CardService\CardService-1\uCardService.pas',0,1,40,1,1,0,0,,
+File_1=TSourceModule,'D:\Project-Basis\SOURCE\ParentForm.pas',0,1,1,1,1,0,0,,
+File_2=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdGuides.pas',0,1,262,4,265,0,0,,
+File_3=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\ExternalLoad.pas',0,1,777,35,795,0,0,,{1
+File_4=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdDB.pas',0,1,470,36,485,0,0,,
+File_5=TSourceModule,'D:\Project-Basis\SOURCE\COMPONENT\dsdAction.pas',0,1,2260,1,2279,0,0,,{1
+File_6=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorData.pas',0,1,1,1,1,0,0,,
+File_7=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorBase.pas',0,1,1,1,1,0,0,,
+File_8=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorReport.pas',0,1,1,1,1,0,0,,
+File_9=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorDBGrid.pas',0,1,1,1,1,0,0,,
+File_10=TSourceModule,'D:\Project-Basis\SOURCE\DataModul.pas',0,1,1,1,1,0,0,,
+File_11=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorJournal.pas',0,1,1,1,1,0,0,,
+File_12=TSourceModule,'D:\Project-Basis\Forms\Ancestor\AncestorDocument.pas',0,1,1,1,1,0,0,,
+File_13=TSourceModule,'D:\Project-Basis\Forms\Import\ImportSettings.pas',0,1,1,1,1,0,0,,
 
 [Modules]
 Module0=D:\Project-Basis\CardService\CardService-1\uMain.pas
-Module1=default.htm
-Count=2
+Module1=c:\program files (x86)\embarcadero\rad studio\9.0\source\soap\Soap.XSBuiltIns.pas
+Module2=default.htm
+Count=3
 EditWindowCount=1
 
 [D:\Project-Basis\CardService\CardService-1\uMain.pas]
@@ -26,14 +26,20 @@ ModuleType=TSourceModule
 FormState=1
 FormOnTop=0
 
+[c:\program files (x86)\embarcadero\rad studio\9.0\source\soap\Soap.XSBuiltIns.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
 [default.htm]
 ModuleType=TURLModule
 
 [EditWindow0]
-ViewCount=2
+ViewCount=3
 CurrentEditView=D:\Project-Basis\CardService\CardService-1\uMain.pas
 View0=0
 View1=1
+View2=2
 PercentageSizes=1
 Create=1
 Visible=1
@@ -50,12 +56,12 @@ ClientHeight=9011
 DockedToMainForm=1
 BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
-LeftPanelSize=1859
+LeftPanelSize=2379
 LeftPanelClients=PropertyInspector,DockSite3
-LeftPanelData=0000080001010100000009000000446F636B5369746533780F0000000000000143070000000000000100000000841B00001100000050726F7065727479496E73706563746F72FFFFFFFF
-RightPanelSize=1999
+LeftPanelData=0000080001010100000009000000446F636B5369746533780F000000000000014B090000000000000100000000841B00001100000050726F7065727479496E73706563746F72FFFFFFFF
+RightPanelSize=944
 RightPanelClients=DockSite2,DockSite4
-RightPanelData=00000800010100000000780F00000000000001CF0700000000000001000000004212000009000000446F636B53697465320100000000841B000009000000446F636B5369746534FFFFFFFF
+RightPanelData=00000800010100000000780F00000000000001B00300000000000001000000004212000009000000446F636B53697465320100000000841B000009000000446F636B5369746534FFFFFFFF
 BottomPanelSize=1576
 BottomPanelClients=DockSite1,MessageView
 BottomPanelData=0000080001020100000009000000446F636B53697465317A4500000000000002280600000000000001000000007A4500000F0000004D65737361676556696577466F726DFFFFFFFF
@@ -70,13 +76,24 @@ WelcomePageURL=bds:/default.htm
 [View1]
 CustomEditViewType=TEditView
 Module=D:\Project-Basis\CardService\CardService-1\uMain.pas
-CursorX=1
-CursorY=14
-TopLine=1
+CursorX=43
+CursorY=100
+TopLine=82
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=D:\Project-Basis\CardService\CardService-1\uMain.pas
+
+[View2]
+CustomEditViewType=TEditView
+Module=c:\program files (x86)\embarcadero\rad studio\9.0\source\soap\Soap.XSBuiltIns.pas
+CursorX=72
+CursorY=24
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=c:\program files (x86)\embarcadero\rad studio\9.0\source\soap\Soap.XSBuiltIns.pas
 
 [Watches]
 Count=0
@@ -142,11 +159,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1999
+Width=944
 Height=4160
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1999
+ClientWidth=944
 ClientHeight=4160
 TBDockHeight=5894
 LRDockWidth=2350
@@ -180,11 +197,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1999
+Width=944
 Height=2154
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1999
+ClientWidth=944
 ClientHeight=2154
 TBDockHeight=7154
 LRDockWidth=1999
@@ -199,17 +216,17 @@ Docked=1
 State=0
 Left=0
 Top=23
-Width=1859
+Width=2379
 Height=7019
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1859
+ClientWidth=2379
 ClientHeight=7019
 TBDockHeight=8672
-LRDockWidth=1859
+LRDockWidth=2379
 Dockable=1
 StayOnTop=0
-SplitPos=109
+SplitPos=171
 
 [TFileExplorerForm]
 PercentageSizes=1
@@ -617,14 +634,14 @@ Docked=1
 State=0
 Left=0
 Top=23
-Width=1999
+Width=944
 Height=4499
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1999
+ClientWidth=944
 ClientHeight=4499
 TBDockHeight=6667
-LRDockWidth=1999
+LRDockWidth=944
 Dockable=1
 StayOnTop=0
 TabPosition=1
@@ -665,14 +682,14 @@ Docked=1
 State=0
 Left=0
 Top=382
-Width=1999
+Width=944
 Height=2154
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1999
+ClientWidth=944
 ClientHeight=2154
 TBDockHeight=6667
-LRDockWidth=1999
+LRDockWidth=944
 Dockable=1
 StayOnTop=0
 TabPosition=1

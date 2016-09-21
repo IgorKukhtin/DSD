@@ -26,7 +26,7 @@
       -- AND COALESCE (Object_GoodsObject.DescId, 0) NOT IN (zc_Object_Juridical(), zc_Object_GlobalConst(), zc_object_User(), zc_Object_Contract())
       -- AND COALESCE (Object_GoodsObject.DescId, 0) IN (0, zc_Object_Retail())
    ;
-
+   
      -- !!!ALL!!!
      SELECT Object_Goods.*, tmpGoods.*
           /*, case when tmpGoods.Id is null then
@@ -72,13 +72,15 @@
            WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
           ) AS Object_Goods
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods.ObjectId
-
+                                           AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
+          
 
           LEFT JOIN 
           (SELECT Object_Goods.*, ObjectLink_LinkGoods_GoodsMain.ChildObjectId AS GoodsId_main, Object_Retail.Id AS ObjectId
            FROM (SELECT MIN (Object_Retail.Id) AS Id FROM Object AS Object_Retail WHERE Object_Retail.DescId = zc_Object_Retail()
                 ) AS Object_Retail_from
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Retail_from.Id
+                                                 AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
                 INNER JOIN ObjectLink AS ObjectLink_Goods_Object
                                       ON ObjectLink_Goods_Object.ChildObjectId = Object_Retail.Id
                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
@@ -161,6 +163,7 @@
            WHERE ObjectLink_LinkGoods_GoodsMain.ChildObjectId > 0
           ) AS Object_Goods_View_from
           LEFT JOIN Object AS Object_Retail ON Object_Retail.DescId = zc_Object_Retail() AND Object_Retail.Id <> Object_Goods_View_from.ObjectId
+                                           AND Object_Retail.Id = (select max (Id) from Object where DescId = zc_Object_Retail())
           -- inner JOIN Object_Goods_View on Object_Goods_View.ObjectId = Object_Retail.Id
           --        and Object_Goods_View.GoodsCode = Object_Goods_View_from.GoodsCode
 

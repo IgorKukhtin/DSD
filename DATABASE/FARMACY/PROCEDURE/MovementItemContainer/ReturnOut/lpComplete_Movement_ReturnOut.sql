@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbAccountId Integer;
    DECLARE vbOperSumm_Partner TFloat;
    DECLARE vbOperSumm_Partner_byItem TFloat;
+   DECLARE vbInvNumberPartner TVarChar;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -22,6 +23,8 @@ BEGIN
   --   DELETE FROM _tmpMIReport_insert;
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
+
+    vbInvNumberPartner:= (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId AND MS.DescId = zc_MovementString_InvNumberPartner());
 
 
 /*    -- Проводки по суммам документа
@@ -182,12 +185,14 @@ BEGIN
            FROM _tmpItem 
                 JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.MovementItemId = _tmpItem.MovementItemId
                 LEFT JOIN MovementItem_ReturnOut_View ON MovementItem_ReturnOut_View.Id = _tmpItem.MovementItemId
-                LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.Id = MovementItem_ReturnOut_View.MovementId;
+                LEFT JOIN Movement_ReturnOut_View ON Movement_ReturnOut_View.Id = MovementItem_ReturnOut_View.MovementId
+           WHERE vbInvNumberPartner <> '';
 
      
      SELECT -SUM(Amount) INTO vbOperSumm_Partner_byItem FROM _tmpMIContainer_insert WHERE AnalyzerId = 0;
  
-     IF (vbOperSumm_Partner <> vbOperSumm_Partner_byItem) THEN
+     IF (vbOperSumm_Partner <> vbOperSumm_Partner_byItem) AND vbInvNumberPartner <> ''
+     THEN
         UPDATE _tmpMIContainer_insert SET Amount = Amount - (vbOperSumm_Partner_byItem - vbOperSumm_Partner)
          WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0 
                       AND Amount IN (SELECT MAX (Amount) FROM _tmpMIContainer_insert WHERE AnalyzerId = 0)

@@ -10,7 +10,8 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit;
+  cxGrid, cxPC, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TSetUserDefaultsForm = class(TAncestorDBGridForm)
@@ -24,6 +25,8 @@ type
     OpenObjectForm: TOpenChoiceForm;
     spInsertUpdate: TdsdStoredProc;
     UpdateDataSet: TdsdUpdateDataSet;
+    ItemName_user: TcxGridDBColumn;
+    ItemName_value: TcxGridDBColumn;
   private
     { Private declarations }
   public

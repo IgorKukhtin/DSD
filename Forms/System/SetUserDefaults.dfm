@@ -2,8 +2,8 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1079#1085#1072#1095#1077#1085#1080#1081' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
   ClientHeight = 395
   ClientWidth = 847
-  ExplicitWidth = 855
-  ExplicitHeight = 422
+  ExplicitWidth = 863
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +24,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
+          OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -39,17 +40,16 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 192
           end
           object colFormClassName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072
             DataBinding.FieldName = 'FormClassName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 122
-          end
-          object colDescName: TcxGridDBColumn
-            Caption = #1044#1045#1057#1050
-            DataBinding.FieldName = 'DescName'
-            Width = 97
           end
           object colUserKey: TcxGridDBColumn
             Caption = #1056#1086#1083#1100'/'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
@@ -62,7 +62,17 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 211
+          end
+          object ItemName_user: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1088#1086#1083#1100'/'#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'ItemName_user'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 150
           end
           object colValue: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -75,7 +85,24 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 211
+          end
+          object colDescName: TcxGridDBColumn
+            Caption = #1044#1045#1057#1050
+            DataBinding.FieldName = 'DescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 97
+          end
+          object ItemName_value: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1079#1085#1072#1095#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'ItemName_value'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -90,6 +117,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       FormName = 'TDefaultsKeyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -97,6 +125,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           Component = MasterCDS
           ComponentItem = 'KeyId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -104,6 +133,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           Component = MasterCDS
           ComponentItem = 'Key'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -115,12 +145,14 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       FormName = 'TUserKeyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'UserId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -128,6 +160,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           Component = MasterCDS
           ComponentItem = 'UserName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -139,12 +172,14 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       FormName = 'TObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -152,6 +187,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           Component = MasterCDS
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -200,6 +236,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'indefaultkeyid'
@@ -207,6 +244,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         Component = MasterCDS
         ComponentItem = 'KeyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inuserkey'
@@ -214,6 +252,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         Component = MasterCDS
         ComponentItem = 'UserId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'indefaultvalue'
@@ -222,6 +261,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         ComponentItem = 'ObjectId'
         DataType = ftBlob
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456

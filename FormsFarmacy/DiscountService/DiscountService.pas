@@ -13,7 +13,8 @@ type
     spGet_BarCode: TdsdStoredProc;
     spGet_DiscountExternal: TdsdStoredProc;
   private
-    { Private declarations }
+    function myFloatToStr(aValue: Double) : String;
+    function myStrToFloat(aValue: String) : Double;
   public
     // так криво будем хранить "текущие" параметры-Main
     gURL, gService, gPort, gUserName, gPassword, gCardNumber : String;
@@ -47,9 +48,25 @@ var
 implementation
 {$R *.dfm}
 uses Soap.XSBuiltIns
-   , MainCash
+   , MainCash, UtilConvert
    , XMLIntf, XMLDoc, OPToSOAPDomConv;
 
+//
+function TDiscountServiceForm.myFloatToStr(aValue: Double) : String;
+//var lValue:String;
+begin
+     Result:=  gfFloatToStr(aValue);
+{
+      lValue:= FloatToStr(aValue);
+      if Pos(',',lValue)
+      then Result:= ReplaceStr() lValue
+      else Result:= lValue;}
+end;
+//
+function TDiscountServiceForm.myStrToFloat(aValue: String) : Double;
+begin
+     Result:=  gfStrToFloat(aValue);
+end;
 // для Теста
 procedure SaveToXMLFile_CheckItem(Source : ArrayOfCardCheckItem);
 var
@@ -68,7 +85,7 @@ begin
   for i := 0 to Length(Source) - 1 do
     NodeObject:= Source[i].ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
 
-  XML.SaveToFile('D:\11Item.xml');
+  if FileExists('d:\test.SaveToXML') then XML.SaveToFile('D:\11Item.xml');
 end;
 procedure SaveToXMLFile_CheckItemResult(Source : ArrayOfCardCheckResultItem);
 var
@@ -87,7 +104,7 @@ begin
   for i := 0 to Length(Source) - 1 do
     NodeObject:= Source[i].ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
 
-  XML.SaveToFile('D:\12ItemRes.xml');
+  if FileExists('d:\test.SaveToXML') then XML.SaveToFile('D:\12ItemRes.xml');
 end;
 procedure SaveToXMLFile_ItemCommit(Source : TRemotable);
 var
@@ -119,7 +136,7 @@ begin
       NodeParent:= NodeRoot.AddChild('Parent');
       Converter:= TSOAPDomConv.Create(NIL);
       NodeObject:= Source.ObjectToSOAP(NodeRoot, NodeParent, Converter, 'CopyObject', '', '', [ocoDontPrefixNode], XMLStr);
-      XML.SaveToFile('D:\22ItemCommitRes.xml');
+      if FileExists('d:\test.SaveToXML') then XML.SaveToFile('D:\22ItemCommitRes.xml');
 end;
 
 
@@ -361,20 +378,20 @@ begin
 
             //Цена без учета скидки
             Item.PrimaryPrice := TXSDecimal.Create;
-            Item.PrimaryPrice.XSToNative (FloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
+            Item.PrimaryPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
             //Сумма без учета скидки
             Item.PrimaryAmount := TXSDecimal.Create;
-            Item.PrimaryAmount.XSToNative (FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat)));
+            Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat)));
 
             //Цена товара (с учетом скидки)
             Item.RequestedPrice := TXSDecimal.Create;
-            Item.RequestedPrice.XSToNative (FloatToStr (CheckCDS.FieldByName('Price').AsFloat));
+            Item.RequestedPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('Price').AsFloat));
             //Кол-во товара
             Item.RequestedQuantity := TXSDecimal.Create;
-            Item.RequestedQuantity.XSToNative (FloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
+            Item.RequestedQuantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
             //Сумма за кол-во товара (с учетом скидки)
             Item.RequestedAmount := TXSDecimal.Create;
-            Item.RequestedAmount.XSToNative(FloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
+            Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
 
             // Подготовили список для отправки
             SetLength(SendList, i);
@@ -413,8 +430,10 @@ begin
           //!!!для теста!!!
           SaveToXMLFile_ItemCommit(aSaleRequest);
           //!!!для теста!!!
+
           // Отправили запрос
           ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
+
           //!!!для теста!!!
           SaveToXMLFile_ItemCommitRes(ResList);
           //!!!для теста!!!
@@ -545,13 +564,13 @@ begin
 
             //Предполагаемая цена товара
             Item.RequestedPrice := TXSDecimal.Create;
-            Item.RequestedPrice.XSToNative(FloatToStr(lPriceSale));
+            Item.RequestedPrice.XSToNative(myFloatToStr(lPriceSale));
             //Предполагаемое кол-во товара
             Item.RequestedQuantity := TXSDecimal.Create;
-            Item.RequestedQuantity.XSToNative(FloatToStr(CheckCDS.FieldByName('Amount').AsFloat));
+            Item.RequestedQuantity.XSToNative(myFloatToStr(CheckCDS.FieldByName('Amount').AsFloat));
             //Предполагаемая сумма за кол-во товара
             Item.RequestedAmount := TXSDecimal.Create;
-            Item.RequestedAmount.XSToNative(FloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale)));
+            Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm(CheckCDS.FieldByName('Amount').AsFloat, lPriceSale)));
 
 
             // Подготовили список для отправки
@@ -613,6 +632,7 @@ begin
           //!!!для теста!!!
           SaveToXMLFile_CheckItem(SendList);
           //!!!для теста!!!
+
           // Отправили запрос на ВСЕ элементы
           ResList := (HTTPRIO as CardServiceSoap).checkCardSale(SendList, gUserName, gPassword);
 
@@ -679,7 +699,7 @@ begin
                //проверка
                if lSummChangePercent >= GetSumm(lQuantity, lPriceSale) then
                begin
-                    ShowMessage ('Ошибка.Сумма скидки  <' + FloatToStr(lSummChangePercent) + '> не может быть больше чем <' + FloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
+                    ShowMessage ('Ошибка.Сумма скидки  <' + myFloatToStr(lSummChangePercent) + '> не может быть больше чем <' + myFloatToStr(GetSumm(lQuantity, lPriceSale)) + '>.'
                     + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                     + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                     //ошибка

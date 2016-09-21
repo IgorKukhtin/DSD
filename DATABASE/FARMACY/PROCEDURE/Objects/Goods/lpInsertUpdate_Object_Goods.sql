@@ -37,7 +37,7 @@ BEGIN
    END IF;
 
    -- проверка уникальности <Код>
-   IF COALESCE (inObjectId, 0) = 0
+   IF COALESCE (inObjectId, 0) = 0 -- AND inUserId <> 3 -- !!!только когда руками новую сеть!!!
    THEN
       -- !!!для "общего справочника" - GoodsCodeInt
       IF EXISTS (SELECT GoodsName FROM Object_Goods_View 

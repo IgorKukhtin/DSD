@@ -32,7 +32,9 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Товар Торговой сети>
-     ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, '');
+     ioId:= lpInsertUpdate_Object_Goods (ioId, inCode, inName, inGoodsGroupId, inMeasureId, inNDSKindId, inObjectId, inUserId, 0, ''
+                                       --, CASE WHEN inUserId = 3 THEN FALSE ELSE TRUE END -- !!!только когда руками новую сеть!!!
+                                        );
 
      -- !!!замена!!!
      IF inMinimumLot = 0 THEN inMinimumLot := NULL; END IF;   	

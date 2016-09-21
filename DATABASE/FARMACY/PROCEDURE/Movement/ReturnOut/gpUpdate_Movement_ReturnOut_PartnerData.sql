@@ -18,11 +18,12 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
     vbUserId := inSession;
     
-    IF COALESCE(inMovementId,0) = 0
+    IF COALESCE (inMovementId,0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен!';
     END IF;
-    --Если документ проведен - распроводим его и отмечаем что в конце нужено его провести
+
+    -- Если документ проведен - распроводим его и отмечаем что в конце нужено его провести
     IF EXISTS(SELECT 1 FROM Movement Where Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
     THEN
         PERFORM gpUnComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);
@@ -32,12 +33,12 @@ BEGIN
     END IF;
     
     --Сохранили дату партнера
-    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, inOperDatePartner);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), inMovementId, CASE WHEN TRIM (inInvNumberPartner) <> '' AND inOperDatePartner > '01.01.2000' THEN inOperDatePartner ELSE NULL END);
     
-    --Сохранили № документа партнера
+    -- Сохранили № документа партнера
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), inMovementId, inInvNumberPartner);
 
-    --Если документ был распроведен - то проводим его
+    -- Если документ был распроведен - то проводим его
     IF vbNeedComplete = TRUE
     THEN
         PERFORM gpComplete_Movement_ReturnOut (inMovementId := inMovementId, inSession := inSession);

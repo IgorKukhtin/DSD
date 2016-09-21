@@ -67,7 +67,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 -- !!!¬–≈ћ≈ЌЌќ!!!
--- inItearationCount:=700;
+ inItearationCount:=100;
 -- !!!¬–≈ћ≈ЌЌќ!!!
 
      -- !!!если не филиал, тогда начальна€ дата всегда 1-ое число мес€ца!!!
@@ -438,7 +438,28 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (142372, 147559); -- 08.2016
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
+, 955228
+, 189406
 
+, 955227
+, 147524
+
+, 955226
+, 147525
+
+, 955221
+, 147522
+
+, 1088976
+, 699999
+
+, 955223
+, 955224
+
+, 393568
+, 149497
+);
 
 
      IF inBranchId = 0 -- OR 1 = 1
@@ -1102,7 +1123,7 @@ order by 3
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016', inBranchId:= 0, inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2016', inEndDate:= '30.09.2016', inBranchId:= 0, inItearationCount:= 300, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
 /*
 select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
 from Container 
@@ -1113,7 +1134,7 @@ from Container
 where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.06.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
 order by 3, 5
 SELECT * 
-FROM HistoryCost WHERE ('01.06.2016' BETWEEN StartDate AND EndDate)
+FROM HistoryCost WHERE ('01.09.2016' BETWEEN StartDate AND EndDate)
 and abs (Price) = 1.1234
 and CalcSumm > 1000000
 order by Price desc
