@@ -74,11 +74,13 @@ BEGIN
                         , tmpEnumEmail.EmailToolsName 
                         , tmpEnumEmail.EmailId
                         , tmpEnumEmail.EmailName
-                        , COALESCE(Object_Juridical.Id,0)     AS JuridicalId
+                        , ObjectBoolean_isCorporate.ObjectId AS JuridicalId
                   FROM tmpEnumEmail
-                       left JOIN Object AS Object_Juridical ON Object_Juridical.DescId = zc_Object_Juridical()
-                 WHERE inIsShowAll = True
-                  )
+                       INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate 
+                                   ON ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
+                                  AND ObjectBoolean_isCorporate.ValueData = TRUE
+                  WHERE inIsShowAll = TRUE
+                 )
 
   , tmpObject AS (SELECT tmpObject1.EmailSettingsId
                        , tmpObject1.EmailSettingsCode
@@ -129,4 +131,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_EmailSettings (0, '2')
+-- SELECT * FROM gpSelect_Object_EmailSettings (0, FALSE, '2')

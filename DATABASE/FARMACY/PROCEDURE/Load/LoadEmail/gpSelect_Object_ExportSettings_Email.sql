@@ -32,7 +32,7 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= inSession) AS tmp WHERE tmp.EmailKindId = zc_Enum_EmailKind_OutOrder())
+     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= inSession) AS tmp WHERE tmp.EmailKindId = zc_Enum_EmailKind_OutOrder() AND tmp.JuridicalId = 0)
         , tmpFind AS (SELECT * FROM gpSelect_Object_ImportSettings_Email (inSession:= inSession) AS tmp
                       WHERE tmp.EmailKindId = zc_Enum_EmailKind_IncomeMMO()
                         AND tmp.Id          = inObjectId

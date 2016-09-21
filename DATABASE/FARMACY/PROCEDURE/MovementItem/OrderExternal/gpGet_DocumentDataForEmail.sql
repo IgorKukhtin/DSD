@@ -20,6 +20,7 @@ $BODY$
   DECLARE vbSubject TVarChar;
   DECLARE vbUserMailSign TBlob;
   DECLARE vbUnitSign TBlob;
+  DECLARE vbJuridicalId_unit Integer;
   DECLARE vbJuridicalName TVarChar;
   DECLARE vbZakazName TVarChar;
 BEGIN
@@ -29,9 +30,10 @@ BEGIN
 
 
    -- еще
-   SELECT tmp.Mail, tmp.JuridicalName
-          INTO vbMail, vbJuridicalName
-   FROM (WITH tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+   SELECT tmp.Mail, tmp.JuridicalId_unit, tmp.JuridicalName
+          INTO vbMail, vbJuridicalId_unit, vbJuridicalName
+   FROM (WITH tmpMovement AS (SELECT MLO_From.ObjectId AS FromId, MLO_To.ObjectId AS ToId, ObjectLink_Juridical_Retail.ChildObjectId AS RetailId
+                                   , ObjectLink_Unit_Juridical.ChildObjectId AS JuridicalId_unit
                               FROM MovementLinkObject AS MLO_From
                                    -- !!!только так - определяется <Торговая сеть>!!!
                                    LEFT JOIN MovementLinkObject AS MLO_To
@@ -46,7 +48,8 @@ BEGIN
                               WHERE MLO_From.MovementId = inId
                                 AND MLO_From.DescId     = zc_MovementLinkObject_From()
                              )
-         SELECT COALESCE (View_ContactPerson.Mail,          View_ContactPerson_two.Mail)          AS Mail
+         SELECT tmpMovement.JuridicalId_unit
+              , COALESCE (View_ContactPerson.Mail,          View_ContactPerson_two.Mail)          AS Mail
               , COALESCE (View_ContactPerson.JuridicalName, View_ContactPerson_two.JuridicalName) AS JuridicalName
          FROM tmpMovement
               LEFT JOIN Object_ContactPerson_View AS View_ContactPerson
@@ -61,7 +64,8 @@ BEGIN
 
 
    -- еще
-   SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText, MovementLinkObject.ObjectId INTO vbZakazName, vbUnitSign, vbUnitId 
+   SELECT object_unit_view.juridicalname||' от '||object_unit_view.name, SomeText, MovementLinkObject.ObjectId
+          INTO vbZakazName, vbUnitSign, vbUnitId 
    FROM MovementLinkObject 
         LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = ObjectId 
                                               AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_UnitEmailSign()
@@ -71,7 +75,8 @@ BEGIN
      AND MovementId = inId;
 
    -- еще
-   SELECT Object_ImportExportLink_View.StringKey INTO vbSubject
+   SELECT Object_ImportExportLink_View.StringKey
+          INTO vbSubject
    FROM MovementLinkObject 
         LEFT JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.MainId = vbUnitId
                                               AND Object_ImportExportLink_View.LinkTypeId = zc_Enum_ImportExportLinkType_ClientEmailSubject()
@@ -86,7 +91,8 @@ BEGIN
     END IF;
 
     -- еще
-    SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData INTO vbUserMail, vbUserMailSign
+    SELECT ObjectString.valuedata, ObjectBlob_EMailSign.ValueData
+           INTO vbUserMail, vbUserMailSign
     FROM ObjectLink AS User_Link_Member 
          LEFT JOIN ObjectString ON ObjectString.descid = zc_ObjectString_Member_EMail()
                                AND ObjectString.ObjectId = User_Link_Member.ChildObjectId
@@ -115,19 +121,30 @@ BEGIN
        -- Результат
        RETURN QUERY
        WITH tmpComment AS (SELECT MS_Comment.ValueData AS Comment FROM MovementString AS MS_Comment WHERE MS_Comment.MovementId = inId AND MS_Comment.DescId = zc_MovementString_Comment())
+          , tmpEmail_all AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= inSession) AS tmp WHERE tmp.EmailKindId = zc_Enum_EmailKind_OutOrder())
+          , tmpEmail_jur AS (SELECT * FROM tmpEmail_all WHERE JuridicalId = vbJuridicalId_unit)
+          , tmpEmail AS (SELECT * FROM tmpEmail_jur UNION ALL SELECT * FROM tmpEmail_all WHERE COALESCE (JuridicalId, 0) = 0 AND NOT EXISTS (SELECT 1 FROM tmpEmail_jur))
        SELECT
-         vbSubject, 
-         (CASE WHEN (SELECT Comment FROM tmpComment) <> ''
+         vbSubject AS Subject
+       , (CASE WHEN (SELECT Comment FROM tmpComment) <> ''
                     THEN 'ПРИМЕЧАНИЕ ВАЖНО : ' || (SELECT Comment FROM tmpComment) || CHR (13) || CHR (13) || CHR (13) || CHR (13) || CHR (13)
                ELSE ''
          END
-      || COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body,
-         zc_Mail_From(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
-         vbMail, 
-         zc_Mail_Host(), --'smtp.mail.ru'::TVarChar, 
-         zc_Mail_Port(), --465, 
-         zc_Mail_User(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
-         zc_Mail_Password(); --'fgntrfyt,jktq'::TVarChar;
+      || COALESCE (vbUnitSign, '') || '<br>' || COALESCE (vbUserMailSign, '')) :: TBlob AS Body
+       , gpGet_Mail.Value            AS AddressFrom   --*** zc_Mail_From() --'zakaz_family-neboley@mail.ru'::TVarChar, 
+       , vbMail                      AS AddressTo
+       , gpGet_Host.Value            AS Host          --*** zc_Mail_Host(), --'smtp.mail.ru'::TVarChar, 
+       , gpGet_Port.Value :: Integer AS Port          --*** zc_Mail_Port(), --465, 
+       , gpGet_User.Value            AS UserName      --*** zc_Mail_User(), --'zakaz_family-neboley@mail.ru'::TVarChar, 
+       , gpGet_Password.Value        AS Password      --*** zc_Mail_Password() --'fgntrfyt,jktq'::TVarChar;
+
+       FROM tmpEmail AS gpGet_Host
+            LEFT JOIN tmpEmail AS gpGet_Port      ON gpGet_Port.EmailToolsId      = zc_Enum_EmailTools_Port()
+            LEFT JOIN tmpEmail AS gpGet_Mail      ON gpGet_Mail.EmailToolsId      = zc_Enum_EmailTools_Mail()
+            LEFT JOIN tmpEmail AS gpGet_User      ON gpGet_User.EmailToolsId      = zc_Enum_EmailTools_User()
+            LEFT JOIN tmpEmail AS gpGet_Password  ON gpGet_Password.EmailToolsId  = zc_Enum_EmailTools_Password()
+     WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
+    ;
 
 END;
 $BODY$
