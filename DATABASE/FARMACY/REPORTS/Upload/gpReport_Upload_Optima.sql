@@ -286,4 +286,4 @@ ALTER FUNCTION  gpReport_Upload_Optima (TDateTime, Integer, Integer, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpReport_Upload_Optima (inDate := '20151101'::TDateTime, inObjectId := 59611, inUnitId := 183293, inSession := '3')
+-- SELECT * FROM gpReport_Upload_Optima (inDate:= '19.09.2016', inObjectId := 59611, inUnitId := 183293, inSession := '3')

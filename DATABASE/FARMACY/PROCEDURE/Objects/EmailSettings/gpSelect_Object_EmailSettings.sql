@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_EmailSettings (Integer, Boolean, TVarCha
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_EmailSettings(
     IN inEmailId       Integer   ,
-    IN inisShowAll     Boolean, 
+    IN inIsShowAll     Boolean, 
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Value TVarChar
@@ -77,7 +77,7 @@ BEGIN
                         , COALESCE(Object_Juridical.Id,0)     AS JuridicalId
                   FROM tmpEnumEmail
                        left JOIN Object AS Object_Juridical ON Object_Juridical.DescId = zc_Object_Juridical()
-                 WHERE inisShowAll = True
+                 WHERE inIsShowAll = True
                   )
 
   , tmpObject AS (SELECT tmpObject1.EmailSettingsId
@@ -123,7 +123,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.09.16         * add zc_ObjectLink_EmailSettings_Juridical, inisShowAll
+ 20.09.16         * add zc_ObjectLink_EmailSettings_Juridical, inIsShowAll
  28.06.16         *
  03.03.16         *
 */
