@@ -45,7 +45,7 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inSession:= inSession) AS tmp WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))
+     WITH tmpEmail AS (SELECT * FROM gpSelect_Object_EmailSettings (inEmailId:= 0, inIsShowAll:= FALSE, inSession:= inSession) AS tmp WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO()))
         , tmp_ImportSettings AS (SELECT *
                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
                                  WHERE tmp.isErased    = FALSE
