@@ -1514,12 +1514,14 @@ object ContractForm: TContractForm
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1527,6 +1529,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1561,19 +1564,23 @@ object ContractForm: TContractForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -1589,6 +1596,7 @@ object ContractForm: TContractForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1596,6 +1604,7 @@ object ContractForm: TContractForm
           Component = CDSContractGoods
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1604,6 +1613,7 @@ object ContractForm: TContractForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1616,6 +1626,7 @@ object ContractForm: TContractForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1623,6 +1634,7 @@ object ContractForm: TContractForm
           Component = CDSContractPartner
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1631,6 +1643,7 @@ object ContractForm: TContractForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1643,6 +1656,7 @@ object ContractForm: TContractForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1650,6 +1664,7 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1658,6 +1673,7 @@ object ContractForm: TContractForm
           ComponentItem = 'BonusKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1670,6 +1686,7 @@ object ContractForm: TContractForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1677,6 +1694,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1685,6 +1703,7 @@ object ContractForm: TContractForm
           ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1708,6 +1727,7 @@ object ContractForm: TContractForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1715,12 +1735,14 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1728,6 +1750,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -1743,12 +1766,14 @@ object ContractForm: TContractForm
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1756,6 +1781,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'ContractKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1812,12 +1838,14 @@ object ContractForm: TContractForm
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1825,18 +1853,21 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupName'
@@ -1844,6 +1875,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1855,12 +1887,14 @@ object ContractForm: TContractForm
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractCondition
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1868,6 +1902,7 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1879,12 +1914,14 @@ object ContractForm: TContractForm
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1892,6 +1929,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1903,12 +1941,14 @@ object ContractForm: TContractForm
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1916,12 +1956,14 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1929,6 +1971,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OKPO'
@@ -1936,12 +1979,14 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'OKPO'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalCode'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalCode'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -2001,12 +2046,14 @@ object ContractForm: TContractForm
       FormName = 'TContractTagForm'
       FormNameParam.Value = 'TContractTagForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'ContractTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2014,6 +2061,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'ContractTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2025,12 +2073,14 @@ object ContractForm: TContractForm
       FormName = 'TBankAccountForm'
       FormNameParam.Value = 'TBankAccountForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BankAccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2038,6 +2088,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'BankAccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2050,6 +2101,7 @@ object ContractForm: TContractForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2057,6 +2109,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -2064,6 +2117,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -2086,12 +2140,14 @@ object ContractForm: TContractForm
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractCondition
           ComponentItem = 'ContractSendId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2099,6 +2155,7 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'ContractSendName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
@@ -2106,6 +2163,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -2113,6 +2171,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2124,12 +2183,14 @@ object ContractForm: TContractForm
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractCondition
           ComponentItem = 'ContractConditionKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2137,6 +2198,7 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2148,12 +2210,14 @@ object ContractForm: TContractForm
       FormName = 'TBonusKindForm'
       FormNameParam.Value = 'TBonusKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractCondition
           ComponentItem = 'BonusKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2161,6 +2225,7 @@ object ContractForm: TContractForm
           Component = CDSContractCondition
           ComponentItem = 'BonusKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2220,12 +2285,14 @@ object ContractForm: TContractForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2233,6 +2300,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2244,12 +2312,14 @@ object ContractForm: TContractForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractGoods
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2257,6 +2327,7 @@ object ContractForm: TContractForm
           Component = CDSContractGoods
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2268,12 +2339,14 @@ object ContractForm: TContractForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2281,6 +2354,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2292,12 +2366,14 @@ object ContractForm: TContractForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractGoods
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2305,6 +2381,7 @@ object ContractForm: TContractForm
           Component = CDSContractGoods
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2316,12 +2393,14 @@ object ContractForm: TContractForm
       FormName = 'TPartner_ObjectForm'
       FormNameParam.Value = 'TPartner_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CDSContractPartner
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2329,6 +2408,7 @@ object ContractForm: TContractForm
           Component = CDSContractPartner
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
@@ -2336,12 +2416,14 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2353,12 +2435,14 @@ object ContractForm: TContractForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalCollationId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2366,6 +2450,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'PersonalCollationName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2377,12 +2462,14 @@ object ContractForm: TContractForm
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = 'TJuridical_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalDocumentId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -2390,6 +2477,7 @@ object ContractForm: TContractForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalDocumentName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2424,6 +2512,7 @@ object ContractForm: TContractForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2431,6 +2520,7 @@ object ContractForm: TContractForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeriod'
@@ -2438,6 +2528,7 @@ object ContractForm: TContractForm
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsEndDate'
@@ -2445,6 +2536,7 @@ object ContractForm: TContractForm
         Component = cbEndDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -2465,6 +2557,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
@@ -2524,6 +2617,7 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2532,6 +2626,7 @@ object ContractForm: TContractForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -2540,6 +2635,7 @@ object ContractForm: TContractForm
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -2547,6 +2643,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractConditionKindId'
@@ -2554,6 +2651,7 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBonusKindId'
@@ -2561,6 +2659,7 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -2568,6 +2667,7 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractSendId'
@@ -2575,6 +2675,7 @@ object ContractForm: TContractForm
         Component = CDSContractCondition
         ComponentItem = 'ContractSendId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -2603,6 +2704,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -2610,6 +2712,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
@@ -2617,6 +2720,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalCollationId'
@@ -2624,6 +2728,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'PersonalCollationId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -2631,6 +2736,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'BankAccountId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractTagId'
@@ -2638,6 +2744,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'ContractTagId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalDocumentId'
@@ -2645,6 +2752,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'JuridicalDocumentId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -2652,6 +2760,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -2693,6 +2802,7 @@ object ContractForm: TContractForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -2739,6 +2849,7 @@ object ContractForm: TContractForm
         Component = CDSContractPartner
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -2746,6 +2857,7 @@ object ContractForm: TContractForm
         Component = CDSContractPartner
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -2753,6 +2865,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -2760,6 +2873,7 @@ object ContractForm: TContractForm
         Component = CDSContractPartner
         ComponentItem = 'PartnerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 688
@@ -2859,6 +2973,7 @@ object ContractForm: TContractForm
         Component = CDSContractGoods
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
@@ -2866,6 +2981,7 @@ object ContractForm: TContractForm
         Component = CDSContractGoods
         ComponentItem = 'Code'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -2873,6 +2989,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -2880,6 +2997,7 @@ object ContractForm: TContractForm
         Component = CDSContractGoods
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -2887,6 +3005,7 @@ object ContractForm: TContractForm
         Component = CDSContractGoods
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -2895,6 +3014,7 @@ object ContractForm: TContractForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1112
@@ -2911,6 +3031,7 @@ object ContractForm: TContractForm
         Component = CDSContractPartner
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 800
@@ -2927,6 +3048,7 @@ object ContractForm: TContractForm
         Component = CDSContractGoods
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 912
@@ -2943,6 +3065,7 @@ object ContractForm: TContractForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisVat'
@@ -2951,6 +3074,7 @@ object ContractForm: TContractForm
         ComponentItem = 'isVat'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328

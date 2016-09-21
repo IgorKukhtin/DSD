@@ -68,6 +68,8 @@ type
     cxLabel8: TcxLabel;
     edOrderKind: TcxButtonEdit;
     GuidesOrderKind: TdsdGuides;
+    spUpdateMovementUserSend: TdsdStoredProc;
+    actUpdateUserSend: TdsdExecStoredProc;
   private
     { Private declarations }
   public

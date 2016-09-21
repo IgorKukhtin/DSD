@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
              , Comment TVarChar
+             , UpdateName TVarChar, UpdateDate TDateTime
               )
 
 AS
@@ -69,8 +70,11 @@ BEGIN
            , Movement_OrderExternal_View.ContractName
            , Movement_OrderExternal_View.MasterId
            , Movement_OrderExternal_View.MasterInvNumber
-           , Object_OrderKind.ValueData                   AS OrderKindName
+           , Object_OrderKind.ValueData                 AS OrderKindName
            , Movement_OrderExternal_View.Comment
+
+           , Object_Update.ValueData                    AS UpdateName
+           , MovementDate_Update.ValueData              AS UpdateDate
 
        FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
@@ -82,6 +86,14 @@ BEGIN
           LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
           JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
+
+          LEFT JOIN MovementDate AS MovementDate_Update
+                                 ON MovementDate_Update.MovementId = Movement_OrderExternal_View.Id
+                                AND MovementDate_Update.DescId = zc_MovementDate_Update()
+          LEFT JOIN MovementLinkObject AS MLO_Update
+                                       ON MLO_Update.MovementId = Movement_OrderExternal_View.Id
+                                      AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+          LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
     ;
 
 END;
@@ -96,7 +108,6 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
  10.05.16         *
  15.07.14                                                        *
  01.07.14                                                        *
-
 */
 
 -- тест

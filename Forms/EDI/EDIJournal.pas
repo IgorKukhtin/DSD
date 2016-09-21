@@ -187,6 +187,7 @@ type
     clPrice_EDI: TcxGridDBColumn;
     actOpenOrderForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

@@ -453,7 +453,9 @@ uses
   Report_Payment_PlanDialog in '..\..\FormsFarmacy\Report\Report_Payment_PlanDialog.pas' {Report_Payment_PlanDialogForm: TParentForm},
   Report_MovementCheckErrorDialog in '..\..\FormsFarmacy\Report\Report_MovementCheckErrorDialog.pas' {Report_MovementCheckErrorDialogForm: TParentForm},
   Report_MovementCheckError in '..\..\FormsFarmacy\Report\Report_MovementCheckError.pas' {Report_MovementCheckErrorForm: TParentForm},
-  MCS_Lite in '..\..\FormsFarmacy\Guides\MCS_Lite.pas' {MCS_LiteForm: TParentForm};
+  MCS_Lite in '..\..\FormsFarmacy\Guides\MCS_Lite.pas' {MCS_LiteForm: TParentForm},
+  OrderShedule in '..\..\FormsFarmacy\Guides\OrderShedule.pas' {OrderSheduleForm: TParentForm},
+  OrderSheduleEdit in '..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas' {OrderSheduleEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

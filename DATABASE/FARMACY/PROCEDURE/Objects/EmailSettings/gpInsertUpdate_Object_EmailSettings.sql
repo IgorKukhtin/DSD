@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_EmailSettings()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_EmailSettings (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_EmailSettings (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_EmailSettings(
  INOUT ioId                            Integer   , -- ключ объекта
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_EmailSettings(
     IN inValue                         TVarChar  , -- значение
     IN inEmailId                       Integer   , -- почтовый ящик
     IN inEmailToolsId                  Integer   , -- Параметры установок для почты
+    IN inJuridicalId                   Integer   , -- Юридические лица
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -39,6 +41,9 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_EmailSettings_EmailTools(), ioId, inEmailToolsId);
 
+   -- сохранили связь с <юр.лицо>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_EmailSettings_Juridical(), ioId, inJuridicalId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -50,6 +55,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.16         * add inJuridicalId
  28.06.16         *
  03.03.16         *
 */

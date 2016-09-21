@@ -3,7 +3,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientHeight = 668
   ClientWidth = 844
   ExplicitWidth = 860
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -339,7 +339,21 @@ inherited OrderExternalForm: TOrderExternalForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
-    object actExportStoredproc: TdsdExecStoredProc [0]
+    object actUpdateUserSend: TdsdExecStoredProc [0]
+      Category = 'SendEMail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementUserSend
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementUserSend
+        end
+        item
+          StoredProc = spSelectExport
+        end>
+      Caption = 'actExportStoredproc'
+    end
+    object actExportStoredproc: TdsdExecStoredProc [1]
       Category = 'SendEMail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -356,7 +370,7 @@ inherited OrderExternalForm: TOrderExternalForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actExportToPartner: TExportGrid [3]
+    object actExportToPartner: TExportGrid [4]
       Category = 'SendEMail'
       TabSheet = tsMain
       MoveParams = <>
@@ -412,7 +426,7 @@ inherited OrderExternalForm: TOrderExternalForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -514,6 +528,9 @@ inherited OrderExternalForm: TOrderExternalForm
         end
         item
           Action = SMTPFileAction
+        end
+        item
+          Action = actUpdateUserSend
         end
         item
           Action = actCompleteMovement
@@ -1467,5 +1484,22 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Left = 456
     Top = 48
+  end
+  object spUpdateMovementUserSend: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderExternal_UserSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 282
+    Top = 344
   end
 end
