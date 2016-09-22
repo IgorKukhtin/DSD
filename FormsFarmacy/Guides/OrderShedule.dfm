@@ -40,7 +40,6 @@ object OrderSheduleForm: TOrderSheduleForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.CellAutoHeight = True
@@ -54,6 +53,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 99
       end
       object clUnitName: TcxGridDBColumn
@@ -62,6 +62,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 187
       end
       object clCode: TcxGridDBColumn
@@ -79,6 +80,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 109
       end
       object clContractName: TcxGridDBColumn
@@ -87,6 +89,7 @@ object OrderSheduleForm: TOrderSheduleForm
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 115
       end
       object clValue8: TcxGridDBColumn
@@ -105,7 +108,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue2: TcxGridDBColumn
@@ -113,7 +115,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue3: TcxGridDBColumn
@@ -121,7 +122,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue4: TcxGridDBColumn
@@ -129,7 +129,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue5: TcxGridDBColumn
@@ -137,7 +136,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value5'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue6: TcxGridDBColumn
@@ -145,7 +143,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value6'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object colValue7: TcxGridDBColumn
@@ -153,7 +150,6 @@ object OrderSheduleForm: TOrderSheduleForm
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 25
       end
       object clErased: TcxGridDBColumn
@@ -213,6 +209,7 @@ object OrderSheduleForm: TOrderSheduleForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Options.Editing = False
         Width = 120
       end
       object colInf_Text2: TcxGridDBColumn
@@ -221,6 +218,7 @@ object OrderSheduleForm: TOrderSheduleForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+        Options.Editing = False
         Width = 120
       end
     end
@@ -234,7 +232,7 @@ object OrderSheduleForm: TOrderSheduleForm
     Width = 779
     Height = 32
     Align = alTop
-    TabOrder = 4
+    TabOrder = 2
     object cxLabel4: TcxLabel
       Left = 8
       Top = 7
@@ -702,6 +700,20 @@ object OrderSheduleForm: TOrderSheduleForm
         end>
       isShowModal = False
     end
+    object actInsertUpdate: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+        end>
+      Caption = 'actInsertUpdate'
+      DataSource = MasterDS
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_OrderShedule'
@@ -890,5 +902,174 @@ object OrderSheduleForm: TOrderSheduleForm
       end>
     Left = 536
     Top = 160
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_OrderShedule'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value5'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value6'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value7'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInf_Text1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Inf_Text1'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInf_Text2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Inf_Text2'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc1'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc2'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc3'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc4'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc5'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc6'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outColor_Calc7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Color_Calc7'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 433
+    Top = 120
   end
 end

@@ -12,11 +12,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderShedule(
     IN inValue5                   TVarChar  ,
     IN inValue6                   TVarChar  ,
     IN inValue7                   TVarChar  ,
+   OUT outInf_Text1               TVarChar  ,
+   OUT outInf_Text2               TVarChar  ,
+   OUT outColor_Calc1             Integer ,
+   OUT outColor_Calc2             Integer ,
+   OUT outColor_Calc3             Integer ,
+   OUT outColor_Calc4             Integer ,
+   OUT outColor_Calc5             Integer ,
+   OUT outColor_Calc6             Integer ,
+   OUT outColor_Calc7             Integer ,
     IN inUnitId                   Integer ,    -- ссылка подразделение
     IN inContractId               Integer ,    -- ссылка на договор
     IN inSession                  TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
@@ -58,6 +67,29 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderShedule_Unit(), ioId, inUnitId);
 
+
+ outInf_Text1:=  (CASE WHEN CAST(inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
+                 CASE WHEN CAST(inValue2 AS TFloat) in (1,3) THEN 'Вторник,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue3 AS TFloat) in (1,3) THEN 'Среда,'       ELSE '' END ||
+                 CASE WHEN CAST(inValue4 AS TFloat) in (1,3) THEN 'Четверг,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue5 AS TFloat) in (1,3) THEN 'Пятница,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue6 AS TFloat) in (1,3) THEN 'Суббота,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue7 AS TFloat) in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
+ outInf_Text2:= (CASE WHEN CAST(inValue1 AS TFloat) in (2,3) THEN 'Понедельник,' ELSE '' END ||
+                 CASE WHEN CAST(inValue2 AS TFloat) in (2,3) THEN 'Вторник,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue3 AS TFloat) in (2,3) THEN 'Среда,'       ELSE '' END ||
+                 CASE WHEN CAST(inValue4 AS TFloat) in (2,3) THEN 'Четверг,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue5 AS TFloat) in (2,3) THEN 'Пятница,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue6 AS TFloat) in (2,3) THEN 'Суббота,'     ELSE '' END ||
+                 CASE WHEN CAST(inValue7 AS TFloat) in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
+             
+ outColor_Calc1:= CASE WHEN CAST(inValue1 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue1 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue1 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc2:= CASE WHEN CAST(inValue2 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue2 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue2 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc3:= CASE WHEN CAST(inValue3 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue3 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue3 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc4:= CASE WHEN CAST(inValue4 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue4 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue4 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc5:= CASE WHEN CAST(inValue5 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue5 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue5 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc6:= CASE WHEN CAST(inValue6 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue6 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue6 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
+ outColor_Calc7:= CASE WHEN CAST(inValue7 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue7 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue7 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

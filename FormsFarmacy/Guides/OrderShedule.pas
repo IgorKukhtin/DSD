@@ -76,6 +76,8 @@ type
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    spInsertUpdate: TdsdStoredProc;
+    actInsertUpdate: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
