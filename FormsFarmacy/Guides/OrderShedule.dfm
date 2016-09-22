@@ -832,8 +832,8 @@ object OrderSheduleForm: TOrderSheduleForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 320
-    Top = 208
+    Left = 304
+    Top = 248
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

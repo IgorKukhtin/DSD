@@ -53,7 +53,7 @@ BEGIN
           RAISE EXCEPTION 'Данные не уникальны - Аптека = "%" Договор "%" .',  lfGet_Object_ValueData(inUnitId), lfGet_Object_ValueData(inContractId);
        END IF;
     END IF;
-
+ 
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_OrderShedule(), vbCode_calc);
 
