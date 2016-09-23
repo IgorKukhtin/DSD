@@ -378,6 +378,41 @@ inherited OrderInternalForm: TOrderInternalForm
           inherited colIsErased: TcxGridDBColumn
             VisibleForCustomization = False
           end
+          object colisZakazToday: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079' '#1089#1077#1075#1086#1076#1085#1103
+            DataBinding.FieldName = 'isZakazToday'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colisDostavkaToday: TcxGridDBColumn
+            Caption = #1044#1086#1089#1090'. '#1089#1077#1075#1086#1076#1085#1103
+            DataBinding.FieldName = 'isDostavkaToday'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1089#1090#1072#1074#1082#1072' '#1089#1077#1075#1086#1076#1085#1103
+            Options.Editing = False
+            Width = 55
+          end
+          object colOperDate_Zakaz: TcxGridDBColumn
+            Caption = #1041#1083#1080#1078'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'OperDate_Zakaz'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1075#1086' '#1079#1072#1082#1072#1079#1072
+            Options.Editing = False
+            Width = 60
+          end
+          object colOperDate_Dostavka: TcxGridDBColumn
+            Caption = #1041#1083#1080#1078'. '#1076#1086#1089#1090#1072#1074#1082#1072
+            DataBinding.FieldName = 'OperDate_Dostavka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1073#1083#1080#1078#1072#1081#1097#1077#1081' '#1076#1086#1089#1090#1072#1074#1082#1080
+            Options.Editing = False
+            Width = 60
+          end
         end
       end
       object cxGrid1: TcxGrid

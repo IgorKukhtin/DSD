@@ -22,6 +22,8 @@ $BODY$
   
   DECLARE vbMainJuridicalId Integer;    
     
+  DECLARE vbCURRENT_DOW Integer;
+
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
 BEGIN
@@ -30,6 +32,8 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_OrderInternal());
     vbUserId := inSession;
 
+    vbCURRENT_DOW := CASE WHEN EXTRACT (DOW FROM CURRENT_DATE) = 0 THEN 7 ELSE EXTRACT (DOW FROM CURRENT_DATE) END ; -- день недели сегодня
+   
     --
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     SELECT COALESCE(MB_Document.ValueData, False) :: Boolean AS isDocument 
@@ -68,11 +72,101 @@ BEGIN
                JOIN  MovementLinkObject ON MovementLinkObject.ObjectId = Object_Unit_View.Id 
                 AND  MovementLinkObject.MovementId = inMovementId 
                 AND  MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
-                
+             
+    
      OPEN Cursor1 FOR
           WITH  
+     --Данные Справочника График заказа/доставки
+          tmpDateList AS (SELECT ''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
+                               , tmpDayOfWeek.Number
+                               , tmpDayOfWeek.DayOfWeekName
+                          FROM (SELECT generate_series ( CURRENT_DATE,  CURRENT_DATE+interval '6 day', '1 day' :: INTERVAL) AS OperDate) AS tmp
+                            LEFT JOIN zfCalc_DayOfWeekName(tmp.OperDate) AS tmpDayOfWeek ON 1=1
+                          )
+      , tmpOrderShedule AS (SELECT ObjectLink_OrderShedule_Contract.ChildObjectId          AS ContractId --
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat AS Value1
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat AS Value2
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat AS Value3
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat AS Value4
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat AS Value5
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat AS Value6
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat AS Value7
+                            FROM Object AS Object_OrderShedule
+                                 INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                         ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                                        AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+                                        AND ObjectLink_OrderShedule_Unit.ChildObjectId = vbUnitId
+                                 LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                                        ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
+                                       AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+                            WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
+                              AND Object_OrderShedule.isErased = FALSE
+                           )
+, tmpOrderSheduleList AS (SELECT tmp.*
+                          FROM (
+                                select tmpOrderShedule.ContractId, CASE WHEN Value1 in (1,3) THEN 1 ELSE 0 END AS DoW, CASE WHEN Value1 in (2,3) THEN 1 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value2 in (1,3) THEN 2 ELSE 0 END AS DoW, CASE WHEN Value2 in (2,3) THEN 2 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value3 in (1,3) THEN 3 ELSE 0 END AS DoW, CASE WHEN Value3 in (2,3) THEN 3 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value4 in (1,3) THEN 4 ELSE 0 END AS DoW, CASE WHEN Value4 in (2,3) THEN 4 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value5 in (1,3) THEN 5 ELSE 0 END AS DoW, CASE WHEN Value5 in (2,3) THEN 5 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value6 in (1,3) THEN 6 ELSE 0 END AS DoW, CASE WHEN Value6 in (2,3) THEN 6 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value7 in (1,3) THEN 7 ELSE 0 END AS DoW, CASE WHEN Value7 in (2,3) THEN 7 ELSE 0 END AS DoW_D from tmpOrderShedule) AS tmp
+                          WHERE tmp.DoW <> 0 OR tmp.DoW_D <> 0
+                          )
+,tmpAfter AS (SELECT tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+              FROM ( 
+                    SELECT tmpOrderSheduleList.ContractId, min (DoW) AS DoW, 0 AS DoW_D
+                    FROM tmpOrderSheduleList
+                    WHERE tmpOrderSheduleList.DoW > vbCURRENT_DOW 
+                      AND tmpOrderSheduleList.DoW > 0
+                    GROUP BY tmpOrderSheduleList.ContractId
+                    Union
+                    SELECT tmpOrderSheduleList.ContractId, 0 AS DoW, min (DoW_D) AS DoW_D
+                    FROM tmpOrderSheduleList
+                    WHERE tmpOrderSheduleList.DoW_D > vbCURRENT_DOW 
+                      AND tmpOrderSheduleList.DoW_D > 0
+                    GROUP BY tmpOrderSheduleList.ContractId) as tmp
+              GROUP BY tmp.ContractId
+              )
+, tmpBefore AS (SELECT tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+                FROM (
+                    SELECT tmpOrderSheduleList.ContractId,  min (tmpOrderSheduleList.DoW) AS DoW, 0 AS DoW_D
+                    FROM tmpOrderSheduleList
+                       LEFT JOIN tmpAfter ON tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                    WHERE tmpOrderSheduleList.DoW < vbCURRENT_DOW 
+                      AND tmpAfter.ContractId IS NULL
+                        AND tmpOrderSheduleList.DoW<>0
+                    GROUP BY tmpOrderSheduleList.ContractId
+                UNION 
+                    SELECT tmpOrderSheduleList.ContractId, 0 AS DoW,  min (tmpOrderSheduleList.DoW_D) AS DoW_D
+                    FROM tmpOrderSheduleList
+                       LEFT JOIN tmpAfter ON tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                    WHERE tmpOrderSheduleList.DoW_D < vbCURRENT_DOW 
+                      AND tmpAfter.ContractId IS NULL
+                        AND tmpOrderSheduleList.DoW_D<>0
+                    GROUP BY tmpOrderSheduleList.ContractId) as tmp
+                GROUP BY tmp.ContractId
+                )
+, OrderSheduleList AS ( SELECT tmp.ContractId 
+                             , tmpDateList.OperDate         AS OperDate_Zakaz
+                             , tmpDateList_D.OperDate       AS OperDate_Dostavka
+                        FROM (SELECT *
+                              FROM tmpAfter
+                           union all 
+                              SELECT *
+                              FROM tmpBefore
+                             ) AS tmp
+                         LEFT JOIN tmpDateList ON tmpDateList.Number = tmp.DoW
+                         LEFT JOIN tmpDateList AS tmpDateList_D ON tmpDateList_D.Number = tmp.DoW_D
+                   )
+, OrderSheduleListToday AS (SELECT *
+                            FROM tmpOrderSheduleList
+                            WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW  OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW  
+                           )
+--
+
  -- Маркетинговый контракт
-    GoodsPromo AS (SELECT tmp.JuridicalId
+  , GoodsPromo AS (SELECT tmp.JuridicalId
                         , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
                         , tmp.MovementId
                         , tmp.ChangePercent
@@ -179,6 +273,11 @@ BEGIN
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
            , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
            
+           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
+           , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
+           , OrderSheduleList.OperDate_Zakaz    ::TVarChar AS OperDate_Zakaz
+           , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
+
        FROM  _tmpOrderInternal_MI AS tmpMI
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -215,10 +314,12 @@ BEGIN
                         GROUP BY tmpMI.MIMasterId
                        ) AS tmpOneJuridical ON tmpOneJuridical.MIMasterId = tmpMI.MovementItemId
                        
-             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
-                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId 
-             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
-           
+            LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
+                                AND GoodsPromo.GoodsId = tmpMI.GoodsId 
+            LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+
+            LEFT JOIN OrderSheduleList ON OrderSheduleList.ContractId = tmpMI.ContractId
+            LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId           
            ;
 
      RETURN NEXT Cursor1;
@@ -348,11 +449,101 @@ BEGIN
 
     -- !!!Только для ДРУГИХ документов!!!
 
-
-    PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
+   PERFORM lpCreateTempTable_OrderInternal(inMovementId, vbObjectId, 0, vbUserId);
 
     OPEN Cursor1 FOR
-     WITH  tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
+     WITH
+     --Данные Справочника График заказа/доставки
+          tmpDateList AS (SELECT ''||tmp.OperDate :: Date || ' (' ||tmpDayOfWeek.DayOfWeekName ||')' AS OperDate
+                               , tmpDayOfWeek.Number
+                               , tmpDayOfWeek.DayOfWeekName
+                          FROM (SELECT generate_series ( CURRENT_DATE,  CURRENT_DATE+interval '6 day', '1 day' :: INTERVAL) AS OperDate) AS tmp
+                            LEFT JOIN zfCalc_DayOfWeekName(tmp.OperDate) AS tmpDayOfWeek ON 1=1
+                          )
+      , tmpOrderShedule AS (SELECT ObjectLink_OrderShedule_Contract.ChildObjectId          AS ContractId --
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat AS Value1
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat AS Value2
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat AS Value3
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat AS Value4
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat AS Value5
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat AS Value6
+                                 , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat AS Value7
+                                 , Object_OrderShedule.ValueData AS Value8
+                            FROM Object AS Object_OrderShedule
+                                 INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                         ON ObjectLink_OrderShedule_Unit.ObjectId = Object_OrderShedule.Id
+                                        AND ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+                                        AND ObjectLink_OrderShedule_Unit.ChildObjectId = vbUnitId
+                                 LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                                        ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
+                                       AND ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+                            WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
+                              AND Object_OrderShedule.isErased = FALSE
+                           )
+, tmpOrderSheduleList AS (SELECT tmp.*
+                          FROM (
+                                select tmpOrderShedule.ContractId, CASE WHEN Value1 in (1,3) THEN 1 ELSE 0 END AS DoW, CASE WHEN Value1 in (2,3) THEN 1 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value2 in (1,3) THEN 2 ELSE 0 END AS DoW, CASE WHEN Value2 in (2,3) THEN 2 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value3 in (1,3) THEN 3 ELSE 0 END AS DoW, CASE WHEN Value3 in (2,3) THEN 3 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value4 in (1,3) THEN 4 ELSE 0 END AS DoW, CASE WHEN Value4 in (2,3) THEN 4 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value5 in (1,3) THEN 5 ELSE 0 END AS DoW, CASE WHEN Value5 in (2,3) THEN 5 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value6 in (1,3) THEN 6 ELSE 0 END AS DoW, CASE WHEN Value6 in (2,3) THEN 6 ELSE 0 END AS DoW_D from tmpOrderShedule
+                                union select tmpOrderShedule.ContractId, CASE WHEN Value7 in (1,3) THEN 7 ELSE 0 END AS DoW, CASE WHEN Value7 in (2,3) THEN 7 ELSE 0 END AS DoW_D from tmpOrderShedule) AS tmp
+                          WHERE tmp.DoW <> 0 OR tmp.DoW_D <> 0
+                          )
+,tmpAfter AS (SELECT tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+              FROM ( 
+                    SELECT tmpOrderSheduleList.ContractId, min (DoW) AS DoW, 0 AS DoW_D
+                    FROM tmpOrderSheduleList
+                    WHERE tmpOrderSheduleList.DoW > vbCURRENT_DOW 
+                      AND tmpOrderSheduleList.DoW > 0
+                    GROUP BY tmpOrderSheduleList.ContractId
+                    Union
+                    SELECT tmpOrderSheduleList.ContractId, 0 AS DoW, min (DoW_D) AS DoW_D
+                    FROM tmpOrderSheduleList
+                    WHERE tmpOrderSheduleList.DoW_D > vbCURRENT_DOW 
+                      AND tmpOrderSheduleList.DoW_D > 0
+                    GROUP BY tmpOrderSheduleList.ContractId) as tmp
+              GROUP BY tmp.ContractId
+              )
+, tmpBefore AS (SELECT tmp.ContractId, max (DoW) AS DoW, max (DoW_D) AS DoW_D
+                FROM (
+                    SELECT tmpOrderSheduleList.ContractId,  min (tmpOrderSheduleList.DoW) AS DoW, 0 AS DoW_D
+                    FROM tmpOrderSheduleList
+                       LEFT JOIN tmpAfter ON tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                    WHERE tmpOrderSheduleList.DoW < vbCURRENT_DOW 
+                      AND tmpAfter.ContractId IS NULL
+                        AND tmpOrderSheduleList.DoW<>0
+                    GROUP BY tmpOrderSheduleList.ContractId
+                UNION 
+                    SELECT tmpOrderSheduleList.ContractId, 0 AS DoW,  min (tmpOrderSheduleList.DoW_D) AS DoW_D
+                    FROM tmpOrderSheduleList
+                       LEFT JOIN tmpAfter ON tmpAfter.ContractId = tmpOrderSheduleList.ContractId
+                    WHERE tmpOrderSheduleList.DoW_D < vbCURRENT_DOW 
+                      AND tmpAfter.ContractId IS NULL
+                        AND tmpOrderSheduleList.DoW_D<>0
+                    GROUP BY tmpOrderSheduleList.ContractId) as tmp
+                GROUP BY tmp.ContractId
+                )
+, OrderSheduleList AS ( SELECT tmp.ContractId 
+                             , tmpDateList.OperDate         AS OperDate_Zakaz
+                             , tmpDateList_D.OperDate       AS OperDate_Dostavka
+                        FROM (SELECT *
+                              FROM tmpAfter
+                           union all 
+                              SELECT *
+                              FROM tmpBefore
+                             ) AS tmp
+                         LEFT JOIN tmpDateList ON tmpDateList.Number = tmp.DoW
+                         LEFT JOIN tmpDateList AS tmpDateList_D ON tmpDateList_D.Number = tmp.DoW_D
+                   )
+, OrderSheduleListToday AS (SELECT *
+                            FROM tmpOrderSheduleList
+                            WHERE tmpOrderSheduleList.DoW = vbCURRENT_DOW  OR tmpOrderSheduleList.DoW_D = vbCURRENT_DOW  
+                           )
+--
+
+         , tmpCheck AS (SELECT MI_Check.ObjectId                  AS GoodsId
                              , -1 * SUM (MIContainer.Amount) ::TFloat  AS Amount
                         FROM Movement AS Movement_Check
                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -460,6 +651,12 @@ BEGIN
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
            , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+
+           , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
+           , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
+           , OrderSheduleList.OperDate_Zakaz    ::TVarChar AS OperDate_Zakaz
+           , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
+--, (select count (*) from OrderSheduleList) ::TVarChar AS OperDate_Dostavka
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
                   , Object_Goods.GoodsCodeInt                    AS GoodsCode
@@ -622,6 +819,9 @@ BEGIN
              LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                  AND GoodsPromo.GoodsId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
              LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+
+            LEFT JOIN OrderSheduleList ON OrderSheduleList.ContractId = tmpMI.ContractId
+            LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId
            ;
      RETURN NEXT Cursor1;
 
