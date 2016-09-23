@@ -2132,6 +2132,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariff2Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEdit2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEdit2Form');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployee2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployee2Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeEdit2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeEdit2Form');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;

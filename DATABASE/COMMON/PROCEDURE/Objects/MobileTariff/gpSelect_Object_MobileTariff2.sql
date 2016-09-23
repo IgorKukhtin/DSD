@@ -1,8 +1,8 @@
 -- Function: gpSelect_Object_MobileTariff (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_MobileTariff (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_MobileTariff2 (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_MobileTariff(
+CREATE OR REPLACE FUNCTION gpSelect_Object_MobileTariff2(
     IN inShowAll     Boolean, 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -97,4 +97,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_MobileTariff (TRUE,zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_MobileTariff2 (TRUE,zfCalc_UserAdmin())

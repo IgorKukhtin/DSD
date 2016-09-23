@@ -857,7 +857,9 @@ uses
   Report_MotionGoodsAssetDialog in '..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas' {Report_MotionGoodsAssetDialogForm: TParentForm},
   Report_MotionGoodsAsset in '..\..\Forms\Report\Report_MotionGoodsAsset.pas' {Report_MotionGoodsAssetForm: TParentForm},
   MobileTariff_2 in '..\..\Forms\Guides\MobileTariff_2.pas' {MobileTariff2Form: TParentForm},
-  MobileTariffEdit_2 in '..\..\Forms\Guides\MobileTariffEdit_2.pas' {MobileTariffEdit2Form: TParentForm};
+  MobileTariffEdit_2 in '..\..\Forms\Guides\MobileTariffEdit_2.pas' {MobileTariffEdit2Form: TParentForm},
+  MobileEmployee2 in '..\..\Forms\Guides\MobileEmployee2.pas' {MobileEmployee2Form: TParentForm},
+  MobileEmployeeEdit2 in '..\..\Forms\Guides\MobileEmployeeEdit2.pas' {MobileEmployeeEdit2Form: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

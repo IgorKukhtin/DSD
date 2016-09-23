@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_Object_MobileTariff  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MobileTariff (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MobileTariff2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TFloat,TVarChar,Integer,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileTariff(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileTariff2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
     IN inCode                     Integer   ,    -- Код объекта <>
     IN inName                     TVarChar  ,    -- Название объекта <>
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileTariff(
     IN inPocketSMS                TFloat  ,    -- 
     IN inPocketInet               TFloat  ,    -- 
     IN inCostSMS                  TFloat  ,    -- 
-    IN inCostMinu                 TFloat  ,    -- 
+    IN inCostMinutes              TFloat  ,    -- 
     IN inCostInet                 TFloat  ,    -- 
     IN inComment                  TVarChar  ,    --
     IN inContractId               Integer   ,    --
@@ -74,4 +74,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_MobileTariff(ioId := 0 , inCode := 1 , inName := 'Белов' , inMonthly := '4444' , PocketMinutes := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inMobileTariffKindId := 153272 ,  inSession := '5');
+-- select * from gpInsertUpdate_Object_MobileTariff2(ioId := 0 , inCode := 1 , inName := 'Белов' , inMonthly := '4444' , PocketMinutes := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inContractId := 0 , inMobileTariffKindId := 153272 ,  inSession := '5');

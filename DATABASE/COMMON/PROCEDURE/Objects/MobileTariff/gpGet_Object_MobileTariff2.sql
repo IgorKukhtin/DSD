@@ -1,9 +1,9 @@
 -- Function: gpGet_Object_MobileTariff (Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_MobileTariff (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_MobileTariff2 (Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_Object_MobileTariff(
+CREATE OR REPLACE FUNCTION gpGet_Object_MobileTariff2(
     IN inId                     Integer,       -- ключ объекта <>
     IN inSession                TVarChar       -- сессия пользователя
 )
@@ -113,7 +113,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpGet_Object_MobileTariff (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -122,4 +121,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_MobileTariff (0,  inPartnerId:= 83665 , inMobileTariffKindId := 153273 ,  inSession := '5')
+-- SELECT * FROM gpGet_Object_MobileTariff2 (0,  inPartnerId:= 83665 , inMobileTariffKindId := 153273 ,  inSession := '5')

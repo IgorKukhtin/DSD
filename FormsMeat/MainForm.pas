@@ -742,6 +742,11 @@ type
     actReport_MotionGoods_Asset: TdsdOpenForm;
     OC1: TMenuItem;
     N134: TMenuItem;
+    actMobileTariff2: TdsdOpenForm;
+    N210: TMenuItem;
+    N135: TMenuItem;
+    actMobileEmployee2: TdsdOpenForm;
+    N211: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
