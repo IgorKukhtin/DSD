@@ -37,7 +37,7 @@ BEGIN
                                  
    , tmpMITax AS (SELECT tmpListTax.TaxId
                        , MovementItem.ObjectId                                          AS GoodsId
-                       , MILinkObject_GoodsKind.ObjectId                                AS GoodsKindId
+                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                  AS GoodsKindId
                        , MIFloat_Price.ValueData                                        AS Price
                        , COALESCE (MIFloat_NPP.ValueData, 0)                 :: Integer AS LineNum
                        , COUNT(*) OVER (PARTITION BY tmpListTax.TaxId, MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), MIFloat_Price.ValueData) AS LineCount1

@@ -147,9 +147,11 @@ BEGIN
      RETURN QUERY
        SELECT
              MovementItem.Id
-           , CASE WHEN vbOperDate < '01.03.2016' AND 1=1
-                       THEN ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
-                  ELSE ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
+           , CASE WHEN MIFloat_NPP.ValueData <> 0
+                       THEN MIFloat_NPP.ValueData
+                  WHEN vbOperDate < '01.03.2016' AND 1=1
+                       THEN -1 * ROW_NUMBER() OVER (ORDER BY MovementItem.Id)
+                  ELSE -1 * ROW_NUMBER() OVER (ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData, MovementItem.Id)
              END :: Integer AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
@@ -180,6 +182,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+            LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                        ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPP.DescId = zc_MIFloat_NPP()           
 
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind

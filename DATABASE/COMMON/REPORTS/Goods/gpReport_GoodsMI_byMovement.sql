@@ -41,7 +41,7 @@ $BODY$
 BEGIN
 
     vbIsGoods_show:= TRUE;
-
+/*
     -- !!!т.к. нельзя когда много данных в гриде!!!
     IF inStartDate + (INTERVAL '1 DAY') < inEndDate AND COALESCE (inGoodsGroupId, 0) = 0 AND COALESCE (inGoodsId, 0) = 0 AND COALESCE (inJuridicalId, 0) = 0
     THEN
@@ -56,7 +56,7 @@ BEGIN
     END IF;
     END IF;
 
-
+*/
     vbIsGoods:= FALSE;
     vbIsUnit:= FALSE;
 
