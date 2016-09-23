@@ -387,6 +387,10 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_SignInternal(), 'zc_ObjectFloat_SignInternal_ObjectDesc', 'Вид справочника' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_SignInternal_ObjectDesc');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_MobileTariff_CostMinutes() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MobileTariff_CostMinutes'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_MobileTariff(), 'zc_ObjectFloat_MobileTariff_CostMinutes', 'Стоимость 1 минуты вне пакета' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_MobileTariff_CostMinutes');
+
 --!!! АПТЕКА
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Contract_Deferment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_Deferment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -518,6 +522,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 23.09.16         * zc_ObjectFloat_MobileTariff_CostMinutes
  27.08.16         * zc_ObjectFloat_PriceGroupSettingsTOP_MinPrice
                     zc_ObjectFloat_PriceGroupSettingsTOP_Percent
  19.07.16         * zc_ObjectFloat_OverSettings_MinimumLot

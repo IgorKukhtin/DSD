@@ -855,7 +855,9 @@ uses
   EntryAssetJournal in '..\..\Forms\Document\EntryAssetJournal.pas' {EntryAssetJournalForm: TParentForm},
   AssetGoodsPlace in '..\..\Forms\Guides\AssetGoodsPlace.pas' {AssetGoodsPlaceForm: TParentForm},
   Report_MotionGoodsAssetDialog in '..\..\Forms\Report\Report_MotionGoodsAssetDialog.pas' {Report_MotionGoodsAssetDialogForm: TParentForm},
-  Report_MotionGoodsAsset in '..\..\Forms\Report\Report_MotionGoodsAsset.pas' {Report_MotionGoodsAssetForm: TParentForm};
+  Report_MotionGoodsAsset in '..\..\Forms\Report\Report_MotionGoodsAsset.pas' {Report_MotionGoodsAssetForm: TParentForm},
+  MobileTariff_2 in '..\..\Forms\Guides\MobileTariff_2.pas' {MobileTariff2Form: TParentForm},
+  MobileTariffEdit_2 in '..\..\Forms\Guides\MobileTariffEdit_2.pas' {MobileTariffEdit2Form: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

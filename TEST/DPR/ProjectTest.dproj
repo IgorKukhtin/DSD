@@ -2777,6 +2777,14 @@
 				<Form>Report_MotionGoodsAssetForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariff_2.pas">
+				<Form>MobileTariff2Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit_2.pas">
+				<Form>MobileTariffEdit2Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

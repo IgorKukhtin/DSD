@@ -1288,6 +1288,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_SignInternal_Object() RETURNS Integer A
   INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_SignInternal_Object', 'Связь с Подразделения/Ведомости начисления', zc_Object_SignInternal(), NULL WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SignInternal_Object');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileTariff_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileTariff_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MobileTariff_Contract', 'Связь Тарифа с Договором', zc_Object_MobileTariff(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileTariff_Contract');
+
 
 --!!! АПТЕКА
 
@@ -1528,6 +1532,7 @@ SELECT 'zc_ObjectLink_Email_EmailKind', 'Тип почтового ящика', zc_Object_Email()
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 23.09.16         * zc_ObjectLink_MobileTariff_Contract
  20.09.16         * zc_ObjectLink_OrderShedule_Unit,
                     zc_ObjectLink_OrderShedule_Contract
  13.06.16         * add zc_ObjectLink_Unit_UserFarmacyCash

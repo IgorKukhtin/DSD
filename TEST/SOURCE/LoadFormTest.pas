@@ -82,6 +82,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMemberExternalFormTest;
+    procedure LoadMobileTariffFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
     procedure LoadOrderIncomeFormTest;
@@ -162,7 +163,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadWeighingPartnerFormTest;
     procedure LoadWeighingProductionFormTest;
-    procedure LoadMobileTariffFormTest;
+
     //procedure LoadZakazExternalFormTest;
     //procedure LoadZakazInternalFormTest;
   end;
@@ -2125,6 +2126,12 @@ begin
   // форма отчета Отчет Затраты мобильной связи по сотрудникам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MobileKSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MobileKSForm');
+
+  // форма 2
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariff2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileTariff2Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEdit2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEdit2Form');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;
