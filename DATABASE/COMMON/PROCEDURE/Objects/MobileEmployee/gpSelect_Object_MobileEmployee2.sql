@@ -12,7 +12,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Navigator TFloat
              , Comment TVarChar
              , PersonalId Integer, PersonalName TVarChar
+             , PositionId Integer, PositionCode Integer, PositionName TVarChar
+             , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
+
              , isErased boolean
              ) AS
 $BODY$
@@ -39,6 +42,14 @@ BEGIN
            , Object_Personal.Id                AS PersonalId
            , Object_Personal.ValueData         AS PersonalName 
            
+           , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
+           , Object_Position.ObjectCode        AS PositionCode
+           , Object_Position.ValueData         AS PositionName
+
+           , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
+           , Object_Unit.ObjectCode            AS UnitCode
+           , Object_Unit.ValueData             AS UnitName
+
            , Object_MobileTariff.Id            AS MobileTariffId
            , Object_MobileTariff.ValueData     AS MobileTariffName 
 
@@ -69,6 +80,17 @@ BEGIN
                                  ON ObjectLink_MobileEmployee_MobileTariff.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_MobileTariff.DescId = zc_ObjectLink_MobileEmployee_MobileTariff()
             LEFT JOIN Object AS Object_MobileTariff ON Object_MobileTariff.Id = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId                               
+--
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                 ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
 
      WHERE Object_MobileEmployee.DescId = zc_Object_MobileEmployee()
        AND (Object_MobileEmployee.isErased = inShowAll OR inShowAll = True)
