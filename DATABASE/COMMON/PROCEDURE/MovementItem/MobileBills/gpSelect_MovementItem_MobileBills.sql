@@ -8,18 +8,16 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
-             , PrevMobileTariffDate TDateTime
-             , Amount TFloat, Count TFloat, CurrNavigator TFloat
-             , PrevMobileTariff TVarChar, RegionId Integer, RegionName  TVarChar
+RETURNS TABLE (Id Integer, MobileEmployeeId Integer, MobileEmployeeCode Integer, MobileEmployeeName TVarChar
+             , Amount TFloat
+             , CurrMonthly TFloat, CurrNavigator TFloat, PrevNavigator TFloat
+             , MobileLimit TFloat, PrevLimit TFloat, DutyLimit TFloat, Overlimit TFloat
+             , PrevMonthly TFloat
+             , RegionId Integer, RegionName  TVarChar
              , EmployeeId Integer, EmployeeName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , PrevEmployeeId Integer, PrevEmployeeName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
-             , PrevMobileTariffId Integer, PrevMobileTariffName TVarChar, PrevMobileTariffOperDate TDateTime
-             , Price TFloat, MobileTariffName_Partion TVarChar
-             , AmountRemains TFloat
+             , PrevMobileTariffId Integer, PrevMobileTariffName TVarChar
              , isErased Boolean
               )
 AS
@@ -32,24 +30,14 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_MobileBills());
      vbUserId:= lpGetUserBySession (inSession);
 
-
-     -- определяется
-     vbPrevEmployeeId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From());
-     IF vbPrevEmployeeId IN (SELECT lfSelect_Object_PrevEmployee_byGroup.PrevEmployeeId FROM lfSelect_Object_PrevEmployee_byGroup (8433) AS lfSelect_Object_PrevEmployee_byGroup) -- Производство
-     THEN vbPrevEmployeeId:= NULL;
-     END IF;
-
-
      -- Результат 
      RETURN QUERY
      
      SELECT
-             MovementItem.Id                             AS Id
-           , Object_MobileEmployee.Id                    AS MobileEmployeeId
-           , Object_MobileEmployee.ObjectCode            AS MobileEmployeeCode
-           , Object_MobileEmployee.ValueData             AS MobileEmployeeName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData                    AS MeasureName
+             MovementItem.Id                    AS Id
+           , Object_MobileEmployee.Id           AS MobileEmployeeId
+           , Object_MobileEmployee.ObjectCode   AS MobileEmployeeCode
+           , Object_MobileEmployee.ValueData    AS MobileEmployeeName
 
            , MovementItem.Amount                AS Amount
            , MIFloat_CurrMonthly.ValueData      AS CurrMonthly

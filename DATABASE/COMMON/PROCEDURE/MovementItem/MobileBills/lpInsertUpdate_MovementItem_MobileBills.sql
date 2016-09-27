@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_MobileBills(
     IN inPrevMobileTariffId  Integer   , --
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
@@ -77,12 +77,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 29.05.15                                        * set lp
- 26.07.14                                        * add inPrevMobileTariffDate and inPrevEmployeeId and inMobileTariffId and inPrevMobileTariffId and ioPrevMobileTariff
- 23.05.14                                                       *
- 18.07.13         * add inEmployeeId
- 16.07.13                                        * del params by MobileBillsOnPrice
- 12.07.13         *
+ 27.09.16         *
 */
 
 -- тест

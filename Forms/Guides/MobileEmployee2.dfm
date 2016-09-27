@@ -402,6 +402,20 @@ object MobileEmployee2Form: TMobileEmployee2Form
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileTariffId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileTariffId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MobileTariffName'
           Value = Null
           Component = ClientDataSet
@@ -410,11 +424,42 @@ object MobileEmployee2Form: TMobileEmployee2Form
           MultiSelectSeparator = ','
         end
         item
+          Name = 'PersonalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'PersonalName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileLimit'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileLimit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DutyLimit'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'DutyLimit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Navigator'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Navigator'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1088#1072#1090#1100

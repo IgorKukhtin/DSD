@@ -721,6 +721,14 @@ CREATE OR REPLACE FUNCTION zc_Object_SignInternalItem() RETURNS integer AS $BODY
 INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_SignInternalItem', 'Элементы моделей электронных подписей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SignInternalItem');
 
+CREATE OR REPLACE FUNCTION zc_Object_MobileTariff() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MobileTariff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+ SELECT 'zc_Object_MobileTariff', 'Tарифы мобильных операторов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MobileTariff');
+
+CREATE OR REPLACE FUNCTION zc_Object_MobileEmployee() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MobileEmployee'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+ SELECT 'zc_Object_MobileEmployee', 'Мобильные телефоны сотрудников' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MobileEmployee');
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
