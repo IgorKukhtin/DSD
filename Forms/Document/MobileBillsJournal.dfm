@@ -129,7 +129,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 127
+            Width = 152
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -139,7 +139,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 177
           end
           object colisAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086'.'
@@ -366,13 +366,6 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
