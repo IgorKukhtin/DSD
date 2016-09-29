@@ -1,7 +1,7 @@
 -- Function: gpSelect_MovementItem_MobileBills()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileBills (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileBills (Integer, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
     IN inMovementId  Integer      , -- ключ Документа
@@ -132,7 +132,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_MobileBills (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+
 
 
 /*

@@ -1114,89 +1114,131 @@ inherited MobileBillsForm: TMobileBillsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
-        Value = Null
+        Name = 'inMobileEmployeeId'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'MobileEmployeeId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCurrMonthly'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'CurrMonthly'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrNavigator'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'CurrNavigator'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionGoodsDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCount'
+        Name = 'inPrevNavigator'
         Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'PrevNavigator'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inHeadCount'
-        Value = '0'
+        Name = 'inLimit'
+        Value = 0
+        Component = MasterCDS
+        ComponentItem = 'MobileLimit'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioPartionGoods'
-        Value = Null
+        Name = 'inPrevLimit'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
+        ComponentItem = 'PrevLimit'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsKindId'
-        Value = Null
+        Name = 'inDutyLimit'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'DutyLimit'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAssetId'
-        Value = Null
+        Name = 'inOverlimit'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'AssetId'
+        ComponentItem = 'Overlimit'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
-        Value = Null
+        Name = 'inPrevMonthly'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'PrevMonthly'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStorageId'
-        Value = Null
+        Name = 'inRegionId'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'StorageId'
+        ComponentItem = 'RegionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionGoodsId'
-        Value = Null
+        Name = 'inEmployeeId'
+        Value = '0'
         Component = MasterCDS
-        ComponentItem = 'PartionGoodsId'
+        ComponentItem = 'EmployeeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrevEmployeeId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'PrevEmployeeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobileTariffId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'MobileTariffId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrevMobileTariffId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'PrevMobileTariffId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

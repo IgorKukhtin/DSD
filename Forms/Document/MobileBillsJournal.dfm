@@ -254,6 +254,11 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actLoadXMLKS1: TdsdLoadXMLKS
+      Category = 'DSDLib'
+      MoveParams = <>
+      InsertProcedureName = 'InsertUpdate_MobileBills'
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -331,9 +336,91 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actLoadXMLKS1
+      Category = 0
+      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
