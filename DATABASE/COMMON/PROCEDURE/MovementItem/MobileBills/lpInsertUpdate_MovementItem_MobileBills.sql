@@ -20,14 +20,14 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_MobileBills(
     IN inPrevEmployeeId      Integer   , --
     IN inMobileTariffId      Integer   , --
     IN inPrevMobileTariffId  Integer   , --
-    IN inUserId              Integer     -- пользователь
+    IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
- 
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -81,4 +81,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_MobileBills (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPrevMobileTariff:= '', inRegionId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_MobileBills (ioId:= 0, inMovementId:= 10, inMobileEmployeeId:= 1, inAmount:= 0, inCurrMonthly:= 0, inPrevMobileTariff:= '', inRegionId:= 0, inSession:= '2')

@@ -254,10 +254,10 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actLoadXMLKS1: TdsdLoadXMLKS
+    object actLoadXMLKS: TdsdLoadXMLKS
       Category = 'DSDLib'
       MoveParams = <>
-      InsertProcedureName = 'InsertUpdate_MobileBills'
+      InsertProcedureName = 'gpInsert_MobileBills_XML'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -382,7 +382,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbLoadXMLKS'
         end
         item
           Visible = True
@@ -417,8 +417,8 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       Action = actPrint
       Category = 0
     end
-    object bb: TdxBarButton
-      Action = actLoadXMLKS1
+    object bbLoadXMLKS: TdxBarButton
+      Action = actLoadXMLKS
       Category = 0
       ImageIndex = 41
     end

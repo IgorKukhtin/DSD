@@ -45,43 +45,27 @@ BEGIN
      ioAmount:= (ioCurrMonthly+inCurrNavigator+inOverlimit) ::TFloat;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inMobileEmployeeId, inMovementId, ioAmount, NULL);
-
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrMonthly(), ioId, ioCurrMonthly);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrNavigator(), ioId, inCurrNavigator);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PrevNavigator(), ioId, inPrevNavigator);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Limit(), ioId, inLimit);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PrevLimit(), ioId, inPrevLimit);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DutyLimit(), ioId, inDutyLimit);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Overlimit(), ioId, inOverlimit);
-     -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PrevMonthly(), ioId, inPrevMonthly);
-    
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Region(), ioId, inRegionId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Employee(), ioId, inEmployeeId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PrevEmployee(), ioId, inPrevEmployeeId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MobileTariff(), ioId, inMobileTariffId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PrevMobileTariff(), ioId, inPrevMobileTariffId);
-
-     
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     ioId := lpInsertUpdate_MovementItem_MobileBills( ioId                 := ioId
+                                                    , inMovementId         := inMovementId
+                                                    , inMobileEmployeeId   := inMobileEmployeeId
+                                                    , inAmount             := ioAmount 
+                                                    , inCurrMonthly        := ioCurrMonthly
+                                                    , inCurrNavigator      := inCurrNavigator
+                                                    , inPrevNavigator      := inPrevNavigator
+                                                    , inLimit              := inLimit
+                                                    , inPrevLimit          := inPrevLimit
+                                                    , inDutyLimit          := inDutyLimit
+                                                    , inOverlimit          := inOverlimit
+                                                    , inPrevMonthly        := inPrevMonthly
+                                                    , inRegionId           := inRegionId
+                                                    , inEmployeeId         := inEmployeeId
+                                                    , inPrevEmployeeId     := inPrevEmployeeId
+                                                    , inMobileTariffId     := inMobileTariffId
+                                                    , inPrevMobileTariffId := inPrevMobileTariffId
+                                                    , inUserId             := vbUserId
+                                                      );
 
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -94,4 +78,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_MobileBills (ioId:= 0, inMovementId:= 10, inMobileEmployeeId:= 1, inAmount:= 0, inCurrMonthly:= 0, inPrevMobileTariff:= '', inRegionId:= 0, inSession:= '2')
+--select * from gpInsertUpdate_MovementItem_MobileBills(ioId := 0 , inMovementId := 4353249 , inMobileEmployeeId := 670584 , ioAmount := 0 , ioCurrMonthly := 0 , inCurrNavigator := 0 , inPrevNavigator := 0 , inLimit := 100 , inPrevLimit := 0 , inDutyLimit := 0 , inOverlimit := 0 , inPrevMonthly := 0 , inRegionId := 0 , inEmployeeId := 617411 , inPrevEmployeeId := 0 , inMobileTariffId := 669910 , inPrevMobileTariffId := 0 ,  inSession := '5');
