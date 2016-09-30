@@ -761,10 +761,10 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1242
     ExplicitWidth = 1242
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42614d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42614d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 404
@@ -3936,12 +3936,15 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = 42614d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -3949,7 +3952,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = 42614d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -3964,7 +3967,7 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 407
-    Top = 152
+    Left = 375
+    Top = 160
   end
 end

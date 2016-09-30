@@ -17,6 +17,7 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
 
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
@@ -159,11 +160,13 @@ BEGIN
                                WHERE ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
                                  AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
                               )
-       SELECT
-             Movement.Id                                AS Id
+       SELECT Movement.Id                                AS Id
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
 --         , Movement.InvNumber                         AS InvNumber
-           , '' AS InvNumber
+           
+           , (date_part('day' ,current_date)
+            || CASE WHEN date_part('month' ,current_date):: tfloat < 10 THEN ('0'||(date_part('month' ,current_date))::tvarchar ) ELSE (date_part('month' ,current_date))::tvarchar end 
+            || date_part('year' ,current_date))   ::tvarchar  AS InvNumber
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 
@@ -186,7 +189,7 @@ BEGIN
            , CASE WHEN MovementDate_Payment.ValueData IS NOT NULL THEN TRUE ELSE FALSE END AS isPaymentDate
            , COALESCE (Movement_order.OperDate, Movement.OperDate) AS OperDateOrder
 
-           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) :: Boolean AS PriceWithVAT
            , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
            , tmpMovement.ChangePercent
            , tmpMovement.TotalCount
@@ -341,6 +344,7 @@ BEGIN
            
            , MovementSale_Comment.ValueData        AS SaleComment 
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
+
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
                   , MAX(tmpListDocSale.ExtraChargesPercent - tmpListDocSale.DiscountPercent)  AS ChangePercent
                   , Sum(MovementFloat_TotalCount.ValueData)         AS TotalCount
@@ -352,7 +356,7 @@ BEGIN
                   , Sum(MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData) AS SummVAT
                   , Sum(MovementFloat_TotalSumm.ValueData)          AS TotalSumm
                   , Sum(MovementFloat_TotalSumm.ValueData *(1 - (tmpListDocSale.VATPercent / (tmpListDocSale.VATPercent + 100)))) TotalSummMVAT_Info
-             FROM tmpListDocSale --ORDER BY tmpListDocSale.MovementId DESC LIMIT 1
+             FROM tmpListDocSale 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId = tmpListDocSale.MovementId
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
@@ -412,25 +416,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-    /*        LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
-                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-*/
+   
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
@@ -633,7 +619,6 @@ BEGIN
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
-where 1=0
      ;
     RETURN NEXT Cursor1;
 
@@ -795,7 +780,7 @@ where 1=0
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-           --  where 1=0
+            -- where 1=0
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
@@ -1017,6 +1002,63 @@ where 1=0
        ;
 
     RETURN NEXT Cursor2;
+    -- печать тары
+    OPEN Cursor3 FOR
+      SELECT Object_Goods.ObjectCode         AS GoodsCode
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , Object_Goods.ValueData          AS GoodsName_two
+           , Object_GoodsKind.ValueData      AS GoodsKindName
+           , Object_Measure.ValueData        AS MeasureName
+
+           , tmpMI.Amount                    AS Amount
+           , tmpMI.AmountPartner             AS AmountPartner
+           , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 0 END )) AS TFloat) AS Amount_Weight
+           -- , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
+
+       FROM (SELECT MovementItem.ObjectId                         AS GoodsId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , SUM (MovementItem.Amount) AS Amount
+                  , SUM (MovementItem.Amount) AS AmountPartner
+             FROM tmpListDocSale
+                  LEFT JOIN MovementItem ON MovementItem.MovementId = tmpListDocSale.MovementId
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+             WHERE COALESCE (MIFloat_Price.ValueData, 0) = 0
+               AND 1 = 0 -- !!!временно отключил!!!
+             GROUP BY MovementItem.ObjectId
+                    , MILinkObject_GoodsKind.ObjectId
+            ) AS tmpMI
+
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+       WHERE tmpMI.AmountPartner <> 0
+
+       ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
+      ;
+
+    RETURN NEXT Cursor3;
 
 END;
 $BODY$
@@ -1031,4 +1073,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpSelect_Movement_Sale_TotalPrint (inStartDate:= '30.08.2016', inEndDate:= '30.08.2016', inContractId:= 148465, inSession:= zfCalc_UserAdmin()); 
---FETCH ALL "<unnamed portal 85>";
+--FETCH ALL "<unnamed portal 43>";
