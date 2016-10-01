@@ -35,7 +35,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      IF COALESCE (ioCurrMonthly,0) = 0 THEN
-         ioCurrMonthly:= (SELECT ObjectFloat_Monthly.ValueData   ::TFloat  AS Monthly 
+         ioCurrMonthly:= (SELECT COALESCE(ObjectFloat_Monthly.ValueData,0)   ::TFloat  AS Monthly 
                           FROM ObjectFloat AS ObjectFloat_Monthly
                           WHERE ObjectFloat_Monthly.ObjectId = inMobileTariffId
                             AND ObjectFloat_Monthly.DescId = zc_ObjectFloat_MobileTariff_Monthly()

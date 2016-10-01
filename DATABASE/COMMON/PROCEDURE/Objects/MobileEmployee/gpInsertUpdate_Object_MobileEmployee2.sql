@@ -26,31 +26,19 @@ BEGIN
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_MobileEmployee()); 
    
-
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_MobileEmployee(), vbCode_calc, inName);
-
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_MobileEmployee_Limit(), ioId, inLimit);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_MobileEmployee_DutyLimit(), ioId, inDutyLimit);
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_MobileEmployee_Navigator(), ioId, inNavigator);
-  
-   -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_MobileEmployee_Comment(), ioId, inComment);
-
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_Personal(), ioId, inPersonalId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_MobileTariff(), ioId, inMobileTariffId);
-
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   ioId := lpInsertUpdate_Object_MobileEmployee2(ioId             :=  ioId
+                                               , inCode           := inCode
+                                               , inName           := inName
+                                               , inLimit          := inLimit
+                                               , inDutyLimit      := inDutyLimit
+                                               , inNavigator      := inNavigator
+                                               , inComment        := inComment
+                                               , inPersonalId     := inPersonalId
+                                               , inMobileTariffId := inMobileTariffId
+                                               , inUserId         := vbUserId
+                                                 );
    
 END;
 $BODY$

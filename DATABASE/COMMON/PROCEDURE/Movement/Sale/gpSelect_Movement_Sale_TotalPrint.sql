@@ -164,9 +164,9 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
 --         , Movement.InvNumber                         AS InvNumber
            
-           , (date_part('day' ,current_date)
-            || CASE WHEN date_part('month' ,current_date):: tfloat < 10 THEN ('0'||(date_part('month' ,current_date))::tvarchar ) ELSE (date_part('month' ,current_date))::tvarchar end 
-            || date_part('year' ,current_date))   ::tvarchar  AS InvNumber
+           , (lpad(date_part('day' ,inEndDate)::tvarchar, 2, '0')
+            || lpad(date_part('month' ,inEndDate)::tvarchar, 2, '0')  
+            || date_part('year' ,inEndDate))   ::tvarchar            AS InvNumber
 
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
 

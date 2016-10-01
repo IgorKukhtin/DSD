@@ -173,8 +173,8 @@ object MobileEmployee2Form: TMobileEmployee2Form
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 106
-    Top = 185
+    Left = 114
+    Top = 241
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -590,8 +590,8 @@ object MobileEmployee2Form: TMobileEmployee2Form
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 172
-    Top = 142
+    Left = 228
+    Top = 230
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 75
@@ -619,10 +619,10 @@ object MobileEmployee2Form: TMobileEmployee2Form
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actUpdate
       end
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end>
     ActionItemList = <
       item
@@ -633,6 +633,7 @@ object MobileEmployee2Form: TMobileEmployee2Form
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>

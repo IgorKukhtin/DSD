@@ -257,7 +257,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     object actLoadXMLKS: TdsdLoadXMLKS
       Category = 'DSDLib'
       MoveParams = <>
-      InsertProcedureName = 'gpInsert_MobileBills_XML'
+      InsertProcedureName = 'gpinsertupdate_logbillsks2'
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -329,8 +329,8 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     Top = 163
   end
   inherited BarManager: TdxBarManager
-    Left = 224
-    Top = 155
+    Left = 200
+    Top = 147
     DockControlHeights = (
       0
       0

@@ -151,6 +151,10 @@ type
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbactOpenReport: TdxBarButton;
+    spSelectPrint_Total: TdsdStoredProc;
+    mactPrint_Sale_Total: TMultiAction;
+    actPrint_Total: TdsdPrintAction;
+    bbPrint_Sale_Total: TdxBarButton;
   private
     { Private declarations }
   public
