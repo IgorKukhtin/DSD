@@ -116,10 +116,18 @@ BEGIN
               AND Object_MobileEmployee.isErased = False;
 
 
- 
   -- создание документа
-  vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
- --RAISE EXCEPTION 'Ошибка.%', vbMovementId;
+  vbMovementId := (SELECT Movement.Id 
+                   FROM Movement
+                   WHERE Movement.OperDate = xmlBillDate ::tdatetime
+                     AND Movement.DescId = zc_Movement_MobileBills()
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                   );
+              
+  IF COALESCE (vbMovementId, 0) = 0 THEN 
+     vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
+  END IF;
+
 
   -- *** Заполняем таблицу журнала счетов
     FOR r IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpReportMobileKS tmp)
