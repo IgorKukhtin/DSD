@@ -88,7 +88,7 @@ BEGIN
 	    SELECT Object_MobileEmployee.Id          AS Id
                  , COALESCE(ObjectLink_MobileEmployee_Personal.ChildObjectId, 0) ::Integer      AS PersonalId
                  , COALESCE(ObjectLink_MobileEmployee_MobileTariff.ChildObjectId, 0) ::Integer  AS TariffId
-                 , COALESCE(Object_MobileEmployee.ValueData, 0) ::TFloat   AS MobileNum
+                 , COALESCE(Object_MobileEmployee.ValueData, '') ::TVarchar   AS MobileNum
                  , COALESCE(ObjectFloat_Limit.ValueData, 0) ::TFloat       AS MobileLimit
                  , COALESCE(ObjectFloat_DutyLimit.ValueData, 0) ::TFloat   AS DutyLimit
                  , COALESCE(ObjectFloat_Navigator.ValueData, 0) ::TFloat   AS Navigator
@@ -117,7 +117,7 @@ BEGIN
 
 
   -- создание документа
-  vbMovementId := (SELECT Movement.Id 
+ /* vbMovementId := (SELECT Movement.Id 
                    FROM Movement
                    WHERE Movement.OperDate = xmlBillDate ::tdatetime
                      AND Movement.DescId = zc_Movement_MobileBills()
@@ -127,7 +127,8 @@ BEGIN
   IF COALESCE (vbMovementId, 0) = 0 THEN 
      vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
   END IF;
-
+*/
+  vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
 
   -- *** Заполняем таблицу журнала счетов
     FOR r IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpReportMobileKS tmp)
