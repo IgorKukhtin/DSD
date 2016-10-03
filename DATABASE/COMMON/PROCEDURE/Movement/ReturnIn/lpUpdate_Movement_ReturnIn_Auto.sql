@@ -818,6 +818,10 @@ BEGIN
           ;
 
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
+
+
      -- !!!вернули ОШИБКУ, если есть!!!
      outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
                                                     , inUserId        := inUserId

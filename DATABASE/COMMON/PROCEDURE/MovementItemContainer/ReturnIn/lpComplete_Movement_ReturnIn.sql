@@ -707,6 +707,7 @@ BEGIN
                           AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9042))
                        )
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+        AND inUserId <> zc_Enum_Process_Auto_ReturnIn()
      THEN
          -- Проверка ошибки
          outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId

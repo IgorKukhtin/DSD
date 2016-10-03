@@ -31,18 +31,28 @@ BEGIN
                                                          , inMovementId    := inMovementId
                                                          , inUserId        := zc_Enum_Process_Auto_ReturnIn()
                                                           );
+
+         -- автоматом 
+         DROP TABLE _tmpItem;
+         -- автоматом 
+         PERFORM gpReComplete_Movement_ReturnIn (inMovementId, NULL, FALSE, zc_Enum_Process_Auto_ReturnIn() :: TVarChar);
+
      ELSE
          -- !!!вернули ОШИБКУ, если есть!!!
          outMessageText:= lpCheck_Movement_ReturnIn_Auto (inMovementId    := inMovementId
                                                         , inUserId        := zc_Enum_Process_Auto_ReturnIn()
                                                          );
+         -- пересчитали Итоговые суммы по накладной
+         PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
      END IF;
+
 
      -- сохранили свойство <Ошибка>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Error(), inMovementId, CASE WHEN outMessageText <> '' THEN TRUE ELSE FALSE END);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, zc_Enum_Process_Auto_ReturnIn(), FALSE);
+
 
 END;
 $BODY$

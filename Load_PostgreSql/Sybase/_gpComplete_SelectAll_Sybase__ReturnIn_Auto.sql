@@ -86,3 +86,8 @@ END;$BODY$
 -- тест
 -- SELECT * FROM gpComplete_SelectAll_Sybase_ReturnIn_Auto (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016')
 -- SELECT * FROM gpComplete_SelectAll_Sybase_ReturnIn_Auto (inStartDate:= '01.09.2016', inEndDate:= '30.09.2016')
+/*
+insert into  "DBA"."_pgMovementReComlete_add"
+SELECT * FROM _pgMovementReComlete_copy
+where Movementid = 4400825 
+*/

@@ -57,7 +57,7 @@ BEGIN
        ;
 
 
-     IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.09.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+     IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
      THEN
          -- Распровели
          IF vbMovementId_Peresort <> 0

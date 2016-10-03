@@ -2253,13 +2253,14 @@ begin
      // сам расчет с/с - 2-ой - производство + ФИЛИАЛЫ
      if not fStop then pInsertHistoryCost(FALSE);
      //
+     // ВСЕГДА - Привязка Возвраты
+     if (not fStop) then pCompleteDocument_ReturnIn_Auto;
+     //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Diff;
      //
-     // ВСЕГДА - Привязка Возвраты
-     if (not fStop) then pCompleteDocument_ReturnIn_Auto;
      //
      if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
@@ -20488,6 +20489,7 @@ begin
      // delete Data on Sybase
      fromADOConnection.Connected:=false;
      fExecSqFromQuery('delete dba._pgMovementReComlete');
+     fExecSqFromQuery('insert into dba._pgMovementReComlete select * from _pgMovementReComlete_add');
 
      SaveRecord:=toSqlQuery.RecordCount;
      Gauge.Progress:=0;
@@ -20809,6 +20811,7 @@ begin
      // delete Data on Sybase
      fromADOConnection.Connected:=false;
      fExecSqFromQuery('delete dba._pgMovementReComlete');
+     fExecSqFromQuery('insert into dba._pgMovementReComlete select * from _pgMovementReComlete_add');
 
      SaveRecord:=toSqlQuery.RecordCount;
      Gauge.Progress:=0;

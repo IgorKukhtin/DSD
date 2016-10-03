@@ -38,6 +38,7 @@ $BODY$
 
     DECLARE vbStoreKeeperName TVarChar;
     DECLARE vbIsInfoMoney_30201 Boolean;
+    DECLARE vbIsInfoMoney_30200 Integer;
 
     DECLARE vbKiev Integer;
 
@@ -93,7 +94,10 @@ BEGIN
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
           , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
+          , case when COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) = zc_Enum_InfoMoney_30201() -- ѕараметр дл€ ћ€сное сырье
+                     then 1 else 0 end
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
+               , vbIsInfoMoney_30200
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -110,6 +114,10 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                       AND MovementLinkObject_PaidKind.DescId IN (zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
+
+          LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                               ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                              AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -283,7 +291,6 @@ BEGIN
                                   WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId     = zc_MI_Master()
                                     AND MovementItem.isErased   = FALSE);
-
 
      --
     OPEN Cursor1 FOR
@@ -495,6 +502,7 @@ BEGIN
              END AS Price_info
 
            , vbIsInfoMoney_30201 AS isInfoMoney_30201
+           , vbIsInfoMoney_30200 AS isInfoMoney_30200
 
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
                   ELSE 'м.ƒнiпропетровськ' 
@@ -1174,4 +1182,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 377284, inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 2>";
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 4115668 , inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";
