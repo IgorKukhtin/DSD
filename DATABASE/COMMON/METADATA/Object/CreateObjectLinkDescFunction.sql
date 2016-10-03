@@ -1292,6 +1292,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileTariff_Contract() RETURNS Integer
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_MobileTariff_Contract', 'Связь Тарифа с Договором', zc_Object_MobileTariff(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileTariff_Contract');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileEmployee_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MobileEmployee_Personal', 'Связь c Сотрудники', zc_Object_MobileEmployee(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_Personal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_MobileEmployee_MobileTariff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_MobileTariff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_MobileEmployee_MobileTariff', 'Связь c Тарифы мобильных операторов', zc_Object_MobileEmployee(), zc_Object_MobileTariff() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_MobileEmployee_MobileTariff');
+
+
+
+
 
 --!!! АПТЕКА
 

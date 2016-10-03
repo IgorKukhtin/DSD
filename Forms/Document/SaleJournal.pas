@@ -199,6 +199,10 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     clReestrKindName: TcxGridDBColumn;
+    actPrint_Total: TdsdPrintAction;
+    mactPrint_Sale_Total: TMultiAction;
+    bbPrint_Sale_Total: TdxBarButton;
+    spSelectPrint_Total: TdsdStoredProc;
   private
     { Private declarations }
   public

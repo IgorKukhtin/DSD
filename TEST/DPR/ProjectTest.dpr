@@ -859,7 +859,9 @@ uses
   MobileTariff_2 in '..\..\Forms\Guides\MobileTariff_2.pas' {MobileTariff2Form: TParentForm},
   MobileTariffEdit_2 in '..\..\Forms\Guides\MobileTariffEdit_2.pas' {MobileTariffEdit2Form: TParentForm},
   MobileEmployee2 in '..\..\Forms\Guides\MobileEmployee2.pas' {MobileEmployee2Form: TParentForm},
-  MobileEmployeeEdit2 in '..\..\Forms\Guides\MobileEmployeeEdit2.pas' {MobileEmployeeEdit2Form: TParentForm};
+  MobileEmployeeEdit2 in '..\..\Forms\Guides\MobileEmployeeEdit2.pas' {MobileEmployeeEdit2Form: TParentForm},
+  MobileBillsJournal in '..\..\Forms\Document\MobileBillsJournal.pas' {MobileBillsJournalForm: TParentForm},
+  MobileBills in '..\..\Forms\Document\MobileBills.pas' {MobileBillsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

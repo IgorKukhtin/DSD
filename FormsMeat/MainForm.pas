@@ -747,6 +747,8 @@ type
     N135: TMenuItem;
     actMobileEmployee2: TdsdOpenForm;
     N211: TMenuItem;
+    actMobileBills: TdsdOpenForm;
+    N212: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

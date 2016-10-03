@@ -75,28 +75,44 @@ object MobileEmployee2Form: TMobileEmployee2Form
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 51
+        Width = 40
       end
       object colPersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 219
+        Width = 172
+      end
+      object clPositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 111
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 124
       end
       object colMobileNum: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1084#1086#1073'. '#1090#1077#1083'.'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 130
+        Width = 98
       end
       object colMobileTariffName: TcxGridDBColumn
         Caption = #1058#1072#1088#1080#1092
         DataBinding.FieldName = 'MobileTariffName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 75
       end
       object colMobileLimit: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090
@@ -106,7 +122,7 @@ object MobileEmployee2Form: TMobileEmployee2Form
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 101
+        Width = 76
       end
       object colDutyLimit: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1089#1083#1091#1078#1077#1073#1085#1099#1081
@@ -116,7 +132,7 @@ object MobileEmployee2Form: TMobileEmployee2Form
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 99
+        Width = 73
       end
       object colNavigator: TcxGridDBColumn
         Caption = #1059#1089#1083#1091#1075#1072' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
@@ -126,14 +142,14 @@ object MobileEmployee2Form: TMobileEmployee2Form
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 110
+        Width = 84
       end
       object colComment: TcxGridDBColumn
         Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 170
+        Width = 127
       end
       object colisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -157,8 +173,8 @@ object MobileEmployee2Form: TMobileEmployee2Form
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 106
-    Top = 185
+    Left = 114
+    Top = 241
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -386,6 +402,20 @@ object MobileEmployee2Form: TMobileEmployee2Form
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileTariffId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileTariffId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MobileTariffName'
           Value = Null
           Component = ClientDataSet
@@ -394,11 +424,42 @@ object MobileEmployee2Form: TMobileEmployee2Form
           MultiSelectSeparator = ','
         end
         item
+          Name = 'PersonalId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'PersonalName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MobileLimit'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileLimit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DutyLimit'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'DutyLimit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Navigator'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Navigator'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1088#1072#1090#1100
@@ -529,8 +590,8 @@ object MobileEmployee2Form: TMobileEmployee2Form
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 172
-    Top = 142
+    Left = 228
+    Top = 230
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 75
@@ -558,10 +619,10 @@ object MobileEmployee2Form: TMobileEmployee2Form
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actUpdate
       end
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end>
     ActionItemList = <
       item
@@ -572,6 +633,7 @@ object MobileEmployee2Form: TMobileEmployee2Form
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
