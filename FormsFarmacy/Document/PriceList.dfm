@@ -79,6 +79,7 @@ inherited PriceListForm: TPriceListForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
@@ -105,6 +106,7 @@ inherited PriceListForm: TPriceListForm
             Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1088#1072#1081#1089#1077
             DataBinding.FieldName = 'GoodsJuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 125
           end
           object colAmount: TcxGridDBColumn
@@ -114,6 +116,7 @@ inherited PriceListForm: TPriceListForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object colPrice: TcxGridDBColumn
@@ -134,6 +137,7 @@ inherited PriceListForm: TPriceListForm
             Properties.DateButtons = [btnClear, btnNow, btnToday]
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 171
           end
           object colRemains: TcxGridDBColumn
@@ -483,6 +487,14 @@ inherited PriceListForm: TPriceListForm
         item
           Visible = True
           ItemName = 'bbOpenPriceListLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
