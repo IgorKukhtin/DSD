@@ -861,7 +861,8 @@ uses
   MobileEmployee2 in '..\..\Forms\Guides\MobileEmployee2.pas' {MobileEmployee2Form: TParentForm},
   MobileEmployeeEdit2 in '..\..\Forms\Guides\MobileEmployeeEdit2.pas' {MobileEmployeeEdit2Form: TParentForm},
   MobileBillsJournal in '..\..\Forms\Document\MobileBillsJournal.pas' {MobileBillsJournalForm: TParentForm},
-  MobileBills in '..\..\Forms\Document\MobileBills.pas' {MobileBillsForm: TParentForm};
+  MobileBills in '..\..\Forms\Document\MobileBills.pas' {MobileBillsForm: TParentForm},
+  Juridical_Basis in '..\..\Forms\Guides\Juridical_Basis.pas' {Juridical_BasisForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
