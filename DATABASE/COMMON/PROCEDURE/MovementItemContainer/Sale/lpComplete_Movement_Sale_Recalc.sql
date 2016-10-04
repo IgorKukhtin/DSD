@@ -187,6 +187,8 @@ BEGIN
          DELETE FROM _tmpMIContainer_insert;
          DELETE FROM _tmpMIReport_insert;
          -- !!!обязательно!!! удалили таблицы
+         DROP TABLE _tmpItem_pr;
+         DROP TABLE _tmpItemSumm_pr;
          DROP TABLE _tmpItemChild;
          DROP TABLE _tmpItemSummChild;
          DROP TABLE _tmpItem_Partion;
