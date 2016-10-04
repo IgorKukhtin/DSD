@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CostMinutes TFloat
              , CostInet TFloat
              , Comment TVarChar
-             , ContactId Integer, ContacttName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , isErased boolean
              ) AS
 $BODY$

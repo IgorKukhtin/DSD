@@ -63,7 +63,6 @@ object MobileTariffEdit2Form: TMobileTariffEdit2Form
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 2
-    ExplicitTop = 374
   end
   object cxButton2: TcxButton
     Left = 262
@@ -78,7 +77,6 @@ object MobileTariffEdit2Form: TMobileTariffEdit2Form
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 3
-    ExplicitTop = 374
   end
   object lblCode: TcxLabel
     Left = 10

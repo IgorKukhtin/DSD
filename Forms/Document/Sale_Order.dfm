@@ -2,6 +2,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 408
   ClientWidth = 1291
+  ExplicitLeft = -188
   ExplicitWidth = 1307
   ExplicitHeight = 446
   PixelsPerInch = 96
@@ -2916,6 +2917,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       end
       item
         Name = 'InvNumber_ProductionFull'
+        Value = Null
         Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -4286,8 +4288,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1008
-    Top = 64
+    Left = 984
+    Top = 72
   end
   object ContractTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -4316,8 +4318,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 987
-    Top = 12
+    Left = 1035
+    Top = 60
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'

@@ -86,9 +86,9 @@ object MobileTariff2Form: TMobileTariff2Form
         Options.Editing = False
         Width = 184
       end
-      object colContacttName: TcxGridDBColumn
+      object colContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
-        DataBinding.FieldName = 'ContacttName'
+        DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

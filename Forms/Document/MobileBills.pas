@@ -39,9 +39,11 @@ type
     colMobileTariffName: TcxGridDBColumn;
     colOverlimit: TcxGridDBColumn;
     actMobileEmployeeChoiceForm: TOpenChoiceForm;
-    edIsAuto: TcxCheckBox;
     actInsertRecord: TInsertRecord;
     bbInsertRecord: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public

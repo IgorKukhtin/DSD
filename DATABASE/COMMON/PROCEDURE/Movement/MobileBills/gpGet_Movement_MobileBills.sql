@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_MobileBills(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalSumm TFloat
-              )
+             , ContractId Integer, ContractName TVarChar
+               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -27,10 +27,11 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
-             , Object_Status.Code                               AS StatusCode
-             , Object_Status.Name                               AS StatusName
-             , CAST (0 AS TFloat)                               AS TotalSumm
+             , inOperDate                                 AS OperDate
+             , Object_Status.Code                         AS StatusCode
+             , Object_Status.Name                         AS StatusName
+             , 0                                          AS ContractId
+             , CAST ('' AS TVarChar) 		          AS ContractName
             
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -38,24 +39,26 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             Movement.Id                                        AS Id
-           , Movement.InvNumber                                 AS InvNumber
-           , Movement.OperDate                                  AS OperDate
-           , Object_Status.ObjectCode                           AS StatusCode
-           , Object_Status.ValueData                            AS StatusName
-           , MovementFloat_TotalSumm.ValueData                  AS TotalSumm
+             Movement.Id                        AS Id
+           , Movement.InvNumber                 AS InvNumber
+           , Movement.OperDate                  AS OperDate
+           , Object_Status.ObjectCode           AS StatusCode
+           , Object_Status.ValueData            AS StatusName
+           , Object_Contract.Id                 AS ContractId 
+           , Object_Contract.ValueData          AS ContractName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+         
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_MobileBills();
 
-       END IF;
+     END IF;
 
 END;
 $BODY$

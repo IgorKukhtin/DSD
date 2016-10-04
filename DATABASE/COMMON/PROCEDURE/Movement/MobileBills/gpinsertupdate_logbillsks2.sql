@@ -7,27 +7,27 @@ CREATE OR REPLACE FUNCTION public.gpinsertupdate_logbillsks2(
     insession tvarchar)
   RETURNS void AS
 $BODY$
-  DECLARE x TEXT;
-  DECLARE xmlBillDate TDateTime;
-  DECLARE r RECORD;
+  DECLARE vbXMLFile TEXT;
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbRecord RECORD;
   DECLARE vbMovementId integer;
   DECLARE vbUserId Integer; 
+  DECLARE vbContractId Integer; 
+
 BEGIN
 
   vbUserId:= lpGetUserBySession (inSession);
  --RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
   -- Убираем экранизацию
-  SELECT INTO x inXMLFile;
-  SELECT INTO x REPLACE(x, 'Windows-1251', 'UTF-8');
-  SELECT INTO x REPLACE(x, '%', '<');
-  SELECT INTO x REPLACE(x, '$', '>');
-  SELECT INTO x REPLACE(x, '^', '"');
+  vbXMLFile:= REPLACE (inXMLFile, 'Windows-1251', 'UTF-8');
+  vbXMLFile:= REPLACE (vbXMLFile, '%', '<');
+  vbXMLFile:= REPLACE (vbXMLFile, '$', '>');
+  vbXMLFile:= REPLACE (vbXMLFile, '^', '"');
   
-  -- Дата счета
-    SELECT INTO xmlBillDate unnest(xpath('//Array-Bill/bill[1]/od/text()', x::XML));
- 
-  -- Вставка файла
-  INSERT INTO logBillsKS(BillDate, XMLData) VALUES (xmlBillDate::TDateTime, x::TBlob);
+   -- Дата счета
+   vbOperDate:= (SELECT unnest(xpath('//Array-Bill/bill[1]/od/text()', vbXMLFile::XML)));
+   -- ОКПО Юр.Лица
+   -- SELECT INTO vbOKPO unnest(xpath('//Array-Bill/bill[1]/bank/str/text()', x::XML));
 
   -- *** Временная таблица сотрудников для кеша
   --  CREATE TEMP TABLE _tmpEmployees (ID integer, Name TVarchar) ON COMMIT DROP;
@@ -37,18 +37,18 @@ BEGIN
  -- заполнение документа
 
   -- *** Парсим XML в таблицу
-    CREATE TEMP TABLE _tmpReportMobileKS (MobilePhone TVarchar, TotalSum tfloat) ON COMMIT DROP;
-    INSERT INTO _tmpReportMobileKS (MobilePhone, TotalSum)
-    WITH x AS (
-      SELECT xmldata::XML AS T FROM logBillsKS l WHERE l.BillDate = xmlBillDate
+    CREATE TEMP TABLE _tmpItems (MobilePhone TVarchar, TotalSum tfloat) ON COMMIT DROP;
+    INSERT INTO _tmpItems (MobilePhone, TotalSum)
+    WITH tmpData AS (
+      SELECT vbXMLFile::XML AS ValueData
     )
     SELECT
     -- Номер мобильного
-       regexp_split_to_table(replace(replace(CAST(xpath('//Array-Bill/bill/subs[stnd_id=1]/msisdn/text()', T) AS TEXT), '}', ''), '{', ''), ',')::TVarchar AS MobilePhone
+       regexp_split_to_table(replace(replace(CAST(xpath('//Array-Bill/bill/subs[stnd_id=1]/msisdn/text()', ValueData) AS TEXT), '}', ''), '{', ''), ',')::TVarchar AS MobilePhone
     -- Итого
-      ,regexp_split_to_table(replace(replace(CAST(xpath('//Array-Bill/bill/subs[stnd_id=1]/s_det/tot/text()', T) AS TEXT), '}', ''), '{', ''),',')::tfloat AS TotalSum
+      ,regexp_split_to_table(replace(replace(CAST(xpath('//Array-Bill/bill/subs[stnd_id=1]/s_det/tot/text()', ValueData) AS TEXT), '}', ''), '{', ''),',')::tfloat AS TotalSum
    
-    FROM x;
+    FROM tmpData;
 
 --//////////////
  -- новые моб.номера
@@ -60,22 +60,21 @@ BEGIN
              AND Object_MobileEmployee.isErased = False;
              
 
- FOR r IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpReportMobileKS tmp)
+ FOR vbRecord IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpItems tmp)
     LOOP
-  -- RAISE EXCEPTION 'Ошибка.%', r.MobilePhone;
-    IF NOT EXISTS (SELECT _tmpMobile.Id FROM _tmpMobile WHERE RIGHT(_tmpMobile.MobileNum, 10) = r.MobilePhone)
-    THEN
-       PERFORM lpInsertUpdate_Object_MobileEmployee2(ioId             := 0
-                                                   , inCode           := 0
-                                                   , inName           := r.MobilePhone
-                                                   , inLimit          := 0 ::tfloat
-                                                   , inDutyLimit      := 0 ::tfloat
-                                                   , inNavigator      := 0 ::tfloat
-                                                   , inComment        := '(авто)'
-                                                   , inPersonalId     := 0
-                                                   , inMobileTariffId := 0
-                                                   , inUserId         := vbUserId
-                                                 );
+      IF NOT EXISTS (SELECT _tmpMobile.Id FROM _tmpMobile WHERE RIGHT(_tmpMobile.MobileNum, 10) = vbRecord.MobilePhone)
+         THEN
+           PERFORM lpInsertUpdate_Object_MobileEmployee2 (ioId             := 0
+                                                        , inCode           := 0
+                                                        , inName           := vbRecord.MobilePhone
+                                                        , inLimit          := 0  ::Tfloat
+                                                        , inDutyLimit      := 0  ::Tfloat
+                                                        , inNavigator      := 0  ::Tfloat
+                                                        , inComment        := '' ::TVarchar
+                                                        , inPersonalId     := 0
+                                                        , inMobileTariffId := 0
+                                                        , inUserId         := vbUserId
+                                                         );
     END IF;
     END LOOP;
    
@@ -83,20 +82,22 @@ BEGIN
 
 
   -- *** врем. табл. телефонов и тарифов
-    CREATE TEMP TABLE _tmpMobileEmployeeTariff (Id integer, PersonalId integer, TariffId integer, MobileNum TVarchar, MobileLimit Tfloat, DutyLimit Tfloat, Navigator Tfloat, Monthly Tfloat) ON COMMIT DROP;
-    INSERT INTO _tmpMobileEmployeeTariff (Id, PersonalId, TariffId, MobileNum, MobileLimit, DutyLimit, Navigator, Monthly)
+    CREATE TEMP TABLE _tmpMobileEmployeeTariff (Id integer, PersonalId integer, TariffId integer, MobileNum TVarchar, MobileLimit Tfloat, DutyLimit Tfloat, Navigator Tfloat, Monthly Tfloat, ContractId integer) ON COMMIT DROP;
+
+    INSERT INTO _tmpMobileEmployeeTariff (Id, PersonalId, TariffId, MobileNum, MobileLimit, DutyLimit, Navigator, Monthly, ContractId)
 	    SELECT Object_MobileEmployee.Id          AS Id
-                 , COALESCE(ObjectLink_MobileEmployee_Personal.ChildObjectId, 0) ::Integer      AS PersonalId
-                 , COALESCE(ObjectLink_MobileEmployee_MobileTariff.ChildObjectId, 0) ::Integer  AS TariffId
-                 , COALESCE(Object_MobileEmployee.ValueData, '') ::TVarchar   AS MobileNum
-                 , COALESCE(ObjectFloat_Limit.ValueData, 0) ::TFloat       AS MobileLimit
-                 , COALESCE(ObjectFloat_DutyLimit.ValueData, 0) ::TFloat   AS DutyLimit
-                 , COALESCE(ObjectFloat_Navigator.ValueData, 0) ::TFloat   AS Navigator
-                 , COALESCE(ObjectFloat_Monthly.ValueData, 0) ::TFloat     AS Monthly
+                 , COALESCE (ObjectLink_MobileEmployee_Personal.ChildObjectId, 0) ::Integer      AS PersonalId
+                 , COALESCE (ObjectLink_MobileEmployee_MobileTariff.ChildObjectId, 0) ::Integer  AS TariffId
+                 , COALESCE (Object_MobileEmployee.ValueData, '') ::TVarchar    AS MobileNum
+                 , COALESCE (ObjectFloat_Limit.ValueData, 0)      ::TFloat      AS MobileLimit
+                 , COALESCE (ObjectFloat_DutyLimit.ValueData, 0)  ::TFloat      AS DutyLimit
+                 , COALESCE (ObjectFloat_Navigator.ValueData, 0)  ::TFloat      AS Navigator
+                 , COALESCE (ObjectFloat_Monthly.ValueData, 0)    ::TFloat      AS Monthly
+                 , COALESCE (ObjectLink_MobileTariff_Contract.ChildObjectId, 0) AS ContractId
             FROM Object AS Object_MobileEmployee
                LEFT JOIN ObjectFloat AS ObjectFloat_Limit
-                                  ON ObjectFloat_Limit.ObjectId = Object_MobileEmployee.Id 
-                                 AND ObjectFloat_Limit.DescId = zc_ObjectFloat_MobileEmployee_Limit()
+                                     ON ObjectFloat_Limit.ObjectId = Object_MobileEmployee.Id 
+                                    AND ObjectFloat_Limit.DescId = zc_ObjectFloat_MobileEmployee_Limit()
                LEFT JOIN ObjectFloat AS ObjectFloat_DutyLimit
                                      ON ObjectFloat_DutyLimit.ObjectId = Object_MobileEmployee.Id 
                                     AND ObjectFloat_DutyLimit.DescId = zc_ObjectFloat_MobileEmployee_DutyLimit()
@@ -112,26 +113,36 @@ BEGIN
                LEFT JOIN ObjectFloat AS ObjectFloat_Monthly
                                      ON ObjectFloat_Monthly.ObjectId = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId
                                     AND ObjectFloat_Monthly.DescId = zc_ObjectFloat_MobileTariff_Monthly()
+
+               LEFT JOIN ObjectLink AS ObjectLink_MobileTariff_Contract
+                                    ON ObjectLink_MobileTariff_Contract.ObjectId = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId
+                                   AND ObjectLink_MobileTariff_Contract.DescId = zc_ObjectLink_MobileTariff_Contract()
+       
             WHERE Object_MobileEmployee.DescId = zc_Object_MobileEmployee()
               AND Object_MobileEmployee.isErased = False;
 
+  -- получаем договор 
+  vbContractId := (SELECT DISTINCT tmp.ContractId FROM _tmpMobileEmployeeTariff AS tmp WHERE tmp.ContractId <>0 );
 
   -- создание документа
- /* vbMovementId := (SELECT Movement.Id 
+  vbMovementId := (SELECT Movement.Id 
                    FROM Movement
-                   WHERE Movement.OperDate = xmlBillDate ::tdatetime
+                       INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                               ON MovementLinkObject_Contract.MovementId = Movement.Id
+                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                              AND MovementLinkObject_Contract.ObjectId = vbContractId
+                   WHERE Movement.OperDate = vbOperDate ::tdatetime
                      AND Movement.DescId = zc_Movement_MobileBills()
                      AND Movement.StatusId = zc_Enum_Status_Complete()
                    );
               
   IF COALESCE (vbMovementId, 0) = 0 THEN 
-     vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
+     vbMovementId := gpInsertUpdate_Movement_MobileBills (0, CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), vbOperDate ::tdatetime, vbContractId :: Integer, inSession ::TVarChar);
   END IF;
-*/
-  vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_MobileBills(), CAST (NEXTVAL ('Movement_MobileBills_seq') AS TVarChar), xmlBillDate ::tdatetime, NULL);
+
 
   -- *** Заполняем таблицу журнала счетов
-    FOR r IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpReportMobileKS tmp)
+    FOR vbRecord IN (SELECT tmp.MobilePhone, tmp.TotalSum FROM _tmpItems tmp)
     LOOP
   
       PERFORM lpInsertUpdate_MovementItem_MobileBills(
@@ -143,46 +154,46 @@ BEGIN
       -- номер телефона
         , inMobileEmployeeId := (SELECT _tmpMobileEmployeeTariff.Id
                            FROM _tmpMobileEmployeeTariff
-                           WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone)::INTEGER
+                           WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone)::INTEGER
       -- Сумма итого
-        , inAmount := r.TotalSum ::tfloat
+        , inAmount := vbRecord.TotalSum ::tfloat
       -- Абонплата
-	, inCurrMonthly := (SELECT Coalesce(_tmpMobileEmployeeTariff.Monthly,0)
+	, inCurrMonthly := (SELECT COALESCE (_tmpMobileEmployeeTariff.Monthly,0)
                             FROM _tmpMobileEmployeeTariff
-                            WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone):: tfloat
+                            WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone):: tfloat
       -- Навигатор
 	, inCurrNavigator := (SELECT _tmpMobileEmployeeTariff.Navigator
                               FROM _tmpMobileEmployeeTariff
-                              WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone):: tfloat
+                              WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone):: tfloat
       -- 
         , inPrevNavigator := 0 :: tfloat 
         , inLimit := (SELECT _tmpMobileEmployeeTariff.MobileLimit
                       FROM _tmpMobileEmployeeTariff
-                      WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone):: tfloat
+                      WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone):: tfloat
         , inPrevLimit := 0 :: tfloat
     -- Служебный лимит
         , inDutyLimit := (SELECT _tmpMobileEmployeeTariff.DutyLimit
                       FROM _tmpMobileEmployeeTariff
-                      WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone):: tfloat
+                      WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone):: tfloat
       -- Перелимит
-        , inOverlimit := (SELECT CASE WHEN (r.TotalSum - (_tmpMobileEmployeeTariff.MobileLimit +_tmpMobileEmployeeTariff.DutyLimit)) > 0 
-                                      THEN (r.TotalSum - (_tmpMobileEmployeeTariff.MobileLimit +_tmpMobileEmployeeTariff.DutyLimit))
+        , inOverlimit := (SELECT CASE WHEN (vbRecord.TotalSum - (_tmpMobileEmployeeTariff.MobileLimit +_tmpMobileEmployeeTariff.DutyLimit)) > 0 
+                                      THEN (vbRecord.TotalSum - (_tmpMobileEmployeeTariff.MobileLimit +_tmpMobileEmployeeTariff.DutyLimit))
                                       ELSE 0
                                  END
                           FROM _tmpMobileEmployeeTariff
-                          WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone):: tfloat
+                          WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone):: tfloat
         , inPrevMonthly := 0 :: tfloat
       -- Регион
         , inRegionId := 0
       -- ИД сотрудника                
 	, inEmployeeID := (SELECT _tmpMobileEmployeeTariff.PersonalId
                            FROM _tmpMobileEmployeeTariff
-                           WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone)::INTEGER
+                           WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone)::INTEGER
         , inPrevEmployeeId := 0
       -- ИД тарифа
         , inMobileTariffID := (SELECT _tmpMobileEmployeeTariff.TariffId
                                FROM _tmpMobileEmployeeTariff
-                               WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = r.MobilePhone)::INTEGER
+                               WHERE RIGHT(_tmpMobileEmployeeTariff.MobileNum, 10) = vbRecord.MobilePhone)::INTEGER
         , inPrevMobileTariffId := 0
         , inUserId := vbUserId
 

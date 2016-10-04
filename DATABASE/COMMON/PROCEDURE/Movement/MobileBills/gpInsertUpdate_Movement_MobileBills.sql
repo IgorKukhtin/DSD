@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Movement_MobileBills()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileBills (Integer, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileBills (Integer, TVarChar, TDateTime, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MobileBills(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
+    IN inContractId          Integer   , -- Договор
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -31,6 +33,8 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_MobileBills(), inInvNumber, inOperDate, NULL);
 
+     -- сохранили связь с <Договора>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
