@@ -95,6 +95,9 @@ type
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edInvNumberProduction: TcxButtonEdit;
+    ProductionDocGuides: TdsdGuides;
   private
     { Private declarations }
   public

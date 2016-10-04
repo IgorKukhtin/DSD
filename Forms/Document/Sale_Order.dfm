@@ -2,9 +2,8 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 408
   ClientWidth = 1291
-  ExplicitLeft = -501
   ExplicitWidth = 1307
-  ExplicitHeight = 443
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -807,15 +806,15 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 47
     end
     object cxLabel22: TcxLabel
-      Left = 680
+      Left = 685
       Top = 85
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 680
+      Left = 685
       Top = 103
       TabOrder = 46
-      Width = 264
+      Width = 115
     end
     object cxLabel23: TcxLabel
       Left = 1156
@@ -882,6 +881,25 @@ inherited Sale_OrderForm: TSale_OrderForm
       Properties.ReadOnly = True
       TabOrder = 54
       Width = 144
+    end
+    object cxLabel27: TcxLabel
+      Left = 804
+      Top = 85
+      Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
+    end
+    object edInvNumberProduction: TcxButtonEdit
+      Left = 804
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 56
+      Text = '-1'
+      Width = 140
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -1984,6 +2002,41 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
+    object actOpenProductionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      ImageIndex = 26
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+          Component = ProductionDocGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2129,6 +2182,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbOpenReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProduction'
         end
         item
           Visible = True
@@ -2331,6 +2392,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbOpenReport: TdxBarButton
       Action = actOpenReportForm
+      Category = 0
+    end
+    object bbOpenProduction: TdxBarButton
+      Action = actOpenProductionForm
       Category = 0
     end
   end
@@ -2838,6 +2903,20 @@ inherited Sale_OrderForm: TSale_OrderForm
         Name = 'ReestrKindName'
         Value = Null
         Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = '0'
+        Component = ProductionDocGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3848,8 +3927,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 944
-    Top = 112
+    Left = 1000
+    Top = 120
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
@@ -3911,7 +3990,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 820
+    Left = 748
     Top = 64
   end
   object spSelectPrint: TdsdStoredProc
@@ -3968,8 +4047,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 912
-    Top = 64
+    Left = 896
+    Top = 24
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -4855,5 +4934,35 @@ inherited Sale_OrderForm: TSale_OrderForm
       end>
     Left = 588
     Top = 96
+  end
+  object ProductionDocGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberProduction
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '-1'
+        Component = ProductionDocGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ' '
+        Component = ProductionDocGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 876
+    Top = 104
   end
 end

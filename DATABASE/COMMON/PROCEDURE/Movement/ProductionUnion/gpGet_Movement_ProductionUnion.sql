@@ -25,6 +25,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProductionUnion());
      vbUserId := inSession;
+
+     IF COALESCE (inMovementId, 0) <> 0 AND NOT EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_ProductionUnion() )
+       THEN
+         RAISE EXCEPTION 'Ошибка. Документа <Пересортица> не существует.';
+     END IF;
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY

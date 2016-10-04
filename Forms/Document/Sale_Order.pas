@@ -202,6 +202,11 @@ type
     edReestrKind: TcxButtonEdit;
     ReestrKindGuides: TdsdGuides;
     isPeresort: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edInvNumberProduction: TcxButtonEdit;
+    ProductionDocGuides: TdsdGuides;
+    actOpenProductionForm: TdsdOpenForm;
+    bbOpenProduction: TdxBarButton;
   private
     { Private declarations }
   public

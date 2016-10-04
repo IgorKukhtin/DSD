@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Order Integer, InvNumber_Order TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
              , Comment TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -54,6 +55,9 @@ BEGIN
              , 0                     			  AS MovementId_Transport
              , '' :: TVarChar                             AS InvNumber_Transport
              , '' :: TVarChar                             AS Comment
+
+             , 0                                          AS MovementId_Production
+             , CAST ('' AS TVarChar)                      AS InvNumber_ProductionFull
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
@@ -95,6 +99,15 @@ BEGIN
 
            , MovementString_Comment.ValueData               AS Comment
 
+           , Movement_Production.Id                         AS MovementId_Production
+           , (CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             )                             :: TVarChar      AS InvNumber_ProductionFull
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -148,7 +161,13 @@ BEGIN
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
-       WHERE Movement.Id =  inMovementId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();
      END IF;
 

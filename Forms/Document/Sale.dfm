@@ -3,10 +3,8 @@
   ClientHeight = 645
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -525
-  ExplicitTop = -223
   ExplicitWidth = 1314
-  ExplicitHeight = 680
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -881,7 +879,7 @@
     Left = 683
     Top = 103
     TabOrder = 13
-    Width = 261
+    Width = 117
   end
   object cxLabel23: TcxLabel [10]
     Left = 1156
@@ -964,6 +962,24 @@
     Properties.ReadOnly = True
     TabOrder = 23
     Width = 144
+  end
+  object cxLabel27: TcxLabel [20]
+    Left = 804
+    Top = 85
+    Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
+  end
+  object edInvNumberProduction: TcxButtonEdit [21]
+    Left = 804
+    Top = 103
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 140
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -2074,6 +2090,41 @@
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actOpenProductionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
+      ImageIndex = 26
+      FormName = 'TProductionPeresortForm'
+      FormNameParam.Value = 'TProductionPeresortForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+          Component = ProductionDocGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2219,6 +2270,14 @@
         item
           Visible = True
           ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenProduction'
         end
         item
           Visible = True
@@ -2431,6 +2490,10 @@
       Action = actOpenReportForm
       Category = 0
     end
+    object bbOpenProduction: TdxBarButton
+      Action = actOpenProductionForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -2575,8 +2638,8 @@
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 192
-    Top = 56
+    Left = 176
+    Top = 32
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -2947,6 +3010,21 @@
         Name = 'ReestrKindName'
         Value = Null
         Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Production'
+        Value = '0'
+        Component = ProductionDocGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_ProductionFull'
+        Value = Null
+        Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -4040,8 +4118,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 836
-    Top = 56
+    Left = 868
+    Top = 24
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
@@ -4272,8 +4350,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 632
-    Top = 56
+    Left = 584
+    Top = 40
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
@@ -4931,7 +5009,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 340
+    Left = 332
     Top = 88
   end
   object HeaderSaver2: THeaderSaver
@@ -5058,7 +5136,35 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 588
-    Top = 88
+    Left = 604
+    Top = 96
+  end
+  object ProductionDocGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberProduction
+    Key = '0'
+    FormNameParam.Value = 'TProductionPeresortJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TProductionPeresortJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '-1'
+        Component = ProductionDocGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = ProductionDocGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 852
+    Top = 104
   end
 end

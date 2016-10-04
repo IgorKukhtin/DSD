@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- ключ Документа
+    IN inMovementId          Integer  , -- ключ Документа
+    IN inOperDate            TDateTime, -- ключ Документа
     IN inChangePercentAmount TFloat , -- Расчет по % скидки вес
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inSession             TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPrinted Boolean
              , isPromo Boolean
              , Comment TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -99,6 +100,9 @@ BEGIN
              , CAST (FALSE AS Boolean)                      AS isPrinted
              , CAST (FALSE AS Boolean)                      AS isPromo 
              , CAST ('' as TVarChar) 		            AS Comment
+
+             , 0                                            AS MovementId_Production
+             , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
@@ -174,6 +178,16 @@ BEGIN
            , COALESCE (MovementBoolean_Print.ValueData, FALSE)            AS isPrinted
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE)            AS isPromo
            , MovementString_Comment.ValueData       AS Comment
+
+           , COALESCE(Movement_Production.Id, -1)                         AS MovementId_Production
+           , COALESCE(CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             , ' ')                     :: TVarChar      AS InvNumber_ProductionFull
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -326,7 +340,13 @@ BEGIN
 
          LEFT JOIN Object AS ObjectCurrencyDocumentInf ON ObjectCurrencyDocumentInf.Id = zc_Enum_Currency_Basis()
 
-       WHERE Movement.Id =  inMovementId
+         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                        ON MovementLinkMovement_Production.MovementChildId = Movement.Id                       
+                                       AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
+         LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId 
+         LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+
+       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Sale();
      END IF;
 
@@ -339,6 +359,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.10.16         * add Movement_Production
  28.06.16         * add ReestrKind
  21.12.15         * add Print
  26.06.15         * add inChangePercentAmount

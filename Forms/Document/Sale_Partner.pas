@@ -181,6 +181,11 @@ type
     ChangePercent: TcxGridDBColumn;
     isPeresort: TcxGridDBColumn;
     Price_Pricelist_vat: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edInvNumberProduction: TcxButtonEdit;
+    ProductionDocGuides: TdsdGuides;
+    actOpenProductionForm: TdsdOpenForm;
+    bbOpenProduction: TdxBarButton;
   private
     { Private declarations }
   public
