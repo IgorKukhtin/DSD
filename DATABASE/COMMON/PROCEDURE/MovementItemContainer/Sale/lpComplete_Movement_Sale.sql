@@ -838,7 +838,7 @@ BEGIN
      END IF;
 
 
-     -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!
+     -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
      PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
                                             , inUnitId     := vbUnitId_From
                                             , inUserId     := inUserId);

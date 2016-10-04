@@ -393,6 +393,13 @@ BEGIN
              ) AS _tmp;
 
 
+     -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
+     PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
+                                            , inUnitId     := vbUnitId_From
+                                            , inUserId     := inUserId);
+
+
+     -- Расчеты сумм
      SELECT -- Расчет Итоговой суммы прайс-листа по Контрагенту
             CASE WHEN vbPriceWithVAT_PriceList OR vbVATPercent_PriceList = 0
                     -- если цены с НДС или %НДС=0, тогда ничего не делаем
