@@ -1271,10 +1271,18 @@ object IncomeJournalForm: TIncomeJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 24
-    Top = 176
+    Left = 16
+    Top = 192
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Income'

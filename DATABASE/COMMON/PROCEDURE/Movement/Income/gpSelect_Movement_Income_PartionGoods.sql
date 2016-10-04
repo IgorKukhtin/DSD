@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_Income_PartionGoods()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PartionGoods (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_PartionGoods (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_PartionGoods(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
+    IN inJuridicalBasisId  Integer   , -- главное юр.лицо
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
@@ -210,11 +213,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Income_PartionGoods (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.10.16         * add inJuridicalBasisId
  25.06.15         * 
 */
 

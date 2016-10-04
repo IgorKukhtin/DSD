@@ -2,17 +2,21 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , -- Дата нач. периода
+    IN inEndDate           TDateTime , -- Дата оконч. периода
+    IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
+    IN inJuridicalBasisId  Integer   , -- главное юр.лицо
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat
+             , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -53,11 +57,11 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+           , Object_Status.ObjectCode                    AS StatusCode
+           , Object_Status.ValueData                     AS StatusName
 
-           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
-           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+           , MovementDate_OperDatePartner.ValueData      AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData   AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
@@ -76,31 +80,31 @@ BEGIN
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
 
-           , Object_From.ValueData             AS FromName
-           , Object_To.ValueData               AS ToName
-           , Object_PaidKind.ValueData         AS PaidKindName
-           , View_Contract_InvNumber.ContractId AS ContractId
-           , View_Contract_InvNumber.ContractCode AS ContractCode
-           , View_Contract_InvNumber.InvNumber AS ContractName
-           , Object_JuridicalFrom.ValueData    AS JuridicalName_From
-           , ObjectHistory_JuridicalDetails_View.OKPO AS OKPO_From
+           , Object_From.ValueData                       AS FromName
+           , Object_To.ValueData                         AS ToName
+           , Object_PaidKind.ValueData                   AS PaidKindName
+           , View_Contract_InvNumber.ContractId          AS ContractId
+           , View_Contract_InvNumber.ContractCode        AS ContractCode
+           , View_Contract_InvNumber.InvNumber           AS ContractName
+           , Object_JuridicalFrom.ValueData              AS JuridicalName_From
+           , ObjectHistory_JuridicalDetails_View.OKPO    AS OKPO_From
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
-           , Object_Member.ValueData  AS PersonalPackerName
+           , Object_Member.ValueData                     AS PersonalPackerName
 
-           , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
-           , Object_CurrencyPartner.ValueData  AS CurrencyPartnerName
-           , MovementString_Comment.ValueData  AS Comment
+           , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
+           , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
+           , MovementString_Comment.ValueData            AS Comment
 
-           , Movement_Transport.Id                     AS MovementId_Transport
-           , Movement_Transport.InvNumber              AS InvNumber_Transport
-           , Movement_Transport.OperDate               AS OperDate_Transport
+           , Movement_Transport.Id                       AS MovementId_Transport
+           , Movement_Transport.InvNumber                AS InvNumber_Transport
+           , Movement_Transport.OperDate                 AS OperDate_Transport
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
-           , Object_Car.ValueData                      AS CarName
-           , Object_CarModel.ValueData                 AS CarModelName
-           , View_PersonalDriver.PersonalName          AS PersonalDriverName
+           , Object_Car.ValueData                        AS CarName
+           , Object_CarModel.ValueData                   AS CarModelName
+           , View_PersonalDriver.PersonalName            AS PersonalDriverName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -112,10 +116,10 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_Comment 
@@ -123,36 +127,36 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCount.MovementId = Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
-                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalCountPartner.MovementId = Movement.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummPVAT.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPacker
-                                    ON MovementFloat_TotalSummPacker.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummPacker.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPacker.DescId = zc_MovementFloat_TotalSummPacker()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummSpending
-                                    ON MovementFloat_TotalSummSpending.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummSpending.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummSpending.DescId = zc_MovementFloat_TotalSummSpending()
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
@@ -234,11 +238,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.10.16         * add inJuridicalBasisId
  25.06.15         * add inIsErased
  02.08.14                                        * add Object_Member
  23.07.14         * add zc_MovementFloat_CurrencyValue
