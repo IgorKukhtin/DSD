@@ -414,9 +414,9 @@ BEGIN
                                                   , inInvNumberPartner      := ''
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
-                                                  , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201, 
-                                                                              (CASE WHEN inBranchCode = 201 THEN vbOperDate_order ELSE inOperDate END
-                                                                             + (CASE WHEN inBranchCode = 201 THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
+                                                  , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201 + 2
+                                                                              (CASE WHEN inBranchCode IN (201, 2) THEN vbOperDate_order ELSE inOperDate END
+                                                                             + (CASE WHEN inBranchCode IN (201, 2) THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
                                                                              + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent

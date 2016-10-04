@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CarId Integer, CarName TVarChar, CarModelId Integer, CarModelName TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , QualityNumber TVarChar, CertificateNumber TVarChar, OperDateCertificate TDateTime, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar
-            
+             , isNew Boolean
               )
 AS
 $BODY$
@@ -67,6 +67,7 @@ BEGIN
            , MS_CertificateSeries.ValueData        AS CertificateSeries
            , MS_CertificateSeriesNumber.ValueData  AS CertificateSeriesNumber
            
+           , FALSE AS isNew
         FROM Movement
             LEFT JOIN MovementDate AS MovementDate_OperDateIn
                                    ON MovementDate_OperDateIn.MovementId =  Movement.Id
@@ -194,12 +195,15 @@ BEGIN
              0                 AS Id
            , '' :: TVarChar    AS InvNumber
            , NULL :: TDateTime AS OperDate
-           , Movement.OperDate AS OperDateIn
-           , Movement.OperDate AS OperDateOut
+             -- параметр для Склад ГП ф.Киев - !!!временно!!!
+           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateIn
+             -- параметр для Склад ГП ф.Киев - !!!временно!!!
+           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDateOut
 
            , Movement.Id        AS MovementId_Sale
            , Movement.InvNumber AS InvNumber_Sale
-           , Movement.OperDate  AS OperDate_Sale
+             -- параметр для Склад ГП ф.Киев - !!!временно!!!
+           , CASE WHEN 8411 = MovementLinkObject_From.ObjectId THEN COALESCE (MovementDate.ValueData, Movement.OperDate) ELSE Movement.OperDate END :: TDateTime AS OperDate_Sale
 
            , Object_Car.Id                    AS CarId
            , Object_Car.ValueData             AS CarName
@@ -217,9 +221,13 @@ BEGIN
            , COALESCE (tmpQualityDoc.CertificateSeries, tmpQualityDoc_old.CertificateSeries) :: TVarChar AS CertificateSeries
            , COALESCE (tmpQualityDoc.CertificateSeriesNumber, tmpQualityDoc_old.CertificateSeriesNumber) :: TVarChar AS CertificateSeriesNumber
 
+           , TRUE AS isNew
        FROM (SELECT inMovementId_Sale AS MovementId) AS tmp
             LEFT JOIN Movement ON Movement.Id = tmp.MovementId
                              -- AND Movement.DescId IN zc_Movement_Sale()
+
+            LEFT JOIN MovementDate ON MovementDate.MovementId = Movement.Id
+                                  AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
