@@ -3,7 +3,6 @@
   ClientHeight = 432
   ClientWidth = 1063
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitLeft = -30
   ExplicitWidth = 1079
   ExplicitHeight = 470
   PixelsPerInch = 96
@@ -11,21 +10,25 @@
   inherited PageControl: TcxPageControl
     Width = 1063
     Height = 406
-    ExplicitWidth = 1180
+    ExplicitWidth = 1063
     ExplicitHeight = 406
     ClientRectBottom = 406
     ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1180
+      ExplicitWidth = 1063
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
         Width = 1063
         Height = 406
-        ExplicitLeft = -48
-        ExplicitTop = -3
-        ExplicitWidth = 1180
+        ExplicitWidth = 1063
         ExplicitHeight = 406
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsMainName
+            end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -560,9 +563,10 @@
         item
           StoredProc = spErasedUnErasedGoods
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -578,6 +582,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end

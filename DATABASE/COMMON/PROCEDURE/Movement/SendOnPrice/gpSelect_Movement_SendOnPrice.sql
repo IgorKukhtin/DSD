@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
              , Comment TVarChar
+             , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
               )
 AS
 $BODY$
@@ -102,6 +103,16 @@ BEGIN
            , View_PersonalDriver.PersonalName          AS PersonalDriverName
 
            , MovementString_Comment.ValueData          AS Comment
+
+           , Movement_Production.Id               AS MovementId_Production
+           , (CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
+                       THEN '***'
+                   WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
+                       THEN '*'
+                   ELSE ''
+              END
+           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+             ) :: TVarChar AS InvNumber_ProductionFull
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -268,6 +279,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
+            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
 
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
@@ -281,6 +297,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.10.16         * add Movement_Production
  05.05.14                                                        * надо раскоментить права после отладки
  18.04.14                                                        * all new
  05.09.13                                        * add TotalCountPartner

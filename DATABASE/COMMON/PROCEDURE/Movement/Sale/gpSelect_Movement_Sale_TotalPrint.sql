@@ -110,6 +110,8 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                                   ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice();            
+     --!!!!!!!!!!!!!!!!!!!!!
+     ANALYZE tmpListDocSale;
 
      -- параметры из Взвешивания
      vbStoreKeeperName:= '' :: TVarChar;
@@ -705,7 +707,7 @@ BEGIN
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
        )
 
-     , tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
+     /*, tmpMI_Order AS (SELECT MovementItem.ObjectId                         AS GoodsId
                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS Amount
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                             --, COALESCE (MIFloat_Price.ValueData, 0)         AS Price
@@ -737,6 +739,8 @@ BEGIN
                               , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
 
                          )
+*/
+
  , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND (tmpListDocSale.IsChangePrice = TRUE OR COALESCE (MIFloat_ChangePercent.ValueData, 0) <> 0) -- !!!для НАЛ не учитываем, но НЕ всегда!!!
@@ -810,7 +814,7 @@ BEGIN
              END::TVarChar                   AS DELIVEREDUNIT
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
-           , tmpMI_Order.Amount              AS AmountOrder
+           , 0 :: TFloat /*tmpMI_Order.Amount */   AS AmountOrder
            , tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
@@ -960,9 +964,9 @@ BEGIN
 
             ) AS tmpMI
             
-            LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
+        /*    LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
                                  AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
-
+        */
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id

@@ -1,25 +1,25 @@
 inherited PriceListJournalForm: TPriceListJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 535
-  ClientWidth = 593
+  ClientWidth = 615
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 609
-  ExplicitHeight = 570
+  ExplicitWidth = 631
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 593
+    Width = 615
     Height = 478
     TabOrder = 3
     ExplicitWidth = 593
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 593
+    ClientRectRight = 615
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 593
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 593
+        Width = 615
         Height = 478
         ExplicitWidth = 593
         ExplicitHeight = 478
@@ -169,7 +169,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 593
+    Width = 615
     ExplicitWidth = 593
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -425,6 +425,14 @@ inherited PriceListJournalForm: TPriceListJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -619,7 +627,7 @@ inherited PriceListJournalForm: TPriceListJournalForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 628
+    Left = 556
     Top = 294
   end
 end

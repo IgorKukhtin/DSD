@@ -2969,7 +2969,7 @@ begin
   XMLFileStream.LoadFromFile(XMLFilename);
   spInsertProcedure := TdsdStoredProc.Create(Application);
   spInsertProcedure.OutputType := otResult;
-  spInsertProcedure.StoredProcName := 'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
+  spInsertProcedure.StoredProcName := FInsertProcedureName; ///'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
   spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
   spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
   try
