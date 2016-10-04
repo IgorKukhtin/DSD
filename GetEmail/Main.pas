@@ -592,12 +592,12 @@ begin
                    else ShowMessage('not read :' + IntToStr(i));
 
                    //а теперь только для ММО - обработка
-                   ///if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
-                   ///then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
+                   if (JurPos >= 0) and (fMMO = TRUE) and (vbArrayImportSettings[JurPos].EmailKindId = vbArrayImportSettings[JurPos].zc_Enum_EmailKind_IncomeMMO)
+                   then fBeginMMO (vbArrayMail[ii].UserName, vbArrayImportSettings[JurPos].Id,msgDate_save);
 
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
-                   //*****if flag then IdPOP3.DeleteMsgs(i);    //IMAP
+                   if flag then IdPOP3.DeleteMsgs(i);    //IMAP
                    //
 
                    //все, идем дальше

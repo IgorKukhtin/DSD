@@ -1241,7 +1241,7 @@ begin
     //***19.08.16
     AddFloatField(FLocalDataBaseBody,'AMOUNTORD'); //Кол-во заявка
     //***10.08.16
-    AddStrField(FLocalDataBaseBody,'LIST_UID',50); //UID строки
+    AddStrField(FLocalDataBaseBody,'LIST_UID',50); //UID строки продажи
     try
       FLocalDataBaseBody.CreateTable;
     except ON E: Exception do
@@ -2274,7 +2274,7 @@ begin
                                            //***19.08.16
                                            ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
                                            //***10.08.16
-                                           ADS.FieldByName('List_UID').AsString // Сумма Скидки
+                                           ADS.FieldByName('List_UID').AsString // UID строки продажи
                                            ]);
         ADS.Next;
         End;
