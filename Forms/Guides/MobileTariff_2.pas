@@ -64,7 +64,7 @@ type
     N4: TMenuItem;
     N5: TMenuItem;
     colCode: TcxGridDBColumn;
-    colContacttName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
   private
     { Private declarations }

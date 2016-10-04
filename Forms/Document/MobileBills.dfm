@@ -1,28 +1,30 @@
 inherited MobileBillsForm: TMobileBillsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100'>'
-  ClientHeight = 617
-  ClientWidth = 861
-  ExplicitWidth = 877
-  ExplicitHeight = 655
+  ClientHeight = 501
+  ClientWidth = 751
+  ExplicitWidth = 767
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 861
-    Height = 541
+    Width = 751
+    Height = 425
     ExplicitTop = 76
     ExplicitWidth = 861
     ExplicitHeight = 541
-    ClientRectBottom = 541
-    ClientRectRight = 861
+    ClientRectBottom = 425
+    ClientRectRight = 751
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 861
       ExplicitHeight = 517
       inherited cxGrid: TcxGrid
-        Width = 861
-        Height = 517
-        ExplicitWidth = 861
-        ExplicitHeight = 517
+        Width = 751
+        Height = 401
+        ExplicitLeft = -360
+        ExplicitTop = -72
+        ExplicitWidth = 751
+        ExplicitHeight = 528
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -328,7 +330,7 @@ inherited MobileBillsForm: TMobileBillsForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 861
+    Width = 751
     Height = 50
     TabOrder = 3
     ExplicitWidth = 861
@@ -360,18 +362,26 @@ inherited MobileBillsForm: TMobileBillsForm
       Width = 218
     end
   end
-  object edIsAuto: TcxCheckBox [2]
-    Left = 437
+  object cxLabel9: TcxLabel [2]
+    Left = 453
+    Top = 5
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object edContract: TcxButtonEdit [3]
+    Left = 453
     Top = 23
-    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     Properties.ReadOnly = True
-    TabOrder = 6
-    Visible = False
-    Width = 187
+    TabOrder = 7
+    Width = 212
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 219
-    Top = 448
+    Left = 283
+    Top = 360
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -618,12 +628,12 @@ inherited MobileBillsForm: TMobileBillsForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 24
+    Top = 168
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 80
+    Top = 168
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_MobileBills'
@@ -821,8 +831,8 @@ inherited MobileBillsForm: TMobileBillsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 496
+    Left = 336
+    Top = 152
   end
   inherited StatusGuides: TdsdGuides
     Left = 48
@@ -881,6 +891,21 @@ inherited MobileBillsForm: TMobileBillsForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -911,6 +936,14 @@ inherited MobileBillsForm: TMobileBillsForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -926,6 +959,9 @@ inherited MobileBillsForm: TMobileBillsForm
       end
       item
         Control = edOperDate
+      end
+      item
+        Control = edContract
       end>
     Left = 232
     Top = 193
@@ -937,13 +973,13 @@ inherited MobileBillsForm: TMobileBillsForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_MobileBills_SetErased'
-    Left = 606
-    Top = 464
+    Left = 518
+    Top = 392
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_MobileBills_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 598
+    Top = 392
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_MobileBills'
@@ -1305,5 +1341,35 @@ inherited MobileBillsForm: TMobileBillsForm
     PackSize = 1
     Left = 367
     Top = 376
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+    Top = 24
   end
 end

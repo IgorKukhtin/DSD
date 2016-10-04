@@ -131,6 +131,22 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 152
           end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 235
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 122
+          end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
@@ -141,16 +157,21 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 177
           end
-          object colisAuto: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086'.'
-            DataBinding.FieldName = 'isAuto'
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1089#1086#1079#1076#1072#1085
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 77
+            Width = 50
+          end
+          object colJuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1070#1088'. '#1083#1080#1094'a'
+            DataBinding.FieldName = 'JuridicalCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
         end
       end
