@@ -24,7 +24,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
+  dsdGuides, cxButtonEdit;
 
 type
   TWeighingPartnerJournalForm = class(TParentForm)
@@ -66,7 +67,6 @@ type
     spMovementSetErased: TdsdStoredProc;
     colInvNumberOrder: TcxGridDBColumn;
     colMovementDescName: TcxGridDBColumn;
-    colInvNumberTransport: TcxGridDBColumn;
     colEndWeighing: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
@@ -108,6 +108,12 @@ type
     colOperDate_Tax: TcxGridDBColumn;
     colMovementDescNumber: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    FormParams: TdsdFormParams;
   private
   public
   end;

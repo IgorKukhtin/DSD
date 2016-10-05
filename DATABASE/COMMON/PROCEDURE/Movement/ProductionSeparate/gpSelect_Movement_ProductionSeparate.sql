@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_ProductionSeparate()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate(
-    IN inStartDate   TDateTime,
-    IN inEndDate     TDateTime,
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inStartDate         TDateTime,
+    IN inEndDate           TDateTime,
+    IN inIsErased          Boolean ,
+    IN inJuridicalBasisId  Integer ,
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
                , TotalCount TFloat, TotalCountChild TFloat, PartionGoods TVarChar
@@ -86,6 +88,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inJuridicalBasisId
  03.06.14                                                        *
  28.05.14                                                        *
  16.07.13         *

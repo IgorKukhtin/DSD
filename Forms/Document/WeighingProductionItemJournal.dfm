@@ -12,7 +12,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
@@ -24,6 +24,8 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitLeft = -8
+    ExplicitTop = 20
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -583,6 +585,23 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     TabOrder = 9
     Width = 200
   end
+  object edJuridicalBasis: TcxButtonEdit
+    Left = 1052
+    Top = 31
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 185
+  end
+  object cxLabel27: TcxLabel
+    Left = 951
+    Top = 32
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -1071,6 +1090,22 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingProduction_Item'
@@ -1108,6 +1143,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Name = 'inGoodsId'
         Value = Null
         Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1317,5 +1360,62 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       end>
     Left = 816
     Top = 23
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1103
+    Top = 8
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 992
+    Top = 64
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 400
+    Top = 200
   end
 end

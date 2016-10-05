@@ -24,7 +24,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
+  cxButtonEdit, dsdGuides;
 
 type
   TWeighingProductionJournalForm = class(TParentForm)
@@ -89,6 +90,12 @@ type
     colTotalCount: TcxGridDBColumn;
     colIsProductionIn: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    FormParams: TdsdFormParams;
   private
   public
   end;

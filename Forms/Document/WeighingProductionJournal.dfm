@@ -12,18 +12,19 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1240
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitTop = -1
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -269,6 +270,23 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object edJuridicalBasis: TcxButtonEdit
+    Left = 691
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 185
+  end
+  object cxLabel27: TcxLabel
+    Left = 586
+    Top = 6
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -757,6 +775,22 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_WeighingProduction'
@@ -786,6 +820,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Name = 'inIsErased'
         Value = True
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -924,5 +966,61 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     PackSize = 1
     Left = 256
     Top = 288
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 768
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 400
+    Top = 200
   end
 end

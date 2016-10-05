@@ -141,6 +141,11 @@ type
     spSelectPrintCeh: TdsdStoredProc;
     actPrintCeh: TdsdPrintAction;
     bbPrintCeh: TdxBarButton;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
