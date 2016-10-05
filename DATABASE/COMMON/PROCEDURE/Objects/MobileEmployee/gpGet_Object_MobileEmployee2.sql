@@ -31,9 +31,9 @@ BEGIN
         
            , CAST ('' as TVarChar)  AS NAME
            
-           , CAST (0 as TFloat)  AS MobileLimit
-           , CAST (0 as TFloat)  AS DutyLimit
-           , CAST (0 as TFloat)  AS Navigator
+           , CAST (0 as TFloat)     AS MobileLimit
+           , CAST (0 as TFloat)     AS DutyLimit
+           , CAST (0 as TFloat)     AS Navigator
           
            , CAST ('' as TVarChar)  AS Comment
     
@@ -103,6 +103,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.16         * structure
  23.09.16         *
 */
 

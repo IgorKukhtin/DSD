@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_Object_OrderShedule(integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_OrderShedule(integer, Integer, TVarChar);
 
+
 CREATE OR REPLACE FUNCTION gpGet_Object_OrderShedule(
     IN inId          Integer,       -- Подразделение 
     IN inMaskId      Integer   ,    -- id для копирования
@@ -126,6 +127,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.16         * structure
  20.09.16         *
 
 */

@@ -12,10 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Navigator TFloat
              , Comment TVarChar
              , PersonalId Integer, PersonalName TVarChar
-             , PositionId Integer, PositionCode Integer, PositionName TVarChar
-             , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
-
              , isErased boolean
              ) AS
 $BODY$
@@ -42,11 +41,10 @@ BEGIN
            , Object_Personal.Id                AS PersonalId
            , Object_Personal.ValueData         AS PersonalName 
            
-           , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
+
            , Object_Position.ObjectCode        AS PositionCode
            , Object_Position.ValueData         AS PositionName
 
-           , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
            , Object_Unit.ObjectCode            AS UnitCode
            , Object_Unit.ValueData             AS UnitName
 
@@ -103,6 +101,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.10.16         * structure
  23.09.16         *
 */
 

@@ -39,7 +39,7 @@ BEGIN
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_OrderShedule());
     
     -- проверка уникальности  по договор и подразделение
-    IF COALESCE(ioId,0) = 0 THEN
+    IF COALESCE (ioId,0) = 0 THEN
        IF EXISTS (SELECT ObjectLink_OrderShedule_Contract.ObjectId
                   FROM ObjectLink AS ObjectLink_OrderShedule_Contract
                      INNER JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
@@ -68,7 +68,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderShedule_Unit(), ioId, inUnitId);
 
 
- outInf_Text1:=  (CASE WHEN CAST(inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
+ outInf_Text1:= (CASE WHEN CAST(inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
                  CASE WHEN CAST(inValue2 AS TFloat) in (1,3) THEN 'Вторник,'     ELSE '' END ||
                  CASE WHEN CAST(inValue3 AS TFloat) in (1,3) THEN 'Среда,'       ELSE '' END ||
                  CASE WHEN CAST(inValue4 AS TFloat) in (1,3) THEN 'Четверг,'     ELSE '' END ||
@@ -93,6 +93,7 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
@@ -102,6 +103,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.16         * structure
  20.09.16         * 
 
 */

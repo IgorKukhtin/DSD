@@ -725,7 +725,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 200
   end
   object cxLabel27: TcxLabel

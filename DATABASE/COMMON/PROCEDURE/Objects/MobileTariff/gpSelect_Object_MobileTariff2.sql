@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_MobileTariff2 (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_MobileTariff2(
-    IN inShowAll     Boolean, 
+    IN inShowAll     Boolean ,      -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
@@ -93,6 +93,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.16         * structure
  23.09.16         *
 */
 

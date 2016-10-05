@@ -24,8 +24,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -8
-    ExplicitTop = 20
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -582,7 +580,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 8
     Width = 200
   end
   object edJuridicalBasis: TcxButtonEdit

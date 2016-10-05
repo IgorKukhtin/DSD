@@ -42,7 +42,7 @@ BEGIN
         inUnitId := 0;
     END IF;
     -- –ÂÁÛÎ¸Ú‡Ú
-    IF COALESCE(inUnitId,0) = 0
+    IF COALESCE (inUnitId,0) = 0
     THEN
         RETURN QUERY
             SELECT 
@@ -83,14 +83,14 @@ BEGIN
                           , Object_Goods.ValueData                          AS GoodsName
                           , Object_GoodsGroup.ValueData                     AS GoodsGroupName
                           , Object_NDSKind.ValueData                        AS NDSKindName
-                          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
-                          , ObjectFloat_Goods_PercentMarkup.ValueData          AS PercentMarkup
+                          , COALESCE (ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
+                          , ObjectFloat_Goods_PercentMarkup.ValueData           AS PercentMarkup
                  
-                          , Object_Goods.isErased                           AS isErased 
+                          , Object_Goods.isErased                               AS isErased 
                       
-                          , COALESCE(ObjectBoolean_Goods_Close.ValueData, false) AS isClose
-                          , COALESCE(ObjectBoolean_First.ValueData, False)       AS isFirst
-                          , COALESCE(ObjectBoolean_Second.ValueData, False)      AS isSecond
+                          , COALESCE (ObjectBoolean_Goods_Close.ValueData, false) AS isClose
+                          , COALESCE (ObjectBoolean_First.ValueData, False)       AS isFirst
+                          , COALESCE (ObjectBoolean_Second.ValueData, False)      AS isSecond
 
                      FROM ObjectLink AS ObjectLink_Goods_Object
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
@@ -126,28 +126,28 @@ BEGIN
                               AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
 
                      WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId   --????
+                       AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId  
                        AND (ObjectLink_Goods_Object.ObjectId = inGoodsId OR inGoodsId = 0)
                        AND (inisShowDel = True OR Object_Goods.isErased = False)
                     )
 
-      , tmpPrice AS (SELECT Object_Price.Id                           AS Id
-                          , Price_Goods.ChildObjectId                 AS GoodsId
-                          , ROUND(Price_Value.ValueData,2)   ::TFloat AS Price
-                          , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
-                          , price_datechange.valuedata                AS DateChange
-                          , MCS_datechange.valuedata                  AS MCSDateChange
-                          , COALESCE(MCS_isClose.ValueData,False)     AS MCSIsClose
-                          , MCSIsClose_DateChange.valuedata           AS MCSIsCloseDateChange
-                          , COALESCE(MCS_NotRecalc.ValueData,False)   AS MCSNotRecalc
-                          , MCSNotRecalc_DateChange.valuedata         AS MCSNotRecalcDateChange
-                          , COALESCE(Price_Fix.ValueData,False)       AS Fix
-                          , Fix_DateChange.valuedata                  AS FixDateChange
-                          , COALESCE(Price_Top.ValueData,False)       AS isTop
-                          , Price_TOPDateChange.ValueData             AS TopDateChange
+      , tmpPrice AS (SELECT Object_Price.Id                            AS Id
+                          , Price_Goods.ChildObjectId                  AS GoodsId
+                          , ROUND(Price_Value.ValueData,2)   ::TFloat  AS Price
+                          , COALESCE (MCS_Value.ValueData,0) ::TFloat  AS MCSValue
+                          , price_datechange.valuedata                 AS DateChange
+                          , MCS_datechange.valuedata                   AS MCSDateChange
+                          , COALESCE (MCS_isClose.ValueData,False)     AS MCSIsClose
+                          , MCSIsClose_DateChange.valuedata            AS MCSIsCloseDateChange
+                          , COALESCE (MCS_NotRecalc.ValueData,False)   AS MCSNotRecalc
+                          , MCSNotRecalc_DateChange.valuedata          AS MCSNotRecalcDateChange
+                          , COALESCE (Price_Fix.ValueData,False)       AS Fix
+                          , Fix_DateChange.valuedata                   AS FixDateChange
+                          , COALESCE (Price_Top.ValueData,False)       AS isTop
+                          , Price_TOPDateChange.ValueData              AS TopDateChange
 
-                          , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
-                          , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+                          , COALESCE (Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                          , Price_PercentMarkupDateChange.ValueData              AS PercentMarkupDateChange
                      FROM Object AS Object_Price
                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                     ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -208,21 +208,21 @@ BEGIN
                  , COALESCE (tmpPrice.MCSValue,0)::TFloat AS MCSValue
                               
                  , tmpGoods.GoodsId
-                 , tmpGoods.GoodsCode                     AS GoodsCode
-                 , tmpGoods.GoodsName                     AS GoodsName
-                 , tmpGoods.GoodsGroupName                AS GoodsGroupName
-                 , tmpGoods.NDSKindName                   AS NDSKindName
-                 , tmpGoods.isTop                         AS Goods_isTop
-                 , tmpGoods.PercentMarkup                 AS Goods_PercentMarkup
-                 , tmpPrice.DateChange                    AS DateChange
-                 , tmpPrice.MCSDateChange                 AS MCSDateChange
-                 , COALESCE(tmpPrice.MCSIsClose,False)    AS MCSIsClose
-                 , tmpPrice.MCSIsCloseDateChange          AS MCSIsCloseDateChange
-                 , COALESCE(tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
-                 , tmpPrice.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
-                 , COALESCE(tmpPrice.Fix,False)           AS Fix
-                 , tmpPrice.FixDateChange                 AS FixDateChange
-                 , tmpGoods.isErased                      AS isErased 
+                 , tmpGoods.GoodsCode                      AS GoodsCode
+                 , tmpGoods.GoodsName                      AS GoodsName
+                 , tmpGoods.GoodsGroupName                 AS GoodsGroupName
+                 , tmpGoods.NDSKindName                    AS NDSKindName
+                 , tmpGoods.isTop                          AS Goods_isTop
+                 , tmpGoods.PercentMarkup                  AS Goods_PercentMarkup
+                 , tmpPrice.DateChange                     AS DateChange
+                 , tmpPrice.MCSDateChange                  AS MCSDateChange
+                 , COALESCE (tmpPrice.MCSIsClose,False)    AS MCSIsClose
+                 , tmpPrice.MCSIsCloseDateChange           AS MCSIsCloseDateChange
+                 , COALESCE (tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
+                 , tmpPrice.MCSNotRecalcDateChange         AS MCSNotRecalcDateChange
+                 , COALESCE (tmpPrice.Fix,False)           AS Fix
+                 , tmpPrice.FixDateChange                  AS FixDateChange
+                 , tmpGoods.isErased                       AS isErased 
                  , tmpGoods.isClose
                  , tmpGoods.isFirst
                  , tmpGoods.isSecond
@@ -242,14 +242,14 @@ BEGIN
                           , Object_Goods.ValueData                          AS GoodsName
                           , Object_GoodsGroup.ValueData                     AS GoodsGroupName
                           , Object_NDSKind.ValueData                        AS NDSKindName
-                          , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
-                          , ObjectFloat_Goods_PercentMarkup.ValueData          AS PercentMarkup
+                          , COALESCE (ObjectBoolean_Goods_TOP.ValueData, false) AS isTop
+                          , ObjectFloat_Goods_PercentMarkup.ValueData           AS PercentMarkup
                  
-                          , Object_Goods.isErased                              AS isErased 
+                          , Object_Goods.isErased                               AS isErased 
                       
-                          , COALESCE(ObjectBoolean_Goods_Close.ValueData, false) AS isClose
-                          , COALESCE(ObjectBoolean_First.ValueData, False)       AS isFirst
-                          , COALESCE(ObjectBoolean_Second.ValueData, False)      AS isSecond
+                          , COALESCE (ObjectBoolean_Goods_Close.ValueData, false) AS isClose
+                          , COALESCE (ObjectBoolean_First.ValueData, False)       AS isFirst
+                          , COALESCE (ObjectBoolean_Second.ValueData, False)      AS isSecond
 
                      FROM ObjectLink AS ObjectLink_Goods_Object
                         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
@@ -296,17 +296,17 @@ BEGIN
                           , COALESCE (MCS_Value.ValueData,0) ::TFloat AS MCSValue
                           , price_datechange.valuedata                AS DateChange
                           , MCS_datechange.valuedata                  AS MCSDateChange
-                          , COALESCE(MCS_isClose.ValueData,False)     AS MCSIsClose
+                          , COALESCE (MCS_isClose.ValueData,False)    AS MCSIsClose
                           , MCSIsClose_DateChange.valuedata           AS MCSIsCloseDateChange
-                          , COALESCE(MCS_NotRecalc.ValueData,False)   AS MCSNotRecalc
+                          , COALESCE (MCS_NotRecalc.ValueData,False)  AS MCSNotRecalc
                           , MCSNotRecalc_DateChange.valuedata         AS MCSNotRecalcDateChange
-                          , COALESCE(Price_Fix.ValueData,False)       AS Fix
+                          , COALESCE (Price_Fix.ValueData,False)      AS Fix
                           , Fix_DateChange.valuedata                  AS FixDateChange
-                          , COALESCE(Price_Top.ValueData,False)       AS isTop
+                          , COALESCE (Price_Top.ValueData,False)      AS isTop
                           , Price_TOPDateChange.ValueData             AS TopDateChange
 
-                          , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
-                          , Price_PercentMarkupDateChange.ValueData             AS PercentMarkupDateChange
+                          , COALESCE (Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                          , Price_PercentMarkupDateChange.ValueData              AS PercentMarkupDateChange
                      FROM Object AS Object_Price
                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
                                     ON ObjectLink_Price_Unit.ObjectId = Object_Price.Id
@@ -361,14 +361,13 @@ BEGIN
                                    AND Price_PercentMarkupDateChange.DescId = zc_ObjectDate_Price_PercentMarkupDateChange()   
                      WHERE Object_Price.DescId = zc_Object_Price()
                     )
-
       
-            SELECT tmpPrice.Id                           AS Id
-                 , COALESCE (tmpPrice.Price,0)            :: TFloat AS Price
-                 , COALESCE (tmpPrice.MCSValue,0)         :: TFloat AS MCSValue
+            SELECT tmpPrice.Id
+                 , COALESCE (tmpPrice.Price,0)    :: TFloat AS Price
+                 , COALESCE (tmpPrice.MCSValue,0) :: TFloat AS MCSValue
                               
                  , tmpGoods.GoodsId
-                 , tmpGoods.GoodsCode                  AS GoodsCode
+                 , tmpGoods.GoodsCode                     AS GoodsCode
                  , tmpGoods.GoodsName                     AS GoodsName
                  , tmpGoods.GoodsGroupName                AS GoodsGroupName
                  , tmpGoods.NDSKindName                   AS NDSKindName
@@ -376,11 +375,11 @@ BEGIN
                  , tmpGoods.PercentMarkup                 AS Goods_PercentMarkup
                  , tmpPrice.DateChange                    AS DateChange
                  , tmpPrice.MCSDateChange                 AS MCSDateChange
-                 , COALESCE(tmpPrice.MCSIsClose,False)    AS MCSIsClose
+                 , COALESCE (tmpPrice.MCSIsClose,False)    AS MCSIsClose
                  , tmpPrice.MCSIsCloseDateChange          AS MCSIsCloseDateChange
-                 , COALESCE(tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
+                 , COALESCE (tmpPrice.MCSNotRecalc,False)  AS MCSNotRecalc
                  , tmpPrice.MCSNotRecalcDateChange        AS MCSNotRecalcDateChange
-                 , COALESCE(tmpPrice.Fix,False)           AS Fix
+                 , COALESCE (tmpPrice.Fix,False)           AS Fix
                  , tmpPrice.FixDateChange                 AS FixDateChange
                  , tmpGoods.isErased                      AS isErased 
                  , tmpGoods.isClose
@@ -393,17 +392,19 @@ BEGIN
 
             FROM tmpPrice
                 JOIN tmpGoods ON tmpGoods.goodsid = tmpPrice.goodsid
-       
             ORDER BY GoodsGroupName, GoodsName;
+
     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Object_Price_Lite(Integer, Boolean,Boolean,TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ¬ÓÓ·Í‡ÎÓ ¿.¿. 
+ 05.10.16         * structure
  12.09.16         *
 */
 

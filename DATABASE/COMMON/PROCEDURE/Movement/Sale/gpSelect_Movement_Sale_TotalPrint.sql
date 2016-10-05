@@ -1,7 +1,7 @@
 -- Function: gpSelect_Movement_Sale_TotalPrint()
 
 
---DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_TotalPrint (TDateTime, TDateTime, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_TotalPrint(
@@ -127,7 +127,7 @@ BEGIN
                           LIMIT 1
                          );
 
-      -- Параметр для Доходы + Продукция + Тушенка
+    -- Параметр для Доходы + Продукция + Тушенка
     vbIsInfoMoney_30201:= EXISTS (SELECT 1
                                   FROM tmpListDocSale
                                        INNER JOIN MovementItem ON MovementItem.MovementId = tmpListDocSale.MovementId
@@ -142,7 +142,7 @@ BEGIN
 
      --
     OPEN Cursor1 FOR
---     WITH tmpObject_GoodsPropertyValue AS
+
        WITH tmpBankAccount AS (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId             AS BankAccountId
                                     , COALESCE (ObjectLink_BankAccountContract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
                                     , COALESCE (ObjectLink_BankAccountContract_Unit.ChildObjectId, 0)      AS UnitId
@@ -156,15 +156,14 @@ BEGIN
                                WHERE ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
                                  AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
                               )
-       SELECT Movement.Id                                AS Id
+       SELECT Movement.Id                                     
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
---         , Movement.InvNumber                         AS InvNumber
            
            , (lpad(date_part('day' ,inEndDate)::tvarchar, 2, '0')
             || lpad(date_part('month' ,inEndDate)::tvarchar, 2, '0')  
-            || date_part('year' ,inEndDate))   ::tvarchar            AS InvNumber
+            || date_part('year' ,inEndDate))   ::tvarchar              AS InvNumber
 
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberPartner.ValueData                 AS InvNumberPartner
 
            , CASE WHEN MovementString_InvNumberPartner_order.ValueData <> ''
                        THEN CASE WHEN zfConvert_StringToNumber (MovementString_InvNumberPartner_order.ValueData) <> 0
@@ -462,19 +461,18 @@ BEGIN
                                    ON ObjectString_PostalCode.ObjectId = View_Partner_Address.StreetId
                                   AND ObjectString_PostalCode.DescId = zc_ObjectString_Street_PostalCode()
 
-            --LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpMovement.PaidKindId -- MovementLinkObject_PaidKind.ObjectId
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 -- Contract
-            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = inContractId -- MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = inContractId
             LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = View_Contract.ContractId -- MovementLinkObject_Contract.ObjectId
+                                 ON ObjectDate_Signing.ObjectId = View_Contract.ContractId 
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND View_Contract.InvNumber <> '-'
             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
-                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = View_Contract.ContractId -- MovementLinkObject_Contract.ObjectId
+                                 ON ObjectLink_Contract_JuridicalDocument.ObjectId = View_Contract.ContractId 
                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                 AND Object_PaidKind.Id = zc_Enum_PaidKind_SecondForm()
             LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
@@ -727,7 +725,6 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              --AND MIFloat_Price.ValueData <> 0
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -744,7 +741,6 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                               ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                              AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-            -- where 1=0
              GROUP BY MovementItem.ObjectId
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
@@ -756,7 +752,6 @@ BEGIN
                     , tmpListDocSale.GoodsPropertyId
                     , tmplistdocsale.ischangeprice
                     , tmpListDocSale.vatpercent
-            
             )
 
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
@@ -813,7 +808,6 @@ BEGIN
            , tmpMI.AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
-
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -954,9 +948,9 @@ BEGIN
 
        WHERE tmpMI.AmountPartner <> 0 
        ORDER BY CASE WHEN tmpMI.GoodsPropertyId IN (83954 -- Метро
-                                              , 83963 -- Ашан
-                                               )
-                          THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
+                                                  , 83963 -- Ашан
+                                                    )
+                     THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
                      ELSE '0'
                 END :: Integer
               , Object_Goods.ValueData, Object_GoodsKind.ValueData
@@ -1029,7 +1023,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 
+ 05.10.16         * structure
  28.09.16         *
 */
 

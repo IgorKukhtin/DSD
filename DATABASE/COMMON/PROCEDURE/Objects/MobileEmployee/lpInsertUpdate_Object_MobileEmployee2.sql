@@ -6,13 +6,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MobileEmployee2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
     IN inCode                     Integer   ,    -- Код объекта <>
     IN inName                     TVarChar  ,    -- Название объекта <>
-    IN inLimit                    TFloat  ,    -- 
-    IN inDutyLimit                TFloat  ,    --
-    IN inNavigator                TFloat  ,    -- 
-    IN inComment                  TVarChar  ,    --
-    IN inPersonalId               Integer   ,    --
-    IN inMobileTariffId           Integer   ,    -- 
-    IN inUserId                   Integer       -- сессия пользователя
+    IN inLimit                    TFloat    ,    -- Лимит
+    IN inDutyLimit                TFloat    ,    -- Служебный лимит
+    IN inNavigator                TFloat    ,    -- Услуга Навигатор
+    IN inComment                  TVarChar  ,    -- Комментарий
+    IN inPersonalId               Integer   ,    -- Сотрудники
+    IN inMobileTariffId           Integer   ,    -- Тарифы мобильных операторов
+    IN inUserId                   Integer        -- сессия пользователя
 )
  RETURNS Integer AS
 $BODY$
@@ -52,6 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * structure
  01.10.16         *
 */
 

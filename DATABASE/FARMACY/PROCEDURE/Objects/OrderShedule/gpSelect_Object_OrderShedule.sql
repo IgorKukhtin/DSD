@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_OrderShedule(
 )
 RETURNS TABLE (Id Integer, Code Integer,
                Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, 
-               Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TVarChar,
+               Value5 TFloat, Value6 TFloat, Value7 TFloat,
                OurJuridicalName TVarChar,
                UnitId Integer, UnitName TVarChar,
                JuridicalName TVarChar,
@@ -20,7 +20,6 @@ RETURNS TABLE (Id Integer, Code Integer,
                Inf_Text1 TVarChar, Inf_Text2 TVarChar,
                Color_Calc1 Integer, Color_Calc2 Integer, Color_Calc3 Integer, Color_Calc4 Integer,
                Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer
-
                ) AS
 $BODY$
 BEGIN
@@ -40,9 +39,7 @@ BEGIN
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat AS Value5
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat AS Value6
                       , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat AS Value7
-
-                      , Object_OrderShedule.ValueData ::TVarChar   AS Value8
-         
+        
                       , Object_OrderShedule.isErased     AS isErased
                  FROM Object AS Object_OrderShedule
                  WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
@@ -61,8 +58,6 @@ BEGIN
            , Object_OrderShedule.Value6 
            , Object_OrderShedule.Value7 
 
-           , Object_OrderShedule.Value8 ::TVarChar   AS Value8
-         
            , Object_Unit_Juridical.ValueData  AS OurJuridicalName
            , Object_Unit.Id                   AS UnitId
            , Object_Unit.ValueData            AS UnitName 
@@ -122,7 +117,6 @@ BEGIN
   
 END;
 $BODY$
-
 LANGUAGE plpgsql VOLATILE;
 
 
@@ -130,6 +124,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.10.16         * structure
  20.09.14         *
 
 */

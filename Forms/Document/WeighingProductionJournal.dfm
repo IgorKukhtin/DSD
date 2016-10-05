@@ -24,7 +24,6 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitTop = -1
     object deStart: TcxDateEdit
       Left = 101
       Top = 5

@@ -34,13 +34,13 @@ BEGIN
         
            , CAST ('' as TVarChar)  AS NAME
            
-           , CAST (0 as TFloat)  AS Monthly
-           , CAST (0 as TFloat)  AS PocketMinutes
-           , CAST (0 as TFloat)  AS PocketSMS
-           , CAST (0 as TFloat)  AS PocketInet
-           , CAST (0 as TFloat)  AS CostSMS
-           , CAST (0 as TFloat)  AS CostMinutes
-           , CAST (0 as TFloat)  AS CostInet
+           , CAST (0 as TFloat)     AS Monthly
+           , CAST (0 as TFloat)     AS PocketMinutes
+           , CAST (0 as TFloat)     AS PocketSMS
+           , CAST (0 as TFloat)     AS PocketInet
+           , CAST (0 as TFloat)     AS CostSMS
+           , CAST (0 as TFloat)     AS CostMinutes
+           , CAST (0 as TFloat)     AS CostInet
 
            , CAST ('' as TVarChar)  AS Comment
     
@@ -99,7 +99,6 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_MobileTariff.Id 
                                   AND ObjectString_Comment.DescId = zc_ObjectString_MobileTariff_Comment()
-                                                             
 
             LEFT JOIN ObjectLink AS ObjectLink_MobileTariff_Contract
                                  ON ObjectLink_MobileTariff_Contract.ObjectId = Object_MobileTariff.Id 
@@ -117,6 +116,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.10.16         * structure
  23.09.16         *
 */
 
