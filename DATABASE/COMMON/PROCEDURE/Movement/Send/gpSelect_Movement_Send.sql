@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsErased          Boolean ,
+    IN inJuridicalBasisId  Integer ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
@@ -90,12 +92,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inJuridicalBasisId
  14.07.16         *
  17.06.16         *
  22.05.14                                                        *

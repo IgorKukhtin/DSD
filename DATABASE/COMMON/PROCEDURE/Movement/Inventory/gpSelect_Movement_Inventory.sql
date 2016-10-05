@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_Inventory()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsErased          Boolean ,
+    IN inJuridicalBasisId  Integer ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
@@ -78,11 +80,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 05.10.16         * add inJuridicalBasisId
  01.09.14                                                       *
  27.01.14                                        * all
  18.07.13         *

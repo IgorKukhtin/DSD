@@ -3,7 +3,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 381
-  ClientWidth = 810
+  ClientWidth = 809
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -20,11 +20,14 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
-    Width = 810
+    Top = 0
+    Width = 809
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitLeft = -8
+    ExplicitTop = -8
+    ExplicitWidth = 810
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -59,12 +62,13 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 810
+    Width = 809
     Height = 324
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 810
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -423,6 +427,23 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
+  end
+  object cxLabel27: TcxLabel
+    Left = 506
+    Top = 6
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridicalBasis: TcxButtonEdit
+    Left = 606
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 200
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1102,6 +1123,22 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       ImageIndex = 7
       DataSource = DataSource
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_OrderIncome'
@@ -1132,6 +1169,14 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
         Value = Null
         Component = actShowErased
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1344,5 +1389,56 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PackSize = 1
     Left = 217
     Top = 282
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 631
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 40
   end
 end

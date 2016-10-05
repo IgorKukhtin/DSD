@@ -40,6 +40,11 @@ type
     ExecuteDialog: TExecuteDialog;
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

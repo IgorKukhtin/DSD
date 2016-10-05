@@ -14,18 +14,19 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1242
     Height = 560
     TabOrder = 3
+    ExplicitTop = 81
     ExplicitWidth = 1242
-    ExplicitHeight = 584
+    ExplicitHeight = 560
     ClientRectBottom = 560
     ClientRectRight = 1242
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1242
-      ExplicitHeight = 584
+      ExplicitHeight = 560
       inherited cxGrid: TcxGrid
         Width = 1242
         Height = 560
         ExplicitWidth = 1242
-        ExplicitHeight = 584
+        ExplicitHeight = 560
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True

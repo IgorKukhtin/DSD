@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Item(
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Item(
     IN inEndDate            TDateTime , --
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
+    IN inJuridicalBasisId   Integer ,
     IN inIsErased           Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
@@ -514,11 +516,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey
  29.08.15         * add inGoodsGroupId, inGoodsId
  28.06.15         *

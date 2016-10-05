@@ -24,7 +24,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
+  dsdGuides, cxButtonEdit;
 
 type
   TOrderIncomeJournalForm = class(TParentForm)
@@ -100,6 +101,11 @@ type
     ExecuteDialog: TExecuteDialog;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
   public
   end;
