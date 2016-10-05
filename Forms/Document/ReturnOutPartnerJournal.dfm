@@ -360,7 +360,7 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 431
+    Left = 23
     Top = 202
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TReturnOutPartnerForm'
@@ -660,6 +660,9 @@ inherited ReturnOutPartnerJournalForm: TReturnOutPartnerJournalForm
       end
       item
         Component = edIsPartnerDate
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344

@@ -1,13 +1,15 @@
 -- Function: gpSelect_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsPartnerDate Boolean ,
-    IN inIsErased      Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inIsPartnerDate      Boolean ,
+    IN inIsErased           Boolean ,
+    IN inJuridicalBasisId   Integer   ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Integer, InvNumber_Parent TVarChar
              , StatusCode Integer, StatusName TVarChar
@@ -288,11 +290,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inJuridicalBasisId
  14.05.16         *
  21.08.15         * add isPartner
  26.06.15         * add Comment, Parent

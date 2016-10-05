@@ -2,6 +2,7 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 641
   ClientWidth = 1242
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1258
@@ -9,19 +10,20 @@ inherited SaleJournalForm: TSaleJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 81
     Width = 1242
-    Height = 584
+    Height = 560
     TabOrder = 3
     ExplicitWidth = 1242
     ExplicitHeight = 584
-    ClientRectBottom = 584
+    ClientRectBottom = 560
     ClientRectRight = 1242
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1242
       ExplicitHeight = 584
       inherited cxGrid: TcxGrid
         Width = 1242
-        Height = 584
+        Height = 560
         ExplicitWidth = 1242
         ExplicitHeight = 584
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -759,44 +761,58 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 1242
+    Height = 55
     ExplicitWidth = 1242
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
+      Left = 98
       EditValue = 42614d
+      ExplicitLeft = 98
     end
     inherited deEnd: TcxDateEdit
+      Left = 299
       EditValue = 42614d
+      ExplicitLeft = 299
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 7
+      ExplicitLeft = 7
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 189
+      ExplicitLeft = 189
     end
     object edIsPartnerDate: TcxCheckBox
-      Left = 404
-      Top = 5
+      Left = 7
+      Top = 27
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
       Width = 203
     end
     object cxLabel14: TcxLabel
-      Left = 613
-      Top = 6
-      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
+      Left = 394
+      Top = 31
+      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.:'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 721
-      Top = 5
+      Left = 505
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 166
+      Width = 187
     end
     object cxLabel3: TcxLabel
-      Left = 894
-      Top = 7
+      Left = 394
+      Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' <'#1050#1086#1084#1091'>:'
     end
     object edTo: TcxButtonEdit
-      Left = 1028
+      Left = 526
       Top = 5
       Properties.Buttons = <
         item
@@ -804,7 +820,24 @@ inherited SaleJournalForm: TSaleJournalForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 154
+      Width = 166
+    end
+    object cxLabel27: TcxLabel
+      Left = 707
+      Top = 6
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 808
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 239
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -2479,6 +2512,22 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2519,6 +2568,13 @@ inherited SaleJournalForm: TSaleJournalForm
         Value = False
         Component = actShowErased
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2901,7 +2957,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = PeriodChoice
       end
       item
-        Component = edIsPartnerDate
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -3345,8 +3401,8 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 968
-    Top = 48
+    Left = 624
+    Top = 24
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -3815,8 +3871,7 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1184
-    Top = 40
+    Left = 568
   end
   object spSelectPrintReturnInDay: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_PrintDay'
@@ -3969,5 +4024,56 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 375
     Top = 160
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 943
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
   end
 end

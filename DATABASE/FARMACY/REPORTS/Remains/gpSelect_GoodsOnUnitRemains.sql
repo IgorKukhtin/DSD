@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inRemainsDate      TDateTime,  -- Дата остатка
     IN inIsPartion        Boolean,    -- 
     IN inisPartionPrice   Boolean,    -- 
+    IN inisJuridical      Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar
@@ -68,7 +70,8 @@ BEGIN
 
            , tmpData AS (SELECT CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END AS MovementId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END AS MovementId_find
-                              , MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
+                              --, MovementLinkObject_From_Income.ObjectId                                    AS JuridicalId_Income
+                              , CASE WHEN inisJuridical = TRUE OR inIsPartion = TRUE THEN MovementLinkObject_From_Income.ObjectId ELSE 0 END  AS JuridicalId_Income
                               , MovementLinkObject_NDSKind_Income.ObjectId                                 AS NDSKindId_Income
                               , CASE WHEN inIsPartion = TRUE THEN tmpData_all.ContainerId ELSE 0 END       AS ContainerId
                               , tmpData_all.GoodsId
@@ -129,7 +132,7 @@ BEGIN
                                                           
                          GROUP BY CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_Income ELSE 0 END
                                 , CASE WHEN inIsPartion = TRUE THEN tmpData_all.MovementId_find   ELSE 0 END
-                                , MovementLinkObject_From_Income.ObjectId
+                                , CASE WHEN inisJuridical = TRUE OR inIsPartion = TRUE THEN MovementLinkObject_From_Income.ObjectId ELSE 0 END
                                 , MovementLinkObject_NDSKind_Income.ObjectId
                                 , tmpData_all.GoodsId
                                 , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END
@@ -234,6 +237,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inisJuridical
  04.05.16         *
  27.03.16         *
  28.01.16         *

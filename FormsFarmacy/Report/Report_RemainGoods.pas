@@ -38,6 +38,8 @@ type
     MinPriceOnDateVAT: TcxGridDBColumn;
     MP_SummaVAT: TcxGridDBColumn;
     ContainerId: TcxGridDBColumn;
+    actRefreshJuridical: TdsdDataSetRefresh;
+    cbJuridical: TcxCheckBox;
   private
     { Private declarations }
   public

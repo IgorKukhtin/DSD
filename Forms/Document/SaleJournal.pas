@@ -203,6 +203,11 @@ type
     mactPrint_Sale_Total: TMultiAction;
     bbPrint_Sale_Total: TdxBarButton;
     spSelectPrint_Total: TdsdStoredProc;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

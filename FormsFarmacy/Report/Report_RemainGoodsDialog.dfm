@@ -3,8 +3,8 @@
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1087#1086' '#1054#1089#1090#1072#1090#1082#1072#1084' '#1090#1086#1074#1072#1088#1086#1074'>'
-  ClientHeight = 180
-  ClientWidth = 342
+  ClientHeight = 178
+  ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -54,7 +54,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 3
-    Width = 305
+    Width = 315
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -81,6 +81,14 @@
     Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
     TabOrder = 7
     Width = 197
+  end
+  object сbJuridical: TcxCheckBox
+    Left = 216
+    Top = 8
+    Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+    Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+    TabOrder = 8
+    Width = 109
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -112,6 +120,7 @@
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
@@ -119,6 +128,7 @@
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -127,6 +137,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartion'
@@ -134,6 +145,7 @@
         Component = сbPartion
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPartionPrice'
@@ -141,6 +153,15 @@
         Component = cbPartionPrice
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisJuridical'
+        Value = Null
+        Component = сbJuridical
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 22
     Top = 104
@@ -151,6 +172,7 @@
     Key = '0'
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -161,6 +183,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -169,6 +192,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 86
     Top = 72
@@ -223,6 +247,7 @@
         Value = '0'
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -230,6 +255,7 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 111
