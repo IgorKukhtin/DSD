@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeAsset(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
    OUT outCurrencyValue      TFloat    , -- курс валюты
-    IN inComment             TVarChar  , --
+    IN inComment             TVarChar  , -- примечание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS RECORD
@@ -53,9 +53,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
-     --ioId := lpInsertUpdate_Movement (ioId, zc_Movement_IncomeAsset(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_IncomeAsset(), inInvNumber, inOperDate, NULL);
-
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
@@ -91,7 +89,7 @@ BEGIN
                                   ) AS tmpDate
                                   INNER JOIN Movement ON Movement.DescId = zc_Movement_Currency()
                                                      AND Movement.OperDate = tmpDate.maxOperDate
-                                                     AND Movement.StatusId IN (zc_Enum_Status_Complete()/*, zc_Enum_Status_UnComplete()*/)
+                                                     AND Movement.StatusId IN (zc_Enum_Status_Complete())
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
                                                          AND MovementItem.DescId = zc_MI_Master()
                             );
@@ -128,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * parce
  25.07.16         *
 */
 

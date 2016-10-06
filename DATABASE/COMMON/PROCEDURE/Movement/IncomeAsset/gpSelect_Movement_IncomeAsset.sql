@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeAsset(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
@@ -62,7 +63,7 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , (COALESCE (MovementFloat_TotalCount.ValueData, 0) /*+ COALESCE (MovementFloat_TotalSummPacker.ValueData, 0)*/) :: TFloat AS TotalCount_unit
+           , (COALESCE (MovementFloat_TotalCount.ValueData, 0)) :: TFloat AS TotalCount_unit
            , (COALESCE (MovementFloat_TotalCount.ValueData, 0) - COALESCE (MovementFloat_TotalCountPartner.ValueData, 0)) :: TFloat AS TotalCount_diff
            , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
@@ -121,6 +122,7 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -156,6 +158,7 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -220,6 +223,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.10.16         * parce
  29.07.16         * 
  
 */
