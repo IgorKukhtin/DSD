@@ -511,6 +511,7 @@ BEGIN
            
            , MovementSale_Comment.ValueData        AS SaleComment 
            , CASE WHEN TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
+           , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
        FROM Movement
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementId = Movement.Id
