@@ -46,15 +46,16 @@ update Object set ValueData = 'Б'  from Object_InfoMoney_View  where Object_Info
 update Object set ValueData = 'В'  from Object_InfoMoney_View  where Object_InfoMoney_View.InfoMoneyId = Object.Id  and InfoMoneyCode = 80303; -- 
 update Object set ValueData = 'Г'  from Object_InfoMoney_View  where Object_InfoMoney_View.InfoMoneyId = Object.Id  and InfoMoneyCode = 80304; -- 
 
--- InfoMoneyDestinationName = Основное сырье
- update Object set ValueData = Object_InfoMoney_View.InfoMoneyDestinationName || ' ' || Object.Id :: TVarChar
+-- InfoMoneyDestinationName = Основное сырье - Мясное сырье
+-- update Object set ValueData = Object_InfoMoney_View.InfoMoneyDestinationName || ' ' || Object.Id :: TVarChar
+ update Object set ValueData = Object_InfoMoney_View.InfoMoneyName || ' ' || Object.Id :: TVarChar
 from ObjectLink
      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = ObjectLink.ChildObjectId
                                and InfoMoneyCode between 10101 and 10106
 where ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney() 
    and Object.Id = ObjectLink.ObjectId;
 
--- InfoMoneyDestinationName = Прочее сырье
+-- InfoMoneyDestinationName = Основное сырье - Прочее сырье
  update Object set ValueData = Object_InfoMoney_View.InfoMoneyName || ' ' || Object.Id :: TVarChar
 from ObjectLink
      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = ObjectLink.ChildObjectId

@@ -46,6 +46,7 @@ BEGIN
 
 
   IF inUserId <> zc_Enum_Process_Auto_PrimeCost() -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     AND inUserId <> 343013 -- Нагорная Я.Г.
   THEN
 
      -- 2.1.1. проверка для налоговых

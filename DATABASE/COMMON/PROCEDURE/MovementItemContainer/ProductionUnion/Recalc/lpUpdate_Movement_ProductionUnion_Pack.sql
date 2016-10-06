@@ -169,6 +169,14 @@ BEGIN
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
+     , tmpMI_result_find AS (-- как-то исправил ошибку
+                             SELECT tmpMI_result.GoodsId
+                             FROM tmpMI_result
+                             WHERE tmpMI_result.OperCount > 0
+                               AND tmpMI_result.DescId_mi = zc_MI_Master()
+                             GROUP BY tmpMI_result.GoodsId
+                             HAVING COUNT (*) > 1
+                            )
 
           -- Результат:
           -- элементы Прихода с пр-ва
@@ -187,10 +195,13 @@ BEGIN
 
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN COALESCE (tmpMI_child_result.OperCount, 0) ELSE tmpMI_result.OperCount END AS OperCount_two
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN COALESCE (tmpMI_child_result.OperCount, 0) ELSE tmpMI_result.OperCount END
-               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS OperCount_Weight_two
+               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                 -- как-то исправил ошибку
+               * CASE WHEN tmpMI_result_find.GoodsId IS NULL THEN 1 ELSE 0 END AS OperCount_Weight_two
 
                , FALSE AS isDelete
           FROM tmpMI_result
+               LEFT JOIN tmpMI_result_find ON tmpMI_result_find.GoodsId = tmpMI_result.GoodsId
                LEFT JOIN tmpMI_child_result ON tmpMI_child_result.ContainerId = tmpMI_result.ContainerId
                                            AND tmpMI_child_result.OperDate    = tmpMI_result.OperDate
                LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId = tmpMI_result.GoodsId
@@ -668,7 +679,7 @@ BEGIN
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
-    IF inUserId = zfCalc_UserAdmin() :: Integer
+    IF 1=0 OR inUserId = zfCalc_UserAdmin() :: Integer
     THEN
 
     -- Результат
@@ -682,6 +693,7 @@ BEGIN
          , _tmpResult.OperCount
          , _tmpResult.OperCount_Weight
          , _tmpResult.OperCount_two
+         , _tmpResult.OperCount_Weight_two
          , Object_Receipt_master.ObjectCode AS ReceiptCode_master
          , Object_Receipt_master.ValueData  AS ReceiptName_master
          , Object_Goods_master.ObjectCode AS GoodsCode_master
@@ -713,6 +725,7 @@ BEGIN
          , _tmpResult_child.OperCount
          , _tmpResult.OperCount_Weight
          , _tmpResult.OperCount_two
+         , _tmpResult.OperCount_Weight_two
          , Object_Receipt_master.ObjectCode AS ReceiptCode_master
          , Object_Receipt_master.ValueData  AS ReceiptName_master
          , Object_Goods_master.ObjectCode AS GoodsCode_master
@@ -756,7 +769,7 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '14.08.2016', inEndDate:= '14.08.2016', inUnitId:= 8451, inUserId:= zc_Enum_Process_Auto_Pack())
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.09.2016', inEndDate:= '24.09.2016', inUnitId:= 8451, inUserId:= zc_Enum_Process_Auto_Pack())
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
