@@ -3,27 +3,27 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_OrderShedule (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_OrderShedule(
- INOUT ioId                       Integer ,   	-- ключ объекта <Договор>
+ INOUT ioId                       Integer ,    -- ключ объекта <График заказа/доставки>
     IN inCode                     Integer ,    -- Код объекта <>
-    IN inValue1                   TVarChar  ,
-    IN inValue2                   TVarChar  ,
-    IN inValue3                   TVarChar  ,
-    IN inValue4                   TVarChar  ,
-    IN inValue5                   TVarChar  ,
-    IN inValue6                   TVarChar  ,
-    IN inValue7                   TVarChar  ,
-   OUT outInf_Text1               TVarChar  ,
-   OUT outInf_Text2               TVarChar  ,
-   OUT outColor_Calc1             Integer ,
-   OUT outColor_Calc2             Integer ,
-   OUT outColor_Calc3             Integer ,
-   OUT outColor_Calc4             Integer ,
-   OUT outColor_Calc5             Integer ,
-   OUT outColor_Calc6             Integer ,
-   OUT outColor_Calc7             Integer ,
-    IN inUnitId                   Integer ,    -- ссылка подразделение
-    IN inContractId               Integer ,    -- ссылка на договор
-    IN inSession                  TVarChar       -- сессия пользователя
+    IN inValue1                   TVarChar  ,  -- понедльник значение
+    IN inValue2                   TVarChar  ,  -- вторник
+    IN inValue3                   TVarChar  ,  -- среда
+    IN inValue4                   TVarChar  ,  -- четверг
+    IN inValue5                   TVarChar  ,  -- пятница
+    IN inValue6                   TVarChar  ,  -- суббота
+    IN inValue7                   TVarChar  ,  -- воскресенье
+   OUT outInf_Text1               TVarChar  ,  -- инф. названия дней недели заказ
+   OUT outInf_Text2               TVarChar  ,  -- инф. названия дней недели доставка
+   OUT outColor_Calc1             Integer   ,  -- цвет понедельник
+   OUT outColor_Calc2             Integer   ,  -- цвет вторник
+   OUT outColor_Calc3             Integer   ,  -- цвет среда
+   OUT outColor_Calc4             Integer   ,  -- цвет четверг
+   OUT outColor_Calc5             Integer   ,  -- цвет пятница
+   OUT outColor_Calc6             Integer   ,  -- цвет суббота
+   OUT outColor_Calc7             Integer   ,  -- цвет воскресенье
+    IN inUnitId                   Integer   ,  -- ссылка подразделение
+    IN inContractId               Integer   ,  -- ссылка на договор
+    IN inSession                  TVarChar     -- сессия пользователя
 )
   RETURNS record AS
 $BODY$
@@ -67,7 +67,7 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_OrderShedule_Unit(), ioId, inUnitId);
 
-
+ -- инф. названия дней недели заказ
  outInf_Text1:= (CASE WHEN CAST(inValue1 AS TFloat) in (1,3) THEN 'Понедельник,' ELSE '' END ||
                  CASE WHEN CAST(inValue2 AS TFloat) in (1,3) THEN 'Вторник,'     ELSE '' END ||
                  CASE WHEN CAST(inValue3 AS TFloat) in (1,3) THEN 'Среда,'       ELSE '' END ||
@@ -75,6 +75,7 @@ BEGIN
                  CASE WHEN CAST(inValue5 AS TFloat) in (1,3) THEN 'Пятница,'     ELSE '' END ||
                  CASE WHEN CAST(inValue6 AS TFloat) in (1,3) THEN 'Суббота,'     ELSE '' END ||
                  CASE WHEN CAST(inValue7 AS TFloat) in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
+ -- инф. названия дней недели доставка
  outInf_Text2:= (CASE WHEN CAST(inValue1 AS TFloat) in (2,3) THEN 'Понедельник,' ELSE '' END ||
                  CASE WHEN CAST(inValue2 AS TFloat) in (2,3) THEN 'Вторник,'     ELSE '' END ||
                  CASE WHEN CAST(inValue3 AS TFloat) in (2,3) THEN 'Среда,'       ELSE '' END ||
@@ -82,7 +83,8 @@ BEGIN
                  CASE WHEN CAST(inValue5 AS TFloat) in (2,3) THEN 'Пятница,'     ELSE '' END ||
                  CASE WHEN CAST(inValue6 AS TFloat) in (2,3) THEN 'Суббота,'     ELSE '' END ||
                  CASE WHEN CAST(inValue7 AS TFloat) in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar;
-             
+
+ -- возвращаем цвет             
  outColor_Calc1:= CASE WHEN CAST(inValue1 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue1 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue1 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
  outColor_Calc2:= CASE WHEN CAST(inValue2 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue2 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue2 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
  outColor_Calc3:= CASE WHEN CAST(inValue3 AS TFloat) = 1 THEN zc_Color_Yelow() WHEN CAST(inValue3 AS TFloat) = 2 THEN zc_Color_Aqua() WHEN CAST(inValue3 AS TFloat) = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END;
@@ -103,7 +105,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.10.16         * structure
+ 05.10.16         * parce
  20.09.16         * 
 
 */

@@ -22,6 +22,7 @@ BEGIN
   
     RETURN QUERY
         WITH
+         -- документы прихода
          tmpMovementIncome AS ( SELECT date_trunc('day', MovementDate_Payment.ValueData) :: TDateTime AS Date_Payment
                                      , MovementLinkObject_From.ObjectId                 AS JuridicalId_Income             -- поставщик
                                      , SUM(MovementFloat_TotalSumm.ValueData)           AS TotalSumm
@@ -57,15 +58,18 @@ BEGIN
                                  GROUP BY MovementLinkObject_From.ObjectId 
                                         , date_trunc('day', MovementDate_Payment.ValueData)
                               )
+    -- определяем даты интервала для выборки документов чек
     , tmpDate AS (SELECT MIN(tmpMovementIncome.Date_Payment) AS DateStart
                        , MAX(tmpMovementIncome.Date_Payment) AS DateEnd
                   FROM tmpMovementIncome
                   )
+   -- подразделения по выбранному юр.лицу
    , tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
                  FROM ObjectLink AS ObjectLink_Unit_Juridical         
                  WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                    AND (ObjectLink_Unit_Juridical.ChildObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
                    )
+   -- данные из чеков
    , tmpCheckMI AS (SELECT MIContainer.ContainerId
                          , date_trunc('day', Movement_Check.OperDate) :: TDateTime  AS  OperDate_Check                         
                          , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
@@ -93,6 +97,7 @@ BEGIN
                            , date_trunc('day', Movement_Check.OperDate) 
                     HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                    )
+  -- данные из чеков + данные из партии
   , tmpMovementCheck AS (SELECT tmpMI.OperDate_Check
                               , MovementLinkObject_From_Income.ObjectId   AS JuridicalId_Income   --поставщик
                               , SUM(tmpMI.SummaSale) AS SummaSale
@@ -117,7 +122,7 @@ BEGIN
                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                          GROUP BY tmpMI.OperDate_Check, MovementLinkObject_From_Income.ObjectId
                         )
-
+ -- 
  , tmpFull AS (SELECT COALESCE (tmpMovementIncome.Date_Payment, tmpMovementCheck.OperDate_Check) AS OperDate
                     , tmpMovementIncome.JuridicalId_Income             -- поставщик
                     , tmpMovementIncome.TotalSumm   
@@ -146,6 +151,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
- 05.10.16         * structure
+ 05.10.16         * parce
  09.09.16         *
 */

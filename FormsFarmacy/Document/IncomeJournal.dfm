@@ -1,26 +1,26 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
-  ClientHeight = 480
+  ClientHeight = 481
   ClientWidth = 831
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 847
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 831
-    Height = 423
+    Height = 424
     TabOrder = 3
     ExplicitWidth = 831
     ExplicitHeight = 423
-    ClientRectBottom = 423
+    ClientRectBottom = 424
     ClientRectRight = 831
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 831
       ExplicitHeight = 423
       inherited cxGrid: TcxGrid
         Width = 831
-        Height = 423
+        Height = 424
         ExplicitWidth = 831
         ExplicitHeight = 423
         inherited cxGridDBTableView: TcxGridDBTableView
