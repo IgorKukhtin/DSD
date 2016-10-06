@@ -110,6 +110,12 @@ type
     ExecuteDialog: TExecuteDialog;
     ChangePercent_mi: TcxGridDBColumn;
     MovementPromo: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    FormParams: TdsdFormParams;
   private
   public
   end;

@@ -1,13 +1,15 @@
 -- Function: gpSelect_Movement_SendOnPrice()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsPartnerDate Boolean ,
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime , --
+    IN inEndDate            TDateTime , --
+    IN inIsPartnerDate      Boolean ,
+    IN inIsErased           Boolean ,
+    IN inJuridicalBasisId   Integer   ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
@@ -297,6 +299,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inJuridicalBasisId
  03.10.16         * add Movement_Production
  05.05.14                                                        * надо раскоментить права после отладки
  18.04.14                                                        * all new

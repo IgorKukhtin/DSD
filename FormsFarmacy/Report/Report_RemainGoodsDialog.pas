@@ -31,6 +31,7 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ñbPartion: TcxCheckBox;
     cbPartionPrice: TcxCheckBox;
+    ñbJuridical: TcxCheckBox;
   private
     { Private declarations }
   public

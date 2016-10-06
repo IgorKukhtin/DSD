@@ -40,6 +40,11 @@ type
     colTotalCountSh: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

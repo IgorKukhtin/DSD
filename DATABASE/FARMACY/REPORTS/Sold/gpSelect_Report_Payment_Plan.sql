@@ -3,17 +3,16 @@ DROP FUNCTION IF EXISTS gpSelect_Report_Payment_Plan (TDateTime, TDateTime, inte
 CREATE OR REPLACE FUNCTION gpSelect_Report_Payment_Plan(
     IN inStartDate        TDateTime , -- дата начала
     IN inEndDate          TDateTime , -- дата окончания
-    IN inOurJuridicalId   integer   , -- 
+    IN inOurJuridicalId   integer   , -- наше юр.лицо
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
     OperDate            TDateTime,  --Месяц плана
-    JuridicalId_Income  integer,
+    JuridicalId_Income  integer  ,  
     JuridicalName       TVarChar,   --поставщик
     TotalSumm           TFloat,     --Сумма накладной
     PaySumm             TFloat,     --Сумма оплаты
-    SummaSale           TFloat     --Сумма реализации 
-
+    SummaSale           TFloat      --Сумма реализации 
 )
 
 AS
@@ -25,7 +24,6 @@ BEGIN
         WITH
          tmpMovementIncome AS ( SELECT date_trunc('day', MovementDate_Payment.ValueData) :: TDateTime AS Date_Payment
                                      , MovementLinkObject_From.ObjectId                 AS JuridicalId_Income             -- поставщик
-                                  --   , CASE WHEN isOurJuridical = TRUE THEN MovementLinkObject_Juridical_Income.ObjectId ELSE 0 END  AS OurJuridicalId  -- наше юр лицо был приход
                                      , SUM(MovementFloat_TotalSumm.ValueData)           AS TotalSumm
                                      , SUM(Container.Amount)                            AS PaySumm
                                 FROM Movement
@@ -59,19 +57,19 @@ BEGIN
                                  GROUP BY MovementLinkObject_From.ObjectId 
                                         , date_trunc('day', MovementDate_Payment.ValueData)
                               )
-    , tmpDate AS (SELECT Min(tmpMovementIncome.Date_Payment) AS DateStart
-                       , Max(tmpMovementIncome.Date_Payment) AS DateEnd
+    , tmpDate AS (SELECT MIN(tmpMovementIncome.Date_Payment) AS DateStart
+                       , MAX(tmpMovementIncome.Date_Payment) AS DateEnd
                   FROM tmpMovementIncome
                   )
-     , tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                   FROM ObjectLink AS ObjectLink_Unit_Juridical         
-                   WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                     AND (ObjectLink_Unit_Juridical.ChildObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
+   , tmpUnit AS (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                 FROM ObjectLink AS ObjectLink_Unit_Juridical         
+                 WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                   AND (ObjectLink_Unit_Juridical.ChildObjectId = inOurJuridicalId OR inOurJuridicalId = 0)
                    )
-       , tmpCheckMI AS (SELECT MIContainer.ContainerId
-                        , date_trunc('day', Movement_Check.OperDate) :: TDateTime  AS  OperDate_Check                         
-                        , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
-                   FROM tmpDate
+   , tmpCheckMI AS (SELECT MIContainer.ContainerId
+                         , date_trunc('day', Movement_Check.OperDate) :: TDateTime  AS  OperDate_Check                         
+                         , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                    FROM tmpDate
                         INNER JOIN Movement AS Movement_Check
                                             ON Movement_Check.DescId = zc_Movement_Check()
                                            AND Movement_Check.OperDate >= tmpDate.DateStart AND Movement_Check.OperDate < tmpDate.DateEnd + INTERVAL '1 DAY'  -- Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
@@ -91,10 +89,10 @@ BEGIN
                         LEFT JOIN MovementItemContainer AS MIContainer
                                                         ON MIContainer.MovementItemId = MI_Check.Id
                                                        AND MIContainer.DescId = zc_MIContainer_Count() 
-                   GROUP BY MIContainer.ContainerId
-                          , date_trunc('day', Movement_Check.OperDate) 
-                   HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
-                  )
+                    GROUP BY MIContainer.ContainerId
+                           , date_trunc('day', Movement_Check.OperDate) 
+                    HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                   )
   , tmpMovementCheck AS (SELECT tmpMI.OperDate_Check
                               , MovementLinkObject_From_Income.ObjectId   AS JuridicalId_Income   --поставщик
                               , SUM(tmpMI.SummaSale) AS SummaSale
@@ -148,5 +146,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 05.10.16         * structure
  09.09.16         *
 */

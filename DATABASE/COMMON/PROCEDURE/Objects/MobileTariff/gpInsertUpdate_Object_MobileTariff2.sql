@@ -6,15 +6,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileTariff2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
     IN inCode                     Integer   ,    -- Код объекта <>
     IN inName                     TVarChar  ,    -- Название объекта <>
-    IN inMonthly                  TFloat  ,    -- 
-    IN inPocketMinutes            TFloat  ,    --
-    IN inPocketSMS                TFloat  ,    -- 
-    IN inPocketInet               TFloat  ,    -- 
-    IN inCostSMS                  TFloat  ,    -- 
-    IN inCostMinutes              TFloat  ,    -- 
-    IN inCostInet                 TFloat  ,    -- 
-    IN inComment                  TVarChar  ,    --
-    IN inContractId               Integer   ,    --
+    IN inMonthly                  TFloat    ,    -- Ежемесячная абонплата
+    IN inPocketMinutes            TFloat    ,    -- Количество минут в пакете
+    IN inPocketSMS                TFloat    ,    -- Количество СМС в пакете
+    IN inPocketInet               TFloat    ,    -- Количество МБ интернета в пакете
+    IN inCostSMS                  TFloat    ,    -- Стоимость СМС вне пакета
+    IN inCostMinutes              TFloat    ,    -- Стоимость 1 минуты вне пакета
+    IN inCostInet                 TFloat    ,    -- Стоимость 1 МБ интернета вне пакета
+    IN inComment                  TVarChar  ,    -- Комментарий
+    IN inContractId               Integer   ,    -- Договор
     IN inSession                  TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -58,7 +58,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileTariff_Contract(), ioId, inContractId);
 
 
-
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -70,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * structure
  23.09.16         *
 */
 

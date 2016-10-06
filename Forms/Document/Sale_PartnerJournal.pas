@@ -155,6 +155,11 @@ type
     mactPrint_Sale_Total: TMultiAction;
     actPrint_Total: TdsdPrintAction;
     bbPrint_Sale_Total: TdxBarButton;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

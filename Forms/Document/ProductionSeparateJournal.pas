@@ -42,6 +42,11 @@ type
     actPrint_Ceh: TdsdPrintAction;
     bbPrint_Ceh: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    edJuridicalBasis: TcxButtonEdit;
+    cxLabel27: TcxLabel;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

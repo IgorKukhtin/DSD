@@ -6,12 +6,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileEmployee2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
     IN inCode                     Integer   ,    -- Код объекта <>
     IN inName                     TVarChar  ,    -- Название объекта <>
-    IN inLimit                    TFloat  ,    -- 
-    IN inDutyLimit                TFloat  ,    --
-    IN inNavigator                TFloat  ,    -- 
-    IN inComment                  TVarChar  ,    --
-    IN inPersonalId               Integer   ,    --
-    IN inMobileTariffId           Integer   ,    -- 
+    IN inLimit                    TFloat    ,    -- Лимит 
+    IN inDutyLimit                TFloat    ,    -- Служебный лимит
+    IN inNavigator                TFloat    ,    -- Услуга навигатора
+    IN inComment                  TVarChar  ,    -- Комментарий
+    IN inPersonalId               Integer   ,    -- Сотрудник
+    IN inMobileTariffId           Integer   ,    -- Тариф
     IN inSession                  TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -48,6 +48,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * structure
  23.09.16         *
 */
 

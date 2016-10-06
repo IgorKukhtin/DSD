@@ -1,17 +1,18 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
-    IN inStartDate      TDateTime,
-    IN inEndDate        TDateTime,
-    IN inFromId         Integer,
-    IN inToId           Integer,
-    IN inIsErased       Boolean      , --
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inStartDate         TDateTime,
+    IN inEndDate           TDateTime,
+    IN inFromId            Integer,
+    IN inToId              Integer,
+    IN inJuridicalBasisId  Integer ,
+    IN inIsErased          Boolean      , --
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -702,8 +703,9 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 13.06.16        *
- 07.11.15        * GoodsKindComplete
+ 05.10.16         * add inJuridicalBasisId
+ 13.06.16         *
+ 07.11.15         * GoodsKindComplete
  15.03.15                                        * all
  19.12.14                                                        *
 */

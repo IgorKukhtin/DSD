@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_Income_Partner()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Partner (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Partner (TDateTime, TDateTime, Boolean, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Partner(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
+    IN inJuridicalBasisId  Integer   , -- главное юр.лицо
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
@@ -208,13 +211,11 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_CardFuel_Juridical.ChildObjectId)
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
 
-
             LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalTo
                                  ON ObjectLink_Partner_JuridicalTo.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_JuridicalTo.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_JuridicalTo.ChildObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalToDetails_View ON ObjectHistory_JuridicalToDetails_View.JuridicalId = Object_JuridicalTo.Id
-
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
@@ -225,7 +226,6 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-
     ;
   
 END;
@@ -235,6 +235,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.10.16         * add inJuridicalBasisId
  29.06.15         * 
 */
 

@@ -1014,6 +1014,9 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ObjectForm'));

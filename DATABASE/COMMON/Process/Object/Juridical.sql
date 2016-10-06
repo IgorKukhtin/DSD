@@ -3,6 +3,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_Params() RETU
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_PriceList' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_GLN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_GLN' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_PrintKindItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_PrintKindItem' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+--
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Juridical_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Juridical_Basis' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 DO $$
 BEGIN
@@ -35,6 +37,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Juridic
                                   , inCode:= 4
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Juridical_PrintKindItem');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Juridical_Basis()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 3
+                                  , inName:= 'получение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Select_Object_Juridical_Basis');
+
 
 
 END $$;

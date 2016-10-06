@@ -45,8 +45,6 @@ type
     dxBarStatic: TdxBarStatic;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdChoiceGuides: TdsdChoiceGuides;
@@ -67,34 +65,12 @@ type
     clOKPO: TcxGridDBColumn;
     clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    clPriceListName: TcxGridDBColumn;
-    actChoicePriceListForm: TOpenChoiceForm;
-    actChoicePriceListPromoForm: TOpenChoiceForm;
-    clPriceListPromoName: TcxGridDBColumn;
-    clStartPromo: TcxGridDBColumn;
-    clEndPromo: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
-    clRetailReportName: TcxGridDBColumn;
-    actChoiceRetailReportForm: TOpenChoiceForm;
-    actChoiceJuridicalGroup: TOpenChoiceForm;
-    clRetailName: TcxGridDBColumn;
-    actChoiceRetailForm: TOpenChoiceForm;
     InfoMoneyName_all: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
-    clisTaxSummary: TcxGridDBColumn;
-    PriceListName_Prior: TcxGridDBColumn;
-    PriceListName_30103: TcxGridDBColumn;
-    PriceListName_30201: TcxGridDBColumn;
-    actChoicePriceList_Prior: TOpenChoiceForm;
-    actChoicePriceList_30103: TOpenChoiceForm;
-    actChoicePriceList_30201: TOpenChoiceForm;
-    DayTaxSummary: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clisDiscountPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public

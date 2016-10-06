@@ -2,6 +2,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' ('#1092#1080#1083#1080#1072#1083')'
   ClientHeight = 535
   ClientWidth = 1110
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
@@ -366,7 +367,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       EditValue = 42370d
     end
     object edIsPartnerDate: TcxCheckBox
-      Left = 427
+      Left = 418
       Top = 5
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
@@ -374,15 +375,33 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       Width = 262
     end
   end
+  object cxLabel27: TcxLabel [2]
+    Left = 719
+    Top = 6
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridicalBasis: TcxButtonEdit [3]
+    Left = 821
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 239
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 243
+    Left = 32
+    Top = 275
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 39
+    Top = 194
     object actUpdateAmountChangePercentList: TMultiAction [0]
       Category = 'UpdateAmount'
       MoveParams = <>
@@ -440,17 +459,20 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
@@ -458,6 +480,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = FormParams
           ComponentItem = 'inChangePercentAmount'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -470,17 +493,20 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
@@ -489,6 +515,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           ComponentItem = 'inChangePercentAmount'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
     object actUpdateAmountPartnerList: TMultiAction [10]
@@ -549,10 +576,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrintOut
       StoredProcList = <
@@ -578,16 +607,19 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '3'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintOut: TdsdPrintAction
       Category = 'DSDLib'
@@ -597,10 +629,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrintOut
       StoredProcList = <
@@ -626,16 +660,19 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '1'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintSaleOrder: TdsdPrintAction
       Category = 'DSDLib'
@@ -645,10 +682,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint_SaleOrder
       StoredProcList = <
@@ -675,11 +714,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Sale_Order'
       ReportNameParam.Value = 'PrintMovement_Sale_Order'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -689,10 +730,12 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -718,17 +761,20 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PrintParam'
           Value = '2'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_SendOnPrice'
       ReportNameParam.Name = #1055#1088#1080#1093#1086#1076
       ReportNameParam.Value = 'PrintMovement_SendOnPrice'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -739,6 +785,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -746,6 +793,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -753,6 +801,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -760,10 +809,27 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           Component = edIsPartnerDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -782,6 +848,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -789,6 +856,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
@@ -796,6 +864,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = edIsPartnerDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -803,6 +872,15 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -960,7 +1038,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = PeriodChoice
       end
       item
-        Component = edIsPartnerDate
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -974,12 +1052,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -993,6 +1073,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -1006,6 +1087,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -1016,36 +1098,42 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendOnPrice'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSendOnPriceTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChangePercentAmount'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1083,11 +1171,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReportType'
         Value = '1'
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -1117,11 +1207,13 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReportType'
         Value = '0'
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 359
@@ -1145,17 +1237,20 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'MovementId_Order'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Weighing'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDiff'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 527
@@ -1172,6 +1267,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 858
@@ -1188,9 +1284,61 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 858
     Top = 216
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 943
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
   end
 end

@@ -3,13 +3,16 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
-    IN inStartDate      TDateTime,
-    IN inEndDate        TDateTime,
-    IN inIsErased       Boolean  ,
-    IN inIsPeresort     Boolean  ,     -- пересорт
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inStartDate         TDateTime,
+    IN inEndDate           TDateTime,
+    IN inIsErased          Boolean  ,
+    IN inIsPeresort        Boolean  ,     -- пересорт
+    IN inJuridicalBasisId  Integer ,
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalCountChild TFloat
@@ -130,6 +133,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * add inJuridicalBasisId
  26.07.16         *
  13.06.16         * DocumentKind
  26.12.14                                        * add inIsPeresort

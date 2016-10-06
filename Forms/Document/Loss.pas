@@ -53,6 +53,9 @@ type
     clMeasureName: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
+    spSelectPrint_Sale: TdsdStoredProc;
+    actPrint_Sale: TdsdPrintAction;
+    bbPrint_Sale: TdxBarButton;
   private
     { Private declarations }
   public

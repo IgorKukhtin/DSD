@@ -1,29 +1,29 @@
 inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
   Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 364
-  ClientWidth = 930
+  ClientWidth = 1009
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 946
+  ExplicitWidth = 1025
   ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 56
-    Width = 930
+    Width = 1009
     Height = 308
     TabOrder = 3
     ExplicitTop = 56
-    ExplicitWidth = 930
+    ExplicitWidth = 1009
     ExplicitHeight = 308
     ClientRectBottom = 308
-    ClientRectRight = 930
+    ClientRectRight = 1009
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 930
+      ExplicitWidth = 1009
       ExplicitHeight = 308
       inherited cxGrid: TcxGrid
-        Width = 930
+        Width = 1009
         Height = 308
-        ExplicitWidth = 930
+        ExplicitWidth = 1009
         ExplicitHeight = 308
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -415,9 +415,9 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     end
   end
   inherited Panel: TPanel
-    Width = 930
+    Width = 1009
     Height = 30
-    ExplicitWidth = 930
+    ExplicitWidth = 1009
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
       Left = 131
@@ -475,6 +475,13 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
     Action = actRefreshPartionPrice
     TabOrder = 7
     Width = 200
+  end
+  object cbJuridical: TcxCheckBox [4]
+    Left = 840
+    Top = 4
+    Action = actRefreshJuridical
+    TabOrder = 8
+    Width = 112
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -573,6 +580,19 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actRefreshJuridical: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshIsPartion: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -637,6 +657,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisJuridical'
+          Value = Null
+          Component = cbJuridical
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -682,6 +710,14 @@ inherited Report_GoodsRemainsForm: TReport_GoodsRemainsForm
         Name = 'inisPartionPrice'
         Value = Null
         Component = cbPartionPrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisJuridical'
+        Value = Null
+        Component = cbJuridical
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

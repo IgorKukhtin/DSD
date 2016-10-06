@@ -3,8 +3,9 @@
 DROP FUNCTION if exists public.gpinsertupdate_logbillsks2(tblob, tvarchar);
 
 CREATE OR REPLACE FUNCTION public.gpinsertupdate_logbillsks2(
-    inxmlfile tblob,
-    insession tvarchar)
+    inXmlfile       tblob   ,  -- файл xml
+    inSession       tvarchar,  -- сессия пользователя
+)
   RETURNS void AS
 $BODY$
   DECLARE vbXMLFile TEXT;
@@ -26,17 +27,8 @@ BEGIN
   
    -- Дата счета
    vbOperDate:= (SELECT unnest(xpath('//Array-Bill/bill[1]/od/text()', vbXMLFile::XML)));
-   -- ОКПО Юр.Лица
-   -- SELECT INTO vbOKPO unnest(xpath('//Array-Bill/bill[1]/bank/str/text()', x::XML));
-
-  -- *** Временная таблица сотрудников для кеша
-  --  CREATE TEMP TABLE _tmpEmployees (ID integer, Name TVarchar) ON COMMIT DROP;
-  --  INSERT INTO _tmpEmployees (ID, Name)
-  --	    SELECT ID, Name FROM gpSelect_Object_Personal(TRUE, inSession);
  
- -- заполнение документа
-
-  -- *** Парсим XML в таблицу
+   -- *** Парсим XML в таблицу
     CREATE TEMP TABLE _tmpItems (MobilePhone TVarchar, TotalSum tfloat) ON COMMIT DROP;
     INSERT INTO _tmpItems (MobilePhone, TotalSum)
     WITH tmpData AS (
@@ -77,7 +69,6 @@ BEGIN
                                                          );
     END IF;
     END LOOP;
-   
 --/////////////
 
 
@@ -198,7 +189,6 @@ BEGIN
         , inUserId := vbUserId
 
         );
-        --RAISE EXCEPTION 'Ошибка.%', vbMovementId;
     END LOOP;
 END;
 $BODY$
@@ -209,6 +199,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.10.16         * structure
  30.09.16         *
 */
 
