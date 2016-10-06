@@ -837,6 +837,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1808,6 +1816,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inOperDatePartner'
+        Value = 'NULL'
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
