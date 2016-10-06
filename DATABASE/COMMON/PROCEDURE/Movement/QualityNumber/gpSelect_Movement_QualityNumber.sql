@@ -1,13 +1,16 @@
 -- Function: gpSelect_Movement_QualityNumber()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpselect_movement_qualitynumber(
-    IN instartdate tdatetime,
-    IN inenddate tdatetime,
-    IN iniserased boolean,
-    IN insession tvarchar)
+    IN inStartdate          tdatetime,
+    IN inEnddate            tdatetime,
+    IN inJuridicalBasisId   Integer  , -- √Î‡‚ÌÓÂ ˛.ÎËˆÓ
+    IN inisErased           boolean  ,
+    IN inSession            tvarchar
+)
  RETURNS TABLE(Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
 
@@ -77,7 +80,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

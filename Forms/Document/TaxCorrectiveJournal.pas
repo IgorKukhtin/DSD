@@ -13,7 +13,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
   Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, EDI;
+  dxSkinsdxBarPainter, EDI, dsdGuides, cxButtonEdit;
 
 type
   TTaxCorrectiveJournalForm = class(TAncestorJournalForm)
@@ -96,6 +96,11 @@ type
     colisPartner: TcxGridDBColumn;
     ExecuteDialog1: TExecuteDialog;
     actShowMessage: TShowMessageAction;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

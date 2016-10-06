@@ -43,6 +43,11 @@ type
     cxLabel15: TcxLabel;
     ceCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

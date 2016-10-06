@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.DBActns,
-  cxButtonEdit;
+  cxButtonEdit, dsdGuides;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
@@ -72,6 +72,11 @@ type
     colMovementId_Invoice: TcxGridDBColumn;
     spUpdate_Invoice: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
