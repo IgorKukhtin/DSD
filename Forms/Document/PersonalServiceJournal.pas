@@ -67,6 +67,12 @@ type
     ExportGrid1: TExportGrid;
     bExportToFile: TdxBarButton;
     actExportToFile: TdsdStoredProcExportToFile;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

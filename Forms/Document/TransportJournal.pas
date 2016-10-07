@@ -24,7 +24,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, ChoicePeriod, cxLabel, cxCurrencyEdit;
+  dxBarExtItems, ChoicePeriod, cxLabel, cxCurrencyEdit, cxButtonEdit, dsdGuides;
 
 type
   TTransportJournalForm = class(TParentForm)
@@ -117,6 +117,11 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
   public
   end;

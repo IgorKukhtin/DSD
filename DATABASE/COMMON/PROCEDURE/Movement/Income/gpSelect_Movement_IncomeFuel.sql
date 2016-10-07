@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, Boolean , TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, Integer, Boolean , TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer , -- гл. юр.лицо
+    IN inIsErased          Boolean ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaster TVarChar, OperDateMaster TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
@@ -345,6 +347,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.10.16         * add inJuridicalBasisId
  15.01.16         * add               
  10.02.14                                        * add убрал !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!, т.к. AccessKeyId будет достаточно
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View

@@ -1,19 +1,25 @@
 inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientWidth = 982
+  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 76
     Width = 982
+    Height = 599
     TabOrder = 3
     ExplicitWidth = 982
+    ClientRectBottom = 599
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
         Width = 982
+        Height = 599
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -172,7 +178,9 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   end
   inherited Panel: TPanel
     Width = 982
+    Height = 50
     ExplicitWidth = 982
+    ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -188,7 +196,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       ExplicitTop = 7
     end
     object edBankAccount: TcxButtonEdit
-      Left = 649
+      Left = 468
       Top = 5
       Properties.Buttons = <
         item
@@ -196,19 +204,36 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 203
+      Width = 214
     end
     object cxLabel3: TcxLabel
-      Left = 610
+      Left = 441
       Top = 7
       Caption = #1056'/'#1089#1095':'
     end
     object cbIsServiceDate: TcxCheckBox
-      Left = 405
-      Top = 5
+      Left = 10
+      Top = 26
       Action = actIsServiceDate
       TabOrder = 6
       Width = 200
+    end
+    object cxLabel27: TcxLabel
+      Left = 728
+      Top = 6
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 827
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -223,23 +248,27 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashId_top'
           Value = ''
           Component = GuidesBankAccount
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CashName_top'
@@ -247,6 +276,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
           Component = GuidesBankAccount
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -259,21 +289,25 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Value = ''
           ParamType = ptUnknown
+          MultiSelectSeparator = ','
         end>
     end
     object actIsServiceDate: TdsdDataSetRefresh
@@ -288,6 +322,61 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       Hint = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081'>'
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 35
+      FormName = 'TMovement_DateDialogForm'
+      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42005d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42005d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartnerDate'
+          Value = 'False'
+          Component = cbIsServiceDate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -307,6 +396,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -314,6 +404,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -321,6 +412,15 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsServiceDate'
@@ -328,6 +428,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = cbIsServiceDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -335,6 +436,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 96
@@ -388,18 +490,21 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId_top'
@@ -407,6 +512,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName_top'
@@ -415,6 +521,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -427,6 +534,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     LookupControl = edBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccount_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -435,6 +543,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Value = ''
         Component = GuidesBankAccount
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'NameAll'
@@ -442,14 +551,67 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 552
-    Top = 5
+    Top = 21
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 871
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
   end
 end

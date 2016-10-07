@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalSendCash(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer , -- гл. юр.лицо
+    IN inIsErased          Boolean ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -77,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.10.16         * add inJuridicalBasisId
  22.09.15         * add inIsErased               
  26.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  14.12.13                                        * add Object_RoleAccessKey_View
