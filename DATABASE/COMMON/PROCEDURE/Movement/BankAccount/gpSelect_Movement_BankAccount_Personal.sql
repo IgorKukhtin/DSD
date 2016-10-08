@@ -1,14 +1,16 @@
 -- Function: gpSelect_Movement_BankAccount_Personal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount_Personal (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount_Personal (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount_Personal(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inBankAccountId        Integer , --
-    IN inIsServiceDate Boolean ,
-    IN inIsErased      Boolean   ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inBankAccountId     Integer , --
+    IN inJuridicalBasisId  Integer , -- гл. юр.лицо
+    IN inIsServiceDate     Boolean ,
+    IN inIsErased          Boolean   ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -160,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.10.16         * add inJuridicalBasisId
  08.04.15         *
 
 */

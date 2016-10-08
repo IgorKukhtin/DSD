@@ -39,6 +39,11 @@ type
     MoneyPlaceCode: TcxGridDBColumn;
     ContractInvNumber: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

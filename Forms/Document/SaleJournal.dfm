@@ -824,12 +824,12 @@ inherited SaleJournalForm: TSaleJournalForm
       Width = 166
     end
     object cxLabel27: TcxLabel
-      Left = 707
+      Left = 794
       Top = 6
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 808
+      Left = 895
       Top = 5
       Properties.Buttons = <
         item
@@ -838,7 +838,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 239
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

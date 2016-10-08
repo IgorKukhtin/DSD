@@ -132,6 +132,14 @@ BEGIN
     -- сохранили связь с <Дисконтная карта> + здесь же и сформировали <Дисконтная карта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DiscountCard(), ioId, CASE WHEN inDiscountExternalId > 0 THEN lpInsertFind_Object_DiscountCard (inObjectId:= inDiscountExternalId, inValue:= inDiscountCardNumber, inUserId:= vbUserId) ELSE 0 END);
 
+    IF vbIsInsert = TRUE
+      THEN
+          -- сохранили свойство <Дата создания>
+          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+          -- сохранили свойство <Пользователь (создание)>
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
+    END IF;
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
@@ -142,6 +150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 06.10.16         * add сохранение св-в дата/польз. создания
  20.07.16                                        *
  03.11.15                                                                       *
 */

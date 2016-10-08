@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean   ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer   , -- Главное юр.лицо
+    IN inIsErased          Boolean   ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
@@ -184,11 +187,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * add inJuridicalBasisId
  17.06.14         * add inInvNumberPartner 
                       , inInvNumberMark
  29.05.14         *

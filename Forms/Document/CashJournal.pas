@@ -54,6 +54,11 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     actInvoiceJournalDetailChoiceForm: TOpenChoiceForm;
     spUpdate_Invoice: TdsdStoredProc;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

@@ -1,12 +1,12 @@
--- Function: gpGet_Movement_IncomeAsset (Integer, TVarChar)
+-- FunctiON: gpGet_Movement_IncomeASset (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_IncomeAsset (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_IncomeASset (Integer, TDateTime, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeAsset(
+CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeASset(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- ключ Документа
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inOperDate          TDateTime, -- дата Документа
+    IN inSessiON           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
@@ -14,12 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
-             , PersonalPackerId Integer, PersonalPackerName TVarChar
              , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
-             , PaidKindToId Integer, PaidKindToName TVarChar
-             , ContractToId Integer, ContractToName TVarChar
-             , ChangePercentTo TFloat
              , Comment TVarChar 
              , MovementId_Transport Integer, InvNumber_Transport TVarChar
              , InvoiceId Integer, InvoiceName TVarChar
@@ -29,65 +25,60 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_IncomeAsset());
-     vbUserId:= lpGetUserBySession (inSession);
+     -- vbUserId := lpCheckRight (inSessiON, zc_Enum_Process_Get_Movement_IncomeASset());
+     vbUserId:= lpGetUserBySessiON (inSessiON);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('Movement_IncomeAsset_seq') AS TVarChar) AS InvNumber
+             , CAST (NEXTVAL ('Movement_IncomeASset_seq') AS TVarChar) AS InvNumber
              , inOperDate                       AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
              , inOperDate                       AS OperDatePartner
-             , CAST ('' as TVarChar)            AS InvNumberPartner
+             , CAST ('' AS TVarChar)            AS InvNumberPartner
 
-             , CAST (False as Boolean)          AS PriceWithVAT
-             , CAST (20 as TFloat)              AS VATPercent
-             , CAST (0 as TFloat)               AS ChangePercent
+             , CAST (False AS Boolean)          AS PriceWithVAT
+             , CAST (20 AS TFloat)              AS VATPercent
+             , CAST (0 AS TFloat)               AS ChangePercent
              
-             , CAST (1 as TFloat)               AS CurrencyValue
+             , CAST (1 AS TFloat)               AS CurrencyValue
 
              , 0                     AS FromId
-             , CAST ('' as TVarChar) AS FromName
+             , CAST ('' AS TVarChar) AS FromName
              , 0                     AS ToId
-             , CAST ('' as TVarChar) AS ToName
+             , CAST ('' AS TVarChar) AS ToName
              , 0                     AS ToParentId
              , 0                     AS PaidKindId
-             , CAST ('' as TVarChar) AS PaidKindName
+             , CAST ('' AS TVarChar) AS PaidKindName
              , 0                     AS ContractId
-             , CAST ('' as TVarChar) AS ContractName
-             , 0                     AS PersonalPackerId
-             , CAST ('' as TVarChar) AS PersonalPackerName
+             , CAST ('' AS TVarChar) AS ContractName
 
-             , ObjectCurrency.Id      AS CurrencyDocumentId	-- грн
+             , ObjectCurrency.Id         AS CurrencyDocumentId	-- грн
              , ObjectCurrency.ValueData  AS CurrencyDocumentName
            
              , 0                     AS CurrencyPartnerId
-             , CAST ('' as TVarChar) AS CurrencyPartnerName
+             , CAST ('' AS TVarChar) AS CurrencyPartnerName
 
-
-             , 0                     		    AS PaidKindToId
-             , CAST ('' as TVarChar) 		    AS PaidKindToName
-             , 0                     		    AS ContractToId
-             , CAST ('' as TVarChar) 		    AS ContractToName
-             , CAST (0 as TFloat)                   AS ChangePercentTo
-             , CAST ('' as TVarChar) 		    AS Comment
+             , CAST ('' AS TVarChar) 		    AS Comment
 
              , 0                                    AS MovementId_Transport
              , '' :: TVarChar                       AS InvNumber_Transport 
 
              , 0                                    AS InvoiceId
-             , CAST ('' as TVarChar) 	            AS InvoiceName
+             , CAST ('' AS TVarChar) 	            AS InvoiceName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-              JOIN Object as ObjectCurrency on ObjectCurrency.descid= zc_Object_Currency()
-                                            and ObjectCurrency.id = 14461;	             -- грн
+              JOIN Object AS ObjectCurrency ON ObjectCurrency.descid= zc_Object_Currency()
+                                            AND ObjectCurrency.id = 14461;	             -- грн
      ELSE
        RETURN QUERY 
-       WITH tmpMI AS (SELECT MI_Invoice.MovementId AS MovementId
+       
+       WITH 
+            -- определение док. счета из строчной части
+            tmpMI AS (SELECT MI_Invoice.MovementId AS MovementId
                       FROM MovementItem
                            INNER JOIN MovementItemFloat AS MIFloat_MovementId
                                                         ON MIFloat_MovementId.MovementItemId = MovementItem.Id
@@ -95,12 +86,12 @@ BEGIN
                                                        AND MIFloat_MovementId.ValueData > 0
                            INNER JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id = MIFloat_MovementId.ValueData :: Integer
                       WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
-                        AND MovementItem.isErased   = FALSE
+                        AND MovementItem.DescId     = zc_MI_MASter()
+                        AND MovementItem.isErASed   = FALSE
                       ORDER BY MovementItem.Id DESC
                       LIMIT 1
                      )
-
+         -- результат
          SELECT
                Movement.Id
              , Movement.InvNumber
@@ -126,27 +117,19 @@ BEGIN
              , Object_PaidKind.ValueData             AS PaidKindName
              , View_Contract_InvNumber.ContractId    AS ContractId
              , View_Contract_InvNumber.InvNumber     AS ContractName
-             , Object_Member.Id                      AS PersonalPackerId
-             , Object_Member.ValueData               AS PersonalPackerName
 
              , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencycyDocumentInf.Id)                AS CurrencyDocumentId
              , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencycyDocumentInf.ValueData)  AS CurrencyDocumentName
              , Object_CurrencyPartner.Id             AS CurrencyPartnerId
              , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
 
-             , Object_PaidKindTo.Id                	AS PaidKindToId
-             , Object_PaidKindTo.ValueData         	AS PaidKindToName
-             , View_ContractTo_InvNumber.ContractId     AS ContractToId
-             , View_ContractTo_InvNumber.InvNumber      AS ContractToName
-
-             , MovementFloat_ChangePercentTo.ValueData  AS ChangePercentTo
-             , MovementString_Comment.ValueData         AS Comment
+             , MovementString_Comment.ValueData          AS Comment
 
              , Movement_Transport.Id                     AS MovementId_Transport
              , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar AS InvNumber_Transport
 
              , tmpMI.MovementId                          AS InvoiceId
-             , zfCalc_PartionMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvoiceName
+             , zfCalc_PartiONMovementName (Movement_Invoice.DescId, MovementDesc_Invoice.ItemName, Movement_Invoice.InvNumber, Movement_Invoice.OperDate) AS InvoiceName
 
        FROM Movement
             LEFT JOIN tmpMI ON 1 = 1
@@ -176,11 +159,6 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-
-            LEFT JOIN MovementFloat AS MovementFloat_ChangePercentTo
-                                    ON MovementFloat_ChangePercentTo.MovementId =  Movement.Id
-                                   AND MovementFloat_ChangePercentTo.DescId = zc_MovementFloat_ChangePercentPartner()
-
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
@@ -194,7 +172,10 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent 
+                                 ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id 
+                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -206,11 +187,6 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
-                                         ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_PersonalPacker.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
@@ -221,27 +197,20 @@ BEGIN
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 	    
-            LEFT JOIN Object as ObjectCurrencycyDocumentInf on ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
-                                            and ObjectCurrencycyDocumentInf.id = 14461
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindTo
-                                         ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
-            LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractTo
-                                         ON MovementLinkObject_ContractTo.MovementId = Movement.Id
-                                        AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo_InvNumber ON View_ContractTo_InvNumber.ContractId = MovementLinkObject_ContractTo.ObjectId
+            LEFT JOIN Object AS ObjectCurrencycyDocumentInf 
+                             ON ObjectCurrencycyDocumentInf.descid= zc_Object_Currency()
+                            AND ObjectCurrencycyDocumentInf.id = 14461
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_IncomeAsset();
+       WHERE Movement.Id = inMovementId
+         AND Movement.DescId = zc_Movement_IncomeASset();
+
      END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -249,8 +218,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.10.16         * parce
  25.07.16         * 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_IncomeAsset (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_IncomeASset (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSessiON:= zfCalc_UserAdmin())

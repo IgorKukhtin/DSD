@@ -2,25 +2,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
+  ExplicitLeft = -9
   ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 76
     Width = 1118
-    Height = 478
+    Height = 459
     TabOrder = 3
     ExplicitWidth = 1118
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 459
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1118
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1118
-        Height = 478
+        Height = 459
         ExplicitWidth = 1118
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -439,7 +442,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   inherited Panel: TPanel
     Width = 1118
+    Height = 50
     ExplicitWidth = 1118
+    ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -447,15 +452,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       EditValue = 42370d
     end
     object edIsRegisterDate: TcxCheckBox
-      Left = 427
-      Top = 5
+      Left = 10
+      Top = 27
       Action = actRefresh
       Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'>'
       TabOrder = 4
       Width = 262
     end
     object cxTextEdit1: TcxTextEdit
-      Left = 616
+      Left = 417
       Top = 5
       Enabled = False
       ParentColor = True
@@ -467,7 +472,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Width = 113
     end
     object edLoadData: TcxDateEdit
-      Left = 851
+      Left = 652
       Top = 5
       EditValue = 42121.4513888889d
       Enabled = False
@@ -477,7 +482,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Width = 135
     end
     object edPeriod: TcxDateEdit
-      Left = 730
+      Left = 531
       Top = 5
       EditValue = 42121d
       Enabled = False
@@ -488,7 +493,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Width = 91
     end
     object cxTextEdit2: TcxTextEdit
-      Left = 817
+      Left = 618
       Top = 5
       Enabled = False
       ParentColor = True
@@ -498,6 +503,23 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       TabOrder = 7
       Text = #1073#1099#1083#1072
       Width = 34
+    end
+    object cxLabel27: TcxLabel
+      Left = 862
+      Top = 6
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 963
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -591,22 +613,26 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = 'True'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 'NULL'
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actInsertMaskMulti: TMultiAction [8]
@@ -633,22 +659,26 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction [10]
@@ -659,22 +689,26 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMask'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
     end
     object actMovementCheck: TdsdOpenForm [13]
@@ -686,6 +720,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormName = 'TMovementCheckForm'
       FormNameParam.Value = 'TMovementCheckForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -693,6 +728,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -710,12 +746,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormName = 'TTaxJournalDialogForm'
       FormNameParam.Value = 'TTaxJournalDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DateRegistered'
@@ -724,6 +762,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           ComponentItem = 'DateRegistered_notNull'
           DataType = ftDateTime
           ParamType = ptInputOutput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isElectron'
@@ -731,6 +770,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'isElectron'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumberRegistered'
@@ -738,6 +778,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumberRegistered'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -745,6 +786,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -752,12 +794,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
@@ -765,6 +809,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -789,6 +834,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -796,11 +842,13 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrectiveReestr'
       ReportNameParam.Name = 'PrintMovement_TaxCorrectiveReestr'
       ReportNameParam.Value = 'PrintMovement_TaxCorrectiveReestr'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object MedocAction: TMedocCorrectiveAction
       Category = 'TaxLib'
@@ -849,6 +897,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormName = 'TMovement_DateDialogForm'
       FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -856,6 +905,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -863,6 +913,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'IsPartnerDate'
@@ -870,6 +921,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Component = edIsRegisterDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -912,6 +964,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -920,6 +973,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -947,6 +1001,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
@@ -955,6 +1010,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -964,10 +1020,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -988,10 +1046,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       ActionList = <
         item
@@ -1058,7 +1118,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Category = 'TaxLib'
       MoveParams = <>
       StartDateParam.Value = Null
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = Null
+      EndDateParam.MultiSelectSeparator = ','
       EDIDocType = ediDeclarReturn
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
@@ -1085,6 +1147,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end>
       Caption = 'actUpdateIsMedoc'
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1102,6 +1180,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -1109,6 +1188,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsRegisterDate'
@@ -1116,6 +1204,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -1123,6 +1212,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -1369,10 +1459,12 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ouStatusCode'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1380,6 +1472,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -1398,6 +1491,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -1408,24 +1502,28 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameTaxCorrective'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 376
     Top = 168
@@ -1439,12 +1537,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ouStatusCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StatusCode'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -1452,6 +1552,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 336
@@ -1474,12 +1575,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 671
@@ -1503,12 +1606,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 674
@@ -1537,6 +1642,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1545,6 +1651,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         ComponentItem = 'Checked'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -1561,6 +1668,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inElectron'
@@ -1569,6 +1677,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         ComponentItem = 'isElectron'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 248
@@ -1585,6 +1694,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsDocument'
@@ -1593,12 +1703,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         ComponentItem = 'Document'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalculate'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 392
@@ -1606,8 +1718,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.MultiSelectSeparator = ','
     ConnectionParams.User.Value = Null
+    ConnectionParams.User.MultiSelectSeparator = ','
     ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.MultiSelectSeparator = ','
     SendToFTP = False
     Left = 544
     Top = 144
@@ -1623,6 +1738,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -1630,6 +1746,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = FormParams
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
@@ -1646,6 +1763,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MedocCorrectiveActionList
         ComponentItem = 'Directory'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 512
@@ -1662,6 +1780,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 520
@@ -1678,6 +1797,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'onisMedoc'
@@ -1685,6 +1805,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = MasterCDS
         ComponentItem = 'isMedoc'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 736
@@ -1701,20 +1822,74 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Period'
         Value = 'cxTextEdit1'
         Component = edPeriod
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LoadDateTime'
         Value = 42121d
         Component = edLoadData
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 736
     Top = 152
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1031
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 48
   end
 end

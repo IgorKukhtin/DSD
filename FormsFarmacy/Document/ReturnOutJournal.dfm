@@ -291,17 +291,20 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actInsertMask: TdsdInsertUpdateAction
@@ -364,10 +367,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -393,12 +398,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ADOQueryAction1: TADOQueryAction
       Category = 'dsdImportExport'
@@ -470,12 +477,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       FormName = 'TIncomeJournalChoiceForm'
       FormNameParam.Value = 'TIncomeJournalChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = FormParams
           ComponentItem = 'IncomeMovementId'
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -503,6 +512,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       FormName = 'TReturnOutPartnerDataDialogForm'
       FormNameParam.Value = 'TReturnOutPartnerDataDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'InvNumberPartner'
@@ -511,6 +521,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           ComponentItem = 'InvNumberPartner'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDatePartner'
@@ -519,6 +530,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           ComponentItem = 'OperDatePartner'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -550,6 +562,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -557,6 +570,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -564,6 +578,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -586,6 +601,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -593,6 +609,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -600,11 +617,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -699,6 +718,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -785,6 +808,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -798,6 +822,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -811,6 +836,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -821,35 +847,41 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameReturnOut'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameReturnOutTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IncomeMovementId'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
@@ -857,6 +889,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDatePartner'
@@ -864,6 +897,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -898,6 +932,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 607
@@ -920,12 +955,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ConnectionString'
         Value = Null
         Component = ADOQueryAction1
         ComponentItem = 'ConnectionString'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'QueryText'
@@ -933,10 +970,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = ADOQueryAction1
         ComponentItem = 'QueryText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 48
+    Left = 456
+    Top = 112
   end
   object spInsertMovement: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_ReturnOutFromIncome'
@@ -948,6 +986,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -955,6 +994,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = FormParams
         ComponentItem = 'IncomeMovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -971,6 +1011,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -979,6 +1020,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDatePartner'
@@ -987,6 +1029,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         ComponentItem = 'OperDatePartner'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 416

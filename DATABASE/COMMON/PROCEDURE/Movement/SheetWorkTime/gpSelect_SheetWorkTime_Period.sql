@@ -1,11 +1,13 @@
 -- Function: gpSelect_SheetWorkTime_Period()
 
 DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer   , -- гл. юр.лицо
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete Boolean
               )
@@ -108,6 +110,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.16         * add inJuridicalBasisId
  23.03.16                                        * all
  01.03.16         * add isComplete
  28.12.13                                        * add zc_ObjectLink_StaffList_Unit

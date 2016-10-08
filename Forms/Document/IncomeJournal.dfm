@@ -24,8 +24,6 @@ object IncomeJournalForm: TIncomeJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = -7
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -547,13 +545,13 @@ object IncomeJournalForm: TIncomeJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 444
-    Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+    Left = 605
+    Top = 7
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 546
-    Top = 5
+    Left = 704
+    Top = 6
     Properties.Buttons = <
       item
         Default = True
@@ -561,7 +559,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1554,7 +1552,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 668
+    Left = 764
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

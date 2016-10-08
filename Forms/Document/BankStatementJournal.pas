@@ -13,7 +13,7 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, ClientBankLoad, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, ExternalLoad;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, ExternalLoad, cxButtonEdit, dsdGuides;
 
 type
   TBankStatementJournalForm = class(TAncestorJournalForm)
@@ -50,6 +50,11 @@ type
     ProcreditBank: TMultiAction;
     bbProkreditBank: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

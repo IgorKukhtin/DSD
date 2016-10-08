@@ -1,20 +1,20 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
-  ClientWidth = 873
+  ClientWidth = 872
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 889
-  ExplicitHeight = 713
+  ExplicitWidth = 888
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 873
+    Width = 872
     TabOrder = 3
     ExplicitWidth = 873
-    ClientRectRight = 873
+    ClientRectRight = 872
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 873
       inherited cxGrid: TcxGrid
-        Width = 873
+        Width = 872
         ExplicitWidth = 873
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -68,8 +68,26 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 873
+    Width = 872
+    ExplicitLeft = -1
     ExplicitWidth = 873
+  end
+  object cxLabel27: TcxLabel [2]
+    Left = 531
+    Top = 6
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridicalBasis: TcxButtonEdit [3]
+    Left = 630
+    Top = 6
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 239
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -122,9 +140,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object ProcreditBank: TMultiAction [1]
       Category = 'Load'
@@ -150,9 +170,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankMarfin: TMultiAction [7]
       Category = 'Load'
@@ -181,9 +203,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankForumLoad: TClientBankLoadAction
       Category = 'Load'
@@ -192,9 +216,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusLoad: TClientBankLoadAction
       Category = 'Load'
@@ -203,9 +229,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankOTPLoad: TClientBankLoadAction
       Category = 'Load'
@@ -214,9 +242,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusDBFLoad: TClientBankLoadAction
       Category = 'Load'
@@ -225,9 +255,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPireusDBF: TMultiAction
       Category = 'Load'
@@ -278,9 +310,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankFidoLoad: TClientBankLoadAction
       Category = 'Load'
@@ -289,9 +323,11 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
     end
     object BankPrivat: TMultiAction
       Category = 'Load'
@@ -358,6 +394,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -365,6 +402,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -372,14 +410,64 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankStatement'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -551,5 +639,56 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankStatement'
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 767
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
   end
 end

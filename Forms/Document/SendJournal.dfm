@@ -12,17 +12,17 @@ inherited SendJournalForm: TSendJournalForm
     Width = 814
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 814
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 814
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 814
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 814
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 814
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -180,9 +180,7 @@ inherited SendJournalForm: TSendJournalForm
   end
   inherited Panel: TPanel
     Width = 814
-    ExplicitLeft = -64
-    ExplicitTop = 3
-    ExplicitWidth = 1048
+    ExplicitWidth = 814
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -368,18 +366,18 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inJuridicalBasisId'
         Value = 'False'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

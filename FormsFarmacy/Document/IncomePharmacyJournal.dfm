@@ -660,6 +660,10 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -879,8 +883,8 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 48
+    Left = 528
+    Top = 56
   end
   object spGetDataForSendNew: TdsdStoredProc
     StoredProcName = 'gpGetDataForSendNew'

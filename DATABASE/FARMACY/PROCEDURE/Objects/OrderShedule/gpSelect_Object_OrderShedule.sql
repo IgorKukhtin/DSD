@@ -4,10 +4,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_OrderShedule(Integer, Integer, Boolean, 
 
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_OrderShedule(
-    IN inUnitId      Integer, 
-    IN inJuridicalId Integer,    
-    IN inisShowAll   Boolean,   
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inUnitId      Integer,  -- Подразделение
+    IN inJuridicalId Integer,  -- Юр. лицо
+    IN inisShowAll   Boolean,  -- показать удаленные да/нет
+    IN inSession     TVarChar  -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer,
                Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, 
@@ -124,7 +124,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.10.16         * structure
+ 05.10.16         * parce
  20.09.14         *
 
 */

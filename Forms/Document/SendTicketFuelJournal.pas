@@ -11,7 +11,8 @@ uses AncestorJournal, cxGraphics, cxControls, cxLookAndFeels,
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   Vcl.Controls, cxGrid, cxPCdxBarPopupMenu, cxPC, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit,
+  dsdGuides;
 
 type
   TSendTicketFuelJournalForm = class(TAncestorJournalForm)
@@ -19,6 +20,11 @@ type
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
   public
   end;

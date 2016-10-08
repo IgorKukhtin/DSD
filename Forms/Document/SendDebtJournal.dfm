@@ -12,7 +12,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
@@ -407,6 +407,23 @@ object SendDebtJournalForm: TSendDebtJournalForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel27: TcxLabel
+    Left = 844
+    Top = 32
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+  end
+  object edJuridicalBasis: TcxButtonEdit
+    Left = 944
+    Top = 30
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 155
+  end
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 24
@@ -648,16 +665,19 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TSendDebtForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41639d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = MasterDS
@@ -672,6 +692,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TSendDebtForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -679,6 +700,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -687,6 +709,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -767,6 +790,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -774,6 +798,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -786,6 +811,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -793,6 +819,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -825,11 +852,13 @@ object SendDebtJournalForm: TSendDebtJournalForm
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'isCopy'
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'isCopy'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'isCopy'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_isCopy
@@ -863,11 +892,13 @@ object SendDebtJournalForm: TSendDebtJournalForm
           FromParam.Name = 'isCopy'
           FromParam.Value = False
           FromParam.DataType = ftBoolean
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'isCopy'
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'isCopy'
           ToParam.DataType = ftBoolean
+          ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_isCopy
@@ -884,22 +915,26 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TProfitLossServiceForm'
       FormNameParam.Value = 'TProfitLossServiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '-1'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMovementId_Value'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41579d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       IdFieldName = 'Id'
@@ -913,6 +948,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -920,6 +956,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -927,10 +964,27 @@ object SendDebtJournalForm: TSendDebtJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   object spSelect: TdsdStoredProc
@@ -947,6 +1001,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -954,6 +1009,15 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -970,6 +1034,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -997,6 +1062,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1017,6 +1083,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -1051,6 +1118,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1079,12 +1147,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Value = 41579d
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndtDate'
         Value = 41639d
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1101,6 +1171,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1109,6 +1180,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         ComponentItem = 'InvNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1117,6 +1189,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBusinessId'
@@ -1124,6 +1197,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'BusinessId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -1131,6 +1205,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'JuridicalBasisId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioMasterId'
@@ -1138,6 +1213,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'MI_MasterId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioChildId'
@@ -1145,6 +1221,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'MI_ChildId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1153,6 +1230,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalFromId'
@@ -1160,6 +1238,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'JuridicalFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractfromId'
@@ -1167,6 +1246,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindFromId'
@@ -1174,6 +1254,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'PaidKindFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyFromId'
@@ -1181,6 +1262,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyFromId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalToId'
@@ -1188,6 +1270,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'JuridicalToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractToId'
@@ -1195,6 +1278,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'ContractToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindToId'
@@ -1202,6 +1286,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'PaidKindToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyToId'
@@ -1209,6 +1294,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyToId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 526
@@ -1225,6 +1311,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCopy'
@@ -1233,6 +1320,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         ComponentItem = 'isCopy'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsCopy'
@@ -1240,6 +1328,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Component = MasterCDS
         ComponentItem = 'isCopy'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 464
@@ -1251,8 +1340,61 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Name = 'isCopy'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 232
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 935
+    Top = 104
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 48
   end
 end

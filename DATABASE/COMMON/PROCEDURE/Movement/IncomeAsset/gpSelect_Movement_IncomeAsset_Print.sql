@@ -1,11 +1,10 @@
 -- Function: gpSelect_Movement_IncomeAsset_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeAsset_Print (Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeAsset_Print (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeAsset_Print(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inMovementId        Integer  , -- ключ Документа Приход от поставщика
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -28,7 +27,6 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
     DECLARE vbTotalCountKg  TFloat;
     DECLARE vbTotalCountSh  TFloat;
-
 
     DECLARE vbContractId Integer;
     DECLARE vbIsProcess_BranchIn Boolean;
@@ -231,7 +229,7 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId -- MovementLinkObject_Contract.ObjectId
+                                 ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
                                 AND Object_Contract_View.InvNumber <> '-'
 
@@ -271,7 +269,7 @@ BEGIN
                                                                AND Movement.OperDate >= OH_JuridicalDetails_From.StartDate
                                                                AND Movement.OperDate <  OH_JuridicalDetails_From.EndDate
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                 ON ObjectLink_Unit_Branch.ObjectId =  Object_JuridicalFrom.Id --Object_From.Id
+                                 ON ObjectLink_Unit_Branch.ObjectId =  Object_JuridicalFrom.Id 
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN ObjectString AS ObjectString_PlaceOf
                                    ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
@@ -397,10 +395,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_FullName
                                    ON ObjectString_FullName.ObjectId = Object_Goods.Id
                                   AND ObjectString_FullName.DescId = zc_ObjectString_Asset_FullName()
-
        WHERE tmpMI.Amount <> 0 
        ORDER BY Object_Goods.ValueData
-
        ;
 
     RETURN NEXT Cursor2;
@@ -413,6 +409,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeAsset_Print (Integer,  TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * parce
  02.08.16         * 
 */
 

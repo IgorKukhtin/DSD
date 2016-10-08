@@ -3,13 +3,15 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalReport(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inMemberId    Integer,    --
-    IN inIsErased    Boolean ,
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inMemberId         Integer,    --
+    IN inJuridicalBasisId Integer   , -- Главное юр.лицо
+    IN inIsErased         Boolean ,
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -199,11 +201,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * add inJuridicalBasisId
  07.05.15         * add Contract
  08.04.15                                        * all
  15.09.14                                                        *

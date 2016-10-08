@@ -31,6 +31,12 @@ type
     TotalSummToPay_Service: TcxGridDBColumn;
     cbIsServiceDate: TcxCheckBox;
     actIsServiceDate: TdsdDataSetRefresh;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
   private
     { Private declarations }
   public

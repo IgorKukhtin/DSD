@@ -828,6 +828,14 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1477,7 +1485,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 464
+    Left = 632
     Top = 80
   end
   object ContractGuides: TdsdGuides

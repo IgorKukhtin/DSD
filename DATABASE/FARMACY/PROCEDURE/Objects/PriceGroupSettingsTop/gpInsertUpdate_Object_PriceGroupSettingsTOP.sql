@@ -44,7 +44,7 @@ ALTER FUNCTION gpInsertUpdate_Object_PriceGroupSettingsTOP(Integer, TVarChar, TF
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.10.16         * structure
+ 05.10.16         * parce
  26.08.16         *
 
 */

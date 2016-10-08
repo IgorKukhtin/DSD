@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_QualityParams()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_QualityParams (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_QualityParams (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_QualityParams(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inJuridicalBasisId Integer   , -- Главное юр.лицо
+    IN inIsErased         Boolean   ,
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar,
                OperDateCertificate TDateTime, CertificateNumber TVarChar, CertificateSeries TVarChar, CertificateSeriesNumber TVarChar,
@@ -90,11 +93,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_QualityParams (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_QualityParams (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * add inJuridicalBasisId
  22.05.15                                        * add RetailName
  09.02.15                                                        *
 */

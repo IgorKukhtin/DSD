@@ -1,13 +1,15 @@
 -- Function: gpSelect_Movement_Tax()
 
  DROP FUNCTION IF EXISTS gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-    IN inIsRegisterDate Boolean ,
-    IN inIsErased       Boolean ,
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inJuridicalBasisId Integer , -- Главное юр.лицо
+    IN inIsRegisterDate   Boolean ,
+    IN inIsErased         Boolean ,
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean, Document Boolean, DateRegistered TDateTime, DateRegistered_notNull TDateTime, InvNumberRegistered TVarChar
@@ -268,11 +270,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * add inJuridicalBasisId
  06.04.15                        * add InvNumberRegistered, DateRegistered
  15.12.14                        * add isMedoc
  08.10.14         *  dell MovementBoolean_Electron было 2 раза

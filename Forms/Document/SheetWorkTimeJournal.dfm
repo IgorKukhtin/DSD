@@ -3,7 +3,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
   ClientHeight = 427
-  ClientWidth = 467
+  ClientWidth = 456
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,20 +12,21 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 467
-    Height = 41
+    Width = 456
+    Height = 50
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 502
     object deStart: TcxDateEdit
-      Left = 106
-      Top = 10
+      Left = 116
+      Top = 3
       EditValue = 42370d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
@@ -37,8 +38,8 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       Width = 103
     end
     object deEnd: TcxDateEdit
-      Left = 338
-      Top = 10
+      Left = 116
+      Top = 27
       EditValue = 42370d
       Properties.DisplayFormat = 'mmmm yyyy'
       Properties.EditFormat = 'dd.mm.yyyy'
@@ -46,27 +47,47 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       Properties.ShowTime = False
       Properties.WeekNumbers = True
       TabOrder = 1
-      Width = 102
+      Width = 103
     end
     object cxLabel2: TcxLabel
-      Left = 225
-      Top = 10
+      Left = 3
+      Top = 28
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel1: TcxLabel
-      Left = 9
-      Top = 10
+      Left = 22
+      Top = 4
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel27: TcxLabel
+      Left = 357
+      Top = 4
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 301
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 155
     end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
-    Width = 467
-    Height = 360
+    Top = 76
+    Width = 456
+    Height = 351
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 67
+    ExplicitWidth = 467
+    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -347,6 +368,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       FormName = 'TSheetWorkTimeForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'OperDate'
@@ -354,12 +376,14 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -367,11 +391,28 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
           Component = ClientDataSet
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       IdFieldName = 'Id'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -388,6 +429,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -395,10 +437,19 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 24
-    Top = 176
+    Left = 32
+    Top = 192
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -448,6 +499,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -455,5 +507,56 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       end>
     Left = 416
     Top = 32
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 313
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 350
+    Top = 128
   end
 end

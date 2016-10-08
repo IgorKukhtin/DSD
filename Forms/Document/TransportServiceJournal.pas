@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit, cxBlobEdit, frxClass;
+  cxButtonEdit, cxBlobEdit, frxClass, dsdGuides;
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
@@ -44,6 +44,11 @@ type
     clContractCode: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     SummTotal: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    JuridicalBasisGuides: TdsdGuides;
+    spGet_UserJuridicalBasis: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

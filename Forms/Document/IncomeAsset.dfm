@@ -586,9 +586,6 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 258
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2422,7 +2419,8 @@ object IncomeAssetForm: TIncomeAssetForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
+    Left = 680
+    Top = 16
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -2656,7 +2654,7 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end>
     Left = 752
-    Top = 48
+    Top = 64
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2685,7 +2683,8 @@ object IncomeAssetForm: TIncomeAssetForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 776
+    Left = 768
+    Top = 8
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

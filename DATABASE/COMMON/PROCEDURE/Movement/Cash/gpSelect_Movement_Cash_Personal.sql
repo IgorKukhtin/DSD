@@ -1,14 +1,16 @@
 -- Function: gpSelect_Movement_Cash_Personal()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash_Personal (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash_Personal(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inCashId        Integer , --
-    IN inIsServiceDate Boolean ,
-    IN inIsErased      Boolean   ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inCashId            Integer , --
+    IN inJuridicalBasisId  Integer , -- гл. юр.лицо
+    IN inIsServiceDate     Boolean ,
+    IN inIsErased          Boolean   ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -165,6 +167,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.10.16         * add inJuridicalBasisId
  04.04.15                                        * all
  18.01.15         * add member
  17.01.15         * add inCashId

@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_TransferDebtIn()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Integer, Boolean,TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TransferDebtIn(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-    IN inIsErased       Boolean ,
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inStartDate         TDateTime , --
+    IN inEndDate           TDateTime , --
+    IN inJuridicalBasisId  Integer   , -- Главное юр.лицо
+    IN inIsErased          Boolean ,
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar, InvNumberMark TVarChar
@@ -215,11 +218,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.10.16         * add inJuridicalBasisId
  01.12.14         * add InvNumberMark               
  03.09.14         * add Checked
  20.06.14                                                       * add InvNumberPartner

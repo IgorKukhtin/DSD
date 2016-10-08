@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
+             , InsertName TVarChar, InsertDate TDateTime
               )
 AS
 $BODY$
@@ -78,6 +79,10 @@ BEGIN
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
            , Movement_Check.ConfirmedKindClientName
+
+          , Object_Insert.ValueData              AS InsertName
+          , MovementDate_Insert.ValueData        AS InsertDate
+
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -85,6 +90,14 @@ BEGIN
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
                            
+             LEFT JOIN MovementDate AS MovementDate_Insert
+                                    ON MovementDate_Insert.MovementId = Movement_Check.Id
+                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+             LEFT JOIN MovementLinkObject AS MLO_Insert
+                                          ON MLO_Insert.MovementId = Movement_Check.Id
+                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbRetailId = vbObjectId)
@@ -98,6 +111,7 @@ ALTER FUNCTION gpSelect_Movement_Check (TDateTime, TDateTime, Boolean, Integer, 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.  Âîðîáêàëî À.À.
+ 06.10.16         * add InsertName, InsertDate
  25.08.16         *
  21.07.16         *
  05.05.16         *
