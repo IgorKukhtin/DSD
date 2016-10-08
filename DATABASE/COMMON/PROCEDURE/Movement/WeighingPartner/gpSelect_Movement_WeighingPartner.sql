@@ -369,19 +369,23 @@ $BODY$
 
 /*
 update Movement set AccessKeyId = xxx
-from (select Movement.Id, MovementLinkObject_User.ObjectId
-, lpGetAccessKey (ObjectId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()) as xxx
-, Movement.OperDate
-      from  Movement ,     MovementLinkObject AS MovementLinkObject_User
-where Movement.DescId = zc_Movement_WeighingPartner()
-and Movement.AccessKeyId is null
-and MovementLinkObject_User.MovementId = Movement.Id
-AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+from (WITH tmp_all AS (select Movement.Id, MovementLinkObject_User.ObjectId
+                            , Movement.OperDate
+                       from  Movement , MovementLinkObject AS MovementLinkObject_User
+                            join Object on  Object.Id = MovementLinkObject_User.ObjectId
+                                         and Object.isErased = false
+                       where Movement.DescId = zc_Movement_WeighingPartner()
+                         and Movement.AccessKeyId is null
+                         and MovementLinkObject_User.MovementId = Movement.Id
+                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+                         and MovementLinkObject_User.ObjectId not in (300521 , 300544)
+                       order by Movement.Id desc limit 100000
+                      )
+       , tmpUser_all AS (SELECT DISTINCT ObjectId FROM tmp_all)
+       , tmpUser AS (SELECT tmpUser_all.ObjectId, lpGetAccessKey (tmpUser_all.ObjectId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()) AS xxx FROM tmpUser_all)
 
-and MovementLinkObject_User.ObjectId <> 300521 
-
-order by Movement.Id desc limit 10000
-) as tmp
+      select tmp_all.*, tmpUser.xxx from tmp_all join tmpUser on tmpUser.ObjectId = tmp_all.ObjectId order by tmp_all.OperDate DESC, tmp_all.Id
+     ) as tmp
 where Movement.Id = tmp.Id
 */
 

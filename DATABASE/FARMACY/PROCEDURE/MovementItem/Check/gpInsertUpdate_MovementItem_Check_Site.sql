@@ -22,19 +22,21 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
-    -- Находим элемент по документу и товару
+    -- Находим элемент по документу и товару и ЦЕНЕ
     IF (COALESCE(ioId,0) = 0)
        or
        (NOT EXISTS(SELECT 1 FROM MovementItem Where Id = ioId))       
     THEN
-        SELECT 
-            Id, Amount
-        INTO 
-            ioId, vbAmount_old
+        SELECT MovementItem.Id, MovementItem.Amount
+               INTO ioId, vbAmount_old
         FROM MovementItem
-        WHERE MovementId = inMovementId 
-          AND ObjectId = inGoodsId 
-          AND DescId = zc_MI_Master();
+             INNER JOIN MovementItemFloat AS MIFloat_Price
+                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         AND MIFloat_Price.ValueData = inPrice
+        WHERE MovementItem.MovementId = inMovementId 
+          AND MovementItem.ObjectId   = inGoodsId 
+          AND MovementItem.DescId     = zc_MI_Master();
     END IF;
 
      -- определяется признак Создание/Корректировка
