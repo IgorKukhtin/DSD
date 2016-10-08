@@ -4,7 +4,6 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDate
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Item(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
@@ -61,14 +60,11 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsXleb Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingPartner());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Хлеб!!!
-     vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
 
     -- таблица -
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
@@ -106,7 +102,6 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
 
        SELECT  Movement.Id
@@ -237,16 +232,11 @@ BEGIN
 
                   , MovementItem.isErased
 
-       FROM (SELECT Movement.Id
-                  , tmpRoleAccessKey.AccessKeyId
-             FROM tmpStatus
-                JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
-                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                             AND Movement.StatusId = tmpStatus.StatusId
-                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-            ) AS tmpMovement
-
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
+            INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
@@ -507,10 +497,6 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_BarCode
                                           ON MIBoolean_BarCode.MovementItemId =  MovementItem.Id
                                          AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
-
-     WHERE (vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
-                                AND vbIsXleb = TRUE))
-       AND (tmpMovement.AccessKeyId > 0)
       ;
   
 END;
@@ -528,4 +514,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner_Item (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inGoodsGroupId:= 0, inGoodsId:= 0, inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

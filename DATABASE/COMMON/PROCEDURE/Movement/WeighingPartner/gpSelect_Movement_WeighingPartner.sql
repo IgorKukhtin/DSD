@@ -51,9 +51,6 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_WeighingPartner());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Хлеб!!!
-     vbIsXleb:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 131936  AND UserId = vbUserId);
-
 
      -- Результат
      RETURN QUERY 
@@ -76,7 +73,6 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
                          UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
                               )
 
        SELECT  Movement.Id
@@ -171,16 +167,12 @@ BEGIN
              , COALESCE (MovementBoolean_Promo.ValueData, False) AS isPromo
              , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
-       FROM (SELECT Movement.Id
-                  , tmpRoleAccessKey.AccessKeyId
-             FROM tmpStatus
-                JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
-                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                             AND Movement.StatusId = tmpStatus.StatusId
-                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-            ) AS tmpMovement
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
+            INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN Movement AS Movement_Parent ON Movement_Parent.Id = Movement.ParentId
 
@@ -359,11 +351,7 @@ BEGIN
             LEFT JOIN MovementDate AS MD_EndSale
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
-
-     WHERE (vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
-                                AND vbIsXleb = TRUE))
-       AND (tmpMovement.AccessKeyId > 0)
-      ;
+           ;
   
 END;
 $BODY$
@@ -379,5 +367,23 @@ $BODY$
  11.03.14         *
 */
 
+/*
+update Movement set AccessKeyId = xxx
+from (select Movement.Id, MovementLinkObject_User.ObjectId
+, lpGetAccessKey (ObjectId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()) as xxx
+, Movement.OperDate
+      from  Movement ,     MovementLinkObject AS MovementLinkObject_User
+where Movement.DescId = zc_Movement_WeighingPartner()
+and Movement.AccessKeyId is null
+and MovementLinkObject_User.MovementId = Movement.Id
+AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
+
+and MovementLinkObject_User.ObjectId <> 300521 
+
+order by Movement.Id desc limit 10000
+) as tmp
+where Movement.Id = tmp.Id
+*/
+
 -- тест
--- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2016', inEndDate:= '02.06.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_WeighingPartner (inStartDate:= '01.06.2016', inEndDate:= '02.06.2016', inJuridicalBasisId:= zc_Juridical_Basis(), inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

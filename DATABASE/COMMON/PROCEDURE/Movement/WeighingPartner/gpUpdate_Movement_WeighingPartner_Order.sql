@@ -15,7 +15,7 @@ $BODY$
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_WeighingPartner());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_WeighingPartner());
      vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inId, 0) = 0

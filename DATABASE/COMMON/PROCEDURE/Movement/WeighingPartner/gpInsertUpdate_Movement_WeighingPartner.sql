@@ -43,7 +43,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяем ключ доступа
-     -- vbAccessKeyId:= ...;
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
      IF COALESCE (ioId, 0) = 0
      THEN

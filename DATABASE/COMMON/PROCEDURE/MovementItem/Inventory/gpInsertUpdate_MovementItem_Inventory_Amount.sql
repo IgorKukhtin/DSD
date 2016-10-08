@@ -59,11 +59,15 @@ BEGIN
                                                           AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                             INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId
                                                 AND Container.DescId = zc_Container_Count()
+                            LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                          ON CLO_Account.ContainerId = Container.Id
+                                                         AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
                             LEFT JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ContainerId = Container.Id
                                                            AND MIContainer.OperDate > Movement.OperDate -- т.к. остаток на Дата + 1
                        WHERE Movement.Id =  inMovementId
-                       GROUP BY Container.Id
+                         AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                      GROUP BY Container.Id
                               , Container.ObjectId
                               , Container.Amount
                        HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0)) <> 0

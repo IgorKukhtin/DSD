@@ -1,27 +1,30 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
   ClientHeight = 430
-  ClientWidth = 781
+  ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 797
-  ExplicitHeight = 468
+  ExplicitWidth = 1100
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 76
-    Width = 781
-    Height = 354
+    Width = 1084
+    Height = 373
     TabOrder = 3
-    ExplicitHeight = 373
-    ClientRectBottom = 354
-    ClientRectRight = 781
+    ExplicitTop = 76
+    ExplicitWidth = 781
+    ExplicitHeight = 354
+    ClientRectBottom = 373
+    ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 373
+      ExplicitWidth = 781
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
-        Width = 781
-        Height = 354
-        ExplicitHeight = 373
+        Width = 1084
+        Height = 373
+        ExplicitWidth = 781
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -177,35 +180,33 @@ inherited PromoJournalForm: TPromoJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 781
-    Height = 50
-    ExplicitWidth = 790
-    ExplicitHeight = 50
+    Width = 1084
+    ExplicitWidth = 1084
     inherited deStart: TcxDateEdit
-      EditValue = 42309d
+      EditValue = 42675d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42309d
+      EditValue = 42675d
     end
     inherited cxLabel2: TcxLabel
       Left = 198
       ExplicitLeft = 198
     end
     object chbPeriodForOperDate: TcxCheckBox
-      Left = 10
-      Top = 26
+      Left = 411
+      Top = 5
       Action = actRefresh
       Caption = #1042#1082#1083'. - '#1087#1077#1088#1080#1086#1076' '#1076#1083#1103' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> ('#1086#1090#1082#1083'. - '#1076#1083#1103' <'#1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080'>)'
       TabOrder = 4
       Width = 384
     end
     object cxLabel27: TcxLabel
-      Left = 443
+      Left = 849
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 543
+      Left = 927
       Top = 5
       Properties.Buttons = <
         item
@@ -214,7 +215,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 236
+      Width = 150
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

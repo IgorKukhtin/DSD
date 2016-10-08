@@ -423,10 +423,11 @@ BEGIN
                         -- продажа - с ограничениями (так типа быстрее)
                       , tmpMI_sale AS (SELECT tmpMI_sale_all.*
                                        FROM tmpMI_sale_all
-                                            INNER JOIN _tmpGoods_ReturnIn_Auto_all ON _tmpGoods_ReturnIn_Auto_all.GoodsId        = tmpMI_sale_all.GoodsId
-                                                                                  -- !!!т.к. для НАЛ - без проверки!!!
-                                                                                  -- AND _tmpGoods_ReturnIn_Auto_all.GoodsKindId    = tmpMI_sale_all.GoodsKindId
-                                                                                  AND _tmpGoods_ReturnIn_Auto_all.Price_original = tmpMI_sale_all.Price_original
+                                            INNER JOIN (SELECT DISTINCT _tmp.GoodsId, _tmp.Price_original /*, _tmp.GoodsKindId*/ FROM _tmpGoods_ReturnIn_Auto_all AS _tmp
+                                                       ) AS tmp ON tmp.GoodsId        = tmpMI_sale_all.GoodsId
+                                                               -- !!!т.к. для НАЛ - без проверки!!!
+                                                               -- AND tmp.GoodsKindId    = tmpMI_sale_all.GoodsKindId
+                                                               AND tmp.Price_original = tmpMI_sale_all.Price_original
                                       )
                    -- находим для продаж - сколько уже привязано в возвратах
                  , tmpMI_ReturnIn_find AS (SELECT tmpMI_sale.MovementItemId

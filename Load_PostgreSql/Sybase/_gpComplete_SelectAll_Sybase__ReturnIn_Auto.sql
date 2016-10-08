@@ -11,6 +11,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code 
 AS
 $BODY$
 BEGIN
+     IF inStartDate >= '01.10.2016' THEN
+
      -- Результат
      RETURN QUERY 
 
@@ -73,6 +75,9 @@ BEGIN
            )
     ) AS tmp
     ;
+
+     END IF;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

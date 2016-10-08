@@ -27,7 +27,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -37,7 +37,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42005d
+      EditValue = 42370d
       Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -580,7 +580,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 200
   end
   object edJuridicalBasis: TcxButtonEdit
@@ -593,12 +593,12 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 10
-    Width = 185
+    Width = 150
   end
   object cxLabel27: TcxLabel
-    Left = 951
+    Left = 974
     Top = 32
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

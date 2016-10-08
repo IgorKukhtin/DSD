@@ -268,9 +268,9 @@ object TransportJournalForm: TTransportJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 794
+    Left = 817
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit
     Left = 895
@@ -282,7 +282,7 @@ object TransportJournalForm: TTransportJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
