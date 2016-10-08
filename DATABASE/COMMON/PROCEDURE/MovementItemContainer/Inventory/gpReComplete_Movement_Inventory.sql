@@ -21,6 +21,13 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
+     -- Временно - для филиалов
+     IF vbUserId = 5 AND 1=0
+     THEN PERFORM gpInsertUpdate_MovementItem_Inventory_Amount (inMovementId := inMovementId
+                                                              , inSession    := inSession
+                                                               );
+     END IF;
+
 
      -- Проводим Документ
      PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId

@@ -69,7 +69,7 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.AnalyzerId             = zc_Enum_AnalyzerId_ReWork() -- 
+                              AND MIContainer.AnalyzerId             <> inUnitId -- zc_Enum_AnalyzerId_ReWork() -- 
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                               AND MIContainer.isActive               = FALSE
                             GROUP BY MIContainer.ContainerId
@@ -169,14 +169,31 @@ BEGIN
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
-     , tmpMI_result_find AS (-- как-то исправил ошибку
-                             SELECT tmpMI_result.GoodsId
+     /*, tmpMI_result_find AS (-- как-то исправил ошибку
+                             SELECT tmp.GoodsId
+                             FROM
+                            (SELECT tmpMI_result.GoodsId
+                                  , COALESCE (ObjectLink_Receipt_Goods_parent.ChildObjectId, tmpMI_result.GoodsId) AS GoodsId_child
                              FROM tmpMI_result
+                                  LEFT JOIN tmpMI_child_result ON tmpMI_child_result.ContainerId = tmpMI_result.ContainerId
+                                                              AND tmpMI_child_result.OperDate    = tmpMI_result.OperDate
+                                  LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId = tmpMI_result.GoodsId
+                                                      AND tmpReceipt.GoodsKindId = tmpMI_result.GoodsKindId
+                                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
+                                                       ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
+                                                      AND ObjectLink_Receipt_Parent.DescId   = zc_ObjectLink_Receipt_Parent()
+                                  LEFT JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
+                                                                           AND Object_Receipt_parent.isErased = FALSE
+                                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
+                                                       ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                                      AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
+                                                      AND ObjectLink_Receipt_Goods_parent.ChildObjectId > 0
                              WHERE tmpMI_result.OperCount > 0
                                AND tmpMI_result.DescId_mi = zc_MI_Master()
-                             GROUP BY tmpMI_result.GoodsId
+                            ) AS tmp
+                             GROUP BY tmp.GoodsId
                              HAVING COUNT (*) > 1
-                            )
+                            )*/
 
           -- Результат:
           -- элементы Прихода с пр-ва
@@ -197,11 +214,13 @@ BEGIN
                , CASE WHEN tmpMI_result.OperCount > COALESCE (tmpMI_child_result.OperCount, 0) THEN COALESCE (tmpMI_child_result.OperCount, 0) ELSE tmpMI_result.OperCount END
                * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                  -- как-то исправил ошибку
-               * CASE WHEN tmpMI_result_find.GoodsId IS NULL THEN 1 ELSE 0 END AS OperCount_Weight_two
+               * 0
+               /* * CASE WHEN tmpMI_result_find.GoodsId IS NULL THEN 1 ELSE 0 END*/
+                 AS OperCount_Weight_two
 
                , FALSE AS isDelete
           FROM tmpMI_result
-               LEFT JOIN tmpMI_result_find ON tmpMI_result_find.GoodsId = tmpMI_result.GoodsId
+               -- LEFT JOIN tmpMI_result_find ON tmpMI_result_find.GoodsId = tmpMI_result.GoodsId
                LEFT JOIN tmpMI_child_result ON tmpMI_child_result.ContainerId = tmpMI_result.ContainerId
                                            AND tmpMI_child_result.OperDate    = tmpMI_result.OperDate
                LEFT JOIN tmpReceipt ON tmpReceipt.GoodsId = tmpMI_result.GoodsId
@@ -212,9 +231,9 @@ BEGIN
                LEFT JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
                                                         AND Object_Receipt_parent.isErased = FALSE
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
-                                     ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
-                                    AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
-                                    AND ObjectLink_Receipt_Goods_parent.ChildObjectId > 0
+                                    ON ObjectLink_Receipt_Goods_parent.ObjectId = ObjectLink_Receipt_Parent.ChildObjectId
+                                   AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
+                                   AND ObjectLink_Receipt_Goods_parent.ChildObjectId > 0
 
                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_result.GoodsId
                                                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
