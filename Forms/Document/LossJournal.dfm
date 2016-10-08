@@ -1,27 +1,28 @@
 inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
-  ClientHeight = 535
-  ClientWidth = 1020
+  ClientHeight = 412
+  ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitLeft = -119
+  ExplicitWidth = 935
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
-    Height = 478
+    Width = 919
+    Height = 355
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectBottom = 355
+    ClientRectRight = 919
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
+        Width = 919
+        Height = 355
         ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -118,22 +119,22 @@ inherited LossJournalForm: TLossJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 919
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 683
+    Left = 668
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 781
+    Left = 746
     Top = 5
     Properties.Buttons = <
       item
@@ -142,7 +143,7 @@ inherited LossJournalForm: TLossJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 233
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -446,7 +447,7 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 320
+    Top = 288
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Loss'
@@ -460,7 +461,7 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 384
+    Top = 352
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Loss'
@@ -474,7 +475,7 @@ inherited LossJournalForm: TLossJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 208
-    Top = 376
+    Top = 344
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -579,7 +580,8 @@ inherited LossJournalForm: TLossJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 847
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

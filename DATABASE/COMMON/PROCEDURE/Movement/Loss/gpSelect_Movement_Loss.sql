@@ -98,4 +98,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inJuridicalBasisId:= zc_Juridical_Basis(), inSession:= '2')

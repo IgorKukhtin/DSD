@@ -5,7 +5,7 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 797
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,15 +13,19 @@ inherited PromoJournalForm: TPromoJournalForm
     Width = 781
     Height = 354
     TabOrder = 3
-    ExplicitHeight = 373
+    ExplicitTop = 76
+    ExplicitWidth = 781
+    ExplicitHeight = 354
     ClientRectBottom = 354
     ClientRectRight = 781
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 373
+      ExplicitWidth = 781
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 781
         Height = 354
-        ExplicitHeight = 373
+        ExplicitWidth = 781
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -179,13 +183,13 @@ inherited PromoJournalForm: TPromoJournalForm
   inherited Panel: TPanel
     Width = 781
     Height = 50
-    ExplicitWidth = 790
+    ExplicitWidth = 781
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
-      EditValue = 42309d
+      EditValue = 42675d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42309d
+      EditValue = 42675d
     end
     inherited cxLabel2: TcxLabel
       Left = 198
@@ -200,12 +204,12 @@ inherited PromoJournalForm: TPromoJournalForm
       Width = 384
     end
     object cxLabel27: TcxLabel
-      Left = 443
+      Left = 545
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 543
+      Left = 623
       Top = 5
       Properties.Buttons = <
         item
@@ -214,7 +218,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 236
+      Width = 150
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

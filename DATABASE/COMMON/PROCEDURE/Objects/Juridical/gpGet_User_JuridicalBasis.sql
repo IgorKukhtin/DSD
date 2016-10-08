@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION gpGet_User_JuridicalBasis(
 RETURNS TABLE(JuridicalBasisId integer, JuridicalBasisName TVarChar)
 AS
 $BODY$
-  
 BEGIN
 
      RETURN QUERY
@@ -22,12 +21,10 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_User_JuridicalBasis (TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  10.10.16         *
-
 */
 
 -- тест

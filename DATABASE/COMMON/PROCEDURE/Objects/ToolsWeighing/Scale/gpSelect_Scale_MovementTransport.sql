@@ -52,6 +52,15 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_UnComplete() AS StatusId
                          )
+        , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
+        , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                        )
+        , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
+                         UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                              )
 
        SELECT  Movement.Id
              , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
@@ -69,9 +78,10 @@ BEGIN
              , Object_UnitForwarding.ValueData  AS UnitForwardingName
 
        FROM tmpStatus
-            JOIN Movement ON Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                         AND Movement.StatusId = tmpStatus.StatusId
+            INNER JOIN Movement ON Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
+                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                               AND Movement.StatusId = tmpStatus.StatusId
+            INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
