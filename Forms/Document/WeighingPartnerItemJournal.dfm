@@ -725,7 +725,7 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 200
   end
   object cxLabel27: TcxLabel
@@ -1467,6 +1467,9 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
       end
       item
         Component = GuidesGoods
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 552
     Top = 24
@@ -1565,14 +1568,15 @@ object WeighingPartnerItemJournalForm: TWeighingPartnerItemJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'

@@ -13,18 +13,19 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Width = 1114
     Height = 374
     TabOrder = 3
+    ExplicitTop = 76
     ExplicitWidth = 1114
-    ExplicitHeight = 393
+    ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1114
-      ExplicitHeight = 393
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1114
         Height = 374
         ExplicitWidth = 1114
-        ExplicitHeight = 393
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -539,12 +540,12 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
     object cxLabel27: TcxLabel
-      Left = 803
+      Left = 857
       Top = 6
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 901
+      Left = 955
       Top = 5
       Properties.Buttons = <
         item
@@ -553,7 +554,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 210
+      Width = 155
     end
   end
   object ExportXmlGrid: TcxGrid [2]
@@ -2183,18 +2184,20 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

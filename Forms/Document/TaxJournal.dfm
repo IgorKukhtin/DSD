@@ -4,7 +4,6 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -1
   ExplicitWidth = 1126
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -1465,6 +1464,9 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         Component = edIsRegisterDate
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1985,18 +1987,20 @@ inherited TaxJournalForm: TTaxJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 991

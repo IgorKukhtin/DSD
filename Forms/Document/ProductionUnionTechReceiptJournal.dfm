@@ -813,7 +813,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 186
+    Width = 155
   end
   object cxLabel27: TcxLabel [3]
     Left = 789
@@ -2539,6 +2539,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         Component = GuidesTo
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 288
     Top = 232
@@ -2825,18 +2826,20 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

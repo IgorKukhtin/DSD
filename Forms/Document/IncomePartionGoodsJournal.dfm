@@ -516,12 +516,12 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 420
+    Left = 508
     Top = 32
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 522
+    Left = 610
     Top = 31
     Properties.Buttons = <
       item
@@ -530,7 +530,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1350,6 +1350,9 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 336
     Top = 32
@@ -1444,21 +1447,23 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 644
+    Left = 732
     Top = 26
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc

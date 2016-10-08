@@ -23,7 +23,6 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Height = 50
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 502
     object deStart: TcxDateEdit
       Left = 116
       Top = 3
@@ -85,9 +84,6 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 67
-    ExplicitWidth = 467
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -504,6 +500,9 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 416
     Top = 32
@@ -519,18 +518,20 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 313

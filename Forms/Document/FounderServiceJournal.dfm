@@ -12,17 +12,17 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Width = 840
     Height = 480
     TabOrder = 3
-    ExplicitWidth = 841
+    ExplicitWidth = 840
     ExplicitHeight = 480
     ClientRectBottom = 480
     ClientRectRight = 840
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 841
+      ExplicitWidth = 840
       ExplicitHeight = 480
       inherited cxGrid: TcxGrid
         Width = 840
         Height = 480
-        ExplicitWidth = 841
+        ExplicitWidth = 840
         ExplicitHeight = 480
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -138,7 +138,7 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 840
-    ExplicitWidth = 841
+    ExplicitWidth = 840
   end
   object cxLabel27: TcxLabel [2]
     Left = 573
@@ -478,6 +478,13 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
     Left = 408
     Top = 344
   end
@@ -586,18 +593,20 @@ inherited FounderServiceJournalForm: TFounderServiceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 719

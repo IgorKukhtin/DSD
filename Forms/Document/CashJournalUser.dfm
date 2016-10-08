@@ -5,6 +5,7 @@ inherited CashJournalUserForm: TCashJournalUserForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -728,6 +729,9 @@ inherited CashJournalUserForm: TCashJournalUserForm
       end
       item
         Component = CurrencyGuides
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -874,18 +878,20 @@ inherited CashJournalUserForm: TCashJournalUserForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

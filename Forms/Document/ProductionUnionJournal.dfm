@@ -223,7 +223,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 186
+    Width = 155
   end
   object cxLabel27: TcxLabel [3]
     Left = 789
@@ -636,6 +636,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -845,18 +846,20 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

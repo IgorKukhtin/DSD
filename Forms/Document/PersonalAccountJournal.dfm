@@ -24,7 +24,6 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -63,7 +62,6 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 711
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -974,6 +972,9 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 576
     Top = 24
@@ -1019,18 +1020,20 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 639

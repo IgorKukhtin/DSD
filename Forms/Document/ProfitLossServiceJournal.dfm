@@ -356,7 +356,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited ActionList: TActionList
     Left = 143
@@ -645,6 +645,15 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Left = 200
     Top = 120
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ProfitLossService'
     Left = 16
@@ -703,18 +712,20 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 863

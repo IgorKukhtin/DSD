@@ -5,26 +5,25 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1084
     Height = 373
     TabOrder = 3
-    ExplicitTop = 76
-    ExplicitWidth = 781
-    ExplicitHeight = 354
+    ExplicitWidth = 1084
+    ExplicitHeight = 373
     ClientRectBottom = 373
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 781
-      ExplicitHeight = 354
+      ExplicitWidth = 1084
+      ExplicitHeight = 373
       inherited cxGrid: TcxGrid
         Width = 1084
         Height = 373
-        ExplicitWidth = 781
-        ExplicitHeight = 354
+        ExplicitWidth = 1084
+        ExplicitHeight = 373
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -215,7 +214,7 @@ inherited PromoJournalForm: TPromoJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 150
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -606,6 +605,15 @@ inherited PromoJournalForm: TPromoJournalForm
       Action = mactUpdate_Movement_Promo_Data_all
     end
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Promo'
     Left = 64
@@ -735,21 +743,23 @@ inherited PromoJournalForm: TPromoJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 663
+    Left = 943
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

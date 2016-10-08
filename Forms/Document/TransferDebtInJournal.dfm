@@ -12,17 +12,17 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     Width = 1062
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1062
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1062
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1062
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1062
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1062
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -446,7 +446,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   end
   inherited Panel: TPanel
     Width = 1062
-    ExplicitWidth = 1020
+    ExplicitWidth = 1062
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -1198,6 +1198,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1676,18 +1677,20 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

@@ -12,17 +12,17 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Width = 913
     Height = 592
     TabOrder = 3
-    ExplicitWidth = 910
+    ExplicitWidth = 913
     ExplicitHeight = 592
     ClientRectBottom = 592
     ClientRectRight = 913
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 910
+      ExplicitWidth = 913
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
         Width = 913
         Height = 592
-        ExplicitWidth = 910
+        ExplicitWidth = 913
         ExplicitHeight = 592
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -106,7 +106,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited Panel: TPanel
     Width = 913
-    ExplicitWidth = 910
+    ExplicitWidth = 913
   end
   object cxLabel27: TcxLabel [2]
     Left = 634
@@ -389,6 +389,15 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Left = 224
     Top = 168
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Currency'
     Left = 16
@@ -423,18 +432,20 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 759

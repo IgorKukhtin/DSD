@@ -4,18 +4,19 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 888
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 872
     TabOrder = 3
-    ExplicitWidth = 873
+    ExplicitWidth = 872
     ClientRectRight = 872
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 873
+      ExplicitWidth = 872
       inherited cxGrid: TcxGrid
         Width = 872
-        ExplicitWidth = 873
+        ExplicitWidth = 872
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -69,8 +70,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   end
   inherited Panel: TPanel
     Width = 872
-    ExplicitLeft = -1
-    ExplicitWidth = 873
+    ExplicitWidth = 872
   end
   object cxLabel27: TcxLabel [2]
     Left = 531
@@ -637,6 +637,15 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Visible = False
     end
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankStatement'
   end
@@ -651,18 +660,20 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 767

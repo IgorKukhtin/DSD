@@ -825,6 +825,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       end
       item
         Component = MasterCDS
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 328
     Top = 104
@@ -1055,18 +1058,20 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

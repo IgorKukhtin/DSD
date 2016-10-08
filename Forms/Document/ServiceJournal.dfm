@@ -252,8 +252,6 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitLeft = -8
-    ExplicitTop = -1
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -277,7 +275,7 @@ inherited ServiceJournalForm: TServiceJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -560,6 +558,15 @@ inherited ServiceJournalForm: TServiceJournalForm
     Left = 200
     Top = 120
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'
     Left = 16
@@ -615,21 +622,23 @@ inherited ServiceJournalForm: TServiceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 855
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

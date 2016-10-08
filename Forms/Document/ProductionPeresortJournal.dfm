@@ -12,17 +12,17 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     Width = 863
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1073
+    ExplicitWidth = 863
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 863
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
+      ExplicitWidth = 863
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 863
         Height = 478
-        ExplicitWidth = 1073
+        ExplicitWidth = 863
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -206,7 +206,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
   end
   inherited Panel: TPanel
     Width = 863
-    ExplicitWidth = 1073
+    ExplicitWidth = 863
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -215,12 +215,12 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 519
+    Left = 601
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 620
+    Left = 702
     Top = 5
     Properties.Buttons = <
       item
@@ -229,7 +229,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -528,6 +528,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -677,18 +678,20 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 755

@@ -5,6 +5,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,15 +13,19 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     Width = 982
     Height = 599
     TabOrder = 3
+    ExplicitTop = 76
     ExplicitWidth = 982
+    ExplicitHeight = 599
     ClientRectBottom = 599
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
+      ExplicitHeight = 599
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 599
         ExplicitWidth = 982
+        ExplicitHeight = 599
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -465,6 +470,9 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       end
       item
         Component = GuidesBankAccount
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 400
     Top = 144
@@ -574,18 +582,20 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 871
