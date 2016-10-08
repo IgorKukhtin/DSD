@@ -480,12 +480,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 678
+    Left = 760
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 776
+    Left = 858
     Top = 5
     Properties.Buttons = <
       item
@@ -494,7 +494,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1791,21 +1791,23 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 935
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

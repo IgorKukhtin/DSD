@@ -1380,6 +1380,9 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 552
     Top = 24
@@ -1419,18 +1422,20 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

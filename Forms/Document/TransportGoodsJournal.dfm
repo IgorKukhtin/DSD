@@ -279,7 +279,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 235
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -606,6 +606,13 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
     Left = 408
     Top = 344
   end
@@ -721,21 +728,24 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 855
+    Left = 807
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

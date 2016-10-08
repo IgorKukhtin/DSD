@@ -323,12 +323,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 696
+    Left = 749
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 794
+    Left = 847
     Top = 5
     Properties.Buttons = <
       item
@@ -337,7 +337,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -647,6 +647,9 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       end
       item
         Component = edIsPartnerDate
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -770,18 +773,20 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 916

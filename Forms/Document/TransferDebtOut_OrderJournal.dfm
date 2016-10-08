@@ -1309,6 +1309,7 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1760,18 +1761,20 @@ inherited TransferDebtOut_OrderJournalForm: TTransferDebtOut_OrderJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

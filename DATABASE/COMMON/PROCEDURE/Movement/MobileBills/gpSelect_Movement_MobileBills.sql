@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_MobileBills()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_MobileBills (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_MobileBills (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_MobileBills(
-    IN inStartDate     TDateTime , --
-    IN inEndDate       TDateTime , --
-    IN inIsErased      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inStartDate        TDateTime , --
+    IN inEndDate          TDateTime , --
+    IN inJuridicalBasisId Integer   , 
+    IN inIsErased         Boolean ,
+    IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -79,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.10.16         * add inJuridicalBasisId
  05.10.16         * parce
  27.09.16         *
 */

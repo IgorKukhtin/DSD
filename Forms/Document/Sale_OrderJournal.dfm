@@ -14,18 +14,19 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Width = 1177
     Height = 374
     TabOrder = 3
+    ExplicitTop = 76
     ExplicitWidth = 1177
-    ExplicitHeight = 393
+    ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1177
-      ExplicitHeight = 393
+      ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 374
         ExplicitWidth = 1177
-        ExplicitHeight = 393
+        ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -829,12 +830,12 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
   end
   object cxLabel27: TcxLabel [3]
-    Left = 803
+    Left = 832
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit [4]
-    Left = 904
+    Left = 933
     Top = 5
     Properties.Buttons = <
       item
@@ -843,7 +844,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 239
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -4155,18 +4156,20 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

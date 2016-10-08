@@ -13,17 +13,17 @@ inherited CashJournalForm: TCashJournalForm
     Width = 975
     Height = 494
     TabOrder = 3
-    ExplicitWidth = 959
+    ExplicitWidth = 975
     ExplicitHeight = 494
     ClientRectBottom = 494
     ClientRectRight = 975
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 959
+      ExplicitWidth = 975
       ExplicitHeight = 494
       inherited cxGrid: TcxGrid
         Width = 975
         Height = 494
-        ExplicitWidth = 959
+        ExplicitWidth = 975
         ExplicitHeight = 494
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -448,7 +448,7 @@ inherited CashJournalForm: TCashJournalForm
   end
   inherited Panel: TPanel
     Width = 975
-    ExplicitWidth = 959
+    ExplicitWidth = 975
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -913,6 +913,9 @@ inherited CashJournalForm: TCashJournalForm
       end
       item
         Component = CurrencyGuides
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -1108,18 +1111,20 @@ inherited CashJournalForm: TCashJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

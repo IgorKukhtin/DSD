@@ -477,13 +477,13 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 420
-    Top = 34
+    Left = 596
+    Top = 31
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 522
-    Top = 33
+    Left = 698
+    Top = 30
     Properties.Buttons = <
       item
         Default = True
@@ -491,7 +491,7 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1342,8 +1342,8 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 808
-    Top = 24
+    Left = 624
+    Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -1352,9 +1352,12 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
-    Left = 792
-    Top = 8
+    Left = 456
+    Top = 40
   end
   object spMovementReCompleteAll: TdsdStoredProc
     StoredProcName = 'gpCompletePeriod_Movement_Income'
@@ -1470,21 +1473,23 @@ object IncomePartnerJournalForm: TIncomePartnerJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 644
+    Left = 716
     Top = 28
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc

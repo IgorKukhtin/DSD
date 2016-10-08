@@ -12,17 +12,17 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Width = 1050
     Height = 604
     TabOrder = 3
-    ExplicitWidth = 1072
+    ExplicitWidth = 1050
     ExplicitHeight = 604
     ClientRectBottom = 604
     ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1072
+      ExplicitWidth = 1050
       ExplicitHeight = 604
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 604
-        ExplicitWidth = 1072
+        ExplicitWidth = 1050
         ExplicitHeight = 604
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -440,7 +440,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   end
   inherited Panel: TPanel
     Width = 1050
-    ExplicitWidth = 1072
+    ExplicitWidth = 1050
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -463,7 +463,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -883,6 +883,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1088,21 +1089,23 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 903
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

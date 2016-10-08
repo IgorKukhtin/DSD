@@ -1040,6 +1040,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Category = 0
     end
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_BankAccount'
   end
@@ -1217,18 +1226,20 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

@@ -2,6 +2,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100'>'
   ClientHeight = 535
   ClientWidth = 1073
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
   ExplicitHeight = 573
@@ -187,6 +188,23 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       EditValue = 42614d
     end
   end
+  object cxLabel27: TcxLabel [2]
+    Left = 668
+    Top = 6
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
+  end
+  object edJuridicalBasis: TcxButtonEdit [3]
+    Left = 746
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 150
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
   end
@@ -311,6 +329,22 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_UserJuridicalBasis
+      StoredProcList = <
+        item
+          StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -335,6 +369,14 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -462,6 +504,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -599,5 +642,59 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object JuridicalBasisGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 799
+    Top = 8
+  end
+  object spGet_UserJuridicalBasis: TdsdStoredProc
+    StoredProcName = 'gpGet_User_JuridicalBasis'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 48
   end
 end

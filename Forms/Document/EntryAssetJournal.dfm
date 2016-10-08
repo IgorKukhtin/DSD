@@ -24,7 +24,6 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -65,7 +64,6 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1140,6 +1138,9 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 576
     Top = 24
@@ -1234,18 +1235,20 @@ object EntryAssetJournalForm: TEntryAssetJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

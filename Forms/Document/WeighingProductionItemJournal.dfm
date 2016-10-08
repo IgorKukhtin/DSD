@@ -580,7 +580,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 200
   end
   object edJuridicalBasis: TcxButtonEdit
@@ -1271,6 +1271,9 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       end
       item
         Component = GuidesGoodsGroup
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 632
     Top = 184
@@ -1370,18 +1373,20 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 1103

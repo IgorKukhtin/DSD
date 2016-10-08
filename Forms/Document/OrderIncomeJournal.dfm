@@ -25,9 +25,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitLeft = -8
-    ExplicitTop = -8
-    ExplicitWidth = 810
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -68,7 +65,6 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 810
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -429,12 +425,12 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 506
+    Left = 550
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 606
+    Left = 650
     Top = 5
     Properties.Buttons = <
       item
@@ -443,7 +439,7 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 200
+    Width = 155
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1315,6 +1311,9 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 576
     Top = 24
@@ -1401,18 +1400,20 @@ object OrderIncomeJournalForm: TOrderIncomeJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 631

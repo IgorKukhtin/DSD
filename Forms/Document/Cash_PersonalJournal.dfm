@@ -5,6 +5,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 981
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,15 +13,19 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     Width = 965
     Height = 599
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitTop = 76
+    ExplicitWidth = 965
+    ExplicitHeight = 599
     ClientRectBottom = 599
     ClientRectRight = 965
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 965
+      ExplicitHeight = 599
       inherited cxGrid: TcxGrid
         Width = 965
         Height = 599
-        ExplicitWidth = 982
+        ExplicitWidth = 965
+        ExplicitHeight = 599
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -177,7 +182,7 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   inherited Panel: TPanel
     Width = 965
     Height = 50
-    ExplicitWidth = 982
+    ExplicitWidth = 965
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -464,6 +469,9 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
       end
       item
         Component = CashGuides
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 400
     Top = 144
@@ -566,18 +574,20 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 855

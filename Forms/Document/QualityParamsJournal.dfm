@@ -423,6 +423,15 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
     Left = 200
     Top = 120
   end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
+      end>
+  end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_QualityParams'
     Left = 136
@@ -463,21 +472,24 @@ inherited QualityParamsJournalForm: TQualityParamsJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 879
+    Top = 40
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

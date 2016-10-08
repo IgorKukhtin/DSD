@@ -4,7 +4,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1118
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -9
   ExplicitWidth = 1134
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -14,18 +13,19 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Width = 1118
     Height = 459
     TabOrder = 3
+    ExplicitTop = 76
     ExplicitWidth = 1118
-    ExplicitHeight = 478
+    ExplicitHeight = 459
     ClientRectBottom = 459
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1118
-      ExplicitHeight = 478
+      ExplicitHeight = 459
       inherited cxGrid: TcxGrid
         Width = 1118
         Height = 459
         ExplicitWidth = 1118
-        ExplicitHeight = 478
+        ExplicitHeight = 459
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1446,6 +1446,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       end
       item
         Component = edIsRegisterDate
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1852,18 +1855,20 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 1031

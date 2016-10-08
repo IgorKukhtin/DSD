@@ -817,7 +817,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 186
+      Width = 155
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2540,6 +2540,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         Component = GuidesTo
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 288
     Top = 232
@@ -2826,18 +2827,20 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

@@ -12,17 +12,17 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     Width = 1086
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1086
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1086
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1086
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1086
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 1086
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -341,7 +341,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   end
   inherited Panel: TPanel
     Width = 1086
-    ExplicitWidth = 1020
+    ExplicitWidth = 1086
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -379,7 +379,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 142
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -951,6 +951,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -1342,18 +1343,20 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 991

@@ -1,26 +1,26 @@
 inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 535
-  ClientWidth = 1020
+  ClientWidth = 972
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1036
+  ExplicitWidth = 988
   ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1020
+    Width = 972
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1020
+    ClientRectRight = 972
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 972
         Height = 478
         ExplicitWidth = 1020
         ExplicitHeight = 478
@@ -181,7 +181,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 972
     ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 42005d
@@ -191,12 +191,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 680
+    Left = 702
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 781
+    Left = 803
     Top = 5
     Properties.Buttons = <
       item
@@ -205,7 +205,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 234
+    Width = 155
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -493,6 +493,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -643,21 +644,24 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 895
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'

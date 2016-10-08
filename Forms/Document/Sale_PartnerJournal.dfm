@@ -14,18 +14,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Width = 1108
     Height = 459
     TabOrder = 3
-    ExplicitWidth = 1098
-    ExplicitHeight = 478
+    ExplicitTop = 76
+    ExplicitWidth = 1108
+    ExplicitHeight = 459
     ClientRectBottom = 459
     ClientRectRight = 1108
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1098
-      ExplicitHeight = 478
+      ExplicitWidth = 1108
+      ExplicitHeight = 459
       inherited cxGrid: TcxGrid
         Width = 1108
         Height = 459
-        ExplicitWidth = 1098
-        ExplicitHeight = 478
+        ExplicitWidth = 1108
+        ExplicitHeight = 459
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -706,7 +707,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   inherited Panel: TPanel
     Width = 1108
     Height = 50
-    ExplicitWidth = 1098
+    ExplicitWidth = 1108
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 96
@@ -751,12 +752,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Width = 200
     end
     object cxLabel27: TcxLabel
-      Left = 786
+      Left = 831
       Top = 6
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 885
+      Left = 930
       Top = 5
       Properties.Buttons = <
         item
@@ -765,7 +766,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 220
+      Width = 155
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -3079,18 +3080,20 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 943

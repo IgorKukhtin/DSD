@@ -4,27 +4,26 @@ inherited LossJournalForm: TLossJournalForm
   ClientWidth = 919
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -119
   ExplicitWidth = 935
-  ExplicitHeight = 447
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 919
     Height = 355
     TabOrder = 3
-    ExplicitWidth = 1020
-    ExplicitHeight = 478
+    ExplicitWidth = 919
+    ExplicitHeight = 355
     ClientRectBottom = 355
     ClientRectRight = 919
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 478
+      ExplicitWidth = 919
+      ExplicitHeight = 355
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 355
-        ExplicitWidth = 1020
-        ExplicitHeight = 478
+        ExplicitWidth = 919
+        ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -120,7 +119,7 @@ inherited LossJournalForm: TLossJournalForm
   end
   inherited Panel: TPanel
     Width = 919
-    ExplicitWidth = 1020
+    ExplicitWidth = 919
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
@@ -431,6 +430,7 @@ inherited LossJournalForm: TLossJournalForm
         Component = PeriodChoice
       end
       item
+        Component = JuridicalBasisGuides
       end>
     Left = 408
     Top = 344
@@ -566,21 +566,23 @@ inherited LossJournalForm: TLossJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 847
+    Left = 799
     Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc

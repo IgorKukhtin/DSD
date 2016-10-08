@@ -460,12 +460,12 @@ object InvoiceJournalForm: TInvoiceJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 505
+    Left = 582
     Top = 32
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 604
+    Left = 681
     Top = 31
     Properties.Buttons = <
       item
@@ -474,7 +474,7 @@ object InvoiceJournalForm: TInvoiceJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 239
+    Width = 155
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -1295,6 +1295,9 @@ object InvoiceJournalForm: TInvoiceJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalBasisGuides
       end>
     Left = 520
     Top = 72
@@ -1381,18 +1384,20 @@ object InvoiceJournalForm: TInvoiceJournalForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalBasisId'
+        Name = 'Key'
         Value = '0'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'JuridicalBasisName'
+        Name = 'TextValue'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 765
