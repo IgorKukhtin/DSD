@@ -23,7 +23,6 @@ object RepriceUnitForm: TRepriceUnitForm
     Height = 291
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 247
     object AllGoodsPriceGridTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsResult

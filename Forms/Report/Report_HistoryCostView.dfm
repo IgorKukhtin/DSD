@@ -599,7 +599,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object AccountCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1095'.'
         DataBinding.FieldName = 'AccountCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -608,7 +607,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object AccountName_All: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'AccountName_All'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -617,7 +615,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object LocationDescName: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
         DataBinding.FieldName = 'LocationDescName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -626,7 +623,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object LocationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
         DataBinding.FieldName = 'LocationCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -635,7 +631,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object LocationName: TcxGridDBColumn
         Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
         DataBinding.FieldName = 'LocationName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -644,7 +639,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084'.'
         DataBinding.FieldName = 'CarCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -653,7 +647,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -662,7 +655,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -671,7 +663,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object GoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsGroupName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -712,7 +703,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -721,7 +711,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1054#1057
         DataBinding.FieldName = 'AssetToCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -730,7 +719,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object AssetToName: TcxGridDBColumn
         Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetToName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -749,7 +737,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -772,7 +759,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -795,7 +781,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -807,7 +792,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -819,7 +803,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -842,7 +825,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -865,7 +847,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -888,13 +869,13 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
       end
       object Count_calc: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1088#1072#1089#1095#1077#1090'.'
         DataBinding.FieldName = 'Count_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -905,11 +886,11 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 60
       end
       object Count_calc_Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089'. '#1088#1072#1089#1095#1077#1090'.'
         DataBinding.FieldName = 'Count_calc_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -921,7 +902,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         FooterAlignmentHorz = taRightJustify
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -934,14 +914,13 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
       end
       object CountCalc_External: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
+        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountCalc_External'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -952,39 +931,40 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 70
       end
       object CountCalc_External_Weight: TcxGridDBColumn
+        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1074#1077#1089
         DataBinding.FieldName = 'CountCalc_External_Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
       end
       object PriceCalcExternal: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1079#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090
         DataBinding.FieldName = 'PriceCalcExternal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
       end
       object SummCalc_External: TcxGridDBColumn
+        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'SummCalc_External'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
       end
       object Summ_Diff: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1072
         DataBinding.FieldName = 'Summ_Diff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -997,7 +977,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1006,7 +985,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1015,7 +993,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1024,7 +1001,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1033,7 +1009,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoMoneyName_all'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1050,7 +1025,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -1058,7 +1032,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyCode_Detail: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
         DataBinding.FieldName = 'InfoMoneyCode_Detail'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1067,7 +1040,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyGroupName_Detail: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
         DataBinding.FieldName = 'InfoMoneyGroupName_Detail'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1076,7 +1048,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyDestinationName_Detail: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
         DataBinding.FieldName = 'InfoMoneyDestinationName_Detail'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -1085,7 +1056,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
       object InfoMoneyName_Detail: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'  ('#1076#1077#1090#1072#1083#1100#1085#1086')'
         DataBinding.FieldName = 'InfoMoneyName_Detail'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
