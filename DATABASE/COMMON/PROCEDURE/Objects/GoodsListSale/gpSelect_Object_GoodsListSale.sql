@@ -1,11 +1,13 @@
 -- Function: gpSelect_Object_GoodsListSale_all (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
     IN inRetailId      Integer , -- торговая сеть
     IN inContractId    Integer , -- договор
     IN inJuridicalId   Integer , -- юр. лицо
+    IN inShowAll       Boolean , -- показать удаленные Да/нет
     IN inSession       TVarChar  -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -16,7 +18,7 @@ RETURNS TABLE (Id Integer
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, JuridicalGroupName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
-             
+             , PartnerId Integer, PartnerName TVarChar             
              , PaidKindId Integer, PaidKindName TVarChar
 
              , ContractTagId Integer, ContractTagName TVarChar
@@ -40,6 +42,8 @@ BEGIN
   
      -- Результат
      RETURN QUERY 
+     WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
           SELECT 
              Object_GoodsListSale.Id          AS Id
 
@@ -63,6 +67,9 @@ BEGIN
            , Object_JuridicalBasis.Id        AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
 
+           , Object_Partner.Id              AS PartnerId
+           , Object_Partner.ValueData       AS PartnerName
+
            , Object_PaidKind.Id              AS PaidKindId
            , Object_PaidKind.ValueData       AS PaidKindName
 
@@ -81,7 +88,11 @@ BEGIN
 
            , Object_GoodsListSale.isErased      AS isErased
        
-    FROM Object AS Object_GoodsListSale
+    FROM tmpIsErased
+        INNER JOIN Object AS Object_GoodsListSale 
+                          ON Object_GoodsListSale.isErased = tmpIsErased.isErased 
+                         AND Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+
         INNER JOIN ObjectLink AS GoodsListSale_Contract
                               ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
                              AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
@@ -141,8 +152,7 @@ BEGIN
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
-     WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-      AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
     ;
 
 END;

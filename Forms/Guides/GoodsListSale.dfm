@@ -262,12 +262,12 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       Caption = #1058#1086#1088#1075'.'#1089#1077#1090#1100':'
     end
     object cxLabel27: TcxLabel
-      Left = 282
+      Left = 517
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object edContract: TcxButtonEdit
-      Left = 334
+      Left = 569
       Top = 4
       Properties.Buttons = <
         item
@@ -280,12 +280,12 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     end
   end
   object cxLabel1: TcxLabel [2]
-    Left = 505
+    Left = 279
     Top = 5
     Caption = #1070#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridical: TcxButtonEdit [3]
-    Left = 560
+    Left = 334
     Top = 4
     Properties.Buttons = <
       item
@@ -296,7 +296,13 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     TabOrder = 7
     Width = 179
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 83
+    Top = 224
+  end
   inherited ActionList: TActionList
+    Left = 143
+    Top = 255
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'TGoodsListSaleEditForm'
       FormNameParam.Value = 'TGoodsListSaleEditForm'
@@ -375,6 +381,43 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited ProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -408,6 +451,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -446,6 +497,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -463,12 +522,24 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -480,8 +551,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 176
-    Top = 256
+    Left = 256
+    Top = 216
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -509,7 +580,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
+    Left = 448
+    Top = 65528
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -536,8 +608,23 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 400
+    Left = 672
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
@@ -566,5 +653,22 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         MultiSelectSeparator = ','
       end>
     Left = 144
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end
+      item
+        Component = RetailGuides
+      end
+      item
+        Component = ContractGuides
+      end>
+    Left = 304
+    Top = 176
   end
 end

@@ -237,7 +237,7 @@ BEGIN
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                    )
-      , tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
+      /*, tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
                           , Object_Goods.ObjectCode   AS GoodsCode
                           , Object_Goods.ValueData    AS GoodsName
                           , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
@@ -250,6 +250,29 @@ BEGIN
                           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                      WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
+                    )*/
+      , tmpGoods AS ( SELECT Object_Goods.Id           AS GoodsId
+                           , Object_Goods.ObjectCode   AS GoodsCode
+                           , Object_Goods.ValueData    AS GoodsName
+                           , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
+                      FROM Object AS Object_GoodsListSale 
+                           INNER JOIN ObjectLink AS GoodsListSale_Contract
+                                   ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
+                                  AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
+                                  AND GoodsListSale_Contract.ChildObjectId = vbContractId
+                           INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                   ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                  AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                  AND ObjectLink_GoodsListSale_Partner.ChildObjectId = vbPartnerId
+                           LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                  ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                 AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                           INNER JOIN Object AS Object_Goods 
+                                   ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                  AND Object_Goods.isErased = FALSE
+                           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
+                      WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                        AND Object_GoodsListSale.isErased = FALSE
                     )
      , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
                            , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
@@ -719,6 +742,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, TDateTime, Bool
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.10.16         * add tmpGoods ËÁ GoodsListSale
  05.02.16         * 
  31.03.15         * add GoodsGroupNameFull
  14.04.14                                                        * inOperDate

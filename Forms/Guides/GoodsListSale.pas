@@ -28,6 +28,9 @@ type
     RetailGuides: TdsdGuides;
     clPartnerName: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
