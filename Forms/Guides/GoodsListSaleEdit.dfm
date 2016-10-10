@@ -3,7 +3,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   Top = 0
   Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
-  ClientHeight = 276
+  ClientHeight = 253
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 66
-    Top = 238
+    Top = 214
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -29,7 +29,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object cxButton2: TcxButton
     Left = 210
-    Top = 238
+    Top = 214
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -45,7 +45,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object ceGoods: TcxButtonEdit
     Left = 34
-    Top = 26
+    Top = 25
     Properties.Buttons = <
       item
         Default = True
@@ -56,12 +56,12 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object cxLabel6: TcxLabel
     Left = 34
-    Top = 60
+    Top = 107
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object ceContract: TcxButtonEdit
     Left = 34
-    Top = 83
+    Top = 125
     Properties.Buttons = <
       item
         Default = True
@@ -72,12 +72,12 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object cxLabel2: TcxLabel
     Left = 34
-    Top = 115
+    Top = 57
     Caption = #1070#1088'. '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 34
-    Top = 137
+    Top = 75
     Properties.Buttons = <
       item
         Default = True
@@ -88,12 +88,12 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object cxLabel1: TcxLabel
     Left = 34
-    Top = 171
+    Top = 157
     Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   end
   object cePartner: TcxButtonEdit
     Left = 34
-    Top = 193
+    Top = 175
     Properties.Buttons = <
       item
         Default = True
@@ -272,7 +272,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
       end>
     PackSize = 1
     Left = 8
-    Top = 184
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -339,9 +339,24 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 64
+    Left = 120
+    Top = 112
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -370,8 +385,8 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 167
-    Top = 133
+    Left = 183
+    Top = 61
   end
   object PartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -399,8 +414,23 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 135
-    Top = 205
+    Left = 103
+    Top = 173
   end
 end

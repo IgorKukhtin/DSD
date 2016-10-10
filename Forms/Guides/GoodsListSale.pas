@@ -26,6 +26,8 @@ type
     JuridicalGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
     RetailGuides: TdsdGuides;
+    clPartnerName: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public
