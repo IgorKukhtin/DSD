@@ -74,7 +74,7 @@ BEGIN
                                       END)) AS IncomeAmount, 
                           COALESCE(SUM(CASE 
                                       WHEN (MIContainer.OperDate <= inEndDate) AND (MIContainer.Amount < 0)
-                                         THEN MIContainer.Amount
+                                         THEN -1 * MIContainer.Amount
                                          ELSE 0
                                       END)) AS OutcomeAmount    
 

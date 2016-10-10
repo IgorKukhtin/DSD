@@ -252,6 +252,7 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 -- !!!ПЕРЕПРОВЕДЕНИЕ!!!, что б отчеты сходились :)
 -- !!!
 select Movement.InvNumber, Movement.OperDate, Object_From.ValueData, MIFloat_Price.ValueData, tmp.*, Object.*
+     , Object_CheckMember.ValueData AS MemberName
    -- , gpReComplete_Movement_Check (Movement.Id, '3')
 from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.Amount, coalesce (-1 * SUM (MIContainer.Amount), 0) as calcAmount , Movement_Check.Id as MovementId
       FROM
@@ -282,6 +283,10 @@ from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.
                                           ON MovementLinkObject_From.MovementId = Movement.Id
                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_Unit()
              LEFT JOIN Object AS Object_From on Object_From.Id = MovementLinkObject_From.ObjectId
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                          ON MovementLinkObject_CheckMember.MovementId = Movement.Id
+                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+             LEFT JOIN Object AS Object_CheckMember on Object_CheckMember.Id = MovementLinkObject_CheckMember.ObjectId
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId =  tmp.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
