@@ -67,6 +67,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_InsertUpdate_HistoryCost());
 
 -- !!!бпелеммн!!!
+-- RETURN;
+
+-- !!!бпелеммн!!!
 -- inItearationCount:=100;
 -- !!!бпелеммн!!!
 

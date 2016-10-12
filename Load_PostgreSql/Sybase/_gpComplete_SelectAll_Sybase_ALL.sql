@@ -61,6 +61,9 @@ BEGIN
                     UNION SELECT 8413 AS UnitId, NULL AS isMain  -- Склад ГП ф.Кривой Рог
                     UNION SELECT 428366 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Кривой Рог
 
+                    UNION SELECT 8411 AS UnitId, NULL AS isMain  -- Склад ГП ф.Киев
+                    UNION SELECT 428365 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Киев
+
                     UNION SELECT 8415 AS UnitId, NULL AS isMain  -- Склад ГП ф.Черкассы (Кировоград)
                     UNION SELECT 428363 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Черкассы (Кировоград)
 

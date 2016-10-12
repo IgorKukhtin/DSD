@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Income()
+ -- Function: gpSelect_Movement_Income()
 
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains (Integer, TDateTime, Boolean, Boolean, TVarChar);

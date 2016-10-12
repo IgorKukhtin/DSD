@@ -215,7 +215,7 @@ BEGIN
          AND vbIsSummIn  = TRUE
          AND (inIsAllMO  = TRUE
            OR inIsAllAuto = TRUE)
-      UNION ALL
+      /*UNION ALL
        SELECT 0 AS Id
             , tmpCLODesc.DescId
             , tmpDesc.ContainerDescId
@@ -225,7 +225,7 @@ BEGIN
        WHERE Object.Id = zc_Juridical_Basis()
          AND vbIsSummIn  = TRUE
          AND (inIsAllMO  = TRUE
-           OR inIsAllAuto = TRUE);
+           OR inIsAllAuto = TRUE)*/;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;

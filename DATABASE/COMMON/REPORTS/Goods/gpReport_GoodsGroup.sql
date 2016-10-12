@@ -77,7 +77,7 @@ BEGIN
                                                                        , inToId         := 0
                                                                        , inGoodsGroupId := inGoodsGroupId
                                                                        , inPriceListId  := 0
-                                                                       , inIsMO_all     := FALSE
+                                                                       , inIsMO_all     := TRUE -- FALSE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
               , tmpSend_out AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
@@ -87,7 +87,7 @@ BEGIN
                                                                        , inToId         := 0
                                                                        , inGoodsGroupId := inGoodsGroupId
                                                                        , inPriceListId  := 0
-                                                                       , inIsMO_all     := FALSE
+                                                                       , inIsMO_all     := TRUE
                                                                        , inSession      := ''
                                                                         ) AS gpReport)
                , tmpSend_in AS (SELECT * FROM gpReport_GoodsMI_Internal (inStartDate    := inStartDate
@@ -96,7 +96,7 @@ BEGIN
                                                                        , inFromId       := 0
                                                                        , inToId         := CASE WHEN inLocationId <> 0 THEN inLocationId ELSE inUnitGroupId END
                                                                        , inGoodsGroupId := inGoodsGroupId
-                                                                       , inIsMO_all     := FALSE
+                                                                       , inIsMO_all     := TRUE
                                                                        , inPriceListId  := 0
                                                                        , inSession      := ''
                                                                         ) AS gpReport)

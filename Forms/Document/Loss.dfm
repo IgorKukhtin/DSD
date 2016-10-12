@@ -1,23 +1,23 @@
 inherited LossForm: TLossForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1087#1080#1089#1072#1085#1080#1077'>'
   ClientHeight = 668
-  ClientWidth = 985
-  ExplicitWidth = 1001
-  ExplicitHeight = 706
+  ClientWidth = 984
+  ExplicitWidth = 1000
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 985
+    Width = 984
     Height = 582
     ExplicitWidth = 985
     ExplicitHeight = 582
     ClientRectBottom = 582
-    ClientRectRight = 985
+    ClientRectRight = 984
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 985
       ExplicitHeight = 558
       inherited cxGrid: TcxGrid
-        Width = 985
+        Width = 984
         Height = 558
         ExplicitWidth = 985
         ExplicitHeight = 558
@@ -271,7 +271,7 @@ inherited LossForm: TLossForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 985
+    Width = 984
     TabOrder = 3
     ExplicitWidth = 985
     inherited edInvNumber: TcxTextEdit
