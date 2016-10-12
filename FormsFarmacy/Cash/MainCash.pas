@@ -1461,7 +1461,7 @@ begin
     CheckCDS.DisableControls;
     try
       CheckCDS.Filtered := False;
-      if not checkCDS.Locate('GoodsId',SourceClientDataSet.FieldByName('Id').asInteger,[]) then
+      if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
       Begin
         checkCDS.Append;
         checkCDS.FieldByName('Id').AsInteger:=0;
@@ -1940,6 +1940,7 @@ end;
 procedure TMainCashForm.UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0);
 var
   GoodsId: Integer;
+  lPriceSale : Currency;
 begin
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
@@ -1989,7 +1990,11 @@ begin
     Begin
       if (AGoodsId = 0) or (AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) then
       Begin
-        if CheckCDS.locate('GoodsId',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+        if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
+        then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
+        else lPriceSale:= AlternativeCDS.fieldByName('Price').AsFloat;
+
+        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,lPriceSale]),[]) then
         Begin
           AlternativeCDS.Edit;
           if (AAmount = 0) or

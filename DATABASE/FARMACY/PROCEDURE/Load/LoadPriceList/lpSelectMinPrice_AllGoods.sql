@@ -45,6 +45,109 @@ BEGIN
     -- Нашли у Аптеки "Главное юр лицо"
     SELECT Object_Unit_View.JuridicalId INTO vbMainJuridicalId FROM Object_Unit_View WHERE Object_Unit_View.Id = inUnitId;
 
+ANALYZE ObjectLink;
+
+    -- Остатки
+    CREATE TEMP TABLE Remains ON COMMIT DROP AS
+       (WITH tmp AS
+       (SELECT
+            Container.ObjectId           AS ObjectId_retail -- здесь товар "сети"
+          , SUM (Container.Amount)       AS Amount
+          , MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))  AS MinExpirationDate -- Срок годности
+          , SUM (Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM (Container.Amount) AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
+        FROM 
+            Container
+            LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
+                                                ON CLO_PartionMovementItem.ContainerId = Container.Id
+                                               AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem 
+                                   ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+            -- Цена реал. с НДС
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                        ON MIFloat_PriceSale.MovementItemId = Object_PartionMovementItem.ObjectCode
+                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale() 
+        WHERE Container.DescId = zc_Container_Count()
+          AND Container.WhereObjectId = inUnitId
+          AND Container.Amount <> 0
+        GROUP BY Container.ObjectId
+        HAVING SUM (Container.Amount) > 0
+       )
+        SELECT 
+            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
+            ObjectLink_Child_NB.ChildObjectId AS ObjectID
+          , tmp.ObjectId_retail                            -- здесь товар "сети"
+          , tmp.Amount ::TFloat                      AS Amount
+          , tmp.MinExpirationDate ::TDateTime AS MinExpirationDate  -- Срок годности
+          , tmp.MidPriceSale       -- !!! средняя Цена реал. с НДС!!!
+        FROM tmp
+                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmp.ObjectId_retail
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
+                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
+       );
+
+
+-- RAISE EXCEPTION '<%>', (select count(*) from Remains);
+
+    -- Остатки + коды ...
+    CREATE TEMP TABLE GoodsList ON COMMIT DROP AS
+       (SELECT 
+            Remains.ObjectId,                  -- здесь товар "сети"
+            Remains.ObjectId_retail,           -- здесь товар "сети"
+            Object_LinkGoods_View.GoodsMainId, -- здесь "общий" товар
+            PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
+            Remains.Amount,
+            Remains.MinExpirationDate,
+            Remains.MidPriceSale
+        FROM 
+            Remains
+            INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
+            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
+                                            ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
+       );
+/*    -- Остатки + коды ...
+    CREATE TEMP TABLE GoodsList ON COMMIT DROP AS
+       (SELECT 
+            Remains.ObjectId,                  -- здесь товар "сети"
+            Remains.ObjectId_retail,           -- здесь товар "сети"
+            ObjectLink_LinkGoods_Goods.ChildObjectId as GoodsMainId, -- здесь "общий" товар
+            ObjectLink_LinkGoods_Goods2.ChildObjectId as GoodsId,       -- здесь товар "поставщика"
+            Remains.Amount,
+            Remains.MinExpirationDate,
+            Remains.MidPriceSale
+        FROM Remains
+                 INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                       ON ObjectLink_LinkGoods_Goods.ChildObjectId = Remains.objectid -- Связь товара сети с общим
+                                      AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+
+                 INNER join ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                        ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                       AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+
+                 INNER join ObjectLink AS ObjectLink_LinkGoods_GoodsMain2
+                                        ON ObjectLink_LinkGoods_GoodsMain2.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                       AND ObjectLink_LinkGoods_GoodsMain2.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                 INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods2
+                                      ON ObjectLink_LinkGoods_Goods2.ObjectId = ObjectLink_LinkGoods_GoodsMain2.ObjectId
+                                     AND ObjectLink_LinkGoods_Goods2.DescId = zc_ObjectLink_LinkGoods_Goods()
+       );*/
+
+-- RAISE EXCEPTION '<%>      <%>', (select count(*) from Remains), (select count(*) from GoodsList);
 
     -- Результат
     RETURN QUERY
@@ -63,67 +166,6 @@ BEGIN
                    FROM lpSelect_MovementItem_Promo_onDate (inOperDate:= CURRENT_DATE) AS tmp
                    WHERE vbIsGoodsPromo = TRUE -- !!!т.е. только в этом случае учитывается маркет. контракт!!!
                   )
-    -- Остатки
-  , Remains AS
-       (SELECT
-            -- !!!временно захардкодил, будет всегда товар НеБолей!!!
-            ObjectLink_Child_NB.ChildObjectId AS ObjectID, -- здесь товар "сети"
-            Container.ObjectId AS ObjectId_retail, -- здесь товар "сети"
-            SUM(Container.Amount)::TFloat                      AS Amount,
-            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate, -- Срок годности
-            SUM( Container.Amount * COALESCE (MIFloat_PriceSale.ValueData, 0)) / SUM(Container.Amount)      AS MidPriceSale -- !!! средняя Цена реал. с НДС!!!
-        FROM 
-            Container
-            LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionMovementItem
-                                                ON CLO_PartionMovementItem.ContainerId = Container.Id
-                                               AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem 
-                                   ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
-            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                              ON MIDate_ExpirationDate.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-            -- Цена реал. с НДС
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                        ON MIFloat_PriceSale.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                       AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale() 
-                                    -- !!!временно захардкодил, будет всегда товар НеБолей!!!!
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = container.ObjectID
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
-                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                          ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
-                                                         AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                                         AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
-        WHERE Container.DescId = zc_Container_Count()
-          AND Container.WhereObjectId = inUnitId
-          AND Container.Amount <> 0
-        -- GROUP BY Container.ObjectId
-        GROUP BY ObjectLink_Child_NB.ChildObjectId
-               , Container.ObjectId
-        HAVING SUM (Container.Amount) > 0
-       )
-    -- Остатки + коды ...
-  , GoodsList AS
-       (SELECT 
-            Remains.ObjectId,                  -- здесь товар "сети"
-            Remains.ObjectId_retail,           -- здесь товар "сети"
-            Object_LinkGoods_View.GoodsMainId, -- здесь "общий" товар
-            PriceList_GoodsLink.GoodsId,       -- здесь товар "поставщика"
-            Remains.Amount,
-            Remains.MinExpirationDate,
-            Remains.MidPriceSale
-        FROM 
-            Remains
-            INNER JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = Remains.objectid -- Связь товара сети с общим
-            LEFT JOIN Object_LinkGoods_View AS PriceList_GoodsLink -- связь товара в прайсе с главным товаром
-                                            ON PriceList_GoodsLink.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-       )
     -- Список цены + ТОП + % наценки
   , GoodsPrice AS
        (SELECT GoodsList.GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup

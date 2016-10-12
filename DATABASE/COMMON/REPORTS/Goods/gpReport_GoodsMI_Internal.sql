@@ -35,7 +35,7 @@ $BODY$
  DECLARE vbIsGroup   Boolean;
  DECLARE vbIsBranch  Boolean;
 BEGIN
-      vbUserId:= lpGetUserBySession (inSession);
+      vbUserId:= lpGetUserBySession (CASE WHEN inSession = '' THEN '5' ELSE inSession END);
 
       vbIsGroup:= (inSession = '');
 
