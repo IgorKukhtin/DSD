@@ -14,17 +14,17 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Width = 999
     Height = 331
     ExplicitTop = 57
-    ExplicitWidth = 1148
+    ExplicitWidth = 999
     ExplicitHeight = 331
     ClientRectBottom = 331
     ClientRectRight = 999
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1148
+      ExplicitWidth = 999
       ExplicitHeight = 331
       inherited cxGrid: TcxGrid
         Width = 999
         Height = 331
-        ExplicitWidth = 1148
+        ExplicitWidth = 999
         ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -243,7 +243,6 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1148
     object edRetail: TcxButtonEdit
       Left = 65
       Top = 4
@@ -299,6 +298,10 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 83
     Top = 224
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 56
+    Top = 296
   end
   inherited ActionList: TActionList
     Left = 143
@@ -385,6 +388,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -392,6 +396,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
@@ -417,6 +422,36 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1047#1072#1083#1080#1074#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
+      Hint = #1047#1072#1083#1080#1074#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
+      ImageIndex = 27
+      FormName = 'TReport_GoodsListSaleForm'
+      FormNameParam.Value = 'TReport_GoodsListSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
+    object mactOpenReportForm: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      ActionList = <
+        item
+          Action = actOpenReportForm
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'mactOpenReportForm'
+      ImageIndex = 27
     end
   end
   inherited MasterDS: TDataSource
@@ -522,6 +557,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -541,6 +584,10 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       Action = actShowAll
       Category = 0
     end
+    object bbOpenReportForm: TdxBarButton
+      Action = mactOpenReportForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -551,8 +598,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 256
-    Top = 216
+    Left = 232
+    Top = 232
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -652,7 +699,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
+    Left = 192
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

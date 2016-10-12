@@ -14,16 +14,44 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale(
  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbId Integer;
    DECLARE vbIsInsert Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsListSale());
    
+   -- ищем элемент, исключаем дубли
+   vbId := (  SELECT Object_GoodsListSale.Id 
+              FROM Object AS Object_GoodsListSale 
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                             ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                            AND ObjectLink_GoodsListSale_Goods.ChildObjectId = inGoodsId
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                             ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                            AND ObjectLink_GoodsListSale_Partner.ChildObjectId = inPartnerId
+                     INNER JOIN ObjectLink AS GoodsListSale_Contract
+                             ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
+                            AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
+                            AND GoodsListSale_Contract.ChildObjectId = inContractId
+                     INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Juridical
+                             ON ObjectLink_GoodsListSale_Juridical.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_Juridical.DescId = zc_ObjectLink_GoodsListSale_Juridical()
+                            AND ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId
+              WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale());
+ 
+   IF COALESCE(vbId,0) <> 0
+      THEN
+          RAISE EXCEPTION 'Ошибка.Элемент уже существует.';
+   END IF;
+
+
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsListSale(), Null, Null);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsListSale(), 0,'');
                           
    -- сохранили связь с < >
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Contract(), ioId, inContractId);
@@ -52,7 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 05.02.15         *
+ 10.10.16         * 
 
 */
 
