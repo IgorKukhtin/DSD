@@ -751,6 +751,9 @@ type
     N212: TMenuItem;
     actReport_HistoryCostView: TdsdOpenForm;
     N136: TMenuItem;
+    actGoodsListSale: TdsdOpenForm;
+    N137: TMenuItem;
+    N138: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

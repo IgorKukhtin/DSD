@@ -45,6 +45,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSelectPrint_Sale: TdsdStoredProc;
+    actPrint_Sale: TdsdPrintAction;
+    bbPrint_Sale: TdxBarButton;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public

@@ -864,7 +864,9 @@ uses
   MobileBills in '..\..\Forms\Document\MobileBills.pas' {MobileBillsForm: TParentForm},
   Juridical_Basis in '..\..\Forms\Guides\Juridical_Basis.pas' {Juridical_BasisForm: TParentForm},
   Report_HistoryCostView in '..\..\Forms\Report\Report_HistoryCostView.pas' {Report_HistoryCostViewForm: TParentForm},
-  Report_HistoryCostViewDialog in '..\..\Forms\Report\Report_HistoryCostViewDialog.pas' {Report_HistoryCostViewDialogForm: TParentForm};
+  Report_HistoryCostViewDialog in '..\..\Forms\Report\Report_HistoryCostViewDialog.pas' {Report_HistoryCostViewDialogForm: TParentForm},
+  GoodsListSaleEdit in '..\..\Forms\Guides\GoodsListSaleEdit.pas' {GoodsListSaleEditForm: TParentForm},
+  GoodsListSale in '..\..\Forms\Guides\GoodsListSale.pas' {GoodsListSaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
