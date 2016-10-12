@@ -48,22 +48,23 @@ BEGIN
  
    ELSE 
        IF COALESCE (vbId , 0) = 0
-          THEN
-
-   -- сохранили <Объект>
-   vbId := lpInsertUpdate_Object (0, zc_Object_GoodsListSale(), 0, '');
+       THEN
+       -- сохранили <Объект>
+       vbId := lpInsertUpdate_Object (0, zc_Object_GoodsListSale(), 0, '');
                           
-   -- сохранили связь с < >
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Contract(), vbId, inContractId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Goods(), vbId, inGoodsId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Juridical(), vbId, inJuridicalId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), vbId, inPartnerId);
+       -- сохранили связь с < >
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Contract(), vbId, inContractId);
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Goods(), vbId, inGoodsId);
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Juridical(), vbId, inJuridicalId);
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), vbId, inPartnerId);
  
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
+       -- сохранили протокол
+       PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
+       END IF;
+   END IF;
    
 END;
 $BODY$
