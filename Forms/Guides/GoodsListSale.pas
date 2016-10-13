@@ -31,6 +31,9 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    mactOpenReportForm: TMultiAction;
   private
     { Private declarations }
   public

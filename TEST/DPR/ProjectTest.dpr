@@ -866,7 +866,8 @@ uses
   Report_HistoryCostView in '..\..\Forms\Report\Report_HistoryCostView.pas' {Report_HistoryCostViewForm: TParentForm},
   Report_HistoryCostViewDialog in '..\..\Forms\Report\Report_HistoryCostViewDialog.pas' {Report_HistoryCostViewDialogForm: TParentForm},
   GoodsListSaleEdit in '..\..\Forms\Guides\GoodsListSaleEdit.pas' {GoodsListSaleEditForm: TParentForm},
-  GoodsListSale in '..\..\Forms\Guides\GoodsListSale.pas' {GoodsListSaleForm: TParentForm};
+  GoodsListSale in '..\..\Forms\Guides\GoodsListSale.pas' {GoodsListSaleForm: TParentForm},
+  Report_GoodsListSale in '..\..\Forms\Guides\Report_GoodsListSale.pas' {Report_GoodsListSaleForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

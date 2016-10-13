@@ -503,6 +503,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSaleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsListSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsListSaleForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsPropertyFormTest;

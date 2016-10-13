@@ -67,11 +67,15 @@ BEGIN
         AND MovementItem.isErased = False
         AND COALESCE (MovementItem.Amount,0)<>0;
 
-
+      --проводим док. распред.излишков
+      PERFORM lpComplete_Movement (inMovementId := vbMovementId
+                                , inDescId     := zc_Movement_Over()
+                                , inUserId     := vbUserId
+                                 );
     END IF;
       
     --проводим док. распред.излишков
-    PERFORM gpComplete_Movement_Over (inMovementId := vbMovementId, inislastcomplete := 'True',  inSession := inSession);
+    --PERFORM gpComplete_Movement_Over (inMovementId := vbMovementId, inislastcomplete := FALSE ,  inSession := inSession);
 
 END;
 $BODY$
