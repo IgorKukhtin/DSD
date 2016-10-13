@@ -267,6 +267,7 @@ BEGIN
                            * COALESCE(tmpMI.MinimumLot, 1)     ) ) ::TFloat  AS SummAll
            
            , tmpMI.CheckAmount                                      AS CheckAmount
+           , tmpMI.SendAmount                                       AS SendAmount
            , COALESCE (tmpOneJuridical.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
@@ -564,6 +565,32 @@ BEGIN
                         GROUP BY MI_Check.ObjectId 
                         HAVING SUM (MI_Check.Amount) <> 0 
                         )
+         -- автоперемещения приход
+         , tmpSend AS ( SELECT MI_Send.ObjectId                        AS GoodsId
+                             , -1 * SUM (MIContainer.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Send
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementBoolean AS MovementBoolean_isAuto
+                                                          ON MovementBoolean_isAuto.MovementId = Movement_Send.Id
+                                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+                                                         AND MovementBoolean_isAuto.ValueData = TRUE
+                               INNER JOIN MovementItem AS MI_Send
+                                                       ON MI_Send.MovementId = Movement_Send.Id
+                                                      AND MI_Send.DescId = zc_MI_Master()
+                                                      AND MI_Send.isErased = FALSE
+                               LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                                     ON MIContainer.MovementItemId = MI_Send.Id
+                                                                    AND MIContainer.DescId = zc_MIContainer_Count() 
+                                                                    AND MIContainer.isActive = True
+                        WHERE Movement_Send.OperDate >= vbOperDate AND Movement_Send.OperDate < vbOperDateEnd
+                          AND Movement_Send.DescId = zc_Movement_Send()
+                          AND Movement_Send.StatusId = zc_Enum_Status_Complete()
+                        GROUP BY MI_Send.ObjectId 
+                        HAVING SUM (MI_Send.Amount) <> 0 
+                       )
     -- Маркетинговый контракт
   , GoodsPromo AS (SELECT tmp.JuridicalId
                         , ObjectLink_Child_retail.ChildObjectId AS GoodsId        -- здесь товар "сети"
@@ -646,6 +673,7 @@ BEGIN
            , NULLIF(COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll),0)      AS CalcAmountAll
            , tmpMI.Price * COALESCE(tmpMI.AmountManual,tmpMI.CalcAmountAll)  AS SummAll
            , tmpCheck.Amount  ::tfloat                                       AS CheckAmount
+           , tmpSend.Amount   ::tfloat                                       AS SendAmount
            , COALESCE (SelectMinPrice_AllGoods.isOneJuridical, TRUE) :: Boolean AS isOneJuridical
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
@@ -812,6 +840,8 @@ BEGIN
                       ) AS Income ON Income.Income_GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
                       
              LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+             LEFT JOIN tmpSend ON tmpSend.GoodsId = COALESCE (tmpMI.GoodsId, tmpGoods.GoodsId)
+
              LEFT JOIN (SELECT _tmpMI.MovementItemId, CASE WHEN COUNT (*) > 1 THEN FALSE ELSE TRUE END AS isOneJuridical
                         FROM _tmpMI
                         GROUP BY _tmpMI.MovementItemId

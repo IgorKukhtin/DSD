@@ -38,6 +38,7 @@ BEGIN
              , Remains TFloat
              , Income TFloat
              , CheckAmount TFloat
+             , SendAmount TFloat
              , isClose Boolean
              , isFirst Boolean
              , isSecond Boolean
@@ -54,7 +55,6 @@ BEGIN
 
            WITH MovementItemOrder AS (SELECT MovementItem.Id, MovementItem.ObjectId, MovementItem.isErased, MovementItem.Movementid, MovementItem.Amount
                                       FROM MovementItem    
-                
                                       WHERE MovementItem.MovementId = inMovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
                                         AND ((inGoodsId = 0) OR (inGoodsId = MovementItem.ObjectId))
@@ -77,6 +77,7 @@ BEGIN
             , MIFloat_Remains.ValueData            AS Remains
             , MIFloat_Income.ValueData             AS Income
             , MIFloat_Check.ValueData              AS CheckAmount
+            , MIFloat_Send.ValueData               AS SendAmount
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
@@ -105,6 +106,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_Check
                      ON MIFloat_Check.MovementItemId = MovementItem.Id
                     AND MIFloat_Check.DescId = zc_MIFloat_Check() 
+              LEFT JOIN MovementItemFloat AS MIFloat_Send
+                     ON MIFloat_Send.MovementItemId = MovementItem.Id
+                    AND MIFloat_Send.DescId = zc_MIFloat_Send()
 
               LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                           
                      ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()

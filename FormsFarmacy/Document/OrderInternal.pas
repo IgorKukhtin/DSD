@@ -102,6 +102,7 @@ type
     actMovementItemProtocolChild: TdsdOpenForm;
     bbMovementItemProtocolChild: TdxBarButton;
     edIsDocument: TcxCheckBox;
+    colSendAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public
