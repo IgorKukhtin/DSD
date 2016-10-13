@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 420
   ClientWidth = 699
   ExplicitWidth = 715
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -86,6 +86,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
             Options.Editing = False
             Width = 80
+          end
+          object colisOver: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+            DataBinding.FieldName = 'isOver'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080
+            Options.Editing = False
+            Width = 100
           end
           object ceIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -178,6 +187,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       isShowModal = False
     end
+    object actUpdateisOver: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isOver
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isOver
+        end>
+      Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -224,6 +245,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisOver'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -246,9 +275,48 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = actProtocolOpenForm
       Category = 0
     end
+    object bbUpdateisOver: TdxBarButton
+      Action = actUpdateisOver
+      Category = 0
+      ImageIndex = 58
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 136
     Top = 184
+  end
+  object spUpdate_Unit_isOver: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isOver'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOver'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOver'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOver'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOver'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 99
   end
 end

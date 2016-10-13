@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, Parent
              , RouteSortingId integer, RouteSortingName TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
-             , isRepriceAuto Boolean) AS
+             , isRepriceAuto Boolean
+             , isOver Boolean
+) AS
 $BODY$
 BEGIN
 
@@ -44,6 +46,7 @@ BEGIN
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
 
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
+      , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -76,6 +79,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Over
+                                ON ObjectBoolean_Over.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
@@ -98,6 +104,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.10.16         * add isOver
  08.04.16         *
  24.02.16         * add RepriceAuto
  21.08.14                         *

@@ -19,6 +19,10 @@ type
     UnitId: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    spUpdate_Unit_isOver: TdsdStoredProc;
+    colisOver: TcxGridDBColumn;
+    actUpdateisOver: TdsdExecStoredProc;
+    bbUpdateisOver: TdxBarButton;
   private
     { Private declarations }
   public

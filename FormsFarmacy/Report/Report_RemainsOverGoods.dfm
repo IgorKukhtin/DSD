@@ -974,9 +974,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1796,6 +1793,21 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Caption = 'actSendOver'
       ImageIndex = 41
     end
+    object actOpenUnitForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+      Hint = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+      ImageIndex = 43
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
     object macSendOver: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1888,6 +1900,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenUnitForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbExecuteDialog'
         end
         item
@@ -1959,6 +1979,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Action = macSendOver
       Category = 0
     end
+    object bbOpenUnitForm: TdxBarButton
+      Action = actOpenUnitForm
+      Caption = #1086#1090#1082#1088#1099#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 480
@@ -2005,8 +2030,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 256
-    Top = 8
+    Left = 392
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS

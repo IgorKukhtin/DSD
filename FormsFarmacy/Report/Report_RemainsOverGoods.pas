@@ -88,6 +88,8 @@ type
     TotalCDS: TClientDataSet;
     TotalDS: TDataSource;
     DBViewAddOnTotal: TdsdDBViewAddOn;
+    actOpenUnitForm: TdsdOpenForm;
+    bbOpenUnitForm: TdxBarButton;
   private
     { Private declarations }
   public
