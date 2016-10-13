@@ -75,11 +75,13 @@ BEGIN
              INNER JOIN Movement ON Movement.Id     = MovementLinkObject_Juridical.MovementId
                                 AND Movement.DescId = zc_Movement_PriceList()
                                 AND Movement.OperDate <= inOperDate
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
         WHERE MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical() 
           AND Movement.DescId = zc_Movement_PriceList()
+          AND Movement.StatusId <> zc_Enum_Status_Erased()
        ) AS tmp
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
        ) AS tmp

@@ -61,7 +61,7 @@ BEGIN
      
    
     -- !!!Только для таких документов!!!
-    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete()
+    IF vbisDocument = TRUE AND vbStatusId = zc_Enum_Status_Complete() -- AND inSession <> '3'
     THEN
 
      PERFORM lpCreateTempTable_OrderInternal_MI(inMovementId, vbObjectId, 0, vbUserId);

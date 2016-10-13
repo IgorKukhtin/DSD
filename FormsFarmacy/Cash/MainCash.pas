@@ -303,7 +303,7 @@ type
     //Обновить остаток согласно пришедшей разнице
     procedure UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
     //Возвращает товар в верхний грид
-    procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0);
+    procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
 
     //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
     function fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;
@@ -754,11 +754,11 @@ begin
         CheckCDS.FieldByName('Summ').AsFloat := VipList.FieldByName('Summ').AsFloat;
         CheckCDS.FieldByName('NDS').AsFloat := VipList.FieldByName('NDS').AsFloat;
         //***20.07.16
-        checkCDS.FieldByName('PriceSale').asCurrency         :=VipList.FieldByName('PriceSale').AsFloat;
-        checkCDS.FieldByName('ChangePercent').asCurrency     :=VipList.FieldByName('ChangePercent').AsFloat;
-        checkCDS.FieldByName('SummChangePercent').asCurrency :=VipList.FieldByName('SummChangePercent').AsFloat;
+        checkCDS.FieldByName('PriceSale').asCurrency         :=VipList.FieldByName('PriceSale').asCurrency;
+        checkCDS.FieldByName('ChangePercent').asCurrency     :=VipList.FieldByName('ChangePercent').asCurrency;
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=VipList.FieldByName('SummChangePercent').asCurrency;
         //***19.08.16
-        checkCDS.FieldByName('AmountOrder').asCurrency :=VipList.FieldByName('AmountOrder').AsFloat;
+        checkCDS.FieldByName('AmountOrder').asCurrency :=VipList.FieldByName('AmountOrder').asCurrency;
         //***10.08.16
         checkCDS.FieldByName('List_UID').AsString := VipList.FieldByName('List_UID').AsString;
 
@@ -766,7 +766,7 @@ begin
         if FormParams.ParamByName('CheckId').Value > 0 then
           //UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
           //маленькая ошибочка, попробуем с VipList, ***20.07.16
-          UpdateRemainsFromCheck(VipList.FieldByName('GoodsId').AsInteger, VipList.FieldByName('Amount').AsFloat);
+          UpdateRemainsFromCheck(VipList.FieldByName('GoodsId').AsInteger, VipList.FieldByName('Amount').AsFloat, VipList.FieldByName('PriceSale').asCurrency);
         vipList.Next;
       End;
     End;
@@ -1488,7 +1488,7 @@ begin
       CheckCDS.Filtered := True;
       CheckCDS.EnableControls;
     end;
-    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,ceAmount.Value);
+    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,ceAmount.Value, lPriceSale);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -1498,7 +1498,7 @@ begin
   else
   if not SoldRegim AND (ceAmount.Value < 0) then
   Begin
-    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,ceAmount.Value);
+    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,ceAmount.Value,CheckCDS.FieldByName('PriceSale').asCurrency);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -1518,6 +1518,9 @@ end;
 procedure TMainCashForm.UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
 var
   GoodsId: Integer;
+  Amount_find: Currency;
+  oldFilter:String;
+  oldFiltered:Boolean;
 begin
   //Если нет расхождений - ничего не делаем
   if ADiffCDS = nil then
@@ -1534,10 +1537,25 @@ begin
   AlternativeCDS.Filtered := False;
   ADIffCDS.DisableControls;
   CheckCDS.DisableControls;
+  oldFilter:= CheckCDS.Filter;
+  oldFiltered:= CheckCDS.Filtered;
+
   try
     ADIffCDS.First;
     while not ADIffCDS.eof do
     begin
+          // сначала найдем кол-во в чеках
+          CheckCDS.Filter:='GoodsId = ' + IntToStr(ADIffCDS.FieldByName('Id').AsInteger);
+          CheckCDS.Filtered:=true;
+          CheckCDS.First;
+          Amount_find:=0;
+          while not CheckCDS.EOF do begin
+              Amount_find:= Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
+              CheckCDS.Next;
+          end;
+          CheckCDS.Filter := oldFilter;
+          CheckCDS.Filtered:= oldFiltered;
+
       if ADIffCDS.FieldByName('NewRow').AsBoolean then
       Begin
         RemainsCDS.Append;
@@ -1559,9 +1577,12 @@ begin
           RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
           RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
           if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
             RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - Amount_find;
           RemainsCDS.Post;
         End;
       End;
@@ -1577,9 +1598,12 @@ begin
         Begin
           AlternativeCDS.Edit;
           AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
           if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
             AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
-              - CheckCDS.FieldByName('Amount').asCurrency;
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+                                                            - Amount_find;
           AlternativeCDS.Post;
         End;
       End;
@@ -1594,6 +1618,8 @@ begin
     RemainsCDSAfterScroll(RemainsCDS);
     AlternativeCDS.EnableControls;
     CheckCDS.EnableControls;
+    CheckCDS.Filter := oldFilter;
+    CheckCDS.Filtered:= oldFiltered;
   end;
 end;
 
@@ -1937,10 +1963,10 @@ begin
   end;
 end;
 
-procedure TMainCashForm.UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0);
+procedure TMainCashForm.UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
 var
   GoodsId: Integer;
-  lPriceSale : Currency;
+  //lPriceSale : Currency;
 begin
   //Если пусто - ничего не делаем
   CheckCDS.DisableControls;
@@ -1962,7 +1988,7 @@ begin
     CheckCDS.First;
     while not CheckCDS.eof do
     begin
-      if (AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) then
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').AsCurrency = APriceSale)) then
       Begin
         if RemainsCDS.Locate('Id',CheckCDS.FieldByName('GoodsId').AsInteger,[]) then
         Begin
@@ -1988,13 +2014,13 @@ begin
     AlternativeCDS.First;
     while Not AlternativeCDS.eof do
     Begin
-      if (AGoodsId = 0) or (AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) then
+      if (AGoodsId = 0) or ((AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) and (AlternativeCDS.FieldByName('Price').AsFloat = APriceSale)) then
       Begin
-        if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
-        then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
-        else lPriceSale:= AlternativeCDS.fieldByName('Price').AsFloat;
+        //if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
+        //then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
+        //else lPriceSale:= AlternativeCDS.fieldByName('Price').asCurrency;
 
-        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,lPriceSale]),[]) then
+        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,APriceSale]),[]) then
         Begin
           AlternativeCDS.Edit;
           if (AAmount = 0) or
@@ -2017,7 +2043,7 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if (AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) then
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
       Begin
         CheckCDS.Edit;
         {
@@ -2153,11 +2179,11 @@ begin
         MyVipListCDS.FieldByname('Price').Value := ADS.FieldByName('Price').AsFloat;
         MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat);
         //***20.07.16
-        MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').AsFloat;
-        MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').AsFloat;
-        MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').AsFloat;
+        MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').asCurrency;
+        MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').asCurrency;
+        MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').asCurrency;
         //***19.08.16
-        MyVipListCDS.FieldByName('AmountOrder').asCurrency       := ADS.FieldByName('AmountOrder').AsFloat;
+        MyVipListCDS.FieldByName('AmountOrder').asCurrency       := ADS.FieldByName('AmountOrder').asCurrency;
         //***10.08.16
         MyVipListCDS.FieldByName('List_UID').asString := ADS.FieldByName('List_UID').AsString;
 

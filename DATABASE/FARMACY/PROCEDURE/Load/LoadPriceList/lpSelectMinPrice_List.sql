@@ -184,12 +184,14 @@ BEGIN
                                           AND MovementLinkObject_Juridical.DescId   = zc_MovementLinkObject_Juridical()
              INNER JOIN Movement ON Movement.Id     = MovementLinkObject_Juridical.MovementId
                                 AND Movement.DescId = zc_Movement_PriceList()
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              INNER JOIN JuridicalSettings_list ON JuridicalSettings_list.JuridicalId = MovementLinkObject_Juridical.ObjectId
                                               AND JuridicalSettings_list.ContractId = MovementLinkObject_Contract.ObjectId
         WHERE Movement.DescId = zc_Movement_PriceList()
+          AND Movement.StatusId <> zc_Enum_Status_Erased()
        ) AS tmp
         WHERE tmp.Max_Date = tmp.OperDate -- т.е. для договора и юр лица будет 1 документ
        ) /*AS tmp*/
@@ -259,7 +261,7 @@ BEGIN
                   THEN FinalPrice * (100 + COALESCE (PriceSettingsTOP.Percent, 0)) / 100
              -- если Дней отсрочки по договору = 0 + НЕ ТОП-позиция = учитывает % из Установки для ценовых групп (что б уравновесить ... )
              WHEN ddd.Deferment = 0 AND ddd.isTOP = FALSE
-                  THEN FinalPrice * (100 + COALESCE (PriceSettings.Percentб 0)) / 100
+                  THEN FinalPrice * (100 + COALESCE (PriceSettings.Percent, 0)) / 100
              -- иначе НЕ учитывает
              ELSE FinalPrice
 

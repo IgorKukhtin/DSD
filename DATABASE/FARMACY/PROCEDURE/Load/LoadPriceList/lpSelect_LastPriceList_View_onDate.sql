@@ -33,6 +33,7 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
        WHERE Movement.DescId = zc_Movement_PriceList()
          AND Movement.OperDate <= inOperDate
+         AND Movement.StatusId <> zc_Enum_Status_Erased()
       ) AS PriceList
   WHERE PriceList.Max_Date = PriceList.OperDate;
 

@@ -273,11 +273,11 @@ BEGIN
               , COALESCE (tmpOrderMI.Summ,0)    ::TFloat   AS OrderSumm
 
               , CAST (COALESCE (tmpOrderMI.Price,0) / 
-                                              CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
+                                      NULLIF (CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
                                                                                ELSE (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)))
-                                              END * 100 - 100  AS NUMERIC (16, 2))  :: Tfloat  AS PersentDiff
+                                              END, 0) * 100 - 100  AS NUMERIC (16, 2))  :: Tfloat  AS PersentDiff
 
-              , CASE WHEN COALESCE (tmpOrderMI.Amount,0) <> MovementItem.Amount THEN TRUE ELSE FALSE END AS isAmountDiff
+              , CASE WHEN COALESCE (tmpOrderMI.Amount, 0) <> MovementItem.Amount THEN TRUE ELSE FALSE END AS isAmountDiff
               , CASE WHEN vbPriceWithVAT = False 
                      THEN 
                          CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END
@@ -433,9 +433,9 @@ BEGIN
               , COALESCE (tmpOrderMI.Price,0)   ::TFloat   AS OrderPrice
               , COALESCE (tmpOrderMI.Summ,0)    ::TFloat   AS OrderSumm
               , CAST (COALESCE (tmpOrderMI.Price,0) / 
-                                              CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
+                                      NULLIF (CASE WHEN vbPriceWithVAT = False THEN MovementItem.Price
                                                                                ELSE (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)))
-                                              END * 100 - 100  AS NUMERIC (16, 2)) :: Tfloat AS PersentDiff
+                                              END, 0) * 100 - 100  AS NUMERIC (16, 2)) :: Tfloat AS PersentDiff
                                                        
               , CASE WHEN COALESCE (tmpOrderMI.Amount,0) <> MovementItem.Amount THEN TRUE ELSE FALSE END AS isAmountDiff
 --              , CASE WHEN COALESCE (tmpOrderMI.Price,0) <> MovementItem.Price THEN TRUE ELSE FALSE END AS isSummDiff

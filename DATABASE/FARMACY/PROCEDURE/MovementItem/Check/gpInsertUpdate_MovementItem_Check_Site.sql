@@ -23,9 +23,8 @@ BEGIN
     vbUserId := lpGetUserBySession (inSession);
 
     -- Находим элемент по документу и товару и ЦЕНЕ
-    IF (COALESCE(ioId,0) = 0)
-       or
-       (NOT EXISTS(SELECT 1 FROM MovementItem Where Id = ioId))       
+    IF COALESCE(ioId,0) = 0
+       OR NOT EXISTS(SELECT 1 FROM MovementItem WHERE Id = ioId)
     THEN
         SELECT MovementItem.Id, MovementItem.Amount
                INTO ioId, vbAmount_old
@@ -36,7 +35,9 @@ BEGIN
                                          AND MIFloat_Price.ValueData = inPrice
         WHERE MovementItem.MovementId = inMovementId 
           AND MovementItem.ObjectId   = inGoodsId 
-          AND MovementItem.DescId     = zc_MI_Master();
+          AND MovementItem.DescId     = zc_MI_Master()
+          AND MovementItem.isErased   = FALSE
+         ;
     END IF;
 
      -- определяется признак Создание/Корректировка
@@ -72,4 +73,4 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Check_Site(Integer, Integer, Integer,
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Check_Site (ioId:= 0, inMovementId:= 2335122, inGoodsId:= 51922, inAmount:= 10, inPrice:= 1, inSession := '3')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Check_Site (ioId:= 0, inMovementId:= 2335126, inGoodsId:= 51922, inAmount:= 2, inPrice:= 22, inSession := '3')

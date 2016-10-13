@@ -32,18 +32,20 @@ BEGIN
 
 
     -- Находим элемент по документу и товару
-    IF (COALESCE(ioId,0) = 0)
-       or
-       (NOT EXISTS(SELECT 1 FROM MovementItem Where Id = ioId))       
+    IF COALESCE (ioId, 0) = 0
+       OR NOT EXISTS (SELECT 1 FROM MovementItem WHERE Id = ioId)
     THEN
-        SELECT 
-            Id
-        INTO 
-            ioId
-        FROM MovementItem
-        WHERE MovementId = inMovementId 
-          AND ObjectId = inGoodsId 
-          AND DescId = zc_MI_Master();
+        ioId:= (SELECT MovementItem.Id
+                FROM MovementItem
+                     INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                 AND MIFloat_Price.ValueData = inPrice
+                WHERE MovementItem.MovementId = inMovementId 
+                  AND MovementItem.ObjectId   = inGoodsId 
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+               );
     END IF;
 
      -- определяется признак Создание/Корректировка

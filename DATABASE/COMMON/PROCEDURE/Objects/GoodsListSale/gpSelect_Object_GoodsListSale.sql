@@ -163,8 +163,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.10.16         * 
-        
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_GoodsListSale (0,0,0,zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_GoodsListSale (0, 0, 0, FALSE, zfCalc_UserAdmin())
