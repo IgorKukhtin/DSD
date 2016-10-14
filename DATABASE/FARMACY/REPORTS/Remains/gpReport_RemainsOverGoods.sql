@@ -10,26 +10,6 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
-/*TABLE (Id Integer, Price TFloat, MCSValue TFloat
-             , MCSPeriod TFloat, MCSDay TFloat
-             , StartDate TDateTime
-             --, MCSPeriodEnd TFloat, MCSDayEnd TFloat
-             , EndDate TDateTime
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupName TVarChar, NDSKindName TVarChar
-             , DateChange TDateTime, MCSDateChange TDateTime
-             , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
-             , MCSNotRecalc Boolean, MCSNotRecalcDateChange TDateTime
-             , Fix Boolean, FixDateChange TDateTime
-             , MinExpirationDate TDateTime
-             , Remains TFloat, SummaRemains TFloat
-             , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
-             
-             , PriceEnd TFloat---, MCSValueEnd TFloat
-             , RemainsEnd TFloat, SummaRemainsEnd TFloat
---             , RemainsMCS_fromEnd TFloat, SummaRemainsMCS_fromEnd TFloat
-
-             )*/
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -209,13 +189,27 @@ BEGIN
                       
        -- MCS
        INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
-                     SELECT tmp.GoodsId
+            WITH 
+               tmpUnit AS (SELECT ObjectBoolean_Over.ObjectId  AS UnitId
+                           FROM ObjectBoolean AS ObjectBoolean_Over
+                           WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
+                             AND ObjectBoolean_Over.ValueData = true
+                           UNION SELECT inUnitId  AS UnitId
+                           )
+
+             , tmp AS (SELECT tmp.GoodsId
                           , tmp.UnitId
                           , tmp.MCSValue
                        FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                        -- FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                        WHERE tmp.MCSValue > 0
-                      ;
+                       )
+               SELECT tmp.GoodsId
+                    , tmp.UnitId
+                    , tmp.MCSValue
+               FROM tmpUnit
+                  LEFT JOIN tmp ON tmp.UnitId = tmpUnit.UnitId
+               ;
 
 
        -- Goods_list

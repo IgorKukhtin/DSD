@@ -974,6 +974,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1981,8 +1984,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     end
     object bbOpenUnitForm: TdxBarButton
       Action = actOpenUnitForm
-      Caption = #1086#1090#1082#1088#1099#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
+      Caption = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Category = 0
+      Hint = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
