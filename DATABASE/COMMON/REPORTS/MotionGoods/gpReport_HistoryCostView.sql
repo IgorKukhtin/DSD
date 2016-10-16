@@ -41,11 +41,13 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , SummCalc_External TFloat
              , Summ_Diff TFloat
 
+             , Price TFloat
              , PriceStart TFloat
              , PriceIncome TFloat
              , PriceCalc TFloat
              , PriceOut TFloat
              , PriceCalcExternal TFloat
+             , PriceExternal TFloat
              
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
@@ -127,7 +129,7 @@ BEGIN
                             , CLO_Account.ObjectId         AS AccountId
                             , HistoryCost.StartDate
                             , HistoryCost.EndDate
-                         --   , HistoryCost.Price
+                            , HistoryCost.Price
                             , SUM (HistoryCost.StartCount)    AS StartCount
                             , SUM (HistoryCost.StartSumm)     AS StartSumm
                             , SUM (HistoryCost.IncomeCount)   AS IncomeCount
@@ -136,11 +138,11 @@ BEGIN
                             , SUM (HistoryCost.CalcSumm)      AS CalcSumm
                             , SUM (HistoryCost.OutCount)      AS OutCount
                             , SUM (HistoryCost.OutSumm)       AS OutSumm
-                         --   , HistoryCost.Price_External
+                            , HistoryCost.Price_External
                             , SUM (HistoryCost.CalcCount_External) AS CalcCount_External
                             , SUM (HistoryCost.CalcSumm_External)  AS CalcSumm_External
                             , SUM (HistoryCost.Summ_Diff)          AS Summ_Diff
-                            --, HistoryCost.MovementItemId_Diff
+                            , HistoryCost.MovementItemId_Diff
             
                       FROM HistoryCost -- limit 10
                             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = HistoryCost.ContainerId
@@ -150,16 +152,12 @@ BEGIN
                             LEFT JOIN ContainerLinkObject AS CLO_Goods 
                                    ON CLO_Goods.ContainerId = HistoryCost.ContainerId
                                   AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                   --AND (CLO_Goods.ObjectId = inGoodsId OR inGoodsId = 0)
                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = CLO_Goods.ObjectId
 
                             LEFT JOIN ContainerLinkObject AS CLO_Unit 
                                    ON CLO_Unit.ContainerId = HistoryCost.ContainerId
                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                          -- AND CLO_Unit.ObjectId = 301309 -- подразделениеlimit 10
-
-                        --   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = CLO_Goods.ObjectId
-
                          /*   LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                    ON CLO_InfoMoney.ContainerId =  HistoryCost.ContainerId
                                   AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -196,9 +194,9 @@ BEGIN
                              , CLO_Account.ObjectId
                              , HistoryCost.StartDate
                              , HistoryCost.EndDate
-                           --  , HistoryCost.Price
-                            -- , HistoryCost.Price_External
-                            -- , HistoryCost.MovementItemId_Diff
+                             , HistoryCost.Price
+                             , HistoryCost.Price_External
+                             , HistoryCost.MovementItemId_Diff
                       )
 
    -- Результат
@@ -258,12 +256,11 @@ BEGIN
         , CAST (tmpHistoryCost.CalcSumm_External  AS TFloat) AS SummCalc_External
         , CAST (tmpHistoryCost.Summ_Diff          AS TFloat) AS Summ_Diff
 
-
+        , CAST (tmpHistoryCost.Price AS TFloat) AS Price
         , CAST (CASE WHEN tmpHistoryCost.StartCount <> 0
                           THEN tmpHistoryCost.StartSumm / tmpHistoryCost.StartCount
                      ELSE 0
                 END AS TFloat) AS Price_Start
-
         , CAST (CASE WHEN tmpHistoryCost.IncomeCount <> 0
                           THEN tmpHistoryCost.IncomeSumm / tmpHistoryCost.IncomeCount
                      ELSE 0
@@ -282,7 +279,7 @@ BEGIN
                           THEN tmpHistoryCost.CalcSumm_External / tmpHistoryCost.CalcCount_External
                      ELSE 0
                 END AS TFloat) AS PriceCalcExternal
-      --  , CAST (tmpHistoryCost.Price_External AS TFloat) AS PriceExternal
+        , CAST (tmpHistoryCost.Price_External AS TFloat) AS PriceExternal
 
         , View_InfoMoney.InfoMoneyId
         , View_InfoMoney.InfoMoneyCode

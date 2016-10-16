@@ -201,7 +201,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountStart_Weight
         end
         item
           Format = ',0.####'
@@ -210,17 +209,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountIncome_Weight
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = CountOut_Weight
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = Count_calc_Weight
         end
         item
           Format = ',0.####'
@@ -229,7 +217,14 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountCalc_External_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
         end
         item
           Format = ',0.####'
@@ -474,7 +469,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountStart_Weight
         end
         item
           Format = ',0.####'
@@ -483,17 +477,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountIncome_Weight
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = CountOut_Weight
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = Count_calc_Weight
         end
         item
           Format = ',0.####'
@@ -502,7 +485,14 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = CountCalc_External_Weight
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
         end
         item
           Format = ',0.####'
@@ -700,6 +690,13 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 70
       end
+      object AssetToName: TcxGridDBColumn
+        Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+        DataBinding.FieldName = 'AssetToName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
@@ -707,21 +704,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
-      end
-      object AssetToCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1054#1057
-        DataBinding.FieldName = 'AssetToCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object AssetToName: TcxGridDBColumn
-        Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
-        DataBinding.FieldName = 'AssetToName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -743,7 +725,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 30
       end
       object CountStart: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -753,20 +734,8 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 60
       end
-      object CountStart_Weight: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074#1077#1089
-        DataBinding.FieldName = 'CountStart_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object PriceStart: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1086#1089#1090'.'#1085'.'
-        DataBinding.FieldName = 'PriceStart'
+      object Price: TcxGridDBColumn
+        DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -776,7 +745,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 45
       end
       object SummStart: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'SummStart'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -787,7 +755,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 70
       end
       object CountIncome: TcxGridDBColumn
-        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -797,20 +764,8 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 55
       end
-      object CountIncome_Weight: TcxGridDBColumn
-        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1074#1077#1089
-        DataBinding.FieldName = 'CountIncome_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object PriceIncome: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'PriceIncome'
+      object PriceExternal: TcxGridDBColumn
+        DataBinding.FieldName = 'PriceExternal'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
@@ -820,7 +775,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 35
       end
       object SummIncome: TcxGridDBColumn
-        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'SummIncome'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -831,7 +785,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 75
       end
       object CountOut: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -841,19 +794,7 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 60
       end
-      object CountOut_Weight: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1074#1077#1089
-        DataBinding.FieldName = 'CountOut_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
       object PriceOut: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1074'.'#1087#1086#1089#1090'.'
         DataBinding.FieldName = 'PriceOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -864,7 +805,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 35
       end
       object SummOut: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'SummOut'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -875,7 +815,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 75
       end
       object Count_calc: TcxGridDBColumn
-        Caption = #1050#1086#1083'. '#1088#1072#1089#1095#1077#1090'.'
         DataBinding.FieldName = 'Count_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -885,31 +824,7 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 60
       end
-      object Count_calc_Weight: TcxGridDBColumn
-        Caption = #1042#1077#1089'. '#1088#1072#1089#1095#1077#1090'.'
-        DataBinding.FieldName = 'Count_calc_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object PriceCalc: TcxGridDBColumn
-        Caption = #1094#1077#1085#1072' '#1087#1088#1080#1093'.'#1087'. '
-        DataBinding.FieldName = 'PriceCalc'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        FooterAlignmentHorz = taRightJustify
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
       object Summ_calc: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'Summ_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -920,7 +835,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 75
       end
       object CountCalc_External: TcxGridDBColumn
-        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1082#1086#1083'.'
         DataBinding.FieldName = 'CountCalc_External'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -930,30 +844,7 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Options.Editing = False
         Width = 70
       end
-      object CountCalc_External_Weight: TcxGridDBColumn
-        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1074#1077#1089
-        DataBinding.FieldName = 'CountCalc_External_Weight'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object PriceCalcExternal: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1079#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090
-        DataBinding.FieldName = 'PriceCalcExternal'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 45
-      end
       object SummCalc_External: TcxGridDBColumn
-        Caption = #1047#1072#1103#1074#1082#1072' '#1088#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'SummCalc_External'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -964,7 +855,6 @@ object Report_HistoryCostViewForm: TReport_HistoryCostViewForm
         Width = 75
       end
       object Summ_Diff: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1072
         DataBinding.FieldName = 'Summ_Diff'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4

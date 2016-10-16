@@ -51,10 +51,9 @@ type
     GoodsName: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     PartionGoodsName: TcxGridDBColumn;
-    AssetToCode: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
     SummIncome: TcxGridDBColumn;
-    PriceStart: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
     GuidesGoodsGroup: TdsdGuides;
     GuidesLocation: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
@@ -63,7 +62,7 @@ type
     edGoods: TcxButtonEdit;
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
-    PriceIncome: TcxGridDBColumn;
+    PriceExternal: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     GuidesGoods: TdsdGuides;
     edLocation: TcxButtonEdit;
@@ -86,9 +85,6 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     ContainerId_Summ: TcxGridDBColumn;
     FormParams: TdsdFormParams;
-
-    CountStart_Weight: TcxGridDBColumn;
-    CountIncome_Weight: TcxGridDBColumn;
     spGetDescSets: TdsdStoredProc;
     SaleJournal: TdsdOpenForm;
     LineNum: TcxGridDBColumn;
@@ -105,7 +101,6 @@ type
     bbPrint_Loss: TdxBarButton;
     actPrint_Inventory: TdsdPrintAction;
     bbPrint_Inventory: TdxBarButton;
-    AssetToName: TcxGridDBColumn;
     actIsAllMO: TdsdDataSetRefresh;
     actIsAllAuto: TdsdDataSetRefresh;
     actPrint_MO_Auto: TdsdPrintAction;
