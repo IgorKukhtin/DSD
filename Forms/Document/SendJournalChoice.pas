@@ -1,4 +1,4 @@
-unit SendJournal;
+unit SendJournalChoice;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TSendJournalForm = class(TAncestorJournalForm)
+  TSendJournalChoiceForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
@@ -43,6 +43,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actChoiceGuides: TdsdChoiceGuides;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
@@ -53,5 +55,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TSendJournalChoiceForm);
 end.

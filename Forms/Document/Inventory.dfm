@@ -705,19 +705,53 @@ inherited InventoryForm: TInventoryForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actGoodsChoice'
-      FormName = 'TSendJournalForm'
-      FormNameParam.Value = 'TSendJournalForm'
+      FormName = 'TSendJournalChoiceForm'
+      FormNameParam.Value = 'TSendJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id'
+          Name = 'Key'
           Value = Null
           Component = FormParams
           ComponentItem = 'MovementId_Send'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object macInsert_bySend: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendOpenForm
+        end
+        item
+          Action = actInsert_bySend
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1090#1085#1086' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1086#1073#1072#1074#1083#1077#1085#1099
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+    end
+    object actInsert_bySend: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MI_Inventory_bySend
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MI_Inventory_bySend
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+      ImageIndex = 27
     end
   end
   inherited MasterDS: TDataSource
@@ -835,6 +869,14 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -877,6 +919,11 @@ inherited InventoryForm: TInventoryForm
     object bbUpdate_Summ: TdxBarButton
       Action = mactUpdate_Summ
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsert_bySend
+      Category = 0
+      ImageIndex = 27
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1254,7 +1301,7 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 162
+    Left = 154
     Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
@@ -1454,7 +1501,7 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 176
     Top = 368
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
@@ -1738,5 +1785,30 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 240
     Top = 440
+  end
+  object spInsert_MI_Inventory_bySend: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_bySend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Send'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_Send'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 416
   end
 end
