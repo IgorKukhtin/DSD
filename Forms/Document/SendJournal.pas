@@ -43,6 +43,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actChoiceGuides: TdsdChoiceGuides;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

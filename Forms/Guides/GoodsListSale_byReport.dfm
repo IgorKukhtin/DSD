@@ -1,4 +1,4 @@
-object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
+object GoodsListSale_byReportForm: TGoodsListSale_byReportForm
   Left = 0
   Top = 0
   Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
@@ -41,7 +41,7 @@ object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
   object cxGroupBox1: TcxGroupBox
     Left = 8
     Top = 8
-    TabOrder = 19
+    TabOrder = 18
     Height = 126
     Width = 425
   end
@@ -54,7 +54,7 @@ object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 275
   end
   object cxLabel11: TcxLabel
@@ -71,7 +71,7 @@ object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
+    TabOrder = 8
     Text = '(30102) '#1044#1086#1093#1086#1076#1099' '#1055#1088#1086#1076#1091#1082#1094#1080#1103' '#1058#1091#1096#1077#1085#1082#1072
     Width = 275
   end
@@ -129,7 +129,7 @@ object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 275
   end
   object cxLabel2: TcxLabel
@@ -146,7 +146,7 @@ object Report_GoodsListSaleForm: TReport_GoodsListSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 17
+    TabOrder = 15
     Text = '(30200) '#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077
     Width = 275
   end

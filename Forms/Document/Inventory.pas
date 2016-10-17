@@ -61,6 +61,7 @@ type
     GoodsKindName_Complete: TcxGridDBColumn;
     actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
     ContainerId: TcxGridDBColumn;
+    actSendOpenForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
