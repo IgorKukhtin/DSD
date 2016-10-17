@@ -18,14 +18,13 @@ $BODY$
    DECLARE vbisErased Boolean;
 BEGIN
 
-  
    IF COALESCE (inId , 0) <> 0 -- AND vbisErased = TRUE             -- элемент существует но помечен на удаление - снимаем пометку удаления
       THEN
          PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
          -- сохранили свойство <Дата корр.>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
    ELSE 
-       IF COALESCE (inId , 0) = 0                                   -- добавляем новый элемент
+       IF COALESCE (inId , 0) = 0
        THEN
        -- сохранили <Объект>
        vbId := lpInsertUpdate_Object (0, zc_Object_GoodsListSale(), 0, '');

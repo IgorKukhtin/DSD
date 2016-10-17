@@ -1,6 +1,6 @@
+
 -- Function: gpInsertUpdate_Object_GoodsListSale_byReport  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport (TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,Integer,Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport (TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer, TVarChar);
 
 
@@ -185,7 +185,6 @@ BEGIN
     WHERE _tmpGoodsListSale.Id IS NULL OR  _tmpGoodsListSale.isErased   = TRUE
  --   LIMIT 100
 ;
-
    
    
 END;
