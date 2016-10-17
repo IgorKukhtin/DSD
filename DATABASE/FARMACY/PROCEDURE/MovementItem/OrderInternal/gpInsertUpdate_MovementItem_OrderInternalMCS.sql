@@ -79,11 +79,11 @@ BEGIN
                                                                                                           ,inAmountManual:= NULL
                                                                                                           ,inPrice      := Object_Price.Price
                                                                                                           ,inUserId     := vbUserId)
-                                            ,inValueData       := CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                                                                            THEN CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                                                                       WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                                                                            THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                                                                       ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+                                            ,inValueData       := CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                                                                            THEN CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                                                                       WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                                                                            THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                                                                       ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
                                                                   END :: TFloat
                                             )
         from Object_Price_View AS Object_Price
@@ -144,7 +144,30 @@ BEGIN
                                 HAVING
                                     SUM(MovementItem_Income.Amount) > 0
                              ) AS Income
-                               ON Object_Price.GoodsId = Income.GoodsId
+                               ON Income.GoodsId = Object_Price.GoodsId
+
+            LEFT OUTER JOIN (SELECT MovementItem.ObjectId     AS GoodsId 
+                                  , SUM (MovementItem.Amount) AS Amount
+                             FROM Movement
+                                    INNER JOIN MovementItem AS MovementItem
+                                                            ON MovementItem.MovementId = Movement.Id
+                                                           AND MovementItem.DescId     = zc_MI_Master()
+                                                           AND MovementItem.isErased   = FALSE
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                 AND MovementLinkObject_To.ObjectId   = inUnitId
+                                    INNER JOIN MovementBoolean AS MovementBoolean_isAuto
+                                                               ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                                              AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
+                                                              AND MovementBoolean_isAuto.ValueData  = TRUE
+                             WHERE Movement.DescId = zc_Movement_Send()
+                                  AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                  AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                             GROUP BY MovementItem.ObjectId
+                            ) AS tmpMI_Send
+                              ON tmpMI_Send.GoodsId = Object_Price.GoodsId
+
         WHERE Object_Price.MCSValue > 0
           AND Object_Price.MCSIsClose = False 
           AND Object_Price.UnitId = inUnitId
@@ -159,11 +182,11 @@ BEGIN
             Object_Price.MCSValue,
             Object_Goods_View.MinimumLot,
             Income.Amount_Income
-        HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                         THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                    WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                         THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
-                    ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (Income.Amount_Income, 0))
+        HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                         THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                    WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                         THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
+                    ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
                END > 0;
 
         -- Пересчитываем ручное количество для строк с авторасчетом

@@ -185,6 +185,7 @@ BEGIN
     WHERE _tmpGoodsListSale.Id IS NULL OR  _tmpGoodsListSale.isErased   = TRUE
  --   LIMIT 100
 ;
+
    
    
 END;
