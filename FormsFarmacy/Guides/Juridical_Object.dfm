@@ -1,14 +1,10 @@
 inherited Juridical_ObjectForm: TJuridical_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -30,6 +26,14 @@ inherited Juridical_ObjectForm: TJuridical_ObjectForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             Width = 221
+          end
+          object colOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object clisCorporate: TcxGridDBColumn
             Caption = #1053#1072#1096#1077' '#1102#1088'.'#1083#1080#1094#1086

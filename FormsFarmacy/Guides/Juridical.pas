@@ -22,6 +22,7 @@ type
     clisErased: TcxGridDBColumn;
     colPayOrder: TcxGridDBColumn;
     colPercent: TcxGridDBColumn;
+    colOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public
