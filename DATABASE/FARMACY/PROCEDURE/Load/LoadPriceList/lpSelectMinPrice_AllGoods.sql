@@ -179,10 +179,10 @@ BEGIN
                                   AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
-                                      ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
+                                     ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail -- ObjectLink_Price_Goods.ObjectId
+                                    AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
              LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                                   ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                   ON ObjectFloat_PercentMarkup.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail -- ObjectLink_Price_Goods.ObjectId
                                   AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
         WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
@@ -294,7 +294,7 @@ BEGIN
             -- товар "поставщика", если он есть в прайсах !!!а он есть!!!
             LEFT JOIN Object_Goods_View AS Object_JuridicalGoods ON Object_JuridicalGoods.Id = MILinkObject_Goods.ObjectId
             -- товар "сети"
-            LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId
+            LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId_retail -- _tmpMinPrice_RemainsList.ObjectId
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
        
             -- Поставщик

@@ -40,7 +40,20 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
-    vbObjectIdRetail := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+    -- !!!только НЕ так определяется <Торговая сеть>!!!
+    -- vbObjectIdRetail := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+    -- !!!только так - определяется <Торговая сеть>!!!
+    vbObjectIdRetail:= COALESCE (
+                       (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                        WHERE ObjectLink_Unit_Juridical.ObjectId = inUnitId
+                          AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                       ), lpGet_DefaultValue ('zc_Object_Retail', vbUserId) :: Integer);
+
+
 
     --Юрлицо торговой точки
     SELECT
@@ -286,4 +299,5 @@ ALTER FUNCTION  gpReport_Upload_Optima (TDateTime, Integer, Integer, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpReport_Upload_Optima (inDate:= '19.09.2016', inObjectId := 59611, inUnitId := 183293, inSession := '3')
+-- SELECT * FROM gpReport_Upload_Optima (inDate:= '17.10.2016', inObjectId := 59611, inUnitId := 183293, inSession := '3') -- "Аптека_2 ул_Петрова комбрига_6"
+-- SELECT * FROM gpReport_Upload_Optima (inDate:= '17.10.2016', inObjectId := 59611, inUnitId := 2144918, inSession := '3') -- "Аптека_Никополь"

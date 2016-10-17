@@ -1,5 +1,6 @@
--- Function: gpInsertUpdate_Object_GoodsListSale_byReport  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
+-- Function: gpInsertUpdate_Object_GoodsListSale_byReport1  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport (TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,Integer,Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport1 (TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,Integer,Integer,Integer,Integer, TVarChar);
 
 
@@ -54,7 +55,7 @@ BEGIN
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , MIContainer.OperDate 
+             , null :: TDateTime -- MIContainer.OperDate 
              , SUM(-1 * MIContainer.Amount )     AS  Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
@@ -62,16 +63,17 @@ BEGIN
         WHERE MIContainer.OperDate BETWEEN inStartDate_1 AND inEndDate_1
           AND MIContainer.MovementDescId = zc_Movement_Sale()  
           AND MIContainer.DescId = zc_MIContainer_Count()
+          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
-               , MIContainer.OperDate
+               -- , MIContainer.OperDate
         HAVING SUM(-1 * MIContainer.Amount ) <> 0
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , MIContainer.OperDate 
+             , null -- MIContainer.OperDate 
              , SUM(-1 * MIContainer.Amount )     AS  Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
@@ -79,16 +81,17 @@ BEGIN
         WHERE MIContainer.OperDate BETWEEN inStartDate_2 AND inEndDate_2
           AND MIContainer.MovementDescId = zc_Movement_Sale()  
           AND MIContainer.DescId = zc_MIContainer_Count()
+          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
-               , MIContainer.OperDate
+               --, MIContainer.OperDate
         HAVING SUM(-1 * MIContainer.Amount ) <> 0
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , MIContainer.OperDate 
+             , null -- MIContainer.OperDate 
              , SUM(-1 * MIContainer.Amount )     AS  Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
@@ -96,10 +99,11 @@ BEGIN
         WHERE MIContainer.OperDate BETWEEN inStartDate_3 AND inEndDate_3
           AND MIContainer.MovementDescId = zc_Movement_Sale()  
           AND MIContainer.DescId = zc_MIContainer_Count()
+          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
-               , MIContainer.OperDate
+               --, MIContainer.OperDate
         HAVING SUM(-1 * MIContainer.Amount ) <> 0;
 
      --!!!!!!!!!!!!!!!!!!!!!
@@ -135,8 +139,7 @@ BEGIN
                                                , inPartnerId     := _tmpResult.PartnerId
                                                , inUserId        := vbUserId
                                                 )
-    FROM _tmpResult
-    LIMIT 10;
+    FROM _tmpResult;
    
    
 END;

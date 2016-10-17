@@ -111,7 +111,7 @@ BEGIN
                                                , inUserId        := vbUserId
                                                 )
     FROM _tmpResult
-    LIMIT 10;
+    ;
    
    
 END;

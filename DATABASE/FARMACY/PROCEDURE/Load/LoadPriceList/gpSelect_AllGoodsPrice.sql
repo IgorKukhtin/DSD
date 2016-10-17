@@ -252,7 +252,8 @@ BEGIN
         ResultSet.isOneJuridical,
         ResultSet.isPriceFix,
         ResultSet.isIncome,
-        ResultSet.IsTop,
+        -- ResultSet.IsTop,
+        CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
         CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
