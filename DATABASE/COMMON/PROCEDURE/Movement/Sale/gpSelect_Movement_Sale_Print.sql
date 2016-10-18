@@ -547,7 +547,7 @@ BEGIN
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCountPartner()
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
