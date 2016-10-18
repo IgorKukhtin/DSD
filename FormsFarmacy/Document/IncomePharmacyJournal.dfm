@@ -280,6 +280,17 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
             Options.Editing = False
             Width = 68
           end
+          object colisRegistered: TcxGridDBColumn
+            Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
+            DataBinding.FieldName = 'isRegistered'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1047#1072#1075#1088#1091#1078#1077#1085#1072' '#1074' '#1084#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer '#1052#1044#1052
+            Options.Editing = False
+            Width = 74
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -816,6 +827,10 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
     Left = 400
     Top = 200
   end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 384
+    Top = 136
+  end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -911,8 +926,8 @@ inherited IncomePharmacyJournalForm: TIncomePharmacyJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 88
+    Left = 472
+    Top = 136
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeSale'

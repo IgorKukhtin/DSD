@@ -12,17 +12,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Height = 424
     TabOrder = 3
     ExplicitWidth = 831
-    ExplicitHeight = 423
+    ExplicitHeight = 424
     ClientRectBottom = 424
     ClientRectRight = 831
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 831
-      ExplicitHeight = 423
+      ExplicitHeight = 424
       inherited cxGrid: TcxGrid
         Width = 831
         Height = 424
         ExplicitWidth = 831
-        ExplicitHeight = 423
+        ExplicitHeight = 424
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -311,6 +311,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
+          end
+          object colisRegistered: TcxGridDBColumn
+            Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
+            DataBinding.FieldName = 'isRegistered'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1047#1072#1075#1088#1091#1078#1077#1085#1072' '#1074' '#1084#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer '#1052#1044#1052
+            Options.Editing = False
+            Width = 74
           end
           object colPayColor: TcxGridDBColumn
             DataBinding.FieldName = 'PayColor'

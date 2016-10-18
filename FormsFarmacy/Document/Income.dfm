@@ -7,20 +7,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 134
+    Top = 138
     Width = 946
-    Height = 382
+    Height = 378
     ExplicitTop = 134
     ExplicitWidth = 946
     ExplicitHeight = 382
-    ClientRectBottom = 382
+    ClientRectBottom = 378
     ClientRectRight = 946
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 946
       ExplicitHeight = 358
       inherited cxGrid: TcxGrid
         Width = 946
-        Height = 358
+        Height = 354
         ExplicitWidth = 946
         ExplicitHeight = 358
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -498,10 +498,11 @@
   end
   inherited DataPanel: TPanel
     Width = 946
-    Height = 108
+    Height = 112
     TabOrder = 3
+    ExplicitTop = -7
     ExplicitWidth = 946
-    ExplicitHeight = 108
+    ExplicitHeight = 112
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Properties.ReadOnly = False
@@ -570,7 +571,7 @@
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 327
+      Left = 319
       Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
@@ -583,7 +584,7 @@
     end
     object edNDSKind: TcxButtonEdit
       Left = 455
-      Top = 64
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -610,7 +611,7 @@
     end
     object edPaymentDate: TcxDateEdit
       Left = 558
-      Top = 64
+      Top = 63
       EditValue = 42144d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -695,7 +696,7 @@
     end
     object edPointNumber: TcxTextEdit
       Left = 215
-      Top = 57
+      Top = 63
       Properties.ReadOnly = False
       Style.BorderColor = clFuchsia
       TabOrder = 11
@@ -753,15 +754,15 @@
     end
     object chbIsPay: TcxCheckBox
       Left = 8
-      Top = 84
+      Top = 88
       Caption = #1054#1087#1083#1072#1095#1077#1085#1072
       Properties.ReadOnly = True
       TabOrder = 29
       Width = 81
     end
     object вуDateLastPay: TcxDateEdit
-      Left = 220
-      Top = 84
+      Left = 215
+      Top = 88
       EditValue = 42144d
       Properties.ReadOnly = True
       Properties.SaveTime = False
@@ -770,22 +771,30 @@
       Width = 99
     end
     object cxLabel17: TcxLabel
-      Left = 96
-      Top = 85
+      Left = 89
+      Top = 89
       Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1073#1072#1085#1082#1091':'
     end
     object cbisDocument: TcxCheckBox
-      Left = 327
-      Top = 84
+      Left = 319
+      Top = 88
       Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 32
       Width = 154
     end
+    object cbisRegistered: TcxCheckBox
+      Left = 478
+      Top = 88
+      Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 123
+    end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
-    Left = 673
-    Top = 87
+    Left = 757
+    Top = 88
     Properties.Buttons = <
       item
         Default = True
@@ -793,12 +802,12 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 224
+    Width = 140
   end
   object cxLabel25: TcxLabel [3]
-    Left = 558
-    Top = 88
-    Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+    Left = 685
+    Top = 89
+    Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090'.'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1758,6 +1767,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isRegistered'
+        Value = Null
+        Component = cbisRegistered
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'JuridicalId'
         Value = Null
         Component = GuidesJuridical
@@ -2263,8 +2279,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 16
+    Left = 264
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2321,8 +2337,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 576
-    Top = 32
+    Left = 560
+    Top = 8
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -2591,7 +2607,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 756
+    Left = 836
     Top = 80
   end
   object spUpdateMovementIncome_OrderExt: TdsdStoredProc

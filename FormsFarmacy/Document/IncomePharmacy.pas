@@ -81,6 +81,7 @@ type
     spisDocument: TdsdStoredProc;
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
+    cbisRegistered: TcxCheckBox;
   private
     { Private declarations }
   public
