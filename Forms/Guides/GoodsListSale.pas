@@ -34,6 +34,8 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReportForm: TdxBarButton;
     mactOpenReportForm: TMultiAction;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public

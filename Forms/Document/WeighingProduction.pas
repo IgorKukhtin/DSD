@@ -136,6 +136,8 @@ type
     spSelectPrintCeh: TdsdStoredProc;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
   public
   end;

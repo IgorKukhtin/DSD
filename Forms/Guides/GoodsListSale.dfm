@@ -5,6 +5,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1015
   ExplicitHeight = 426
   PixelsPerInch = 96
@@ -459,6 +460,72 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       Caption = 'mactOpenReportForm'
       ImageIndex = 27
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 35
+      FormName = 'TGoodsListSaleDialogForm'
+      FormNameParam.Value = 'TGoodsListSaleDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'RetailId'
+          Value = 42309d
+          Component = RetailGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = 42309d
+          Component = RetailGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractId'
+          Value = Null
+          Component = ContractGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractName'
+          Value = Null
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -507,7 +574,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 136
+    Left = 112
     Top = 72
     DockControlHeights = (
       0
@@ -516,6 +583,18 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbInsert'
@@ -593,6 +672,10 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     end
     object bbOpenReportForm: TdxBarButton
       Action = mactOpenReportForm
+      Category = 0
+    end
+    object bbExecuteDialog: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -710,7 +793,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 192
+    Left = 208
+    Top = 64
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

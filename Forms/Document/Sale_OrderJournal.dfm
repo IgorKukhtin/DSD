@@ -25,6 +25,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 374
+        ExplicitTop = -6
         ExplicitWidth = 1177
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -140,6 +141,11 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummChange
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colToName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -3986,8 +3992,8 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 384
+    Left = 920
+    Top = 304
   end
   object ExportCDS: TClientDataSet
     Aggregates = <>

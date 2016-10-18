@@ -121,6 +121,11 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCountKg
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colFromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -1140,6 +1145,8 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_SendOnPrice'
+    Left = 384
+    Top = 152
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

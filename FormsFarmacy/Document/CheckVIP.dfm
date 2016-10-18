@@ -529,11 +529,13 @@ inherited CheckVIPForm: TCheckVIPForm
     end
     object bbConfirmedKind_Complete: TdxBarButton
       Action = actSetConfirmedKind_Complete
+      Caption = 'VIP '#1095#1077#1082'  - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
       ImageIndex = 52
     end
     object bbConfirmedKind_UnComplete: TdxBarButton
       Action = actSetConfirmedKind_UnComplete
+      Caption = 'VIP '#1095#1077#1082'  - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
       ImageIndex = 58
     end

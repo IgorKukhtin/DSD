@@ -2,7 +2,6 @@ inherited Sale_OrderForm: TSale_OrderForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 408
   ClientWidth = 1291
-  ExplicitLeft = -188
   ExplicitWidth = 1307
   ExplicitHeight = 446
   PixelsPerInch = 96
@@ -110,6 +109,11 @@ inherited Sale_OrderForm: TSale_OrderForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalPercentAmount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

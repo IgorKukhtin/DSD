@@ -97,8 +97,7 @@ BEGIN
                               ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
                              AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
                              AND (GoodsListSale_Contract.ChildObjectId = inContractId OR inContractId = 0)
-        LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = GoodsListSale_Contract.ChildObjectId
- 
+        
         INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Juridical
                               ON ObjectLink_GoodsListSale_Juridical.ObjectId = Object_GoodsListSale.Id
                              AND ObjectLink_GoodsListSale_Juridical.DescId = zc_ObjectLink_GoodsListSale_Juridical()
@@ -110,6 +109,8 @@ BEGIN
                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                              AND (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+        LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = GoodsListSale_Contract.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                              ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id

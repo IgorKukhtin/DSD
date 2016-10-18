@@ -108,6 +108,11 @@ inherited Sale_PartnerForm: TSale_PartnerForm
             item
               Kind = skSum
               Column = CountPack
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -2676,6 +2681,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Name = 'InvNumber_ProductionFull'
+        Value = Null
         Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString

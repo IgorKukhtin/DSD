@@ -96,6 +96,8 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     FormParams: TdsdFormParams;
+    actMovementProtocol: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
   public
   end;
