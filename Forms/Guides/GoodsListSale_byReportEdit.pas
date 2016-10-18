@@ -1,4 +1,4 @@
-unit Report_GoodsListSale;
+unit GoodsListSale_byReportEdit;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   cxGroupBox, cxCalendar;
 
 type
-  TReport_GoodsListSaleForm = class(TParentForm)
+  TGoodsListSale_byReportEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -36,17 +36,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel3: TcxLabel;
-    edStartDate1: TcxDateEdit;
-    cxLabel4: TcxLabel;
-    edEndDate1: TcxDateEdit;
-    cxLabel7: TcxLabel;
-    edStartDate2: TcxDateEdit;
-    cxLabel8: TcxLabel;
-    edEndDate2: TcxDateEdit;
-    cxLabel9: TcxLabel;
-    edStartDate3: TcxDateEdit;
-    edEndDate3: TcxDateEdit;
-    cxLabel10: TcxLabel;
     edInfoMoney: TcxButtonEdit;
     GuidesInfoMoney: TdsdGuides;
     cxLabel5: TcxLabel;
@@ -62,6 +51,11 @@ type
     cxGroupBox1: TcxGroupBox;
     cxGroupBox2: TcxGroupBox;
     cxGroupBox3: TcxGroupBox;
+    cePeriod1: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cePeriod2: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    cePeriod3: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -74,6 +68,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsListSaleForm);
+  RegisterClass(TGoodsListSale_byReportEditForm);
 
 end.

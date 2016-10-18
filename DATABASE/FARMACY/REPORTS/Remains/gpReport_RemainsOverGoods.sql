@@ -75,6 +75,7 @@ BEGIN
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpUnit_list (UnitId Integer) ON COMMIT DROP;
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
@@ -134,6 +135,15 @@ BEGIN
         AND MovementItem.DescId = zc_MI_Child()
         AND MovementItem.isErased = FALSE;
 ------------------------------------------------
+       -- определяем подразделения для распределения
+       INSERT INTO tmpUnit_list (UnitId)
+                           SELECT inUnitId  AS UnitId
+                          UNION
+                           SELECT ObjectBoolean_Over.ObjectId  AS UnitId
+                           FROM ObjectBoolean AS ObjectBoolean_Over
+                           WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
+                             AND ObjectBoolean_Over.ValueData = TRUE;
+                           
 
        -- Remains
        INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
@@ -141,7 +151,9 @@ BEGIN
                                    , Container.WhereObjectId AS UnitId
                                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                                    , Container.Id  AS ContainerId
-                              FROM Container
+                              FROM tmpUnit_list
+                                   INNER JOIN Container ON Container.WhereObjectId = tmpUnit_list.UnitId
+                                                       AND Container.DescId = zc_Container_Count()
                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                          ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
                                                         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
@@ -153,7 +165,7 @@ BEGIN
                                                                    ON MIContainer.ContainerId = Container.Id
                                                                   AND MIContainer.OperDate >= inStartDate
 
-                              WHERE Container.DescId = zc_Container_Count()
+                              --WHERE Container.DescId = zc_Container_Count()
                               GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
                               HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
                               ;
@@ -190,16 +202,9 @@ BEGIN
        -- MCS
        INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
             WITH 
-               tmpUnit AS (SELECT ObjectBoolean_Over.ObjectId  AS UnitId
-                           FROM ObjectBoolean AS ObjectBoolean_Over
-                           WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
-                             AND ObjectBoolean_Over.ValueData = true
-                           UNION SELECT inUnitId  AS UnitId
-                           )
-
-             , tmp AS (SELECT tmp.GoodsId
-                          , tmp.UnitId
-                          , tmp.MCSValue
+               tmp AS (SELECT tmp.GoodsId
+                            , tmp.UnitId
+                            , tmp.MCSValue
                        FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                        -- FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                        WHERE tmp.MCSValue > 0
@@ -207,8 +212,8 @@ BEGIN
                SELECT tmp.GoodsId
                     , tmp.UnitId
                     , tmp.MCSValue
-               FROM tmpUnit
-                  LEFT JOIN tmp ON tmp.UnitId = tmpUnit.UnitId
+               FROM tmpUnit_list
+                  JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId
                ;
 
 

@@ -566,8 +566,8 @@ BEGIN
                         HAVING SUM (MI_Check.Amount) <> 0 
                         )
          -- автоперемещения приход
-         , tmpSend AS ( SELECT MI_Send.ObjectId                        AS GoodsId
-                             , -1 * SUM (MIContainer.Amount) ::TFloat  AS Amount
+         , tmpSend AS ( SELECT MI_Send.ObjectId                     AS GoodsId
+                             , SUM (MI_Send.Amount) ::TFloat   AS Amount
                         FROM Movement AS Movement_Send
                                INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                              ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
@@ -581,13 +581,13 @@ BEGIN
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
                                                       AND MI_Send.isErased = FALSE
-                               LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                         /*      LEFT OUTER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.MovementItemId = MI_Send.Id
                                                                     AND MIContainer.DescId = zc_MIContainer_Count() 
-                                                                    AND MIContainer.isActive = True
+                                                                    AND MIContainer.isActive = True*/
                         WHERE Movement_Send.OperDate >= vbOperDate AND Movement_Send.OperDate < vbOperDateEnd
                           AND Movement_Send.DescId = zc_Movement_Send()
-                          AND Movement_Send.StatusId = zc_Enum_Status_Complete()
+                          AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY MI_Send.ObjectId 
                         HAVING SUM (MI_Send.Amount) <> 0 
                        )

@@ -2821,8 +2821,12 @@
 				<Form>GoodsListSaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Report_GoodsListSale.pas">
-				<Form>Report_GoodsListSaleForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsListSale_byReportEdit.pas">
+				<Form>GoodsListSale_byReportEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendJournalChoice.pas">
+				<Form>SendJournalChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -61,6 +61,11 @@ type
     GoodsKindName_Complete: TcxGridDBColumn;
     actGoodsKindCompleteChoiceMaster: TOpenChoiceForm;
     ContainerId: TcxGridDBColumn;
+    actSendOpenForm: TOpenChoiceForm;
+    bb: TdxBarButton;
+    spInsert_MI_Inventory_bySend: TdsdStoredProc;
+    actInsert_bySend: TdsdExecStoredProc;
+    macInsert_bySend: TMultiAction;
   private
     { Private declarations }
   public

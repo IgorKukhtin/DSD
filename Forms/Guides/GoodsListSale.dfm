@@ -27,6 +27,12 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ExplicitWidth = 999
         ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clGoodsName
+            end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -431,8 +437,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
       Caption = #1047#1072#1083#1080#1074#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
       Hint = #1047#1072#1083#1080#1074#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
       ImageIndex = 27
-      FormName = 'TReport_GoodsListSaleForm'
-      FormNameParam.Value = 'TReport_GoodsListSaleForm'
+      FormName = 'TGoodsListSale_byReportEditForm'
+      FormNameParam.Value = 'TGoodsListSale_byReportEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -455,8 +461,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 40
-    Top = 72
+    Left = 72
+    Top = 168
   end
   inherited MasterCDS: TClientDataSet
     Left = 24
@@ -497,7 +503,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 64
+    Left = 144
+    Top = 200
   end
   inherited BarManager: TdxBarManager
     Left = 136
@@ -600,6 +607,10 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   inherited PopupMenu: TPopupMenu
     Left = 232
     Top = 232
+  end
+  inherited spErasedUnErased: TdsdStoredProc
+    Left = 352
+    Top = 264
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'

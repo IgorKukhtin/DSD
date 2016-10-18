@@ -504,8 +504,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSaleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleEditForm');
   //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsListSaleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsListSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSale_byReportEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsListSale_byReportEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsPropertyFormTest;
@@ -676,6 +676,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');

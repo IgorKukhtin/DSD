@@ -1,10 +1,9 @@
--- Function: gpInsertUpdate_Object_GoodsListSale_byReport1  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
+-- Function: gpInsertUpdate_Object_GoodsListSale_byReport  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport (TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,Integer,Integer,Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport1 (TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,TDateTime,Integer,Integer,Integer,Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale_byReport1(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale_byReport(
     IN inStartDate_1    TDateTime ,  
     IN inEndDate_1      TDateTime ,
     IN inStartDate_2    TDateTime ,  
@@ -30,7 +29,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsListSale());
 
-   CREATE TEMP TABLE _tmpGoods  (GoodsId Integer, Value Integer) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpGoods (GoodsId Integer, StartDate TDateTime, EndDate TDateTime) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, PartnerId Integer, OperDate TDateTime, Amount TFloat) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpResult (GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer) ON COMMIT DROP;
 
@@ -39,71 +38,42 @@ BEGIN
    vbEndDate  := (SELECT MAX (StartDate) FROM (SELECT inEndDate_1 AS StartDate UNION SELECT inEndDate_2 AS StartDate UNION SELECT inEndDate_3 AS StartDate) as tt);
 
 
-   INSERT INTO _tmpGoods (GoodsId, Value) 
+   INSERT INTO _tmpGoods (GoodsId, StartDate, EndDate) 
         SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-            , CASE WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0)) THEN 1
-                   WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0)) THEN 2
-                   ELSE 0
-              END :: Integer AS Value
+             , CASE WHEN (Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0) 
+                      OR Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0))
+                    THEN inStartDate_1
+                    WHEN (Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0) 
+                       OR Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0)) 
+                    THEN inStartDate_2
+                    ELSE inStartDate_2
+               END :: TdateTime AS StartDate                                                                                             -- dataS3
+             , CASE WHEN (Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0) 
+                      OR Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0)) 
+                    THEN inEndDate_1
+                    WHEN (Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0) 
+                       OR Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0))
+                    THEN inEndDate_2
+                    ELSE inEndDate_3
+               END :: TdateTime AS EndDate                                                                                                  -- dataE3
         FROM ObjectLink AS ObjectLink_Goods_InfoMoney
-             JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-        WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney();
-     --!!!!!!!!!!!!!!!!!!!!!
-     ANALYZE _tmpGoods;
+            INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+         WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney();
 
    INSERT INTO _tmpMIContainer (ContainerId, GoodsId, PartnerId, OperDate, Amount)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , null :: TDateTime -- MIContainer.OperDate 
+             , MIContainer.OperDate 
              , SUM(-1 * MIContainer.Amount )     AS  Amount
         FROM MovementItemContainer AS MIContainer 
-            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
-                                AND _tmpGoods.Value = 1
-        WHERE MIContainer.OperDate BETWEEN inStartDate_1 AND inEndDate_1
+        WHERE MIContainer.OperDate BETWEEN vbStartDate AND vbEndDate
           AND MIContainer.MovementDescId = zc_Movement_Sale()  
           AND MIContainer.DescId = zc_MIContainer_Count()
-          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
-               -- , MIContainer.OperDate
-        HAVING SUM(-1 * MIContainer.Amount ) <> 0
-      UNION
-        SELECT MIContainer.ContainerId_analyzer  AS ContainerId
-             , MIContainer.ObjectId_analyzer     AS GoodsId
-             , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , null -- MIContainer.OperDate 
-             , SUM(-1 * MIContainer.Amount )     AS  Amount
-        FROM MovementItemContainer AS MIContainer 
-            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
-                                AND _tmpGoods.Value = 2
-        WHERE MIContainer.OperDate BETWEEN inStartDate_2 AND inEndDate_2
-          AND MIContainer.MovementDescId = zc_Movement_Sale()  
-          AND MIContainer.DescId = zc_MIContainer_Count()
-          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
-        GROUP BY MIContainer.ContainerId_analyzer
-               , MIContainer.ObjectId_analyzer 
-               , MIContainer.ObjectExtId_analyzer
-               --, MIContainer.OperDate
-        HAVING SUM(-1 * MIContainer.Amount ) <> 0
-      UNION
-        SELECT MIContainer.ContainerId_analyzer  AS ContainerId
-             , MIContainer.ObjectId_analyzer     AS GoodsId
-             , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , null -- MIContainer.OperDate 
-             , SUM(-1 * MIContainer.Amount )     AS  Amount
-        FROM MovementItemContainer AS MIContainer 
-            INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
-                                AND _tmpGoods.Value = 0
-        WHERE MIContainer.OperDate BETWEEN inStartDate_3 AND inEndDate_3
-          AND MIContainer.MovementDescId = zc_Movement_Sale()  
-          AND MIContainer.DescId = zc_MIContainer_Count()
-          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()
-        GROUP BY MIContainer.ContainerId_analyzer
-               , MIContainer.ObjectId_analyzer 
-               , MIContainer.ObjectExtId_analyzer
-               --, MIContainer.OperDate
+               , MIContainer.OperDate
         HAVING SUM(-1 * MIContainer.Amount ) <> 0;
 
      --!!!!!!!!!!!!!!!!!!!!!
@@ -118,8 +88,9 @@ BEGIN
                    , _tmpMIContainer.PartnerId
                    , ContainerLO_Juridical.ObjectId AS Juridical
                    , ContainerLO_Contract.ObjectId AS ContractId                          
-                   , SUM (_tmpMIContainer.Amount) AS Amount
-              FROM _tmpMIContainer 
+                   , SUM (CASE WHEN _tmpMIContainer.OperDate BETWEEN _tmpGoods.StartDate AND _tmpGoods.EndDate THEN _tmpMIContainer.Amount ELSE 0 END) AS Amount
+              FROM _tmpGoods
+                 JOIN _tmpMIContainer ON _tmpMIContainer.GoodsId = _tmpGoods.GoodsId
                  LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                ON ContainerLO_Juridical.ContainerId = _tmpMIContainer.ContainerId
                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -139,7 +110,8 @@ BEGIN
                                                , inPartnerId     := _tmpResult.PartnerId
                                                , inUserId        := vbUserId
                                                 )
-    FROM _tmpResult;
+    FROM _tmpResult
+    LIMIT 10;
    
    
 END;
@@ -150,10 +122,15 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.10.16         *
+ 11.10.16         *
 
 */
 
--- тест
--- select * from gpInsertUpdate_Object_GoodsListSale_byReport1(inStartDate_1 := ('01.06.2016')::TDateTime , inEndDate_1 := ('31.08.2016')::TDateTime , inStartDate_2 := ('01.06.2016')::TDateTime , inEndDate_2 := ('31.08.2016')::TDateTime 
---, inStartDate_3 := ('01.08.2016')::TDateTime , inEndDate_3 := ('10.08.2016')::TDateTime , inInfoMoneyId_1 := 8963 , inInfoMoneyDestinationId_1 := 0 , inInfoMoneyId_2 := 0 , inInfoMoneyDestinationId_2 := 8879 ,  inSession := '5');
+-- тест 2.09
+-- select * from gpInsertUpdate_Object_GoodsListSale_byReport(inStartDate_1 := ('05.08.2016')::TDateTime , inEndDate_1 := ('05.08.2016')::TDateTime , inStartDate_2 := ('02.08.2016')::TDateTime , inEndDate_2 := ('07.08.2016')::TDateTime , inStartDate_3 := ('01.08.2016')::TDateTime , inEndDate_3 := ('10.08.2016')::TDateTime , inInfoMoneyGroupId_1 := 8852 , inInfoMoneyDestinationId_1 := 8860 , inInfoMoneyGroupId_2 := 8853 , inInfoMoneyDestinationId_2 := 8861 ,  inSession := '5');
+/*select * from gpInsertUpdate_Object_GoodsListSale_byReport(inStartDate_1 := ('01.01.2016')::TDateTime , inEndDate_1 := ('31.08.2016')::TDateTime 
+                                                         , inStartDate_2 := ('01.06.2016')::TDateTime , inEndDate_2 := ('31.08.2016')::TDateTime
+                                                         , inStartDate_3 := ('01.08.2016')::TDateTime , inEndDate_3 := ('31.08.2016')::TDateTime 
+                                                         , inInfoMoneyId_1 := 8963 , inInfoMoneyDestinationId_1 := 0 
+                                                         , inInfoMoneyId_2 := 0 , inInfoMoneyDestinationId_2 := 8879 ,  inSession := '5');
+*/

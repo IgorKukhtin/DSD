@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Juridical(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, OKPO TVarChar,
                RetailId Integer, RetailName TVarChar,
                isCorporate boolean,
                Percent TFloat, PayOrder TFloat,
@@ -21,7 +21,8 @@ BEGIN
              Object_Juridical.Id                 AS Id
            , Object_Juridical.ObjectCode         AS Code
            , Object_Juridical.ValueData          AS Name
-         
+           , ObjectHistory_JuridicalDetails_View.OKPO
+
            , Object_Retail.Id                    AS RetailId
            , Object_Retail.ValueData             AS RetailName 
 
@@ -48,6 +49,7 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_PayOrder
                                    ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
                                   AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
+           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
        WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;
