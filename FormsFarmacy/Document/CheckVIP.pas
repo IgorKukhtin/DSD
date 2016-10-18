@@ -52,6 +52,12 @@ type
     colAmountOrder: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     ConfirmedKindClientName: TcxGridDBColumn;
+    spConfirmedKind_Complete: TdsdStoredProc;
+    actSetConfirmedKind_Complete: TdsdExecStoredProc;
+    actSetConfirmedKind_UnComplete: TdsdExecStoredProc;
+    bbConfirmedKind_Complete: TdxBarButton;
+    spConfirmedKind_UnComplete: TdsdStoredProc;
+    bbConfirmedKind_UnComplete: TdxBarButton;
   private
     { Private declarations }
   public

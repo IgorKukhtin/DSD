@@ -11,12 +11,12 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  cxPCdxBarPopupMenu, cxImageComboBox, cxCurrencyEdit, dxSkinsdxBarPainter;
+  cxPCdxBarPopupMenu, cxImageComboBox, cxCurrencyEdit, dxSkinsdxBarPainter,
+  cxButtonEdit;
 
 type
   TCheckDeferredForm = class(TCheckVIPForm)
-  private
-    { Private declarations }
+  private{ Private declarations }
   public
     { Public declarations }
   end;

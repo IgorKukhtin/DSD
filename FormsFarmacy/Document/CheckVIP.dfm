@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 417
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,8 @@ inherited CheckVIPForm: TCheckVIPForm
         Width = 369
         Height = 356
         Align = alLeft
+        ExplicitLeft = -6
+        ExplicitTop = 3
         ExplicitWidth = 369
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -392,6 +394,30 @@ inherited CheckVIPForm: TCheckVIPForm
       DataSource = MasterDS
       QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1095#1077#1082' '#1080' '#1074#1077#1088#1085#1091#1090#1100' '#1090#1086#1074#1072#1088' '#1074' '#1082#1072#1089#1089#1091'?'
     end
+    object actSetConfirmedKind_Complete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spConfirmedKind_Complete
+      StoredProcList = <
+        item
+          StoredProc = spConfirmedKind_Complete
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+    end
+    object actSetConfirmedKind_UnComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spConfirmedKind_UnComplete
+      StoredProcList = <
+        item
+          StoredProc = spConfirmedKind_UnComplete
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -447,6 +473,22 @@ inherited CheckVIPForm: TCheckVIPForm
         end
         item
           Visible = True
+          ItemName = 'bbConfirmedKind_Complete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConfirmedKind_UnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -485,6 +527,16 @@ inherited CheckVIPForm: TCheckVIPForm
       Action = actDeleteCheck
       Category = 0
     end
+    object bbConfirmedKind_Complete: TdxBarButton
+      Action = actSetConfirmedKind_Complete
+      Category = 0
+      ImageIndex = 52
+    end
+    object bbConfirmedKind_UnComplete: TdxBarButton
+      Action = actSetConfirmedKind_UnComplete
+      Category = 0
+      ImageIndex = 58
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -518,7 +570,7 @@ inherited CheckVIPForm: TCheckVIPForm
       end>
     Params = <>
     PackSize = 1
-    Left = 416
+    Left = 440
     Top = 56
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
@@ -532,8 +584,8 @@ inherited CheckVIPForm: TCheckVIPForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 520
-    Top = 264
+    Left = 544
+    Top = 256
   end
   object spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Check'
@@ -555,5 +607,69 @@ inherited CheckVIPForm: TCheckVIPForm
     PackSize = 1
     Left = 208
     Top = 128
+  end
+  object spConfirmedKind_Complete: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Check_ConfirmedKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisComplete'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outConfirmedKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 112
+  end
+  object spConfirmedKind_UnComplete: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Check_ConfirmedKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisComplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outConfirmedKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 168
   end
 end
