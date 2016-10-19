@@ -76,12 +76,15 @@ BEGIN
     CREATE TEMP TABLE tmpMIMaster (GoodsId Integer, Amount TFloat, Summa TFloat, InvNumber TVarChar, MovementId Integer, MIMaster_Id Integer, PRIMARY KEY (MovementId, MIMaster_Id, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMIChild (UnitId Integer, GoodsId Integer, Amount TFloat, Summa TFloat, MIChild_Id Integer, PRIMARY KEY (MIChild_Id, UnitId,GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpUnit_list (UnitId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpSend (GoodsId Integer, UnitId Integer, Amount TFloat) ON COMMIT DROP;
+
     -- Таблица - Результат
     CREATE TEMP TABLE tmpData (GoodsId Integer, UnitId Integer, MCSValue TFloat
                              , Price TFloat, StartDate TDateTime, EndDate TDateTime, MinExpirationDate TDateTime
                              , RemainsStart TFloat, SummaRemainsStart TFloat
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
+                             , AmountSend TFloat
                              , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
@@ -196,8 +199,40 @@ BEGIN
                           HAVING  SUM (tmp.RemainsStart) <> 0
                           ;
 
+         -- автоперемещения приход / расход
+         INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
+                        SELECT MI_Send.ObjectId                 AS GoodsId
+                             , MovementLinkObject_Unit.ObjectId AS UnitId
+                             , SUM (CASE WHEN (MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId)
+                                               OR
+                                              (MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId)
+                                         THEN (MI_Send.Amount) 
+                                         ELSE 0 
+                                    END) ::TFloat  AS Amount--_From
+                             --, SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() THEN (MI_Send.Amount) ELSE 0 END) ::TFloat    AS Amount_To
 
-
+                        FROM Movement AS Movement_Send
+                               INNER JOIN MovementBoolean AS MovementBoolean_isAuto
+                                                          ON MovementBoolean_isAuto.MovementId = Movement_Send.Id
+                                                         AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+                                                         AND MovementBoolean_isAuto.ValueData = TRUE
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
+                                                           AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_To(), zc_MovementLinkObject_From())
+                               INNER JOIN tmpUnit_list ON tmpUnit_list.UnitId = MovementLinkObject_Unit.ObjectId
+                               INNER JOIN MovementItem AS MI_Send
+                                                       ON MI_Send.MovementId = Movement_Send.Id
+                                                      AND MI_Send.DescId = zc_MI_Master()
+                                                      AND MI_Send.isErased = FALSE
+                        WHERE Movement_Send.OperDate >= inStartDate --CURRENT_DATE 
+                          AND Movement_Send.OperDate < inStartDate --CURRENT_DATE
+                          AND Movement_Send.DescId = zc_Movement_Send()
+                          AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY MI_Send.ObjectId 
+                               , MovementLinkObject_Unit.ObjectId 
+                        HAVING SUM (MI_Send.Amount) <> 0 
+                        ;
+                       
                       
        -- MCS
        INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
@@ -243,6 +278,7 @@ BEGIN
                             , RemainsStart, SummaRemainsStart
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
+                            , AmountSend
                             , isClose, isTOP, isFirst, isSecond
                              )
              WITH tmpOverSettings AS (SELECT *
@@ -296,7 +332,10 @@ BEGIN
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
                  END AS RemainsMCS_to
-               
+
+               , Object_Send.Amount   AS AmountSend
+--               , Object_Send.Amount_To     AS AmountSend_To
+
                , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
                , COALESCE (ObjectBoolean_Price_Top.ValueData, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
                , COALESCE (ObjectBoolean_First.ValueData, FALSE)         AS isFirst
@@ -305,7 +344,11 @@ BEGIN
             FROM tmpGoods_list
                 LEFT JOIN tmpRemains AS Object_Remains
                                      ON Object_Remains.GoodsId = tmpGoods_list.GoodsId
-                                    AND Object_Remains.UnitId = tmpGoods_list.UnitId
+                                    AND Object_Remains.UnitId  = tmpGoods_list.UnitId
+                LEFT JOIN tmpSend AS Object_Send
+                                  ON Object_Send.GoodsId = tmpGoods_list.GoodsId
+                                 AND Object_Send.UnitId  = tmpGoods_list.UnitId
+
                 LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoods_list.GoodsId
                                 AND tmpMCS.UnitId =  tmpGoods_list.UnitId
                 -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
@@ -443,7 +486,8 @@ BEGIN
                , tmpChildTo.RemainsMCS_result                   :: TFloat AS RemainsMCS_result
                , (tmpChildTo.RemainsMCS_result * tmpData.Price) :: TFloat AS SummaRemainsMCS_result
 
-
+               , tmpData.AmountSend            :: TFloat  AS AmountSend
+ 
                , tmpData.GoodsId
                , tmpData.isClose
                , tmpData.isTOP
@@ -523,6 +567,7 @@ BEGIN
                , COALESCE (tmpMIChild.Amount, 0) :: TFloat  AS Amount_Over
                , COALESCE (tmpMIChild.Summa, 0)  :: TFloat  AS Summa_Over
                , (COALESCE (tmpDataTo.RemainsMCS_result, 0) - COALESCE (tmpMIChild.Amount, 0)) :: TFloat AS Amount_OverDiff
+               , tmpData.AmountSend            :: TFloat    AS AmountSend
      FROM tmpData
           LEFT JOIN Object AS Object_Unit  ON Object_Unit.Id = tmpData.UnitId
           LEFT JOIN Object AS Object_Goods  ON Object_Goods.Id = tmpData.GoodsId
@@ -624,7 +669,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 14.0716          *
+ 19.10.16         *
+ 14.07.16         *
  05.07.16         *
  09.06.16         *
 */
