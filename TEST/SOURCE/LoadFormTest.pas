@@ -503,6 +503,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSaleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsListSaleDialogForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsListSale_byReportEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsListSale_byReportEditForm');

@@ -1,5 +1,5 @@
 -- View: Object_Unit_View
-
+--DROP VIEW IF EXISTS Movement_Income_View CASCADE;
 DROP VIEW IF EXISTS Movement_Income_View;
 
 CREATE OR REPLACE VIEW Movement_Income_View AS 
@@ -30,8 +30,9 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , MovementFloat_TotalSummSale.ValueData      AS SaleSumm
        , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
        , MovementDate_Branch.ValueData              AS BranchDate
-       , COALESCE(MovementBoolean_Checked.ValueData, false)   AS Checked
-       , COALESCE(MovementBoolean_Document.ValueData, false)  AS isDocument
+       , COALESCE(MovementBoolean_Checked.ValueData, false)     AS Checked
+       , COALESCE(MovementBoolean_Document.ValueData, false)    AS isDocument
+       , COALESCE(MovementBoolean_Registered.ValueData, false)  AS isRegistered
        , Container.Id                               AS PaymentContainerId
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -93,6 +94,10 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
                                   ON MovementBoolean_Checked.MovementId =  Movement.Id
                                  AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
+        LEFT JOIN MovementBoolean AS MovementBoolean_Registered
+                                  ON MovementBoolean_Registered.MovementId =  Movement.Id
+                                 AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
+
         LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                   ON MovementBoolean_Document.MovementId =  Movement.Id
                                  AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
@@ -126,6 +131,7 @@ ALTER TABLE Movement_Income_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 18.10.16         * add Registered
  30.01.16         *
  11.01.15                                                         *
  07.12.15                                                         *

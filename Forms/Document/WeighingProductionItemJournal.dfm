@@ -197,6 +197,11 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colWeightOther
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = colFromName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -580,7 +585,7 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 200
   end
   object edJuridicalBasis: TcxButtonEdit
@@ -861,6 +866,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -910,6 +923,10 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     end
     object bbReCompleteAll: TdxBarButton
       Action = actReCompleteAll
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = actMovementProtocol
       Category = 0
     end
   end
@@ -1103,6 +1120,36 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actMovementProtocol: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc

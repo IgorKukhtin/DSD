@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , PaymentDate TDateTime, PaySumm TFloat, SaleSumm TFloat
              , InvNumberBranch TVarChar, BranchDate TDateTime
-             , Checked Boolean, isDocument Boolean 
+             , Checked Boolean, isDocument Boolean, isRegistered Boolean
              , PayColor Integer
              , DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
@@ -92,6 +92,7 @@ BEGIN
                                    , Movement_Income_View.BranchDate
                                    , Movement_Income_View.Checked
                                    , Movement_Income_View.isDocument
+                                   , Movement_Income_View.isRegistered
                                    , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
                                    , Movement_Income_View.PaymentContainerId
                                    , MLM_Order.MovementChildId          AS Movement_OrderId
@@ -142,6 +143,7 @@ BEGIN
                                    , Movement_Income_View.BranchDate
                                    , Movement_Income_View.Checked
                                    , Movement_Income_View.isDocument
+                                   , Movement_Income_View.isRegistered
                                    , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
                                    , Movement_Income_View.PaymentContainerId
                                    , MLM_Order.MovementChildId          AS Movement_OrderId
@@ -191,6 +193,7 @@ BEGIN
           , Movement_Income.BranchDate
           , Movement_Income.Checked
           , Movement_Income.isDocument
+          , Movement_Income.isRegistered
           , Movement_Income.PayColor
           , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
 
@@ -206,7 +209,6 @@ BEGIN
          -- , date_part('day', Movement_Income.PaymentDate - Movement_Income.OperDate) ::TFloat AS PaymentDays 
           , (Movement_Income.PaymentDate::Date - Movement_Income.OperDate::Date) ::TFloat AS PaymentDays 
     
-
         FROM
             Movement_Income
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
@@ -259,6 +261,7 @@ BEGIN
           , Movement_Income.BranchDate
           , Movement_Income.Checked
           , Movement_Income.isDocument
+          , Movement_Income.isRegistered
           , Movement_Income.PayColor
           , Movement_Order.InvNumber
           , Movement_Order.Id 
@@ -276,6 +279,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 18.10.16         * add isRegistered
  04.08.16         *
  04.05.16         *
  22.04.16         * 

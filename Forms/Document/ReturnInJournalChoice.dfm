@@ -140,6 +140,11 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCurrency
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colFromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -590,17 +595,20 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
@@ -625,6 +633,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -632,37 +641,43 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'FromName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ToName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber_Full'
@@ -670,6 +685,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber_Full'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -693,6 +709,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -700,12 +717,14 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartnerDate'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -713,6 +732,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -720,6 +740,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -855,12 +876,14 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -873,6 +896,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -885,6 +909,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -893,21 +918,24 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
         Value = Null
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerName'
@@ -915,6 +943,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -924,6 +953,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -933,6 +963,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -941,6 +972,7 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 8

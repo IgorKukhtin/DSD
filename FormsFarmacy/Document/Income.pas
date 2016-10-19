@@ -113,6 +113,7 @@ type
     spUpdateMovementIncome_OrderExt: TdsdStoredProc;
     HeaderSaver1: THeaderSaver;
     Color_ExpirationDate: TcxGridDBColumn;
+    cbisRegistered: TcxCheckBox;
   private
     { Private declarations }
   public

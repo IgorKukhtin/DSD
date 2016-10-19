@@ -257,8 +257,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -144
-        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -329,6 +327,11 @@ object WeighingProductionForm: TWeighingProductionForm
               Format = ',0.####'
               Kind = skSum
               Column = colUpdateDate
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -565,7 +568,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Top = 62
     Enabled = False
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Width = 157
   end
   object cxLabel13: TcxLabel
@@ -726,6 +729,14 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExel'
         end
         item
@@ -773,6 +784,10 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = MovementItemProtocolOpenForm
       Category = 0
     end
   end
@@ -997,6 +1012,36 @@ object WeighingProductionForm: TWeighingProductionForm
       ImageIndex = 13
       Status = mtDelete
       Guides = StatusGuides
+    end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource

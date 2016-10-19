@@ -140,6 +140,11 @@ inherited SaleJournalChoiceForm: TSaleJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCurrency
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colToName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

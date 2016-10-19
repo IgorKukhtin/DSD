@@ -141,6 +141,11 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalSummPVAT
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = colFromName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

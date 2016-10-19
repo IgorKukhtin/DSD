@@ -300,9 +300,9 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Top = 63
       TabOrder = 7
       ExplicitTop = 63
-      ExplicitWidth = 178
+      ExplicitWidth = 158
       ExplicitHeight = 22
-      Width = 178
+      Width = 158
     end
     object cxLabel3: TcxLabel
       Left = 330
@@ -331,7 +331,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 184
+      Width = 191
     end
     object cxLabel4: TcxLabel
       Left = 530
@@ -339,12 +339,12 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel10: TcxLabel
-      Left = 530
+      Left = 635
       Top = 46
       Caption = #1058#1080#1087' '#1053#1044#1057
     end
     object edNDSKind: TcxButtonEdit
-      Left = 530
+      Left = 635
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -356,7 +356,7 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 86
     end
     object cxLabel12: TcxLabel
-      Left = 209
+      Left = 190
       Top = 65
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085
     end
@@ -376,12 +376,12 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 100
     end
     object cxLabel9: TcxLabel
-      Left = 425
+      Left = 530
       Top = 46
       Caption = #8470' '#1074' '#1072#1087#1090#1077#1082#1077
     end
     object edPointNumber: TcxTextEdit
-      Left = 425
+      Left = 530
       Top = 63
       Enabled = False
       Properties.ReadOnly = False
@@ -389,19 +389,27 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
       Width = 99
     end
     object cbFarmacyShow: TcxCheckBox
-      Left = 192
+      Left = 173
       Top = 63
       Action = mactFarmacyShow
       TabOrder = 17
       Width = 17
     end
     object cbisDocument: TcxCheckBox
-      Left = 268
+      Left = 249
       Top = 63
       Caption = #1054#1088#1080#1075#1080#1085#1072#1083' '#1085#1072#1082#1083'. ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 154
+    end
+    object cbisRegistered: TcxCheckBox
+      Left = 405
+      Top = 63
+      Caption = #1052#1077#1076#1088#1077#1077#1089#1090#1088' Pfizer'
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 119
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -969,8 +977,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
-    Left = 128
-    Top = 56
+    Left = 80
+    Top = 88
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1106,6 +1114,13 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         Name = 'isDocument'
         Value = Null
         Component = cbisDocument
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRegistered'
+        Value = Null
+        Component = cbisRegistered
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -1428,7 +1443,8 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
+    Left = 256
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

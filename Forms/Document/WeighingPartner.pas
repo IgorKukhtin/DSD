@@ -153,6 +153,8 @@ type
     HeaderSaver3: THeaderSaver;
     spUpdateMovement_Order: TdsdStoredProc;
     ChangePercent: TcxGridDBColumn;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
   public
   end;

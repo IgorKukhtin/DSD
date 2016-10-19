@@ -118,6 +118,11 @@
               Format = ',0.####'
               Kind = skSum
               Column = colTotalPercentAmount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -3258,8 +3263,8 @@
       item
         Guides = GuidesTo
       end>
-    Left = 160
-    Top = 192
+    Left = 104
+    Top = 256
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
