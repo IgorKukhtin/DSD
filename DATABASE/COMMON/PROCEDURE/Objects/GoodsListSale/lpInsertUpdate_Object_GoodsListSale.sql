@@ -20,9 +20,11 @@ BEGIN
 
    IF COALESCE (inId , 0) <> 0 -- AND vbisErased = TRUE             -- элемент существует но помечен на удаление - снимаем пометку удаления
       THEN
+         -- Меняется признак <Удален> + там же сохраняется протокол
          PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
-         -- сохранили свойство <Дата корр.>
+         -- сохранили свойство <Дата создания/изменений>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+
    ELSE 
        IF COALESCE (inId , 0) = 0
        THEN
@@ -38,6 +40,9 @@ BEGIN
        -- сохранили связь с <>
        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), vbId, inPartnerId);
  
+       -- сохранили свойство <Дата создания/изменений>
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+
        -- сохранили протокол
        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
        END IF;
@@ -52,7 +57,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  11.10.16         *
-
 */
 
 -- тест

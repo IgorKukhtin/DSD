@@ -32,17 +32,17 @@ BEGIN
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Value Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpResult (GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpGoodsListSale (Id Integer, GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, isErased boolean) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
-   vbStartDate1:= (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_1, '999')|| ' MONTH') :: INTERVAL);
-   vbStartDate2:= (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_2, '999')|| ' MONTH') :: INTERVAL);
-   vbStartDate3:= (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_3, '999')|| ' MONTH') :: INTERVAL);
+   vbStartDate1:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_1, '999')|| ' MONTH') :: INTERVAL));
+   vbStartDate2:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_2, '999')|| ' MONTH') :: INTERVAL));
+   vbStartDate3:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_3, '999')|| ' MONTH') :: INTERVAL));
    vbEndDate   := CURRENT_DATE;
 
 
    -- выборка существующих элементов
-   INSERT INTO _tmpGoodsListSale (Id, GoodsId, Juridical, ContractId, PartnerId, isErased) 
+   INSERT INTO _tmpList (Id, GoodsId, Juridical, ContractId, PartnerId, isErased) 
       SELECT 
              Object_GoodsListSale.Id                           AS Id
            , ObjectLink_GoodsListSale_Goods.ChildObjectId      AS GoodsId 
@@ -68,16 +68,19 @@ BEGIN
    -- выбираем товары согдасно статьям
    INSERT INTO _tmpGoods (GoodsId, Value) 
         SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-            , CASE WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0)) THEN 1
-                   WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0)) THEN 2
+            , CASE WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0))
+                        THEN 1
+                   WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_2,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_2, 0))
+                        THEN 2
                    ELSE 0
               END :: Integer AS Value
         FROM ObjectLink AS ObjectLink_Goods_InfoMoney
              JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
         WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney();
-     --!!!!!!!!!!!!!!!!!!!!!
-     ANALYZE _tmpGoods;
+   -- !!!оптимизация!!!
+   ANALYZE _tmpGoods;
 
+   -- 
    INSERT INTO _tmpMIContainer (ContainerId, GoodsId, PartnerId, Amount)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
@@ -159,17 +162,17 @@ BEGIN
      ANALYZE _tmpResult;
 
     -- метим на удаление элементы, которые не попали в таблицу _tmpResult
-    PERFORM lpUpdate_Object_isErased (inObjectId:= _tmpGoodsListSale.Id, inUserId:= vbUserId)
-    FROM _tmpGoodsListSale
-       LEFT JOIN _tmpResult ON _tmpGoodsListSale.GoodsId    = _tmpResult.GoodsId
-                           AND _tmpGoodsListSale.ContractId = _tmpResult.ContractId
-                           AND _tmpGoodsListSale.Juridical  = _tmpResult.Juridical
-                           AND _tmpGoodsListSale.PartnerId  = _tmpResult.PartnerId
-    WHERE _tmpGoodsListSale.isErased = FALSE AND _tmpResult.GoodsId IS NULL;
+    PERFORM lpUpdate_Object_isErased (inObjectId:= _tmpList.Id, inUserId:= vbUserId)
+    FROM _tmpList
+       LEFT JOIN _tmpResult ON _tmpList.GoodsId    = _tmpResult.GoodsId
+                           AND _tmpList.ContractId = _tmpResult.ContractId
+                           AND _tmpList.Juridical  = _tmpResult.Juridical
+                           AND _tmpList.PartnerId  = _tmpResult.PartnerId
+    WHERE _tmpList.isErased = FALSE AND _tmpResult.GoodsId IS NULL;
     
     
     -- обновляем справочник, добавляем новые элементы, снимаем пометку с удаленных
-    PERFORM lpInsertUpdate_Object_GoodsListSale (inId            := COALESCE (_tmpGoodsListSale.Id, 0) :: integer
+    PERFORM lpInsertUpdate_Object_GoodsListSale (inId            := COALESCE (_tmpList.Id, 0) :: integer
                                                , inGoodsId       := _tmpResult.GoodsId
                                                , inContractId    := _tmpResult.ContractId
                                                , inJuridicalId   := _tmpResult.Juridical
@@ -177,12 +180,12 @@ BEGIN
                                                , inUserId        := vbUserId
                                                 )
     FROM _tmpResult
-       LEFT JOIN _tmpGoodsListSale ON _tmpGoodsListSale.GoodsId    = _tmpResult.GoodsId
-                                  AND _tmpGoodsListSale.ContractId = _tmpResult.ContractId
-                                  AND _tmpGoodsListSale.Juridical  = _tmpResult.Juridical
-                                  AND _tmpGoodsListSale.PartnerId  = _tmpResult.PartnerId
+       LEFT JOIN _tmpList ON _tmpList.GoodsId    = _tmpResult.GoodsId
+                                  AND _tmpList.ContractId = _tmpResult.ContractId
+                                  AND _tmpList.Juridical  = _tmpResult.Juridical
+                                  AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
-    WHERE _tmpGoodsListSale.Id IS NULL OR  _tmpGoodsListSale.isErased   = TRUE
+    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
  --   LIMIT 100
 ;
    
