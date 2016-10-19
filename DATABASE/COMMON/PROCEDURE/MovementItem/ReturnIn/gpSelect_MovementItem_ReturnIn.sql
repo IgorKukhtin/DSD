@@ -237,7 +237,7 @@ BEGIN
                                     WHERE ObjectBoolean_Order.ValueData = TRUE
                                       AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                    )
-      /*, tmpGoods AS (SELECT Object_Goods.Id           AS GoodsId
+     , tmpGoods1 AS (SELECT Object_Goods.Id           AS GoodsId
                           , Object_Goods.ObjectCode   AS GoodsCode
                           , Object_Goods.ValueData    AS GoodsName
                           , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
@@ -250,11 +250,10 @@ BEGIN
                           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                      WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
-                    )*/
-      , tmpGoods AS ( SELECT Object_Goods.Id           AS GoodsId
+                    )
+      , tmpGoods2 AS (SELECT Object_Goods.Id           AS GoodsId
                            , Object_Goods.ObjectCode   AS GoodsCode
                            , Object_Goods.ValueData    AS GoodsName
-                           , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                       FROM Object AS Object_GoodsListSale 
                            INNER JOIN ObjectLink AS GoodsListSale_Contract
                                    ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
@@ -270,10 +269,17 @@ BEGIN
                            INNER JOIN Object AS Object_Goods 
                                    ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
                                   AND Object_Goods.isErased = FALSE
-                           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
                       WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
                         AND Object_GoodsListSale.isErased = FALSE
                     )
+      , tmpGoods AS ( SELECT tmpGoods1.GoodsId
+                           , tmpGoods1.GoodsCode
+                           , tmpGoods1.GoodsName
+                           , tmpGoods1.GoodsKindId
+                      FROM tmpGoods1
+                           INNER JOIN tmpGoods2 ON tmpGoods2.GoodsId = tmpGoods1.GoodsId
+                     )
+
      , tmpMIChild AS (SELECT MovementItem.ParentId     AS MI_ParentId
                            , MIN (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_min
                            , MAX (COALESCE (MIFloat_PromoMovement.ValueData, 0)) AS MovementId_promo_max
@@ -441,11 +447,9 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
-                                AND tmpMIPromo.PricePromo       = tmpResult.Price
 
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
-                              AND CASE WHEN vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT ELSE tmpPromo.PriceWithOutVAT END = tmpResult.Price
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
@@ -706,10 +710,8 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
-                                AND tmpMIPromo.PricePromo       = tmpResult.Price
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
-                              AND CASE WHEN vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT ELSE tmpPromo.PriceWithOutVAT END = tmpResult.Price
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId

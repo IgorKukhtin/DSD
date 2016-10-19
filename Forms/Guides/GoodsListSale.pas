@@ -36,6 +36,7 @@ type
     mactOpenReportForm: TMultiAction;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    clAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

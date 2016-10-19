@@ -181,6 +181,7 @@ BEGIN
             MovementItemSaved.Amount,
             Object_Price.MCSValue,
             Object_Goods_View.MinimumLot,
+            tmpMI_Send.Amount,
             Income.Amount_Income
         HAVING CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
                          THEN CEIL  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0))
