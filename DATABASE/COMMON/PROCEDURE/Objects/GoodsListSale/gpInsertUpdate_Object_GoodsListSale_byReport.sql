@@ -31,7 +31,7 @@ BEGIN
 
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Value Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpResult (GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpResult (GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
@@ -85,7 +85,7 @@ BEGIN
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , SUM(-1 * MIContainer.Amount )     AS  Amount
+             , SUM(-1 * MIContainer.Amount ) ::TFloat    AS  Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
                                 AND _tmpGoods.Value = 1
@@ -131,13 +131,12 @@ BEGIN
      ANALYZE _tmpMIContainer;
 
 
-  -- метим на удаление элементы, которые не попали в таблицу _tmpResult
-
-   INSERT INTO _tmpResult (GoodsId, Juridical, ContractId, PartnerId)
+     INSERT INTO _tmpResult (GoodsId, Juridical, ContractId, PartnerId, Amount)
         SELECT DISTINCT tmpData.GoodsId  
              , tmpData.Juridical
              , tmpData.ContractId
              , tmpData.PartnerId
+             , CAST (tmpData.Amount AS NUMERIC (16, 2)) ::Tfloat
         FROM (SELECT _tmpMIContainer.GoodsId  
                    , _tmpMIContainer.PartnerId
                    , ContainerLO_Juridical.ObjectId AS Juridical
@@ -154,6 +153,7 @@ BEGIN
                      , _tmpMIContainer.PartnerId
                      , ContainerLO_Juridical.ObjectId 
                      , ContainerLO_Contract.ObjectId 
+             HAVING SUM (_tmpMIContainer.Amount) <> 0
              ) as tmpData
         WHERE tmpData.Amount <> 0;
 
@@ -177,17 +177,36 @@ BEGIN
                                                , inContractId    := _tmpResult.ContractId
                                                , inJuridicalId   := _tmpResult.Juridical
                                                , inPartnerId     := _tmpResult.PartnerId
+                                               , inAmount        := _tmpResult.Amount ::Tfloat
                                                , inUserId        := vbUserId
                                                 )
     FROM _tmpResult
        LEFT JOIN _tmpList ON _tmpList.GoodsId    = _tmpResult.GoodsId
-                                  AND _tmpList.ContractId = _tmpResult.ContractId
-                                  AND _tmpList.Juridical  = _tmpResult.Juridical
-                                  AND _tmpList.PartnerId  = _tmpResult.PartnerId
+                         AND _tmpList.ContractId = _tmpResult.ContractId
+                         AND _tmpList.Juridical  = _tmpResult.Juridical
+                         AND _tmpList.PartnerId  = _tmpResult.PartnerId
+                                 
+    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE;
+ --   LIMIT 100
+
+   /* -- обновляем справочник, обновляем кол-во в существующих элементах
+    PERFORM lpInsertUpdate_Object_GoodsListSale (inId            := COALESCE (_tmpList.Id, 0) :: integer
+                                               , inGoodsId       := _tmpResult.GoodsId
+                                               , inContractId    := _tmpResult.ContractId
+                                               , inJuridicalId   := _tmpResult.Juridical
+                                               , inPartnerId     := _tmpResult.PartnerId
+                                               , inAmount        := CAST (_tmpResult.Amount AS NUMERIC (16, 2)) ::Tfloat
+                                               , inUserId        := vbUserId
+                                                )
+    FROM _tmpResult
+       LEFT JOIN _tmpList ON _tmpList.GoodsId    = _tmpResult.GoodsId
+                         AND _tmpList.ContractId = _tmpResult.ContractId
+                         AND _tmpList.Juridical  = _tmpResult.Juridical
+                         AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
     WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
- --   LIMIT 100
-;
+*/
+
    
    
 END;
