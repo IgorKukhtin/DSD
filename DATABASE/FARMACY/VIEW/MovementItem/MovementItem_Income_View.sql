@@ -107,4 +107,4 @@ ALTER TABLE MovementItem_Income_View
 */
 
 -- тест
--- SELECT * FROM Movement_Income_View where id = 805
+-- SELECT * FROM MovementItem_Income_View where id = 805

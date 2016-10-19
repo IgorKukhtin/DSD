@@ -1,26 +1,26 @@
 inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 535
-  ClientWidth = 814
+  ClientWidth = 761
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 830
-  ExplicitHeight = 573
+  ExplicitWidth = 777
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 814
+    Width = 761
     Height = 478
     TabOrder = 3
     ExplicitWidth = 814
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 814
+    ClientRectRight = 761
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 814
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 814
+        Width = 761
         Height = 478
         ExplicitWidth = 814
         ExplicitHeight = 478
@@ -179,22 +179,22 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 814
+    Width = 761
     ExplicitWidth = 814
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 558
+    Left = 510
     Top = 9
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 659
+    Left = 588
     Top = 8
     Properties.Buttons = <
       item
@@ -203,7 +203,7 @@ inherited SendJournalForm: TSendJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -663,8 +663,8 @@ inherited SendJournalForm: TSendJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 705
-    Top = 3
+    Left = 625
+    Top = 35
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -687,7 +687,7 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 744
-    Top = 56
+    Left = 664
+    Top = 88
   end
 end

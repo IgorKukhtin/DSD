@@ -1,28 +1,29 @@
 inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 535
-  ClientWidth = 972
+  ClientWidth = 847
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 988
-  ExplicitHeight = 573
+  ExplicitLeft = -66
+  ExplicitWidth = 863
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 972
+    Width = 847
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 972
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 972
+    ClientRectRight = 847
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 972
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 972
+        Width = 847
         Height = 478
-        ExplicitWidth = 1020
+        ExplicitWidth = 972
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -181,22 +182,22 @@ inherited InventoryJournalForm: TInventoryJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 972
-    ExplicitWidth = 1020
+    Width = 847
+    ExplicitWidth = 972
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 702
+    Left = 608
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 803
+    Left = 686
     Top = 5
     Properties.Buttons = <
       item
@@ -205,7 +206,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -660,8 +661,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 895
-    Top = 8
+    Left = 775
+    Top = 32
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -684,7 +685,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 704
+    Top = 72
   end
 end

@@ -1,7 +1,5 @@
 -- Function: gpInsert_MovementItem_Inventory_bySend()
 
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_Inventory_bySend (Integer, Integer, TVarChar);
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
@@ -35,14 +33,36 @@ BEGIN
                                                   , inStorageId          := NULL
                                                   , inUserId             := vbUserId
                                                    )
-     FROM (SELECT tmpMI.MovementItemId                                                 AS MovementItemId
-                , COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)                         AS GoodsId
-                , COALESCE (tmpMI.GoodsKindId, tmpMI_Send.GoodsKindId)                 AS GoodsKindId
-                , COALESCE (tmpMI.GoodsKindCompleteId, 0)                              AS GoodsKindCompleteId
-                , COALESCE (tmpMI.PartionGoods, tmpMI_Send.PartionGoods)               AS PartionGoods
-                , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Send.PartionGoodsDate)       AS PartionGoodsDate
-                , (COALESCE (tmpMI.Amount,0)+COALESCE (tmpMI_Send.Amount,0)) ::TFLOAT  AS Amount
-           FROM (SELECT MovementItem.Id                                          AS MovementItemId
+     FROM (SELECT tmpMI.MovementItemId                                                      AS MovementItemId
+                , COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)                              AS GoodsId
+                , COALESCE (tmpMI.GoodsKindId, tmpMI_Send.GoodsKindId)                      AS GoodsKindId
+                , COALESCE (tmpMI.GoodsKindCompleteId, 0)                                   AS GoodsKindCompleteId
+                , COALESCE (tmpMI.PartionGoods, tmpMI_Send.PartionGoods)                    AS PartionGoods
+                , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Send.PartionGoodsDate)            AS PartionGoodsDate
+                , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Send.Amount, 0)) :: TFloat  AS Amount
+
+           FROM (SELECT MovementItem.ObjectId                                               AS GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                      AS GoodsKindId
+                                   , COALESCE (MIString_PartionGoods.ValueData, '')                       AS PartionGoods
+                                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                   , MovementItem.Amount                                                AS Amount
+
+                              FROM MovementItem 
+                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                            ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             WHERE MovementItem.MovementId = inMovementId_Send  
+                               AND MovementItem.DescId     = zc_MI_Master()
+                               AND MovementItem.isErased   = FALSE
+                            ) tmpMI_Send
+                    LEFT JOIN
+                (SELECT MovementItem.Id                                          AS MovementItemId
                       , MovementItem.ObjectId                                    AS GoodsId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
                       , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)    AS GoodsKindCompleteId
@@ -64,32 +84,11 @@ BEGIN
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                           WHERE Movement.Id = inMovementId
-                   ) AS tmpMI
-                    FULL JOIN  
-                             (SELECT MovementItem.ObjectId                                              AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                      AS GoodsKindId
-                                   , COALESCE (MIString_PartionGoods.ValueData, '')                       AS PartionGoods
-                                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
-                                   , MovementItem.Amount                                                AS Amount
-
-                              FROM MovementItem 
-                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                                            ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
-                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                              ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             WHERE MovementItem.MovementId = inMovementId_Send  
-                               AND MovementItem.DescId     = zc_MI_Master()
-                               AND MovementItem.isErased   = False
-                            ) tmpMI_Send ON tmpMI_Send.GoodsId         = tmpMI.GoodsId
-                                        AND tmpMI_Send.GoodsKindId     = tmpMI.GoodsKindId
-                                        AND tmpMI_Send.PartionGoods    = tmpMI.PartionGoods
-                                        AND tmpMI_Send.PartionGoodsDate= tmpMI.PartionGoodsDate
+                   WHERE Movement.Id = inMovementId
+                   ) AS tmpMI ON tmpMI.GoodsId          = tmpMI_Send.GoodsId
+                             AND tmpMI.GoodsKindId      = tmpMI_Send.GoodsKindId
+                             AND tmpMI.PartionGoods     = tmpMI_Send.PartionGoods
+                             AND tmpMI.PartionGoodsDate = tmpMI_Send.PartionGoodsDate
            ) AS tmp;
             
 

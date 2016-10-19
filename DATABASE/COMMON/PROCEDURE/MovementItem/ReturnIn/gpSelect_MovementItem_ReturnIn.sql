@@ -441,9 +441,11 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+                                AND tmpMIPromo.PricePromo       = tmpResult.Price
 
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                              AND CASE WHEN vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT ELSE tmpPromo.PriceWithOutVAT END = tmpResult.Price
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId
@@ -704,8 +706,10 @@ BEGIN
                                 AND tmpMIPromo.GoodsId          = tmpResult.GoodsId
                                 AND (tmpMIPromo.GoodsKindId     = tmpResult.GoodsKindId
                                   OR tmpMIPromo.GoodsKindId     = 0)
+                                AND tmpMIPromo.PricePromo       = tmpResult.Price
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                              AND CASE WHEN vbPriceWithVAT = TRUE THEN tmpPromo.PriceWithVAT ELSE tmpPromo.PriceWithOutVAT END = tmpResult.Price
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId

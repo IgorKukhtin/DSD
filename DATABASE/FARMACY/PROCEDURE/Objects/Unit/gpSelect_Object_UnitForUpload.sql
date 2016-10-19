@@ -25,7 +25,10 @@ BEGIN
     WHERE
         Object_ImportExportLink.LinkTypeId = zc_Enum_ImportExportLinkType_UploadCompliance()
         AND
-        Object_ImportExportLink.ValueId = inObjectId;
+        Object_ImportExportLink.ValueId = inObjectId
+    ORDER BY CASE WHEN Object.Id = 2144918 THEN 0 ELSE 1 END
+   ;
+
 END;
 $BODY$
 
@@ -40,4 +43,4 @@ ALTER FUNCTION gpSelect_Object_UnitForUpload(Integer, Boolean, TVarChar) OWNER T
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_UnitForUpload ('2')
+-- SELECT * FROM gpSelect_Object_UnitForUpload (inObjectId:= 59611, inSelectAll:= NULL, inSession:= '3')
