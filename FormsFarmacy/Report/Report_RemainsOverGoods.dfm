@@ -1503,6 +1503,19 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end>
   end
   inherited ActionList: TActionList
+    object dsdGridToExcelTotal: TdsdGridToExcel [1]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTotal
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridTotal
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      TabSheet = tsMain
+    end
     object actOpenPartionReport: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1966,6 +1979,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -2002,6 +2019,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Caption = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Category = 0
       Hint = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
+    end
+    object bb: TdxBarButton
+      Action = dsdGridToExcelTotal
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -92,6 +92,8 @@ type
     bbOpenUnitForm: TdxBarButton;
     AmountSend: TcxGridDBColumn;
     chAmountSend: TcxGridDBColumn;
+    dsdGridToExcelTotal: TdsdGridToExcel;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
