@@ -61,6 +61,7 @@ type
     edComment: TcxTextEdit;
     actUpdateChildDS: TdsdUpdateDataSet;
     spInsertUpdateMIChild: TdsdStoredProc;
+    clAmountSend: TcxGridDBColumn;
   private
     { Private declarations }
   public

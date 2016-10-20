@@ -1,13 +1,15 @@
 -- Function: lpInsertUpdate_MI_Over_Master()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Over_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Over_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Over_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inRemains	     TFloat    , -- 
+    IN inRemains	     TFloat    , -- остаток
+    IN inAmountSend	     TFloat    , -- автоперемещение приход
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
     IN inMinExpirationDate   TDateTime , -- Партия товара
@@ -37,6 +39,8 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Price(), ioId, inPrice);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_MCS(), ioId, inMCS);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Send(), ioId, inAmountSend);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_MinExpirationDate(), ioId, inMinExpirationDate);
@@ -57,6 +61,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.10.16         * add inAmountSend
  05.07.16         *
  
 */

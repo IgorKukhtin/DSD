@@ -28,6 +28,7 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
             , MIFloat_Remains.ValueData         AS Remains
+            , MIFloat_Send.ValueData            AS AmountSend  
             , MIFloat_Price.ValueData           AS Price
             , MIFloat_MCS.ValueData             AS MCS
             
@@ -43,6 +44,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Remains
                                          ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                         AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_Send
+                                         ON MIFloat_Send.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Send.DescId = zc_MIFloat_Send()
 
              LEFT JOIN MovementItemFloat AS MIFloat_Price
                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -118,6 +123,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.10.16         * add AmountSend
  05.07.16         * 
 */
 

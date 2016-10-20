@@ -2369,6 +2369,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSend'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPrice'
         Value = Null
         Component = MasterCDS

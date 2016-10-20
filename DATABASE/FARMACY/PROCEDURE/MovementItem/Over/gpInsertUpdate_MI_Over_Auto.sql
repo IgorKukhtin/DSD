@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_MI_Over_Auto()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Auto(
     IN inUnitId              Integer   , -- от кого
     IN inOperDate            TDateTime , -- дата
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inRemains	     TFloat    , -- 
+    IN inRemains	     TFloat    , -- остаток
+    IN inAmountSend          TFloat    , -- автоперемещение приход
     IN inPrice               TFloat    , -- Цена от кого
     IN inMCS                 TFloat    , -- период для расчета НТЗ
     IN inMinExpirationDate   TDateTime , -- 
@@ -36,8 +38,9 @@ BEGIN
                                       ON MovementLinkObject_Unit.MovementId = Movement.ID
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                      AND MovementLinkObject_Unit.ObjectId = inUnitId
-      WHERE Movement.DescId = zc_Movement_Over() AND Movement.OperDate = inOperDate
-          AND Movement.StatusId <> zc_Enum_Status_Erased();
+      WHERE Movement.DescId = zc_Movement_Over() 
+        AND Movement.OperDate = inOperDate
+        AND Movement.StatusId <> zc_Enum_Status_Erased();
     
       IF COALESCE (vbMovementId,0) = 0
       THEN
@@ -64,6 +67,7 @@ BEGIN
                                                            , inGoodsId            := inGoodsId
                                                            , inAmount             := 0 -- inAmount !!!автоматом = сумме в zc_MI_Child!!!
                                                            , inRemains            := inRemains
+                                                           , inAmountSend         := inAmountSend
                                                            , inPrice              := inPrice
                                                            , inMCS                := inMCS
                                                            , inMinExpirationDate  := inMinExpirationDate

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_Over_Master()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Master  (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Master(
  INOUT ioAmount              TFloat    , -- Количество
    OUT outSumma              TFloat    , -- 
     IN inRemains	     TFloat    , -- 
+    IN inAmountSend          TFloat    , --
     IN inPrice	             TFloat    , -- 
     IN inMCS                 TFloat    , -- 
     IN inMinExpirationDate   TDateTime , -- 
@@ -56,16 +58,17 @@ BEGIN
    END IF;
    
    -- сохранили <Элемент документа>
-   ioId :=lpInsertUpdate_MI_Over_Master (ioId               := ioId
-                                       , inMovementId       := inMovementId
-                                       , inGoodsId          := inGoodsId
-                                       , inAmount           := ioAmount
-                                       , inRemains          := inRemains
-                                       , inPrice            := inPrice
-                                       , inMCS              := inMCS
+   ioId :=lpInsertUpdate_MI_Over_Master (ioId                := ioId
+                                       , inMovementId        := inMovementId
+                                       , inGoodsId           := inGoodsId
+                                       , inAmount            := ioAmount
+                                       , inRemains           := inRemains
+                                       , inAmountSend        := inAmountSend
+                                       , inPrice             := inPrice
+                                       , inMCS               := inMCS
                                        , inMinExpirationDate := inMinExpirationDate
-                                       , inComment          := inComment
-                                       , inUserId           := vbUserId
+                                       , inComment           := inComment
+                                       , inUserId            := vbUserId
                                        );
    
 
@@ -76,6 +79,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.10.16         * add inAmountSend
  05.07.16         * 
  
 */
