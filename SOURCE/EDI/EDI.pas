@@ -1695,6 +1695,8 @@ begin
   DESADV.ORDERDATE := FormatDateTime('yyyy-mm-dd',
     HeaderDataSet.FieldByName('OperDate').asDateTime);
   DESADV.DELIVERYNOTENUMBER := HeaderDataSet.FieldByName('InvNumber').asString;
+  DESADV.DELIVERYNOTEDATE := FormatDateTime('yyyy-mm-dd',
+    HeaderDataSet.FieldByName('OperDatePartner').asDateTime);
 
   DESADV.HEAD.SUPPLIER := HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   DESADV.HEAD.BUYER := HeaderDataSet.FieldByName('BuyerGLNCode').asString;
