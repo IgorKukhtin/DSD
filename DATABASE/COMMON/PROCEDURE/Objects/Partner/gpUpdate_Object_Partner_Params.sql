@@ -25,10 +25,21 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_Params());
 
 
+   -- временно захардкодил
+   IF vbUserId = 715123 -- Осадчий Ю.В.
+   THEN
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Route(), ioId, inRouteId);
+       -- сохранили связь с <>
+       PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
+   ELSE
+
+
    -- сохранили связь с <Сотрудник (супервайзер)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
    -- сохранили связь с <Сотрудник (торговый)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
+
 
    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (106597 )) -- Торговый отдел
    THEN
@@ -49,6 +60,7 @@ BEGIN
         -- сохранили связь с <>
         PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Unit(), ioId, inUnitId);
 
+   END IF;
    END IF;
 
    -- сохранили протокол

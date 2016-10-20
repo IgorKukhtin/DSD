@@ -260,7 +260,7 @@ var
 
 implementation
 {$R *.dfm}
-uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsMovement,GuideMovement,GuideMovementTransport
+uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport
     ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -628,6 +628,17 @@ begin
               end
          else
      else
+         // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
+         if ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn
+         then
+              if GuideGoodsPartnerForm.Execute(ParamsMovement) = TRUE
+              then begin
+                         Result:=true;
+                         RefreshDataSet;
+                         WriteParamsMovement;
+                   end
+              else
+         else
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
          if GuideGoodsForm.Execute(ParamsMovement) = TRUE
          then begin
