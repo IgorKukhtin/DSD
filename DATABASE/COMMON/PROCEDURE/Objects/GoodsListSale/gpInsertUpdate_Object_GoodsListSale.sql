@@ -62,12 +62,10 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), ioId, inPartnerId);
  
-    IF vbIsInsert = False THEN
-       -- сохранили свойство <Дата корр.>
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
-       -- сохранили свойство <Пользователь (корр.)>
-       --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, inUserId);
-    END IF;
+
+   -- сохранили свойство <Дата создания/изменений>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

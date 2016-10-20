@@ -163,6 +163,7 @@ BEGIN
 
     -- метим на удаление элементы, которые не попали в таблицу _tmpResult
     PERFORM lpUpdate_Object_isErased (inObjectId:= _tmpList.Id, inUserId:= vbUserId)
+          , lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), _tmpList.Id, CURRENT_TIMESTAMP)
     FROM _tmpList
        LEFT JOIN _tmpResult ON _tmpList.GoodsId    = _tmpResult.GoodsId
                            AND _tmpList.ContractId = _tmpResult.ContractId

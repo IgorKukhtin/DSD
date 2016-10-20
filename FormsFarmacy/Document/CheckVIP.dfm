@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,8 +21,6 @@ inherited CheckVIPForm: TCheckVIPForm
         Width = 369
         Height = 356
         Align = alLeft
-        ExplicitLeft = -6
-        ExplicitTop = 3
         ExplicitWidth = 369
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -531,7 +529,7 @@ inherited CheckVIPForm: TCheckVIPForm
       Action = actSetConfirmedKind_Complete
       Caption = 'VIP '#1095#1077#1082'  - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Category = 0
-      ImageIndex = 52
+      ImageIndex = 77
     end
     object bbConfirmedKind_UnComplete: TdxBarButton
       Action = actSetConfirmedKind_UnComplete
