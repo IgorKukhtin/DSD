@@ -5,8 +5,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -335
   ExplicitWidth = 1124
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -757,12 +758,12 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Width = 200
     end
     object cxLabel27: TcxLabel
-      Left = 831
+      Left = 822
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 930
+      Left = 900
       Top = 5
       Properties.Buttons = <
         item
@@ -771,7 +772,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 155
+      Width = 150
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

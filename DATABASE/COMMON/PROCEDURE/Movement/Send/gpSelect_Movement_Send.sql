@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Send()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
@@ -107,4 +107,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

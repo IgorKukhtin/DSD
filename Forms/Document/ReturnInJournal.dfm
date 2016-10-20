@@ -4,8 +4,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -341
   ExplicitWidth = 1130
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -545,12 +546,12 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
     object cxLabel27: TcxLabel
-      Left = 857
+      Left = 822
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 955
+      Left = 900
       Top = 5
       Properties.Buttons = <
         item
@@ -559,7 +560,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 155
+      Width = 150
     end
   end
   object ExportXmlGrid: TcxGrid [2]

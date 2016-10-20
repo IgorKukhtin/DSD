@@ -169,7 +169,16 @@ begin
        Params.ParamByName('inMovementId').Value:=execParamsMovement.ParamByName('MovementId').AsInteger;
        Params.ParamByName('inGoodsCode').Value:=0;
        Execute;
-     end;
+     end
+     else
+     if execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn then
+     with spSelect do
+     begin
+       Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
+       Params.ParamByName('inMovementId').Value:= -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+       Execute;
+     end
+     ;
 
   PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
 
@@ -1032,7 +1041,9 @@ begin
        OutputType:=otDataSet;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inOperDate', ftDateTime, ptInput, ParamsMovement.ParamByName('OperDate').AsDateTime);
-       Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+       if Self.Tag < 0
+       then Params.AddParam('inMovementId', ftInteger, ptInput, Self.Tag)
+       else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
        Params.AddParam('inOrderExternalId', ftInteger, ptInput, 0);
        Params.AddParam('inPriceListId', ftInteger, ptInput, 0);
        Params.AddParam('inGoodsCode', ftInteger, ptInput, 0);

@@ -81,7 +81,8 @@ uses
   GuideGoodsMovement in '..\Scale\GuideGoodsMovement.pas' {GuideGoodsMovementForm},
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
-  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas';
+  LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
+  GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm};
 
 {$R *.res}
 
@@ -102,12 +103,13 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);
@@ -140,6 +142,7 @@ begin
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
          Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
          Application.CreateForm(TGuideGoodsMovementForm, GuideGoodsMovementForm);
+         Application.CreateForm(TGuideGoodsPartnerForm, GuideGoodsPartnerForm);
          Application.CreateForm(TGuidePartnerForm, GuidePartnerForm);
          Application.CreateForm(TUtilPrintForm, UtilPrintForm);
          Application.CreateForm(TGuideMovementForm, GuideMovementForm);

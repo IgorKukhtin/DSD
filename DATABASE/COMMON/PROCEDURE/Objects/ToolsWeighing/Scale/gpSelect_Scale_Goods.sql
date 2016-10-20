@@ -309,6 +309,8 @@ BEGIN
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    ELSE
+    -- 
+    inMovementId:= COALESCE (inMovementId, 0);
     -- Результат - все товары
     RETURN QUERY
        WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
@@ -343,6 +345,20 @@ BEGIN
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                             )
                             )
+      , tmpGoods_Return AS (SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                            FROM Object AS Object_GoodsListSale 
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                         ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                        AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                        AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+
+                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                        ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                       AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                            WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                              AND Object_GoodsListSale.isErased = FALSE
+                          )
+       -- Результат
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
             , tmpGoods.GoodsCode          AS GoodsCode
@@ -384,8 +400,10 @@ BEGIN
                   JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                              AND Object_Goods.isErased = FALSE
                                              AND Object_Goods.ObjectCode <> 0
+                  LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND 1=0
+             WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0
             ) AS tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
