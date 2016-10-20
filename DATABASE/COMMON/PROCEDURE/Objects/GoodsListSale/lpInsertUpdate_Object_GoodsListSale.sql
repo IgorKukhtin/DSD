@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inId                Integer   ,    -- ид элемента
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inContractId        Integer   ,    -- Договор
     IN inJuridicalId       Integer   ,    -- Юр. лицо
     IN inPartnerId         Integer   ,    -- Контрагент
+    IN inAmount            TFloat    ,    -- Кол-во в реализации
     IN inUserId            Integer        -- сессия пользователя
 )
  RETURNS Void AS
@@ -22,6 +24,10 @@ BEGIN
       THEN
          -- Меняется признак <Удален> + там же сохраняется протокол
          PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
+    
+         -- сохранили св-во <>
+         PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsListSale_Amount(), inId, inAmount);
+
          -- сохранили свойство <Дата создания/изменений>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
 
@@ -39,9 +45,12 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Juridical(), vbId, inJuridicalId);
        -- сохранили связь с <>
        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), vbId, inPartnerId);
+   
+       -- сохранили св-во <>
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsListSale_Amount(), vbId, inAmount);
  
        -- сохранили свойство <Дата создания/изменений>
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
 
        -- сохранили протокол
        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);

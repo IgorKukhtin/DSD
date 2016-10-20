@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsName TVarChar
+             , Amount Tfloat
              , RetailId Integer, RetailName TVarChar
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
 
@@ -50,6 +51,8 @@ BEGIN
            , Object_Goods.Id         AS GoodsId
            , Object_Goods.ValueData  AS GoodsName
 
+           , ObjectFloat_GoodsListSale_Amount.ValueData ::Tfloat AS Amount
+
            , Object_Retail.Id                AS RetailId
            , Object_Retail.ValueData         AS RetailName
           
@@ -85,7 +88,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
            , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
-
+ 
            , Object_GoodsListSale.isErased      AS isErased
        
     FROM tmpIsErased
@@ -121,6 +124,10 @@ BEGIN
                              ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                             AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
         LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_GoodsListSale_Partner.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_Amount
+                              ON ObjectFloat_GoodsListSale_Amount.ObjectId = Object_GoodsListSale.Id
+                             AND ObjectFloat_GoodsListSale_Amount.DescId = zc_ObjectFloat_GoodsListSale_Amount()
 
         LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
                              ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListSale.Id

@@ -199,6 +199,54 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
       Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
     end
+    object spUpdateisOverNo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isOver_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isOver_No
+        end>
+      Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1053#1077#1090
+    end
+    object spUpdateisOverYes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isOver_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isOver_Yes
+        end>
+      Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+      Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072
+    end
+    object macUpdateisOverNo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisOverNo
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdateisOverYes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisOverYes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' - '#1044#1072
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -253,6 +301,18 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisOverList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisOverNoList'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -278,7 +338,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object bbUpdateisOver: TdxBarButton
       Action = actUpdateisOver
       Category = 0
-      ImageIndex = 58
+      ImageIndex = 72
+    end
+    object bbUpdateisOverList: TdxBarButton
+      Action = macUpdateisOverYes
+      Category = 0
+    end
+    object bbUpdateisOverNoList: TdxBarButton
+      Action = macUpdateisOverNo
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -318,5 +386,69 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 504
     Top = 99
+  end
+  object spUpdate_Unit_isOver_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isOver'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOver'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOver'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOver'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 163
+  end
+  object spUpdate_Unit_isOver_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isOver'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOver'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisOver'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOver'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 219
   end
 end

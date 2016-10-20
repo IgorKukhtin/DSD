@@ -358,6 +358,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 70
           end
+          object AmountSend: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'AmountSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1088#1072#1089#1093#1086#1076
+            Options.Editing = False
+            Width = 69
+          end
           object SummaRemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1089#1091#1084#1084#1072' '#1085#1072#1095'.'
             DataBinding.FieldName = 'SummaRemainsStart'
@@ -798,6 +807,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object chAmountSend: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'AmountSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 69
+          end
           object chSummaRemainsStart: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1089#1091#1084#1084#1072' '#1085#1072#1095'.'
             DataBinding.FieldName = 'SummaRemainsStart'
@@ -974,9 +992,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1488,6 +1503,19 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end>
   end
   inherited ActionList: TActionList
+    object dsdGridToExcelTotal: TdsdGridToExcel [1]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetTotal
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridTotal
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      TabSheet = tsMain
+    end
     object actOpenPartionReport: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1951,6 +1979,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -1987,6 +2019,10 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Caption = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Category = 0
       Hint = #1042#1099#1073#1088#1072#1090#1100'  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103
+    end
+    object bb: TdxBarButton
+      Action = dsdGridToExcelTotal
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

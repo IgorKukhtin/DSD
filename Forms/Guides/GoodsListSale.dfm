@@ -61,6 +61,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Options.Editing = False
             Width = 123
           end
+          object clAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
           object clContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
@@ -574,8 +582,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 72
+    Left = 80
+    Top = 128
     DockControlHeights = (
       0
       0
@@ -793,8 +801,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 64
+    Left = 216
+    Top = 152
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

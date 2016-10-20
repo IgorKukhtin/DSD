@@ -90,6 +90,10 @@ type
     DBViewAddOnTotal: TdsdDBViewAddOn;
     actOpenUnitForm: TdsdOpenForm;
     bbOpenUnitForm: TdxBarButton;
+    AmountSend: TcxGridDBColumn;
+    chAmountSend: TcxGridDBColumn;
+    dsdGridToExcelTotal: TdsdGridToExcel;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

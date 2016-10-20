@@ -23,6 +23,14 @@ type
     colisOver: TcxGridDBColumn;
     actUpdateisOver: TdsdExecStoredProc;
     bbUpdateisOver: TdxBarButton;
+    spUpdateisOverYes: TdsdExecStoredProc;
+    macUpdateisOverYes: TMultiAction;
+    bbUpdateisOverList: TdxBarButton;
+    spUpdate_Unit_isOver_Yes: TdsdStoredProc;
+    spUpdate_Unit_isOver_No: TdsdStoredProc;
+    spUpdateisOverNo: TdsdExecStoredProc;
+    macUpdateisOverNo: TMultiAction;
+    bbUpdateisOverNoList: TdxBarButton;
   private
     { Private declarations }
   public
