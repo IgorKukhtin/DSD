@@ -224,8 +224,7 @@ BEGIN
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
                                                       AND MI_Send.isErased = FALSE
-                        WHERE Movement_Send.OperDate >= inStartDate --CURRENT_DATE 
-                          AND Movement_Send.OperDate < inStartDate --CURRENT_DATE
+                        WHERE DATE_TRUNC ('DAY', Movement_Send.OperDate) = inStartDate 
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY MI_Send.ObjectId 
