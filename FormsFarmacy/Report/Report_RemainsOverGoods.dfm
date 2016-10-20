@@ -129,6 +129,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -230,6 +235,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSend
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -677,6 +687,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = chSumma_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountSend
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -742,6 +757,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
               Format = ',0.####'
               Kind = skSum
               Column = chSumma_Over
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountSend
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -2344,6 +2364,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RemainsStart'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -73,6 +73,11 @@ inherited OverForm: TOverForm
               Position = spFooter
               Column = colSumma
               Sorted = True
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSend
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -137,6 +142,11 @@ inherited OverForm: TOverForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumma
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSend
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -201,7 +211,16 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 70
           end
-          object colAmount: TcxGridDBColumn [5]
+          object clAmountSend: TcxGridDBColumn [5]
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084'. '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'AmountSend'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 77
+          end
+          object colAmount: TcxGridDBColumn [6]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -211,7 +230,7 @@ inherited OverForm: TOverForm
             Options.IncSearch = False
             Width = 70
           end
-          object colSumma: TcxGridDBColumn [6]
+          object colSumma: TcxGridDBColumn [7]
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -223,7 +242,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 80
           end
-          object colMCS: TcxGridDBColumn [7]
+          object colMCS: TcxGridDBColumn [8]
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -234,7 +253,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 55
           end
-          object clMinExpirationDate: TcxGridDBColumn [8]
+          object clMinExpirationDate: TcxGridDBColumn [9]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
             DataBinding.FieldName = 'MinExpirationDate'
             HeaderAlignmentHorz = taCenter
@@ -243,7 +262,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 100
           end
-          object clisError: TcxGridDBColumn [9]
+          object clisError: TcxGridDBColumn [10]
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
             HeaderAlignmentHorz = taCenter
@@ -253,7 +272,7 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 63
           end
-          object colComment: TcxGridDBColumn [10]
+          object colComment: TcxGridDBColumn [11]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -1152,6 +1171,15 @@ inherited OverForm: TOverForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
