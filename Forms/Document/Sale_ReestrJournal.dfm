@@ -5,7 +5,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -74
   ExplicitWidth = 1193
   ExplicitHeight = 573
   PixelsPerInch = 96
@@ -13,21 +12,22 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 1177
-    Height = 391
+    Height = 476
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1177
     ExplicitHeight = 391
-    ClientRectBottom = 391
+    ClientRectBottom = 476
     ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1177
       ExplicitHeight = 391
       inherited cxGrid: TcxGrid
         Width = 1177
-        Height = 391
+        Height = 476
+        ExplicitLeft = -3
         ExplicitWidth = 1177
-        ExplicitHeight = 391
+        ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -572,20 +572,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
             HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
             Width = 74
           end
-          object colIsElectron: TcxGridDBColumn
-            Caption = #1069#1083#1077#1082#1090#1088'.'
-            DataBinding.FieldName = 'isElectron'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 30
-          end
-          object colIsMedoc: TcxGridDBColumn
-            Caption = #1052#1077#1076#1086#1082
-            DataBinding.FieldName = 'IsMedoc'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
           object colInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1101#1082#1089#1087'.)'
             DataBinding.FieldName = 'InsertDate'
@@ -661,48 +647,12 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Width = 262
     end
   end
-  object ExportXmlGrid: TcxGrid [2]
-    Left = 0
-    Top = 450
-    Width = 1177
-    Height = 85
-    Align = alBottom
-    TabOrder = 6
-    Visible = False
-    object ExportXmlGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = ExportDS
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      OptionsBehavior.IncSearch = True
-      OptionsData.CancelOnExit = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.Header = False
-      object RowData: TcxGridDBColumn
-        DataBinding.FieldName = 'RowData'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-    end
-    object ExportXmlGridLevel: TcxGridLevel
-      GridView = ExportXmlGridDBTableView
-    end
-    object ExportXmlGridLevel1: TcxGridLevel
-    end
-  end
-  object cxLabel27: TcxLabel [3]
+  object cxLabel27: TcxLabel [2]
     Left = 922
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
-  object edJuridicalBasis: TcxButtonEdit [4]
+  object edJuridicalBasis: TcxButtonEdit [3]
     Left = 1000
     Top = 5
     Properties.Buttons = <
@@ -711,7 +661,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -774,10 +724,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_Email
       StoredProcList = <
         item
-          StoredProc = spGet_Export_Email
         end>
       Caption = 'actGet_Export_Email'
     end
@@ -2381,10 +2329,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet_Export_FileName
       StoredProcList = <
         item
-          StoredProc = spGet_Export_FileName
         end>
       Caption = 'actGet_Export_FileName'
     end
@@ -2392,10 +2338,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelect_Export
       StoredProcList = <
         item
-          StoredProc = spSelect_Export
         end>
       Caption = 'actSelect_Export'
     end
@@ -2403,7 +2347,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 'Export_Email'
       MoveParams = <>
       ExportType = cxegExportToText
-      Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
       DefaultFileName = 'Report_'
@@ -2412,43 +2355,27 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     object actSMTPFile: TdsdSMTPFileAction
       Category = 'Export_Email'
       MoveParams = <>
-      Host.Value = '0'
-      Host.Component = ExportEmailCDS
       Host.ComponentItem = 'Host'
       Host.DataType = ftString
       Host.MultiSelectSeparator = ','
-      Port.Value = '0'
-      Port.Component = ExportEmailCDS
       Port.ComponentItem = 'Port'
       Port.DataType = ftString
       Port.MultiSelectSeparator = ','
-      UserName.Value = '0'
-      UserName.Component = ExportEmailCDS
       UserName.ComponentItem = 'UserName'
       UserName.DataType = ftString
       UserName.MultiSelectSeparator = ','
-      Password.Value = '0'
-      Password.Component = ExportEmailCDS
       Password.ComponentItem = 'Password'
       Password.DataType = ftString
       Password.MultiSelectSeparator = ','
-      Body.Value = '0'
-      Body.Component = ExportEmailCDS
       Body.ComponentItem = 'Body'
       Body.DataType = ftString
       Body.MultiSelectSeparator = ','
-      Subject.Value = '0'
-      Subject.Component = ExportEmailCDS
       Subject.ComponentItem = 'Subject'
       Subject.DataType = ftString
       Subject.MultiSelectSeparator = ','
-      FromAddress.Value = '0'
-      FromAddress.Component = ExportEmailCDS
       FromAddress.ComponentItem = 'AddressFrom'
       FromAddress.DataType = ftString
       FromAddress.MultiSelectSeparator = ','
-      ToAddress.Value = '0'
-      ToAddress.Component = ExportEmailCDS
       ToAddress.ComponentItem = 'AddressTo'
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
@@ -3776,119 +3703,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     PackSize = 1
     Left = 920
     Top = 304
-  end
-  object ExportCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 48
-    Top = 480
-  end
-  object ExportDS: TDataSource
-    DataSet = ExportCDS
-    Left = 80
-    Top = 480
-  end
-  object spSelect_Export: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Email_Send'
-    DataSet = ExportCDS
-    DataSets = <
-      item
-        DataSet = ExportCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 128
-    Top = 480
-  end
-  object spGet_Export_FileName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Email_FileName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outDefaultFileExt'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'DefaultFileExt'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEncodingANSI'
-        Value = Null
-        Component = actExport_Grid
-        ComponentItem = 'EncodingANSI'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outFileName'
-        Value = Null
-        Component = actSMTPFile
-        ComponentItem = 'FileName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 200
-    Top = 464
-  end
-  object spGet_Export_Email: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Email_Send'
-    DataSet = ExportEmailCDS
-    DataSets = <
-      item
-        DataSet = ExportEmailCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 272
-    Top = 480
-  end
-  object ExportEmailCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 40
-    Top = 432
-  end
-  object ExportEmailDS: TDataSource
-    DataSet = ExportEmailCDS
-    Left = 128
-    Top = 433
   end
   object spSelectPrint_Total: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_TotalPrint'

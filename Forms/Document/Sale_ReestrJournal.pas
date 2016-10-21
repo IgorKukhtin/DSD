@@ -104,7 +104,6 @@ type
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
-    colIsMedoc: TcxGridDBColumn;
     spSelectPrint_TTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
@@ -170,24 +169,13 @@ type
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    ExportCDS: TClientDataSet;
-    ExportDS: TDataSource;
-    spSelect_Export: TdsdStoredProc;
-    ExportXmlGrid: TcxGrid;
-    ExportXmlGridDBTableView: TcxGridDBTableView;
-    RowData: TcxGridDBColumn;
-    ExportXmlGridLevel: TcxGridLevel;
-    spGet_Export_FileName: TdsdStoredProc;
     actGet_Export_FileName: TdsdExecStoredProc;
     actSelect_Export: TdsdExecStoredProc;
     actExport_Grid: TExportGrid;
     actExport: TMultiAction;
     dxBarButton1: TdxBarButton;
-    spGet_Export_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;
     actSMTPFile: TdsdSMTPFileAction;
-    ExportEmailCDS: TClientDataSet;
-    ExportEmailDS: TDataSource;
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbactOpenReport: TdxBarButton;
@@ -200,7 +188,6 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    ExportXmlGridLevel1: TcxGridLevel;
     clInvNumber_ReestrFull: TcxGridDBColumn;
   private
     { Private declarations }
