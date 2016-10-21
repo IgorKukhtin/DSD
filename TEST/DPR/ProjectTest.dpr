@@ -870,7 +870,8 @@ uses
   GoodsListSale_byReportEdit in '..\..\Forms\Guides\GoodsListSale_byReportEdit.pas' {GoodsListSale_byReportEditForm: TParentForm},
   SendJournalChoice in '..\..\Forms\Document\SendJournalChoice.pas' {SendJournalChoiceForm: TParentForm},
   GoodsListSaleDialog in '..\..\Forms\Guides\GoodsListSaleDialog.pas' {GoodsListSaleDialogForm: TParentForm},
-  Sale_ReestrJournal in '..\..\Forms\Document\Sale_ReestrJournal.pas' {Sale_ReestrJournalForm: TParentForm};
+  Sale_ReestrJournal in '..\..\Forms\Document\Sale_ReestrJournal.pas' {Sale_ReestrJournalForm: TParentForm},
+  ReestrJournal in '..\..\Forms\Document\ReestrJournal.pas' {ReestrJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -756,6 +756,8 @@ type
     N138: TMenuItem;
     actSale_Reestr: TdsdOpenForm;
     N139: TMenuItem;
+    actReestr: TdsdOpenForm;
+    N140: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
