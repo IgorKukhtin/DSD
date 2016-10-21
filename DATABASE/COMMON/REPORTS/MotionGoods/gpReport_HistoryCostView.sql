@@ -78,7 +78,7 @@ BEGIN
                    , tmpCLODesc.DescId
                    , tmpDesc.ContainerDescId
               FROM Object
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId ) AS tmpDesc ON 1 = 1
                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
               WHERE Object.DescId IN (zc_Object_Unit(), zc_Object_Member(), zc_Object_Personal(), zc_Object_Car())
            UNION ALL
@@ -86,7 +86,7 @@ BEGIN
                    , tmpCLODesc.DescId
                    , tmpDesc.ContainerDescId
               FROM Object
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId UNION SELECT zc_Container_Summ() AS ContainerDescId) AS tmpDesc ON 1 = 1
+                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId ) AS tmpDesc ON 1 = 1
                    LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
               WHERE Object.Id = zc_Juridical_Basis();
     ELSE
@@ -129,7 +129,7 @@ BEGIN
                             , CLO_Account.ObjectId         AS AccountId
                             , HistoryCost.StartDate
                             , HistoryCost.EndDate
-                            , HistoryCost.Price
+                            , SUM (HistoryCost.Price)         AS Price
                             , SUM (HistoryCost.StartCount)    AS StartCount
                             , SUM (HistoryCost.StartSumm)     AS StartSumm
                             , SUM (HistoryCost.IncomeCount)   AS IncomeCount
@@ -138,7 +138,7 @@ BEGIN
                             , SUM (HistoryCost.CalcSumm)      AS CalcSumm
                             , SUM (HistoryCost.OutCount)      AS OutCount
                             , SUM (HistoryCost.OutSumm)       AS OutSumm
-                            , HistoryCost.Price_External
+                            , SUM (HistoryCost.Price_External)     AS Price_External
                             , SUM (HistoryCost.CalcCount_External) AS CalcCount_External
                             , SUM (HistoryCost.CalcSumm_External)  AS CalcSumm_External
                             , SUM (HistoryCost.Summ_Diff)          AS Summ_Diff
@@ -157,12 +157,6 @@ BEGIN
                             LEFT JOIN ContainerLinkObject AS CLO_Unit 
                                    ON CLO_Unit.ContainerId = HistoryCost.ContainerId
                                   AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                         -- AND CLO_Unit.ObjectId = 301309 -- подразделениеlimit 10
-                         /*   LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                   ON CLO_InfoMoney.ContainerId =  HistoryCost.ContainerId
-                                  AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-*/
-                         --   LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
 
                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
                                    ON CLO_GoodsKind.ContainerId = HistoryCost.ContainerId
@@ -194,8 +188,6 @@ BEGIN
                              , CLO_Account.ObjectId
                              , HistoryCost.StartDate
                              , HistoryCost.EndDate
-                             , HistoryCost.Price
-                             , HistoryCost.Price_External
                              , HistoryCost.MovementItemId_Diff
                       )
 
@@ -378,3 +370,6 @@ $BODY$
 
 -- 
 --SELECT * from gpReport_HistoryCostView (inStartDate:= '01.07.2016', inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsInfoMoney:= true, inSession := zfCalc_UserAdmin());
+
+
+--select * from gpReport_HistoryCostView(inStartDate := ('16.08.2016')::TDateTime , inLocationId := 0 , inGoodsGroupId := 1941 , inGoodsId := 0 , inIsInfoMoney := 'False' ,  inSession := '5')
