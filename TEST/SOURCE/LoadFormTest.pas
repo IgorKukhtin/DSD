@@ -115,6 +115,7 @@ type
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
     procedure LoadQualityNumberFormTest;
+    procedure LoadReestrFormTest;
     procedure LoadReestrKindFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportAssetFormTest;
@@ -865,6 +866,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
@@ -1213,6 +1216,12 @@ procedure TLoadFormTest.LoadReestrKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrKindForm');
+end;
+
+procedure TLoadFormTest.LoadReestrFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentKindFormTest;
