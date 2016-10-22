@@ -1222,6 +1222,8 @@ procedure TLoadFormTest.LoadReestrFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrStartMovementForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentKindFormTest;

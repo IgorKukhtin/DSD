@@ -16,16 +16,15 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1177
-    ExplicitHeight = 391
+    ExplicitHeight = 476
     ClientRectBottom = 476
     ClientRectRight = 1177
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1177
-      ExplicitHeight = 391
+      ExplicitHeight = 476
       inherited cxGrid: TcxGrid
         Width = 1177
         Height = 476
-        ExplicitLeft = -3
         ExplicitWidth = 1177
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -693,43 +692,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
   inherited ActionList: TActionList
     Left = 31
     Top = 186
-    object actExport: TMultiAction [0]
-      Category = 'Export_Email'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_Email
-        end
-        item
-          Action = actGet_Export_FileName
-        end
-        item
-          Action = actSelect_Export
-        end
-        item
-          Action = actExport_Grid
-        end
-        item
-          Action = actSMTPFile
-        end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102' '#1087#1086' '#1087#1086#1095#1090#1077 +
-        '?'
-      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
-      ImageIndex = 53
-    end
-    object actGet_Export_Email: TdsdExecStoredProc [1]
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actGet_Export_Email'
-    end
-    object actPrint_ExpInvoice: TdsdPrintAction [2]
+    object actPrint_ExpInvoice: TdsdPrintAction [0]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -778,7 +741,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [3]
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [1]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -789,7 +752,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actPrint_ExpSpec: TdsdPrintAction [4]
+    object actPrint_ExpSpec: TdsdPrintAction [2]
       Category = 'Print_Export'
       MoveParams = <
         item
@@ -839,7 +802,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrintSaleOrder: TdsdPrintAction [5]
+    object actPrintSaleOrder: TdsdPrintAction [3]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -887,7 +850,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Tax_Us: TMultiAction [6]
+    object mactPrint_Tax_Us: TMultiAction [4]
       Category = 'Print_Tax'
       MoveParams = <
         item
@@ -913,7 +876,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Account: TMultiAction [7]
+    object mactPrint_Account: TMultiAction [5]
       Category = 'Print_Account'
       MoveParams = <
         item
@@ -939,7 +902,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actInvoice: TEDIAction [8]
+    object actInvoice: TEDIAction [6]
       Category = 'EDI'
       MoveParams = <>
       StartDateParam.Value = Null
@@ -951,7 +914,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
-    object actPrintTax_Us: TdsdPrintAction [9]
+    object actPrintTax_Us: TdsdPrintAction [7]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -991,7 +954,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Total: TdsdPrintAction [10]
+    object actPrint_Total: TdsdPrintAction [8]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_Total
@@ -1032,7 +995,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account_ReportName: TdsdExecStoredProc [12]
+    object actPrint_Account_ReportName: TdsdExecStoredProc [10]
       Category = 'Print_Account'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1075,7 +1038,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actChecked: TdsdExecStoredProc [16]
+    object actChecked: TdsdExecStoredProc [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1088,7 +1051,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
-    object actElectron: TdsdExecStoredProc [17]
+    object actElectron: TdsdExecStoredProc [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1136,7 +1099,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object mactPrint_Sale_Total: TMultiAction [22]
+    object mactPrint_Sale_Total: TMultiAction [20]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1162,7 +1125,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1048#1090#1086#1075#1086#1074#1072#1103' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object actMovementCheck: TdsdOpenForm [27]
+    object actMovementCheck: TdsdOpenForm [25]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -1183,7 +1146,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       isShowModal = False
     end
-    object actOpenReportForm: TdsdOpenForm [36]
+    object actOpenReportForm: TdsdOpenForm [34]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2325,61 +2288,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 'DSDLib'
       MoveParams = <>
     end
-    object actGet_Export_FileName: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actGet_Export_FileName'
-    end
-    object actSelect_Export: TdsdExecStoredProc
-      Category = 'Export_Email'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actSelect_Export'
-    end
-    object actExport_Grid: TExportGrid
-      Category = 'Export_Email'
-      MoveParams = <>
-      ExportType = cxegExportToText
-      Caption = 'actExport_Grid'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      DefaultFileExt = 'XML'
-    end
-    object actSMTPFile: TdsdSMTPFileAction
-      Category = 'Export_Email'
-      MoveParams = <>
-      Host.ComponentItem = 'Host'
-      Host.DataType = ftString
-      Host.MultiSelectSeparator = ','
-      Port.ComponentItem = 'Port'
-      Port.DataType = ftString
-      Port.MultiSelectSeparator = ','
-      UserName.ComponentItem = 'UserName'
-      UserName.DataType = ftString
-      UserName.MultiSelectSeparator = ','
-      Password.ComponentItem = 'Password'
-      Password.DataType = ftString
-      Password.MultiSelectSeparator = ','
-      Body.ComponentItem = 'Body'
-      Body.DataType = ftString
-      Body.MultiSelectSeparator = ','
-      Subject.ComponentItem = 'Subject'
-      Subject.DataType = ftString
-      Subject.MultiSelectSeparator = ','
-      FromAddress.ComponentItem = 'AddressFrom'
-      FromAddress.DataType = ftString
-      FromAddress.MultiSelectSeparator = ','
-      ToAddress.ComponentItem = 'AddressTo'
-      ToAddress.DataType = ftString
-      ToAddress.MultiSelectSeparator = ','
-    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2737,8 +2645,11 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Category = 0
     end
     object dxBarButton1: TdxBarButton
-      Action = actExport
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       Category = 0
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Visible = ivAlways
+      ImageIndex = 53
     end
     object bbactOpenReport: TdxBarButton
       Action = actOpenReportForm
