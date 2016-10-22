@@ -3,7 +3,7 @@
 			<ProjectGuid>{4C88BF88-C174-44D9-BEAF-7AE911E70D20}</ProjectGuid>
 			<MainSource>Load_PostgreSql.dpr</MainSource>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Application</AppType>
 			<FrameworkType>VCL</FrameworkType>

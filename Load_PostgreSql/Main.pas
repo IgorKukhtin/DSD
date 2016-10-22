@@ -199,6 +199,7 @@ type
     cb100MSec: TCheckBox;
     cbOnlySale: TCheckBox;
     cbReturnIn_Auto: TCheckBox;
+    cbGoodsListSale: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -212,6 +213,8 @@ type
     procedure cbCompleteIncomeBNClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure cbTaxIntClick(Sender: TObject);
+    procedure DocumentPanelClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -369,6 +372,7 @@ type
     procedure pLoadDocumentItem_Delete_Fl(SaveCount:Integer);
 
     procedure pLoadFillSoldTable;
+    procedure pLoadGoodsListSale;
 
     // Guides :
     procedure pLoadGuide_Measure;
@@ -1191,7 +1195,7 @@ begin
      if MessageDlg('ƒействительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
      DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
 end;
@@ -1203,6 +1207,11 @@ begin
      //
      if fStop then Close;
 end;
+procedure TMainForm.DocumentPanelClick(Sender: TObject);
+begin
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
@@ -1498,6 +1507,11 @@ procedure TMainForm.cbCompleteIncomeBNClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
+procedure TMainForm.cbTaxIntClick(Sender: TObject);
+begin
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
@@ -1628,25 +1642,30 @@ begin
 
      if ParamStr(2)='autoFillSoldTable'
      then begin
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-25)+') as RetV');
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(Date-28)+') as RetV');
                StartDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-25)+') as RetV');
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-28)+') as RetV');
                EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
                //if Date<fromSqlQuery.FieldByName('RetV').AsDateTime
                //then EndDateEdit.Text:=DateToStr(Date-1)
                //else EndDateEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
 
                // текущий мес€ц
-               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date)+') as RetV');
+               fOpenSqFromQuery ('select zf_CalcDate_onMonthEnd('+FormatToDateServer_notNULL(Date-5)+') as RetV');
+
+               // !!!этот пересчет - всегда!!!
+               cbGoodsListSale.Checked:=true;
 
                // !!!за текущий - не надо!!!
                if EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime) then
                begin
                     cbFillSoldTable.Checked:=true;
-                    //«агружаем
-                    OKDocumentButtonClick(Self);
-               end;
+               end
+               else
+                    cbFillSoldTable.Checked:=false;
+               //«агружаем
+               OKDocumentButtonClick(Self);
      end;
 
 
@@ -1785,7 +1804,7 @@ begin
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
@@ -1939,11 +1958,13 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_WeighingPartner;
      if not fStop then pLoadDocumentItem_WeighingPartner(myRecordCount1);
      //
+     if not fStop then pLoadGoodsListSale;
+     //
      if not fStop then pLoadFillSoldTable;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
@@ -2185,7 +2206,7 @@ begin
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
-     OKGuideButton.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
@@ -20428,6 +20449,19 @@ begin
      end;
      //
      myDisabledCB(cbLossGuide);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGoodsListSale;
+var mySql:String;
+begin
+     if (not cbGoodsListSale.Checked)or(not cbGoodsListSale.Enabled) then exit;
+     //
+     //      'select * from gpInsertUpdate_Object_GoodsListSale_byReport(inPeriod_1:= 12, inPeriod_2:= 3, inPeriod_3:= 6, inInfoMoneyId_1:= 8963, inInfoMoneyDestinationId_1:= 0, inInfoMoneyId_2:= 0, inInfoMoneyDestinationId_2:= 8879, inSession:= ' + chr(39) + '5' + chr(39) + ')';
+     mySql:= 'select * from gpInsertUpdate_Object_GoodsListSale_byReport(             12,              3,              6,                   8963,                              0,                   0,                              8879,             ' + chr(39) + '5' + chr(39) + ')';
+     try
+     fOpenSqToQuery (mySql);
+     except ShowMessage('Err - ' + mySql);
+     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadFillSoldTable;
