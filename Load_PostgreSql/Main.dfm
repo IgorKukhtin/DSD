@@ -53,6 +53,8 @@ object MainForm: TMainForm
       Width = 135
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      DragMode = dmAutomatic
+      Enabled = False
       TabOrder = 0
       OnClick = OKGuideButtonClick
     end
@@ -728,6 +730,9 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    OnClick = DocumentPanelClick
+    ExplicitLeft = 668
+    ExplicitTop = -6
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -1000,8 +1005,8 @@ object MainForm: TMainForm
     end
     object cbTaxCorrective: TCheckBox
       Tag = 20
-      Left = 175
-      Top = 499
+      Left = 134
+      Top = 503
       Width = 235
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
@@ -1018,10 +1023,11 @@ object MainForm: TMainForm
     object cbReturnInInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 498
-      Width = 235
+      Top = 491
+      Width = 125
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int - '#1041#1053
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1032,11 +1038,12 @@ object MainForm: TMainForm
     end
     object cbSaleInt: TCheckBox
       Tag = 20
-      Left = 6
-      Top = 478
-      Width = 235
+      Left = 3
+      Top = 476
+      Width = 126
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int - '#1041#1053
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1044,6 +1051,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 20
+      Visible = False
     end
     object OKPOEdit: TEdit
       Left = 3
@@ -1090,6 +1098,7 @@ object MainForm: TMainForm
       Width = 235
       Height = 17
       Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1101,10 +1110,11 @@ object MainForm: TMainForm
     object cbTaxInt: TCheckBox
       Tag = 20
       Left = 3
-      Top = 522
-      Width = 143
+      Top = 506
+      Width = 125
       Height = 17
       Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1112,6 +1122,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 25
+      OnClick = cbTaxIntClick
     end
     object cbClearDelete: TCheckBox
       Left = 3
@@ -1129,11 +1140,12 @@ object MainForm: TMainForm
       TabOrder = 26
     end
     object cbOnlyUpdateInt: TCheckBox
-      Left = 6
+      Left = 3
       Top = 461
       Width = 157
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1072#1085#1085#1099#1077' '#1057#1082#1083#1072#1076#1072
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1143,8 +1155,8 @@ object MainForm: TMainForm
       TabOrder = 27
     end
     object cbErr: TCheckBox
-      Left = 175
-      Top = 462
+      Left = 159
+      Top = 460
       Width = 63
       Height = 17
       Caption = 'Error'
@@ -1300,6 +1312,7 @@ object MainForm: TMainForm
       Width = 107
       Height = 17
       Caption = #1044#1086#1083#1075#1080' Int-'#1053#1040#1051
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1392,8 +1405,8 @@ object MainForm: TMainForm
       Text = '22121'
     end
     object cbFillSoldTable: TCheckBox
-      Left = 133
-      Top = 531
+      Left = 130
+      Top = 526
       Width = 98
       Height = 17
       Caption = 'FillSoldTable'
@@ -1421,11 +1434,12 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object cbShowContract: TCheckBox
-      Left = 157
-      Top = 478
+      Left = 159
+      Top = 473
       Width = 84
       Height = 31
       Caption = 'only Show Contract'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1436,11 +1450,12 @@ object MainForm: TMainForm
       WordWrap = True
     end
     object cbShowAll: TCheckBox
-      Left = 169
-      Top = 508
+      Left = 159
+      Top = 495
       Width = 70
       Height = 14
       Caption = 'Show All'
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1449,6 +1464,20 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 48
       WordWrap = True
+    end
+    object cbGoodsListSale: TCheckBox
+      Left = 4
+      Top = 526
+      Width = 109
+      Height = 17
+      Caption = 'GoodsListSale'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 49
     end
   end
   object CompleteDocumentPanel: TPanel
