@@ -218,60 +218,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clInvNumber_ReestrFull: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
-            DataBinding.FieldName = 'InvNumber_ReestrFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colUpdateDate_Reestr: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103'  ('#1082#1086#1088#1088'.) ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'UpdateDate_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object UpdateName_Reestr: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'UpdateName_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object CarName_Reestr: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'CarName_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalDriverName_Reestr: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'PersonalDriverName_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MemberName_Reestr: TcxGridDBColumn
-            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'MemberName_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object InvNumber_Transport_Reestr: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'. ('#1088#1077#1077#1089#1090#1088')'
-            DataBinding.FieldName = 'InvNumber_Transport_Reestr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
@@ -382,6 +328,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.Append.Visible = False
           DataController.DataSource = DataSource
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -454,6 +401,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          FilterRow.ApplyChanges = fracDelayed
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
@@ -518,7 +466,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     inherited edOperDate: TcxDateEdit
       Left = 88
       Top = 22
-      EditValue = 426630000c
+      EditValue = 42663d
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 88
@@ -628,6 +576,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       StoredProcList = <
         item
           StoredProc = spSelectBarCode
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -740,6 +691,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -747,6 +699,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'InvNumber_Sale'
           DataType = ftString
@@ -904,8 +857,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Value = Null
-        DataType = ftString
+        Name = 'operdate'
+        Value = 0c
+        DataType = ftDateTime
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
@@ -945,8 +899,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
-    Left = 152
-    Top = 16
+    Left = 16
+    Top = 56
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Reestr'
@@ -1055,11 +1009,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     StoredProcName = 'gpInsertUpdate_MI_ReestrStart'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'outId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1155,11 +1108,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     StoredProcName = 'gpInsertUpdate_MI_ReestrStart'
     Params = <
       item
-        Name = 'ioId'
+        Name = 'outId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

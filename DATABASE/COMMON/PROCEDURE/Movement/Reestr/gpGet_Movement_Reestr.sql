@@ -28,7 +28,7 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('Movement_Reestr_seq') AS TVarChar) AS InvNumber
+             , CAST ('' AS TVarChar)  AS InvNumber --CAST (NEXTVAL ('Movement_Reestr_seq') AS TVarChar) AS InvNumber
              , CURRENT_DATE::TDateTime          AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
