@@ -21,10 +21,6 @@ type
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
-    RefreshDispatcher: TRefreshDispatcher;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    PrintItemsSverkaCDS: TClientDataSet;
     actSaleChoiceForm: TOpenChoiceForm;
     cxLabel25: TcxLabel;
     edInvNumberTransport: TcxButtonEdit;

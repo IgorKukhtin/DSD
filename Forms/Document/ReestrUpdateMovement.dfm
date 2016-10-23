@@ -1,36 +1,41 @@
-inherited ReestrStartMovementForm: TReestrStartMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-  ClientHeight = 617
-  ClientWidth = 927
+inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
+  Caption = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1077#1077#1089#1090#1088'>'
+  ClientHeight = 535
+  ClientWidth = 988
+  ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
-  ExplicitWidth = 943
-  ExplicitHeight = 655
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 1004
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
-    Width = 927
-    Height = 491
-    ExplicitTop = 126
-    ExplicitWidth = 927
-    ExplicitHeight = 491
-    ClientRectBottom = 491
-    ClientRectRight = 927
+    Top = 83
+    Width = 988
+    Height = 452
+    TabOrder = 3
+    ExplicitTop = 83
+    ExplicitWidth = 988
+    ExplicitHeight = 452
+    ClientRectBottom = 452
+    ClientRectRight = 988
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 927
-      ExplicitHeight = 467
+      ExplicitWidth = 988
+      ExplicitHeight = 452
       inherited cxGrid: TcxGrid
-        Top = 65
-        Width = 927
-        Height = 402
-        ExplicitTop = 65
-        ExplicitWidth = 927
-        ExplicitHeight = 402
+        Top = 83
+        Width = 988
+        Height = 369
+        ExplicitTop = 83
+        ExplicitWidth = 988
+        ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
+              Column = colTotalCount
             end
             item
               Format = ',0.####'
@@ -39,6 +44,20 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummPVAT
             end
             item
               Format = ',0.####'
@@ -64,6 +83,16 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = colTotalCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSumm
             end
             item
               Format = ',0.####'
@@ -76,12 +105,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = colTotalSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
             end
             item
+              Format = ',0.####'
               Kind = skSum
             end
             item
@@ -99,40 +130,49 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = InvNumber_Sale
+              Column = colToName
             end>
+          OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.GroupSummaryLayout = gslStandard
+          OptionsView.HeaderHeight = 40
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object OperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'OperDate_Sale'
+          inherited colStatus: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          object colIsError: TcxGridDBColumn [1]
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 44
           end
-          object colOperDatePartner: TcxGridDBColumn
+          inherited colOperDate: TcxGridDBColumn [2]
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+            HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          object colOperDatePartner: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object InvNumber_Sale: TcxGridDBColumn
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber_Sale'
             HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 55
           end
           object colInvNumberOrder: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
@@ -219,6 +259,71 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object colTotalCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'TotalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInvNumber_ReestrFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
+            DataBinding.FieldName = 'InvNumber_ReestrFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colUpdateDate_Reestr: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103'  ('#1082#1086#1088#1088'.) ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'UpdateDate_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object UpdateName_Reestr: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'UpdateName_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object CarName_Reestr: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'CarName_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PersonalDriverName_Reestr: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'PersonalDriverName_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MemberName_Reestr: TcxGridDBColumn
+            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'MemberName_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object InvNumber_Transport_Reestr: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'. ('#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'InvNumber_Transport_Reestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
@@ -236,6 +341,17 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colVATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colTotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
@@ -285,6 +401,13 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object RouteGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
@@ -300,6 +423,13 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colChecked: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+            DataBinding.FieldName = 'Checked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 36
           end
           object clReestrKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
@@ -317,22 +447,49 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object MovementId_Order: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementId_Order'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 20
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 927
-        Height = 57
+        Width = 988
+        Height = 75
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          Navigator.Buttons.Append.Visible = False
           DataController.DataSource = DataSource
-          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
             item
               Format = ',0.####'
               Kind = skSum
@@ -387,6 +544,15 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
               Kind = skSum
             end
             item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
               Kind = skSum
             end
             item
@@ -400,9 +566,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
             end>
           DataController.Summary.SummaryGroups = <>
-          FilterRow.ApplyChanges = fracDelayed
           Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -410,22 +579,17 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object BarCode: TcxGridDBColumn
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
             DataBinding.FieldName = 'BarCode'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actSaleChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 200
+            Width = 219
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -434,8 +598,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 57
-        Width = 927
+        Top = 75
+        Width = 988
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
@@ -443,60 +607,52 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
     end
   end
-  inherited DataPanel: TPanel
-    Width = 927
-    Height = 100
-    TabOrder = 3
-    ExplicitWidth = 927
-    ExplicitHeight = 100
-    inherited edInvNumber: TcxTextEdit
-      Left = 8
+  inherited Panel: TPanel
+    Width = 988
+    Height = 57
+    ExplicitWidth = 988
+    ExplicitHeight = 57
+    inherited deStart: TcxDateEdit
+      Left = 582
       Top = 22
-      ExplicitLeft = 8
+      EditValue = 42370d
+      ExplicitLeft = 582
       ExplicitTop = 22
-      ExplicitWidth = 74
-      Width = 74
+    end
+    inherited deEnd: TcxDateEdit
+      Left = 680
+      Top = 22
+      EditValue = 42370d
+      ExplicitLeft = 680
+      ExplicitTop = 22
+      ExplicitWidth = 90
+      Width = 90
     end
     inherited cxLabel1: TcxLabel
-      Left = 8
+      Left = 582
       Top = 4
-      ExplicitLeft = 8
+      Caption = #1044#1072#1090#1072' c:'
+      ExplicitLeft = 582
       ExplicitTop = 4
-    end
-    inherited edOperDate: TcxDateEdit
-      Left = 88
-      Top = 22
-      EditValue = 42663d
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      ExplicitLeft = 88
-      ExplicitTop = 22
+      ExplicitWidth = 42
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
+      Left = 679
       Top = 4
-      ExplicitLeft = 89
+      Hint = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Caption = #1044#1072#1090#1072' '#1087#1086':'
+      ExplicitLeft = 679
       ExplicitTop = 4
-    end
-    inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
-    end
-    inherited ceStatus: TcxButtonEdit
-      Top = 63
-      ExplicitTop = 63
-      ExplicitWidth = 180
-      ExplicitHeight = 22
-      Width = 180
+      ExplicitWidth = 49
     end
   end
-  object cxLabel25: TcxLabel [2]
-    Left = 195
+  object cxLabel27: TcxLabel [2]
+    Left = 8
     Top = 4
-    Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+    Caption = ' '#1058#1080#1087' '#1089#1086#1089#1090#1086#1103#1085#1080#1103' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
   end
-  object edInvNumberTransport: TcxButtonEdit [3]
-    Left = 195
+  object edReestrKind: TcxButtonEdit [3]
+    Left = 8
     Top = 22
     Properties.Buttons = <
       item
@@ -505,15 +661,15 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 213
+    Width = 225
   end
-  object cxLabel27: TcxLabel [4]
-    Left = 415
+  object cxLabel5: TcxLabel [4]
+    Left = 256
     Top = 4
-    Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' / '#1074#1086#1076#1080#1090#1077#1083#1100
   end
-  object edCar: TcxButtonEdit [5]
-    Left = 415
+  object edMember: TcxButtonEdit [5]
+    Left = 256
     Top = 22
     Properties.Buttons = <
       item
@@ -522,170 +678,164 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 200
-  end
-  object cxLabel3: TcxLabel [6]
-    Left = 195
-    Top = 46
-    Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-  end
-  object edPersonalDriver: TcxButtonEdit [7]
-    Left = 195
-    Top = 64
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 213
-  end
-  object cxLabel5: TcxLabel [8]
-    Left = 415
-    Top = 45
-    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
-  end
-  object edMember: TcxButtonEdit [9]
-    Left = 415
-    Top = 63
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 13
-    Width = 200
+    Width = 231
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 203
-    Top = 512
+    Top = 307
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
-    Top = 640
+    Top = 243
   end
   inherited ActionList: TActionList
-    Left = 31
-    Top = 327
-    object actRefreshStart: TdsdDataSetRefresh [0]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectBarCode
-      StoredProcList = <
-        item
-          StoredProc = spSelectBarCode
-        end
-        item
-          StoredProc = spGet
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      RefreshOnTabSetChanges = True
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet [8]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIMaster
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spGet
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProc = nil
-      StoredProcList = <
-        item
-        end>
-    end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      DataSets = <
-        item
-          UserName = 'frxDBDHeader'
-        end
-        item
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
+    Left = 335
+    Top = 74
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TSale_OrderForm'
+      FormNameParam.Value = 'TSale_OrderForm'
+      GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
           Component = FormParams
-          ComponentItem = 'Id'
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TSale_OrderForm'
+      FormNameParam.Value = 'TSale_OrderForm'
+      GuiParams = <
         item
-          StoredProc = spChangeStatus
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
-        end>
-    end
-    inherited actCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercentAmount'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TMovement_DateDialogForm'
+      FormNameParam.Value = 'TMovement_DateDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartnerDate'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
-    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+    object actUpdateDataSource: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMI
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMI
+        end>
+      Caption = 'actUpdateDataSource'
+      DataSource = DataSource
+    end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -699,65 +849,71 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_Sale'
+          ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
+      isShowModal = False
     end
-    object actSaleChoiceForm: TOpenChoiceForm
+    object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'SaleJournalChoice'
-      FormName = 'TSaleJournalChoiceForm'
-      FormNameParam.Value = 'TSaleJournalChoiceForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spSelectBarCode
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'BarCode'
-          MultiSelectSeparator = ','
+          StoredProc = spSelectBarCode
+        end
+        item
         end>
-      isShowModal = True
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 328
+    Top = 307
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 288
+    Top = 307
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Reestr'
+    StoredProcName = 'gpSelect_MI_ReestrUser'
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Name = 'instartdate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
+        Name = 'inenddate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 296
+    Left = 232
+    Top = 243
   end
   inherited BarManager: TdxBarManager
-    Left = 88
-    Top = 287
+    Left = 392
+    Top = 75
     DockControlHeights = (
       0
       0
@@ -767,32 +923,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbShowErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -804,7 +939,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementItemProtocol'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True
@@ -819,572 +958,248 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           ItemName = 'dxBarStatic'
         end>
     end
-    inherited bbInsertUpdateMovement: TdxBarButton
-      Action = actUpdateDataSet
+    inherited bbMovementProtocol: TdxBarButton
+      Action = MovementItemProtocolOpenForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    ColumnEnterList = <
+    ActionItemList = <
       item
-      end
-      item
+        Action = actUpdateDataSource
+        ShortCut = 13
       end>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
-    Left = 726
-    Top = 401
+    Left = 320
+    Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
-    object N2: TMenuItem
-      Action = actMISetErased
+    Left = 888
+    Top = 240
+    object miInvoice: TMenuItem [3]
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' <'#1057#1095#1077#1090' - Invoice>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077' <'#1057#1095#1077#1090' - Invoice>'
+      ImageIndex = 47
     end
-    object N3: TMenuItem
-      Action = actMISetUnErased
+    object miOrdSpr: TMenuItem [4]
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' - Ordspr>'
+      ImageIndex = 48
     end
+    object miDesadv: TMenuItem [5]
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1089#1077'  <'#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077' - Desadv>'
+      ImageIndex = 49
+    end
+    object N13: TMenuItem [6]
+      Caption = '-'
+    end
+    inherited Excel1: TMenuItem
+      Enabled = False
+    end
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 432
+    Top = 216
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = ReestrKindGuides
+      end>
+    Left = 784
+    Top = 272
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Sale'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inislastcomplete'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 944
+    Top = 354
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement_Sale'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPrinted'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPrinted'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    Left = 928
+    Top = 346
+  end
+  inherited spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Sale'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 80
+    Top = 370
   end
   inherited FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
-        Value = '0'
+        Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'operdate'
-        Value = 0c
-        DataType = ftDateTime
-        ParamType = ptUnknown
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'fff'
         Value = False
         DataType = ftBoolean
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameSend'
-        Value = 'PrintMovement_Sale1'
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameSendTax'
+        Name = 'fff'
         Value = Null
         DataType = ftString
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameSendBill'
+        Name = 'fff'
         Value = Null
         DataType = ftString
         ParamType = ptUnknown
         MultiSelectSeparator = ','
-      end>
-    Left = 344
-    Top = 496
-  end
-  inherited StatusGuides: TdsdGuides
-    Left = 80
-    Top = 48
-  end
-  inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
-    Left = 16
-    Top = 56
-  end
-  inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Reestr'
-    Params = <
+      end
       item
-        Name = 'inMovementId'
+        Name = 'inReestrKindId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusCode'
-        Value = ''
-        Component = StatusGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StatusName'
-        Value = ''
-        Component = StatusGuides
+        Name = 'inReestrKindName'
+        Value = Null
+        Component = ReestrKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'CarId'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CarName'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'TextValue'
+        Name = 'ReportNameTransport'
+        Value = Null
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalDriverId'
-        Value = ''
-        Component = PersonalDriverGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PersonalDriverName'
-        Value = ''
-        Component = PersonalDriverGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberId'
-        Value = 0d
-        Component = MemberGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MemberName'
-        Value = 'False'
-        Component = MemberGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Transport'
-        Value = 'NULL'
-        Component = TransportChoiceGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId_Transport'
-        Value = 0.000000000000000000
-        Component = TransportChoiceGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end>
-    Left = 344
-    Top = 352
-  end
-  inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReestrStart'
-    Params = <
-      item
-        Name = 'outId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCarId'
-        Value = Null
-        Component = CarGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalDriverId'
-        Value = Null
-        Component = PersonalDriverGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = Null
-        Component = MemberGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDocumentId_Transport'
-        Value = Null
-        Component = TransportChoiceGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outInvNumber'
-        Value = Null
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end>
-    NeedResetData = True
-    Left = 210
-    Top = 368
-  end
-  inherited GuidesFiller: TGuidesFiller
-    GuidesList = <
-      item
-      end
-      item
-      end>
-    Left = 248
-    Top = 312
-  end
-  inherited HeaderSaver: THeaderSaver
-    StoredProc = nil
-    Left = 440
-    Top = 105
-  end
-  inherited RefreshAddOn: TRefreshAddOn
-    DataSet = ''
-    Left = 592
-    Top = 320
-  end
-  inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
-    Left = 718
-    Top = 512
-  end
-  inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
-    Left = 718
-    Top = 464
-  end
-  inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReestrStart'
-    Params = <
-      item
-        Name = 'outId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'BarCode'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCarId'
-        Value = Null
-        Component = CarGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalDriverId'
-        Value = Null
-        Component = PersonalDriverGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = Null
-        Component = MemberGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inDocumentId_Transport'
-        Value = Null
-        Component = TransportChoiceGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outInvNumber'
-        Value = Null
-        Component = edInvNumber
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end>
-    Left = 88
-    Top = 392
-  end
-  inherited spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
-    Params = <
-      item
-        Name = 'ioId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeadCount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioPartionGoods'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inStorageId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StorageId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
+    Left = 520
     Top = 272
   end
-  inherited spGetTotalSumm: TdsdStoredProc
-    Left = 820
-    Top = 332
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_Print'
-    DataSets = <
-      item
-      end
-      item
-      end>
-    OutputType = otMultiDataSet
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Sale'
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
+        Name = 'inislastcomplete'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 936
+    Top = 360
+  end
+  object spUpdateMI: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Reestr'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBarCode'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = MemberGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 799
-    Top = 272
+    Left = 400
+    Top = 379
   end
-  object TransportChoiceGuides: TdsdGuides
+  object ReestrKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edInvNumberTransport
+    LookupControl = edReestrKind
     Key = '0'
-    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.Value = 'TReestrKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TTransportJournalChoiceForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TReestrKindForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = TransportChoiceGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = TransportChoiceGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CarId'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CarName'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 313
-    Top = 13
-  end
-  object CarGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edCar
-    Key = '0'
-    FormNameParam.Value = 'TCarForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCarForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = CarGuides
+        Component = ReestrKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1392,44 +1207,26 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CarGuides
+        Component = ReestrKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 493
-    Top = 15
+    Left = 165
+    Top = 7
   end
-  object PersonalDriverGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPersonalDriver
-    Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = PersonalDriverGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PersonalDriverGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 259
-    Top = 56
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 544
+    Top = 99
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 600
+    Top = 99
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
@@ -1458,20 +1255,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 506
-    Top = 54
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 768
-    Top = 171
-  end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 832
-    Top = 171
+    Left = 405
+    Top = 13
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Reestr_BarCode'
@@ -1482,19 +1267,19 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     Params = <>
     PackSize = 1
-    Left = 352
-    Top = 160
+    Left = 688
+    Top = 96
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdateDataSet
+        Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = actUpdateDataSet
+        Action = actUpdateDataSource
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1502,16 +1287,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
-      end>
-    Left = 598
-    Top = 121
+    SummaryItemList = <>
+    Left = 472
+    Top = 96
   end
 end

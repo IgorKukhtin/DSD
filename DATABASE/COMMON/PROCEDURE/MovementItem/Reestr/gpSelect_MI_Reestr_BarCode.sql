@@ -18,7 +18,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
 
-       SELECT CAST ('' AS TVarChar)  AS BarCode;
+       SELECT CAST (Null AS TVarChar)  AS BarCode;
   
 END;
 $BODY$
