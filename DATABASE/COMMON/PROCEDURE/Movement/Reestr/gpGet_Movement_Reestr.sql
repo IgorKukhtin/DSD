@@ -1,11 +1,11 @@
 -- FunctiON: gpGet_Movement_Reestr (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Reestr (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Reestr (Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Reestr(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
     IN inSessiON           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -28,8 +28,8 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (NEXTVAL ('Movement_Reestr_seq') AS TVarChar) AS InvNumber
-             , inOperDate                       AS OperDate
+             , CAST ('' AS TVarChar)  AS InvNumber --CAST (NEXTVAL ('Movement_Reestr_seq') AS TVarChar) AS InvNumber
+             , CURRENT_DATE::TDateTime          AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 

@@ -169,13 +169,7 @@ type
     mactPrint_Transport: TMultiAction;
     bbPrint_Transport: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    actGet_Export_FileName: TdsdExecStoredProc;
-    actSelect_Export: TdsdExecStoredProc;
-    actExport_Grid: TExportGrid;
-    actExport: TMultiAction;
     dxBarButton1: TdxBarButton;
-    actGet_Export_Email: TdsdExecStoredProc;
-    actSMTPFile: TdsdSMTPFileAction;
     actShowMessage: TShowMessageAction;
     actOpenReportForm: TdsdOpenForm;
     bbactOpenReport: TdxBarButton;
