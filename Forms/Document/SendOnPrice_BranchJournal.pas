@@ -68,6 +68,9 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    TotalCountShFrom: TcxGridDBColumn;
+    TotalCountKgFrom: TcxGridDBColumn;
+    TotalSummFrom: TcxGridDBColumn;
   private
     { Private declarations }
   public
