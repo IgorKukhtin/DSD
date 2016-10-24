@@ -1,6 +1,5 @@
 <?php
-  $connectstring = "port=5432 dbname=project host=integer-srv.alan.dp.ua user=admin password=vas6ok";
-  $host = "http://integer-srv2.alan.dp.ua";
+  $connectstring = "port=5432 dbname=project host=localhost user=postgres password=postgres";
+  $host = "http://localhost/alan_farmacy/index.php";
   $isArchive = true;
 ?>
-http://integer-srv.alan.dp.ua

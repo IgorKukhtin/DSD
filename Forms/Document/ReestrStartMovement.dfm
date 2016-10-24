@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 652
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -113,6 +113,22 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object LineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'LineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object BarCode_Sale: TcxGridDBColumn [1]
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            DataBinding.FieldName = 'BarCode_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate_Sale'
@@ -602,6 +618,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelectBarCode
         end
         item
           StoredProc = spSelect

@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,19 +141,35 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited colStatus: TcxGridDBColumn
+          object LineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'LineNum'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object BarCode_Sale: TcxGridDBColumn [1]
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            DataBinding.FieldName = 'BarCode_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
             HeaderAlignmentHorz = taCenter
             Width = 77
+          end
+          inherited colStatus: TcxGridDBColumn [4]
+            HeaderAlignmentHorz = taCenter
+            Width = 55
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
@@ -674,6 +690,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       StoredProcList = <
         item
           StoredProc = spUpdateMI
+        end
+        item
+          StoredProc = spSelectBarCode
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
@@ -718,6 +737,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           StoredProc = spGet_Period
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrUser(
     IN inReestrKindId       Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( Id Integer
+RETURNS TABLE ( Id Integer, LineNum Integer
               , StatusCode Integer, StatusName TVarChar
               , OperDate TDateTime, InvNumber TVarChar
               , CarName TVarChar
@@ -19,7 +19,7 @@ RETURNS TABLE ( Id Integer
               , InvNumber_Transport TVarChar, OperDate_Transport TDateTime
               , Date_Insert TDateTime, MemberName_Insert TVarChar
               
-              , OperDate_Sale TDateTime, InvNumber_Sale TVarChar
+              , BarCode_Sale Integer, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
               
               , OperDatePartner TDateTime, InvNumberPartner TVarChar
               , TotalSumm TFloat
@@ -68,6 +68,7 @@ BEGIN
                    )
 
        SELECT MovementItem.Id
+            , CAST (ROW_NUMBER() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
             , Object_Status.ObjectCode          AS StatusCode
             , Object_Status.ValueData           AS StatusName
             , Movement_Reestr.OperDate                  AS OperDate
@@ -85,6 +86,7 @@ BEGIN
             , MIDate_Insert.ValueData                   AS Date_Insert
             , Object_Member.ValueData                   AS MemberName_Insert
 
+            , Movement_Sale.Id                          AS BarCode_Sale
             , Movement_Sale.OperDate                    AS OperDate_Sale
             , Movement_Sale.InvNumber                   AS InvNumber_Sale
             , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
