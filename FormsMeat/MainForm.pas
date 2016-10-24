@@ -761,8 +761,14 @@ type
     actReestrStart: TdsdOpenForm;
     N141: TMenuItem;
     N142: TMenuItem;
-    actReestrUpdate: TdsdOpenForm;
+    actReestrPartnerIn: TdsdOpenForm;
     N143: TMenuItem;
+    actReestrRemakeIn: TdsdOpenForm;
+    actReestrRemakeBuh: TdsdOpenForm;
+    actReestrRemake: TdsdOpenForm;
+    N144: TMenuItem;
+    N145: TMenuItem;
+    N146: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

@@ -32,35 +32,17 @@ type
     colOperDatePartner: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colInvNumberOrder: TcxGridDBColumn;
-    colChecked: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
-    colOKPO_To: TcxGridDBColumn;
-    colJuridicalName_To: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
-    colIsError: TcxGridDBColumn;
-    clRouteName: TcxGridDBColumn;
-    PersonalName: TcxGridDBColumn;
-    colInsertDate: TcxGridDBColumn;
+    colDate_Insert: TcxGridDBColumn;
     N13: TMenuItem;
     miInvoice: TMenuItem;
     miOrdSpr: TMenuItem;
     miDesadv: TMenuItem;
-    Comment: TcxGridDBColumn;
-    MovementId_Order: TcxGridDBColumn;
-    RouteGroupName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     cxLabel27: TcxLabel;
     edReestrKind: TcxButtonEdit;
     ReestrKindGuides: TdsdGuides;
-    clInvNumber_ReestrFull: TcxGridDBColumn;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
@@ -75,6 +57,8 @@ type
     spSelectBarCode: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
+    bbErased: TdxBarButton;
+    MemberName_Insert: TcxGridDBColumn;
   private
     { Private declarations }
   public
