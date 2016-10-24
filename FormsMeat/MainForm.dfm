@@ -85,16 +85,6 @@ inherited MainForm: TMainForm
           Value = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inStartDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -116,16 +106,6 @@ inherited MainForm: TMainForm
           Name = 'inReestrKindName'
           Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inStartDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -149,16 +129,6 @@ inherited MainForm: TMainForm
           Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inStartDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -180,16 +150,6 @@ inherited MainForm: TMainForm
           Name = 'inReestrKindName'
           Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inStartDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = False
