@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr_BarCode(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BarCode TVarChar
+           --, BarCode1 TVarChar
               )
 AS
 $BODY$
@@ -19,6 +20,7 @@ BEGIN
      RETURN QUERY 
 
        SELECT CAST (Null AS TVarChar)  AS BarCode;
+           -- , CAST (Null AS TVarChar)  AS BarCode1;
   
 END;
 $BODY$
@@ -31,6 +33,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_Reestr_BarCode (inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
-
-
+-- SELECT * FROM gpSelect_MI_Reestr_BarCode ( inSession:= zfCalc_UserAdmin())
+--4323306
