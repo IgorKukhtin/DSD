@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 655
+  ExplicitHeight = 652
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -824,11 +824,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    ColumnEnterList = <
-      item
-      end
-      item
-      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -1498,19 +1493,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <
+    ColumnEnterList = <
       item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        Column = BarCode
       end>
+    SummaryItemList = <>
     Left = 598
     Top = 121
   end

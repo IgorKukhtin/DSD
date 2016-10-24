@@ -313,7 +313,7 @@ BEGIN
     inMovementId:= COALESCE (inMovementId, 0);
     -- Результат - все товары
     RETURN QUERY
-       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
+       WITH tmpInfoMoney AS (SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = TRUE
                                AND (View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна + Ирна
@@ -326,20 +326,20 @@ BEGIN
                                                                            )
                                  )
                             UNION
-                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
+                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
                                                                            , zc_Enum_InfoMoneyDestination_30300() -- Доходы + Переработка
                                                                             )
                             UNION
-                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
+                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE inIsGoodsComplete = FALSE
                                AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10204() -- Основное сырье + Прочее сырье
                                                                  )
                             UNION
-                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId
+                             SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, CASE WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() THEN TRUE ELSE FALSE END AS isTare
                              FROM Object_InfoMoney_View AS View_InfoMoney
                              WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500() -- Общефирменные + Оборотная тара
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
@@ -403,7 +403,7 @@ BEGIN
                   LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
                   LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                         AND 1=0
-             WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0
+             WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE
             ) AS tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull

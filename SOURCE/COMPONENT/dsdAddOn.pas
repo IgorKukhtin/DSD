@@ -660,7 +660,7 @@ begin
     for i := 0 to View.Controller.FocusedColumnIndex do
         if inColumnEnterList(View.VisibleColumns[i]) then begin
            View.Controller.FocusedColumnIndex := View.VisibleColumns[i].VisibleIndex;
-           if (not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes) then
+           if (ColumnEnterList.Count = 1) or ((not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes)) then
                TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
            exit;
         end;
@@ -958,7 +958,7 @@ end;
 function TdsdDBViewAddOn.inColumnEnterList(Column: TcxGridColumn): boolean;
 var i: integer;
 begin
-  result := false;
+  result := ColumnEnterList.Count = 1;
   for i := 0 to ColumnEnterList.Count - 1  do
       if Column = TColumnCollectionItem(ColumnEnterList.Items[i]).Column then begin
          result := true;
