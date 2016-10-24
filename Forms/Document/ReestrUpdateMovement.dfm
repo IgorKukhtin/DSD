@@ -126,7 +126,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = colToName
+              Column = InvNumber_Sale
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -153,7 +153,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 77
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
@@ -717,6 +717,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           StoredProc = spSelectBarCode
         end
         item
+          StoredProc = spGet_Period
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -726,8 +727,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 328
-    Top = 307
+    Left = 368
+    Top = 299
   end
   inherited MasterCDS: TClientDataSet
     Left = 288
@@ -872,7 +873,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Top = 272
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Sale'
+    StoredProcName = 'gpComplete_Movement'
     Params = <
       item
         Name = 'inmovementid'
@@ -893,7 +894,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Top = 354
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Sale'
+    StoredProcName = 'gpUnComplete_Movement'
     Params = <
       item
         Name = 'inmovementid'
@@ -952,27 +953,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDate'
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inReestrKindId'
         Value = Null
         Component = ReestrKindGuides
@@ -1000,7 +980,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Top = 272
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Sale'
+    StoredProcName = 'gpReComplete_Movement'
     Params = <
       item
         Name = 'inMovementId'
@@ -1143,7 +1123,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     View = cxGridDBTableView1
     OnDblClickActionList = <
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -1158,5 +1137,28 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     SummaryItemList = <>
     Left = 472
     Top = 96
+  end
+  object spGet_Period: TdsdStoredProc
+    StoredProcName = 'gpGet_Period'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 208
+    Top = 371
   end
 end

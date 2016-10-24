@@ -59,6 +59,7 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     bbErased: TdxBarButton;
     MemberName_Insert: TcxGridDBColumn;
+    spGet_Period: TdsdStoredProc;
   private
     { Private declarations }
   public
