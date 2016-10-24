@@ -1,27 +1,28 @@
 inherited OrderExternalForm: TOrderExternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
   ClientHeight = 536
-  ClientWidth = 1366
-  ExplicitWidth = 1382
+  ClientWidth = 1362
+  ExplicitLeft = -589
+  ExplicitWidth = 1378
   ExplicitHeight = 571
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1366
+    Width = 1362
     Height = 370
     ExplicitTop = 166
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 370
     ClientRectBottom = 370
-    ClientRectRight = 1366
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1362
       ExplicitHeight = 346
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1362
         Height = 346
-        ExplicitWidth = 1366
+        ExplicitWidth = 1362
         ExplicitHeight = 346
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -341,10 +342,10 @@ inherited OrderExternalForm: TOrderExternalForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1366
+    Width = 1362
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8

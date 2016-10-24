@@ -5,7 +5,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 575
+  ExplicitHeight = 572
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -265,12 +265,12 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 619
+    Left = 722
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 720
+    Left = 800
     Top = 5
     Properties.Buttons = <
       item
@@ -279,7 +279,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

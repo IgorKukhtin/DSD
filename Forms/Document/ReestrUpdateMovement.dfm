@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1130,10 +1130,13 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnEnterList = <
+      item
+        Column = BarCode
+      end>
     SummaryItemList = <>
     Left = 472
     Top = 96

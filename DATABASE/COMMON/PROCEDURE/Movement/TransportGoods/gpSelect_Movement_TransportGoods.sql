@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_TransportGoods()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_TransportGoods (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportGoods(
@@ -243,4 +243,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.10.2015', inEndDate:= '01.12.2015', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportGoods (inStartDate:= '30.10.2015', inEndDate:= '01.12.2015', inIsErased:=false, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
