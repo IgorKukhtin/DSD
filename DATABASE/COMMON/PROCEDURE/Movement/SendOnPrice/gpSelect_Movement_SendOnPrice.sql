@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_SendOnPrice()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalCountKgFrom TFloat, TotalCountShFrom TFloat, TotalSummFrom TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar, RouteGroupName TVarChar, RouteName TVarChar, PersonalName TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
@@ -70,6 +71,10 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+
+           , MovementFloat_TotalCountKgFrom.ValueData       AS TotalCountKgFrom
+           , MovementFloat_TotalCountShFrom.ValueData       AS TotalCountShFrom
+           , MovementFloat_TotalSummFrom.ValueData          AS TotalSummFrom
 
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
@@ -168,10 +173,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKgFrom
+                                    ON MovementFloat_TotalCountKgFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKgFrom.DescId = zc_MovementFloat_TotalCountKgFrom()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountShFrom
+                                    ON MovementFloat_TotalCountShFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountShFrom.DescId = zc_MovementFloat_TotalCountShFrom()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountTare
                                     ON MovementFloat_TotalCountTare.MovementId =  Movement.Id
@@ -193,6 +203,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                    ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -308,4 +321,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:=0, inSession:= zfCalc_UserAdmin())

@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_GoodsListSale_all (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsListSale (Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
@@ -96,15 +95,13 @@ BEGIN
                           ON Object_GoodsListSale.isErased = tmpIsErased.isErased 
                          AND Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
 
-        INNER JOIN ObjectLink AS GoodsListSale_Contract
+        LEFT JOIN ObjectLink AS GoodsListSale_Contract
                               ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
                              AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
-                             AND (GoodsListSale_Contract.ChildObjectId = inContractId OR inContractId = 0)
         
-        INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Juridical
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Juridical
                               ON ObjectLink_GoodsListSale_Juridical.ObjectId = Object_GoodsListSale.Id
                              AND ObjectLink_GoodsListSale_Juridical.DescId = zc_ObjectLink_GoodsListSale_Juridical()
-                             AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_GoodsListSale_Juridical.ChildObjectId
             
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -161,6 +158,8 @@ BEGIN
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
      WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+       AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+       AND (GoodsListSale_Contract.ChildObjectId = inContractId OR inContractId = 0)
     ;
 
 END;

@@ -72,8 +72,8 @@ type
     cxLabel5: TcxLabel;
     LocationDescName: TcxGridDBColumn;
     LocationCode: TcxGridDBColumn;
-    CarCode: TcxGridDBColumn;
-    CarName: TcxGridDBColumn;
+    LocationCode_two: TcxGridDBColumn;
+    LocationName_two: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrintBy_Goods: TdxBarButton;
     GoodsGroupNameFull: TcxGridDBColumn;
@@ -107,7 +107,10 @@ type
     actPrint_Total: TdsdPrintAction;
     bbPrint_MO: TdxBarButton;
     bbPrint_Auto: TdxBarButton;
-    LocationName_inf: TcxGridDBColumn;
+    GoodsDescName: TcxGridDBColumn;
+    LocationDescName_two: TcxGridDBColumn;
+    StartDate: TcxGridDBColumn;
+    EndDate: TcxGridDBColumn;
   private
   public
   end;

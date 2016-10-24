@@ -13,9 +13,9 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCostView(
 RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , AccountId Integer, AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
              , LocationDescName TVarChar, LocationId Integer, LocationCode Integer, LocationName TVarChar
-             , CarCode Integer, CarName TVarChar
+             , LocationDescName_two TVarChar, LocationId_two Integer, LocationCode_two Integer, LocationName_two TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+             , GoodsDescName TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
              , Weight TFloat
              , PartionGoodsId Integer, PartionGoodsName TVarChar, AssetToCode Integer, AssetToName TVarChar
 
@@ -54,8 +54,6 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
 
              , ContainerId_Summ Integer
              , LineNum Integer
-             , LocationName_inf TVarChar
-
               )
 AS
 $BODY$
@@ -66,67 +64,70 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     --vbUserId:= lpGetUserBySession (inSession);
 
+
     -- таблица -
-    CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 
-    -- подразделение или место учета (МО, Авто)
-    IF COALESCE (inLocationId, 0) = 0
+    -- место учета - подразделение или МО или Авто
+    IF inLocationId <> 0
     THEN
-       INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-              SELECT Object.Id
-                   , tmpCLODesc.DescId
-                   , tmpDesc.ContainerDescId
-              FROM Object
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId ) AS tmpDesc ON 1 = 1
-                   LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
-              WHERE Object.DescId IN (zc_Object_Unit(), zc_Object_Member(), zc_Object_Personal(), zc_Object_Car())
-           UNION ALL
-              SELECT 0 AS Id
-                   , tmpCLODesc.DescId
-                   , tmpDesc.ContainerDescId
-              FROM Object
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId ) AS tmpDesc ON 1 = 1
-                   LEFT JOIN (SELECT zc_ContainerLinkObject_Car() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId) AS tmpCLODesc ON 1 = 1
-              WHERE Object.Id = zc_Juridical_Basis();
-    ELSE
-       INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+       INSERT INTO _tmpLocation (LocationId)
               SELECT Object.Id AS LocationId
-                   , CASE WHEN Object.DescId = zc_Object_Unit()   THEN zc_ContainerLinkObject_Unit() 
-                          WHEN Object.DescId = zc_Object_Car()    THEN zc_ContainerLinkObject_Car() 
-                          WHEN Object.DescId = zc_Object_Member() THEN zc_ContainerLinkObject_Member()
-                     END AS DescId
-                   , tmpDesc.ContainerDescId
               FROM Object
-                   LEFT JOIN (SELECT zc_Container_Count() AS ContainerDescId/* UNION SELECT zc_Container_Summ() AS ContainerDescId */) AS tmpDesc ON 1 = 1
               WHERE Object.Id = inLocationId;
     END IF;
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpLocation;
 
+
     IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
-       THEN
-           INSERT INTO _tmpGoods (GoodsId)
-                   SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect;
+    THEN
+        INSERT INTO _tmpGoods (GoodsId)
+           SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect
+          UNION
+           SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Goods_Fuel() AND ChildObjectId > 0
+          ;
     ELSE
-       IF COALESCE (inGoodsId, 0) <> 0
-          THEN
-              INSERT INTO _tmpGoods (GoodsId)
-                     SELECT inGoodsId AS GoodsId;
-       END IF;
+        IF COALESCE (inGoodsId, 0) <> 0
+        THEN
+            INSERT INTO _tmpGoods (GoodsId)
+               SELECT inGoodsId AS GoodsId
+              UNION
+               SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Goods_Fuel() AND ChildObjectId > 0 AND ObjectId = inGoodsId
+             ;
+        END IF;
     END IF;
+
+
     -- Результат
     RETURN QUERY
     WITH 
-   tmpHistoryCost AS ( SELECT CASE WHEN inIsInfoMoney = TRUE THEN HistoryCost.ContainerId ELSE 0 END AS ContainerId
-                            , _tmpLocation.LocationId
-                            , _tmpLocation.ContainerDescId
+    tmpHistoryCost AS (SELECT CASE WHEN inIsInfoMoney = TRUE THEN HistoryCost.ContainerId ELSE 0 END AS ContainerId
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN zc_Object_Member()
+                                   WHEN CLO_Car.DescId > 0      THEN zc_Object_Car()
+                                   WHEN CLO_Unit.DescId > 0     THEN zc_Object_Unit()
+                              END AS Location_Desc
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN CLO_Member.ObjectId
+                                   WHEN CLO_Car.DescId > 0      THEN CLO_Car.ObjectId
+                                   WHEN CLO_Unit.DescId > 0     THEN CLO_Unit.ObjectId
+                              END AS LocationId
+
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN CASE WHEN CLO_Car.DescId > 0    THEN zc_Object_Car()    WHEN CLO_Unit.DescId > 0 THEN zc_Object_Unit() END
+                                   WHEN CLO_Car.DescId > 0      THEN CASE WHEN CLO_Member.DescId > 0 THEN zc_Object_Member() WHEN CLO_Unit.DescId > 0 THEN zc_Object_Unit() END
+                                   WHEN CLO_Unit.DescId > 0     THEN CASE WHEN CLO_Member.DescId > 0 THEN zc_Object_Member() WHEN CLO_Car.DescId  > 0 THEN zc_Object_Car()  END
+                              END AS Location_Desc_two
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN COALESCE (CLO_Car.ObjectId, CLO_Unit.ObjectId)
+                                   WHEN CLO_Car.DescId > 0      THEN COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId)
+                                   WHEN CLO_Unit.DescId > 0     THEN COALESCE (CLO_Member.ObjectId, CLO_Car.ObjectId)
+                              END AS LocationId_two
+
                             , CLO_Goods.ObjectId           AS GoodsId
                             , CLO_GoodsKind.ObjectId       AS GoodsKindId
                             , CLO_PartionGoods.ObjectId    AS PartionGoodsId
                             , CLO_AssetTo.ObjectId         AS AssetToId
-                            , CLO_Car.ObjectId             AS CarId
-                            , CLO_Account.ObjectId         AS AccountId
+
+                            , Container.ObjectId           AS AccountId
                             , HistoryCost.StartDate
                             , HistoryCost.EndDate
                             , SUM (HistoryCost.Price)         AS Price
@@ -143,49 +144,60 @@ BEGIN
                             , SUM (HistoryCost.CalcSumm_External)  AS CalcSumm_External
                             , SUM (HistoryCost.Summ_Diff)          AS Summ_Diff
                             , HistoryCost.MovementItemId_Diff
-            
-                      FROM HistoryCost -- limit 10
-                            INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = HistoryCost.ContainerId
-                            INNER JOIN _tmpLocation ON _tmpLocation.LocationId = ContainerLinkObject.ObjectId
-                                   AND _tmpLocation.DescId = ContainerLinkObject.DescId
+                      FROM HistoryCost
+                            LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                          ON CLO_Unit.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                            LEFT JOIN ContainerLinkObject AS CLO_Car
+                                                          ON CLO_Car.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
+                            LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                          ON CLO_Member.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
+                            LEFT JOIN _tmpLocation ON _tmpLocation.LocationId = CLO_Unit.ObjectId
 
                             LEFT JOIN ContainerLinkObject AS CLO_Goods 
-                                   ON CLO_Goods.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                                          ON CLO_Goods.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = CLO_Goods.ObjectId
 
-                            LEFT JOIN ContainerLinkObject AS CLO_Unit 
-                                   ON CLO_Unit.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-
                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind 
-                                   ON CLO_GoodsKind.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                          ON CLO_GoodsKind.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods 
-                                   ON CLO_PartionGoods.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                          ON CLO_PartionGoods.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                             LEFT JOIN ContainerLinkObject AS CLO_AssetTo
-                                   ON CLO_AssetTo.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
-                            LEFT JOIN ContainerLinkObject AS CLO_Car 
-                                   ON CLO_Car.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
-                            LEFT JOIN ContainerLinkObject AS CLO_Account
-                                   ON CLO_Account.ContainerId = HistoryCost.ContainerId
-                                  AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
-                                  AND _tmpLocation.ContainerDescId = zc_Container_Count()
+                                                          ON CLO_AssetTo.ContainerId = HistoryCost.ContainerId
+                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
+                            LEFT JOIN Container ON Container.Id = HistoryCost.ContainerId
 
                       WHERE inStartDate >= HistoryCost.StartDate AND inStartDate < HistoryCost.EndDate
+                        AND (_tmpLocation.LocationId > 0 OR inLocationId = 0)
 
                       GROUP BY CASE WHEN inIsInfoMoney = TRUE THEN HistoryCost.ContainerId ELSE 0 END
-                             , _tmpLocation.LocationId
-                             , _tmpLocation.ContainerDescId
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN zc_Object_Member()
+                                   WHEN CLO_Car.DescId > 0      THEN zc_Object_Car()
+                                   WHEN CLO_Unit.DescId > 0     THEN zc_Object_Unit()
+                              END
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN CLO_Member.ObjectId
+                                   WHEN CLO_Car.DescId > 0      THEN CLO_Car.ObjectId
+                                   WHEN CLO_Unit.DescId > 0     THEN CLO_Unit.ObjectId
+                              END
+
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN CASE WHEN CLO_Car.DescId > 0    THEN zc_Object_Car()    WHEN CLO_Unit.DescId > 0 THEN zc_Object_Unit() END
+                                   WHEN CLO_Car.DescId > 0      THEN CASE WHEN CLO_Member.DescId > 0 THEN zc_Object_Member() WHEN CLO_Unit.DescId > 0 THEN zc_Object_Unit() END
+                                   WHEN CLO_Unit.DescId > 0     THEN CASE WHEN CLO_Member.DescId > 0 THEN zc_Object_Member() WHEN CLO_Car.DescId  > 0 THEN zc_Object_Car()  END
+                              END
+                            , CASE WHEN CLO_Member.ObjectId > 0 THEN COALESCE (CLO_Car.ObjectId, CLO_Unit.ObjectId)
+                                   WHEN CLO_Car.DescId > 0      THEN COALESCE (CLO_Member.ObjectId, CLO_Unit.ObjectId)
+                                   WHEN CLO_Unit.DescId > 0     THEN COALESCE (CLO_Member.ObjectId, CLO_Car.ObjectId)
+                              END
                              , CLO_Goods.ObjectId
                              , CLO_GoodsKind.ObjectId
                              , CLO_PartionGoods.ObjectId
                              , CLO_AssetTo.ObjectId 
-                             , CLO_Car.ObjectId
-                             , CLO_Account.ObjectId
+                             , Container.ObjectId
                              , HistoryCost.StartDate
                              , HistoryCost.EndDate
                              , HistoryCost.MovementItemId_Diff
@@ -195,14 +207,19 @@ BEGIN
    SELECT View_Account.AccountGroupName, View_Account.AccountDirectionName
         , View_Account.AccountId, View_Account.AccountCode, View_Account.AccountName, View_Account.AccountName_all
         , ObjectDesc.ItemName            AS LocationDescName
-        , CAST (COALESCE(Object_Location.Id, 0) AS Integer)             AS LocationId
+        , Object_Location.Id             AS LocationId
         , Object_Location.ObjectCode     AS LocationCode
-        , CAST (COALESCE(Object_Location.ValueData,'') AS TVarChar)     AS LocationName
-        , Object_Car.ObjectCode          AS CarCode
-        , Object_Car.ValueData           AS CarName
+        , Object_Location.ValueData      AS LocationName
+
+        , ObjectDesc_two.ItemName        AS LocationDescName_two
+        , Object_Location_two.Id         AS LocationId_two
+        , CASE WHEN Object_Location_two.Id > 0 THEN Object_Location_two.ObjectCode ELSE Object_Car_Unit.ObjectCode END :: Integer  AS LocationCode_two
+        , CASE WHEN Object_Location_two.Id > 0 THEN Object_Location_two.ValueData  ELSE Object_Car_Unit.ValueData  END :: TVarChar AS LocationName_two
+
         , Object_GoodsGroup.ValueData    AS GoodsGroupName
         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-        , CAST (COALESCE(Object_Goods.Id, 0) AS Integer)                 AS GoodsId
+        , Object_GoodsDesc.ItemName      AS GoodsDescName
+        , Object_Goods.Id                AS GoodsId
         , Object_Goods.ObjectCode        AS GoodsCode
         , CAST (COALESCE(Object_Goods.ValueData, '') AS TVarChar)        AS GoodsName
         , CAST (COALESCE(Object_GoodsKind.Id, 0) AS Integer)             AS GoodsKindId
@@ -290,9 +307,7 @@ BEGIN
         , tmpHistoryCost.ContainerId                    AS ContainerId_Summ
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
-        , CAST( CASE WHEN COALESCE(Object_Car.ValueData,'') <> '' THEN Object_Car.ValueData ELSE COALESCE(Object_Location.ValueData,'') END  AS TVarChar)  AS LocationName_inf
       FROM tmpHistoryCost
-
         LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                       ON CLO_InfoMoney.ContainerId = tmpHistoryCost.ContainerId
                                      AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -302,14 +317,19 @@ BEGIN
                                      AND CLO_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyDetail ON View_InfoMoneyDetail.InfoMoneyId = CLO_InfoMoneyDetail.ObjectId
 
-        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpHistoryCost.GoodsId
+        LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpHistoryCost.GoodsId
+        LEFT JOIN ObjectDesc AS Object_GoodsDesc ON Object_GoodsDesc.Id = Object_Goods.DescId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpHistoryCost.GoodsKindId
-        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpHistoryCost.LocationId
+
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = tmpHistoryCost.Location_Desc
+        LEFT JOIN ObjectDesc AS ObjectDesc_two ON ObjectDesc_two.Id = tmpHistoryCost.Location_Desc_two
+
+        LEFT JOIN Object AS Object_Location     ON Object_Location.Id     = tmpHistoryCost.LocationId
+        LEFT JOIN Object AS Object_Location_two ON Object_Location_two.Id = tmpHistoryCost.LocationId_two
+
         LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpHistoryCost.LocationId
                                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN tmpHistoryCost.CarId > 0 THEN tmpHistoryCost.CarId WHEN Object_Location_find.DescId = zc_Object_Car() THEN Object_Location_find.Id END -- CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpHistoryCost.LocationId END
-        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN tmpHistoryCost.LocationId = tmpHistoryCost.CarId OR Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpHistoryCost.LocationId END -- CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpHistoryCost.LocationId END
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = CASE WHEN tmpHistoryCost.CarId > 0 THEN zc_Object_Car() ELSE Object_Location_find.DescId END
+        LEFT JOIN Object AS Object_Car_Unit ON Object_Car_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                              ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -323,7 +343,8 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-        LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                              ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
         LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
@@ -354,11 +375,9 @@ BEGIN
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpHistoryCost.AccountId
       ;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -367,9 +386,4 @@ $BODY$
 */
 
 -- тест
-
--- 
---SELECT * from gpReport_HistoryCostView (inStartDate:= '01.07.2016', inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsInfoMoney:= true, inSession := zfCalc_UserAdmin());
-
-
---select * from gpReport_HistoryCostView(inStartDate := ('16.08.2016')::TDateTime , inLocationId := 0 , inGoodsGroupId := 1941 , inGoodsId := 0 , inIsInfoMoney := 'False' ,  inSession := '5')
+-- SELECT * from gpReport_HistoryCostView (inStartDate:= '01.07.2016', inLocationId:= 0, inGoodsGroupId:= 0, inGoodsId:= 1826, inIsInfoMoney:= true, inSession := zfCalc_UserAdmin());

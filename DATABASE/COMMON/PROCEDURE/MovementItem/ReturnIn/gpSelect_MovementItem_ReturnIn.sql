@@ -251,24 +251,18 @@ BEGIN
                      WHERE (tmpGoodsByGoodsKind.GoodsId > 0 AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                         OR (vbIsB = TRUE AND Object_InfoMoney_View.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()))
                     )
-      , tmpGoods2 AS (SELECT Object_Goods.Id           AS GoodsId
-                           , Object_Goods.ObjectCode   AS GoodsCode
-                           , Object_Goods.ValueData    AS GoodsName
+      , tmpGoods2 AS (SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
                       FROM Object AS Object_GoodsListSale 
-                           INNER JOIN ObjectLink AS GoodsListSale_Contract
-                                   ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
-                                  AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
-                                  AND GoodsListSale_Contract.ChildObjectId = vbContractId
                            INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                   ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                  AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                  AND ObjectLink_GoodsListSale_Partner.ChildObjectId = vbPartnerId
+                                                 ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                                AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                                AND ObjectLink_GoodsListSale_Partner.ChildObjectId = vbPartnerId
                            LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
-                                  ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                 AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                                ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                               AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
                            INNER JOIN Object AS Object_Goods 
-                                   ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
-                                  AND Object_Goods.isErased = FALSE
+                                             ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                            AND Object_Goods.isErased = FALSE
                       WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
                         AND Object_GoodsListSale.isErased = FALSE
                     )
