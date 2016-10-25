@@ -1,20 +1,20 @@
 inherited ReestrStartMovementForm: TReestrStartMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-  ClientHeight = 617
+  ClientHeight = 542
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 655
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 927
-    Height = 491
+    Height = 416
     ExplicitTop = 126
     ExplicitWidth = 927
     ExplicitHeight = 491
-    ClientRectBottom = 491
+    ClientRectBottom = 416
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 927
@@ -22,10 +22,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       inherited cxGrid: TcxGrid
         Top = 65
         Width = 927
-        Height = 402
-        ExplicitTop = 65
+        Height = 327
+        ExplicitTop = 63
         ExplicitWidth = 927
-        ExplicitHeight = 402
+        ExplicitHeight = 365
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -575,8 +575,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Width = 200
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 203
-    Top = 512
+    Left = 195
+    Top = 456
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -645,9 +645,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end>
       DataSets = <
         item
+          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
         end
         item
+          DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
       Params = <
@@ -658,8 +660,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_Reestr'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -745,12 +749,12 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 24
+    Top = 456
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 80
+    Top = 456
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Reestr'
@@ -816,6 +820,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -907,8 +919,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 496
+    Left = 336
+    Top = 440
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1099,8 +1111,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
       end>
-    Left = 248
-    Top = 312
+    Left = 264
+    Top = 328
   end
   inherited HeaderSaver: THeaderSaver
     StoredProc = nil
@@ -1114,13 +1126,13 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
-    Left = 718
-    Top = 512
+    Left = 582
+    Top = 464
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 662
+    Top = 456
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ReestrStart'
@@ -1304,11 +1316,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Top = 332
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_Print'
+    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    DataSet = PrintHeaderCDS
     DataSets = <
       item
+        DataSet = PrintHeaderCDS
       end
       item
+        DataSet = PrintItemsCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1319,16 +1334,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 799
-    Top = 272
+    Top = 280
   end
   object TransportChoiceGuides: TdsdGuides
     KeyField = 'Id'
@@ -1522,5 +1531,17 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     SummaryItemList = <>
     Left = 598
     Top = 121
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 310
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 257
   end
 end

@@ -25,6 +25,8 @@ inherited ReestrJournalForm: TReestrJournalForm
       inherited cxGrid: TcxGrid
         Width = 838
         Height = 476
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 838
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -457,11 +459,13 @@ inherited ReestrJournalForm: TReestrJournalForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
+          StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072
       ShortCut = 16464
       DataSets = <
         item
@@ -471,10 +475,6 @@ inherited ReestrJournalForm: TReestrJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -484,11 +484,9 @@ inherited ReestrJournalForm: TReestrJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
+      ReportName = 'PrintMovement_Reestr'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Value = 'PrintMovement_Reestr'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -648,6 +646,14 @@ inherited ReestrJournalForm: TReestrJournalForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -662,6 +668,11 @@ inherited ReestrJournalForm: TReestrJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bb: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 3
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -855,12 +866,6 @@ inherited ReestrJournalForm: TReestrJournalForm
     Left = 708
     Top = 270
   end
-  object PrintItemsSverkaCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 628
-    Top = 294
-  end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
     ConnectionParams.Host.DataType = ftString
@@ -928,5 +933,29 @@ inherited ReestrJournalForm: TReestrJournalForm
     PackSize = 1
     Left = 712
     Top = 32
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 376
   end
 end

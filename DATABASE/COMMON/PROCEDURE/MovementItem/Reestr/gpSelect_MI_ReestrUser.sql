@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrUser(
     IN inReestrKindId       Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( Id Integer, LineNum Integer
+RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , StatusCode Integer, StatusName TVarChar
               , OperDate TDateTime, InvNumber TVarChar
               , CarName TVarChar
@@ -68,6 +68,7 @@ BEGIN
                    )
 
        SELECT MovementItem.Id
+            , MovementItem.MovementId           AS MovementId
             , CAST (ROW_NUMBER() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
             , Object_Status.ObjectCode          AS StatusCode
             , Object_Status.ValueData           AS StatusName
