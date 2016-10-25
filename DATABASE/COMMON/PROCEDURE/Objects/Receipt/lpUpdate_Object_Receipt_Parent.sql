@@ -41,12 +41,21 @@ BEGIN
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Receipt_Parent(), ObjectLink_Receipt_Goods.ObjectId, tmp.ReceiptId_parent)
+         , lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_ParentMulti(), ObjectLink_Receipt_Goods.ObjectId, tmp.isParentMulti)
    FROM ObjectLink AS ObjectLink_Receipt_Goods
         LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                              ON ObjectLink_Receipt_Parent.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                             AND ObjectLink_Receipt_Parent.DescId = zc_ObjectLink_Receipt_Parent()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                ON ObjectBoolean_ParentMulti.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                               AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
         LEFT JOIN (-- Все у кого Child-GoodsKind = ПФ (ГП)
-                   SELECT ObjectLink_Receipt_Goods.ObjectId                                               AS ReceiptId
+                   SELECT tmp.ReceiptId
+                        , MAX (tmp.ReceiptId_parent) AS ReceiptId_parent
+                        , CASE WHEN MAX (tmp.ReceiptId_parent) <> MIN (tmp.ReceiptId_parent) THEN TRUE ELSE FALSE END AS isParentMulti
+                   FROM
+                   -- Все у кого Child-GoodsKind = ПФ (ГП)
+                  (SELECT ObjectLink_Receipt_Goods.ObjectId                                               AS ReceiptId
                         , COALESCE (_tmpListMaster.ReceiptId, COALESCE (_tmpListMaster_two.ReceiptId, 0)) AS ReceiptId_parent
                    FROM ObjectLink AS ObjectLink_Receipt_Goods
                         INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
@@ -123,13 +132,17 @@ BEGIN
                        OR (COALESCE (inGoodsId, 0) = 0 AND COALESCE (inReceiptId, 0) = 0)
                          )
                       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                  ) AS tmp
+                   GROUP BY tmp.ReceiptId
                   ) AS tmp ON tmp.ReceiptId = ObjectLink_Receipt_Goods.ObjectId
    WHERE (ObjectLink_Receipt_Goods.ObjectId = inReceiptId
        OR ObjectLink_Receipt_Goods.ChildObjectId = inGoodsId
        OR (COALESCE (inGoodsId, 0) = 0 AND COALESCE (inReceiptId, 0) = 0)
          )
       AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-      AND COALESCE (ObjectLink_Receipt_Parent.ObjectId, 0) <> COALESCE (tmp.ReceiptId_parent, 0);
+      AND (COALESCE (ObjectLink_Receipt_Parent.ObjectId, 0) <> COALESCE (tmp.ReceiptId_parent, 0)
+        OR COALESCE (ObjectBoolean_ParentMulti.ValueData, FALSE) <> COALESCE (tmp.isParentMulti, FALSE)
+          );
 
 
 

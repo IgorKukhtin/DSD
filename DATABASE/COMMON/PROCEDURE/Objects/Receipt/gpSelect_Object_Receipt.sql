@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
              , InsertDate TDateTime, UpdateDate TDateTime
              , isCheck_Parent Boolean
              , Check_Weight TFloat, Check_PartionValue TFloat, Check_TaxExit TFloat
+             , isParentMulti Boolean
              , isErased Boolean
               )
 AS
@@ -139,6 +140,9 @@ BEGIN
                 ELSE COALESCE (ObjectFloat_TaxExit.ValueData, 0) - 100
            END :: TFloat AS Check_TaxExit
 
+
+         , COALESCE (ObjectBoolean_ParentMulti.ValueData, FALSE) :: Boolean AS isParentMulti
+
          , Object_Receipt.isErased AS isErased
 
      FROM Object AS Object_Receipt
@@ -232,6 +236,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                   ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_ParentMulti
+                                  ON ObjectBoolean_ParentMulti.ObjectId = Object_Receipt.Id
+                                 AND ObjectBoolean_ParentMulti.DescId = zc_ObjectBoolean_Receipt_ParentMulti()
 
           LEFT JOIN ObjectString AS ObjectString_Code
                                  ON ObjectString_Code.ObjectId = Object_Receipt.Id

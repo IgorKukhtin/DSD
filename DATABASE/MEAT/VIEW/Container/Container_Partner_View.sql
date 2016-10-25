@@ -26,6 +26,7 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
                              ON ObjectLink_Account_AccountGroup.ObjectId = Container.ObjectId
                             AND ObjectLink_Account_AccountGroup.ChildObjectId <> zc_Enum_AccountGroup_110000() -- Транзит
                             AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+
        LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                      ON CLO_PaidKind.ContainerId = CLO_Partner.ContainerId
                                     AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -50,7 +51,15 @@ CREATE OR REPLACE VIEW Container_Partner_View AS
        LEFT JOIN ObjectFloat AS ObjectFloat_MovementId ON ObjectFloat_MovementId.ObjectId = CLO_PartionMovement.ObjectId
                                                       AND ObjectFloat_MovementId.DescId = zc_ObjectFloat_PartionMovement_MovementId()
 
+       LEFT JOIN ObjectLink AS ObjectLink_Destination
+                            ON ObjectLink_Destination.ObjectId = CLO_InfoMoney.ObjectId
+                           AND ObjectLink_Destination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+
   WHERE CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+     AND ObjectLink_Destination.ChildObjectId NOT IN (zc_Enum_InfoMoneyDestination_21400() -- услуги полученные
+                                                    , zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                    , zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
+                                                     )
  ;
 
 ALTER TABLE Container_Partner_View  OWNER TO postgres;
