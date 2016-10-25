@@ -29,7 +29,7 @@ BEGIN
               );
 
     IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN 
-       -- сохранили <когда сформирована виза "Вывезено со склада">   
+       -- сохранили <когда сформирована виза "Получено от клиента">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), vbMIId, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "Получено от клиента">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), vbMIId, vbUserId);
@@ -41,11 +41,11 @@ BEGIN
     END IF;
   
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeIn() THEN 
-       -- сохранили <когда сформирована виза "Вывезено со склада">   
+       -- сохранили <когда сформирована виза "Получено для переделки">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeIn(), vbMIId, CURRENT_TIMESTAMP);
-       -- сохранили связь с <кто сформировал визу "Получено от клиента">
+       -- сохранили связь с <кто сформировал визу "Получено для переделки">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInTo(), vbMIId, vbUserId);
-       -- сохранили связь с <кто сдал документ для визы "Получено от клиента">
+       -- сохранили связь с <кто сдал документ для визы "Получено для переделки">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), vbMIId, inMemberId);
 
        -- Изменили <Состояние по реестру> в документе продажи
@@ -53,9 +53,9 @@ BEGIN
     END IF;
     
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN 
-       -- сохранили <когда сформирована виза "Получено для переделки">   
+       -- сохранили <когда сформирована виза "ухгалтерия для исправления">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeBuh(), vbMIId, CURRENT_TIMESTAMP);
-       -- сохранили связь с <кто сформировал визу "Получено для переделки"">
+       -- сохранили связь с <кто сформировал визу "ухгалтерия для исправления">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), vbMIId, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
@@ -63,15 +63,24 @@ BEGIN
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Remake() THEN 
-       -- сохранили <когда сформирована виза "Получено для переделки">   
+       -- сохранили <когда сформирована виза "Документ исправлен">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Remake(), vbMIId, CURRENT_TIMESTAMP);
-       -- сохранили связь с <кто сформировал визу "Получено для переделки"">
+       -- сохранили связь с <кто сформировал визу "Документ исправлен">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), vbMIId, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
     END IF;
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
+       -- сохранили <когда сформирована виза "Бухгалтерия">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbMIId, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу "Бухгалтерия">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbMIId, vbUserId);
+
+       -- Изменили <Состояние по реестру> в документе продажи
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+    END IF;
 
 END;
 $BODY$

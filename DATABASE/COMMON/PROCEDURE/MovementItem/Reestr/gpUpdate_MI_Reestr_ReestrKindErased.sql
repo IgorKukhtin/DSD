@@ -68,6 +68,15 @@ BEGIN
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
     END IF;
 
+    IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
+       -- сохранили <когда сформирована виза "Бухгалтерия">   
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), inId, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу "Бухгалтерия">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, vbUserId);
+
+       -- Изменили <Состояние по реестру> в документе продажи
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+    END IF;
 
 END;
 $BODY$

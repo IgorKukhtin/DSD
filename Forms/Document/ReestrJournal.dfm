@@ -25,8 +25,6 @@ inherited ReestrJournalForm: TReestrJournalForm
       inherited cxGrid: TcxGrid
         Width = 838
         Height = 476
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 838
         ExplicitHeight = 476
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -311,6 +309,20 @@ inherited ReestrJournalForm: TReestrJournalForm
           object Member_Remake: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085')'
             DataBinding.FieldName = 'Member_Remake'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Date_Buh: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103'  ('#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1060#1080#1085#1080#1096')'
+            DataBinding.FieldName = 'Date_Buh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Member_Buh: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1060#1080#1085#1080#1096')'
+            DataBinding.FieldName = 'Member_Buh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
