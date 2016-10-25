@@ -60,6 +60,11 @@ type
     bbErased: TdxBarButton;
     MemberName_Insert: TcxGridDBColumn;
     spGet_Period: TdsdStoredProc;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

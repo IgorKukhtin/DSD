@@ -47,6 +47,10 @@ type
     spSelectBarCode: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     actRefreshStart: TdsdDataSetRefresh;
+    BarCode_Sale: TcxGridDBColumn;
+    LineNum: TcxGridDBColumn;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
   private
     { Private declarations }
   public

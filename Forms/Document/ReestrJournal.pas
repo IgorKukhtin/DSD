@@ -31,7 +31,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
-    PrintItemsSverkaCDS: TClientDataSet;
     colIsError: TcxGridDBColumn;
     N13: TMenuItem;
     miInvoice: TMenuItem;
@@ -44,6 +43,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spSelectPrint: TdsdStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

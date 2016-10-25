@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,19 +141,35 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited colStatus: TcxGridDBColumn
+          object LineNum: TcxGridDBColumn [0]
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'LineNum'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object BarCode_Sale: TcxGridDBColumn [1]
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            DataBinding.FieldName = 'BarCode_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
             HeaderAlignmentHorz = taCenter
             Width = 77
+          end
+          inherited colStatus: TcxGridDBColumn [4]
+            HeaderAlignmentHorz = taCenter
+            Width = 55
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
@@ -674,6 +690,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       StoredProcList = <
         item
           StoredProc = spUpdateMI
+        end
+        item
+          StoredProc = spSelectBarCode
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
@@ -718,12 +737,50 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           StoredProc = spGet_Period
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = True
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Reestr'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -800,6 +857,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -821,6 +886,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     object bbErased: TdxBarButton
       Action = spErased
       Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 3
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1163,5 +1233,41 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     PackSize = 1
     Left = 208
     Top = 371
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 217
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 607
+    Top = 320
   end
 end

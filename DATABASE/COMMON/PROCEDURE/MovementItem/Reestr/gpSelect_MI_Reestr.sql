@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr(
     IN inIsErased           Boolean   , --
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( Id Integer, MemberId Integer, OperDate TDateTime, isErased Boolean
-              , InvNumber_Sale TVarChar, OperDate_Sale TDateTime--, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE ( Id Integer, LineNum Integer, MemberId Integer, OperDate TDateTime, isErased Boolean
+              , BarCode_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime--, StatusCode Integer, StatusName TVarChar
               , Checked Boolean
              --, PriceWithVAT Boolean
 
@@ -54,9 +54,11 @@ BEGIN
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                       )
      SELECT  tmp.MovementItemId                           AS Id
+           , CAST (ROW_NUMBER() OVER (ORDER BY tmp.MovementItemId) AS Integer) AS LineNum
            , tmp.MemberId                                 AS MemberId
            , tmp.OperDate                                 AS OperDate
            , tmp.isErased                                 AS isErased
+           , Movement_Sale.Id                             AS BarCode_Sale
            , Movement_Sale.InvNumber                      AS InvNumber_Sale
            , Movement_Sale.OperDate                       AS OperDate_Sale
        --    , Object_Status.ObjectCode                       AS StatusCode

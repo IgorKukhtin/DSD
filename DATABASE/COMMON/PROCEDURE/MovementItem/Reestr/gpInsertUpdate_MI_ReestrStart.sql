@@ -26,6 +26,10 @@ BEGIN
     IF COALESCE (inBarCode, '') = '' THEN 
 	Return;
     END IF;
+  
+    IF COALESCE (inDocumentId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0 THEN 
+        RAISE EXCEPTION 'Ошибка. Параметр Путевой лист или Автомобиль должен быть определен.';
+    END IF;
 
          -- ищем док Реестр 
          IF COALESCE (inDocumentId_Transport, 0) <> 0 THEN 
