@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
+             , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
               )
 AS
@@ -80,6 +81,7 @@ BEGIN
            , Movement_Check.ConfirmedKindName
            , Movement_Check.ConfirmedKindClientName
 
+          , MovementString_Comment.ValueData     AS Comment
           , Object_Insert.ValueData              AS InsertName
           , MovementDate_Insert.ValueData        AS InsertDate
 
@@ -90,6 +92,10 @@ BEGIN
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
                            
+             LEFT JOIN MovementString AS MovementString_Comment
+                                      ON MovementString_Comment.MovementId = Movement_Check.Id
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_Check.Id
                                    AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -101,7 +107,7 @@ BEGIN
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
          AND (Movement_Check.UnitId = inUnitId)
          AND (vbRetailId = vbObjectId)
-;
+      ;
 
 END;
 $BODY$

@@ -164,6 +164,7 @@ type
     Check_PartionValue: TcxGridDBColumn;
     Check_TaxExit: TcxGridDBColumn;
     TaxExitCheck: TcxGridDBColumn;
+    isParentMulti: TcxGridDBColumn;
   private
     { Private declarations }
   public

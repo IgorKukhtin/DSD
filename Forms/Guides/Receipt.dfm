@@ -375,6 +375,14 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
+      object isParentMulti: TcxGridDBColumn
+        Caption = #1076#1077#1083#1072#1077#1090#1089#1103' '#1080#1079' '#1085#1077#1089#1082#1086#1083#1100#1082#1080#1093' '#1043#1055
+        DataBinding.FieldName = 'isParentMulti'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object Code_Parent: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'. ('#1087#1086#1080#1089#1082', '#1087#1086#1083#1100#1079'.)'
         DataBinding.FieldName = 'Code_Parent'
@@ -1159,11 +1167,13 @@ object ReceiptForm: TReceiptForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InMaskId'
@@ -1171,6 +1181,7 @@ object ReceiptForm: TReceiptForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -1187,19 +1198,23 @@ object ReceiptForm: TReceiptForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inMaskId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
           Value = ''
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = MasterDS
@@ -1216,6 +1231,7 @@ object ReceiptForm: TReceiptForm
       FormName = 'TReceiptEditForm'
       FormNameParam.Value = 'TReceiptEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1223,11 +1239,13 @@ object ReceiptForm: TReceiptForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InMaskId'
           Value = '0'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -1275,6 +1293,7 @@ object ReceiptForm: TReceiptForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1282,6 +1301,7 @@ object ReceiptForm: TReceiptForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1304,12 +1324,14 @@ object ReceiptForm: TReceiptForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1317,6 +1339,7 @@ object ReceiptForm: TReceiptForm
           Component = ChildCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1350,12 +1373,14 @@ object ReceiptForm: TReceiptForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ChildCDS
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1363,6 +1388,7 @@ object ReceiptForm: TReceiptForm
           Component = ChildCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1398,6 +1424,7 @@ object ReceiptForm: TReceiptForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1405,6 +1432,7 @@ object ReceiptForm: TReceiptForm
           Component = ChildCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1413,6 +1441,7 @@ object ReceiptForm: TReceiptForm
           ComponentItem = 'GoodsName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1425,6 +1454,7 @@ object ReceiptForm: TReceiptForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -1432,6 +1462,7 @@ object ReceiptForm: TReceiptForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1440,6 +1471,7 @@ object ReceiptForm: TReceiptForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1491,6 +1523,7 @@ object ReceiptForm: TReceiptForm
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintDetail: TdsdPrintAction
       Category = 'Print'
@@ -1517,6 +1550,7 @@ object ReceiptForm: TReceiptForm
       ReportName = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1088#1077#1094#1077#1087#1090#1086#1074
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actUpdateTaxExit: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1575,16 +1609,19 @@ object ReceiptForm: TReceiptForm
         Name = 'inReceiptId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1592,6 +1629,7 @@ object ReceiptForm: TReceiptForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1659,6 +1697,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -1667,6 +1706,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outValueWeight'
@@ -1674,6 +1714,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'ValueWeight'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsWeightMain'
@@ -1682,6 +1723,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'isWeightMain'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsTaxExit'
@@ -1690,6 +1732,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'isTaxExit'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -1698,6 +1741,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1706,6 +1750,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'EndDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1714,6 +1759,7 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptId'
@@ -1721,6 +1767,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1728,6 +1775,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1735,6 +1783,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 368
@@ -1752,6 +1801,7 @@ object ReceiptForm: TReceiptForm
         Name = 'inReceiptId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1759,6 +1809,7 @@ object ReceiptForm: TReceiptForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 650
@@ -1775,6 +1826,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1782,6 +1834,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
@@ -1789,6 +1842,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalCollationId'
@@ -1796,6 +1850,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'PersonalCollationId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
@@ -1803,6 +1858,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'BankAccountId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractTagId'
@@ -1810,6 +1866,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'ContractTagId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 432
@@ -1899,6 +1956,7 @@ object ReceiptForm: TReceiptForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1921,6 +1979,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 304
@@ -1950,6 +2009,7 @@ object ReceiptForm: TReceiptForm
         Name = 'inReceiptId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1957,6 +2017,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1964,12 +2025,14 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 496
@@ -1990,6 +2053,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioParam'
@@ -1998,12 +2062,14 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'isTaxExit'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesc'
         Value = 'zc_ObjectBoolean_ReceiptChild_TaxExit'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 770
@@ -2024,6 +2090,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioParam'
@@ -2032,12 +2099,14 @@ object ReceiptForm: TReceiptForm
         ComponentItem = 'isWeightMain'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDesc'
         Value = 'zc_ObjectBoolean_ReceiptChild_WeightMain'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 858
@@ -2054,6 +2123,7 @@ object ReceiptForm: TReceiptForm
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -2070,6 +2140,7 @@ object ReceiptForm: TReceiptForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112

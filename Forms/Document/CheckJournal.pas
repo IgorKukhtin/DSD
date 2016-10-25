@@ -45,6 +45,7 @@ type
     InvNumberOrder: TcxGridDBColumn;
     ConfirmedKindName: TcxGridDBColumn;
     ConfirmedKindClientName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public
