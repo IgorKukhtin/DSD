@@ -13,19 +13,19 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Height = 416
     ExplicitTop = 126
     ExplicitWidth = 927
-    ExplicitHeight = 491
+    ExplicitHeight = 416
     ClientRectBottom = 416
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 927
-      ExplicitHeight = 467
+      ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Top = 65
         Width = 927
         Height = 327
-        ExplicitTop = 63
+        ExplicitTop = 65
         ExplicitWidth = 927
-        ExplicitHeight = 365
+        ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -429,8 +429,15 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object BarCode_Transport: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076' '#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+            DataBinding.FieldName = 'BarCode_Transport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
           object BarCode: TcxGridDBColumn
-            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076' '#1055#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'BarCode'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -603,8 +610,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spSelect
+      StoredProc = spSelectBarCode
       StoredProcList = <
+        item
+          StoredProc = spSelectBarCode
+        end
         item
           StoredProc = spSelect
         end>
@@ -1086,10 +1096,18 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDocumentId_Transport'
+        Name = 'inDocumentId_TransportTop'
         Value = Null
         Component = TransportChoiceGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentId_Transport'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_Transport'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1116,8 +1134,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   end
   inherited HeaderSaver: THeaderSaver
     StoredProc = nil
-    Left = 440
-    Top = 105
+    Left = 800
+    Top = 49
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1186,7 +1204,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDocumentId_Transport'
+        Name = 'inDocumentId_TransportTop'
         Value = Null
         Component = TransportChoiceGuides
         ComponentItem = 'Key'
@@ -1194,11 +1212,27 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outInvNumber'
+        Name = 'inDocumentId_Transport'
         Value = Null
-        Component = edInvNumber
+        Component = ClientDataSet
+        ComponentItem = 'BarCode_Transport'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvnumber_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 88
@@ -1391,8 +1425,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 313
-    Top = 13
+    Left = 297
+    Top = 21
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -1503,7 +1537,15 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inBarCode_Transport'
+        Value = Null
+        Component = TransportChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 352
     Top = 160
@@ -1543,5 +1585,18 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Params = <>
     Left = 708
     Top = 257
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = TransportChoiceGuides
+      end
+      item
+      end>
+    Left = 496
+    Top = 152
   end
 end

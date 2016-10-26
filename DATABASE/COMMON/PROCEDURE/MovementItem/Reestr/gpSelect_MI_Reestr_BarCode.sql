@@ -1,12 +1,15 @@
 -- Function: gpSelect_MI_Reestr_BarCode()
 
 DROP FUNCTION IF EXISTS gpSelect_MI_Reestr_BarCode (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Reestr_BarCode (Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr_BarCode(
+    IN inBarCode_Transport Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BarCode TVarChar
-           --, BarCode1 TVarChar
+             , BarCode_Transport TVarChar
               )
 AS
 $BODY$
@@ -19,8 +22,10 @@ BEGIN
      -- Результат
      RETURN QUERY 
 
-       SELECT CAST (Null AS TVarChar)  AS BarCode;
-           -- , CAST (Null AS TVarChar)  AS BarCode1;
+       SELECT CAST (Null AS TVarChar)  AS BarCode
+            , CASE WHEN COALESCE  (inBarCode_Transport , NUll) = Null OR COALESCE (inBarCode_Transport , NUll) = 0 THEN Null
+                   ELSE COALESCE  (inBarCode_Transport , NUll) 
+              END ::TVarChar  AS BarCode_Transport;
   
 END;
 $BODY$
@@ -35,3 +40,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_MI_Reestr_BarCode ( inSession:= zfCalc_UserAdmin())
 --4323306
+--4306286

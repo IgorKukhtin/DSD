@@ -939,8 +939,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       item
         Component = ReestrKindGuides
       end>
-    Left = 784
-    Top = 272
+    Left = 808
+    Top = 288
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement'
@@ -1183,7 +1183,13 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inBarCode_Transport'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 688
     Top = 96

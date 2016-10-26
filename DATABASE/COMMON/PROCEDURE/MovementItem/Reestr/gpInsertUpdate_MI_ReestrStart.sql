@@ -2,19 +2,23 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReestrStart(
-   OUT outId                  Integer   , -- Ключ объекта <Документ>
-   --OUT outInvNumber           TVarChar  , -- Номер документа
-    IN inBarCode              TVarChar  , 
-    IN inOperDate             TDateTime , -- Дата документа
-    IN inCarId                Integer   , -- Автомобиль
-    IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
-    IN inMemberId             Integer   , -- Физические лица(экспедитор)
-    IN inDocumentId_Transport Integer   , -- Путевой лист/Начисления наемный транспорт
-    IN inSession              TVarChar    -- сессия пользователя
+   OUT outId                      Integer   , -- Ключ объекта <Документ>
+   --OUT outInvNumber             TVarChar  , -- Номер документа
+    IN inBarCode                  TVarChar  , 
+    IN inOperDate                 TDateTime , -- Дата документа
+    IN inCarId                    Integer   , -- Автомобиль
+    IN inPersonalDriverId         Integer   , -- Сотрудник (водитель)
+    IN inMemberId                 Integer   , -- Физические лица(экспедитор)
+    IN inDocumentId_TransportTop  Integer   , -- Путевой лист/Начисления наемный транспорт
+    IN inDocumentId_Transport     Integer   , -- Путевой лист/Начисления наемный транспорт
+   OUT outDocumentId_Transport    Integer   , -- Путевой лист/Начисления наемный транспорт
+   OUT outInvNumber_Transport     TVarChar   , -- Путевой лист/Начисления наемный транспорт
+    IN inSession                  TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -27,16 +31,16 @@ BEGIN
 	Return;
     END IF;
   
-    IF COALESCE (inDocumentId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0 THEN 
+    IF COALESCE (inDocumentId_TransportTop, 0) = 0 AND COALESCE (inDocumentId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0 THEN 
         RAISE EXCEPTION 'Ошибка. Параметр Путевой лист или Автомобиль должен быть определен.';
     END IF;
 
          -- ищем док Реестр 
-         IF COALESCE (inDocumentId_Transport, 0) <> 0 THEN 
+         IF COALESCE (inDocumentId_Transport, COALESCE (inDocumentId_TransportTop,0)) <> 0 THEN 
            outId := ( SELECT MLM_Transport.MovementId AS Id
                      FROM MovementLinkMovement AS MLM_Transport
                      WHERE MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
-                       AND MLM_Transport.MovementChildId = inDocumentId_Transport);
+                       AND MLM_Transport.MovementChildId = COALESCE (inDocumentId_Transport, COALESCE (inDocumentId_TransportTop,0)));
          ELSE
            IF COALESCE (inCarId, 0) <> 0 THEN 
               outId := ( SELECT Movement.Id AS Id
@@ -58,7 +62,7 @@ BEGIN
                                                  , inCarId            := inCarId
                                                  , inPersonalDriverId := inPersonalDriverId
                                                  , inMemberId         := inMemberId
-                                                 , inDocumentId_Transport := inDocumentId_Transport
+                                                 , inDocumentId_Transport := COALESCE (inDocumentId_Transport, COALESCE (inDocumentId_TransportTop,0))
                                                  , inUserId           := vbUserId
                                                  ) AS tmp;
          ELSE
@@ -68,7 +72,7 @@ BEGIN
                                                  , inCarId            := COALESCE (MovementLinkObject_Car.ObjectId, inCarId)
                                                  , inPersonalDriverId := COALESCE (MovementLinkObject_PersonalDriver.ObjectId, inPersonalDriverId)
                                                  , inMemberId         := COALESCE (MovementLinkObject_Member.ObjectId, inMemberId)
-                                                 , inDocumentId_Transport := COALESCE (MovementLinkMovement_Transport.MovementChildId, inDocumentId_Transport) 
+                                                 , inDocumentId_Transport := COALESCE (MovementLinkMovement_Transport.MovementChildId, COALESCE (inDocumentId_Transport, COALESCE (inDocumentId_TransportTop,0))) 
                                                  , inUserId           := vbUserId
                                                   ) 
                    FROM Movement
@@ -108,7 +112,11 @@ BEGIN
        -- сохранили связь с <Состояние по реестру>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), zc_Enum_ReestrKind_PartnerOut());
 
-    
+       -- возвращаем параметры путевого листа
+       SELECT Movement.Id, Movement.Invnumber
+      INTO outDocumentId_Transport, outInvNumber_Transport
+       FROM Movement
+       WHERE Movement.Id = COALESCE (inDocumentId_Transport, COALESCE (inDocumentId_TransportTop,0));
 
 END;
 $BODY$
@@ -122,4 +130,4 @@ $BODY$
 
 -- тест
 ----RAISE EXCEPTION 'Ошибка.%, %', outId, vbMIId;
---select * from gpInsertUpdate_MI_ReestrStart(inBarCode := '4323306' , inOperDate := ('23.10.2016')::TDateTime , inCarId := 340655 , inPersonalDriverId := 0 , inMemberId := 0 , inDocumentId_Transport := 2298218 ,  inSession := '5');
+--select * from gpInsertUpdate_MI_ReestrStart(inBarCode := '4323306' , inOperDate := ('23.10.2016')::TDateTime , inCarId := 340655 , inPersonalDriverId := 0 , inMemberId := 0 , inDocumentId_TransportTop := 2298218 ,  inSession := '5');
