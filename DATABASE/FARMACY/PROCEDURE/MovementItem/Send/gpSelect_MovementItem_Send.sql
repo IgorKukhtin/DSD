@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, AmountRemains TFloat, PriceIn TFloat, SumPriceIn TFloat
+             , Amount TFloat, AmountRemains TFloat, AmountCheck TFloat
+             , PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
              , AmountManual TFloat, AmountDiff TFloat
@@ -22,6 +23,8 @@ $BODY$
     DECLARE vbUnitFromId Integer;
     DECLARE vbUnitToId Integer;
     DECLARE vbisAuto Boolean;
+    DECLARE vbOperDate TDateTime;
+    DECLARE vbOperDateEnd TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
@@ -31,9 +34,11 @@ BEGIN
     SELECT MovementLinkObject_From.ObjectId
          , MovementLinkObject_To.ObjectId
          , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean
+         , date_trunc('day', Movement.OperDate)
     INTO vbUnitFromId
        , vbUnitToId 
        , vbisAuto
+       , vbOperDate
     FROM Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = Movement.ID
@@ -44,8 +49,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-    WHERE 
-        Movement.Id = inMovementId;
+    WHERE Movement.Id = inMovementId;
+
+    vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
 
     -- Результат
     IF inShowAll THEN
@@ -77,6 +83,25 @@ BEGIN
                                   AND Container.Amount <> 0
                                 GROUP BY Container.ObjectId
                              )
+         --
+         , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitFromId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                          AND Movement_Check.DescId = zc_Movement_Check()
+                          AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY MI_Check.ObjectId 
+                        HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
                ,MovementItem_Send AS (  SELECT 
                                             MovementItem.Id
                                            ,MovementItem.ObjectId
@@ -94,6 +119,7 @@ BEGIN
               , Object_Goods.GoodsName                            AS GoodsName
               , MovementItem_Send.Amount                          AS Amount
               , tmpRemains.Amount::TFloat                         AS AmountRemains
+              , tmpCheck.Amount::TFloat                           AS AmountCheck
               , COALESCE(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount)
                         ,tmpRemains.PriceIn)::TFloat           AS PriceIn
               , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
@@ -154,14 +180,16 @@ BEGIN
                                                   ON MIFloat_Price.MovementItemId = MovementItem.ID
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
-            -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
-            LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
-                                        ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.ID
-                                       AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
-            -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                        ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                -- цена с учетом НДС, для элемента прихода от поставщика (или NULL)
+                LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
+                                            ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.ID
+                                           AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                -- цена с учетом НДС, для элемента прихода от поставщика без % корректировки  (или NULL)
+                LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                            ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                           AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+                LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
 
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null
@@ -172,6 +200,7 @@ BEGIN
               , Object_Goods.GoodsName
               , MovementItem_Send.Amount
               , tmpRemains.Amount
+              , tmpCheck.Amount
               , tmpRemains.PriceIn
               , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END
               , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END
@@ -205,6 +234,25 @@ BEGIN
                                   AND Container.Amount <> 0
                                 GROUP BY Container.ObjectId
                                 )
+
+         , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitFromId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                          AND Movement_Check.DescId = zc_Movement_Check()
+                          AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                        GROUP BY MI_Check.ObjectId 
+                        HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
            ,MovementItem_Send AS (SELECT MovementItem.Id
                                         ,MovementItem.ObjectId
                                         ,MovementItem.Amount
@@ -221,6 +269,7 @@ BEGIN
            , Object_Goods.GoodsName                            AS GoodsName
            , MovementItem_Send.Amount                          AS Amount
            , tmpRemains.Amount::TFloat                         AS AmountRemains
+           , tmpCheck.Amount::TFloat                           AS AmountCheck
            , COALESCE(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData)/SUM(MIContainer_Count.Amount)
                         ,tmpRemains.PriceIn)::TFloat           AS PriceIn
            , COALESCE(ABS(SUM(MIContainer_Count.Amount * MIFloat_Price.ValueData))
@@ -239,7 +288,7 @@ BEGIN
            , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
            , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
 
-           , MovementItem_Send.IsErased                        AS isErased
+           , MovementItem_Send.IsErased              AS isErased
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -288,14 +337,16 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
 
        GROUP BY
-              MovementItem_Send.Id
+             MovementItem_Send.Id
            , Object_Goods.Id
            , Object_Goods.GoodsCodeInt
            , Object_Goods.GoodsName
            , MovementItem_Send.Amount
            , tmpRemains.Amount
+           , tmpCheck.Amount
            , tmpRemains.PriceIn
            , CASE WHEN vbisAuto = False THEN Object_Price_From.Price ELSE COALESCE(MIFloat_PriceFrom.ValueData,0) END 
            , CASE WHEN vbisAuto = False THEN Object_Price_To.Price ELSE COALESCE(MIFloat_PriceTo.ValueData,0) END     
@@ -315,6 +366,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.10.16         *
  20.06.16         *
  10.05.16         *
  15.10.14         * add Price, Storage_Partion

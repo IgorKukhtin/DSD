@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , isErased Boolean
              , AmountInIncome TFloat
              , Remains TFloat
+             , AmountCheck TFloat
              , WarningColor Integer
              , ExpirationDate TDateTime
              , PartionGoods TVarChar
@@ -25,6 +26,9 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbMovementIncomeId Integer;
+  DECLARE vbUnitId Integer;
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDateEnd TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -34,12 +38,16 @@ BEGIN
     --Номер прихода
     SELECT 
         Movement.ParentId 
-    INTO
-        vbMovementIncomeId
-    FROM 
-        Movement
-    WHERE 
-        Movement.Id = inMovementId;
+      , Movement.OperDate 
+      , MovementLinkObject_Unit.ObjectId
+    INTO vbMovementIncomeId, vbOperDate, vbUnitId
+    FROM Movement
+        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
+    WHERE Movement.Id = inMovementId;
+
+    vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
 
     --Результат    
     IF inShowAll THEN
@@ -65,8 +73,26 @@ BEGIN
                                 MovementItem_Income.MovementId = vbMovementIncomeId
                                 AND
                                 MovementItem_Income.isErased = FALSE
-                          ),
-                ReturnOut AS (
+                          )
+         , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                           AND Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                         GROUP BY MI_Check.ObjectId 
+                         HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
+               ,  ReturnOut AS (
                                 SELECT
                                     Movement_ReturnOut.StatusId
                                    ,MI_ReturnOut.Id
@@ -104,6 +130,7 @@ BEGIN
                       THEN MovementItem_ReturnOut.Amount
                     ELSE 0
                     END)::TFloat                                                          AS Remains
+              , tmpCheck.Amount::TFloat                                                   AS AmountCheck
               , CASE 
                   WHEN MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
                        MovementItem_ReturnOut.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
@@ -128,7 +155,9 @@ BEGIN
                                             AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
             LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                   ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
-                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() ;
+                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker() 
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = COALESCE(MovementItem_ReturnOut.GoodsId, MovementItem_Income.GoodsId)
+;
 
     ELSE
         RETURN QUERY
@@ -151,8 +180,8 @@ BEGIN
                                 MovementItem_Income.MovementId = vbMovementIncomeId
                                 AND
                                 MovementItem_Income.isErased = FALSE
-                          ),
-                ReturnOut AS (
+                          )
+              , ReturnOut AS (
                                 SELECT
                                     Movement_ReturnOut.StatusId
                                    ,MI_ReturnOut.Id
@@ -171,8 +200,26 @@ BEGIN
                                                                           AND (MI_ReturnOut.isErased = FALSE OR inIsErased = TRUE)
                                 WHERE
                                     Movement_ReturnOut.Id = inMovementId
-                                    
                              )
+
+         , tmpCheck AS (SELECT MI_Check.ObjectId                AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat   AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                           AND Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                         GROUP BY MI_Check.ObjectId 
+                         HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
             SELECT
                 MovementItem.Id
               , MovementItem.ParentId  
@@ -189,6 +236,7 @@ BEGIN
                       THEN MovementItem.Amount
                     ELSE 0
                     END)::TFloat AS Remains
+              , tmpCheck.Amount::TFloat                   AS AmountCheck
               , CASE 
                   WHEN MovementItem.Amount > COALESCE(MovementItem_Income.AmountInIncome,0) or
                        MovementItem.Amount > COALESCE(MovementItem_Income.AmountRemains,0)
@@ -216,6 +264,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                   ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
                                  AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()   
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = MovementItem.GoodsId
             
 
 ;
@@ -227,6 +276,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.10.16         *
  14.04.16         *
  10.02.15                         *
  

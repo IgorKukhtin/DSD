@@ -54,6 +54,11 @@ inherited ReturnOutForm: TReturnOutForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountCheck
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,6 +93,11 @@ inherited ReturnOutForm: TReturnOutForm
               Format = ',0.00'
               Kind = skSum
               Column = colSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountCheck
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -177,6 +187,18 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object clAmountCheck: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
+            DataBinding.FieldName = 'AmountCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093
+            Options.Editing = False
+            Width = 77
           end
           object colAmountInIncome: TcxGridDBColumn
             AlternateCaption = #1042' '#1087#1088#1080#1093#1086#1076#1077
