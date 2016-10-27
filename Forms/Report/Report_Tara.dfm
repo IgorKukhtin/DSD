@@ -1217,7 +1217,7 @@ inherited Report_TaraForm: TReport_TaraForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'operdate;MovementDescName;InvNumber;GoodsName'
+          IndexFieldNames = 'operdate;BranchName;MovementDescName;InvNumber'
         end>
       Params = <
         item
@@ -1253,7 +1253,7 @@ inherited Report_TaraForm: TReport_TaraForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'operdate;MovementDescName;InvNumber;GoodsName'
+          IndexFieldNames = 'operdate;BranchName;MovementDescName;InvNumber'
         end>
       Params = <
         item
