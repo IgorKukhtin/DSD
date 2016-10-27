@@ -263,6 +263,20 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 40
           end
+          object clReceiptName: TcxGridDBColumn
+            Caption = #1056#1077#1094#1077#1087#1090#1091#1088#1072
+            DataBinding.FieldName = 'ReceiptName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ReceiptChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
@@ -417,6 +431,49 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindSubName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object ReceiptChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TReceipt_ObjectForm'
+      FormName = 'TReceipt_ObjectForm'
+      FormNameParam.Value = 'TReceipt_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -599,6 +656,14 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindSubId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

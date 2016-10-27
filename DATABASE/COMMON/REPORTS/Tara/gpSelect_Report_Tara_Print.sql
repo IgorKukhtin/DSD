@@ -134,8 +134,9 @@ BEGIN
               GROUP BY tmpContainer.Amount, tmpContainer.Id
               ) AS tmp
                LEFT JOIN Object AS Object_UnitOrPartner ON Object_UnitOrPartner.Id = inWhereObjectId
-               LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id =inGoodsOrGroupId
+               LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = inGoodsOrGroupId
         GROUP BY Object_UnitOrPartner.ValueData 
+               , Object_GoodsOrGroup.ValueData 
 
         HAVING
               SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) <> 0 OR
@@ -216,12 +217,8 @@ BEGIN
             LEFT OUTER JOIN Movement ON Movement.Id = DDD.MovementId
             LEFT OUTER JOIN MovementDesc ON MovementDesc.Id = DDD.MovementDescId
 
-            LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                       ON ObjectLink_Unit_Branch.ObjectId = inWhereObjectId
-                                      AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                      AND Object_UnitOrPartner.DescId = zc_Object_Unit()
             LEFT OUTER JOIN OBJECT AS Object_Branch
-                                   ON Object_Branch.Id = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, DDD.BranchId)
+                                   ON Object_Branch.Id = DDD.BranchId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = DDD.PaidKindId
 
     ;

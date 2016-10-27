@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isOrder Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
+             , ReceiptId Integer, ReceiptName TVarChar
 )
 AS
 $BODY$
@@ -63,6 +64,9 @@ BEGIN
 
            , Object_GoodsKindSub.Id           AS GoodsKindSubId
            , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
+
+           , Object_Receipt.Id                AS ReceiptId
+           , Object_Receipt.ValueData         AS ReceiptName
          
        FROM Object_GoodsByGoodsKind_View
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
@@ -135,6 +139,11 @@ BEGIN
                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
            LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
+                                ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectLink_GoodsByGoodsKind_Receipt.DescId = zc_ObjectLink_GoodsByGoodsKind_Receipt()
+           LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
+
       ;
 
 END;
@@ -146,6 +155,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.10.16        * add zc_ObjectLink_GoodsByGoodsKind_Receipt
  26.07.16        *
  17.06.15                                       * all
  18.03.15        * add redmine 17.03.2015
