@@ -4,8 +4,6 @@ inherited CheckJournalForm: TCheckJournalForm
   ClientWidth = 831
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -58
-  ExplicitTop = -132
   ExplicitWidth = 847
   ExplicitHeight = 589
   PixelsPerInch = 96
@@ -206,9 +204,9 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 102
           end
-          object Comment: TcxGridDBColumn
+          object CommentError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072' '#1086#1089#1090#1072#1090#1086#1082' - '#1058#1086#1074#1072#1088'/'#1088#1072#1089#1095'/'#1092#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Comment'
+            DataBinding.FieldName = 'CommentError'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -369,6 +367,10 @@ inherited CheckJournalForm: TCheckJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -566,6 +568,22 @@ inherited CheckJournalForm: TCheckJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Check'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
     Left = 88
     Top = 392
   end

@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
-             , Comment TVarChar
+             , CommentError TVarChar
              , InsertName TVarChar, InsertDate TDateTime
               )
 AS
@@ -36,7 +36,7 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- определяем Торговую сеть входящего подразделения
-     vbRetailId:= CASE WHEN vbUserId = 3
+     vbRetailId:= CASE WHEN vbUserId IN (3, 183242, 375661) -- Админ + Люба + Юра
                   THEN vbObjectId
                   ELSE
                   (SELECT ObjectLink_Juridical_Retail.ChildObjectId
@@ -81,9 +81,9 @@ BEGIN
            , Movement_Check.ConfirmedKindName
            , Movement_Check.ConfirmedKindClientName
 
-          , MovementString_Comment.ValueData     AS Comment
-          , Object_Insert.ValueData              AS InsertName
-          , MovementDate_Insert.ValueData        AS InsertDate
+          , MovementString_CommentError.ValueData AS CommentError
+          , Object_Insert.ValueData               AS InsertName
+          , MovementDate_Insert.ValueData         AS InsertDate
 
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId
@@ -92,9 +92,9 @@ BEGIN
                                  AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
              LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
                            
-             LEFT JOIN MovementString AS MovementString_Comment
-                                      ON MovementString_Comment.MovementId = Movement_Check.Id
-                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+             LEFT JOIN MovementString AS MovementString_CommentError
+                                      ON MovementString_CommentError.MovementId = Movement_Check.Id
+                                     AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
 
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_Check.Id
@@ -105,7 +105,7 @@ BEGIN
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
 
        WHERE Movement_Check.OperDate >= DATE_TRUNC ('DAY', inStartDate) AND Movement_Check.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
-         AND (Movement_Check.UnitId = inUnitId)
+         AND (Movement_Check.UnitId = inUnitId OR (MovementString_CommentError.ValueData <> '' AND inUnitId = 0))
          AND (vbRetailId = vbObjectId)
       ;
 

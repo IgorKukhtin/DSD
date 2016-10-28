@@ -77,7 +77,9 @@ BEGIN
          inProfitLossId          := inProfitLossId,
          inBranchId              := inBranchId,
          inUserId                := vbUserId
-       );
+       ) AS tmp
+    WHERE SummStart <> 0 OR SummIn <> 0 OR SummOut <> 0 OR SummEnd <> 0
+   ;
 
 
 END;

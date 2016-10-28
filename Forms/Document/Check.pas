@@ -47,6 +47,7 @@ type
     List_UID: TcxGridDBColumn;
     edConfirmedKindClient: TcxTextEdit;
     cxLabel11: TcxLabel;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

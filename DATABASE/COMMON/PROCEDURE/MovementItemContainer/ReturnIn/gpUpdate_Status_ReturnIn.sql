@@ -27,7 +27,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_ReturnIn (inMovementId, inSession);
          ELSE
-            RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
+            RAISE EXCEPTION 'Нет статуса с кодом <%>', ioStatusCode;
      END CASE;
 
      -- Вернули статус (вдруг он не изменился)

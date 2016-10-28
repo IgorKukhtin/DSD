@@ -28,6 +28,7 @@ $BODY$
   DECLARE vbPaidTypeId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbCashRegisterId Integer;
+  DECLARE vbMessageText Text;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Check());
@@ -40,8 +41,8 @@ BEGIN
         -- Перебили дату документа
         -- UPDATE Movement SET OperDate = CURRENT_TIMESTAMP WHERE Movement.Id = inMovementId; /*Дата проведения хранится в локальной базе и не должна перебиваться*/
 
-        -- Поиск
-        vbUnitId:= (SELECT MLO_Unit.ObjectId FROM MovementLinkObject AS MLO_Unit WHERE MLO_Unit.MovementId = inMovementId AND MLO_Unit.DescId = zc_MovementLinkObject_Unit();
+        -- Определить
+        vbUnitId:= (SELECT MLO_Unit.ObjectId FROM MovementLinkObject AS MLO_Unit WHERE MLO_Unit.MovementId = inMovementId AND MLO_Unit.DescId = zc_MovementLinkObject_Unit());
         
         -- сохранили тип оплаты
         IF inPaidType = 0
@@ -71,9 +72,9 @@ BEGIN
         -- пересчитали Итоговые суммы
         PERFORM lpInsertUpdate_MovementFloat_TotalSummCheck (inMovementId);
 
-        -- собственно проводки
-        PERFORM lpComplete_Movement_Check(inMovementId, -- ключ Документа
-                                          vbUserId);    -- Пользователь
+
+        -- формируются проводки
+        vbMessageText:= COALESCE (lpComplete_Movement_Check (inMovementId, vbUserId), '');
 
 
         -- доводим снапшет до текущего состояния на клиенте
@@ -86,6 +87,7 @@ BEGIN
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = FALSE
                 AND MovementItem.Amount > 0
+                AND vbMessageText = ''
               GROUP BY MovementItem.ObjectId
              ) AS MovementItem
         WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -105,16 +107,15 @@ BEGIN
         WITH -- Текущий остаток
              GoodsRemains AS (SELECT Container.ObjectId 
                                    , SUM (Amount) AS Remains
-                              FROM container
-                                   -- INNER JOIN containerlinkobject AS CLO_Unit
-                                                                 --  ON CLO_Unit.containerid = container.id
+                              FROM Container
+                                   -- INNER JOIN Containerlinkobject AS CLO_Unit
+                                                                 --  ON CLO_Unit.Containerid = Container.id
                                                                  -- AND CLO_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                 -- AND CLO_Unit.objectid = vbUnitId
-                              FROM container
-                              WHERE Container.descid = zc_container_count() 
+                                                                 -- AND CLO_Unit.ObjectId = vbUnitId
+                              WHERE Container.descid = zc_Container_count() 
                                 AND Container.WhereObjectId = vbUnitId
                                 AND Amount <> 0
-                              GROUP BY container.objectid
+                              GROUP BY Container.ObjectId
                              )
              -- резерв
            , RESERVE AS (SELECT MovementItem_Reserve.GoodsId

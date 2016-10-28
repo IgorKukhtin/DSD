@@ -4,33 +4,28 @@ DROP FUNCTION IF EXISTS gpReComplete_Movement_Check (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReComplete_Movement_Check(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outMessageText      Text      ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
+
     -- только если документ проведен
-    IF EXISTS(
-                SELECT 1
-                FROM Movement
-                WHERE
-                    Id = inMovementId
-                    AND
-                    StatusId = zc_Enum_Status_Complete()
-             )
+    IF EXISTS(SELECT 1 FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_Complete())
     THEN
-        --распроводим документ
+        -- распроводим документ
         PERFORM gpUpdate_Status_Check(inMovementId := inMovementId,
-                                      inStatusCode := zc_Enum_StatusCode_UnComplete(),
+                                      ioStatusCode := zc_Enum_StatusCode_UnComplete(),
                                       inSession    := inSession);
-        --Проводим документ
-        PERFORM gpUpdate_Status_Check(inMovementId := inMovementId,
-                                      inStatusCode := zc_Enum_StatusCode_Complete(),
-                                      inSession    := inSession);
+        -- Проводим документ
+        outMessageText:= gpUpdate_Status_Check (inMovementId := inMovementId,
+                                                ioStatusCode := zc_Enum_StatusCode_Complete(),
+                                                inSession    := inSession);
     END IF;
 END;
 $BODY$

@@ -251,8 +251,14 @@ ALTER FUNCTION gpSelect_Report_SoldDay (TDateTime, Integer, Boolean, TVarChar) O
 -- !!!
 -- !!!ПЕРЕПРОВЕДЕНИЕ!!!, что б отчеты сходились :)
 -- !!!
-select Movement.InvNumber, Movement.OperDate, Object_From.ValueData, MIFloat_Price.ValueData, tmp.*, Object.*
+select * -- , lpInsertUpdate_MovementString (zc_MovementString_CommentError(), tmp.MovementId, tmp.NewValue)
+from
+(select tmp.MovementId,  STRING_AGG (tmp.Value, '(+)') AS NewValue
+from
+(select Movement.InvNumber, Movement.OperDate, Object_From.ValueData, MIFloat_Price.ValueData, tmp.*, Object.ObjectCode AS GoodsCode, Object.ValueData AS GoodsName
      , Object_CheckMember.ValueData AS MemberName
+     ,'(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' Кол: ' || zfConvert_FloatToString (calcAmount) || '/' || zfConvert_FloatToString (Amount) AS Value
+
    -- , gpReComplete_Movement_Check (Movement.Id, '3')
 from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.Amount, coalesce (-1 * SUM (MIContainer.Amount), 0) as calcAmount , Movement_Check.Id as MovementId
       FROM
@@ -277,6 +283,11 @@ from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.
       group by Movement_Check.InvNumber, MI_Check.Id, MI_Check.Amount , Movement_Check.Id, MI_Check.ObjectId
       having MI_Check.Amount <> coalesce (-1 * SUM (MIContainer.Amount), 0)
       ) as tmp 
+             LEFT JOIN MovementString AS MovementString_CommentError
+                                      ON MovementString_CommentError.MovementId = tmp.MovementId
+                                     AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                     AND MovementString_CommentError.ValueData <> ''
+
              LEFT JOIN Object on Object.Id = tmp.ObjectId
              LEFT JOIN Movement on  Movement.Id = tmp.MovementId
              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -290,6 +301,11 @@ from (select Movement_Check.InvNumber, MI_Check.Id, MI_Check.ObjectId, MI_Check.
              LEFT OUTER JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId =  tmp.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+where MovementString_CommentError.MovementId IS NULL
+) as tmp
+group by tmp.MovementId
+) as tmp
+
 select *  FROM MovementItem where Id = 26009762
 select *  FROM MovementItemContainer where MovementItemId = 26009762
 */

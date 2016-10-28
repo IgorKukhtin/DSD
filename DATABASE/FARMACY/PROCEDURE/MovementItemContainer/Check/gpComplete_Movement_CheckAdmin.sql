@@ -8,9 +8,10 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_CheckAdmin(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
     IN inCashRegisterId    Integer              , --№ кассового аппарата
+   OUT outMessageText      Text      ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Text
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -77,24 +78,26 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущей продажи. Проведение документа запрещено!';
     END IF; */   
     
-    --прописали тип оплаты
-    if inPaidType = 0 then
+    -- Сохранили связь с тип оплаты
+    if inPaidType = 0 THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Cash());
     ELSEIF inPaidType = 1 THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_PaidType(),inMovementId,zc_Enum_PaidType_Card());
     ELSE
         RAISE EXCEPTION 'Ошибка.Не определен тип оплаты';
     END IF;
-    --Сохранили связь с кассовым аппаратом
+
+    -- Сохранили связь с кассовым аппаратом
     IF inCashRegisterId <> 0 THEN
         PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_CashRegister(),inMovementId,inCashRegisterId);
     END IF;
+
     -- пересчитали Итоговые суммы
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-    -- собственно проводки
-    PERFORM lpComplete_Movement_Check(inMovementId, -- ключ Документа
-                                      vbUserId);    -- Пользователь                          
+    -- формируются проводки
+    outMessageText:= lpComplete_Movement_Check (inMovementId, vbUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

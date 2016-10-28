@@ -15,6 +15,15 @@ $BODY$
    DECLARE vbOperSumm_Partner_byItem TFloat;
    DECLARE vbUnitId Integer;
    DECLARE vbOperDate TDateTime;
+
+   DECLARE vbMovementItemId Integer;
+   DECLARE vbContainerId Integer;
+   DECLARE vbGoodsId Integer;
+   DECLARE vbAmount TFloat;
+   DECLARE vbAmount_remains TFloat;
+
+   DECLARE curRemains refcursor;
+   DECLARE curSale refcursor;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -139,107 +148,158 @@ BEGIN
  */
 
     -- данные почти все
-    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMIContainer_remains'))
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))
     THEN
-        DELETE FROM _tmpMIContainer_remains;
+        DELETE FROM _tmpItem_remains;
     ELSE
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpMIContainer_remains (MovementItemId Integer, GoodsId Integer, SaleAmount TFloat, ContainerAmount TFloat, ContainerId Integer, ContainerAmountSUM TFloat, DOrd Integer, SaleAmountTotal TFloat, ContainerAmountTotal TFloat);
+        CREATE TEMP TABLE _tmpItem_remains (GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime);
     END IF;
 
-    -- предварительно сохранили остаток + продажи + найденный 1 элемент 
-    INSERT INTO _tmpMIContainer_remains (MovementItemId, GoodsId, SaleAmount, ContainerAmount, ContainerId, ContainerAmountSUM, DOrd, SaleAmountTotal, ContainerAmountTotal)
-       WITH tmpMI AS (SELECT * FROM MovementItem AS MI_Sale WHERE MI_Sale.MovementId = inMovementId AND MI_Sale.Amount > 0 AND MI_Sale.isErased = FALSE)
-          , tmpContainer AS (SELECT MI_Sale.Id          AS MovementItemId
-                                  , MI_Sale.ObjectId    AS GoodsId
-                                  , MI_Sale.Amount      AS SaleAmount
-                                  , Container.Amount    AS ContainerAmount
-                                  , Container.Id        AS ContainerId
-                                  , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id, MI_Sale.Id) AS ContainerAmountSUM
-                                  , ROW_NUMBER() OVER (PARTITION BY MI_Sale.ObjectId /*MI_Sale.Id*/ ORDER BY Movement.OperDate DESC, Container.Id DESC, MI_Sale.Id DESC) AS DOrd
-                             FROM tmpMI AS MI_Sale
-                                  INNER JOIN Container ON Container.DescId = zc_Container_Count()
-                                                      AND Container.WhereObjectId = vbUnitId
-                                                      AND Container.ObjectId = MI_Sale.ObjectId
-                                                      AND Container.Amount > 0
-                                  INNER JOIN ContainerLinkObject AS CLI_MI
-                                                                 ON CLI_MI.ContainerId = Container.Id
-                                                                AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                                  INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                                  INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                            )
-          , tmp_check AS (SELECT tmpFrom.GoodsId, tmpFrom.SaleAmount, COALESCE (tmpTo.ContainerAmount, 0) AS ContainerAmount
-                          FROM (SELECT tmpMI.ObjectId AS GoodsId, SUM (tmpMI.Amount) AS SaleAmount FROM tmpMI GROUP BY tmpMI.ObjectId
-                               ) AS tmpFrom
-                               LEFT JOIN (SELECT tmpContainer.GoodsId, MAX (tmpContainer.ContainerAmountSUM) AS ContainerAmount FROM tmpContainer GROUP BY tmpContainer.GoodsId
-                                         ) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId
-                          WHERE tmpFrom.SaleAmount > COALESCE (tmpTo.ContainerAmount, 0)
-                          ORDER BY tmpFrom.SaleAmount DESC
-                         )
-       -- результат
-       SELECT tmpMI.Id         AS MovementItemId
-            , tmpMI.ObjectId   AS GoodsId
-            , tmpMI.Amount     AS SaleAmount
-            , COALESCE (tmpContainer.ContainerAmount, 0)     AS ContainerAmount
-            , COALESCE (tmpContainer.ContainerId, 0)         AS ContainerId
-            , COALESCE (tmpContainer.ContainerAmountSUM, 0)  AS ContainerAmountSUM
-            , COALESCE (tmpContainer.DOrd, 0)                AS DOrd
-            , tmp_check.SaleAmount                           AS SaleAmountTotal
-            , tmp_check.ContainerAmount                      AS ContainerAmountTotal
-       FROM tmpMI
-            LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.Id
-            LEFT JOIN tmp_check    ON tmp_check.GoodsId           = tmpMI.ObjectId
-      ;
+    -- предварительно сохранили продажи
+    INSERT INTO _tmpItem (MovementItemId, ObjectId, OperSumm)
+       SELECT Id, ObjectId, Amount FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.Amount > 0 AND MI.isErased = FALSE;
+    -- предварительно сохранили остаток
+    INSERT INTO _tmpItem_remains (GoodsId, ContainerId, Amount, OperDate)
+       SELECT Container.ObjectId AS GoodsId
+            , Container.Id       AS ContainerId
+            , Container.Amount
+            , Movement.OperDate
+       FROM (SELECT DISTINCT ObjectId FROM _tmpItem) AS tmp
+            INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                AND Container.WhereObjectId = vbUnitId
+                                AND Container.ObjectId = tmp.ObjectId
+                                AND Container.Amount > 0
+            INNER JOIN ContainerLinkObject AS CLI_MI
+                                           ON CLI_MI.ContainerId = Container.Id
+                                          AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+            INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+            INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+            INNER JOIN Movement ON Movement.Id = MovementItem.MovementId;
 
 
-       -- Проверим что б БЫЛ остаток
-       IF EXISTS (SELECT 1 FROM _tmpMIContainer_remains WHERE SaleAmountTotal > ContainerAmountTotal)
-       THEN
+    -- Проверим что б БЫЛ остаток
+    IF EXISTS (SELECT 1 FROM (SELECT ObjectId AS GoodsId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0))
+    THEN
            -- Ошибка расч/факт остаток :
            outMessageText:= '<' || (SELECT STRING_AGG (tmp.Value, '(+)')
-                                    FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' Кол: ' || zfConvert_FloatToString (ContainerAmountTotal) || '/' || zfConvert_FloatToString (SaleAmountTotal) AS Value
-                                          FROM (SELECT DISTINCT GoodsId, SaleAmountTotal, ContainerAmountTotal FROM _tmpMIContainer_remains WHERE SaleAmountTotal > ContainerAmountTotal) AS tmp
+                                    FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' Кол: ' || zfConvert_FloatToString (AmountFrom) || '/' || zfConvert_FloatToString (AmountTo) AS Value
+                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo FROM (SELECT ObjectId AS GoodsId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
                                                LEFT JOIN Object ON Object.Id = tmp.GoodsId
                                          ) AS tmp
                                     )
                          || '>';
 
            -- Сохранили ошибку
-           PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), inMovementId, outMessageText);
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, outMessageText);
 
            -- кроме Админа
            IF inUserId <> 3
            THEN
                -- больше ничего не делаем
                RETURN;
-           ELSE
-               DELETE FROM _tmpMIContainer_remains WHERE ContainerId = 0;
            END IF;
 
-       END IF;
+     END IF;
 
 
-    -- Результат - проводки кол-во
-    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
-    SELECT 
-        zc_Container_Count()
-      , zc_Movement_Check()  
-      , inMovementId
-      , tmpItem.MovementItemId
-      , tmpItem.ContainerId
-      , vbAccountId
-      , - Amount
-      , vbOperDate
-    FROM (SELECT ContainerId
-               , MovementItemId
-               , CASE WHEN SaleAmount - ContainerAmountSUM > 0 AND DOrd <> 1
-                           THEN ContainerAmount
-                      ELSE SaleAmount - ContainerAmountSUM + ContainerAmount
-                 END AS Amount
-          FROM (SELECT * FROM _tmpMIContainer_remains) AS DD
-          WHERE SaleAmount - (ContainerAmountSUM - ContainerAmount) > 0
-         ) AS tmpItem;
+    -- !!!Только если товар дублируется - Распределим по старинке!!!
+    IF EXISTS (SELECT 1 FROM _tmpItem GROUP BY ObjectId HAVING COUNT (*) > 1)
+    THEN
+        -- курсор1 - элементы продажи
+        OPEN curSale FOR SELECT MovementItemId, ObjectId, OperSumm AS Amount FROM _tmpItem;
+        -- начало цикла по курсору1 - возвраты
+        LOOP
+                -- данные по продажам
+                FETCH curSale INTO vbMovementItemId, vbGoodsId, vbAmount;
+                -- если данные закончились, тогда выход
+                IF NOT FOUND THEN EXIT; END IF;
+
+                -- курсор2. - остатки МИНУС сколько уже распределили для vbGoodsId
+                OPEN curRemains FOR
+                   SELECT _tmpItem_remains.ContainerId, _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0)
+                   FROM _tmpItem_remains
+                        LEFT JOIN (SELECT ContainerId, SUM (_tmpMIContainer_insert.Amount) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId
+                                  ) AS tmp ON tmp.ContainerId = _tmpItem_remains.ContainerId
+                   WHERE _tmpItem_remains.GoodsId = vbGoodsId
+                     AND _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0) > 0
+                   ORDER BY _tmpItem_remains.OperDate DESC, _tmpItem_remains.ContainerId DESC
+                  ;
+                -- начало цикла по курсору2. - остатки
+                LOOP
+                    -- данные по остаткам
+                    FETCH curRemains INTO vbContainerId, vbAmount_remains;
+                    -- если данные закончились, или все кол-во найдено тогда выход
+                    IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
+
+                    --
+                    IF vbAmount_remains > vbAmount
+                    THEN
+                        -- получилось в остатках больше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+                           SELECT zc_Container_Count()
+                                , zc_Movement_Check()
+                                , inMovementId
+                                , vbMovementItemId
+                                , vbContainerId
+                                , vbAccountId
+                                , -1 * vbAmount
+                                , vbOperDate;
+                        -- обнуляем кол-во что бы больше не искать
+                        vbAmount:= 0;
+                    ELSE
+                        -- получилось в остатках меньше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+                           SELECT zc_Container_Count()
+                                , zc_Movement_Check()
+                                , inMovementId
+                                , vbMovementItemId
+                                , vbContainerId
+                                , vbAccountId
+                                , -1 * vbAmount_remains
+                                , vbOperDate;
+                        -- уменьшаем на кол-во которое нашли и продолжаем поиск
+                        vbAmount:= vbAmount - vbAmount_remains;
+                    END IF;
+
+                END LOOP; -- финиш цикла по курсору2. - остатки
+                CLOSE curRemains; -- закрыли курсор2. - остатки
+
+            END LOOP; -- финиш цикла по курсору1 - продажи
+            CLOSE curSale; -- закрыли курсор1 - продажи
+
+    ELSE
+        -- !!!Сразу!!! - Результат - проводки кол-во
+        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+           WITH tmpContainer AS (SELECT MI_Sale.MovementItemId
+                                      , MI_Sale.ObjectId        AS GoodsId
+                                      , MI_Sale.OperSumm        AS SaleAmount
+                                      , Container.Amount        AS ContainerAmount
+                                      , Container.ContainerId
+                                      , SUM (Container.Amount) OVER (PARTITION BY Container.GoodsId ORDER BY Container.OperDate, Container.ContainerId, MI_Sale.MovementItemId) AS ContainerAmountSUM
+                                      , ROW_NUMBER() OVER (PARTITION BY /*MI_Sale.ObjectId*/ MI_Sale.MovementItemId ORDER BY Container.OperDate DESC, Container.ContainerId DESC, MI_Sale.MovementItemId DESC) AS DOrd
+                                 FROM _tmpItem AS MI_Sale
+                                      INNER JOIN _tmpItem_remains AS Container ON Container.GoodsId = MI_Sale.ObjectId
+                                )
+           SELECT zc_Container_Count()
+                , zc_Movement_Check()
+                , inMovementId
+                , tmpItem.MovementItemId
+                , tmpItem.ContainerId
+                , vbAccountId
+                , -1 * Amount
+                , vbOperDate
+              FROM (SELECT ContainerId
+                         , MovementItemId
+                         , CASE WHEN SaleAmount - ContainerAmountSUM > 0 AND DOrd <> 1
+                                     THEN ContainerAmount
+                                ELSE SaleAmount - ContainerAmountSUM + ContainerAmount
+                           END AS Amount
+                    FROM (SELECT * FROM tmpContainer) AS DD
+                    WHERE SaleAmount - (ContainerAmountSUM - ContainerAmount) > 0
+                   ) AS tmpItem;
+
+    END IF;
     
 
 --     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementDescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer

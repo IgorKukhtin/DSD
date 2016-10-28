@@ -45,7 +45,8 @@ type
     InvNumberOrder: TcxGridDBColumn;
     ConfirmedKindName: TcxGridDBColumn;
     ConfirmedKindClientName: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
+    CommentError: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public
