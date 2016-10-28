@@ -15,19 +15,15 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , PersonalDriverName TVarChar
               , MemberName TVarChar
               , UpdateName TVarChar, UpdateDate TDateTime
-
               , InvNumber_Transport TVarChar, OperDate_Transport TDateTime
               , Date_Insert TDateTime, MemberName_Insert TVarChar
-              
               , BarCode_Sale Integer, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
-              
               , OperDatePartner TDateTime, InvNumberPartner TVarChar
               , TotalSumm TFloat
-             
               , FromName TVarChar, ToName TVarChar
-            
               , ReestrKindName TVarChar
-
+              , InvNumber_Transport_Sale TVarChar, OperDate_Transport_Sale TDateTime
+              , CarName_Sale TVarChar, PersonalDriverName_Sale TVarChar
               )
 AS
 $BODY$
@@ -42,13 +38,15 @@ BEGIN
      vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()  
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
-                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh() 
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake() 
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
      vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()  
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
-                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
      -- Результат
@@ -59,11 +57,11 @@ BEGIN
                    FROM MovementItemDate AS MIDate
                         INNER JOIN MovementItemLinkObject AS MILinkObject_PartnerIn
                                 ON MILinkObject_PartnerIn.MovementItemId = MIDate.MovementItemId
-                               AND MILinkObject_PartnerIn.DescId = vbMILinkObjectId --zc_MILinkObject_PartnerInTo()
+                               AND MILinkObject_PartnerIn.DescId = vbMILinkObjectId 
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                ON MovementFloat_MovementItemId.ValueData ::integer = MIDate.MovementItemId  -- tmpMI.MovementItemId
+                                                ON MovementFloat_MovementItemId.ValueData ::integer = MIDate.MovementItemId  
                                                AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                   WHERE MIDate.DescId = vbDateDescId --zc_MIDate_Insert() --zc_MIDate_PartnerIn()
+                   WHERE MIDate.DescId = vbDateDescId 
                      AND date_trunc('day', MIDate.ValueData) BETWEEN inStartDate AND inEndDate
                    )
 
@@ -98,7 +96,12 @@ BEGIN
             , Object_From.ValueData                     AS FromName
             , Object_To.ValueData                       AS ToName   
 
-            , Object_ReestrKind.ValueData               AS ReestrKindName      
+            , Object_ReestrKind.ValueData               AS ReestrKindName    
+
+            , Movement_Transport.InvNumber              AS InvNumber_Transport_Sale
+            , Movement_Transport.OperDate               AS OperDate_Transport_Sale
+            , Object_Car.ValueData                      AS CarName_Sale
+            , Object_PersonalDriver.ValueData           AS PersonalDriverName_Sale 
 
        FROM tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
@@ -166,6 +169,21 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement_Sale.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
   
     ;
 

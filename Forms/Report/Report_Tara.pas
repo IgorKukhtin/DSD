@@ -67,6 +67,14 @@ type
     colAccountGroupName: TcxGridDBColumn;
     colAccountGroupCode: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    spSelectPrintJuridical: TdsdStoredProc;
+    actPrintJuridical: TdsdPrintAction;
+    bbPrintJuridical: TdxBarButton;
   private
     { Private declarations }
   public

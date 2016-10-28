@@ -245,6 +245,10 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_Remake() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_Remake', 'кто сформировал визу Документ исправлен' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Remake');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Buh() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Buh'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Buh', 'кто сформировал визу Бухгалтерия (Финиш)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Buh');
+
 
 
 /*-------------------------------------------------------------------------------

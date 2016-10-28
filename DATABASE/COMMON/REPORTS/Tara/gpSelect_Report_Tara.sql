@@ -62,6 +62,7 @@ RETURNS TABLE(
     ,ObjectDescName    TVarChar  --Наименование типа объекта
     ,ObjectType        TVarChar  --Тип объекта анализа
     ,BranchName        TVarChar  --Филиал (для складов)
+    ,JuridicalId       Integer   --ИД Юрлица (для партнеров)
     ,JuridicalName     TVarChar  --Юрлицо (для партнеров)
     ,RetailName        TVarChar  --Торговая сеть (для партнеров)
     ,AccountGroupId    Integer   --ИД группы счетов
@@ -437,6 +438,7 @@ BEGIN
            ,ObjectDesc.ItemName                                AS ObjectDescName  --Наименование типа объекта
            ,DDD.ObjectType                                     AS ObjectType      --Тип объекта анализа
            ,Object_Branch.ValueData                            AS BranchName      --Филиал (для складов)
+           ,Object_Juridical.Id                                AS JuridicalId     --Ид Юрлица (для партнеров)
            ,Object_Juridical.ValueData                         AS JuridicalName   --Юрлицо (для партнеров)
            ,Object_Retail.ValueData                            AS RetailName      --Торговая сеть (для партнеров)
            ,Object_AccountGroup.Id                             AS AccountGroupId  --ИД Группы счетов

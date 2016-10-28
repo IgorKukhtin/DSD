@@ -28,6 +28,8 @@ type
     bbProtocol: TdxBarButton;
     GoodsSubOpenChoice: TOpenChoiceForm;
     GoodsKindSubChoiceForm: TOpenChoiceForm;
+    clReceiptName: TcxGridDBColumn;
+    ReceiptChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

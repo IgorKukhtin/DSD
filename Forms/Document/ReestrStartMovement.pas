@@ -51,6 +51,8 @@ type
     LineNum: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
+    BarCode_Transport: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

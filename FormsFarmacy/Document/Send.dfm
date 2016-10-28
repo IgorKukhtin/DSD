@@ -83,6 +83,11 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountCheck
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -146,6 +151,11 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountDiff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountCheck
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -183,24 +193,38 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 249
           end
-          object colAmountRemains: TcxGridDBColumn [2]
+          object clAmountCheck: TcxGridDBColumn [2]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078'. '#1095#1077#1082#1072#1093
+            DataBinding.FieldName = 'AmountCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1074' '#1086#1090#1083#1086#1078#1077#1085#1085#1099#1093' '#1095#1077#1082#1072#1093
+            Options.Editing = False
+            Width = 62
+          end
+          object colAmountRemains: TcxGridDBColumn [3]
             Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 65
           end
-          object colAmount: TcxGridDBColumn [3]
+          object colAmount: TcxGridDBColumn [4]
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentVert = vaCenter
+            Width = 77
           end
           object colPriceIn: TcxGridDBColumn
             Caption = #1059#1089#1088#1077#1076'. '#1079#1072#1082#1091#1087'. '#1094#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
@@ -319,7 +343,6 @@ inherited SendForm: TSendForm
     Width = 1002
     Height = 100
     TabOrder = 3
-    ExplicitTop = 4
     ExplicitWidth = 1002
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
@@ -1443,8 +1466,8 @@ inherited SendForm: TSendForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 188
+    Left = 404
+    Top = 252
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

@@ -3,10 +3,8 @@ inherited Report_TaraForm: TReport_TaraForm
   ClientHeight = 490
   ClientWidth = 975
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -202
-  ExplicitTop = -68
   ExplicitWidth = 991
-  ExplicitHeight = 525
+  ExplicitHeight = 528
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -404,12 +402,6 @@ inherited Report_TaraForm: TReport_TaraForm
     Height = 64
     ExplicitWidth = 975
     ExplicitHeight = 64
-    inherited deStart: TcxDateEdit
-      EditValue = 42370d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 42370d
-    end
     object chkWithSupplier: TcxCheckBox
       Left = 408
       Top = 6
@@ -572,6 +564,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraDialogForm'
       FormNameParam.Value = 'TReport_TaraDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -579,6 +572,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -586,6 +580,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
@@ -593,6 +588,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = ObjectGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -601,6 +597,7 @@ inherited Report_TaraForm: TReport_TaraForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
@@ -608,6 +605,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = GoodsGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -616,6 +614,7 @@ inherited Report_TaraForm: TReport_TaraForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WithSupplier'
@@ -623,6 +622,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chkWithSupplier
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WithBayer'
@@ -630,6 +630,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chbWithBayer
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WithPlace'
@@ -637,6 +638,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chbWithPlace
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WithBranch'
@@ -644,6 +646,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chbWithBranch
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'WithMember'
@@ -651,6 +654,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = chkWithMember
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
@@ -658,6 +662,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = AccountGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -665,6 +670,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = AccountGroupGuides
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -677,6 +683,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -684,6 +691,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -691,12 +699,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -704,12 +714,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -717,6 +729,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -724,18 +737,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'InDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'InMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -743,6 +759,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -753,6 +770,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -760,6 +778,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -767,12 +786,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -780,12 +801,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -793,6 +816,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -800,18 +824,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'InBayDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'InMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -819,6 +846,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -829,6 +857,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -836,6 +865,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -843,12 +873,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -856,12 +888,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -869,6 +903,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -876,18 +911,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'OutDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'OutMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -895,6 +933,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -905,6 +944,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -912,6 +952,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -919,12 +960,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -932,12 +975,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -945,6 +990,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -952,18 +998,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'OutSaleDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'OutMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -971,6 +1020,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -981,6 +1031,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -988,6 +1039,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -995,12 +1047,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1008,12 +1062,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -1021,6 +1077,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1028,18 +1085,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'InventoryDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'InventoryMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -1047,6 +1107,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1057,6 +1118,7 @@ inherited Report_TaraForm: TReport_TaraForm
       FormName = 'TReport_TaraMovementForm'
       FormNameParam.Value = 'TReport_TaraMovementForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1064,6 +1126,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'StartDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1071,12 +1134,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'EndDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsId'
           Value = Null
           Component = FormParams
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
@@ -1084,12 +1149,14 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectId'
           Value = Null
           Component = FormParams
           ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ObjectName'
@@ -1097,6 +1164,7 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'ObjectName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1104,18 +1172,21 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'LossDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MLODesc'
           Value = Null
           Component = FormParams
           ComponentItem = 'LossMLODesc'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupId'
           Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountGroupName'
@@ -1123,8 +1194,81 @@ inherited Report_TaraForm: TReport_TaraForm
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPrintJuridical: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintJuridical
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintJuridical
+        end>
+      Caption = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1091
+      Hint = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1091
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'operdate;BranchName;MovementDescName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.Name = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      ReportNameParam.Value = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      Hint = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'operdate;BranchName;MovementDescName;InvNumber'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.Name = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091
+      ReportNameParam.Value = 'A'#1082#1090' '#1089#1074#1077#1088#1082#1080' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1091' ('#1090#1072#1088#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1142,6 +1286,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1149,6 +1294,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWithSupplier'
@@ -1156,6 +1302,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = chkWithSupplier
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWithBayer'
@@ -1163,6 +1310,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = chbWithBayer
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWithPlace'
@@ -1170,6 +1318,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = chbWithPlace
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWithBranch'
@@ -1177,6 +1326,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = chbWithBranch
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWithMember'
@@ -1184,6 +1334,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = chkWithMember
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inWhereObjectId'
@@ -1191,6 +1342,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsOrGroupId'
@@ -1198,6 +1350,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountGroup'
@@ -1205,11 +1358,13 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Top = 144
   end
   inherited BarManager: TdxBarManager
-    Top = 144
+    Left = 152
+    Top = 208
     DockControlHeights = (
       0
       0
@@ -1239,6 +1394,22 @@ inherited Report_TaraForm: TReport_TaraForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1249,6 +1420,16 @@ inherited Report_TaraForm: TReport_TaraForm
     object dxBarButton1: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 3
+    end
+    object bbPrintJuridical: TdxBarButton
+      Action = actPrintJuridical
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1329,6 +1510,7 @@ inherited Report_TaraForm: TReport_TaraForm
     LookupControl = edObject
     FormNameParam.Value = 'TPartnerAndUnitForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerAndUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1338,6 +1520,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = ObjectGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1346,6 +1529,7 @@ inherited Report_TaraForm: TReport_TaraForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 264
     Top = 32
@@ -1355,6 +1539,7 @@ inherited Report_TaraForm: TReport_TaraForm
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsTree_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsTree_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1364,6 +1549,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1372,6 +1558,7 @@ inherited Report_TaraForm: TReport_TaraForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 440
     Top = 32
@@ -1383,18 +1570,21 @@ inherited Report_TaraForm: TReport_TaraForm
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsName'
@@ -1402,12 +1592,14 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = MasterCDS
         ComponentItem = 'GoodsName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ObjectId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ObjectName'
@@ -1415,58 +1607,70 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = MasterCDS
         ComponentItem = 'ObjectName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InBayDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutSaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InventoryDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LossDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InMLODesc'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutMLODesc'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InventoryMLODesc'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LossMLODesc'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'AccountGroupId'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
@@ -1474,6 +1678,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = MasterCDS
         ComponentItem = 'AccountGroupName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 24
     Top = 328
@@ -1489,6 +1694,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'InDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InBayDesc'
@@ -1496,6 +1702,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'InBayDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutDesc'
@@ -1503,6 +1710,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'OutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutSaleDesc'
@@ -1510,6 +1718,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'OutSaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InventoryDesc'
@@ -1517,6 +1726,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'InventoryDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LossDesc'
@@ -1524,30 +1734,35 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = FormParams
         ComponentItem = 'LossDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InMLODesc'
         Value = 'False'
         Component = FormParams
         ComponentItem = 'InMLODesc'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OutMLODesc'
         Value = ''
         Component = FormParams
         ComponentItem = 'OutMLODesc'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InventoryMLODesc'
         Value = ''
         Component = FormParams
         ComponentItem = 'InventoryMLODesc'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'LossMLODesc'
         Value = Null
         Component = FormParams
         ComponentItem = 'LossMLODesc'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -1558,6 +1773,7 @@ inherited Report_TaraForm: TReport_TaraForm
     LookupControl = ceAccountGroup
     FormNameParam.Value = 'TAccountGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccountGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1567,6 +1783,7 @@ inherited Report_TaraForm: TReport_TaraForm
         Component = AccountGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1575,13 +1792,155 @@ inherited Report_TaraForm: TReport_TaraForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Goods'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 728
     Top = 37
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 716
+    Top = 217
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 270
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Report_Tara_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWhereObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsOrGroupId'
+        Value = Null
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountGroup'
+        Value = Null
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 376
+  end
+  object spSelectPrintJuridical: TdsdStoredProc
+    StoredProcName = 'gpSelect_Report_Tara_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42370d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42370d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWhereObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsOrGroupId'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountGroup'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 439
+    Top = 376
   end
 end

@@ -89,8 +89,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
-exit;
+ {
   LoadReportFromFile('Отчет движение по ОС', ReportPath + '\Отчеты (товарные)\Отчет движение по ОС.fr3');
   LoadReportFromFile('Отчет движение по товару (МО)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (МО).fr3');
   LoadReportFromFile('Отчет движение по товару (Итого)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (Итого).fr3');
@@ -157,7 +156,9 @@ exit;
   LoadReportFromFile('Отчет по товару (внутренний)', ReportPath + '\Отчеты (товарные)\Отчет по товару (внутренний).fr3');
 
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по просрочке.fr3');
-
+  }
+  LoadReportFromFile('Aкт сверки по контрагенту (тара)', ReportPath + '\Отчеты (товарные)\Aкт сверки по контрагенту (тара).fr3');
+  exit;
   // Отчеты производство
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение_по_документам_1', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение_по_документам_1.fr3');
   LoadReportFromFile('Производство и процент выхода (итоги)', ReportPath + '\Отчеты (производство)\Производство и процент выхода (итоги).fr3');
@@ -200,6 +201,8 @@ exit;
   LoadReportFromFile('Отчет - заявки (кросс)', ReportPath + '\Отчеты (товарные)\Отчет - заявки (кросс).fr3');
 
   // Печатные формы накладных
+   LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
+exit;
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');

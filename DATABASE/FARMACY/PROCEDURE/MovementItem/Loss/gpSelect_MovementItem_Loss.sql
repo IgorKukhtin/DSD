@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat 
-             , Remains_Amount TFloat, PriceIn TFloat, SummIn TFloat
+             , Remains_Amount TFloat, AmountCheck TFloat
+             , PriceIn TFloat, SummIn TFloat
              , isErased Boolean
               )
 AS
@@ -19,6 +20,7 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbOperDate TDateTime;
+  DECLARE vbOperDateEnd TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
@@ -32,14 +34,14 @@ BEGIN
     INTO 
         vbUnitId
        ,vbOperDate
-    FROM
-        Movement AS Movement_Loss
+    FROM Movement AS Movement_Loss
         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                       ON MovementLinkObject_Unit.MovementId = Movement_Loss.Id
                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-    WHERE 
-        Movement_Loss.Id = inMovementId;
-        
+    WHERE Movement_Loss.Id = inMovementId;
+    
+    vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
+    
 
     IF inShowAll THEN
     -- Результат
@@ -112,6 +114,25 @@ BEGIN
                                     GROUP BY
                                         MovementItemContainer.MovementItemId
                                 )
+
+         , tmpCheck AS (SELECT MI_Check.ObjectId                    AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                           AND Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                         GROUP BY MI_Check.ObjectId 
+                         HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
             SELECT
                     COALESCE(MovementItem.Id,0)           AS Id
                   , Object_Goods_View.Id                  AS GoodsId
@@ -121,6 +142,7 @@ BEGIN
                   , CurrPRICE.Price                       AS Price
                   , (MovementItem.Amount*CurrPRICE.Price)::TFloat                           AS Summ
                   , REMAINS.Amount                                                          AS Remains_Amount 
+                  , tmpCheck.Amount::TFloat                                                 AS AmountCheck
                   , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
                   , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
                   , COALESCE(MovementItem.IsErased,FALSE) AS isErased
@@ -132,11 +154,11 @@ BEGIN
                 LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = CurrPRICE.GoodsId
                 LEFT OUTER JOIN REMAINS ON object_Goods_View.Id = REMAINS.ObjectId 
                 LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id
+                LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods_View.Id
             WHERE 
                 Object_Goods_View.ObjectId = vbObjectId
                 AND 
-                (
-                    Object_Goods_View.isErased = FALSE 
+                (   Object_Goods_View.isErased = FALSE 
                     OR 
                     MovementItem.Id IS NOT NULL
                 );
@@ -210,6 +232,25 @@ BEGIN
                                     GROUP BY
                                         MovementItemContainer.MovementItemId
                                 )
+
+         , tmpCheck AS (SELECT MI_Check.ObjectId               AS GoodsId
+                             , SUM (MI_Check.Amount) ::TFloat  AS Amount
+                        FROM Movement AS Movement_Check
+                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                            AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                               INNER JOIN MovementItem AS MI_Check
+                                                       ON MI_Check.MovementId = Movement_Check.Id
+                                                      AND MI_Check.DescId = zc_MI_Master()
+                                                      AND MI_Check.isErased = FALSE
+                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                           AND Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
+                         GROUP BY MI_Check.ObjectId 
+                         HAVING SUM (MI_Check.Amount) <> 0 
+                        )
+
         SELECT
             MovementItem.Id                       AS Id
           , Object_Goods_View.Id                  AS GoodsId
@@ -219,6 +260,7 @@ BEGIN
           , CurrPRICE.Price                       AS Price
           , (MovementItem.Amount*CurrPRICE.Price)::TFloat                           AS Summ
           , REMAINS.Amount                                                          AS Remains_Amount
+          , tmpCheck.Amount::TFloat                           AS AmountCheck
           , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
           , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
           , COALESCE(MovementItem.IsErased,FALSE) AS isErased
@@ -228,13 +270,13 @@ BEGIN
             LEFT OUTER JOIN CurrPRICE ON object_Goods_View.Id = CurrPRICE.GoodsId
             LEFT OUTER JOIN REMAINS ON MovementItem.ObjectId = REMAINS.ObjectId
             LEFT OUTER JOIN MIContainer ON MIContainer.MovementItemId = MovementItem.Id
+            LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods_View.Id
         WHERE 
             MovementItem.MovementId = inMovementId
             AND 
             MovementItem.DescId = zc_MI_Master()
             AND 
-            (
-                MovementItem.isErased = FALSE 
+            (   MovementItem.isErased = FALSE 
                 OR 
                 inIsErased = TRUE
             );
@@ -249,6 +291,7 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.10.16         * 
  31.03.15         * add GoodsGroupNameFull, MeasureName
  17.10.14         * add св-ва PartionGoods
  08.10.14                                        * add Object_InfoMoney_View
