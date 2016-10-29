@@ -19,6 +19,10 @@ $BODY$
    DECLARE vbFullInvent Boolean;
 BEGIN
 
+    -- пересчитали Итоговые суммы по накладной
+    PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
+
+
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 

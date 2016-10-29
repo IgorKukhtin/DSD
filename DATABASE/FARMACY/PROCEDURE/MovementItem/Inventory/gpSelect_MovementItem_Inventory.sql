@@ -29,10 +29,12 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
     -- inShowAll:= TRUE;
     vbUserId:= lpGetUserBySession (inSession);
-    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-    --вытягиваем дату и подразделение
+    vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
+
+
+    -- вытягиваем дату и подразделение
     SELECT
-        Movement_Inventory.OperDate
+        DATE_TRUNC ('DAY', Movement_Inventory.OperDate) + INTERVAL '1 DAY'
        ,Inventory_Unit.ObjectId
     INTO
         vbOperDate,
@@ -47,35 +49,45 @@ BEGIN
     IF inShowAll = FALSE 
     THEN
         RETURN QUERY
-            WITH REMAINS AS ( --остатки на дату документа
+            WITH REMAINS AS (   -- остатки на дату документа
                                 SELECT 
                                     T0.ObjectId
-                                   ,SUM(T0.Amount)::TFloat as Amount
+                                   ,SUM (T0.Amount) :: TFloat AS Amount
                                 FROM(
                                         SELECT 
-                                            Container.Id 
-                                           ,Container.ObjectId --Товар
-                                           ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                                             Container.Id 
+                                           , Container.ObjectId  -- Товар
+                                           , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
-                                            LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                                 AND 
-                                                                                 (
-                                                                                    date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
-                                                                                    OR
-                                                                                    MovementItemContainer.MovementId = inMovementId
-                                                                                 )
-                                            JOIN ContainerLinkObject AS CLI_Unit 
+                                            /*JOIN ContainerLinkObject AS CLI_Unit 
                                                                      ON CLI_Unit.containerid = Container.Id
                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
+                                                                    AND CLI_Unit.ObjectId = vbUnitId*/
+                                            LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                                 -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
+                                                                                 AND MovementItemContainer.Operdate > vbOperDate
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
+                                        AND Container.WhereObjectId = vbUnitId
+                                        GROUP BY 
+                                            Container.Id 
+                                           ,Container.ObjectId
+                                        HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+                                       UNION ALL
+                                        SELECT 
+                                             Container.Id 
+                                           , Container.ObjectId  -- Товар
+                                           , -1 * SUM (MovementItemContainer.Amount) AS Amount
+                                        FROM MovementItemContainer
+                                            INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                        WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
+                                          AND MovementItemContainer.MovementId = inMovementId
                                         GROUP BY 
                                             Container.Id 
                                            ,Container.ObjectId
                                     ) as T0
-                                GROUP By ObjectId
-                                HAVING SUM(T0.Amount) <> 0
+                                GROUP BY ObjectId
+                                HAVING SUM (T0.Amount) <> 0
                             )
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -148,26 +160,42 @@ BEGIN
                  REMAINS AS ( --остатки на дату документа
                                 SELECT 
                                     T0.ObjectId
-                                   ,SUM(T0.Amount)::TFloat as Amount
+                                   ,SUM (T0.Amount) :: TFloat AS Amount
                                 FROM(
                                         SELECT 
-                                            Container.Id 
-                                           ,Container.ObjectId --Товар
-                                           ,(Container.Amount - COALESCE(SUM(MovementItemContainer.amount),0.0))::TFloat as Amount  --Тек. остаток - Движение после даты переучета
+                                             Container.Id 
+                                           , Container.ObjectId  -- Товар
+                                           , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM Container
-                                            LEFT OUTER JOIN MovementItemContainer ON Container.Id = MovementItemContainer.ContainerId
-                                                                                 AND date_trunc('day', MovementItemContainer.Operdate) > vbOperDate
-                                            JOIN ContainerLinkObject AS CLI_Unit 
+                                            /*JOIN ContainerLinkObject AS CLI_Unit 
                                                                      ON CLI_Unit.containerid = Container.Id
                                                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
-                                                                    AND CLI_Unit.ObjectId = vbUnitId                                   
+                                                                    AND CLI_Unit.ObjectId = vbUnitId*/
+                                            LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                                 -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
+                                                                                 AND MovementItemContainer.Operdate > vbOperDate
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
+                                        AND Container.WhereObjectId = vbUnitId
+                                        GROUP BY 
+                                            Container.Id 
+                                           ,Container.ObjectId
+                                        HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+                                       UNION ALL
+                                        SELECT 
+                                             Container.Id 
+                                           , Container.ObjectId  -- Товар
+                                           , -1 * SUM (MovementItemContainer.Amount) AS Amount
+                                        FROM MovementItemContainer
+                                            INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                        WHERE MovementItemContainer.DescID = zc_MIContainer_Count()
+                                          AND MovementItemContainer.MovementId = inMovementId
                                         GROUP BY 
                                             Container.Id 
                                            ,Container.ObjectId
                                     ) as T0
-                                GROUP By ObjectId
+                                GROUP BY ObjectId
+                                HAVING SUM (T0.Amount) <> 0
                             )
             SELECT
                 MovementItem.Id                                                     AS Id

@@ -31,7 +31,7 @@ BEGIN
 	
     --определяем подразделение и дату документа, ИД строки
     SELECT 
-        Movement.OperDate
+        DATE_TRUNC ('DAY', Movement.OperDate) + INTERVAL '1 DAY'
        ,MLO_Unit.ObjectId
        ,MovementItem.Id
     INTO
@@ -48,35 +48,30 @@ BEGIN
                                     AND MovementItem.ObjectId = inGoodsId
     WHERE
         Movement.Id = inMovementId;
+
     -- Находим остаток товара на дату
-    SELECT 
-        COALESCE(SUM(DD.Amount),0)::TFloat
-    INTO
-        outRemains
-    FROM(
-            SELECT
-                Container.Id
-               ,Container.Amount - COALESCE(SUM(MovementItemContainer.Amount),0) as  Amount
-            FROM
-                Container
-                Inner Join ContainerLinkObject AS CLO_Unit
-                                               ON CLO_Unit.ContainerId = Container.Id
-                                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                              AND CLO_Unit.ObjectId = vbUnitId
-                LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                     AND MovementItemContainer.DescId = zc_MIContainer_Count()
-                                                     AND DATE_TRUNC('day', MovementItemContainer.OperDate) > DATE_TRUNC('day', vbOperDate)
-            WHERE
-                Container.DescId = zc_Container_Count()
-                AND
-                Container.ObjectId = inGoodsId
-            Group By
-                Container.Id
-               ,Container.Amount
-        ) AS DD;
+    outRemains := COALESCE ((SELECT SUM (DD.Amount)
+                             FROM (SELECT Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) AS Amount
+                                   FROM
+                                       Container
+                                       /*Inner Join ContainerLinkObject AS CLO_Unit
+                                                                      ON CLO_Unit.ContainerId = Container.Id
+                                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                     AND CLO_Unit.ObjectId = vbUnitId*/
+                                       LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                                            AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                                            -- AND DATE_TRUNC ('DAY', MovementItemContainer.OperDate) > DATE_TRUNC('day', vbOperDate)
+                                                                            AND MovementItemContainer.OperDate > vbOperDate
+                                   WHERE Container.DescId = zc_Container_Count()
+                                     AND Container.ObjectId = inGoodsId
+                                     AND Container.WhereObjectId = vbUnitId
+                                   GROUP BY Container.Id,Container.Amount
+                                   HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
+                                  ) AS DD
+                             ), 0);
         
     -- Расчитываем сумму по строке
-	outSumm := (ioAmount * inPrice)::TFloat;
+    outSumm := (ioAmount * inPrice)::TFloat;
     
     IF COALESCE(outRemains,0) > COALESCE(ioAmount,0)
     THEN
@@ -101,7 +96,7 @@ BEGIN
                                                 , inComment            := inComment
                                                 , inUserId             := vbUserId) AS tmp;
     -- пересчитали Итоговые суммы по накладной
-    PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
+    -- PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
 
 
 END;
@@ -116,3 +111,4 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer,
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId:= 0, inMovementId:= 0, inGoodsId:= 1, ioAmount:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId := 58062345 , inMovementId := 3497252 , inGoodsId := 337 , ioAmount := 1 , inPrice := 0 , inComment := '' ,  inSession := '3');
