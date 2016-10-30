@@ -33,6 +33,9 @@ type
     edPeriod: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     edDay: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    cbOutMCS: TcxCheckBox;
+    cbMCS: TcxCheckBox;
   private
     { Private declarations }
   public
