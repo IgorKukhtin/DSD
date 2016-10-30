@@ -31,7 +31,6 @@ type
     colCashRegisterName: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
     colCashMember: TcxGridDBColumn;
-    colBayer: TcxGridDBColumn;
     dxBarButton2: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     colGoodsName: TcxGridDBColumn;
@@ -41,17 +40,11 @@ type
     actCompleteCheck: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     colStatusCode: TcxGridDBColumn;
-    colDiscountCardNumber: TcxGridDBColumn;
-    colDiscountExternalName: TcxGridDBColumn;
     colPriceSale: TcxGridDBColumn;
     colChangePercent: TcxGridDBColumn;
     colSummChangePercent: TcxGridDBColumn;
-    BayerPhone: TcxGridDBColumn;
-    InvNumberOrder: TcxGridDBColumn;
-    ConfirmedKindName: TcxGridDBColumn;
     colAmountOrder: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
-    ConfirmedKindClientName: TcxGridDBColumn;
     spConfirmedKind_Complete: TdsdStoredProc;
     actSetConfirmedKind_Complete: TdsdExecStoredProc;
     actSetConfirmedKind_UnComplete: TdsdExecStoredProc;

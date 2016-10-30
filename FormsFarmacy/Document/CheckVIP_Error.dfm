@@ -54,79 +54,47 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
                 ImageIndex = 13
                 Value = 3
               end>
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1076#1072#1083#1077#1085
             Width = 27
-          end
-          object ConfirmedKindName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090'. '#1079'.'
-            DataBinding.FieldName = 'ConfirmedKindName'
-            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
-            Width = 55
           end
           object colCashMember: TcxGridDBColumn
             Caption = #1052#1077#1085#1077#1076#1078#1077#1088
             DataBinding.FieldName = 'CashMember'
+            HeaderAlignmentVert = vaCenter
             Width = 83
-          end
-          object colBayer: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'Bayer'
-            Width = 77
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
             Width = 48
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colCashRegisterName: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashRegisterName'
+            HeaderAlignmentVert = vaCenter
             Width = 57
           end
           object colInvNumber: TcxGridDBColumn
             AlternateCaption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 50
-          end
-          object InvNumberOrder: TcxGridDBColumn
-            Caption = #8470' '#1079'.'
-            DataBinding.FieldName = 'InvNumberOrder'
-            HeaderHint = #8470' '#1079#1072#1082#1072#1079#1072' ('#1089#1072#1081#1090')'
-            Width = 45
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object BayerPhone: TcxGridDBColumn
-            Caption = #1058#1077#1083'. '#1087#1086#1082'.'
-            DataBinding.FieldName = 'BayerPhone'
-            Width = 65
-          end
-          object ConfirmedKindClientName: TcxGridDBColumn
-            Caption = #1057#1084#1089
-            DataBinding.FieldName = 'ConfirmedKindClientName'
-            HeaderHint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1054#1090#1087#1088#1072#1074#1083#1077#1085' '#1082#1083#1080#1077#1085#1090#1091')'
-            Options.Editing = False
-            Width = 50
-          end
-          object colDiscountCardNumber: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090#1099
-            DataBinding.FieldName = 'DiscountCardNumber'
-            Width = 70
-          end
-          object colDiscountExternalName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1077#1082#1090
-            DataBinding.FieldName = 'DiscountExternalName'
-            Width = 70
           end
           object colCommentError: TcxGridDBColumn
             Caption = #1054#1096#1080#1073#1082#1072

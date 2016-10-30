@@ -16,14 +16,6 @@ RETURNS TABLE (
   CashRegisterName TVarChar,
   CashMemberId Integer,
   CashMember TVarCHar,
-  Bayer TVarChar,
-  BayerPhone TVarChar,
-  InvNumberOrder TVarChar,
-  ConfirmedKindName TVarChar,
-  ConfirmedKindClientName TVarChar,
-  DiscountExternalId Integer,
-  DiscountExternalName TVarChar,
-  DiscountCardNumber TVarChar,
   CommentError TVarChar
  )
 AS
@@ -67,18 +59,8 @@ BEGIN
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
-           , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
-	    , MovementString_Bayer.ValueData             AS Bayer
+           , CASE WHEN COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 
-            , MovementString_BayerPhone.ValueData        AS BayerPhone
-            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-            , Object_ConfirmedKind.ValueData             AS ConfirmedKindName
-            , Object_ConfirmedKindClient.ValueData       AS ConfirmedKindClientName
-
-	    , Object_DiscountExternal.Id                 AS DiscountExternalId
-	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
-	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
-  
             , tmpMov.CommentError
 
        FROM tmpMov
@@ -91,10 +73,6 @@ BEGIN
                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                         
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-
-   	    LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
-		                      ON MovementBoolean_Deferred.MovementId = Movement.Id
-		                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -114,36 +92,7 @@ BEGIN
                                         AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
   	    LEFT JOIN Object AS Object_CashMember ON Object_CashMember.Id = MovementLinkObject_CheckMember.ObjectId
   	    
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DiscountCard
-                                         ON MovementLinkObject_DiscountCard.MovementId = Movement.Id
-                                        AND MovementLinkObject_DiscountCard.DescId = zc_MovementLinkObject_DiscountCard()
-            LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
-                                 ON ObjectLink_DiscountExternal.ObjectId = MovementLinkObject_DiscountCard.ObjectId
-                                AND ObjectLink_DiscountExternal.DescId = zc_ObjectLink_DiscountCard_Object()
-            LEFT JOIN Object AS Object_DiscountExternal ON Object_DiscountExternal.Id = ObjectLink_DiscountExternal.ChildObjectId
-            LEFT JOIN Object AS Object_DiscountCard ON Object_DiscountCard.Id = MovementLinkObject_DiscountCard.ObjectId
-
-	    LEFT JOIN MovementString AS MovementString_Bayer
-                                     ON MovementString_Bayer.MovementId = Movement.Id
-                                    AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
-
-             LEFT JOIN MovementString AS MovementString_BayerPhone
-                                      ON MovementString_BayerPhone.MovementId = Movement.Id
-                                     AND MovementString_BayerPhone.DescId = zc_MovementString_BayerPhone()
-
-             LEFT JOIN MovementString AS MovementString_InvNumberOrder
-                                      ON MovementString_InvNumberOrder.MovementId = Movement.Id
-                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                          ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
-                                         AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-             LEFT JOIN Object AS Object_ConfirmedKind ON Object_ConfirmedKind.Id = MovementLinkObject_ConfirmedKind.ObjectId
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKindClient
-                                          ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
-                                         AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
-             LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
+   
        ;
 
 END;
