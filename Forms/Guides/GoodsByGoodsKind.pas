@@ -30,6 +30,7 @@ type
     GoodsKindSubChoiceForm: TOpenChoiceForm;
     clReceiptName: TcxGridDBColumn;
     ReceiptChoiceForm: TOpenChoiceForm;
+    ReceiptCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

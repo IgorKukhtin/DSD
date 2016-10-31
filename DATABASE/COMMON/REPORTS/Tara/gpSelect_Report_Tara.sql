@@ -1,39 +1,6 @@
- DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Boolean,   --По всем поставщикам
-    Boolean,   --По всем покупателям
-    Boolean,   --По всем складам
-    Boolean,   --По всем филиалам
-    Integer,   --По одному(группе) из объектов
-    Integer,   --Группа товара / Товар
-    TVarChar   --сессия пользователя
-);
-DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Boolean,   --По всем поставщикам
-    Boolean,   --По всем покупателям
-    Boolean,   --По всем складам
-    Boolean,   --По всем филиалам
-    Boolean,   --По всем МОЛ
-    Integer,   --По одному(группе) из объектов
-    Integer,   --Группа товара / Товар
-    TVarChar   --сессия пользователя
-);
-DROP FUNCTION IF EXISTS gpSelect_Report_Tara(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Boolean,   --По всем поставщикам
-    Boolean,   --По всем покупателям
-    Boolean,   --По всем складам
-    Boolean,   --По всем филиалам
-    Boolean,   --По всем МОЛ
-    Integer,   --По одному(группе) из объектов
-    Integer,   --Группа товара / Товар
-    Integer,   --Группа счетов
-    TVarChar   --сессия пользователя
-);
+-- Function: gpSelect_Report_Tara()
+
+DROP FUNCTION IF EXISTS gpSelect_Report_Tara (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara(
     IN inStartDate      TDateTime, --дата начала периода

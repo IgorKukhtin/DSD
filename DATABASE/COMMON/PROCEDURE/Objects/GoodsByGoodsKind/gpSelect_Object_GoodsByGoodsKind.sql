@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isOrder Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
-             , ReceiptId Integer, ReceiptName TVarChar
+             , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
 )
 AS
 $BODY$
@@ -66,6 +66,7 @@ BEGIN
            , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
 
            , Object_Receipt.Id                AS ReceiptId
+           , ObjectString_Code.ValueData      AS ReceiptCode
            , Object_Receipt.ValueData         AS ReceiptName
          
        FROM Object_GoodsByGoodsKind_View
@@ -143,6 +144,9 @@ BEGIN
                                 ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id
                                AND ObjectLink_GoodsByGoodsKind_Receipt.DescId = zc_ObjectLink_GoodsByGoodsKind_Receipt()
            LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
+           LEFT JOIN ObjectString AS ObjectString_Code
+                                  ON ObjectString_Code.ObjectId = Object_Receipt.Id
+                                 AND ObjectString_Code.DescId   = zc_ObjectString_Receipt_Code()
 
       ;
 

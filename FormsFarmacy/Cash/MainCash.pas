@@ -217,7 +217,7 @@ type
     lblDiscountCardNumber: TLabel;
     VIP2: TMenuItem;
     actSetDiscountExternal: TAction;
-    TimerBlinkVIP: TTimer;
+    TimerBlinkBtn: TTimer;
     spGet_BlinkVIP: TdsdStoredProc;
     actSetConfirmedKind_UnComplete: TAction;
     actSetConfirmedKind_Complete: TAction;
@@ -230,6 +230,7 @@ type
     actOpenMCSForm: TdsdOpenForm;
     N13: TMenuItem;
     N14: TMenuItem;
+    spGet_BlinkCheck: TdsdStoredProc;
     actOpenCheckVIP_Error: TOpenChoiceForm;
     actOpenCheckVIPError1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
@@ -274,7 +275,7 @@ type
     procedure actCheckConnectionExecute(Sender: TObject);
     procedure actSetDiscountExternalExecute(Sender: TObject);  //***20.07.16
     procedure CheckCDSBeforePost(DataSet: TDataSet);
-    procedure TimerBlinkVIPTimer(Sender: TObject);
+    procedure TimerBlinkBtnTimer(Sender: TObject);
     procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject); //***10.08.16
   private
@@ -292,10 +293,11 @@ type
     VipCDS, VIPListCDS: TClientDataSet;
     VIPForm: TParentForm;
     // для мигания кнопки
-    fBlinkVIP : Boolean;
-    time_onBlink:TDateTime;
+    fBlinkVIP, fBlinkCheck : Boolean;
+    time_onBlink, time_onBlinkCheck :TDateTime;
     MovementId_BlinkVIP:String;
     procedure SetBlinkVIP (isRefresh : boolean);
+    procedure SetBlinkCheck (isRefresh : boolean);
 
     procedure SetSoldRegim(const Value: boolean);
     // процедура обновляет параметры для введения нового чека
@@ -842,7 +844,6 @@ begin
 
   //
   SetBlinkVIP (true);
-
 end;
 
 procedure TMainCashForm.actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
@@ -1082,8 +1083,9 @@ begin
   OnShow := ParentFormShow;
   TimerSaveAll.Enabled := true;
 
-  TimerBlinkVIP.Enabled := true;
   SetBlinkVIP (true);
+  SetBlinkCheck (true);
+  TimerBlinkBtn.Enabled := true;
 end;
 
 function TMainCashForm.InitLocalStorage: Boolean;
@@ -2475,15 +2477,24 @@ begin
 end;
 
 
-procedure TMainCashForm.TimerBlinkVIPTimer(Sender: TObject);
+procedure TMainCashForm.TimerBlinkBtnTimer(Sender: TObject);
 begin
   SetBlinkVIP (false);
+  SetBlinkCheck (false);
+
 
   if fBlinkVIP = true
   then if btnVIP.Colors.NormalText <> clDefault
        then begin btnVIP.Colors.NormalText:= clDefault; btnVIP.Colors.Default := clDefault; end
        else begin {Beep;} btnVIP.Colors.NormalText:= clYellow; btnVIP.Colors.Default := clRed; end
   else begin btnVIP.Colors.NormalText := clDefault; btnVIP.Colors.Default := clDefault; end;
+
+  if fBlinkCheck = true
+  then if btnCheck.Colors.NormalText <> clDefault
+       then begin btnCheck.Colors.NormalText:= clDefault; btnCheck.Colors.Default := clDefault; end
+       else begin btnCheck.Colors.NormalText:= clYellow; btnCheck.Colors.Default := clRed; end
+  else begin btnCheck.Colors.NormalText := clDefault; btnCheck.Colors.Default := clDefault; end;
+
 end;
 
 procedure TMainCashForm.SetBlinkVIP (isRefresh : boolean);
@@ -2519,6 +2530,34 @@ begin
         Self.Caption := 'Продажа - OFF-line режим для VIP-чеков'
   end;
 end;
+
+procedure TMainCashForm.SetBlinkCheck (isRefresh : boolean);
+var lMovementId_BlinkCheck : String;
+begin
+  // если прошло > 50 сек - захардкодил
+  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+
+  try
+      //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
+      time_onBlinkCheck:= now;
+
+      //Получили список ВСЕХ документов - с типом "Не подтвержден"
+      spGet_BlinkCheck.Execute;
+      lMovementId_BlinkCheck:=spGet_BlinkCheck.ParamByName('outMovementId_list').Value;
+
+      // в этом случае кнопка будет мигать
+      fBlinkCheck:= lMovementId_BlinkCheck <> '';
+
+      // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
+      if fBlinkCheck = True
+      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток'
+      else Self.Caption := 'Продажа';
+
+  except
+        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой'
+  end;
+end;
+
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 begin
