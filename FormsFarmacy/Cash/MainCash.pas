@@ -231,6 +231,8 @@ type
     N13: TMenuItem;
     N14: TMenuItem;
     spGet_BlinkCheck: TdsdStoredProc;
+    actOpenCheckVIP_Error: TOpenChoiceForm;
+    actOpenCheckVIPError1: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

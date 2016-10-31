@@ -3,8 +3,8 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 222
-  ClientWidth = 345
+  ClientHeight = 278
+  ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 46
-    Top = 183
+    Left = 43
+    Top = 239
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 220
-    Top = 183
+    Left = 217
+    Top = 239
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -57,7 +57,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     Width = 305
   end
   object cxLabel3: TcxLabel
-    Left = 8
+    Left = 10
     Top = 44
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
@@ -67,7 +67,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086':'
   end
   object cxLabel1: TcxLabel
-    Left = 8
+    Left = 10
     Top = 112
     Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1072#1085#1072#1083#1080#1079#1072' '#1053#1058#1047
   end
@@ -82,7 +82,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     Width = 55
   end
   object cxLabel2: TcxLabel
-    Left = 11
+    Left = 10
     Top = 142
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
@@ -96,10 +96,31 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 9
     Width = 55
   end
+  object cxLabel4: TcxLabel
+    Left = 10
+    Top = 174
+    Caption = #1048#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
+  end
+  object cbOutMCS: TcxCheckBox
+    Left = 199
+    Top = 174
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081
+    TabOrder = 11
+    Width = 149
+  end
+  object cbMCS: TcxCheckBox
+    Left = 199
+    Top = 201
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+    TabOrder = 12
+    Width = 152
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
-    Left = 172
-    Top = 168
+    Left = 169
+    Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 212
@@ -160,9 +181,25 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMCS'
+        Value = Null
+        Component = cbMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isOutMCS'
+        Value = Null
+        Component = cbOutMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 28
-    Top = 123
+    Left = 36
+    Top = 195
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -256,7 +293,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 108
-    Top = 160
+    Left = 105
+    Top = 216
   end
 end

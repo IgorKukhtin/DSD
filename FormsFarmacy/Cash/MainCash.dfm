@@ -948,7 +948,108 @@ inherited MainCashForm: TMainCashForm
       Caption = 'actChoiceGoodsInRemainsGrid'
       OnExecute = actChoiceGoodsInRemainsGridExecute
     end
-    object actRefreshAll: TAction [1]
+    object actOpenCheckVIP_Error: TOpenChoiceForm [1]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1053#1077#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080
+      FormName = 'TCheckVIP_ErrorForm'
+      FormNameParam.Value = 'TCheckVIP_ErrorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'CheckId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMemberId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CashMember'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountExternalName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountExternalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DiscountCardNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'DiscountCardNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberOrder'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberOrder'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ConfirmedKindClientName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ConfirmedKindClientName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actRefreshAll: TAction [2]
       Category = 'DSDLib'
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -956,12 +1057,12 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 116
       OnExecute = actRefreshAllExecute
     end
-    object actSold: TAction [2]
+    object actSold: TAction [3]
       Caption = #1055#1088#1086#1076#1072#1078#1072
       ShortCut = 113
       OnExecute = actSoldExecute
     end
-    object actCheck: TdsdOpenForm [3]
+    object actCheck: TdsdOpenForm [4]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       Caption = #1063#1077#1082#1080
@@ -972,7 +1073,7 @@ inherited MainCashForm: TMainCashForm
       GuiParams = <>
       isShowModal = False
     end
-    object actInsertUpdateCheckItems: TAction [4]
+    object actInsertUpdateCheckItems: TAction [5]
       Caption = 'actInsertUpdateCheckItems'
       OnExecute = actInsertUpdateCheckItemsExecute
     end
@@ -1461,6 +1562,9 @@ inherited MainCashForm: TMainCashForm
     end
     object N13: TMenuItem
       Action = actOpenMCSForm
+    end
+    object actOpenCheckVIPError1: TMenuItem
+      Action = actOpenCheckVIP_Error
     end
   end
   object FormParams: TdsdFormParams

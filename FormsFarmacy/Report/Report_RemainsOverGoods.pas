@@ -94,6 +94,9 @@ type
     chAmountSend: TcxGridDBColumn;
     dsdGridToExcelTotal: TdsdGridToExcel;
     bb: TdxBarButton;
+    cbOutMCS: TcxCheckBox;
+    cbMCS: TcxCheckBox;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

@@ -1,12 +1,16 @@
 -- Function: gpReport_RemainsOverGoods()
 
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата остатка
-    IN inPeriod           TFloat,    -- 
-    IN inDay              TFloat,    -- 
+    IN inPeriod           TFloat,     -- Кол-во дней для анализа НТЗ
+    IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
+    IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
+    IN inisOutMCS         Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -69,7 +73,7 @@ BEGIN
 
 
     -- Таблицы
-    CREATE TEMP TABLE tmpGoods_list (GoodsId Integer, UnitId Integer, PriceId Integer, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpGoods_list (GoodsId Integer, UnitId Integer, PriceId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains_1 (GoodsId Integer, UnitId Integer, RemainsStart TFloat, ContainerId Integer, PRIMARY KEY (UnitId, GoodsId,ContainerId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpRemains (GoodsId Integer, UnitId Integer, RemainsStart TFloat, RemainsStart_save TFloat, MinExpirationDate TDateTime, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
     CREATE TEMP TABLE tmpMCS (GoodsId Integer, UnitId Integer, MCSValue TFloat, PRIMARY KEY (UnitId, GoodsId)) ON COMMIT DROP;
@@ -256,26 +260,45 @@ BEGIN
 
 
        -- MCS
-       INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
-            WITH 
-               tmp AS (SELECT tmp.GoodsId
-                            , tmp.UnitId
-                            , tmp.MCSValue
-                       FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
-                       -- FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
-                       WHERE tmp.MCSValue > 0
-                       )
-               SELECT tmp.GoodsId
-                    , tmp.UnitId
-                    , tmp.MCSValue
-               FROM tmpUnit_list
-                  JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId
-               ;
+       IF (inisMCS = FALSE AND inisOutMCS = FALSE) OR (inisMCS = TRUE AND inisOutMCS = FALSE)
+          THEN 
+              INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
+                   WITH 
+                   tmp AS (SELECT tmp.GoodsId
+                                , tmp.UnitId
+                                , tmp.MCSValue
+                           FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
+                           -- FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
+                           WHERE tmp.MCSValue > 0
+                           )
+                   SELECT tmp.GoodsId
+                        , tmp.UnitId
+                        , tmp.MCSValue
+                   FROM tmpUnit_list
+                        JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
+       IF inisMCS = FALSE AND inisOutMCS = TRUE
+          THEN 
+              INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
+                   WITH 
+                   tmp AS (SELECT tmp.GoodsId
+                                , tmp.UnitId
+                                , tmp.MCSValue
+                           --FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
+                           FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
+                           WHERE tmp.MCSValue > 0
+                           )
+                   SELECT tmp.GoodsId
+                        , tmp.UnitId
+                        , tmp.MCSValue
+                   FROM tmpUnit_list
+                        JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
+       END IF;
+       END IF;
 
 
        -- Goods_list
-       INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId)
-         SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId FROM tmpRemains
+       INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId, MCSValue)
+         SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue FROM tmpRemains
         /*UNION
          SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId FROM tmpMCS*/
         ;
@@ -285,12 +308,26 @@ BEGIN
        FROM ObjectLink AS Price_Goods, ObjectLink AS Price_Unit
        WHERE Price_Goods.ChildObjectId = tmpGoods_list.GoodsId
          AND Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
-
          AND Price_Unit.ObjectId       = Price_Goods.ObjectId
          AND Price_Unit.ChildObjectId  = tmpGoods_list.UnitId
-         AND Price_Unit.DescId         = zc_ObjectLink_Price_Unit()
-        ;
+         AND Price_Unit.DescId         = zc_ObjectLink_Price_Unit();
 
+       -- Goods_list - MCSValue
+       UPDATE tmpGoods_list 
+              SET MCSValue = CASE WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
+                                  WHEN (inisOutMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
+                                  WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN Object_Price_View.MCSValue 
+                                  WHEN (inisOutMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN Object_Price_View.MCSValue 
+                             END
+       FROM tmpGoods_list AS tmp
+           LEFT JOIN Object_Price_View ON Object_Price_View.Id = tmp.PriceId
+                                      AND Object_Price_View.UnitId = tmp.UnitId
+                                      AND Object_Price_View.GoodsId = tmp.GoodsId
+           LEFT JOIN tmpMCS ON tmpMCS.UnitId = tmp.UnitId
+                           AND tmpMCS.GoodsId = tmp.GoodsId
+       WHERE tmp.PriceId = tmpGoods_list.PriceId
+         AND tmp.UnitId  = tmpGoods_list.UnitId
+         AND tmp.GoodsId = tmpGoods_list.GoodsId;
 
 
         -- Result
@@ -310,7 +347,7 @@ BEGIN
              SELECT
                  tmpGoods_list.GoodsId
                , tmpGoods_list.UnitId
-               , tmpMCS.MCSValue
+               , tmpGoods_list.MCSValue
 
                , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)  AS Price
                , COALESCE (ObjectHistory_Price.StartDate, NULL)    AS StartDate
@@ -323,15 +360,15 @@ BEGIN
                  -- Излишки
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
-                           THEN FLOOR ((Object_Remains.RemainsStart - tmpMCS.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                       ELSE 0
                  END AS RemainsMCS_from
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN Object_Remains.RemainsStart > tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
-                          THEN FLOOR ((Object_Remains.RemainsStart - tmpMCS.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
@@ -340,15 +377,15 @@ BEGIN
                  -- Не хватает
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
-                           THEN CEIL ((tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                       ELSE 0
                  END AS RemainsMCS_to
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpMCS.MCSValue AND tmpMCS.MCSValue > 0
-                           THEN CEIL ((tmpMCS.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                      WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
+                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
@@ -370,8 +407,9 @@ BEGIN
                                   ON Object_Send.GoodsId = tmpGoods_list.GoodsId
                                  AND Object_Send.UnitId  = tmpGoods_list.UnitId
 
-                LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoods_list.GoodsId
+               /* LEFT JOIN tmpMCS ON tmpMCS.GoodsId = tmpGoods_list.GoodsId
                                 AND tmpMCS.UnitId =  tmpGoods_list.UnitId
+               */
                 -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = tmpGoods_list.PriceId
@@ -690,6 +728,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.10.16         *
  19.10.16         *
  14.07.16         *
  05.07.16         *

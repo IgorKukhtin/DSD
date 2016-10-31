@@ -455,7 +455,8 @@ uses
   Report_MovementCheckError in '..\..\FormsFarmacy\Report\Report_MovementCheckError.pas' {Report_MovementCheckErrorForm: TParentForm},
   MCS_Lite in '..\..\FormsFarmacy\Guides\MCS_Lite.pas' {MCS_LiteForm: TParentForm},
   OrderShedule in '..\..\FormsFarmacy\Guides\OrderShedule.pas' {OrderSheduleForm: TParentForm},
-  OrderSheduleEdit in '..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas' {OrderSheduleEditForm: TParentForm};
+  OrderSheduleEdit in '..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas' {OrderSheduleEditForm: TParentForm},
+  CheckVIP_Error in '..\..\FormsFarmacy\Document\CheckVIP_Error.pas' {CheckVIP_ErrorForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
