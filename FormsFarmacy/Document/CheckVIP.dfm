@@ -128,6 +128,12 @@ inherited CheckVIPForm: TCheckVIPForm
             DataBinding.FieldName = 'DiscountExternalName'
             Width = 70
           end
+          object Color_CalcDoc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_CalcDoc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -253,10 +259,6 @@ inherited CheckVIPForm: TCheckVIPForm
             Visible = False
             VisibleForCustomization = False
             Width = 20
-          end
-          object cxGridDBTableView1Column1: TcxGridDBColumn
-            DataBinding.FieldName = 'RemainsAmount'
-            Width = 30
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -553,7 +555,13 @@ inherited CheckVIPForm: TCheckVIPForm
       item
         Action = dsdChoiceGuides
       end>
-    Left = 440
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_CalcDoc
+        ColorValueList = <>
+      end>
+    Left = 400
+    Top = 248
   end
   object ClientDataSet1: TClientDataSet
     Aggregates = <>
@@ -592,7 +600,6 @@ inherited CheckVIPForm: TCheckVIPForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ColorColumn = colGoodsName
         BackGroundValueColumn = Color_Calc
         ColorValueList = <>
       end>

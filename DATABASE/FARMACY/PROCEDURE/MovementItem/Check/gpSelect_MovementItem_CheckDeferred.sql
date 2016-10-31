@@ -16,7 +16,6 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , List_UID TVarChar
              , isErased Boolean
              , Color_Calc Integer
-, RemainsAmount TFloat
               )
 AS
 $BODY$
@@ -57,7 +56,6 @@ BEGIN
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
                                                      ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-           
                       WHERE Movement.DescId = zc_Movement_Check()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
@@ -80,11 +78,12 @@ BEGIN
            , MIFloat_AmountOrder.ValueData       AS AmountOrder
            , MIString_UID.ValueData              AS List_UID
            , MovementItem.isErased
+
            , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)= 0 THEN 16440317 -- бледно крассный / розовый
                   WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)<> 0 THEN zc_Color_Yelow() -- желтый
                   ELSE zc_Color_White()
              END  AS Color_Calc
-           , COALESCE (tmpRemains.Amount,0) ::TFloat AS RemainsAmount
+
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
                                  AND MovementItem.DescId     = zc_MI_Master()

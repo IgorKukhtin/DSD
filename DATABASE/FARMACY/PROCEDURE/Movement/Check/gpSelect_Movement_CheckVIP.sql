@@ -23,7 +23,8 @@ RETURNS TABLE (
   ConfirmedKindClientName TVarChar,
   DiscountExternalId Integer,
   DiscountExternalName TVarChar,
-  DiscountCardNumber TVarChar
+  DiscountCardNumber TVarChar,
+  Color_CalcDoc Integer
  )
 AS
 $BODY$
@@ -42,9 +43,17 @@ BEGIN
      vbUnitId := vbUnitKey::Integer;
 
      RETURN QUERY
-       WITH tmpMov AS(SELECT Movement.Id
-                      FROM 
-                        Movement
+       WITH
+            tmpRemains AS(SELECT Container.ObjectId                  AS GoodsId
+                               , SUM(Container.Amount)::TFloat       AS Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count()
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount <> 0
+                          GROUP BY Container.ObjectId
+                          )
+          , tmpMov AS(SELECT Movement.Id
+                      FROM Movement
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
@@ -56,12 +65,21 @@ BEGIN
                              OR
                              (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)) 
                          AND MovementBoolean_Deferred.ValueData = True 
-                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
-                              OR 
-                              vbUnitId = 0))
-       --tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId
-       --                   UNION
-       --                   SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
+                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+                       )
+      , tmpColor AS (SELECT DISTINCT tmpMov.Id
+                     FROM tmpMov
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                        ON MovementLinkObject_ConfirmedKind.MovementId = tmpMov.Id
+                                                       AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                                                       AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_UnComplete()
+                          INNER JOIN MovementItem 
+                                  ON MovementItem.MovementId = tmpMov.Id
+                                 AND MovementItem.DescId     = zc_MI_Master()
+                                 AND MovementItem.isErased   = FALSE
+                          LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
+                     WHERE tmpRemains.Amount < MovementItem.Amount
+                     )
          
        SELECT Movement.Id
             , Movement.InvNumber
@@ -73,7 +91,7 @@ BEGIN
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId
-           , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
+            , CASE WHEN MovementString_InvNumberOrder.ValueData <> '' AND COALESCE (Object_CashMember.ValueData, '') = '' THEN zc_Member_Site() ELSE Object_CashMember.ValueData END :: TVarChar AS CashMember
 	    , MovementString_Bayer.ValueData             AS Bayer
 
             , MovementString_BayerPhone.ValueData        AS BayerPhone
@@ -84,6 +102,11 @@ BEGIN
 	    , Object_DiscountExternal.Id                 AS DiscountExternalId
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
 	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
+
+            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpColor.Id, 0) <> 0 THEN 16440317 -- 
+                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpColor.Id, 0) = 0  THEN zc_Color_Yelow() -- желтый
+                   ELSE zc_Color_White()
+             END  AS Color_CalcDoc
 
        FROM tmpMov
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
@@ -147,6 +170,8 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
              LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
+   
+             LEFT JOIN tmpColor ON tmpColor.Id = Movement.Id
        ;
 
 END;
@@ -157,6 +182,7 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 31.10.16         *
  10.08.16                                                                     * оптимизация
  07.04.16         * ушли от вьюхи
  12.09.2015                                                                   *[17:23] Кухтин Игорь: вторую кнопку закрыть и перекинуть их в запрос ВИП
