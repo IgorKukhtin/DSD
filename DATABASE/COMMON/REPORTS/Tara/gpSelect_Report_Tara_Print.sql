@@ -1,11 +1,6 @@
-DROP FUNCTION IF EXISTS gpSelect_Report_Tara_Print(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --По одному(группе) из объектов
-    Integer,   --Группа товара / Товар
-    Integer,   --Группа счетов
-    TVarChar   --сессия пользователя
-);
+-- Function: gpSelect_Report_TaraMovement()
+
+DROP FUNCTION IF EXISTS gpSelect_Report_Tara_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Tara_Print(
     IN inStartDate      TDateTime, --дата начала периода
@@ -229,7 +224,6 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
@@ -237,4 +231,4 @@ $BODY$
 */
 
 -- тест
---select * from gpSelect_Report_Tara_Print (inStartDate := ('30.08.2016')::TDateTime , inEndDate := ('31.08.2016')::TDateTime , inWhereObjectId := 630169 , inGoodsOrGroupId := 1865 , inAccountGroup := 0 ,  inSession := '5' ::TVarChar);
+-- select * from gpSelect_Report_Tara_Print (inStartDate := ('30.08.2016')::TDateTime , inEndDate := ('31.08.2016')::TDateTime , inWhereObjectId := 630169 , inGoodsOrGroupId := 1865 , inAccountGroup := 0 ,  inSession := '5' ::TVarChar);

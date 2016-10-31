@@ -442,28 +442,8 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (142372, 147559); -- 08.2016
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
-, 955228
-, 189406
-
-, 955227
-, 147524
-
-, 955226
-, 147525
-
-, 955221
-, 147522
-
-, 1088976
-, 699999
-
-, 955223
-, 955224
-
-, 393568
-, 149497
-);
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
+     --                                                       , 955228, 189406, 955227, 147524, 955226, 147525, 955221, 147522, 1088976, 699999, 955223, 955224, 393568, 149497);
 
 
      IF inBranchId = 0 -- OR 1 = 1

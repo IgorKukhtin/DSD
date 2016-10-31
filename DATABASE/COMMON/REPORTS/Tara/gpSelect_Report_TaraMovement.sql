@@ -1,22 +1,6 @@
-DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --Объект анализа
-    Integer,   --Товар
-    TVarChar,  --Типы документов
-    Integer,   --Тип связи для "От кого / кому"
-    TVarChar   --сессия пользователя
-);
-DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement(
-    TDateTime, --дата начала периода
-    TDateTime, --дата окончания периода
-    Integer,   --Объект анализа
-    Integer,   --Товар
-    TVarChar,  --Типы документов
-    Integer,   --Тип связи для "От кого / кому"
-    Integer,   --Группа счетов
-    TVarChar   --сессия пользователя
-);
+-- Function: gpSelect_Report_TaraMovement()
+
+DROP FUNCTION IF EXISTS gpSelect_Report_TaraMovement (TDateTime, TDateTime, Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_TaraMovement(
     IN inStartDate      TDateTime, --дата начала периода

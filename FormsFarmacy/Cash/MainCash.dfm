@@ -11,7 +11,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 781
-  ExplicitHeight = 453
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -803,7 +803,8 @@ inherited MainCashForm: TMainCashForm
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
-      ExplicitTop = 81
+      ExplicitWidth = 12
+      ExplicitHeight = 13
     end
     object Label2: TLabel
       Left = 432
@@ -1882,9 +1883,9 @@ inherited MainCashForm: TMainCashForm
     Left = 448
     Top = 80
   end
-  object TimerBlinkVIP: TTimer
+  object TimerBlinkBtn: TTimer
     Enabled = False
-    OnTimer = TimerBlinkVIPTimer
+    OnTimer = TimerBlinkBtnTimer
     Left = 320
     Top = 96
   end
@@ -1924,5 +1925,20 @@ inherited MainCashForm: TMainCashForm
     PackSize = 1
     Left = 448
     Top = 128
+  end
+  object spGet_BlinkCheck: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Check_CommentError'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outMovementId_list'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 168
   end
 end
