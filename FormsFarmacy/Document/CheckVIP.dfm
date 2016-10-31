@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 417
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -247,6 +247,16 @@ inherited CheckVIPForm: TCheckVIPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
+          end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 20
+          end
+          object cxGridDBTableView1Column1: TcxGridDBColumn
+            DataBinding.FieldName = 'RemainsAmount'
+            Width = 30
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -580,7 +590,12 @@ inherited CheckVIPForm: TCheckVIPForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = colGoodsName
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

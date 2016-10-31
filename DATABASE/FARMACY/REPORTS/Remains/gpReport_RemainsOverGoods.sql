@@ -268,7 +268,6 @@ BEGIN
                                 , tmp.UnitId
                                 , tmp.MCSValue
                            FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
-                           -- FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
                            WHERE tmp.MCSValue > 0
                            )
                    SELECT tmp.GoodsId
@@ -276,23 +275,14 @@ BEGIN
                         , tmp.MCSValue
                    FROM tmpUnit_list
                         JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
-       IF inisMCS = FALSE AND inisOutMCS = TRUE
+       ELSEIF inisMCS = FALSE AND inisOutMCS = TRUE
           THEN 
               INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
-                   WITH 
-                   tmp AS (SELECT tmp.GoodsId
-                                , tmp.UnitId
-                                , tmp.MCSValue
-                           --FROM gpSelect_RecalcMCS (-1 * inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
-                           FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
-                           WHERE tmp.MCSValue > 0
-                           )
                    SELECT tmp.GoodsId
                         , tmp.UnitId
                         , tmp.MCSValue
-                   FROM tmpUnit_list
-                        JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
-       END IF;
+                   FROM gpSelect_RecalcMCS (inUnitId, 0, inPeriod::Integer, inDay::Integer, inStartDate, inSession) AS tmp
+                   WHERE tmp.MCSValue > 0;
        END IF;
 
 
@@ -314,11 +304,12 @@ BEGIN
 
        -- Goods_list - MCSValue
        UPDATE tmpGoods_list 
-              SET MCSValue = CASE WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
+              SET MCSValue = CASE /*WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
                                   WHEN (inisOutMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
-                                  WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN Object_Price_View.MCSValue 
+                                  */WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN Object_Price_View.MCSValue 
                                   WHEN (inisOutMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN Object_Price_View.MCSValue 
-                             END
+                                  ELSE tmpMCS.MCSValue 
+                             END ::Tfloat
        FROM tmpGoods_list AS tmp
            LEFT JOIN Object_Price_View ON Object_Price_View.Id = tmp.PriceId
                                       AND Object_Price_View.UnitId = tmp.UnitId
