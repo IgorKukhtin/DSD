@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
@@ -10,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inPeriod           TFloat,     -- Кол-во дней для анализа НТЗ
     IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
     IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
-    IN inisOutMCS         Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
+    IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
+    IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor
@@ -52,7 +54,7 @@ BEGIN
     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     -- !!!Временно исправлются ошибки с датами в ценах!!!
     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    IF 1=1 -- inSession <> '3'
+    IF inisRecal = TRUE  -- inSession <> '3'
     THEN
     UPDATE  ObjectHistory set EndDate = coalesce (tmp.StartDate, zc_DateEnd())
     FROM (with tmp as (select ObjectHistory_Price.*
@@ -260,7 +262,7 @@ BEGIN
 
 
        -- MCS
-       IF (inisMCS = FALSE AND inisOutMCS = FALSE) OR (inisMCS = TRUE AND inisOutMCS = FALSE)
+       IF (inisMCS = FALSE AND inisInMCS = FALSE) OR (inisMCS = TRUE AND inisInMCS = FALSE)
           THEN 
               INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
                    WITH 
@@ -275,7 +277,7 @@ BEGIN
                         , tmp.MCSValue
                    FROM tmpUnit_list
                         JOIN tmp ON tmp.UnitId = tmpUnit_list.UnitId;
-       ELSEIF inisMCS = FALSE AND inisOutMCS = TRUE
+       ELSEIF inisMCS = FALSE AND inisInMCS = TRUE
           THEN 
               INSERT INTO tmpMCS (GoodsId, UnitId, MCSValue)
                    SELECT tmp.GoodsId
@@ -305,9 +307,9 @@ BEGIN
        -- Goods_list - MCSValue
        UPDATE tmpGoods_list 
               SET MCSValue = CASE /*WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
-                                  WHEN (inisOutMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
+                                  WHEN (inisInMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
                                   */WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN Object_Price_View.MCSValue 
-                                  WHEN (inisOutMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN Object_Price_View.MCSValue 
+                                  WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN Object_Price_View.MCSValue 
                                   ELSE tmpMCS.MCSValue 
                              END ::Tfloat
        FROM tmpGoods_list AS tmp
@@ -719,6 +721,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.11.16         * add inisRecal, rename inisOutMCS -> inisInMCS
  30.10.16         *
  19.10.16         *
  14.07.16         *

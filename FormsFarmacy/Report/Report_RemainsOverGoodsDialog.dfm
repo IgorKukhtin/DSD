@@ -117,6 +117,13 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 12
     Width = 152
   end
+  object cbisRecal: TcxCheckBox
+    Left = 291
+    Top = 15
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 13
+    Width = 22
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     Left = 169
@@ -191,9 +198,17 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isOutMCS'
+        Name = 'isInMCS'
         Value = Null
         Component = cbOutMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRecal'
+        Value = Null
+        Component = cbisRecal
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -51,8 +51,27 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Количество дней страхового запаса<%> не может быть меньше 1',inDay;
     END IF;
-    
-    
+  
+
+    -- Таблица подразделений для распределения 
+    CREATE TEMP TABLE tmpUnit(UnitId Integer) ON COMMIT DROP;
+    -- определяем подразделения для распределения
+    IF COALESCE (inUnitId,0) > 0 
+    THEN
+       INSERT INTO tmpUnit (UnitId)
+                      SELECT inUnitId AS UnitId;
+    ELSE
+       INSERT INTO tmpUnit (UnitId)
+                      SELECT ABS (inUnitId) :: Integer  AS UnitId
+                     UNION
+                      SELECT ObjectBoolean_Over.ObjectId  AS UnitId
+                      FROM ObjectBoolean AS ObjectBoolean_Over
+                      WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
+                        AND ObjectBoolean_Over.ValueData = TRUE;
+ 
+    END IF;
+
+
     -- Таблица
     CREATE TEMP TABLE tmpSoldOneDay (UnitId Integer, GoodsId Integer, NumberDay Integer, SoldCount TFloat, PRIMARY KEY (GoodsId, UnitId, NumberDay)) ON COMMIT DROP;
     INSERT INTO tmpSoldOneDay (UnitId, GoodsId, NumberDay, SoldCount)
@@ -61,12 +80,11 @@ BEGIN
                                   , inPeriod - DATE_PART ('DAY', inStartDate - Movement.OperDate) AS NumberDay
                                   , SUM (ROUND (CASE WHEN COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE THEN MovementItem.Amount ELSE 0 END, 1)) AS SoldCount
                              FROM Movement 
-                                  LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
-                                                                  ON MovementBoolean_NotMCS.MovementId = Movement.Id
-                                                                 AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+
                                   INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                         ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
                                                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
@@ -75,12 +93,16 @@ BEGIN
                                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
 
+                                  LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                                                  ON MovementBoolean_NotMCS.MovementId = Movement.Id
+                                                                 AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                          AND MovementItem.isErased = FALSE
                                                          AND MovementItem.Amount > 0
                                                          AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
                              WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                               AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId <= 0)
+                              -- AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId <= 0)
                                AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate :: Date - inPeriod)
                                AND Movement.OperDate <  DATE_TRUNC ('DAY', inStartDate :: Date)
                                AND Movement.DescId = zc_Movement_Check()
@@ -88,6 +110,9 @@ BEGIN
                                       MovementItem.ObjectId, 
                                       DATE_PART('DAY', inStartDate - Movement.OperDate)
                             ;
+
+     --!!!!!!!!!!!!!!!!!!!!!
+     ANALYZE tmpSoldOneDay;
 
 
     -- РЕЗУЛЬТАТ
