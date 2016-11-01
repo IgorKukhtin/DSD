@@ -177,7 +177,9 @@ BEGIN
                        GROUP BY tmpMIInvoice.MovementId
                        )
 
-  SELECT tmpMIInvoice.MovementId
+  SELECT *
+  FROM
+ (SELECT tmpMIInvoice.MovementId
        , tmpMIInvoice.InvNumber
        , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
        , tmpMIInvoice.OperDate
@@ -201,16 +203,16 @@ BEGIN
               THEN CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) / tmpMIInvoice.CountForPrice AS NUMERIC (16, 2))
               ELSE CAST (tmpMIInvoice.Amount * COALESCE (tmpMIInvoice.Price, 0) AS NUMERIC (16, 2))
          END :: TFloat AS AmountSumm
-       , tmpMIInvoice.TotalSumm           ::TFloat
-       , tmpMLM.ServiceSumma              ::TFloat
+       , tmpMIInvoice.TotalSumm           ::TFloat AS TotalSumm
+       , tmpMLM.ServiceSumma              ::TFloat AS ServiceSumma
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0))  ::TFloat  AS RemStart                 --ост.нач.счет
-       , tmpMLM.BankSumma                 ::TFloat
+       , tmpMLM.BankSumma                 ::TFloat AS BankSumma
        , (tmpMIInvoice.TotalSumm - COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpMLM.BankSumma, 0))   ::TFloat  AS RemEnd
-       , tmpIncomeGroup.IncomeTotalSumma  ::TFloat
-       , tmpIncome.IncomeSumma            ::TFloat
+       , tmpIncomeGroup.IncomeTotalSumma  ::TFloat AS IncomeTotalSumma
+       , tmpIncome.IncomeSumma            ::TFloat AS IncomeSumma
        , (COALESCE (tmpMLM.BankSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0))  ::TFloat AS DebetStart
        , (COALESCE (tmpMLM.BankSumma_Before, 0) + COALESCE (tmpMLM.BankSumma, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma_Before, 0) - COALESCE (tmpMLM.ServiceSumma_Before, 0) - COALESCE (tmpIncomeGroup.IncomeTotalSumma, 0) - COALESCE (tmpMLM.ServiceSumma, 0))  ::TFloat AS DebetEnd
-       , tmpMIInvoiceChild.AmountSumm      ::TFloat  AS PaymentPlan
+       , tmpMIInvoiceChild.AmountSumm     ::TFloat AS PaymentPlan
 
   FROM tmpMIInvoice
        LEFT JOIN tmpMLM         ON tmpMLM.MovementId_Invoice         = tmpMIInvoice.MovementId
@@ -238,7 +240,17 @@ BEGIN
        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
        
   ORDER BY tmpMIInvoice.MovementId, Object_NameBefore.ValueData
-    ;
+ ) AS tmpResult
+ WHERE tmpResult.RemStart <> 0
+    OR tmpResult.PaymentPlan <> 0
+    OR tmpResult.BankSumma <> 0
+    OR tmpResult.RemEnd <> 0
+
+    OR tmpResult.DebetStart <> 0
+    OR tmpResult.IncomeTotalSumma <> 0
+    OR tmpResult.ServiceSumma <> 0
+    OR tmpResult.DebetEnd <> 0
+      ;
          
 END;
 $BODY$

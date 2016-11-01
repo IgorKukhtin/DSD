@@ -1,9 +1,7 @@
 -- Function: gpSelect_Movement_ProductionUnionTech()
 
-
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech(
     IN inStartDate         TDateTime,
@@ -711,4 +709,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_ProductionUnionTech (inStartDate:= ('01.02.2015')::TDateTime, inEndDate:= ('01.02.2015')::TDateTime, inFromId:= 8447, inToId:= 8447, inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

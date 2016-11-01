@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_ProductionSeparate()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionSeparate (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionSeparate(
@@ -96,4 +96,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionSeparate (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionSeparate (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= '2')

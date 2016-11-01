@@ -4,8 +4,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   ClientWidth = 1073
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -283
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -184,12 +185,12 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
-            DataBinding.FieldName = 'InsertDate'
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 105
+            Width = 150
           end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090'.'
@@ -198,6 +199,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 36
+          end
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076'. '#1082#1083#1072#1076#1086#1074#1097'.'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
           end
         end
       end
@@ -214,7 +222,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     end
   end
   object edJuridicalBasis: TcxButtonEdit [2]
-    Left = 887
+    Left = 800
     Top = 7
     Properties.Buttons = <
       item
@@ -226,9 +234,9 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     Width = 155
   end
   object cxLabel27: TcxLabel [3]
-    Left = 789
+    Left = 722
     Top = 8
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

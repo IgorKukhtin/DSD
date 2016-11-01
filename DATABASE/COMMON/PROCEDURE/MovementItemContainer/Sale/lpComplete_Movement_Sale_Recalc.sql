@@ -14,23 +14,24 @@ $BODY$
 BEGIN
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
-        -- AND inUserId = 5
+        AND inUserId = 5
      THEN
 
-     -- Поиск "Пересортица"
+     -- Поиск "Пересортица" или "Обычный"
      vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
 
      -- таблица - элементы
-     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, GoodsId_from Integer, GoodsKindId_from Integer, Amount_to TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
 
      -- элементы
-     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, Amount_to)
+     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
         SELECT 0                                                      AS MovementItemId_to
              , 0                                                      AS MovementItemId_from
              , _tmpItem.GoodsId                                       AS GoodsId_to
              , _tmpItem.GoodsKindId                                   AS GoodsKindId_to
              , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsId_from
              , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId AS GoodsKindId_from
+             , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId      AS ReceipId_to
              , SUM (_tmpItem.OperCount)                               AS Amount_to
         FROM _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -48,13 +49,58 @@ BEGIN
                                    ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                   AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
                                   AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
+                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_Receipt.DescId   = zc_ObjectLink_GoodsByGoodsKind_Receipt()
+
         WHERE _tmpItem.GoodsId      <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
            OR _tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
-       ;
+               , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId
+                ;
+
+     -- элементы - добавили еще те что по рецептуре
+     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
+        SELECT 0                                                      AS MovementItemId_to
+             , 0                                                      AS MovementItemId_from
+             , _tmpItemPeresort_new.GoodsId_to                        AS GoodsId_to
+             , _tmpItemPeresort_new.GoodsKindId_to                    AS GoodsKindId_to
+             , ObjectLink_ReceiptChild_Goods.ChildObjectId            AS GoodsId_from
+             , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_from
+             , -- т.к. надо будет отличать кол-во для ГП от других составляющих
+               -1 * _tmpItemPeresort_new.ReceipId_to                  AS ReceipId_to
+             , _tmpItemPeresort_new.Amount_to * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_to
+        FROM _tmpItemPeresort_new
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value_master
+                                                     ON ObjectFloat_Value_master.ObjectId = _tmpItemPeresort_new.ReceipId_to
+                                                    AND ObjectFloat_Value_master.DescId = zc_ObjectFloat_Receipt_Value()
+                                                    AND ObjectFloat_Value_master.ValueData <> 0
+                              INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                   ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = _tmpItemPeresort_new.ReceipId_to
+                                                  AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                              INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                      AND Object_ReceiptChild.isErased = FALSE
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                   ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                              LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                   ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                  AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                              INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                    AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                    AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                              AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
+
+        WHERE _tmpItemPeresort_new.ReceipId_to <> 0
 
 
      IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
@@ -108,7 +154,7 @@ BEGIN
                                                                         , inFromId         := (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
                                                                         , inToId           := (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
                                                                         , inDocumentKindId := 0
-                                                                        , inIsPeresort     := TRUE
+                                                                        , inIsPeresort     := CASE WHEN EXISTS (SELECT 1 FROM _tmpItemPeresort_new AS tmp WHERE tmp.ReceipId_to <> 0) THEN FALSE ELSE TRUE END
                                                                         , inUserId         := inUserId
                                                                          );
          -- сохранили свойство <автоматически сформирован>
@@ -128,28 +174,51 @@ BEGIN
            AND tmp.MovementItemId IS NULL
         ;
 
-         -- сохранили элементы - Master
-         UPDATE _tmpItemPeresort_new SET MovementItemId_to = lpInsertUpdate_MI_ProductionUnion_Master
-                                                  (ioId                     := _tmpItemPeresort_new.MovementItemId_to
+         -- сохранили в табл. элементы - Master
+         UPDATE _tmpItemPeresort_new SET MovementItemId_to = tmpMI.MovementItemId_new
+         FROM (SELECT tmp.MovementItemId_new, tmp.GoodsId_to, tmp.GoodsKindId_to
+                    , -- еще св-во связь с <Рецептуры>
+                      lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), tmp.MovementItemId_new, tmp.ReceipId_to)
+               FROM
+              (SELECT tmp.GoodsId_to, tmp.GoodsKindId_to, tmp.ReceipId_to
+                    , -- сохранили элементы - Master
+                      lpInsertUpdate_MI_ProductionUnion_Master
+                                                  (ioId                     := tmp.MovementItemId_to
                                                  , inMovementId             := vbMovementId_Peresort
-                                                 , inGoodsId                := _tmpItemPeresort_new.GoodsId_to
-                                                 , inAmount                 := _tmpItemPeresort_new.Amount_to
+                                                 , inGoodsId                := tmp.GoodsId_to
+                                                 , inAmount                 := tmp.Amount_to
                                                  , inCount                  := 0
                                                  , inCuterWeight            := 0
                                                  , inPartionGoodsDate       := NULL
                                                  , inPartionGoods           := NULL
-                                                 , inGoodsKindId            := _tmpItemPeresort_new.GoodsKindId_to
+                                                 , inGoodsKindId            := tmp.GoodsKindId_to
                                                  , inUserId                 := inUserId
-                                                  );
+                                                  ) AS MovementItemId_new
+               FROM (-- обязательно взяли только там где нет составляющих
+                     SELECT DISTINCT _tmpItemPeresort_new.MovementItemId_to, _tmpItemPeresort_new.GoodsId_to, _tmpItemPeresort_new.GoodsKindId_to, _tmpItemPeresort_new.ReceipId_to, _tmpItemPeresort_new.Amount_to
+                     FROM _tmpItemPeresort_new
+                     WHERE _tmpItemPeresort_new.ReceipId_to >= 0
+                    ) AS tmp
+              ) AS tmp
+              ) AS tmpMI
+         WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
+           AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
+          ;
          -- сохранили элементы - Child
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child
                                                   (ioId                     := _tmpItemPeresort_new.MovementItemId_from
                                                  , inMovementId             := vbMovementId_Peresort
                                                  , inGoodsId                := _tmpItemPeresort_new.GoodsId_from
-                                                 , inAmount                 := CASE WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_to.ChildObjectId = zc_Measure_Sh()
+                                                 , inAmount                 := CASE -- если это составляющие
+                                                                                    WHEN _tmpItemPeresort_new.ReceipId_to < 0
+                                                                                         THEN _tmpItemPeresort_new.Amount_to
+                                                                                    -- если это НЕ составляющие и надо перевести в Вес
+                                                                                    WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_to.ChildObjectId = zc_Measure_Sh()
                                                                                          THEN _tmpItemPeresort_new.Amount_to * ObjectFloat_Weight.ValueData
+                                                                                    -- если это НЕ составляющие и надо перевести в Шт
                                                                                     WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh()
                                                                                          THEN _tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData
+                                                                                    -- иначе ... ?
                                                                                     ELSE _tmpItemPeresort_new.Amount_to
                                                                                END
                                                  , inParentId               := _tmpItemPeresort_new.MovementItemId_to

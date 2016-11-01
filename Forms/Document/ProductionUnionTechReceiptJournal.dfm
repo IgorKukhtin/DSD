@@ -4,8 +4,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
   ClientWidth = 1076
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -303
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -804,7 +805,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     end
   end
   object edJuridicalBasis: TcxButtonEdit [2]
-    Left = 890
+    Left = 900
     Top = 7
     Properties.Buttons = <
       item
@@ -813,12 +814,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 155
+    Width = 150
   end
   object cxLabel27: TcxLabel [3]
-    Left = 789
+    Left = 822
     Top = 8
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <

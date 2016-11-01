@@ -1,10 +1,7 @@
 -- Function: gpSelect_Movement_ProductionUnion()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inStartDate         TDateTime,
@@ -146,4 +143,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:=true, inIsPeresort:=false, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ProductionUnion (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:=true, inIsPeresort:=false, inJuridicalBasisId:=0, inSession:= '2')

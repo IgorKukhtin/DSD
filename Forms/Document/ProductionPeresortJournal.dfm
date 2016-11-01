@@ -1,26 +1,27 @@
 inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
   ClientHeight = 535
-  ClientWidth = 863
+  ClientWidth = 984
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 879
-  ExplicitHeight = 573
+  ExplicitLeft = -194
+  ExplicitWidth = 1000
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 863
+    Width = 984
     Height = 478
     TabOrder = 3
     ExplicitWidth = 863
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 863
+    ClientRectRight = 984
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 863
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 863
+        Width = 984
         Height = 478
         ExplicitWidth = 863
         ExplicitHeight = 478
@@ -185,12 +186,12 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             Width = 90
           end
           object colInvNumber_ProductionFull: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_ProductionFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 108
+            Width = 150
           end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090'.'
@@ -205,7 +206,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 863
+    Width = 984
     ExplicitWidth = 863
     inherited deStart: TcxDateEdit
       EditValue = 42370d
@@ -215,12 +216,12 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 601
+    Left = 722
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 702
+    Left = 800
     Top = 5
     Properties.Buttons = <
       item
@@ -229,7 +230,7 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
