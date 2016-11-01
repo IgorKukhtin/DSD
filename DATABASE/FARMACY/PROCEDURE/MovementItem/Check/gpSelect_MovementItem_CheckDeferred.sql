@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , AmountOrder TFloat
              , List_UID TVarChar
              , isErased Boolean
+             , Color_Calc Integer
               )
 AS
 $BODY$
@@ -34,9 +35,17 @@ BEGIN
 
     RETURN QUERY
         WITH 
-            tmpMov AS(SELECT Movement.Id
-                      FROM 
-                        Movement
+            tmpRemains AS(SELECT Container.ObjectId                  AS GoodsId
+                               , SUM(Container.Amount)::TFloat       AS Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count()
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount <> 0
+                          GROUP BY Container.ObjectId
+                          )
+          , tmpMov AS(SELECT Movement.Id
+                           , MovementLinkObject_ConfirmedKind.ObjectId  AS ConfirmedKindId
+                      FROM Movement
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
@@ -44,6 +53,9 @@ BEGIN
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                     ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                                    AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
                       WHERE Movement.DescId = zc_Movement_Check()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
@@ -66,6 +78,12 @@ BEGIN
            , MIFloat_AmountOrder.ValueData       AS AmountOrder
            , MIString_UID.ValueData              AS List_UID
            , MovementItem.isErased
+
+           , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)= 0 THEN 16440317 -- бледно крассный / розовый
+                  WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)<> 0 THEN zc_Color_Yelow() -- желтый
+                  ELSE zc_Color_White()
+             END  AS Color_Calc
+
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id
                                  AND MovementItem.DescId     = zc_MI_Master()
@@ -99,6 +117,8 @@ BEGIN
           LEFT JOIN MovementItemString AS MIString_UID
                                        ON MIString_UID.MovementItemId = MovementItem.Id
                                       AND MIString_UID.DescId = zc_MIString_UID()
+
+          LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
      WHERE MovementItem.isErased = FALSE;
 
 END;
@@ -109,6 +129,7 @@ ALTER FUNCTION gpSelect_MovementItem_CheckDeferred (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Воробкало А.А
+ 30.10.16         * add Color_Calc
  10.08.16                                                                     * MIString_UID.ValueData AS List_UID + оптимизация
  08.04.16         *
  03.07.15                                                                       * 

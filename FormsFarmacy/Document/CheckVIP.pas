@@ -58,6 +58,8 @@ type
     bbConfirmedKind_Complete: TdxBarButton;
     spConfirmedKind_UnComplete: TdsdStoredProc;
     bbConfirmedKind_UnComplete: TdxBarButton;
+    Color_Calc: TcxGridDBColumn;
+    Color_CalcDoc: TcxGridDBColumn;
   private
     { Private declarations }
   public
