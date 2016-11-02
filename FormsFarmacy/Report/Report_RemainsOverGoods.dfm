@@ -16,9 +16,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     TabOrder = 3
     Properties.ActivateFocusedTab = False
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
-    ExplicitTop = 61
+    ExplicitTop = 76
     ExplicitWidth = 1066
-    ExplicitHeight = 496
+    ExplicitHeight = 481
     ClientRectBottom = 481
     ClientRectRight = 1066
     ClientRectTop = 24
@@ -27,12 +27,12 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1066
-      ExplicitHeight = 472
+      ExplicitHeight = 457
       inherited cxGrid: TcxGrid
         Width = 1066
         Height = 220
         ExplicitWidth = 1066
-        ExplicitHeight = 235
+        ExplicitHeight = 220
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -623,7 +623,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 240
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1008,13 +1007,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 235
       end
     end
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitHeight = 472
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1022,7 +1019,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Height = 457
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 472
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1504,7 +1500,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     TabOrder = 7
     Width = 35
   end
-  object cbOutMCS: TcxCheckBox [4]
+  object cbInMCS: TcxCheckBox [4]
     Left = 718
     Top = 29
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1519,6 +1515,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
     TabOrder = 9
     Width = 152
+  end
+  object cbisRecal: TcxCheckBox [6]
+    Left = 972
+    Top = 4
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 10
+    Width = 22
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1705,9 +1708,17 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'isOutMCS'
+          Name = 'isInMCS'
           Value = Null
-          Component = cbOutMCS
+          Component = cbInMCS
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isRecal'
+          Value = Null
+          Component = cbisRecal
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1983,9 +1994,17 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOutMCS'
+        Name = 'inisInMCS'
         Value = Null
-        Component = cbOutMCS
+        Component = cbInMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRecal'
+        Value = Null
+        Component = cbisRecal
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

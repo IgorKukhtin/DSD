@@ -36,6 +36,7 @@ type
     cxLabel4: TcxLabel;
     cbOutMCS: TcxCheckBox;
     cbMCS: TcxCheckBox;
+    cbisRecal: TcxCheckBox;
   private
     { Private declarations }
   public
