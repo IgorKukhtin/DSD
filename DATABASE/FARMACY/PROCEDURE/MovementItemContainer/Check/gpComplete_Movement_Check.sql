@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Check (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Check(
     IN inMovementId        Integer              , -- ключ Документа
    OUT outStatusCode       Integer              ,
+   OUT outMessageText      Text                 ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS Integer
@@ -34,7 +35,7 @@ BEGIN
     WHERE Movement_Check.Id = inMovementId;
 
     -- формируются проводки
-    PERFORM gpComplete_Movement_CheckAdmin (inMovementId, vbPaidType, vbCashRegisterId, inSession);
+    outMessageText:= gpComplete_Movement_CheckAdmin (inMovementId, vbPaidType, vbCashRegisterId, inSession);
 
     outStatusCode := (SELECT Object.ObjectCode FROM Movement INNER JOIN Object ON Object.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
 
