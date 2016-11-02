@@ -154,12 +154,17 @@ BEGIN
                                     , tmpMI.Price_original
                                     , MIFloat_Price.ValueData    AS Price_find
                                     , MIN (MovementItem.Id)      AS MovementItemId_sale
-                                    , SUM (MovementItem.Amount)  AS Amount_sale
+                                    -- , SUM (MovementItem.Amount)  AS Amount_sale
+                                    , SUM (MIFloat_AmountPartner.ValueData) AS Amount_sale
                                FROM tmpMI
                                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMI.MovementId_sale
                                                            AND MovementItem.isErased   = FALSE
                                                            AND MovementItem.DescId     = zc_MI_Master()
                                                            AND MovementItem.ObjectId   = tmpMI.GoodsId
+                                    INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_AmountPartner.DescId         = zc_MIFloat_AmountPartner()
+                                                                AND MIFloat_AmountPartner.ValueData    <> 0
                                     LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                AND MIFloat_Price.DescId         = zc_MIFloat_Price()

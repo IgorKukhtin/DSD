@@ -113,12 +113,12 @@ BEGIN
 
            , Movement_Production.Id               AS MovementId_Production
            , (CASE WHEN Movement_Production.StatusId = zc_Enum_Status_Erased()
-                       THEN '***'
+                       THEN '???'
                    WHEN Movement_Production.StatusId = zc_Enum_Status_UnComplete()
-                       THEN '*'
+                       THEN '?'
                    ELSE ''
               END
-           || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
+           || zfCalc_PartionMovementName (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN -1 ELSE 1 END * Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
              ) :: TVarChar AS InvNumber_ProductionFull
 
        FROM (SELECT Movement.id
@@ -299,6 +299,9 @@ BEGIN
                                           AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
             LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
+            LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                      ON MovementBoolean_Peresort.MovementId =  Movement_Production.Id
+                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
@@ -321,4 +324,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:=0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inJuridicalBasisId:=0, inSession:= zfCalc_UserAdmin())

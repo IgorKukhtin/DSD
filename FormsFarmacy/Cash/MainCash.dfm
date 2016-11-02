@@ -632,7 +632,7 @@ inherited MainCashForm: TMainCashForm
         Width = 35
         Height = 22
         Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1095#1077#1082#1086#1074
-        Action = actCheck
+        Caption = #1063#1077#1082#1080
         LookAndFeel.Kind = lfStandard
         ParentShowHint = False
         ShowHint = True
@@ -643,6 +643,7 @@ inherited MainCashForm: TMainCashForm
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
+        OnClick = btnCheckClick
       end
       object cxLabel2: TcxLabel
         Left = 279
@@ -952,7 +953,7 @@ inherited MainCashForm: TMainCashForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1053#1077#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080
+      Caption = #1063#1077#1082#1080' '#1089' '#1086#1096#1080#1073#1082#1086#1081' '#1074' '#1086#1089#1090#1072#1090#1082#1077
       FormName = 'TCheckVIP_ErrorForm'
       FormNameParam.Value = 'TCheckVIP_ErrorForm'
       FormNameParam.DataType = ftString

@@ -1,10 +1,10 @@
 inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
-  Caption = #1053#1077#1087#1088#1086#1074#1077#1076#1077#1085#1085#1099#1077' '#1095#1077#1082#1080
+  Caption = #1063#1077#1082#1080' '#1089' '#1086#1096#1080#1073#1082#1086#1081' '#1074' '#1086#1089#1090#1072#1090#1082#1077
   ClientHeight = 382
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -58,11 +58,13 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderHint = #1059#1076#1072#1083#1077#1085
             Width = 27
           end
-          object colCashMember: TcxGridDBColumn
-            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
-            DataBinding.FieldName = 'CashMember'
+          object colCommentError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'CommentError'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1086#1089#1090#1072#1090#1086#1082' - '#1058#1086#1074#1072#1088'/'#1088#1072#1089#1095'/'#1092#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
+            Width = 60
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
@@ -90,19 +92,17 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             Width = 50
           end
+          object colCashMember: TcxGridDBColumn
+            Caption = #1052#1077#1085#1077#1076#1078#1077#1088
+            DataBinding.FieldName = 'CashMember'
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1040#1087#1090#1077#1082#1072
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object colCommentError: TcxGridDBColumn
-            Caption = #1054#1096#1080#1073#1082#1072
-            DataBinding.FieldName = 'CommentError'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1096#1080#1073#1082#1072' '#1086#1089#1090#1072#1090#1086#1082' - '#1058#1086#1074#1072#1088'/'#1088#1072#1089#1095'/'#1092#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
-            Width = 60
           end
         end
       end

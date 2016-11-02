@@ -12,7 +12,7 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || ItemName || '>' FROM MovementDesc WHERE Id = inDescId), ''));
+     RETURN ('№ ' || inInvNumber || ' oт '|| DATE (inOperDate) :: TVarChar || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion() THEN 'Пересортица' ELSE ItemName END || '>' FROM MovementDesc WHERE Id = ABS (inDescId)), ''));
 
 END;
 $BODY$

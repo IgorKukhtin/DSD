@@ -277,7 +277,8 @@ type
     procedure CheckCDSBeforePost(DataSet: TDataSet);
     procedure TimerBlinkBtnTimer(Sender: TObject);
     procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
-    procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject); //***10.08.16
+    procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
+    procedure btnCheckClick(Sender: TObject); //***10.08.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -494,6 +495,9 @@ procedure TMainCashForm.actExecuteLoadVIPExecute(Sender: TObject);
 var lMsg: String;
 begin
   inherited;
+  //
+  SetBlinkVIP(true);
+  //
   if not CheckCDS.IsEmpty then
   Begin
     ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
@@ -984,6 +988,15 @@ end;
 procedure TMainCashForm.actUpdateRemainsExecute(Sender: TObject);
 begin
   UpdateRemainsFromDiff(nil);
+end;
+
+procedure TMainCashForm.btnCheckClick(Sender: TObject);
+begin
+  SetBlinkCheck(true);
+  //
+  if fBlinkCheck = true
+  then actOpenCheckVIP_Error.Execute
+  else actCheck.Execute;
 end;
 
 procedure TMainCashForm.ceAmountExit(Sender: TObject);
@@ -2492,7 +2505,7 @@ begin
   if fBlinkCheck = true
   then if btnCheck.Colors.NormalText <> clDefault
        then begin btnCheck.Colors.NormalText:= clDefault; btnCheck.Colors.Default := clDefault; end
-       else begin btnCheck.Colors.NormalText:= clYellow; btnCheck.Colors.Default := clRed; end
+       else begin btnCheck.Colors.NormalText:= clRed; btnCheck.Colors.Default := clRed; end
   else begin btnCheck.Colors.NormalText := clDefault; btnCheck.Colors.Default := clDefault; end;
 
 end;

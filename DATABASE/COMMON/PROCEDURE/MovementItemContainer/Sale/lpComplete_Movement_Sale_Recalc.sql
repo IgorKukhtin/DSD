@@ -14,7 +14,13 @@ $BODY$
 BEGIN
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
-        AND inUserId = 5
+     OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
+                    , 8445 -- Склад МИНУСОВКА
+                    , 133049 -- Склад реализации мясо
+                     )
+         AND '01.11.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+        )
+        -- AND inUserId = 5
      THEN
 
      -- Поиск "Пересортица" или "Обычный"
@@ -30,8 +36,8 @@ BEGIN
              , _tmpItem.GoodsId                                       AS GoodsId_to
              , _tmpItem.GoodsKindId                                   AS GoodsKindId_to
              , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsId_from
-             , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId AS GoodsKindId_from
-             , ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId      AS ReceipId_to
+             , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
+             , COALESCE (ObjectLink_GoodsByGoodsKind_Receipt.ChildObjectId, 0)      AS ReceipId_to
              , SUM (_tmpItem.OperCount)                               AS Amount_to
         FROM _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -40,21 +46,22 @@ BEGIN
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                    ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                   AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = _tmpItem.GoodsKindId
+                                  AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = _tmpItem.GoodsKindId
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
                                    ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                   AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
                                   AND ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId > 0
-             INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
-                                   ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
-                                  AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId      = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+                                 -- AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                   ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                  AND ObjectLink_GoodsByGoodsKind_Receipt.DescId   = zc_ObjectLink_GoodsByGoodsKind_Receipt()
 
         WHERE _tmpItem.GoodsId      <> ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
-           OR _tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+           OR (_tmpItem.GoodsKindId  <> ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+               AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0)
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
@@ -101,6 +108,7 @@ BEGIN
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
 
         WHERE _tmpItemPeresort_new.ReceipId_to <> 0
+       ;
 
 
      IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
@@ -286,5 +294,6 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpComplete_Movement_Sale_Recalc (inMovementId:= 4164174, inUnitId:= 8459, inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM gpReComplete_Movement_Sale (inMovementId:= 4164174, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Sale_Recalc (inMovementId:= 4691383, inUnitId:= 8459, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpReComplete_Movement_SendOnPrice (inMovementId:= 4691383, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReComplete_Movement_Sale (inMovementId:= 4691383, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())

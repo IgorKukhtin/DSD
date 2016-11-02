@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsert_Object_GoodsByGoodsKind(
     IN inGoodsKindId  Integer  , -- Виды товаров
     IN inUserId       Integer    -- Пользователь
 )
-  RETURNS VOID AS
+RETURNS VOID
+AS
 $BODY$
    DECLARE vbId Integer;
 BEGIN
@@ -17,6 +18,12 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Товар не определен.';
      END IF;
+     -- Проверка
+     IF inGoodsId = inGoodsKindId
+     THEN
+         RAISE EXCEPTION 'Ошибка.Параметры Товар и Вид товара = <%> <%>.', inGoodsId, inGoodsKindId;
+     END IF;
+
 
      -- если связь не нужна, зачем ее создавать
      IF COALESCE (inGoodsKindId, 0) = 0
@@ -51,9 +58,8 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+ LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lpInsert_Object_GoodsByGoodsKind (Integer, Integer, Integer)  OWNER TO postgres;
-
   
 /*-------------------------------------------------------------------------------*/
 /*
