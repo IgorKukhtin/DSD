@@ -290,9 +290,17 @@ BEGIN
 
        -- Goods_list
        INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId, MCSValue)
-         SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue FROM tmpRemains
-        /*UNION
-         SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId FROM tmpMCS*/
+         SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+         FROM tmpRemains
+        UNION 
+         SELECT Object_Price_View.GoodsId, Object_Price_View.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+         FROM tmpUnit_list
+            LEFT JOIN Object_Price_View ON Object_Price_View.UnitId = tmpUnit_list.UnitId
+         WHERE Object_Price_View.MCSValue <> 0 AND inisInMCS = TRUE
+        UNION
+         SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+         FROM tmpMCS
+         WHERE inisInMCS = FALSE
         ;
   
        -- Goods_list - PriceId
