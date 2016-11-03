@@ -4,7 +4,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 417
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -224,6 +224,12 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
             Options.Editing = False
             Width = 45
           end
+          object Color_CalcError: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_CalcError'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -429,6 +435,10 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
         end>
       Caption = 'spCompete'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -577,7 +587,11 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Color_CalcError
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -687,6 +701,14 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'StatusCode'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

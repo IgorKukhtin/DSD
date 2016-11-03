@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, MovementId Integer
              , List_UID TVarChar
              , isErased Boolean
              , Color_Calc Integer
+             , Color_CalcError Integer
               )
 AS
 $BODY$
@@ -79,10 +80,14 @@ BEGIN
            , MIString_UID.ValueData              AS List_UID
            , MovementItem.isErased
 
-           , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)= 0 THEN 16440317 -- бледно крассный / розовый
-                  WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpRemains.Amount,0)<> 0 THEN zc_Color_Yelow() -- желтый
+           , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND (COALESCE (tmpRemains.Amount,0) < COALESCE (MovementItem.Amount,0)) THEN 16440317 -- бледно крассный / розовый
+                  WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND (COALESCE (tmpRemains.Amount,0) >= COALESCE (MovementItem.Amount,0)) THEN zc_Color_Yelow() -- желтый
                   ELSE zc_Color_White()
              END  AS Color_Calc
+
+           , CASE WHEN COALESCE (tmpRemains.Amount,0) < COALESCE (MovementItem.Amount,0) THEN zc_Color_Red()
+                  ELSE zc_Color_Black()
+             END  AS Color_CalcError
 
        FROM tmpMov
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMov.Id

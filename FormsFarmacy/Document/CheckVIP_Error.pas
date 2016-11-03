@@ -58,6 +58,8 @@ type
     spCompete: TdsdExecStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
+    Color_CalcError: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

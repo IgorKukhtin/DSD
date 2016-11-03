@@ -13,18 +13,19 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     Width = 1110
     Height = 449
     TabOrder = 3
+    ExplicitTop = 86
     ExplicitWidth = 1110
-    ExplicitHeight = 478
+    ExplicitHeight = 449
     ClientRectBottom = 449
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
-      ExplicitHeight = 478
+      ExplicitHeight = 449
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 449
         ExplicitWidth = 1110
-        ExplicitHeight = 478
+        ExplicitHeight = 449
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -89,6 +90,11 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colFromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -462,17 +468,20 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
@@ -497,6 +506,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -504,6 +514,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumberPartner'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate_Tax'
@@ -511,6 +522,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -534,6 +546,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -541,6 +554,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsRegisterDate'
@@ -548,6 +562,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = edIsRegisterDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -555,6 +570,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -562,6 +578,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -569,6 +586,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 104
     Top = 171
@@ -707,12 +725,14 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -725,6 +745,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -737,6 +758,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -747,18 +769,21 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -766,6 +791,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -773,6 +799,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -780,6 +807,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -787,6 +815,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 304
     Top = 288
@@ -800,6 +829,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     FormNameParam.Name = 'TJuridical_ObjectForm'
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -809,6 +839,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -817,6 +848,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 577
   end
@@ -826,6 +858,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
     FormNameParam.Name = 'TPartner_ObjectForm'
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -835,6 +868,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -843,12 +877,14 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = Null
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -856,6 +892,7 @@ inherited TaxJournalChoiceForm: TTaxJournalChoiceForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 649
     Top = 24

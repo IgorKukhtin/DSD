@@ -100,6 +100,11 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountRemains
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False

@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -49,6 +49,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             item
               Kind = skSum
               Column = colPrice
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -482,6 +487,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -507,12 +513,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -520,6 +528,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Component = MasterCDS
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -573,6 +582,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -581,6 +591,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxCorrective_Client: TdsdPrintAction
       Category = 'DSDLib'
@@ -608,6 +619,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
@@ -616,6 +628,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       ReportNameParam.ComponentItem = 'ReportNameTaxCorrective'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object mactPrint_TaxCorrective_Client: TMultiAction
       Category = 'DSDLib'
@@ -654,6 +667,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       FormName = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -661,12 +675,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Component = DocumentTaxGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inmask'
           Value = 'False'
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -674,11 +690,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = 'False'
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -722,6 +740,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -729,6 +748,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -736,10 +756,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'delme'
         Value = ''
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 248
@@ -868,6 +890,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 2
       end>
     Left = 830
@@ -889,12 +912,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -902,35 +927,41 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSale'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameTaxCorrective'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
         Value = '0'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 552
@@ -948,6 +979,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioStatusCode'
@@ -955,6 +987,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = StatusGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outMessageText'
@@ -962,6 +995,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = actShowMessage
         ComponentItem = 'MessageText'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 32
@@ -975,6 +1009,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMask'
@@ -983,6 +1018,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'inMask'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -991,12 +1027,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isMask'
@@ -1004,17 +1042,20 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'isMask'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1022,6 +1063,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1029,54 +1071,63 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Checked'
         Value = 'False'
         Component = edIsChecked
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Document'
         Value = 'False'
         Component = edIsDocument
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isElectron'
         Value = 'False'
         Component = edIsElectron
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateRegistered'
         Value = 0d
         Component = edDateRegistered
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromId'
         Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
@@ -1084,12 +1135,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1097,12 +1150,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -1110,12 +1165,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1123,12 +1180,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxKindName'
@@ -1136,18 +1195,21 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentMasterName'
         Value = ''
         Component = edReturnIn
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentChildId'
         Value = ''
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentChildName'
@@ -1155,24 +1217,28 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberBranch'
         Value = ''
         Component = edInvNumberBranch
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPartner'
         Value = Null
         Component = cbPartner
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 240
@@ -1186,6 +1252,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1193,6 +1260,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberPartner'
@@ -1200,6 +1268,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberBranch'
@@ -1207,6 +1276,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edInvNumberBranch
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1214,6 +1284,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inChecked'
@@ -1221,6 +1292,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edIsChecked
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocument'
@@ -1228,6 +1300,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceWithVAT'
@@ -1235,6 +1308,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inVATPercent'
@@ -1242,6 +1316,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inFromId'
@@ -1249,6 +1324,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inToId'
@@ -1256,6 +1332,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -1263,6 +1340,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1270,6 +1348,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentTaxKind'
@@ -1277,6 +1356,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1284,6 +1364,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1364,6 +1445,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1371,6 +1453,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1378,6 +1461,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1386,6 +1470,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1394,6 +1479,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -1402,6 +1488,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
@@ -1409,6 +1496,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1416,6 +1504,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLineNumTaxOld'
@@ -1423,6 +1512,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'LineNumTaxOld'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLineNumTax'
@@ -1430,6 +1520,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'LineNumTax'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsAuto'
@@ -1437,6 +1528,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'isAuto'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1448,6 +1540,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Name = 'ioId'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1455,6 +1548,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -1462,12 +1556,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
         Value = '0'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrice'
@@ -1476,6 +1572,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioCountForPrice'
@@ -1484,11 +1581,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAmountSumm'
         Value = '0'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -1496,16 +1595,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLineNumTaxOld'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inLineNumTax'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outIsAuto'
@@ -1513,6 +1615,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = MasterCDS
         ComponentItem = 'isAuto'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 432
@@ -1522,6 +1625,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     LookupControl = edTo
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1530,6 +1634,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1537,6 +1642,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 512
     Top = 8
@@ -1546,6 +1652,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1556,6 +1663,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1564,6 +1672,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 800
     Top = 8
@@ -1573,6 +1682,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1583,6 +1693,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1591,6 +1702,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 656
     Top = 8
@@ -1613,12 +1725,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 303
@@ -1626,6 +1740,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     ComponentList = <>
     Left = 496
     Top = 96
@@ -1646,6 +1761,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement_Params
     ControlList = <
       item
@@ -1669,6 +1785,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1676,6 +1793,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1683,6 +1801,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateRegistered'
@@ -1690,6 +1809,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edDateRegistered
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRegistered'
@@ -1697,6 +1817,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edIsElectron
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1704,6 +1825,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 417
@@ -1727,12 +1849,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisClientCopy'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 306
@@ -1743,6 +1867,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     LookupControl = edDocumentTax
     FormNameParam.Value = 'TTaxJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TTaxJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1751,6 +1876,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1758,12 +1884,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1772,6 +1900,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -1779,6 +1908,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1786,6 +1916,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 912
     Top = 56
@@ -1794,6 +1925,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement_DocChild
     ControlList = <
       item
@@ -1814,6 +1946,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1821,6 +1954,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1828,6 +1962,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovement_ChildId'
@@ -1835,6 +1970,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 274
@@ -1847,6 +1983,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     TextValue = ' '
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1855,6 +1992,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1862,12 +2000,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1875,12 +2015,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1888,6 +2030,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 1040
     Top = 8
@@ -1898,6 +2041,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Key = '0'
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1906,6 +2050,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1913,12 +2058,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1926,12 +2073,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1939,6 +2088,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 8
@@ -1947,6 +2097,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     StoredProc = spInsertUpdateMovement_IsDocument
     ControlList = <
       item
@@ -1967,6 +2118,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsDocument'
@@ -1974,12 +2126,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsCalculate'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 497
@@ -1996,6 +2150,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -2003,6 +2158,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'ReportNameTaxCorrective'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 400
@@ -2019,6 +2175,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 226

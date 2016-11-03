@@ -27,7 +27,7 @@ BEGIN
     -- Создать таблицу, в которую будут залиты все товары для анализа
     CREATE TEMP TABLE _tmpObject (Id Integer) ON COMMIT DROP;
     -- Создать таблицу всех контейнеров
-    CREATE TEMP TABLE _tmpContainer (Id Integer, GoodsId Integer, WhereObjectId Integer, BranchId Integer, PaidKindId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpContainer (Id Integer, GoodsId Integer, WhereObjectId Integer, PaidKindId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
     
 
     --Определить объекты анализа
@@ -77,25 +77,22 @@ BEGIN
 
     END IF;
 
-    INSERT INTO _tmpContainer (Id , GoodsId , WhereObjectId , BranchId , PaidKindId , AccountGroupId , Amount )
+    INSERT INTO _tmpContainer (Id , GoodsId , WhereObjectId , PaidKindId , AccountGroupId , Amount )
                               SELECT Container.Id
                                    , Container.ObjectId        AS GoodsId       -- товар
                                    , _tmpWhereOject.Id         AS WhereObjectId -- Объект анализа
-                                   , CLO_Branch.ObjectId       AS BranchId      -- только для zc_ContainerLinkObject_Partner
                                    , CLO_PaidKind.ObjectId     AS PaidKindId    -- только для zc_ContainerLinkObject_Partner
                                    , COALESCE (ObjectLink_Account_AccountGroup.ChildObjectId, zc_Enum_AccountGroup_20000()) AS AccountGroupId -- группа счетов
                                    , Container.Amount          AS Amount        -- текущий остаток
                               FROM _tmpObject
                                    INNER JOIN Container ON Container.ObjectId = _tmpObject.Id
-                                                       -- AND Container.DescId IN (zc_Container_Count(), zc_Container_CountSupplier())
+                                                     
                                    INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                  -- AND ContainerLinkObject.DescId IN (zc_ContainerLinkObject_Partner(), zc_ContainerLinkObject_Unit(), zc_ContainerLinkObject_Member())
                                    INNER JOIN _tmpWhereOject ON _tmpWhereOject.Id              = ContainerLinkObject.ObjectId
                                                             AND _tmpWhereOject.ContainerDescId = Container.DescId
                                                             AND _tmpWhereOject.CLODescId       = ContainerLinkObject.DescId
-                                   LEFT JOIN ContainerLinkObject AS CLO_Branch
-                                                                 ON CLO_Branch.ContainerId = Container.Id
-                                                                AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+
                                    LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                                                  ON CLO_PaidKind.ContainerId = Container.Id
                                                                 AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -111,7 +108,8 @@ BEGIN
     OPEN Cursor1 FOR
         SELECT inStartDate   AS StartDate
              , inEndDate     AS EndDate
-             , Object_UnitOrPartner.ValueData                        AS ObjectName      --Наименование объекта анализа
+             , Object_UnitOrPartner.ValueData                        AS ObjectName           --Наименование объекта анализа
+             , ObjectDesc_UnitOrPartner.ItemName                     AS ObjectDescName
              , Object_GoodsOrGroup.ValueData                         AS GoodsOrGroupName      --Наименование товара/гр.товара
 
              , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) AS RemainsStart
@@ -129,9 +127,11 @@ BEGIN
               GROUP BY tmpContainer.Amount, tmpContainer.Id
               ) AS tmp
                LEFT JOIN Object AS Object_UnitOrPartner ON Object_UnitOrPartner.Id = inWhereObjectId
+               LEFT JOIN ObjectDesc AS ObjectDesc_UnitOrPartner ON ObjectDesc_UnitOrPartner.Id = Object_UnitOrPartner.DescId
                LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = inGoodsOrGroupId
         GROUP BY Object_UnitOrPartner.ValueData 
                , Object_GoodsOrGroup.ValueData 
+               , ObjectDesc_UnitOrPartner.ItemName 
 
         HAVING
               SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) <> 0 OR
@@ -149,10 +149,6 @@ BEGIN
                 DD.Id
                ,DD.MovementId
                ,DD.MovementDescId 
-/*               ,DD.GoodsId
-               ,DD.WhereObjectId
-               ,DD.AccountGroupId
-*/               ,DD.BranchId
                ,DD.PaidKindId
 
                , COALESCE (SUM (MIC_Amount_IN), 0)  :: TFloat       AS MIC_Amount_IN
@@ -163,10 +159,6 @@ BEGIN
                          tmpContainer.Id
                        , MIContainer.MovementId
                        , MIContainer.MovementDescId 
-                      /* , tmpContainer.GoodsId
-                       , tmpContainer.WhereObjectId
-                       , tmpContainer.AccountGroupId
-                     */, tmpContainer.BranchId
                        , tmpContainer.PaidKindId
                                             
                        , SUM (CASE WHEN  MIContainer.OperDate <= inEndDate AND MIContainer.IsActive = TRUE 
@@ -186,14 +178,12 @@ BEGIN
                          tmpContainer.Id
                        , MIContainer.MovementId
                        , MIContainer.MovementDescId 
-                       , tmpContainer.BranchId
                        , tmpContainer.PaidKindId
                 ) AS DD
             GROUP BY
                 DD.Id
                ,DD.MovementId
                ,DD.MovementDescId 
-               ,DD.BranchId
                ,DD.PaidKindId
             HAVING
                 COALESCE(SUM(MIC_Amount_IN),0) <> 0 OR
@@ -201,10 +191,10 @@ BEGIN
         )
 
         SELECT
-            Movement.OperDate                                                     --Дата документа
+            COALESCE (MovementDate_OperDatePartner.ValueData,Movement.OperDate)::TDateTime    AS OperDate                                                 --Дата документа 
            ,Movement.InvNumber                                                    --№ документа
            ,MovementDesc.ItemName                              AS MovementDescName--тип документа
-           ,Object_Branch.ValueData                            AS BranchName      --Филиал (для складов)
+           ,Object_Unit.ValueData                              AS UnitName        --подразделение
            ,Object_PaidKind.ValueData                          AS PaidKindName
            ,DDD.MIC_Amount_IN   ::TFloat                       AS AmountIn        --Приход
            ,DDD.MIC_Amount_OUT  ::TFloat                       AS AmountOut       --Расход
@@ -212,10 +202,16 @@ BEGIN
             LEFT OUTER JOIN Movement ON Movement.Id = DDD.MovementId
             LEFT OUTER JOIN MovementDesc ON MovementDesc.Id = DDD.MovementDescId
 
-            LEFT OUTER JOIN OBJECT AS Object_Branch
-                                   ON Object_Branch.Id = DDD.BranchId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = DDD.PaidKindId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementLinkObject AS MLO_Unit
+                                         ON MLO_Unit.MovementId = Movement.Id
+                                        AND MLO_Unit.DescId = CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From()  END 
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MLO_Unit.ObjectId
     ;
     RETURN NEXT Cursor2;
 
@@ -227,6 +223,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 03.11.16         * 
  26.10.16         *
 */
 
