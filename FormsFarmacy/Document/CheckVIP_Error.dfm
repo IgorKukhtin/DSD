@@ -244,7 +244,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
           StoredProc = spSelect
         end
         item
-          StoredProc = dsdStoredProc1
+          StoredProc = spSelectMI
         end>
     end
     object actShowErased: TBooleanStoredProcAction
@@ -568,8 +568,8 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
     Left = 376
     Top = 56
   end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_CheckDeferred'
+  object spSelectMI: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_CheckError'
     DataSet = ClientDataSet1
     DataSets = <
       item
@@ -577,8 +577,8 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
       end>
     Params = <>
     PackSize = 1
-    Left = 440
-    Top = 56
+    Left = 488
+    Top = 72
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

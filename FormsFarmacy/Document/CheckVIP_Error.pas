@@ -21,7 +21,7 @@ type
     cxGridLevel1: TcxGridLevel;
     ClientDataSet1: TClientDataSet;
     DataSource1: TDataSource;
-    dsdStoredProc1: TdsdStoredProc;
+    spSelectMI: TdsdStoredProc;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     actShowErased: TBooleanStoredProcAction;
     dxBarButton1: TdxBarButton;
