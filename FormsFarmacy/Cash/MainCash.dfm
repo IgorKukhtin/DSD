@@ -1299,6 +1299,10 @@ inherited MainCashForm: TMainCashForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
     object actOpenMCSForm: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
@@ -2045,5 +2049,34 @@ inherited MainCashForm: TMainCashForm
     PackSize = 1
     Left = 312
     Top = 168
+  end
+  object spCheck_RemainsError: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Check_RemainsError'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsId_list'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount_list'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 408
+    Top = 248
   end
 end

@@ -233,6 +233,8 @@ type
     spGet_BlinkCheck: TdsdStoredProc;
     actOpenCheckVIP_Error: TOpenChoiceForm;
     actOpenCheckVIPError1: TMenuItem;
+    spCheck_RemainsError: TdsdStoredProc;
+    actShowMessage: TShowMessageAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -330,6 +332,9 @@ type
 
     //Перечитывает остаток
     procedure StartRefreshDiffThread;
+
+    //проверили что есть остаток
+    function fCheck_RemainsError : Boolean;
 
     //Находит в локальной базе и досылает всечеки
     procedure SaveRealAll;
@@ -596,6 +601,54 @@ begin
   ActiveControl := lcName;
 end;
 
+//проверили что есть остаток
+function TMainCashForm.fCheck_RemainsError : Boolean;
+var GoodsId_list, Amount_list : String;
+    B:TBookmark;
+begin
+  Result:=false;
+  //
+  GoodsId_list:= '';
+  Amount_list:= '';
+  //
+  //формируется список товаров
+  with CheckCDS do
+  begin
+    B:= GetBookmark;
+    DisableControls;
+    try
+      First;
+      while Not Eof do
+      Begin
+        if GoodsId_list <> '' then begin GoodsId_list :=  GoodsId_list + ';'; Amount_list :=  Amount_list + ';';end;
+        GoodsId_list:= GoodsId_list + IntToStr(FieldByName('GoodsId').AsInteger);
+        Amount_list:= Amount_list + FloatToStr(FieldByName('Amount').asCurrency);
+        Next;
+      End;
+      GotoBookmark(B);
+      FreeBookmark(B);
+    finally
+      EnableControls;
+    end;
+  end;
+  //
+  //теперь вызов
+  with spCheck_RemainsError do
+  try
+      ParamByName('inGoodsId_list').Value := GoodsId_list;
+      ParamByName('inAmount_list').Value := Amount_list;
+      Execute;
+      Result:=ParamByName('outMessageText').Value = '';
+      //if not Result then ShowMessage(ParamByName('outMessageText').Value);
+  except
+       //т.е. нет связи и это не является ошибкой
+       Result:=true;
+  end;
+  if not Result then begin actShowMessage.MessageText:= spCheck_RemainsError.ParamByName('outMessageText').Value;
+  actShowMessage.Execute;
+  end;
+end;
+
 procedure TMainCashForm.actPutCheckToCashExecute(Sender: TObject);
 var
   UID,CheckNumber: String;
@@ -620,6 +673,10 @@ begin
   ShapeState.Brush.Color := clYellow;
   ShapeState.Repaint;
   application.ProcessMessages;
+
+  //проверили что есть остаток
+  if fCheck_RemainsError = false then exit;
+
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
@@ -2505,7 +2562,7 @@ begin
   if fBlinkCheck = true
   then if btnCheck.Colors.NormalText <> clDefault
        then begin btnCheck.Colors.NormalText:= clDefault; btnCheck.Colors.Default := clDefault; end
-       else begin btnCheck.Colors.NormalText:= clRed; btnCheck.Colors.Default := clRed; end
+       else begin btnCheck.Colors.NormalText:= clBlue; btnCheck.Colors.Default := clRed; end
   else begin btnCheck.Colors.NormalText := clDefault; btnCheck.Colors.Default := clDefault; end;
 
 end;

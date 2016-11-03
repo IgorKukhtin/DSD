@@ -318,12 +318,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -331,6 +333,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 158
     Top = 119
@@ -353,6 +356,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -360,6 +364,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisErased'
@@ -367,6 +372,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448
@@ -583,12 +589,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = ''
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'From'
           Value = ''
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
@@ -596,10 +604,12 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -617,12 +627,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FormName = 'TWorkTimeKind_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = CrossDBViewAddOn
           ComponentItem = 'TypeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Value'
@@ -630,6 +642,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Component = CrossDBViewAddOn
           ComponentItem = 'Value'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -670,30 +683,36 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FormName = 'TSheetWorkTimeAddRecordForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PersonalId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
           Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalGroupId'
           Value = '0'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
           Value = 0d
           Component = edOperDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSetRefresh = actRefresh
@@ -708,36 +727,42 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       FormName = 'TSheetWorkTimeAddRecordForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PersonalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PositionId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalGroupId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalGroupId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
           Value = 0d
           Component = edOperDate
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -773,7 +798,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
@@ -789,7 +813,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -846,6 +869,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     LookupControl = edUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -856,6 +880,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -864,6 +889,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 8
@@ -879,6 +905,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -886,6 +913,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -893,6 +921,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -900,6 +929,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -908,6 +938,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -916,6 +947,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'Value'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioTypeId'
@@ -923,6 +955,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = CrossDBViewAddOn
         ComponentItem = 'TypeId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 542
@@ -953,6 +986,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -975,6 +1009,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -982,6 +1017,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -998,6 +1034,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1005,6 +1042,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1012,6 +1050,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -1019,6 +1058,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = MasterCDS
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1026,6 +1066,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioIsErased'
@@ -1034,6 +1075,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 518
@@ -1068,6 +1110,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1075,6 +1118,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisErased'
@@ -1082,6 +1126,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 480
@@ -1121,6 +1166,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = ChildCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1128,6 +1174,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = ChildCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1135,6 +1182,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -1142,6 +1190,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = ChildCDS
         ComponentItem = 'PersonalGroupId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1150,6 +1199,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioValue'
@@ -1158,6 +1208,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ComponentItem = 'Value'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 254
@@ -1174,6 +1225,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1181,6 +1233,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 848

@@ -628,7 +628,7 @@ BEGIN
            , COALESCE (Object_Price_View.isTOP, False)               AS isTOP_Price
 
            , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
-           , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
+           -- , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
            , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
            , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
@@ -653,7 +653,7 @@ BEGIN
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
            , tmpMI.JuridicalId
-           , tmpMI.JuridicalName 
+           -- , tmpMI.JuridicalName 
            , tmpMI.ContractId
            , tmpMI.ContractName
            , tmpMI.MakerName 
@@ -705,6 +705,8 @@ BEGIN
              WHERE inShowAll = TRUE
                AND Object_Goods.ObjectId = vbObjectId
                AND Object_Goods.isErased = FALSE
+             -- ORDER BY Object_Goods.Id DESC
+             -- LIMIT 20000 -- 17664 от 03.11.2016
             ) AS tmpGoods
 
             FULL JOIN (SELECT MovementItem.Id
