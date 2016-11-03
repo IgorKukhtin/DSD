@@ -277,6 +277,11 @@ object OrderIncomeForm: TOrderIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = clNameBeforeName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList

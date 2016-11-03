@@ -82,6 +82,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colFromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

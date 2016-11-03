@@ -5,24 +5,24 @@ inherited SendJournalForm: TSendJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 777
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 761
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 814
+    ExplicitWidth = 761
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 761
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 761
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 761
         Height = 478
-        ExplicitWidth = 814
+        ExplicitWidth = 761
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -180,7 +180,7 @@ inherited SendJournalForm: TSendJournalForm
   end
   inherited Panel: TPanel
     Width = 761
-    ExplicitWidth = 814
+    ExplicitWidth = 761
     inherited deStart: TcxDateEdit
       EditValue = 42370d
     end
