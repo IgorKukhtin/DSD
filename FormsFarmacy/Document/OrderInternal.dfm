@@ -2,8 +2,9 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
+  ExplicitLeft = -456
   ExplicitWidth = 1245
-  ExplicitHeight = 570
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -272,62 +273,50 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 65
           end
-          object coJuridicalName: TcxGridDBColumn [21]
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090'-'#1082
-            DataBinding.FieldName = 'JuridicalName'
-            Options.Editing = False
-            Width = 77
-          end
-          object coContractName: TcxGridDBColumn [22]
+          object coContractName: TcxGridDBColumn [21]
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
             Options.Editing = False
             Width = 60
           end
-          object clPartionGoodsDate: TcxGridDBColumn [23]
+          object clPartionGoodsDate: TcxGridDBColumn [22]
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PartionGoodsDate'
             Options.Editing = False
             Width = 75
           end
-          object colNDSKindName: TcxGridDBColumn [24]
+          object colNDSKindName: TcxGridDBColumn [23]
             Caption = #1057#1090#1072#1074#1082#1072' '#1053#1044#1057
             DataBinding.FieldName = 'NDSKindName'
             Options.Editing = False
             Width = 71
           end
-          object colGoodsGroupName: TcxGridDBColumn [25]
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
-            DataBinding.FieldName = 'GoodsGroupName'
-            Options.Editing = False
-            Width = 104
-          end
-          object clPartionGoodsDateColor: TcxGridDBColumn [26]
+          object clPartionGoodsDateColor: TcxGridDBColumn [24]
             DataBinding.FieldName = 'PartionGoodsDateColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object colisTopColor: TcxGridDBColumn [27]
+          object colisTopColor: TcxGridDBColumn [25]
             DataBinding.FieldName = 'isTopColor'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
           end
-          object colisCalculated: TcxGridDBColumn [28]
+          object colisCalculated: TcxGridDBColumn [26]
             Caption = #1040#1074#1090#1086
             DataBinding.FieldName = 'isCalculated'
             Options.Editing = False
             Width = 33
           end
-          object clIsClose: TcxGridDBColumn [29]
+          object clIsClose: TcxGridDBColumn [27]
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
           end
-          object clisFirst: TcxGridDBColumn [30]
+          object clisFirst: TcxGridDBColumn [28]
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
             HeaderAlignmentHorz = taCenter
@@ -335,7 +324,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisSecond: TcxGridDBColumn [31]
+          object clisSecond: TcxGridDBColumn [29]
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
             HeaderAlignmentHorz = taCenter
@@ -343,7 +332,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisTOP: TcxGridDBColumn [32]
+          object clisTOP: TcxGridDBColumn [30]
             Caption = #1058#1054#1055' '#1089#1077#1090#1080
             DataBinding.FieldName = 'isTOP'
             HeaderAlignmentHorz = taCenter
@@ -351,7 +340,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisTOP_Price: TcxGridDBColumn [33]
+          object clisTOP_Price: TcxGridDBColumn [31]
             Caption = #1058#1054#1055' '#1090#1086#1095#1082#1080
             DataBinding.FieldName = 'isTOP_Price'
             HeaderAlignmentHorz = taCenter
@@ -359,7 +348,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
-          object clisPromo: TcxGridDBColumn [34]
+          object clisPromo: TcxGridDBColumn [32]
             Caption = #1041#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPromo'
             HeaderAlignmentHorz = taCenter
@@ -367,7 +356,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 50
           end
-          object OperDatePromo: TcxGridDBColumn [35]
+          object OperDatePromo: TcxGridDBColumn [33]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085' .'#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'OperDatePromo'
             HeaderAlignmentHorz = taCenter
@@ -375,7 +364,7 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 80
           end
-          object InvNumberPromo: TcxGridDBColumn [36]
+          object InvNumberPromo: TcxGridDBColumn [34]
             Caption = #8470' '#1076#1086#1082'. '#1073#1086#1085#1091#1089#1085'. '#1082#1086#1085#1090#1088#1072#1082#1090#1072
             DataBinding.FieldName = 'InvNumberPromo'
             HeaderAlignmentHorz = taCenter

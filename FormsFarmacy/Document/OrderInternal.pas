@@ -53,7 +53,6 @@ type
     colSuperFinalPrice: TcxGridDBColumn;
     colBonus: TcxGridDBColumn;
     colPartnerGoodsName: TcxGridDBColumn;
-    coJuridicalName: TcxGridDBColumn;
     coPrice: TcxGridDBColumn;
     coContractName: TcxGridDBColumn;
     spUpdatePrioritetPartner: TdsdStoredProc;
@@ -86,7 +85,6 @@ type
     colisTopColor: TcxGridDBColumn;
     colRemainsInUnit: TcxGridDBColumn;
     colMCS: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
     colNDSKindName: TcxGridDBColumn;
     colAmountAll: TcxGridDBColumn;
     colCalcAmountAll: TcxGridDBColumn;

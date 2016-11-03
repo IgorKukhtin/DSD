@@ -148,14 +148,14 @@ BEGIN
 , SelectMinPrice_AllGoods AS (SELECT tmp.*
                               FROM lpSelectMinPrice_AllGoods(inUnitId := inUnitId,
                                                              inObjectId := vbObjectId, 
-                                                             inUserId := vbUserId) AS tmp limit 1
+                                                             inUserId := vbUserId) AS tmp -- limit 1
                              )
           
 , SelectMinPrice_AllGoods_onDate AS (SELECT tmp.*
                                      FROM lpSelectMinPrice_AllGoods_onDate(inOperDate := inRemainsDate,
                                                                            inUnitId   := inUnitId,
                                                                            inObjectId := vbObjectId, 
-                                                                           inUserId   := vbUserId) AS tmp limit 1
+                                                                           inUserId   := vbUserId) AS tmp -- limit 1
                                      )
 , Object_Price AS (SELECT Object_Price.Id       AS Id
                         , Object_Price.GoodsId  AS GoodsId

@@ -232,7 +232,7 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('36003603')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
--- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины + ТОВ Нордон + Амиата
+-- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины + ТОВ Нордон + Амиата + Легион-2015
       SELECT
              zc_movement_sale()
            , CAST ('Sale' AS TVarChar)
@@ -245,6 +245,7 @@ AS
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
        AND OH_JuridicalDetails.OKPO IN ('39118745','39118195','39117631', '39118572', '39143745', '39117799'
                                        , '40145541' -- Амиата
+                                       , '39775097' -- Легион-2015
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
