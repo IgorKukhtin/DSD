@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_CheckDeferred(
 )
 RETURNS TABLE (Id Integer, MovementId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount_remains TFloat
              , Amount TFloat
              , Price TFloat
              , Summ TFloat 
@@ -32,19 +33,12 @@ BEGIN
     IF vbUnitKey = '' THEN
         vbUnitKey := '0';
     END IF;   
-    vbUnitId := vbUnitKey::Integer;
+    vbUnitId := CASE WHEN vbUserId = 3 THEN 0 ELSE vbUnitKey::Integer END;
 
     RETURN QUERY
         WITH 
-            tmpRemains AS(SELECT Container.ObjectId                  AS GoodsId
-                               , SUM(Container.Amount)::TFloat       AS Amount
-                          FROM Container
-                          WHERE Container.DescId = zc_Container_Count()
-                            AND Container.WhereObjectId = vbUnitId
-                            AND Container.Amount <> 0
-                          GROUP BY Container.ObjectId
-                          )
-          , tmpMov AS(SELECT Movement.Id
+           tmpMov AS (SELECT Movement.Id
+                           , MovementLinkObject_Unit.ObjectId           AS UnitId
                            , MovementLinkObject_ConfirmedKind.ObjectId  AS ConfirmedKindId
                       FROM Movement
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -54,14 +48,55 @@ BEGIN
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
+                                                     ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
+                                                    AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
+                      WHERE Movement.DescId   = zc_Movement_Check()
+                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                        AND Movement.OperDate > CURRENT_DATE - INTERVAL '31 DAY'
+                     UNION
+                      SELECT Movement.Id
+                           , MovementLinkObject_Unit.ObjectId           AS UnitId
+                           , MovementLinkObject_ConfirmedKind.ObjectId  AS ConfirmedKindId
+                      FROM Movement
+                        INNER JOIN MovementString AS MovementString_CommentError
+                                                  ON MovementString_CommentError.MovementId = Movement.Id
+                                                 AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                                 AND MovementString_CommentError.ValueData <> ''
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
                         LEFT JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
                                                      ON MovementLinkObject_ConfirmedKind.MovementId = Movement.Id
                                                     AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
                       WHERE Movement.DescId = zc_Movement_Check()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                        AND (MovementLinkObject_Unit.ObjectId = vbUnitId 
-                          OR vbUnitId = 0)
+                        AND Movement.OperDate > CURRENT_DATE - INTERVAL '31 DAY'
                      )
+          , tmpMI AS (SELECT tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+                      FROM tmpMov
+                           INNER JOIN MovementItem
+                                   ON MovementItem.MovementId = tmpMov.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                      GROUP BY tmpMov.UnitId, MovementItem.ObjectId
+                     )
+          , tmpRemains AS (SELECT tmpMI.GoodsId
+                                , tmpMI.UnitId
+                                , tmpMI.Amount           AS Amount_mi
+                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                           FROM tmpMI
+                                LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                                   AND Container.ObjectId = tmpMI.GoodsId
+                                                   AND Container.WhereObjectId = tmpMI.UnitId
+                                                   AND Container.Amount <> 0
+                           GROUP BY tmpMI.GoodsId
+                                  , tmpMI.UnitId
+                                  , tmpMI.Amount
+                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                          )
        -- Результат
        SELECT
              MovementItem.Id          AS Id,
@@ -69,6 +104,7 @@ BEGIN
            , MovementItem.ObjectId    AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+           , tmpRemains.Amount_remains :: TFloat AS Amount_remains
            , MovementItem.Amount      AS Amount
            , MIFloat_Price.ValueData  AS Price
            , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
@@ -80,12 +116,12 @@ BEGIN
            , MIString_UID.ValueData              AS List_UID
            , MovementItem.isErased
 
-           , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND (COALESCE (tmpRemains.Amount,0) < COALESCE (MovementItem.Amount,0)) THEN 16440317 -- бледно крассный / розовый
-                  WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND (COALESCE (tmpRemains.Amount,0) >= COALESCE (MovementItem.Amount,0)) THEN zc_Color_Yelow() -- желтый
+           , CASE WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId > 0 THEN 16440317 -- бледно крассный / розовый
+                  -- WHEN tmpMov.ConfirmedKindId = zc_Enum_ConfirmedKind_UnComplete() AND tmpRemains.GoodsId IS NULL THEN zc_Color_Yelow() -- желтый
                   ELSE zc_Color_White()
              END  AS Color_Calc
 
-           , CASE WHEN COALESCE (tmpRemains.Amount,0) < COALESCE (MovementItem.Amount,0) THEN zc_Color_Red()
+           , CASE WHEN tmpRemains.GoodsId > 0 THEN zc_Color_Red()
                   ELSE zc_Color_Black()
              END  AS Color_CalcError
 
@@ -124,7 +160,8 @@ BEGIN
                                       AND MIString_UID.DescId = zc_MIString_UID()
 
           LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
-     WHERE MovementItem.isErased = FALSE;
+                              AND tmpRemains.UnitId  = tmpMov.UnitId
+         ;
 
 END;
 $BODY$

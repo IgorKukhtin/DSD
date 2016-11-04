@@ -60,6 +60,7 @@ type
     bbConfirmedKind_UnComplete: TdxBarButton;
     Color_Calc: TcxGridDBColumn;
     Color_CalcDoc: TcxGridDBColumn;
+    actShowMessage: TShowMessageAction;
   private
     { Private declarations }
   public

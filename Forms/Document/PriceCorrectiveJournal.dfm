@@ -4,8 +4,9 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   ClientWidth = 1086
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -296
   ExplicitWidth = 1102
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -370,12 +371,12 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       Width = 250
     end
     object cxLabel27: TcxLabel
-      Left = 859
+      Left = 922
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 959
+      Left = 1000
       Top = 5
       Properties.Buttons = <
         item
@@ -384,7 +385,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 155
+      Width = 150
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

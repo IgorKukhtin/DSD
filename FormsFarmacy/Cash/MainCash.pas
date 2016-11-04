@@ -644,8 +644,9 @@ begin
        //т.е. нет связи и это не является ошибкой
        Result:=true;
   end;
-  if not Result then begin actShowMessage.MessageText:= spCheck_RemainsError.ParamByName('outMessageText').Value;
-  actShowMessage.Execute;
+  if not Result then
+  begin actShowMessage.MessageText:= spCheck_RemainsError.ParamByName('outMessageText').Value;
+        actShowMessage.Execute;
   end;
 end;
 
@@ -863,11 +864,16 @@ begin
   with spUpdate_ConfirmedKind do
   try
       ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
-      ParamByName('ioConfirmedKindName').Value := 'zc_Enum_ConfirmedKind_Complete';
+      ParamByName('inDescName').Value := 'zc_Enum_ConfirmedKind_Complete';
       Execute;
-      lConfirmedKindName:=ParamByName('ioConfirmedKindName').Value;
+      lConfirmedKindName:=ParamByName('ouConfirmedKindName').Value;
   except
         ShowMessage('Ошибка.Нет связи с сервером');
+  end;
+
+  if spUpdate_ConfirmedKind.ParamByName('outMessageText').Value <> '' then
+  begin actShowMessage.MessageText:= spUpdate_ConfirmedKind.ParamByName('outMessageText').Value;
+        actShowMessage.Execute;
   end;
 
   if lConfirmedKindName = '' then
@@ -921,9 +927,9 @@ begin
   with spUpdate_ConfirmedKind do
   try
       ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
-      ParamByName('ioConfirmedKindName').Value := 'zc_Enum_ConfirmedKind_UnComplete';
+      ParamByName('inDescName').Value := 'zc_Enum_ConfirmedKind_UnComplete';
       Execute;
-      lConfirmedKindName:=ParamByName('ioConfirmedKindName').Value;
+      lConfirmedKindName:=ParamByName('ouConfirmedKindName').Value;
   except
         ShowMessage('Ошибка.Нет связи с сервером');
   end;

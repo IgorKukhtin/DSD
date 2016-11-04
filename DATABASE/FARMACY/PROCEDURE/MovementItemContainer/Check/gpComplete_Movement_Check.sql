@@ -8,12 +8,11 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Check(
    OUT outMessageText      Text                 ,
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
   DECLARE vbPaidType Integer;
   DECLARE vbCashRegisterId  Integer;
-
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
@@ -26,8 +25,7 @@ BEGIN
            END as PaidType 
          , Movement_Check.CashRegisterId
 
-    INTO vbPaidType, vbCashRegisterId
-
+           INTO vbPaidType, vbCashRegisterId
     FROM Movement_Check_View AS Movement_Check 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidType
                                       ON MovementLinkObject_PaidType.MovementId = Movement_Check.Id
@@ -47,7 +45,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
  30.10.16         *
- 
 */
 
 -- тест

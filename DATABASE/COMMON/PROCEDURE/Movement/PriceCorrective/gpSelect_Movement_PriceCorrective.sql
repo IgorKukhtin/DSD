@@ -1,9 +1,7 @@
 -- Function: gpSelect_Movement_PriceCorrective()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
     IN inStartDate         TDateTime , --
@@ -199,4 +197,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceCorrective (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_PriceCorrective (inStartDate:= '01.01.2016', inEndDate:= '02.02.2016', inJuridicalBasisId:= 0, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

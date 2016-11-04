@@ -953,7 +953,7 @@ inherited MainCashForm: TMainCashForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = #1063#1077#1082#1080' '#1089' '#1086#1096#1080#1073#1082#1086#1081' '#1074' '#1086#1089#1090#1072#1090#1082#1077
+      Caption = #1063#1077#1082#1080' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' "'#1085#1077#1090' '#1074' '#1085#1072#1083#1080#1095#1080#1080'"'
       FormName = 'TCheckVIP_ErrorForm'
       FormNameParam.Value = 'TCheckVIP_ErrorForm'
       FormNameParam.DataType = ftString
@@ -2025,10 +2025,22 @@ inherited MainCashForm: TMainCashForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioConfirmedKindName'
+        Name = 'inDescName'
         Value = Null
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ouConfirmedKindName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

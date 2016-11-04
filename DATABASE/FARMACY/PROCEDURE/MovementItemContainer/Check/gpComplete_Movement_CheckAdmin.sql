@@ -1,8 +1,8 @@
 -- Function: gpComplete_Movement_IncomeAdmin()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_CheckAdmin (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_CheckAdmin (Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_CheckAdmin (Integer,Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_CheckAdmin (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_CheckAdmin (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_CheckAdmin(
     IN inMovementId        Integer              , -- ключ Документа

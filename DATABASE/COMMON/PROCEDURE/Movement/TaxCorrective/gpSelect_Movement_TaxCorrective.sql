@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_TaxCorrective()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective(
@@ -338,4 +338,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inJuridicalBasisId:= 0, inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

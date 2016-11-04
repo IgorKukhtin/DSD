@@ -68,7 +68,7 @@ BEGIN
 
 -- !!!бпелеммн!!!
 -- RETURN;
- IF inBranchId <> 8379 THEN RETURN; END IF;
+-- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!бпелеммн!!!
 -- inItearationCount:=100;

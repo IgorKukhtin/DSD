@@ -4,7 +4,7 @@ inherited CheckVIPForm: TCheckVIPForm
   ClientWidth = 668
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 684
-  ExplicitHeight = 420
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,8 @@ inherited CheckVIPForm: TCheckVIPForm
         Width = 369
         Height = 356
         Align = alLeft
+        ExplicitLeft = 72
+        ExplicitTop = -72
         ExplicitWidth = 369
         ExplicitHeight = 356
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -428,6 +430,10 @@ inherited CheckVIPForm: TCheckVIPForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1053#1077' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
     end
+    object actShowMessage: TShowMessageAction
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -631,7 +637,7 @@ inherited CheckVIPForm: TCheckVIPForm
     Top = 128
   end
   object spConfirmedKind_Complete: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Check_ConfirmedKind'
+    StoredProcName = 'gpUpdate_Movement_Check_ConfirmedKind'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -644,17 +650,24 @@ inherited CheckVIPForm: TCheckVIPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisComplete'
-        Value = 'True'
-        DataType = ftBoolean
+        Name = 'inDescName'
+        Value = 'zc_Enum_ConfirmedKind_Complete'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outConfirmedKindName'
+        Name = 'ouConfirmedKindName'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -663,7 +676,7 @@ inherited CheckVIPForm: TCheckVIPForm
     Top = 112
   end
   object spConfirmedKind_UnComplete: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Check_ConfirmedKind'
+    StoredProcName = 'gpUpdate_Movement_Check_ConfirmedKind'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -676,17 +689,24 @@ inherited CheckVIPForm: TCheckVIPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisComplete'
-        Value = 'False'
-        DataType = ftBoolean
+        Name = 'inDescName'
+        Value = 'zc_Enum_ConfirmedKind_UnComplete'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outConfirmedKindName'
+        Name = 'ouConfirmedKindName'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ConfirmedKindName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

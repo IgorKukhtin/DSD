@@ -3,9 +3,9 @@
 DROP FUNCTION IF EXISTS gpGet_Movement_Check_RemainsError (TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Check_RemainsError(
-    IN inGoodsId_list      TVarChar  , -- 
-    IN inAmount_list       TVarChar  , -- 
-   OUT outMessageText      Text      , --
+    IN inGoodsId_list      TVarChar  , -- список Id товаров для проверки
+    IN inAmount_list       TVarChar  , -- список кол-ва для проверки
+   OUT outMessageText      Text      , -- вернули, если есть ошибка
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Text
@@ -50,7 +50,7 @@ BEGIN
 
 
     -- проверим что есть остатки
-    outMessageText:= 'Ошибка.Товара нет в наличии (Кол: продано/наличие): '
+    outMessageText:= 'Ошибка.Товара нет в наличии: '
                                 || (WITH tmpFrom AS (SELECT _tmpGoods.GoodsId, SUM (_tmpGoods.Amount) AS Amount FROM _tmpGoods GROUP BY _tmpGoods.GoodsId)
                                        , tmpTo AS (SELECT tmpFrom.GoodsId, SUM (Container.Amount) AS Amount
                                                    FROM tmpFrom
@@ -60,12 +60,15 @@ BEGIN
                                                                             AND Container.Amount > 0
                                                    GROUP BY tmpFrom.GoodsId
                                                   )
-                                    SELECT STRING_AGG (tmp.Value, '(+)')
-                                    FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' Кол: ' || zfConvert_FloatToString (AmountFrom) || '/' || zfConvert_FloatToString (AmountTo) AS Value
+                                    SELECT STRING_AGG (tmp.Value, ' (***) ')
+                                    FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' в чеке : ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') || '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
                                           FROM (SELECT tmpFrom.GoodsId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo
                                                 FROM tmpFrom
                                                      LEFT JOIN tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
                                                LEFT JOIN Object ON Object.Id = tmp.GoodsId
+                                               LEFT JOIN ObjectLink ON ObjectLink.ObjectId = tmp.GoodsId
+                                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure()
+                                               LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink.ChildObjectId
                                          ) AS tmp
                                     );
 

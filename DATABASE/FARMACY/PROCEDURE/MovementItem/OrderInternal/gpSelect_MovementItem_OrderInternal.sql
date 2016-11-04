@@ -653,7 +653,7 @@ BEGIN
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
            , tmpMI.JuridicalId
-           -- , tmpMI.JuridicalName 
+           , tmpMI.JuridicalName 
            , tmpMI.ContractId
            , tmpMI.ContractName
            , tmpMI.MakerName 

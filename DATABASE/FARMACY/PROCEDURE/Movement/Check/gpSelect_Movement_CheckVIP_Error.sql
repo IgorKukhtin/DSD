@@ -12,6 +12,7 @@ RETURNS TABLE (
   StatusCode Integer, 
   TotalCount TFloat, 
   TotalSumm TFloat, 
+  UnitId Integer,
   UnitName TVarChar, 
   CashRegisterName TVarChar,
   CashMemberId Integer,
@@ -32,7 +33,7 @@ BEGIN
      IF vbUnitKey = '' THEN
         vbUnitKey := '0';
      END IF;   
-     vbUnitId := vbUnitKey::Integer;
+     vbUnitId := CASE WHEN vbUserId = 3 THEN 0 ELSE vbUnitKey::Integer END;
 
      RETURN QUERY
        WITH tmpMov AS(SELECT Movement.Id
@@ -41,11 +42,12 @@ BEGIN
                         INNER JOIN MovementString AS MovementString_CommentError
                                                   ON MovementString_CommentError.MovementId = Movement.Id
                                                  AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                                 AND MovementString_CommentError.ValueData <> ''
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                        WHERE Movement.DescId = zc_Movement_Check()
-                         AND (Movement.StatusId = zc_Enum_Status_UnComplete() OR (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)) 
+                         AND (Movement.StatusId = zc_Enum_Status_UnComplete()/* OR (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)*/) 
                          AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
                        )
          
@@ -56,6 +58,7 @@ BEGIN
             , Object_Status.ObjectCode                   AS StatusCode
             , MovementFloat_TotalCount.ValueData         AS TotalCount
             , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+            , Object_Unit.Id                             AS UnitId
             , Object_Unit.ValueData                      AS UnitName
             , Object_CashRegister.ValueData              AS CashRegisterName
             , MovementLinkObject_CheckMember.ObjectId    AS CashMemberId

@@ -44,42 +44,54 @@ BEGIN
 
      RETURN QUERY
        WITH
-            tmpRemains AS(SELECT Container.ObjectId                  AS GoodsId
-                               , SUM(Container.Amount)::TFloat       AS Amount
-                          FROM Container
-                          WHERE Container.DescId = zc_Container_Count()
-                            AND Container.WhereObjectId = vbUnitId
-                            AND Container.Amount <> 0
-                          GROUP BY Container.ObjectId
-                          )
-          , tmpMov AS(SELECT Movement.Id
+           tmpMov AS (SELECT Movement.Id
+                           , MovementLinkObject_Unit.ObjectId AS UnitId
                       FROM Movement
                         INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                    ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                   AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                  AND MovementBoolean_Deferred.ValueData = TRUE
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                     AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0 /*OR MovementLinkObject_Unit.MovementId = 3400557*/)
                        WHERE Movement.DescId = zc_Movement_Check()
                          AND (Movement.StatusId = zc_Enum_Status_UnComplete()
-                             OR
-                             (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)) 
-                         AND MovementBoolean_Deferred.ValueData = True 
-                         AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0)
+                              OR (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)
+                             )
                        )
-      , tmpColor AS (SELECT DISTINCT tmpMov.Id
-                     FROM tmpMov
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_ConfirmedKind
-                                                        ON MovementLinkObject_ConfirmedKind.MovementId = tmpMov.Id
-                                                       AND MovementLinkObject_ConfirmedKind.DescId = zc_MovementLinkObject_ConfirmedKind()
-                                                       AND MovementLinkObject_ConfirmedKind.ObjectId = zc_Enum_ConfirmedKind_UnComplete()
-                          INNER JOIN MovementItem 
-                                  ON MovementItem.MovementId = tmpMov.Id
-                                 AND MovementItem.DescId     = zc_MI_Master()
-                                 AND MovementItem.isErased   = FALSE
-                          LEFT JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem.ObjectId
-                     WHERE tmpRemains.Amount < MovementItem.Amount
+      , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
+                      FROM tmpMov
+                           INNER JOIN MovementItem
+                                   ON MovementItem.MovementId = tmpMov.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                      GROUP BY tmpMov.Id, tmpMov.UnitId, MovementItem.ObjectId
                      )
+          , tmpMI AS (SELECT tmpMI_all.UnitId, tmpMI_all.GoodsId, SUM (tmpMI_all.Amount) AS Amount
+                      FROM tmpMI_all
+                      GROUP BY tmpMI_all.UnitId, tmpMI_all.GoodsId
+                     )
+          , tmpRemains AS (SELECT tmpMI.GoodsId
+                                , tmpMI.UnitId
+                                , tmpMI.Amount           AS Amount_mi
+                                , COALESCE (SUM (Container.Amount), 0) AS Amount_remains
+                           FROM tmpMI
+                                LEFT JOIN Container ON Container.DescId = zc_Container_Count()
+                                                   AND Container.ObjectId = tmpMI.GoodsId
+                                                   AND Container.WhereObjectId = tmpMI.UnitId
+                                                   AND Container.Amount <> 0
+                           GROUP BY tmpMI.GoodsId
+                                  , tmpMI.UnitId
+                                  , tmpMI.Amount
+                           HAVING COALESCE (SUM (Container.Amount), 0) < tmpMI.Amount
+                          )
+          , tmpErr AS (SELECT DISTINCT tmpMov.Id AS MovementId
+                       FROM tmpMov
+                            INNER JOIN tmpMI_all ON tmpMI_all.MovementId = tmpMov.Id
+                            INNER JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_all.GoodsId
+                                                 AND tmpRemains.UnitId  = tmpMI_all.UnitId
+                      )
          
        SELECT Movement.Id
             , Movement.InvNumber
@@ -103,12 +115,13 @@ BEGIN
 	    , Object_DiscountExternal.ValueData          AS DiscountExternalName
 	    , Object_DiscountCard.ValueData              AS DiscountCardNumber
 
-            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpColor.Id, 0) <> 0 THEN 16440317 -- 
-                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND COALESCE (tmpColor.Id, 0) = 0  THEN zc_Color_Yelow() -- желтый
+            , CASE WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId > 0 THEN 16440317 -- бледно крассный / розовый
+                   WHEN Object_ConfirmedKind.Id = zc_Enum_ConfirmedKind_UnComplete() AND tmpErr.MovementId IS NULL THEN zc_Color_Yelow() -- желтый
                    ELSE zc_Color_White()
              END  AS Color_CalcDoc
 
        FROM tmpMov
+            LEFT JOIN tmpErr ON tmpErr.MovementId = tmpMov.Id 
             LEFT JOIN Movement ON Movement.Id = tmpMov.Id 
                                
                               
@@ -170,8 +183,6 @@ BEGIN
                                           ON MovementLinkObject_ConfirmedKindClient.MovementId = Movement.Id
                                          AND MovementLinkObject_ConfirmedKindClient.DescId = zc_MovementLinkObject_ConfirmedKindClient()
              LEFT JOIN Object AS Object_ConfirmedKindClient ON Object_ConfirmedKindClient.Id = MovementLinkObject_ConfirmedKindClient.ObjectId
-   
-             LEFT JOIN tmpColor ON tmpColor.Id = Movement.Id
        ;
 
 END;
