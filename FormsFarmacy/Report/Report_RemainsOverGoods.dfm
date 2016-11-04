@@ -2269,8 +2269,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1000
-    Left = 696
-    Top = 184
+    Left = 704
+    Top = 208
   end
   object DataSetDocs: TClientDataSet
     Aggregates = <>
@@ -2367,8 +2367,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1000
-    Left = 672
-    Top = 216
+    Left = 648
+    Top = 224
   end
   object spSetErased_Over: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Over_Report'
@@ -2613,10 +2613,27 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa_Over'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inRemains'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'RemainsStart'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2859,8 +2876,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1000
-    Left = 584
-    Top = 168
+    Left = 576
+    Top = 192
   end
   object TotalCDS: TClientDataSet
     Aggregates = <>
