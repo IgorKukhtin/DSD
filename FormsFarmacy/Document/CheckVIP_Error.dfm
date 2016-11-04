@@ -569,7 +569,7 @@ inherited CheckVIP_ErrorForm: TCheckVIP_ErrorForm
     Top = 56
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_CheckError'
+    StoredProcName = 'gpSelect_MovementItem_CheckDeferred'
     DataSet = ClientDataSet1
     DataSets = <
       item
