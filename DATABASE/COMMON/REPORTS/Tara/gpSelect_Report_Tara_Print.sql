@@ -36,8 +36,8 @@ BEGIN
     THEN
         -- Определили Деск объекта анализа
         SELECT Object.DescId INTO vbDescId FROM Object WHERE Object.Id = inWhereObjectId;
-                
-        IF vbDescId = zc_Object_Partner()
+             
+/*       IF vbDescId = zc_Object_Partner()
         THEN
             INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
             SELECT inWhereObjectId, zc_Container_CountSupplier(), zc_ContainerLinkObject_Partner(), 'Поставщик'
@@ -58,8 +58,95 @@ BEGIN
             SELECT tmp.ObjectId, zc_Container_Count(), zc_ContainerLinkObject_Partner(), 'Покупатель' FROM tmp
            ;
         END IF;
-      END IF;   
-        
+      END IF;
+*/
+        IF vbDescId = zc_Object_Member()
+        THEN
+            INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+                                VALUES (inWhereObjectId, zc_Container_Count(), zc_ContainerLinkObject_Member(),'МОЛ');
+
+
+        ELSEIF vbDescId = zc_Object_Partner()
+        THEN
+            INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+            SELECT inWhereObjectId, zc_Container_CountSupplier(), zc_ContainerLinkObject_Partner(), 'Поставщик'
+           UNION
+            SELECT inWhereObjectId, zc_Container_Count(), zc_ContainerLinkObject_Partner(), 'Покупатель'
+           ;
+
+        ELSEIF vbDescId = zc_Object_Juridical()
+        THEN
+            INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+            WITH tmp AS (SELECT ObjectLink_Partner_Juridical.ObjectId
+                         FROM ObjectLink AS ObjectLink_Partner_Juridical
+                         WHERE ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                           AND ObjectLink_Partner_Juridical.ChildObjectId = inWhereObjectId
+                        )
+            SELECT tmp.ObjectId, zc_Container_CountSupplier(), zc_ContainerLinkObject_Partner(), 'Поставщик' FROM tmp
+           UNION
+            SELECT tmp.ObjectId, zc_Container_Count(), zc_ContainerLinkObject_Partner(), 'Покупатель' FROM tmp
+           ;
+
+        ELSEIF vbDescId = zc_Object_Retail()
+        THEN
+            INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+            WITH tmp AS (SELECT ObjectLink_Partner_Juridical.ObjectId
+                         FROM ObjectLink AS ObjectLink_Juridical_Retail
+                              INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                   AND ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Juridical_Retail.ObjectId
+                         WHERE ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                           AND ObjectLink_Juridical_Retail.ChildObjectId = inWhereObjectId
+                        )
+            SELECT tmp.ObjectId, zc_Container_CountSupplier(), zc_ContainerLinkObject_Partner(), 'Поставщик' FROM tmp
+           UNION
+            SELECT tmp.ObjectId, zc_Container_Count(), zc_ContainerLinkObject_Partner(), 'Покупатель' FROM tmp
+           ;
+
+
+        ELSEIF vbDescId = zc_Object_Unit()
+        THEN
+            IF EXISTS(SELECT 1
+                      FROM
+                          Object AS Object_Unit
+                          INNER JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() 
+                      WHERE 
+                          Object_Unit.Id = inWhereObjectId
+                          AND 
+                          COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) <> 0
+                          AND
+                          COALESCE (ObjectLink_Unit_Branch.ChildObjectId,0) <> zc_Branch_Basis())
+            THEN
+                INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+                Values(inWhereObjectId, zc_Container_Count(), zc_ContainerLinkObject_Unit(),'Филиал');
+            ELSE
+                INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+                Values(inWhereObjectId, zc_Container_Count(), zc_ContainerLinkObject_Unit(),'Склад');
+            END IF;
+        ELSEIF vbDescId = zc_Object_Branch()
+        THEN
+            IF inWhereObjectId <> zc_Branch_Basis()
+            THEN
+                INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+                SELECT ObjectLink_Unit_Branch.ObjectId, zc_Container_Count(), zc_ContainerLinkObject_Unit(), 'Филиал'
+                FROM
+                    ObjectLink AS ObjectLink_Unit_Branch
+                WHERE ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                  AND ObjectLink_Unit_Branch.ChildObjectId = inWhereObjectId;
+            ELSE
+                INSERT INTO _tmpWhereOject (Id, ContainerDescId, CLODescId, ObjectType)
+                SELECT ObjectLink_Unit_Branch.ObjectId, zc_Container_Count(), zc_ContainerLinkObject_Unit(), 'Склад'
+                FROM
+                    ObjectLink AS ObjectLink_Unit_Branch
+                WHERE ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                  AND ObjectLink_Unit_Branch.ChildObjectId = inWhereObjectId;
+            END IF;
+        END IF;
+        END IF;
+
+
     -- Заполняется список товаров
     IF COALESCE (inGoodsOrGroupId, 0) <> 0
     THEN
@@ -104,6 +191,7 @@ BEGIN
                                                        AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
                               WHERE inAccountGroupId = 0
                                   OR COALESCE (ObjectLink_Account_AccountGroup.ChildObjectId, zc_Enum_AccountGroup_20000()) = inAccountGroupId;
+
                 
     OPEN Cursor1 FOR
         SELECT inStartDate   AS StartDate
@@ -115,27 +203,23 @@ BEGIN
              , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) AS RemainsStart
              , SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_End, 0))   AS RemainsEnd
         FROM (SELECT tmpContainer.Amount
-                   , tmpContainer.Id
-                   , SUM (MIContainer.Amount)                        AS MIC_Amount_Start  --Все движение после начала 
-                   , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
-                               THEN MIContainer.Amount 
-                               ELSE 0 END)                           AS MIC_Amount_End    --Все движение после окончания
+                             , tmpContainer.Id
+                             , SUM (MIContainer.Amount)                        AS MIC_Amount_Start  --Все движение после начала 
+                             , SUM (CASE WHEN MIContainer.OperDate > inEndDate 
+                                         THEN MIContainer.Amount 
+                                         ELSE 0 END)                           AS MIC_Amount_End    --Все движение после окончания
               FROM _tmpContainer AS tmpContainer
-                  LEFT OUTER JOIN MovementItemContainer AS MIContainer
-                                                        ON MIContainer.ContainerId = tmpContainer.Id
-                                                       AND MIContainer.OperDate >= inStartDate
+                            LEFT OUTER JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.ContainerId = tmpContainer.Id
+                                                                 AND MIContainer.OperDate >= inStartDate
               GROUP BY tmpContainer.Amount, tmpContainer.Id
-              ) AS tmp
+              ) AS tmp 
                LEFT JOIN Object AS Object_UnitOrPartner ON Object_UnitOrPartner.Id = inWhereObjectId
                LEFT JOIN ObjectDesc AS ObjectDesc_UnitOrPartner ON ObjectDesc_UnitOrPartner.Id = Object_UnitOrPartner.DescId
                LEFT JOIN Object AS Object_GoodsOrGroup ON Object_GoodsOrGroup.Id = inGoodsOrGroupId
         GROUP BY Object_UnitOrPartner.ValueData 
                , Object_GoodsOrGroup.ValueData 
                , ObjectDesc_UnitOrPartner.ItemName 
-
-        HAVING
-              SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_Start, 0)) <> 0 OR
-              SUM (tmp.Amount - COALESCE (tmp.MIC_Amount_End, 0))  <> 0 
         ;
 
     RETURN NEXT Cursor1;
@@ -210,7 +294,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MLO_Unit
                                          ON MLO_Unit.MovementId = Movement.Id
-                                        AND MLO_Unit.DescId = CASE WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From()  END 
+                                        AND MLO_Unit.DescId = CASE WHEN MovementDesc.Id in (zc_Movement_ReturnIn(),zc_Movement_Income()) THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From()  END 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MLO_Unit.ObjectId
     ;
     RETURN NEXT Cursor2;
