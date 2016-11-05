@@ -1,8 +1,6 @@
 -- FunctiON: gpGet_Movement_Reestr (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Reestr (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Reestr (Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Reestr(
     IN inMovementId        Integer  , -- ключ Документа

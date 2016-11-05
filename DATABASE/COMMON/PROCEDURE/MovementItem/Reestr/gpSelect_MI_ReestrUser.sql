@@ -184,8 +184,7 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-  
-    ;
+           ;
 
 END;
 $BODY$
@@ -198,5 +197,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_ReestrUser (inMovementId:= 4353346, inIsErased:= True, inSession:= zfCalc_UserAdmin())
---select * from gpSelect_MI_ReestrUser(instartdate := ('24.10.2016')::TDateTime , inenddate := ('24.10.2016')::TDateTime , inReestrKindId := 736914 ,  inSession := '5');
+-- SELECT * FROM gpSelect_MI_ReestrUser (inStartDate:= '24.10.2016', inEndDate:= '24.10.2016', inReestrKindId:= 736914,  inSession := '5');

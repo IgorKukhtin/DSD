@@ -3,7 +3,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080'>'
   ClientHeight = 427
-  ClientWidth = 456
+  ClientWidth = 484
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,10 +19,11 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 456
+    Width = 484
     Height = 50
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 456
     object deStart: TcxDateEdit
       Left = 116
       Top = 3
@@ -59,12 +60,12 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel27: TcxLabel
-      Left = 357
+      Left = 322
       Top = 4
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 301
+      Left = 322
       Top = 27
       Properties.Buttons = <
         item
@@ -73,17 +74,18 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 155
+      Width = 150
     end
   end
   object cxGrid: TcxGrid
     Left = 0
     Top = 76
-    Width = 456
+    Width = 484
     Height = 351
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 456
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

@@ -15,6 +15,8 @@ AS
 $BODY$
 BEGIN
      -- !!!Замена!!!
+     -- inIsBefoHistoryCost:= FALSE;
+     -- !!!Замена!!!
      /*IF inIsSale = TRUE
      THEN 
          inIsBefoHistoryCost:= FALSE;

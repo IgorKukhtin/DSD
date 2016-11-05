@@ -628,7 +628,7 @@ BEGIN
            , COALESCE (Object_Price_View.isTOP, False)               AS isTOP_Price
 
            , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
-           -- , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName
+           , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName -- ***
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
            , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
            , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
@@ -653,7 +653,7 @@ BEGIN
            , tmpMI.PartnerGoodsCode 
            , tmpMI.PartnerGoodsName
            , tmpMI.JuridicalId
-           , tmpMI.JuridicalName 
+           , tmpMI.JuridicalName -- ***
            , tmpMI.ContractId
            , tmpMI.ContractName
            , tmpMI.MakerName 

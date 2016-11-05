@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr(
     IN inIsErased           Boolean   , --
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( Id Integer, LineNum Integer, MemberId Integer, OperDate TDateTime, isErased Boolean
+RETURNS TABLE  (Id Integer, LineNum Integer, MemberId Integer, OperDate TDateTime, isErased Boolean
               , BarCode_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime--, StatusCode Integer, StatusName TVarChar
               , Checked Boolean
              --, PriceWithVAT Boolean
@@ -25,8 +25,7 @@ RETURNS TABLE ( Id Integer, LineNum Integer, MemberId Integer, OperDate TDateTim
               , CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar
 
               , ReestrKindName TVarChar
-
-              )
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -91,7 +90,6 @@ BEGIN
        FROM tmpMI AS tmp
             INNER JOIN Movement AS Movement_Sale  ON Movement_Sale.id = tmp.MovementId_Sale  -- док. продажи
 --            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement_Sale.Id

@@ -1,8 +1,6 @@
 -- Function: gpSelect_MI_Reestr_BarCode()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_Reestr_BarCode (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_Reestr_BarCode (Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr_BarCode(
     IN inBarCode_Transport Integer ,
@@ -39,5 +37,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_Reestr_BarCode ( inSession:= zfCalc_UserAdmin())
---4323306
---4306286

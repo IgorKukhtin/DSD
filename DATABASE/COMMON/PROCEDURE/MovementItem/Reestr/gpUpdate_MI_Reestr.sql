@@ -8,11 +8,12 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Reestr(
     IN inMemberId             Integer   , -- Физические лица(водитель/экспедитор) кто сдал документ для визы
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Void
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMIId Integer;
+
+   DECLARE vbId_mi Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
@@ -22,64 +23,64 @@ BEGIN
     END IF;
 
     -- ищем строку Реестра с таким док продажи
-    vbMIId:= (SELECT MF_MovementItemId.ValueData ::integer AS Id
+    vbId_mi:= (SELECT MF_MovementItemId.ValueData ::Integer AS Id
               FROM MovementFloat AS MF_MovementItemId 
               WHERE MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                AND MF_MovementItemId.MovementId = CAST (inBarCode AS integer) --saleid
+                AND MF_MovementItemId.MovementId = CAST (inBarCode AS Integer) --saleid
               );
 
     IF inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN 
        -- сохранили <когда сформирована виза "Получено от клиента">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), vbMIId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartnerIn(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "Получено от клиента">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), vbMIId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), vbId_mi, vbUserId);
        -- сохранили связь с <кто сдал документ для визы "Получено от клиента">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), vbMIId, inMemberId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), vbId_mi, inMemberId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS Integer), inReestrKindId);
     END IF;
   
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeIn() THEN 
        -- сохранили <когда сформирована виза "Получено для переделки">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeIn(), vbMIId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeIn(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "Получено для переделки">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInTo(), vbMIId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInTo(), vbId_mi, vbUserId);
        -- сохранили связь с <кто сдал документ для визы "Получено для переделки">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), vbMIId, inMemberId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), vbId_mi, inMemberId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS Integer), inReestrKindId);
     END IF;
     
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN 
        -- сохранили <когда сформирована виза "ухгалтерия для исправления">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeBuh(), vbMIId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeBuh(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "ухгалтерия для исправления">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), vbMIId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), vbId_mi, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS Integer), inReestrKindId);
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Remake() THEN 
        -- сохранили <когда сформирована виза "Документ исправлен">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Remake(), vbMIId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Remake(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "Документ исправлен">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), vbMIId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), vbId_mi, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS Integer), inReestrKindId);
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
        -- сохранили <когда сформирована виза "Бухгалтерия">   
-       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbMIId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), vbId_mi, CURRENT_TIMESTAMP);
        -- сохранили связь с <кто сформировал визу "Бухгалтерия">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbMIId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), vbId_mi, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS integer), inReestrKindId);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), CAST (inBarCode AS Integer), inReestrKindId);
     END IF;
 
 END;
@@ -93,5 +94,4 @@ $BODY$
 */
 
 -- тест
-----RAISE EXCEPTION 'Ошибка.%, %', outId, vbMIId;
---select * from gpUpdate_MI_Reestr(inBarCode := '4323306' , inOperDate := ('23.10.2016')::TDateTime , inCarId := 340655 , inPersonalDriverId := 0 , inMemberId := 0 , inDocumentId_Transport := 2298218 ,  inSession := '5');
+-- SELECT * FROM gpUpdate_MI_Reestr (inBarCode:= '4323306', inOperDate:= '23.10.2016', inCarId:= 340655, inPersonalDriverId:= 0, inMemberId:= 0, inDocumentId_Transport:= 2298218, inSession:= '5');

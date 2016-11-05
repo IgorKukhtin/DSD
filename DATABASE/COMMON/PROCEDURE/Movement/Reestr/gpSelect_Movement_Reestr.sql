@@ -183,7 +183,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
-            LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_RemakeBuh.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -203,5 +203,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Reestr (inStartDate:= '20.10.2016', inEndDate:= '25.10.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
-
-

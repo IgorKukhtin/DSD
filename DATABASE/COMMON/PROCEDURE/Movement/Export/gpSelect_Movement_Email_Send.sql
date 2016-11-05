@@ -1,11 +1,13 @@
-п»ї-- Function: gpselect_movement_email_send(integer, tvarchar)
+-- Function: gpSelect_Movement_Email_Send(Integer, tvarchar)
 
--- DROP FUNCTION gpselect_movement_email_send(integer, tvarchar);
+-- DROP FUNCTION gpSelect_Movement_Email_Send (Integer, tvarchar);
 
-CREATE OR REPLACE FUNCTION gpselect_movement_email_send(
-    IN inmovementid integer,
-    IN insession tvarchar)
-  RETURNS TABLE(rowdata tblob) AS
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Email_Send(
+    IN inMovementId           Integer   ,
+    IN inSession              TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (RowData TBlob)
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPartnerId Integer;
@@ -13,18 +15,17 @@ $BODY$
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
    DECLARE vbExportKindId Integer;
-   
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
      vbUserId := lpGetUserBySession (inSession);
 
 
-     -- РўР°Р±Р»РёС†Р° РґР»СЏ СЂРµР·СѓР»СЊС‚Р°С‚Р°
+     -- Таблица для результата
      CREATE TEMP TABLE _Result (RowData TBlob) ON COMMIT DROP;
 
 
-     -- РїР°СЂР°РјРµС‚СЂС‹ РёР· РґРѕРєСѓРјРµРЅС‚Р°
+     -- параметры из документа
      SELECT tmp.PartnerId
           , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
@@ -57,24 +58,24 @@ BEGIN
     ;
 
 
-     -- !!!1.Р¤РѕСЂРјР°С‚ XML - zc_Enum_ExportKind_Mida35273055!!!
+     -- !!!1.Формат XML - zc_Enum_ExportKind_Mida35273055!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Mida35273055()
      THEN
 
-     -- РїРµСЂРІС‹Рµ СЃС‚СЂРѕС‡РєРё XML
+     -- первые строчки XML
      -- INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="windows-1251"?>');
      INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
 
-     -- РЁР°РїРєР°
+     -- Шапка
      INSERT INTO _Result(RowData)
-        SELECT '<head РљРѕРґРџРѕСЃС‚Р°РІС‰РёРєР°="226"'
+        SELECT '<head КодПоставщика="226"'
                   ||    ' Direction="' || COALESCE (ObjectString_RoomNumber.ValueData, '') ||'"'
-                  || ' Р”Р°С‚Р°РћРїРµСЂР°С†РёРё="' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData) ||'"'
-                  ||' РќРѕРјРµСЂРћРїРµСЂР°С†РёРё="' || Movement.InvNumber ||'"'
-                  ||  ' РќРѕРјРµСЂР—Р°РєР°Р·Р°="' || COALESCE (MovementString_InvNumberOrder.ValueData, '') ||'"'
-                  ||  ' Р’РёРґРћРїРµСЂР°С†РёРё="2">'
+                  || ' ДатаОперации="' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData) ||'"'
+                  ||' НомерОперации="' || Movement.InvNumber ||'"'
+                  ||  ' НомерЗаказа="' || COALESCE (MovementString_InvNumberOrder.ValueData, '') ||'"'
+                  ||  ' ВидОперации="2">'
         FROM Movement
              LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                       ON MovementString_InvNumberOrder.MovementId =  Movement.Id
@@ -88,7 +89,7 @@ BEGIN
         WHERE Movement.Id = inMovementId
        ;
 
-     -- РЎС‚СЂРѕС‡РЅР°СЏ С‡Р°СЃС‚СЊ
+     -- Строчная часть
      INSERT INTO _Result(RowData)
         WITH tmpObject_GoodsPropertyValue AS
                 (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -149,12 +150,12 @@ BEGIN
                                              ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                             AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
                 )
-        -- СЂРµР·СѓР»СЊС‚Р°С‚
-        SELECT --'<tov РљРѕРґР РµРіРёСЃС‚СЂР°="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))) || '"'
-               '<tov РљРѕРґР РµРіРёСЃС‚СЂР°="' || COALESCE (tmpObject_GoodsPropertyValue.Article, COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))) || '"'
-               || ' РќР°РёРјРµРЅРѕРІР°РЅРёРµ="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END || '"'
-               || ' РљРѕР»РёС‡РµСЃС‚РІРѕ="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar || '"'
-               || ' Р¦РµРЅР°="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) :: TVarChar ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) :: TVarChar END || '"'
+        -- результат
+        SELECT --'<tov КодРегистра="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, ''))) || '"'
+               '<tov КодРегистра="' || COALESCE (tmpObject_GoodsPropertyValue.Article, COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))) || '"'
+               || ' Наименование="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END || '"'
+               || ' Количество="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar || '"'
+               || ' Цена="' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) :: TVarChar ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) :: TVarChar END || '"'
                || '/>'
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -186,27 +187,27 @@ BEGIN
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
 
-     -- РїРѕСЃР»РµРґРЅРёРµ СЃС‚СЂРѕС‡РєРё XML
+     -- последние строчки XML
      INSERT INTO _Result(RowData) VALUES ('</head>');
      INSERT INTO _Result(RowData) VALUES ('</root>');
 
 
      ELSE
 
-     -- !!!2.Р¤РѕСЂРјР°С‚ CSV - zc_Enum_ExportKind_Vez37171990!!!
+     -- !!!2.Формат CSV - zc_Enum_ExportKind_Vez37171990!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Vez37171990()
      THEN
 
 
-     -- РїРµСЂРІР°СЏ СЃС‚СЂРѕС‡РєР° CSV  - РЁР°РїРєР°
+     -- первая строчка CSV  - Шапка
      INSERT INTO _Result(RowData)
         SELECT COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
      || ';' || COALESCE (OH_JuridicalDetails_From.OKPO, '')
      || ';' || Movement.InvNumber
      || ';' || COALESCE (ObjectString_GLNCode.ValueData, '') -- || ':V' || COALESCE (ObjectString_RoomNumber.ValueData, '0')
-     || ';' || '14' -- Р’РµСЂСЃРёСЏ С„РѕСЂРјР°С‚Р°
-     || ';' || CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 'RN' ELSE 'VN' END -- Р’РёРґ РґРѕРєСѓРјРµРЅС‚Р° : RN вЂ“ СЂР°СЃС…РѕРґРЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ or VN вЂ“ РІРѕР·РІСЂР°С‚РЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ or SP - СЃРїРµС†РёС„РёРєР°С†РёСЏ
+     || ';' || '14' -- Версия формата
+     || ';' || CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 'RN' ELSE 'VN' END -- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
      || ';' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData)
      || ';' || COALESCE (View_Contract.InvNumber, '')
      || ';' || CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '10' ELSE '11' END
@@ -248,7 +249,7 @@ BEGIN
         WHERE Movement.Id = inMovementId
        ;
 
-     -- РЎС‚СЂРѕС‡РЅР°СЏ С‡Р°СЃС‚СЊ
+     -- Строчная часть
      INSERT INTO _Result(RowData)
         WITH tmpObject_GoodsPropertyValue AS
                 (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -308,25 +309,25 @@ BEGIN
                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                 )
 
-        -- СЂРµР·СѓР»СЊС‚Р°С‚
+        -- результат
         SELECT tmpGoodsByGoodsKind.ObjectId :: TVarChar
      || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
-               -- Р¦РµРЅР° СЃ РќР”РЎ
+               -- Цена с НДС
      || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
      || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
-     || ';1' -- РљРѕСЌС„С„РёС†РёРµРЅС‚
+     || ';1' -- Коэффициент
      || ';' || COALESCE (Object_Measure.ValueData, '')
-               -- Р¦РµРЅР° Р±РµР· РќР”РЎ
+               -- Цена без НДС
      || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
-               -- РЎСѓРјРјР° Р±РµР· РќР”РЎ
+               -- Сумма без НДС
      || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END :: TVarChar
-               -- РЎСѓРјРјР° СЃ РќР”РЎ
+               -- Сумма с НДС
      || ';' || COALESCE (MIFloat_Summ.ValueData, 0) :: TVarChar
-               -- РќР”РЎ
+               -- НДС
      || ';' || (COALESCE (MIFloat_Summ.ValueData, 0)
               - CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END
                ) :: TVarChar
-               -- РЁС‚СЂРёС…-РєРѕРґ
+               -- Штрих-код
      || ';' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -368,17 +369,17 @@ BEGIN
 
      ELSE
 
-     -- !!!3.Р¤РѕСЂРјР°С‚ XML - zc_Enum_ExportKind_Brusn34604386!!!
+     -- !!!3.Формат XML - zc_Enum_ExportKind_Brusn34604386!!!
 
      IF vbExportKindId = zc_Enum_ExportKind_Brusn34604386()
      THEN
 
-     -- РїРµСЂРІС‹Рµ СЃС‚СЂРѕС‡РєРё XML
+     -- первые строчки XML
      INSERT INTO _Result(RowData) VALUES ('<?xml version="1.0" encoding="UTF-16"?>');
      INSERT INTO _Result(RowData) VALUES ('<root>');
      INSERT INTO _Result(RowData) VALUES ('<Export Provider="9990074" />');
 
-     -- РЎС‚СЂРѕС‡РЅР°СЏ С‡Р°СЃС‚СЊ
+     -- Строчная часть
      INSERT INTO _Result(RowData)
         WITH tmpMovement AS
                 (SELECT Movement.Id                                      AS MovementId
@@ -459,26 +460,26 @@ BEGIN
                                           AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
                  WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                 )
-        -- СЂРµР·СѓР»СЊС‚Р°С‚
+        -- результат
         SELECT 
-        -- С€С‚СЂРёС…РєРѕРґ С‚РѕРІР°СЂР° (РµСЃР»Рё С‚Р°РєРѕРІРѕРіРѕ РЅРµС‚ - РїСЂРёРґСѓРјР°С‚СЊ РїСЂРѕРёР·РІРѕР»СЊРЅС‹Р№ СЃ Р±СѓРєРІРµРЅРЅС‹Рј РїСЂРµС„РёРєСЃРѕРј)
+        -- штрихкод товара (если такового нет - придумать произвольный с буквенным префиксом)
       '    <tov KOD="' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
-               -- РєРѕР»РёС‡РµСЃС‚РІРѕ
+               -- количество
      || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
-               -- С†РµРЅР° СЃ РќР”РЎ (Р’Р°С€Р°) 
+               -- цена с НДС (Ваша) 
      || '" CEN="' || CAST(((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
 		     +
 		     ((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
-		      * (select ValueData/100 from movementfloat where descid = 3 and movementid = inmovementid))) AS NUMERIC(16, 2))/*РЎРѓР С”Р С‘Р Т‘Р С”Р В°/Р Р…Р В°Р С”РЎР‚РЎС“РЎвЂљР С”Р В°*/ :: TVarChar
-               -- РёРјСЏ С‚РѕРІР°СЂР° РЅР° РІСЃСЏРє СЃР»СѓС‡Р°Р№ РµСЃР»Рё Р·Р°Р±С‹Р»Рё СЃРѕРѕР±С‰РёС‚СЊ С€С‚СЂРёС…РєРѕРґ
+		      * (select ValueData/100 from movementfloat where descid = 3 and movementid = inmovementid))) AS NUMERIC(16, 2))/*СЃРєРёРґРєР°/РЅР°РєСЂСѓС‚РєР°*/ :: TVarChar
+               -- имя товара на всяк случай если забыли сообщить штрихкод
      || '" NAM="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
-               -- РјР°РіР°Р·РёРЅ (РјС‹ РЅРѕРјРµСЂ РјР°РіР°Р·Р° РїРѕ РЅР°С€РµР№ РєРѕРґРёС„РёРєР°С†РёРё РёР»Рё РІР°С€Р° РєР°РєР°-РЅРёС‚СЊ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РўРў)
+               -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
      || '" MAG="' || tmpMovement.PartnerId -- tmpMovement.RoomNumber
-               -- РЅР°Р·РІР°РЅРёРµ Р°РґСЂРµСЃ РўРў
+               -- название адрес ТТ
      || '" NAM_TT="' || tmpMovement.PartnerName
-               -- РґР°С‚Р° РґРѕРєР°
+               -- дата дока
      || '" DAT="' || zfConvert_DateToString (tmpMovement.OperDatePartner)
-               -- РЅРѕРјРµСЂ РЅР°РєР»Р°РґРЅРѕР№ (РјР°Р»Рѕ Р·РЅР°РєРѕРІ - СЂР°СЃС€РёСЂСЏР№С‚Рµ РЅР° СЃРІРѕРµ СѓСЃРјРѕС‚СЂРµРЅРёРµ)
+               -- номер накладной (мало знаков - расширяйте на свое усмотрение)
      || '" NAK="' || tmpMovement.InvNumber || '" />'
 
         FROM MovementItem
@@ -522,20 +523,203 @@ BEGIN
           AND MovementItem.isErased = FALSE
           AND MIFloat_AmountPartner.ValueData <> 0
        ;
-     -- РїРѕСЃР»РµРґРЅРёРµ СЃС‚СЂРѕС‡РєРё XML
+     -- последние строчки XML
      INSERT INTO _Result(RowData) VALUES ('</root>');
+     
+     ELSE
+     
+     -- !!!4.Формат CSV - zc_Enum_ExportKind_Dakort39135074!!!
 
+     IF vbExportKindId = zc_Enum_ExportKind_Dakort39135074()
+     THEN
+
+
+     -- первая строчка CSV  - Шапка
+     INSERT INTO _Result(RowData)
+        SELECT COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+        -- Код ОКПО
+	|| ';' || COALESCE (OH_JuridicalDetails_From.OKPO, '')
+	--Номер РН
+	|| ';' || Movement.InvNumber
+	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
+	|| ';' || 'DP:V'||ObjectString_RoomNumber.ValueData||' - НЕКТАР №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
+	-- Версия формата
+	|| ';' || '14'
+	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
+	|| ';' || CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 'RN' ELSE 'VN' END
+	-- Дата РН
+	|| ';' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData)
+	-- Номер договора
+	|| ';' || COALESCE (View_Contract.InvNumber, '')
+	-- Форма накладной
+	|| ';' || CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '10' ELSE '11' END
+        FROM Movement
+             LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+                                 AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId)
+
+             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_JuridicalBasis.Id
+                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
+                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+             LEFT JOIN Object AS Object_PartnerAdress
+                              ON Object_PartnerAdress.Id = vbPartnerId
+                             AND Object_PartnerAdress.DescId = zc_Object_Partner()
+             LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                    ON ObjectString_RoomNumber.ObjectId = vbPartnerId
+                                   AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()                             
+        WHERE Movement.Id = inMovementId
+       ;
+
+     -- Строчная часть
+     INSERT INTO _Result(RowData)
+        WITH tmpObject_GoodsPropertyValue AS
+                (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                      , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                 FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                )
+           , tmpObject_GoodsPropertyValueGroup AS
+                (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                      , tmpObject_GoodsPropertyValue.BarCode
+                 FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE BarCode <> '' GROUP BY GoodsId
+                      ) AS tmpGoodsProperty_find
+                      LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                )
+           , tmpObject_GoodsPropertyValue_basis AS
+                (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                 FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                )
+           , tmpGoodsByGoodsKind AS
+                (SELECT DISTINCT
+                        ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
+                      , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                 FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                           ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                          AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                )
+
+        -- результат
+        SELECT tmpGoodsByGoodsKind.ObjectId :: TVarChar
+     || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
+               -- Цена с НДС
+     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
+     || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+     || ';1' -- Коэффициент
+     || ';' || COALESCE (Object_Measure.ValueData, '')
+               -- Цена без НДС
+     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
+               -- Сумма без НДС
+     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END :: TVarChar
+               -- Сумма с НДС
+     || ';' || COALESCE (MIFloat_Summ.ValueData, 0) :: TVarChar
+               -- НДС
+     || ';' || (COALESCE (MIFloat_Summ.ValueData, 0)
+              - CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END
+               ) :: TVarChar
+               -- Штрих-код
+     || ';' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
+        FROM MovementItem
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = MovementItem.ObjectId
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
+                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                   AND tmpObject_GoodsPropertyValue.BarCode <> ''
+             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
+                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = MovementItem.ObjectId
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+             LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = ObjectLink_Goods_Measure.ChildObjectId
+
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.isErased = FALSE
+          AND MIFloat_AmountPartner.ValueData <> 0
+       ;
+
+     END IF;
      END IF;
      END IF;
      END IF;
 
      IF vbExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
      THEN
-         -- Р РµР·СѓР»СЊС‚Р°С‚
+         -- Результат
          RETURN QUERY
             SELECT STRING_AGG (_Result.RowData, CHR(13)||CHR(10)) :: TBlob FROM _Result;
      ELSE
-         -- Р РµР·СѓР»СЊС‚Р°С‚
+         -- Результат
          RETURN QUERY
             SELECT _Result.RowData FROM _Result;
      END IF;
@@ -543,26 +727,19 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpselect_movement_email_send(integer, tvarchar)
-  OWNER TO admin;
-GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO public;
-GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO admin;
-GRANT EXECUTE ON FUNCTION gpselect_movement_email_send(integer, tvarchar) TO project;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ., Р›РµРІРёС†РєРёР№ Р‘.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Левицкий Б.
+ 29.07.16                                                                       * Шери - XML формат : цены в колонке " KOL="* формируются для каждой позиции отдельно с учетом скидки/накрутки
+ 10.05.16                                                                       * Шери - XML формат : не учитывалась скидка/накрутка при формировании цены в колонке " KOL="*
+ 05.05.16                                                                       * Допилена выгрузка для Шери - XML формат
  23.03.16                                        *
  25.02.16                                        *
- 05.05.16 Р”РѕРїРёР»РµРЅР° РІС‹РіСЂСѓР·РєР° РґР»СЏ РЁРµСЂРё - XML С„РѕСЂРјР°С‚*
- 10.05.16 РЁРµСЂРё - XML С„РѕСЂРјР°С‚ : РЅРµ СѓС‡РёС‚С‹РІР°Р»Р°СЃСЊ СЃРєРёРґРєР°/РЅР°РєСЂСѓС‚РєР° РїСЂРё С„РѕСЂРјРёСЂРѕРІР°РЅРёРё С†РµРЅС‹ РІ РєРѕР»РѕРЅРєРµ " KOL="*
- 29.07.16 РЁРµСЂРё - XML С„РѕСЂРјР°С‚ : С†РµРЅС‹ РІ РєРѕР»РѕРЅРєРµ " KOL="* С„РѕСЂРјРёСЂСѓСЋС‚СЃСЏ РґР»СЏ РєР°Р¶РґРѕР№ РїРѕР·РёС†РёРё РѕС‚РґРµР»СЊРЅРѕ СЃ СѓС‡РµС‚РѕРј СЃРєРёРґРєРё/РЅР°РєСЂСѓС‚РєРё
 */
 
--- РЎвЂљР ВµРЎРѓРЎвЂљ
+-- тест
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()

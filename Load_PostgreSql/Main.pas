@@ -200,6 +200,7 @@ type
     cbOnlySale: TCheckBox;
     cbReturnIn_Auto: TCheckBox;
     cbGoodsListSale: TCheckBox;
+    cbOnlyTwo: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1657,9 +1658,10 @@ begin
                // !!!этот пересчет - всегда!!!
                cbGoodsListSale.Checked:=true;
 
-               // !!!за текущий - не надо!!!
-               if EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime) then
-               begin
+               // !!!за "текущий" - не надо!!! + или надо ...
+               if  (EndDateEdit.Text <> DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime))
+                or (ParamStr(3)='+')
+               then begin
                     cbFillSoldTable.Checked:=true;
                end
                else
@@ -2240,8 +2242,10 @@ begin
 
      //if not fStop then pCompleteDocument_Cash;
 
-     if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
-     begin
+     if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
+         // и - если необходимо 2 раза
+         and (cbOnlyTwo.Checked = FALSE)
+     then begin
           {if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_IncomeNal(cbLastComplete.Checked);
           if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
@@ -2275,7 +2279,7 @@ begin
      if not fStop then pInsertHistoryCost(FALSE);
      //
      // ВСЕГДА - Привязка Возвраты
-     if (not fStop) then pCompleteDocument_ReturnIn_Auto;
+     if (not fStop) and ((ParamStr(4) <> '-') or (isPeriodTwo = true)) then pCompleteDocument_ReturnIn_Auto;
      //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);

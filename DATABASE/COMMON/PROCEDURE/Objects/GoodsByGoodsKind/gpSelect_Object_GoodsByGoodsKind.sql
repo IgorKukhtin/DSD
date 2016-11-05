@@ -165,6 +165,14 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
  18.03.15        * add redmine 17.03.2015
  29.01.14                        * 
 */
-
+/*
+select BarCodeShort from (
+select GoodsName, BarCodeShort from gpSelect_Object_GoodsPropertyValue(inGoodsPropertyId := 0 , inShowAll := 'False' ,  inSession := '5') as a
+where BarCodeShort <> ''
+group by GoodsName, BarCodeShort
+) aS A
+group by BarCodeShort
+having count (*) > 1
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsByGoodsKind (zfCalc_UserAdmin())

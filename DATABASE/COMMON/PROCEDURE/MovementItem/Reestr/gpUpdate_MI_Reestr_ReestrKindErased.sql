@@ -11,14 +11,15 @@ RETURNS Void
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMIId_Sale Integer;
+
+   DECLARE vbId_miSale Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
      
 
     -- ищем строку Реестра с таким док продажи
-    vbMIId_Sale:= (SELECT MF_MovementItemId.MovementId AS MIID_Sale
+    vbId_miSale:= (SELECT MF_MovementItemId.MovementId AS MIID_Sale
                    FROM MovementFloat AS MF_MovementItemId 
                    WHERE MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                      AND MF_MovementItemId.ValueData ::integer = inId
@@ -33,7 +34,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInFrom(), inId, Null);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
   
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeIn() THEN 
@@ -45,7 +46,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), inId, Null);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
     
     IF inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN 
@@ -55,7 +56,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), inId, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Remake() THEN 
@@ -65,7 +66,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), inId, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
 
     IF inReestrKindId = zc_Enum_ReestrKind_Buh() THEN 
@@ -75,7 +76,7 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, vbUserId);
 
        -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMIId_Sale, Null);
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
 
 END;
@@ -89,5 +90,4 @@ $BODY$
 */
 
 -- тест
-----RAISE EXCEPTION 'Ошибка.%, %', outId, vbMIId;
---select * from gpUpdate_MI_Reestr_ReestrKindErased(inBarCode := '4323306' , inOperDate := ('23.10.2016')::TDateTime , inCarId := 340655 , inPersonalDriverId := 0 , inMemberId := 0 , inDocumentId_Transport := 2298218 ,  inSession := '5');
+-- SELECT * FROM gpUpdate_MI_Reestr_ReestrKindErased (inBarCode := '4323306' , inOperDate := ('23.10.2016')::TDateTime , inCarId := 340655 , inPersonalDriverId := 0 , inMemberId := 0 , inDocumentId_Transport := 2298218 ,  inSession := '5');

@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_MI_ReestrStart()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ReestrStart (TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ReestrStart(
