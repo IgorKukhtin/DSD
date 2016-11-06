@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Reestr(
     IN inCarId                Integer   , -- Автомобиль
     IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
     IN inMemberId             Integer   , -- Физические лица(экспедитор)
-    IN inDocumentId_Transport Integer   , -- Путевой лист/Начисления наемный транспорт
+    IN inMovementId_Transport Integer   , -- Путевой лист/Начисления наемный транспорт
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -20,16 +20,28 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
                                               
+
+     -- только в этом случае - ничего не делаем
+     IF ioId = 0
+        AND inCarId  = 0
+        AND inPersonalDriverId = 0
+        AND inMemberId          = 0
+        AND inMovementId_Transport  = 0
+     THEN
+         RETURN; -- !!!выход!!!
+     END IF;
+
+
      -- сохранили <Документ>
-     ioId:= lpInsertUpdate_Movement_Reestr (ioId                  := ioId
-                                             , inInvNumber        := inInvNumber
-                                             , inOperDate         := inOperDate
-                                             , inCarId            := inCarId
-                                             , inPersonalDriverId := inPersonalDriverId
-                                             , inMemberId         := inMemberId
-                                             , inDocumentId_Transport := inDocumentId_Transport
-                                             , inUserId           := vbUserId
-                                              ) AS tmp;
+     ioId:= lpInsertUpdate_Movement_Reestr (ioId               := ioId
+                                          , inInvNumber        := inInvNumber
+                                          , inOperDate         := inOperDate
+                                          , inCarId            := inCarId
+                                          , inPersonalDriverId := inPersonalDriverId
+                                          , inMemberId         := inMemberId
+                                          , inMovementId_Transport := inMovementId_Transport
+                                          , inUserId           := vbUserId
+                                          );
 
 
 END;

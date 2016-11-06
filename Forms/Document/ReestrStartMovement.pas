@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter,
+  cxImageComboBox;
 
 type
   TReestrStartMovementForm = class(TAncestorDocumentForm)
@@ -53,6 +54,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     BarCode_Transport: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    MemberCode: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
   private
     { Private declarations }
   public

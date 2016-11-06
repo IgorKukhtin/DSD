@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Reestr (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Reestr(
     IN inMovementId        Integer  , -- ключ Документа
-    IN inSessiON           TVarChar   -- сессия пользователя
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -18,8 +18,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSessiON, zc_Enum_Process_Get_Movement_Reestr());
-     vbUserId:= lpGetUserBySessiON (inSessiON);
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Reestr());
+     vbUserId:= lpGetUserBySessiON (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -106,4 +106,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Reestr (inMovementId:= 0 ::integer,  inOperDate:= CURRENT_DATE ::TDateTime, inSessiON:= '5'::TVarChar)
+-- SELECT * FROM gpGet_Movement_Reestr (inMovementId:= 0 ::integer,  inOperDate:= CURRENT_DATE ::TDateTime, inSession:= '5'::TVarChar)

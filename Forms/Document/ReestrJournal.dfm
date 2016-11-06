@@ -1,12 +1,12 @@
 inherited ReestrJournalForm: TReestrJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088#1099' '#1085#1072#1082#1083#1072#1076#1085#1099#1093'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1077#1077#1089#1090#1088#1099' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')>'
   ClientHeight = 535
   ClientWidth = 838
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -402,68 +402,24 @@ inherited ReestrJournalForm: TReestrJournalForm
     Left = 31
     Top = 186
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TReestrForm'
-      FormNameParam.Value = 'TReestrForm'
+      FormName = 'TReestrStartMovementForm'
+      FormNameParam.Value = 'TReestrStartMovementForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inChangePercentAmount'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inChangePercentAmount'
-          DataType = ftFloat
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TReestrForm'
-      FormNameParam.Value = 'TReestrForm'
+      FormName = 'TReestrStartMovementForm'
+      FormNameParam.Value = 'TReestrStartMovementForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inChangePercentAmount'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inChangePercentAmount'
-          DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

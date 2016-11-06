@@ -87,12 +87,12 @@ BEGIN
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Buh.ValueData            AS Member_Buh
 
-       FROM (SELECT Movement.id
+       FROM (SELECT Movement.Id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Reestr() AND Movement.StatusId = tmpStatus.StatusId
              ) AS tmpMovement
 
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_Update

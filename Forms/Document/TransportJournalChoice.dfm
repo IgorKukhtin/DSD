@@ -28,7 +28,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -37,7 +37,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 42309d
+      EditValue = 42370d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -409,10 +409,12 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
       FormName = 'TTransportForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -429,6 +431,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
       FormName = 'TTransportForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -436,6 +439,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -522,6 +526,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
       FormName = 'TMovementItemContainerForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -529,6 +534,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -693,6 +699,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
       FormName = 'TMovementProtocolForm'
       FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -700,6 +707,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber'
@@ -708,6 +716,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           ComponentItem = 'InvNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -719,7 +728,9 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           FromParam.Value = Null
           FromParam.Component = ClientDataSet
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <
         item
@@ -742,10 +753,12 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Name = 'isFrom'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.Value = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
@@ -771,10 +784,12 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Name = 'isFrom'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -786,6 +801,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -793,25 +809,29 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'OperDate'
-          Value = Null
+          Value = 'NULL'
           Component = ClientDataSet
           ComponentItem = 'OperDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CarId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CarName'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'CarName'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InvNumber_Full'
@@ -819,6 +839,22 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
           Component = ClientDataSet
           ComponentItem = 'InvNumber_Full'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalDriverId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalDriverName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
@@ -840,6 +876,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -847,6 +884,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -854,6 +892,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 24
@@ -870,6 +909,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
@@ -912,6 +952,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -928,6 +969,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 72
@@ -966,6 +1008,7 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -985,12 +1028,14 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inislastcomplete'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 185

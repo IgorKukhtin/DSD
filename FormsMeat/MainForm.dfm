@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   KeyPreview = True
   Position = poDesigned
   ExplicitWidth = 1376
-  ExplicitHeight = 265
+  ExplicitHeight = 262
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -69,7 +69,7 @@ inherited MainForm: TMainForm
     object actReestrRemake: TdsdOpenForm [0]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085'>'
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
       FormNameParam.DataType = ftString
@@ -91,7 +91,7 @@ inherited MainForm: TMainForm
     object actReestrBuh: TdsdOpenForm [1]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' ('#1060#1048#1053#1048#1064')>'
+      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
       FormNameParam.DataType = ftString
@@ -113,7 +113,7 @@ inherited MainForm: TMainForm
     object actReestrRemakeBuh: TdsdOpenForm [2]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103'>'
+      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
       FormNameParam.DataType = ftString
@@ -135,7 +135,7 @@ inherited MainForm: TMainForm
     object actReestrRemakeIn: TdsdOpenForm [3]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080'>'
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
       FormNameParam.DataType = ftString
@@ -157,7 +157,7 @@ inherited MainForm: TMainForm
     object actReestrPartnerIn: TdsdOpenForm [4]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
       FormName = 'TReestrUpdateMovementForm'
       FormNameParam.Value = 'TReestrUpdateMovementForm'
       FormNameParam.DataType = ftString
@@ -179,18 +179,23 @@ inherited MainForm: TMainForm
     object actReestrStart: TdsdOpenForm [5]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
       FormName = 'TReestrStartMovementForm'
       FormNameParam.Value = 'TReestrStartMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actReestr: TdsdOpenForm [6]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088#1099' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      Caption = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       FormName = 'TReestrJournalForm'
       FormNameParam.Value = 'TReestrJournalForm'
       FormNameParam.DataType = ftString
@@ -4842,6 +4847,7 @@ inherited MainForm: TMainForm
       end
       object N139: TMenuItem
         Action = actSale_Reestr
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1099' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081')'
       end
       object miSale_all: TMenuItem
         Action = actSaleAll
@@ -4859,27 +4865,33 @@ inherited MainForm: TMainForm
       object miSendOnPrice_Branch: TMenuItem
         Action = actSendOnPrice_Branch
       end
-      object N140: TMenuItem
-        Caption = #1056#1077#1077#1089#1090#1088#1099
-        object N141: TMenuItem
+      object miReestrAll: TMenuItem
+        Caption = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')'
+        object miReestr: TMenuItem
           Action = actReestr
         end
-        object N142: TMenuItem
+        object N141: TMenuItem
+          Caption = '-'
+        end
+        object miReestrStart: TMenuItem
           Action = actReestrStart
         end
-        object N143: TMenuItem
+        object N140: TMenuItem
+          Caption = '-'
+        end
+        object miReestrPartnerIn: TMenuItem
           Action = actReestrPartnerIn
         end
-        object N144: TMenuItem
+        object miReestrRemakeIn: TMenuItem
           Action = actReestrRemakeIn
         end
-        object N145: TMenuItem
+        object miReestrRemakeBuh: TMenuItem
           Action = actReestrRemakeBuh
         end
-        object N146: TMenuItem
+        object miReestrRemake: TMenuItem
           Action = actReestrRemake
         end
-        object N147: TMenuItem
+        object miReestrBuh: TMenuItem
           Action = actReestrBuh
         end
       end
