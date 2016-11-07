@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Transport_Choice(
 RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar, RouteName TVarChar
+             , PersonalDriverId Integer
              , PersonalDriverName TVarChar
              , UnitForwardingName TVarChar
              , BranchName TVarChar
@@ -112,6 +113,7 @@ BEGIN
              , Object_Car.ValueData             AS CarName
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Route.ValueData           AS RouteName
+             , Object_PersonalDriver.Id         AS PersonalDriverId
              , Object_PersonalDriver.ValueData  AS PersonalDriverName
              , Object_UnitForwarding.ValueData  AS UnitForwardingName
              , View_Unit.BranchName

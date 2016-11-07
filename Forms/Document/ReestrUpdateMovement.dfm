@@ -1,12 +1,12 @@
 inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
-  Caption = #1054#1073#1085#1086#1074#1083#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1077#1077#1089#1090#1088'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
   ClientHeight = 535
   ClientWidth = 988
   ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -512,7 +512,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   object cxLabel27: TcxLabel [2]
     Left = 8
     Top = 4
-    Caption = ' '#1058#1080#1087' '#1089#1086#1089#1090#1086#1103#1085#1080#1103' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+    Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '
   end
   object edReestrKind: TcxButtonEdit [3]
     Left = 8

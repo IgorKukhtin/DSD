@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_MI_Reestr_BarCode (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr_BarCode(
-    IN inBarCode_Transport Integer ,
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inMovementId_Transport Integer ,
+    IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BarCode TVarChar
              , BarCode_Transport TVarChar
@@ -17,12 +17,12 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Reestr());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      -- Результат
      RETURN QUERY 
-
-       SELECT CAST (Null AS TVarChar)  AS BarCode
-            , CASE WHEN COALESCE  (inBarCode_Transport , NUll) = Null OR COALESCE (inBarCode_Transport , NUll) = 0 THEN Null
-                   ELSE COALESCE  (inBarCode_Transport , NUll) 
+       SELECT NULL :: TVarChar AS BarCode
+            , CASE WHEN inMovementId_Transport > 0
+                        THEN zfFormat_BarCode (zc_BarCodePref_Movement(), inMovementId_Transport) || '0'
               END ::TVarChar  AS BarCode_Transport;
   
 END;
@@ -36,4 +36,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_Reestr_BarCode ( inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Reestr_BarCode (inMovementId_Transport:= 4680679, inSession:= zfCalc_UserAdmin())
