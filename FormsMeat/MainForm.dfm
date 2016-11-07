@@ -1,10 +1,11 @@
 inherited MainForm: TMainForm
-  ClientHeight = 207
+  ClientHeight = 202
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
+  OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 262
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6102,14 +6103,17 @@ inherited MainForm: TMainForm
       end>
     Params = <
       item
-        Name = 'ActualBankStatementText'
+        Name = 'inIP'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 128
+    Left = 424
+    Top = 144
   end
   object CDSGetInfo: TClientDataSet
     Aggregates = <>
@@ -6168,8 +6172,53 @@ inherited MainForm: TMainForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IP_str'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 914
-    Top = 128
+    Left = 874
+    Top = 112
+  end
+  object spInsert_isExit: TdsdStoredProc
+    StoredProcName = 'gpInsert_LoginProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsConnect'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProcess'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsExit'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
+    Top = 152
   end
 end

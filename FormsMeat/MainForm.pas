@@ -773,8 +773,10 @@ type
     miReestrBuh: TMenuItem;
     N140: TMenuItem;
     N141: TMenuItem;
+    spInsert_isExit: TdsdStoredProc;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     procedure ChangeKeyboard(var Message: TMessage); message WM_ChangeKeyboard;
   public
@@ -785,7 +787,7 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-
+uses IdIPWatch;
 {$R *.dfm}
 
 procedure TMainForm.actReport_OLAPSoldExecute(Sender: TObject);
@@ -805,9 +807,23 @@ begin
   LoadKeyboardLayout('00000422', KLF_ACTIVATE); //ukr
 end;
 
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  spInsert_isExit.Execute;
+  inherited;
+end;
+
 procedure TMainForm.FormShow(Sender: TObject);
 var Item: TContainedAction;
 begin
+  // определили IP
+  with TIdIPWatch.Create(nil) do
+  begin
+        Active:=true;
+        FormParams.ParamByName('IP_str').Value:=LocalIP;
+        Free;
+  end;
+
   inherited;
   PostMessage(Handle, WM_ChangeKeyboard, 0, 0);
   // Выполняем сразу то что в таймере

@@ -1,7 +1,7 @@
--- Function: gpchecklogin(TVarChar, TVarChar, TVarChar)
+-- Function: gpCheckLogin(TVarChar, TVarChar, TVarChar)
 
- DROP FUNCTION IF EXISTS gpchecklogin(TVarChar, TVarChar, TVarChar);
- DROP FUNCTION IF EXISTS gpchecklogin (TVarChar, TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpCheckLogin (TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin    TVarChar, 
@@ -15,7 +15,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
 
-   SELECT Object_User.Id, Object_User.Id
+     -- Определися пользователь + сессия (потом будем шифровать)
+     SELECT Object_User.Id, Object_User.Id
           INTO Session, vbUserId
      FROM Object AS Object_User
           JOIN ObjectString AS UserPassword
@@ -26,17 +27,20 @@ BEGIN
       AND Object_User.isErased = FALSE
       AND Object_User.DescId = zc_Object_User();
 
-    IF NOT found THEN
+
+    -- Проверка
+    IF NOT FOUND THEN
        RAISE EXCEPTION 'Неправильный логин или пароль';
     ELSE
-        INSERT INTO LoginProtocol (UserId, OperDate, ProtocolData)
-           SELECT vbUserId, current_timestamp
-                , '<XML>'
-               || '<Field FieldName = "IP" FieldValue = "' || zfStrToXmlStr (inIP) || '"/>'
-               || '<Field FieldName = "Логин" FieldValue = "' || zfStrToXmlStr (inUserLogin) || '"/>'
-               || '</XML>'
-                ;
-        
+        -- запишем что Пользователь "Подключился"
+        PERFORM lpInsert_LoginProtocol (inUserLogin  := inUserLogin
+                                      , inIP         := inIP
+                                      , inUserId     := vbUserId
+                                      , inIsConnect  := TRUE
+                                      , inIsProcess  := FALSE
+                                      , inIsExit     := FALSE
+                                       );
+
     END IF;
 
 END;$BODY$
@@ -50,4 +54,3 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM LoginProtocol order by 1 desc
-

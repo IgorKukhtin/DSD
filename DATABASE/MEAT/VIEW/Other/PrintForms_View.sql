@@ -5,7 +5,7 @@
 CREATE OR REPLACE VIEW PrintForms_View
 AS
       SELECT
-             zc_movement_sale()                         AS DescId
+             zc_Movement_Sale()                         AS DescId
            , CAST ('Sale' AS TVarChar)                  AS ReportType
            , CAST ('01.01.2000' AS TDateTime)           AS StartDate
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
@@ -14,7 +14,7 @@ AS
            , CAST ('PrintMovement_Sale1' AS TVarChar)   AS PrintFormName
       UNION
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -24,7 +24,7 @@ AS
       UNION
 -- признак isDiscountPrice = True - печатать цену со скидкой
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -40,7 +40,7 @@ AS
       UNION
 -- Счет
       SELECT
-             zc_movement_sale()                         AS DescId
+             zc_Movement_Sale()                         AS DescId
            , CAST ('Bill' AS TVarChar)                  AS ReportType
            , CAST ('01.01.2000' AS TDateTime)           AS StartDate
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
@@ -49,7 +49,7 @@ AS
            , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
       UNION
       SELECT
-             zc_movement_sale()                         AS DescId
+             zc_Movement_Sale()                         AS DescId
            , CAST ('Bill' AS TVarChar)                  AS ReportType
            , CAST ('01.01.2000' AS TDateTime)           AS StartDate
            , CAST ('01.01.2200' AS TDateTime)           AS EndDate
@@ -58,7 +58,7 @@ AS
            , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
       UNION
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Bill' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -77,7 +77,7 @@ AS
 -- добавляем записи для покупаетелей с нестандартными формами накладных
 -- с одной формой на ОКПО
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -91,7 +91,7 @@ AS
       UNION
 -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -105,7 +105,7 @@ AS
       UNION
 -- Амстор Торгiвельний будинок ТОВ + Амстор Трейд
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -119,7 +119,7 @@ AS
       UNION
 -- Adventis + Billa + Kray
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -127,13 +127,18 @@ AS
            , zc_Enum_PaidKind_FirstForm()
            , CAST ('PrintMovement_Sale35275230' AS TVarChar)
       FROM Object AS Object_Juridical
-      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
+           LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+           LEFT JOIN ObjectLink AS ObjectLink_Retail
+                                ON ObjectLink_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
+        AND (OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
+             OR ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков
+            )
       UNION
 -- Omega+РТЦ ТОВ(Варус)
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -147,7 +152,7 @@ AS
       UNION
 -- Таврія
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -161,7 +166,7 @@ AS
       UNION
 -- Furshet
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -175,7 +180,7 @@ AS
       UNION
 -- ЖД
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -192,7 +197,7 @@ AS
       UNION
 -- FM
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -206,7 +211,7 @@ AS
       UNION
 -- Objora
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -220,7 +225,7 @@ AS
       UNION
 -- Новус
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -234,7 +239,7 @@ AS
       UNION
 -- Лабр+Твич+Финест+Джуна+Группа Ритейлу Украины + ТОВ Нордон + Амиата + Легион-2015
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Sale' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -252,7 +257,7 @@ AS
 
 --налоговая
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('30.11.2014' AS TDateTime)
@@ -262,7 +267,7 @@ AS
       UNION
 --налоговая c 01.12.2014
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.12.2014' AS TDateTime)
            , CAST ('31.12.2014' AS TDateTime)
@@ -272,7 +277,7 @@ AS
       UNION
 --налоговая c 01.01.2015
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.01.2015' AS TDateTime)
            , CAST ('31.03.2016' AS TDateTime)
@@ -282,7 +287,7 @@ AS
       UNION
 --налоговая c 01.04.2016
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.04.2016' AS TDateTime)
            , CAST ('01.01.2214' AS TDateTime)
@@ -336,7 +341,7 @@ AS
 -- Новая форма налоговой
       UNION
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('SaleTax' AS TVarChar)
            , CAST ('10.02.2014' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -466,7 +471,7 @@ AS
       UNION
 -- Транспортная Amstor
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Transport' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -481,7 +486,7 @@ AS
       UNION
 -- Транспортная Метро
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Transport' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -496,7 +501,7 @@ AS
       UNION
 -- Транспортная Новус
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Transport' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -509,9 +514,9 @@ AS
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
--- Транспортная Фудмережа, Альвар
+      -- Транспортная Фудмережа, Альвар
       SELECT
-             zc_movement_sale()
+             zc_Movement_Sale()
            , CAST ('Transport' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
@@ -523,14 +528,9 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')        
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
-
-
-
---       ORDER BY 1,2,4
+--   ORDER BY 1,2,4
 
        ;
-
-
 
 ALTER TABLE PrintForms_View OWNER TO postgres;
 
@@ -560,4 +560,5 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM PrintForms_View
+-- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE JuridicalId IN (SELECT JuridicalId FROM PrintForms_View GROUP BY JuridicalId, ReportType, PaidKindId, StartDate HAVING COUNT(*) > 1) ORDER BY ReportType, JuridicalId, PaidKindId, StartDate
+-- SELECT * FROM PrintForms_View LEFT JOIN Object ON Object.Id = JuridicalId WHERE PrintFormName = 'PrintMovement_Sale35275230'

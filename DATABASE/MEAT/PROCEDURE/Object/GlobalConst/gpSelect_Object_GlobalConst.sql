@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_GlobalConst()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst(TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConst(
+    IN inIP          TVarChar,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime, ValueText TVarChar, EnumName TVarChar)
@@ -16,6 +18,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+     -- если Пользователь "на связи" запишем что он "Работает"
+     PERFORM lpInsert_LoginProtocol (inUserLogin  := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbUserId)
+                                   , inIP         := inIP
+                                   , inUserId     := vbUserId
+                                   , inIsConnect  := FALSE
+                                   , inIsProcess  := TRUE
+                                   , inIsExit     := FALSE
+                                    );
 
 
      -- только Админ делает Update
@@ -138,7 +150,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_GlobalConst(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_GlobalConst (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
