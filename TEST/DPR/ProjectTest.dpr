@@ -873,7 +873,9 @@ uses
   Sale_ReestrJournal in '..\..\Forms\Document\Sale_ReestrJournal.pas' {Sale_ReestrJournalForm: TParentForm},
   ReestrJournal in '..\..\Forms\Document\ReestrJournal.pas' {ReestrJournalForm: TParentForm},
   ReestrStartMovement in '..\..\Forms\Document\ReestrStartMovement.pas' {ReestrStartMovementForm: TParentForm},
-  ReestrUpdateMovement in '..\..\Forms\Document\ReestrUpdateMovement.pas' {ReestrUpdateMovementForm: TParentForm};
+  ReestrUpdateMovement in '..\..\Forms\Document\ReestrUpdateMovement.pas' {ReestrUpdateMovementForm: TParentForm},
+  Report_UserProtocol in '..\..\Forms\Report\Report_UserProtocol.pas' {Report_UserProtocolForm: TParentForm},
+  Report_UserProtocolDialog in '..\..\Forms\Report\Report_UserProtocolDialog.pas' {Report_UserProtocolDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

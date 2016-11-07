@@ -1686,6 +1686,11 @@ procedure TLoadFormTest.LoadReportSystemFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_LoginProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_LoginProtocolForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UserProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UserProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_UserProtocolDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_UserProtocolDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportProductionOrderFormTest;
