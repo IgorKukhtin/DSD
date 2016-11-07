@@ -2,6 +2,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1091' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 341
   ClientWidth = 935
+  AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 951
   ExplicitHeight = 379
   PixelsPerInch = 96
@@ -254,7 +255,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit [3]
-    Left = 306
+    Left = 311
     Top = 5
     Properties.Buttons = <
       item
@@ -303,6 +304,96 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      Hint = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 35
+      FormName = 'TReport_UserProtocolDialogForm'
+      FormNameParam.Value = 'TReport_UserProtocolDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserId'
+          Value = Null
+          Component = GuidesUser
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = GuidesUser
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDay'
+          Value = Null
+          Component = cbisDay
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      RefreshDispatcher = RefreshDispatcher
+      OpenBeforeShow = True
     end
   end
   inherited MasterDS: TDataSource
@@ -375,6 +466,41 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbDialog: TdxBarButton
+      Action = ExecuteDialog
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368

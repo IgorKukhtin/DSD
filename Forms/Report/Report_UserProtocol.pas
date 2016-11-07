@@ -35,6 +35,8 @@ type
     GuidesUser: TdsdGuides;
     GuidesBranch: TdsdGuides;
     actRefreshIsDay: TdsdDataSetRefresh;
+    ExecuteDialog: TExecuteDialog;
+    bbDialog: TdxBarButton;
   private
     { Private declarations }
   public
