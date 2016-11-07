@@ -770,7 +770,6 @@ type
     miReestrRemakeBuh: TMenuItem;
     miReestrRemake: TMenuItem;
     actReestrBuh: TdsdOpenForm;
-    N147: TMenuItem;
     actReport_UserProtocol: TdsdOpenForm;
     N148: TMenuItem;
     miReestrBuh: TMenuItem;
