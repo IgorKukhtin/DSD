@@ -456,7 +456,8 @@ uses
   MCS_Lite in '..\..\FormsFarmacy\Guides\MCS_Lite.pas' {MCS_LiteForm: TParentForm},
   OrderShedule in '..\..\FormsFarmacy\Guides\OrderShedule.pas' {OrderSheduleForm: TParentForm},
   OrderSheduleEdit in '..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas' {OrderSheduleEditForm: TParentForm},
-  CheckVIP_Error in '..\..\FormsFarmacy\Document\CheckVIP_Error.pas' {CheckVIP_ErrorForm: TParentForm};
+  CheckVIP_Error in '..\..\FormsFarmacy\Document\CheckVIP_Error.pas' {CheckVIP_ErrorForm: TParentForm},
+  Report_MovementIncome_Promo in '..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas' {Report_MovementIncome_PromoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
