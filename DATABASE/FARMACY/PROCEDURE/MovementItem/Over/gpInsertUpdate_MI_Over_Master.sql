@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Master(
     IN inGoodsId             Integer   , -- Товары
  INOUT ioAmount              TFloat    , -- Количество
    OUT outSumma              TFloat    , -- Сумма расход
-    IN inRemains	     TFloat    , -- Остаток
+    IN inRemains             TFloat    , -- Остаток
     IN inAmountSend          TFloat    , -- Автоперемещение приход
     IN inPrice	             TFloat    , -- Цена расход
     IN inMCS                 TFloat    , -- НТЗ
