@@ -6197,7 +6197,7 @@ inherited MainForm: TMainForm
     Left = 874
     Top = 112
   end
-  object spInsert_isExit: TdsdStoredProc
+  object spProtocol_isExit: TdsdStoredProc
     StoredProcName = 'gpInsert_LoginProtocol'
     DataSets = <>
     OutputType = otResult

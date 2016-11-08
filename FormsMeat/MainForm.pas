@@ -775,7 +775,7 @@ type
     miReestrBuh: TMenuItem;
     N140: TMenuItem;
     N141: TMenuItem;
-    spInsert_isExit: TdsdStoredProc;
+    spProtocol_isExit: TdsdStoredProc;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -789,8 +789,8 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses IdIPWatch;
 {$R *.dfm}
+uses IdIPWatch;
 
 procedure TMainForm.actReport_OLAPSoldExecute(Sender: TObject);
 begin
@@ -811,7 +811,8 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  spInsert_isExit.Execute;
+  //отметили "Выход"
+  spProtocol_isExit.Execute;
   inherited;
 end;
 

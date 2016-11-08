@@ -37,7 +37,7 @@ BEGIN
 
    
    -- проверка уникальности дл€ свойства <Ќаименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Asset(), inName);
+   -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Asset(), inName);
    -- проверка уникальности дл€ свойства < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Asset(), vbCode_calc);
    -- проверка уникальности дл€ свойства <»нвентарный номер> 

@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IncomeAsset(
     IN inSession          TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , AssetId Integer, AssetCode Integer, AssetName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, InvNumber_Asset TVarChar, InvNumber_Asset_save TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar, InvNumber_AssetTo TVarChar
              , UnitId Integer, UnitName TVarChar
              , Amount TFloat, Price TFloat
              , Amount_parent TFloat, Price_parent TFloat
@@ -108,13 +108,16 @@ BEGIN
          SELECT
              tmpMI.Id
 
-           , Object_Goods.Id            AS GoodsId
-           , Object_Goods.ObjectCode    AS GoodsCode
-           , Object_Goods.ValueData     AS GoodsName
+           , Object_Goods.Id                     AS GoodsId
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , Object_Goods.ValueData              AS GoodsName
+           , ObjectString_InvNumber.ValueData    AS InvNumber_Asset
+           , ObjectString_InvNumber.ValueData    AS InvNumber_Asset_save
 
-           , Object_Asset.Id             AS AssetId
-           , Object_Asset.ObjectCode     AS AssetCode
-           , Object_Asset.ValueData      AS AssetName
+           , Object_Asset.Id                     AS AssetId
+           , Object_Asset.ObjectCode             AS AssetCode
+           , Object_Asset.ValueData              AS AssetName
+           , ObjectString_InvNumber_to.ValueData AS InvNumber_AssetTo
 
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName
@@ -140,6 +143,10 @@ BEGIN
        FROM tmpResult AS tmpMI
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                   ON ObjectString_InvNumber.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+
             -- это док. "—чет"
             LEFT JOIN MovementItem AS MI_Invoice ON MI_Invoice.Id       = tmpMI.MIId_Invoice
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Invoice_Goods
@@ -160,6 +167,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE (tmpMI.UnitId , MILinkObject_Unit_Invoice.ObjectId)
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = COALESCE (tmpMI.AssetId , MILinkObject_Asset_Invoice.ObjectId)
+            LEFT JOIN ObjectString AS ObjectString_InvNumber_to
+                                   ON ObjectString_InvNumber_to.ObjectId = Object_Asset.Id
+                                  AND ObjectString_InvNumber_to.DescId = zc_ObjectString_Asset_InvNumber()
 
             LEFT JOIN MovementDesc AS MovementDesc_Invoice ON MovementDesc_Invoice.Id = Movement_Invoice.DescId
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice

@@ -202,6 +202,10 @@ type
     isBarCode: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
     SpeedButton1: TSpeedButton;
+    spProtocol_isExit: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    TimerProtocol_isProcess: TTimer;
+    spProtocol_isProcess: TdsdStoredProc;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -230,6 +234,8 @@ type
     procedure EditBarCodeTransportPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TimerProtocol_isProcessTimer(Sender: TObject);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -257,11 +263,11 @@ type
 var
   MainForm: TMainForm;
 
-
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc, GuideGoods,GuideGoodsPartner,GuideGoodsMovement,GuideMovement,GuideMovementTransport
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal;
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal
+    ,IdIPWatch;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -1024,8 +1030,32 @@ begin
      else WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.TimerProtocol_isProcessTimer(Sender: TObject);
+begin
+  //отметили "Работает"
+  spProtocol_isProcess.Execute;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  //отметили "Выход"
+  spProtocol_isExit.Execute;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  // определили IP
+  with TIdIPWatch.Create(nil) do
+  begin
+        Active:=true;
+        FormParams.ParamByName('IP_str').Value:=LocalIP;
+        Free;
+  end;
+  //отметили "Работает"
+  spProtocol_isProcess.Execute;
+  //запустили Таймер
+  TimerProtocol_isProcess.Enabled:= TRUE;
+
   SettingMain.BranchName:=DMMainScaleForm.lpGet_BranchName(SettingMain.BranchCode);
   Caption:='Экспедиция ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleForm.gpGet_Scale_User+'>';
   //global Initialize

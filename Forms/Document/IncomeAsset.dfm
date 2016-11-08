@@ -427,6 +427,13 @@ object IncomeAssetForm: TIncomeAssetForm
             Options.Editing = False
             Width = 50
           end
+          object InvNumber_Asset: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'InvNumber_Asset'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1058#1086#1074#1072#1088'/'#1054#1057')'
             DataBinding.FieldName = 'GoodsName'
@@ -465,6 +472,15 @@ object IncomeAssetForm: TIncomeAssetForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object InvNumber_AssetTo: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088' ('#1076#1083#1103' '#1054#1057')'
+            DataBinding.FieldName = 'InvNumber_AssetTo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103
@@ -1902,6 +1918,24 @@ object IncomeAssetForm: TIncomeAssetForm
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInvNumber_Asset'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Asset'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInvNumber_Asset_save'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_Asset_save'
+        DataType = ftString
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

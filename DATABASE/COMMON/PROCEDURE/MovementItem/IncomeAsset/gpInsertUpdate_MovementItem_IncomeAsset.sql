@@ -13,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeAsset(
     IN inMIId_Invoice        TFloat    , -- элемент документа Cчет
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
+ INOUT ioInvNumber_Asset      TVarChar  , -- 
+ INOUT ioInvNumber_Asset_save TVarChar  , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
@@ -39,6 +41,23 @@ BEGIN
                                                    , inMIId_Invoice       := inMIId_Invoice
                                                    , inUserId             := vbUserId
                                                     );
+
+
+     -- сохранили свойство справочника <Основные средства>
+     IF ioInvNumber_Asset <> ioInvNumber_Asset_save AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Asset())
+     THEN
+         -- проверка уникальности для свойства <Инвентарный номер> 
+         PERFORM lpCheckUnique_ObjectString_ValueData (inGoodsId, zc_ObjectString_Asset_InvNumber(), ioInvNumber_Asset);
+         -- сохранили
+         PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Asset_InvNumber(), inGoodsId, ioInvNumber_Asset);
+         -- сохранили протокол
+         PERFORM lpInsert_ObjectProtocol (inGoodsId, vbUserId);
+     ELSEIF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Asset())
+     THEN
+         ioInvNumber_Asset:= '';
+     END IF;
+     -- синхронизируем
+     ioInvNumber_Asset_save:= ioInvNumber_Asset;
 
 
      -- расчитали сумму по элементу, для грида

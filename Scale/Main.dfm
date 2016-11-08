@@ -13,6 +13,7 @@ object MainForm: TMainForm
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
@@ -2204,5 +2205,101 @@ object MainForm: TMainForm
       Hint = 'actUpdateBox'
       OnExecute = actUpdateBoxExecute
     end
+  end
+  object spProtocol_isExit: TdsdStoredProc
+    StoredProcName = 'gpInsert_LoginProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsConnect'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProcess'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsExit'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 176
+    Top = 280
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'IP_str'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 178
+    Top = 152
+  end
+  object TimerProtocol_isProcess: TTimer
+    Enabled = False
+    Interval = 360000
+    OnTimer = TimerProtocol_isProcessTimer
+    Left = 184
+    Top = 216
+  end
+  object spProtocol_isProcess: TdsdStoredProc
+    StoredProcName = 'gpInsert_LoginProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsConnect'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProcess'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsExit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 264
   end
 end

@@ -177,6 +177,8 @@ type
     actUnitChoiceForm: TOpenChoiceForm;
     actAssetChoiceForm: TOpenChoiceForm;
     AssetCode: TcxGridDBColumn;
+    InvNumber_AssetTo: TcxGridDBColumn;
+    InvNumber_Asset: TcxGridDBColumn;
   private
   public
   end;

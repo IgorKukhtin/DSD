@@ -214,6 +214,10 @@ type
     bbChangePartionGoodsDate: TSpeedButton;
     PanelMovementInfo: TPanel;
     MemoMovementInfo: TMemo;
+    spProtocol_isExit: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    TimerProtocol_isProcess: TTimer;
+    spProtocol_isProcess: TdsdStoredProc;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -274,6 +278,8 @@ type
     procedure bbChangePartionGoodsDateClick(Sender: TObject);
     procedure EditPartionGoodsEnter(Sender: TObject);
     procedure EditGoodsKindCodeEnter(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure TimerProtocol_isProcessTimer(Sender: TObject);
   private
     oldGoodsId:Integer;
     fEnterKey13:Boolean;
@@ -305,12 +311,12 @@ type
 var
   MainCehForm: TMainCehForm;
 
-
 implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue, DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress;
+    ,GuideWorkProgress
+    ,IdIPWatch;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -1388,8 +1394,33 @@ begin
      end;
 end;
 {------------------------------------------------------------------------------}
+procedure TMainCehForm.TimerProtocol_isProcessTimer(Sender: TObject);
+begin
+  //отметили "Работает"
+  spProtocol_isProcess.Execute;
+end;
+{------------------------------------------------------------------------------}
+procedure TMainCehForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  //отметили "Выход"
+  spProtocol_isExit.Execute;
+end;
+{------------------------------------------------------------------------------}
 procedure TMainCehForm.FormCreate(Sender: TObject);
 begin
+  // определили IP
+  with TIdIPWatch.Create(nil) do
+  begin
+        Active:=true;
+        FormParams.ParamByName('IP_str').Value:=LocalIP;
+        Free;
+  end;
+  //отметили "Работает"
+  spProtocol_isProcess.Execute;
+  //запустили Таймер
+  TimerProtocol_isProcess.Enabled:= TRUE;
+
+
   SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
   Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
   //global Initialize

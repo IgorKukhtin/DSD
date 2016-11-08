@@ -13,6 +13,7 @@ object MainCehForm: TMainCehForm
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
@@ -2317,5 +2318,101 @@ object MainCehForm: TMainCehForm
       Hint = #1042#1099#1093#1086#1076
       OnExecute = actExitExecute
     end
+  end
+  object spProtocol_isExit: TdsdStoredProc
+    StoredProcName = 'gpInsert_LoginProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsConnect'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProcess'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsExit'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 136
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'IP_str'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 402
+    Top = 112
+  end
+  object TimerProtocol_isProcess: TTimer
+    Enabled = False
+    Interval = 360000
+    OnTimer = TimerProtocol_isProcessTimer
+    Left = 400
+    Top = 160
+  end
+  object spProtocol_isProcess: TdsdStoredProc
+    StoredProcName = 'gpInsert_LoginProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsConnect'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsProcess'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsExit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 120
   end
 end
