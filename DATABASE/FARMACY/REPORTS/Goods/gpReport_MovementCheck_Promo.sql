@@ -76,6 +76,7 @@ BEGIN
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                           AND COALESCE (inMakerId, 0) <> 0
                          GROUP BY MI_Check.ObjectId
                                 , Movement_Check.Id
                                 , MovementLinkObject_Unit.ObjectId
