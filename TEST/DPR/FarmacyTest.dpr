@@ -457,7 +457,8 @@ uses
   OrderShedule in '..\..\FormsFarmacy\Guides\OrderShedule.pas' {OrderSheduleForm: TParentForm},
   OrderSheduleEdit in '..\..\FormsFarmacy\Guides\OrderSheduleEdit.pas' {OrderSheduleEditForm: TParentForm},
   CheckVIP_Error in '..\..\FormsFarmacy\Document\CheckVIP_Error.pas' {CheckVIP_ErrorForm: TParentForm},
-  Report_MovementIncome_Promo in '..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas' {Report_MovementIncome_PromoForm: TParentForm};
+  Report_MovementIncome_Promo in '..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas' {Report_MovementIncome_PromoForm: TParentForm},
+  Report_MovementCheck_Promo in '..\..\FormsFarmacy\Report\Report_MovementCheck_Promo.pas' {Report_MovementCheck_PromoForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

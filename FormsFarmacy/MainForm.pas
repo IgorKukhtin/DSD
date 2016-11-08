@@ -297,6 +297,8 @@ type
     N107: TMenuItem;
     actReport_MovementIncome_Promo: TdsdOpenForm;
     N108: TMenuItem;
+    actReport_MovementCheck_Promo: TdsdOpenForm;
+    N109: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

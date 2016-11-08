@@ -1,5 +1,5 @@
-inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1072#1084' ('#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1082#1086#1085#1090#1088#1072#1082#1090#1072')'
+inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' ('#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1086#1075#1086' '#1082#1086#1085#1090#1088#1072#1082#1090#1072')'
   ClientWidth = 806
   ExplicitWidth = 822
   PixelsPerInch = 96
@@ -111,14 +111,6 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 46
           end
-          object colAmount_SpecZakaz: TcxGridDBColumn
-            Caption = #1057#1087#1077#1094#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'Amount_SpecZakaz'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 46
-          end
           object colStatusName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusName'
@@ -133,14 +125,6 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
-          end
-          object colOrderKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'OrderKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -171,15 +155,6 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 113
           end
-          object colProducerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'ProducerName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 105
-          end
           object colPartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'PartnerGoodsName'
@@ -196,36 +171,6 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 100
           end
-          object colExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103
-            DataBinding.FieldName = 'ExpirationDate'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 73
-          end
-          object colNDS: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'NDS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = ',0 %; ; ;'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 70
-          end
-          object colGoodsNDS: TcxGridDBColumn
-            Caption = #1053#1044#1057' '#1080#1079' '#1087#1088#1072#1081#1089#1072
-            DataBinding.FieldName = 'GoodsNDS'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 66
-          end
           object colComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
@@ -241,37 +186,13 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 75
           end
-          object colExpirationDate2: TcxGridDBColumn
+          object colExpirationDate: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'ExpirationDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
-          end
-          object colPaymentDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaymentDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
-          end
-          object colInvNumberBranch: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
-            DataBinding.FieldName = 'InvNumberBranch'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 85
-          end
-          object colBranchDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1074' '#1072#1087#1090#1077#1082#1077
-            DataBinding.FieldName = 'BranchDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
           end
           object clInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -402,7 +323,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
     Top = 88
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_MovementIncome_Promo'
+    StoredProcName = 'gpReport_MovementCheck_Promo'
     Params = <
       item
         Name = 'inMakerId'
