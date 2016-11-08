@@ -23,9 +23,6 @@ type
     colPrice: TcxGridDBColumn;
     colProducerName: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
-    colExpirationDate: TcxGridDBColumn;
-    colNDS: TcxGridDBColumn;
-    colGoodsNDS: TcxGridDBColumn;
     actRefreshSearch: TdsdExecStoredProc;
     cxLabel3: TcxLabel;
     colAmount: TcxGridDBColumn;
@@ -35,15 +32,13 @@ type
     GuidesMaker: TdsdGuides;
     colInvNumber: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
-    colOrderKindName: TcxGridDBColumn;
     gpGetObjectGoods: TdsdStoredProc;
     colStatusName: TcxGridDBColumn;
-    colComment: TcxGridDBColumn;
     colPriceSale: TcxGridDBColumn;
     getMovementForm: TdsdStoredProc;
     FormParams: TdsdFormParams;
     colPartionGoods: TcxGridDBColumn;
-    colExpirationDate2: TcxGridDBColumn;
+    colExpirationDate: TcxGridDBColumn;
     colPaymentDate: TcxGridDBColumn;
     colInvNumberBranch: TcxGridDBColumn;
     colBranchDate: TcxGridDBColumn;

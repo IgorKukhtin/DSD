@@ -13,8 +13,8 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,Amount TFloat           --Кол-во товара в документе
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
-              ,PartnerGoodsName TVarChar  --Наименование поставщика
-              ,MakerName  TVarChar     --Производитель
+  --            ,PartnerGoodsName TVarChar  --Наименование поставщика
+  --            ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
@@ -61,7 +61,6 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                          -- AND MovementLinkObject_Unit.ObjectId = inUnitId
                                                            AND ((MovementLinkObject_Unit.ObjectId = vbUnitId) OR (vbUnitId = 0)) 
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
@@ -115,12 +114,12 @@ BEGIN
                               , tmpData_1.SummaSale
                               , MovementLinkObject_From_Income.ObjectId AS JuridicalId_Income
                          FROM tmpData_1
-                              LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = tmpData_1.MovementId
+                              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = tmpData_1.MovementId
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Income
                                                            ON MovementLinkObject_From_Income.MovementId = tmpData_1.MovementId
                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
-                                                          AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                                    
                               INNER JOIN MovementDate AS MovementDate_StartPromo
                                                       ON /*MovementDate_StartPromo.MovementId = Movement.Id
                                                      AND */MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
@@ -152,8 +151,8 @@ BEGIN
                               , tmpData_all.GoodsId
                               , MIString_PartionGoods.ValueData          AS PartionGoods
                               , MIDate_ExpirationDate.ValueData          AS ExpirationDate
-                              , MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
-                              , MI_Income_View.MakerName                 AS MakerName
+                              --, MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
+                              --, MI_Income_View.MakerName                 AS MakerName
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                               , SUM (tmpData_all.Amount)    AS Amount
@@ -176,8 +175,7 @@ BEGIN
                                                          ON MIDate_ExpirationDate.MovementItemId = tmpData_all.MovementItemId_Income
                                                         AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                           
-                              LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = tmpData_all.MovementItemId_Income
-
+                             -- LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = tmpData_all.MovementItemId_Income
 
                          GROUP BY tmpData_all.JuridicalId_Income
                                 , tmpData_all.MovementId_Check
@@ -185,8 +183,8 @@ BEGIN
                                 , tmpData_all.UnitId
                                 , MIString_PartionGoods.ValueData
                                 , MIDate_ExpirationDate.ValueData
-                                , MI_Income_View.PartnerGoodsName
-                                , MI_Income_View.MakerName
+                             --   , MI_Income_View.PartnerGoodsName
+                             --   , MI_Income_View.MakerName
                         )
 
 
@@ -195,8 +193,8 @@ BEGIN
             ,tmpData.Amount               :: TFloat   AS Amount
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
-            ,tmpData.PartnerGoodsName
-            ,tmpData.MakerName
+       --     ,tmpData.PartnerGoodsName     :: TVarChar
+       --     ,tmpData.MakerName            :: TVarChar
 
             ,Object_NDSKind.ValueData                 AS NDSKindName
             ,Movement.OperDate                        AS OperDate
@@ -250,4 +248,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2171811 , inStartDate:= '24.05.2016', inEndDate:= '31.05.2016', inSession:= '2')
+--SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
