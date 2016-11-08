@@ -23,6 +23,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, isErased Boo
              , OperDate_End TDateTime
              , Mov_Count TFloat             
              , MI_Count TFloat
+             , Color_Calc Integer
 
               )
 AS
@@ -34,12 +35,13 @@ BEGIN
    RETURN QUERY 
     WITH 
     tmpPersonal AS (SELECT View_Personal.MemberId
-                             , MAX (View_Personal.UnitId) AS UnitId
-                             , MAX (View_Personal.PositionId) AS PositionId
-                        FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
-                        GROUP BY View_Personal.MemberId
-                       )
+                          , MAX (View_Personal.UnitId) AS UnitId
+                          , MAX (View_Personal.PositionId) AS PositionId
+                    FROM Object_Personal_View AS View_Personal
+                    WHERE View_Personal.isErased = FALSE
+                    GROUP BY View_Personal.MemberId
+                    )
+
   , tmpUser AS (SELECT Object_User.Id AS UserId
                      , Object_User.ObjectCode AS UserCode
                      , Object_User.ValueData  AS UserName
@@ -67,31 +69,37 @@ BEGIN
                UNION 
                 SELECT inStartDate as OperDate
                 WHERE inisDay = FALSE)
-  -- 
+  -- определяем врямя Подключения и выхода из программы
   , tmpLoginProtocol AS (SELECT LoginProtocol.UserId
-                              , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',LoginProtocol.operDate) ELSE inStartDate END  AS OperDate
-                              , CASE WHEN inisDay = TRUE THEN min(LoginProtocol.OperDate) ELSE inStartDate END  AS OperDate_Entry
-                              , CASE WHEN inisDay = TRUE THEN max(LoginProtocol.OperDate) ELSE inEndDate END  AS OperDate_Exit
-                         FROM LoginProtocol
-                              INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
-                         WHERE DATE_TRUNC ('DAY', LoginProtocol.operDate) between inStartDate AND inEndDate
-                         GROUP BY LoginProtocol.UserId
+                              , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',LoginProtocol.OperDate) ELSE inStartDate END AS OperDate
+                              , MIN (CASE CAST(replace(replace(CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT) , '}', ''), '{', '') AS tvarchar)
+                                          WHEN CAST('Подключение' AS tvarchar) THEN (LoginProtocol.OperDate) 
+                                          WHEN CAST('Подключение(виртуальное)' AS tvarchar) THEN (LoginProtocol.OperDate) 
+                                     END)  AS OperDate_Entry
+                              , MAX (CASE replace(replace(CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT) , '}', ''), '{', '') 
+                                          WHEN CAST('Выход' AS tvarchar) THEN (LoginProtocol.OperDate) 
+                                          WHEN CAST('Работает' AS tvarchar) THEN (LoginProtocol.OperDate) 
+                                     END)  AS OperDate_Exit
+                          FROM LoginProtocol
+                               INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
+                          WHERE DATE_TRUNC ('DAY', LoginProtocol.operDate) BETWEEN inStartDate AND inEndDate
+                          GROUP BY LoginProtocol.UserId
                                  , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',LoginProtocol.operDate) ELSE inStartDate END
-                        ) 
+                         ) 
   -- Данные из протокола документа
   , tmpMov_Protocol AS (SELECT MovementProtocol.UserId
-                                , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementProtocol.operDate) ELSE inStartDate END AS OperDate
-                                , MovementProtocol.OperDate AS OperDate_Protocol
-                                , MovementProtocol.MovementId AS Id
+                             , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementProtocol.operDate) ELSE inStartDate END AS OperDate
+                             , MovementProtocol.OperDate AS OperDate_Protocol
+                             , MovementProtocol.MovementId AS Id
                         FROM MovementProtocol
                              INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
                         WHERE DATE_TRUNC ('DAY',MovementProtocol.operDate) between inStartDate AND inEndDate
                            ) 
   -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
-                                , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementItemProtocol.operDate) ELSE inStartDate END AS OperDate
-                                , MovementItemProtocol.OperDate AS OperDate_Protocol
-                                , MovementItemProtocol.MovementItemId AS Id
+                            , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementItemProtocol.operDate) ELSE inStartDate END AS OperDate
+                            , MovementItemProtocol.OperDate AS OperDate_Protocol
+                            , MovementItemProtocol.MovementItemId AS Id
                        FROM MovementItemProtocol
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
                        WHERE DATE_TRUNC ('DAY',MovementItemProtocol.operDate) between inStartDate AND inEndDate
@@ -112,26 +120,27 @@ BEGIN
           , tmpUser.UserCode
           , tmpUser.UserName
           , tmpUser.isErased
-          , Object_Member.ValueData    AS MemberName 
-          , Object_Position.ValueData  AS PositionName 
-          , Object_Unit.ValueData      AS UnitName
-          , Object_Branch.ValueData    AS BranchName
+          , Object_Member.ValueData           AS MemberName 
+          , Object_Position.ValueData         AS PositionName 
+          , Object_Unit.ValueData             AS UnitName
+          , Object_Branch.ValueData           AS BranchName
  
           , tmpData.OperDate                ::TDateTime
           , tmpLoginProtocol.OperDate_Entry ::TDateTime                         -- время входа
-          , CASE WHEN tmpLoginProtocol.OperDate_Exit < tmpTimeMotion.OperDate_End 
-                 THEN tmpTimeMotion.OperDate_End 
-                 ELSE tmpLoginProtocol.OperDate_Exit  
-            END                             ::TDateTime  AS OperDate_Exit       -- время выхода
+          , tmpLoginProtocol.OperDate_Exit  ::TDateTime                         -- время выхода
           , tmpTimeMotion.OperDate_Start    ::TDateTime                         -- время первого действия
           , tmpTimeMotion.OperDate_End      ::TDateTime                         -- время последнего действия
           , COALESCE (tmpMov.Mov_Count,0)   ::TFloat     AS Mov_Count           -- кол-во документов 
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
-     FROM tmpUser
-          LEFT JOIN tmpData ON 1=1
-          LEFT JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpData.OperDate
-                                    AND tmpLoginProtocol.UserId = tmpUser.UserId
 
+          , CASE WHEN CAST (tmpLoginProtocol.OperDate_Exit AS TDateTime) > CURRENT_TIMESTAMP - interval '10 minute'
+                 THEN zc_Color_Red()
+                 ELSE zc_Color_Black()
+            END                                          AS Color_Calc          -- Подсвечиваем красным если человек еще работает
+     FROM tmpData-- ON 1=1
+          LEFT JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpData.OperDate
+                                   -- AND tmpLoginProtocol.UserId = tmpUser.UserId
+          LEFT JOIN tmpUser ON tmpUser.UserId =  tmpLoginProtocol.UserId 
           LEFT JOIN (SELECT tmpMov_Protocol.UserId 
                           , tmpMov_Protocol.OperDate
                           , Count(DISTINCT tmpMov_Protocol.Id) AS Mov_Count

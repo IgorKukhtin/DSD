@@ -37,6 +37,7 @@ type
     actRefreshIsDay: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbDialog: TdxBarButton;
+    Color_Calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

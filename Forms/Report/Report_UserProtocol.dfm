@@ -198,6 +198,12 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Options.Editing = False
             Width = 80
           end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -255,7 +261,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit [3]
-    Left = 311
+    Left = 306
     Top = 5
     Properties.Buttons = <
       item
@@ -289,6 +295,42 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Action = actRefreshIsDay
     TabOrder = 10
     Width = 70
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesBranch
+        Properties.Strings = (
+          'key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'key'
+          'TextValue')
+      end
+      item
+        Component = GuidesUser
+        Properties.Strings = (
+          'key'
+          'TextValue')
+      end
+      item
+        Component = cbisDay
+        Properties.Strings = (
+          'Checked')
+      end>
   end
   inherited ActionList: TActionList
     object actRefreshIsDay: TdsdDataSetRefresh [0]
@@ -503,6 +545,11 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     Left = 368
   end
   inherited PeriodChoice: TPeriodChoice
