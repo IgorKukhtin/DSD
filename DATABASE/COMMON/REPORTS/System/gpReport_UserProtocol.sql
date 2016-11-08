@@ -79,7 +79,7 @@ BEGIN
                               , MAX (CASE replace(replace(CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT) , '}', ''), '{', '') 
                                           WHEN CAST('Выход' AS tvarchar) THEN (LoginProtocol.OperDate) 
                                           WHEN CAST('Работает' AS tvarchar) THEN (LoginProtocol.OperDate) 
-                                     END)  AS OperDate_Exit
+                                     END)  AS OperDate_Exit 
                           FROM LoginProtocol
                                INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
                           WHERE DATE_TRUNC ('DAY', LoginProtocol.operDate) BETWEEN inStartDate AND inEndDate
