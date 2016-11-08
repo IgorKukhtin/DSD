@@ -295,6 +295,8 @@ type
     N106: TMenuItem;
     actOrderShedule: TdsdOpenForm;
     N107: TMenuItem;
+    actReport_MovementIncome_Promo: TdsdOpenForm;
+    N108: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
