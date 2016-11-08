@@ -34,8 +34,12 @@ BEGIN
                                , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, tmpOperSumm_PartnerTo TFloat, OperSumm_PartnerTo TFloat
                                , AccountId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyGroupId_Detail Integer, InfoMoneyDestinationId_Detail Integer, InfoMoneyId_Detail Integer
                                , BusinessId Integer
+                               , ContainerId_ProfitLoss Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                               , PartionGoodsId Integer
+                                ) ON COMMIT DROP;
+
+-- WHERE _tmpItem.ContainerId_ProfitLoss = 0 -- !!!åñëè ÍÅ ÎÏèÓ!!!
 
 
 END;$BODY$

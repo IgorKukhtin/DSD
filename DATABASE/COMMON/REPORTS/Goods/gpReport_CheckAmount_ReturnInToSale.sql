@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_CheckAmount_ReturnInToSale (TDateTime,TDateTime
 CREATE OR REPLACE FUNCTION gpReport_CheckAmount_ReturnInToSale (
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inShowAll           Boolean ,
+    IN inOnlyError         Boolean ,
     IN inMovementId        Integer   ,
     IN inJuridicalId       Integer   ,
     IN inPartnerId         Integer   , --
@@ -31,17 +31,17 @@ RETURNS TABLE (Id Integer, MovementDescName TVarChar, StatusCode Integer
 AS
 $BODY$
  DECLARE vbUserId Integer;
- DECLARE vbTaxKind_null  Boolean;
+ -- DECLARE vbTaxKind_null  Boolean;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
-     vbTaxKind_null:= inShowAll;
+     -- vbTaxKind_null:= inOnlyError;
 
     IF inJuridicalId = 0 AND inPartnerId = 0
-    THEN inShowAll:= TRUE;
+    THEN inOnlyError:= TRUE;
     END IF;
     -- !!!захардкодил временно!!!
-    IF inMovementId = 0 THEN inShowAll:= TRUE; END IF;
+    IF inMovementId = 0 THEN inOnlyError:= TRUE; END IF;
 
     -- Результат
     RETURN QUERY
@@ -68,16 +68,16 @@ BEGIN
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                 ON MovementLinkObject_Contract.MovementId = MD_OperDatePartner.MovementId
                                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                   LEFT JOIN _tmpKN_err_06062016 ON _tmpKN_err_06062016.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                AND _tmpKN_err_06062016.ContractId  = MovementLinkObject_Contract.ObjectId
+                                   /*LEFT JOIN _tmpKN_err_06062016 ON _tmpKN_err_06062016.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                AND _tmpKN_err_06062016.ContractId  = MovementLinkObject_Contract.ObjectId*/
                               WHERE inMovementId = 0
                                 AND MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                                 AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                 AND (MovementLinkObject_From.ObjectId = inPartnerId OR inPartnerId = 0)
                                 AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                                 -- AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
-                                AND (_tmpKN_err_06062016.JuridicalId > 0
-                                  OR vbTaxKind_null = FALSE)
+                                /*AND (_tmpKN_err_06062016.JuridicalId > 0
+                                  OR vbTaxKind_null = FALSE)*/
                              UNION ALL
                               SELECT Movement.Id
                                    , COALESCE (MovementLinkObject_Partner.ObjectId, 0)  AS PartnerId
@@ -110,8 +110,8 @@ BEGIN
                                                                 ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                                                AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
                               WHERE Movement.Id = inMovementId
-                                AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
-                                  OR vbTaxKind_null = FALSE)
+                                /*AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                                  OR vbTaxKind_null = FALSE)*/
                              ) AS tmp
                        )
 
@@ -183,7 +183,7 @@ BEGIN
                                 , MI_Sale.ObjectId
                                 , CASE WHEN Movement_Return.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner_Sale.ValueData ELSE MI_Sale.Amount END
                          HAVING CASE WHEN Movement_Return.DescId = zc_Movement_ReturnIn() THEN MIFloat_AmountPartner_Sale.ValueData ELSE MI_Sale.Amount END < SUM (MI_Return.Amount)
-                             OR inShowAll = FALSE
+                             OR inOnlyError = FALSE
                       )   
 
              SELECT Movement_Sale.Id                AS Id
@@ -292,7 +292,7 @@ BEGIN
                                             AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_PaidKind() ELSE zc_MovementLinkObject_PaidKindTo() END
                 LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-             WHERE (tmpData.AmountSale < tmpData.Amount) OR inShowAll = FALSE
+             WHERE (tmpData.AmountSale < tmpData.Amount) OR inOnlyError = FALSE
        ;
          
 END;
@@ -306,5 +306,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inShowAll:= false, inMovementId:= 0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
--- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inShowAll:= false, inMovementId:= 3650319  , inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 0, inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_CheckAmount_ReturnInToSale (inStartDate:= '2016-05-20' ::TDateTime , inEndDate:= '2016-05-20' ::TDateTime, inOnlyError:= false, inMovementId:= 3650319  , inJuridicalId:= 0, inPartnerId:=97790, inSession:= zfCalc_UserAdmin()) 

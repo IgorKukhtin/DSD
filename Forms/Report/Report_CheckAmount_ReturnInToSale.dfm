@@ -4,7 +4,6 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -61
   ExplicitWidth = 1093
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -371,11 +370,10 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       TabOrder = 7
       Width = 255
     end
-    object edShowAll: TcxCheckBox
+    object cbOnlyError: TcxCheckBox
       Left = 554
       Top = 5
       Action = dsdDataSetRefresh1
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1091#1087#1077#1088' '#1086#1096#1080#1073#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 8
       Width = 223
     end
@@ -521,9 +519,9 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inShowAll'
+          Name = 'inOnlyError'
           Value = 'False'
-          Component = edShowAll
+          Component = cbOnlyError
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -710,9 +708,9 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShowAll'
+        Name = 'inOnlyError'
         Value = 'False'
-        Component = edShowAll
+        Component = cbOnlyError
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -898,7 +896,7 @@ inherited Report_CheckAmount_ReturnInToSaleForm: TReport_CheckAmount_ReturnInToS
       item
       end
       item
-        Component = edShowAll
+        Component = cbOnlyError
       end>
     Left = 576
     Top = 176

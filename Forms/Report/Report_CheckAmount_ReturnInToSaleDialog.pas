@@ -27,7 +27,7 @@ type
     edPartner: TcxButtonEdit;
     cxLabel13: TcxLabel;
     edJuridical: TcxButtonEdit;
-    edShowAll: TcxCheckBox;
+    cbOnlyError: TcxCheckBox;
     GuidesPartner: TdsdGuides;
     GuidesJuridical: TdsdGuides;
     cxLabel5: TcxLabel;

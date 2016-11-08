@@ -31,7 +31,7 @@ type
     cxLabel3: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
-    edShowAll: TcxCheckBox;
+    cbOnlyError: TcxCheckBox;
     bbPrint_byProduction: TdxBarButton;
     bbPrint_byType: TdxBarButton;
     bbPrint_byRoute: TdxBarButton;
