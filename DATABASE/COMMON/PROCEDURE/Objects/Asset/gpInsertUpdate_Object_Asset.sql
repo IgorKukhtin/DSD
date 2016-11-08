@@ -68,8 +68,7 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

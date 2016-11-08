@@ -49,14 +49,20 @@ BEGIN
          SELECT
                0                                                AS Id
              , CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                       AS OperDate
+             -- , inOperDate                                    AS OperDate
+             , CURRENT_DATE :: TDateTime                        AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
-             , inOperDate                                       AS OperDatePartner
-             , inOperDate                                       AS OperDatePartner_sale
-             , inOperDate                                       AS OperDateMark
-             , (inOperDate - INTERVAL '7 DAY') ::TDateTime      AS OperDateStart
-             , (inOperDate - INTERVAL '1 DAY') ::TDateTime      AS OperDateEnd             
+             -- , inOperDate                                    AS OperDatePartner
+             , CURRENT_DATE :: TDateTime                        AS OperDatePartner
+             -- , inOperDate                                    AS OperDatePartner_sale
+             , CURRENT_DATE :: TDateTime                        AS OperDatePartner_sale
+             -- , inOperDate                                    AS OperDateMark
+             , CURRENT_DATE :: TDateTime                        AS OperDateMark
+             -- , (inOperDate - INTERVAL '7 DAY') ::TDateTime   AS OperDateStart
+             , (CURRENT_DATE - INTERVAL '7 DAY') ::TDateTime    AS OperDateStart
+             -- , (inOperDate - INTERVAL '1 DAY') ::TDateTime   AS OperDateEnd
+             , (CURRENT_DATE - INTERVAL '1 DAY') ::TDateTime    AS OperDateEnd
              , CAST ('' AS TVarChar)                            AS InvNumberPartner
              , 0                     				AS FromId
              , CAST ('' AS TVarChar) 				AS FromName
@@ -90,7 +96,8 @@ BEGIN
              , CAST (FALSE AS Boolean)                          AS PriceWithVAT
              , CAST (20 AS TFloat)                              AS VATPercent
              , CAST (0 AS TFloat)                               AS ChangePercent
-             , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
+             -- , (1 + EXTRACT (DAY FROM ((inOperDate - INTERVAL '1 DAY') - (inOperDate - INTERVAL '7 DAY')))) :: TFloat AS DayCount
+             , (1 + EXTRACT (DAY FROM ((CURRENT_DATE - INTERVAL '1 DAY') - (CURRENT_DATE - INTERVAL '7 DAY')))) :: TFloat AS DayCount
              , CAST (FALSE AS Boolean)                          AS isPrinted
              , CAST (FALSE AS Boolean)                          AS isPromo 
              , CAST ('' as TVarChar) 		        AS Comment

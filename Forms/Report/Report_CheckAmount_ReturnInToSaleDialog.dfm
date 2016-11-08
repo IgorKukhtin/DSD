@@ -96,7 +96,7 @@ object Report_CheckAmount_ReturnInToSaleDialogForm: TReport_CheckAmount_ReturnIn
     TabOrder = 9
     Width = 395
   end
-  object edShowAll: TcxCheckBox
+  object cbOnlyError: TcxCheckBox
     Left = 205
     Top = 56
     Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1096#1080#1073#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
@@ -209,9 +209,9 @@ object Report_CheckAmount_ReturnInToSaleDialogForm: TReport_CheckAmount_ReturnIn
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShowAll'
+        Name = 'inOnlyError'
         Value = Null
-        Component = edShowAll
+        Component = cbOnlyError
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
