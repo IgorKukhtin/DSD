@@ -1074,6 +1074,8 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectDescForm'));
@@ -1105,10 +1107,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 
