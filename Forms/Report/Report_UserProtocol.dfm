@@ -1,30 +1,30 @@
 inherited Report_UserProtocolForm: TReport_UserProtocolForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1091' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
-  ClientHeight = 341
+  ClientHeight = 552
   ClientWidth = 935
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 951
-  ExplicitHeight = 379
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 86
     Width = 935
-    Height = 255
+    Height = 466
     TabOrder = 3
     ExplicitTop = 86
     ExplicitWidth = 935
-    ExplicitHeight = 255
-    ClientRectBottom = 255
+    ExplicitHeight = 435
+    ClientRectBottom = 466
     ClientRectRight = 935
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 935
-      ExplicitHeight = 255
+      ExplicitHeight = 435
       inherited cxGrid: TcxGrid
         Width = 935
-        Height = 255
+        Height = 200
         ExplicitWidth = 935
-        ExplicitHeight = 255
+        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -198,6 +198,32 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Options.Editing = False
             Width = 80
           end
+          object colCount: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
+            DataBinding.FieldName = 'Count'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Count_Prog: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1088#1086#1075#1088'-'#1084#1077
+            DataBinding.FieldName = 'Count_Prog'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1085#1072#1093#1086#1078#1076'. '#1074' '#1087#1088#1086#1075#1088'-'#1084#1077
+            Options.Editing = False
+            Width = 80
+          end
+          object Count_Work: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1088#1072#1073#1086#1090#1099
+            DataBinding.FieldName = 'Count_Work'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1088#1077#1084#1103' '#1088#1072#1073#1086#1090#1099
+            Options.Editing = False
+            Width = 80
+          end
           object Color_Calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
@@ -205,6 +231,62 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Width = 30
           end
         end
+      end
+      object grChart: TcxGrid
+        Left = 0
+        Top = 208
+        Width = 935
+        Height = 258
+        Align = alBottom
+        TabOrder = 1
+        object grChartDBChartView1: TcxGridDBChartView
+          DataController.DataSource = MasterDS
+          DiagramColumn.Active = True
+          DiagramColumn.Legend.Border = lbNone
+          ToolBox.CustomizeButton = True
+          ToolBox.DiagramSelector = True
+          object dgOperDate: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
+          end
+          object dgUserName: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'UserName'
+            DisplayText = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+          end
+          object serCount: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Count'
+            DisplayText = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
+          end
+          object serMov_Count: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Mov_Count'
+            DisplayText = #1050#1086#1083'. '#1076#1086#1082'.'
+          end
+          object serMI_Count: TcxGridDBChartSeries
+            DataBinding.FieldName = 'MI_Count'
+            DisplayText = #1050#1086#1083'. '#1089#1090#1088#1086#1082' '#1076#1086#1082'.'
+          end
+          object serCount_Prog: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Count_Prog'
+            DisplayText = #1042#1088#1077#1084#1103' '#1074' '#1087#1088#1086#1075#1088'.'
+          end
+          object serCount_Work: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Count_Work'
+            DisplayText = #1042#1088#1077#1084#1103' '#1088#1072#1073#1086#1090#1099
+          end
+        end
+        object grChartLevel1: TcxGridLevel
+          GridView = grChartDBChartView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 200
+        Width = 935
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = grChart
+        ExplicitTop = 282
       end
     end
   end
