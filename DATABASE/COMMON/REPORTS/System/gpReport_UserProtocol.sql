@@ -12,18 +12,21 @@ CREATE OR REPLACE FUNCTION gpReport_UserProtocol(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, isErased Boolean
-             , MemberName TVarChar
+             , MemberName   TVarChar
              , PositionName TVarChar
-             , UnitName TVarChar
-             , BranchName TVarChar
-             , OperDate TDateTime
+             , UnitName     TVarChar
+             , BranchName   TVarChar
+             , OperDate     TDateTime
              , OperDate_Entry TDateTime
-             , OperDate_Exit TDateTime
+             , OperDate_Exit  TDateTime
              , OperDate_Start TDateTime
-             , OperDate_End TDateTime
-             , Mov_Count TFloat             
-             , MI_Count TFloat
-             , Color_Calc Integer
+             , OperDate_End   TDateTime
+             , Mov_Count    TFloat             
+             , MI_Count     TFloat
+             , Count        TFloat       
+             , Count_Prog   Tfloat      
+             , Count_Work   Tfloat
+             , Color_Calc   Integer
 
               )
 AS
@@ -82,27 +85,27 @@ BEGIN
                                      END)  AS OperDate_Exit 
                           FROM LoginProtocol
                                INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
-                          WHERE DATE_TRUNC ('DAY', LoginProtocol.operDate) BETWEEN inStartDate AND inEndDate
+                          WHERE LoginProtocol.OperDate >= inStartDate AND LoginProtocol.OperDate < inEndDate + interval '1 day'
                           GROUP BY LoginProtocol.UserId
-                                 , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',LoginProtocol.operDate) ELSE inStartDate END
+                                 , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',LoginProtocol.OperDate) ELSE inStartDate END
                          ) 
   -- Данные из протокола документа
   , tmpMov_Protocol AS (SELECT MovementProtocol.UserId
-                             , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementProtocol.operDate) ELSE inStartDate END AS OperDate
+                             , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementProtocol.OperDate) ELSE inStartDate END AS OperDate
                              , MovementProtocol.OperDate AS OperDate_Protocol
                              , MovementProtocol.MovementId AS Id
                         FROM MovementProtocol
                              INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
-                        WHERE DATE_TRUNC ('DAY',MovementProtocol.operDate) between inStartDate AND inEndDate
+                        WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + interval '1 day'
                            ) 
   -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
-                            , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementItemProtocol.operDate) ELSE inStartDate END AS OperDate
+                            , CASE WHEN inisDay = TRUE THEN DATE_TRUNC ('DAY',MovementItemProtocol.OperDate) ELSE inStartDate END AS OperDate
                             , MovementItemProtocol.OperDate AS OperDate_Protocol
                             , MovementItemProtocol.MovementItemId AS Id
                        FROM MovementItemProtocol
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
-                       WHERE DATE_TRUNC ('DAY',MovementItemProtocol.operDate) between inStartDate AND inEndDate
+                       WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + interval '1 day'
                            ) 
 
   -- находим время первого действия, время последнего действия
@@ -132,6 +135,11 @@ BEGIN
           , tmpTimeMotion.OperDate_End      ::TDateTime                         -- время последнего действия
           , COALESCE (tmpMov.Mov_Count,0)   ::TFloat     AS Mov_Count           -- кол-во документов 
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
+          , (COALESCE (tmpMov.Mov_Count,0)+ COALESCE (tmpMI.MI_Count,0))        ::TFloat  AS Count            -- итого кол-во действий
+          , CAST ( EXTRACT(HOUR FROM (tmpLoginProtocol.OperDate_Exit - tmpLoginProtocol.OperDate_Entry)) || 
+             '.'|| EXTRACT(MINUTE FROM (tmpLoginProtocol.OperDate_Exit - tmpLoginProtocol.OperDate_Entry)) AS Tfloat)   AS Count_Prog       -- отработал, по входу /выходу  - время в программе
+          , CAST ( EXTRACT(HOUR FROM (tmpTimeMotion.OperDate_End - tmpTimeMotion.OperDate_Start)) || 
+             '.'|| EXTRACT(MINUTE FROM (tmpTimeMotion.OperDate_End - tmpTimeMotion.OperDate_Start)) AS Tfloat)          AS Count_Work       -- отработал, первому/последнему действию  - время работы
 
           , CASE WHEN CAST (tmpLoginProtocol.OperDate_Exit AS TDateTime) > CURRENT_TIMESTAMP - interval '10 minute'
                  THEN zc_Color_Red()
@@ -179,4 +187,3 @@ $BODY$
 */
 -- тест
  --select * from gpReport_UserProtocol(inStartDate := ('07.11.2016')::TDateTime , inEndDate := ('07.11.2016')::TDateTime , inBranchId := 0 , inUnitId := 0 , inUserId := 76913 , inisDay := 'True' ,  inSession := '5');
-
