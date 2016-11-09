@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_JuridicalSettings()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalSettings(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalSettings(Boolean, TVarChar);
                         
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
+    IN inIsShowAll   Boolean,       -- показать удаденные Да/Нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
@@ -10,7 +12,10 @@ RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVa
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar, isErased boolean,
-               StartDate TDateTime, EndDate TDateTime) AS
+               StartDate TDateTime, EndDate TDateTime,
+               InsertName TVarChar, InsertDate TDateTime,
+               UpdateName TVarChar, UpdateDate TDateTime
+) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
@@ -39,16 +44,28 @@ BEGIN
            , Object_Juridical.isErased
            , COALESCE (JuridicalSettings.StartDate, Null)  ::TDateTime  AS StartDate
            , COALESCE (JuridicalSettings.EndDate, Null)  ::TDateTime    AS EndDate
+
+           , Object_User_Insert.ValueData   AS InsertName
+           , LoadPriceList.Date_Insert      AS InsertDate
+           , Object_User_Update.ValueData   AS UpdateName
+           , LoadPriceList.Date_Update      AS UpdateDate
+
        FROM LastPriceList_View 
             LEFT JOIN ObjectLink AS ObjectLink_JuridicalRetail 
                                 ON ObjectLink_JuridicalRetail.DescId = zc_ObjectLink_Juridical_Retail()    
                                AND ObjectLink_JuridicalRetail.ChildObjectId = vbObjectId
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_JuridicalRetail.ObjectId
                                
-           JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
-           LEFT JOIN Object AS Contract ON Contract.Id = LastPriceList_View.ContractId
-                               
-           LEFT JOIN
+            JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
+                                           AND (Object_Juridical.isErased = False OR inIsShowAll = TRUE)
+            LEFT JOIN Object AS Contract ON Contract.Id = LastPriceList_View.ContractId
+            --   
+            LEFT JOIN LoadPriceList ON LoadPriceList.ContractId = LastPriceList_View.ContractId
+                                   AND LoadPriceList.JuridicalId = LastPriceList_View.JuridicalId
+            LEFT JOIN Object AS Object_User_Insert ON Object_User_Insert.Id = LoadPriceList.UserId_Insert
+            LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update  
+            
+            LEFT JOIN
                 (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId     AS JuridicalId
                       , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId AS MainJuridicalId
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
@@ -116,12 +133,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_JuridicalSettings(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_JuridicalSettings(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.16         * add inIsShowAll, Insert, Update
  11.02.16         * add PriceLimit Ограничение "Цена до"
  17.02.15                         *
  21.01.15                         *

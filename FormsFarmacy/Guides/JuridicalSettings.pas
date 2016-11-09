@@ -28,6 +28,13 @@ type
     colPriceLimit: TcxGridDBColumn;
     col—onditionalPercent: TcxGridDBColumn;
     colisSite: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public
