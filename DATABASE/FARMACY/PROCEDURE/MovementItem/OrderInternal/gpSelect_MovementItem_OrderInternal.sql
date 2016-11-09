@@ -209,7 +209,7 @@ BEGIN
            , Object_Goods.GoodsName                                  AS GoodsName
            , Object_Goods.MinimumLot                                 AS Multiplicity
            , Object_Goods.GoodsGroupId                               AS GoodsGroupId
-           , Object_Goods.GoodsGroupName                             AS GoodsGroupName
+           --, Object_Goods.GoodsGroupName                             AS GoodsGroupName -- ***
            , Object_Goods.NDSKindId                                  AS NDSKindId
            , Object_Goods.NDSKindName                                AS NDSKindName
            , Object_Goods.NDS                                        AS NDS
@@ -240,7 +240,7 @@ BEGIN
            , Object_PartnerGoods.ObjectCode                         AS PartnerGoodsCode 
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
            , tmpMI.JuridicalId               
-           , tmpMI.JuridicalName             
+           , tmpMI.JuridicalName --***
            , tmpMI.ContractId
            , tmpMI.ContractName 
            , tmpMI.MakerName                                        AS MakerName
@@ -963,6 +963,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- select * from gpSelect_MovementItem_OrderInternal(inMovementId := 2158888 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818'); FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); FETCH ALL "<unnamed portal 6>";
