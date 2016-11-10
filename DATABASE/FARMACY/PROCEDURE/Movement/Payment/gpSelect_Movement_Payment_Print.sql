@@ -46,7 +46,7 @@ BEGIN
                   , Max(tmp.Name)      ::TVarChar   AS InvNumber
                   , Max(tmp.StartDate) ::TDateTime  AS StartDate
                   , Max(tmp.EndDate)   ::TDateTime  AS EndDate
-             FROM gpSelect_Object_JuridicalSettings (FALSE, inSession) as tmp
+             FROM gpSelect_Object_JuridicalSettings (FALSE,  inSession) as tmp
              WHERE tmp.MainJuridicalId = vbJuridicalId
                AND Coalesce (tmp.Name, '') <> '' 
              GROUP BY tmp.JuridicalId

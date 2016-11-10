@@ -209,7 +209,7 @@
       isSetErased = False
       DataSource = MasterDS
     end
-    object actShowAll: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -217,16 +217,16 @@
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   inherited MasterDS: TDataSource
@@ -240,9 +240,9 @@
     StoredProcName = 'gpSelect_Object_JuridicalSettings'
     Params = <
       item
-        Name = 'inIsShowAll'
+        Name = 'inIsShowErased'
         Value = Null
-        Component = actShowAll
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -302,7 +302,7 @@
         end>
     end
     object bbShowAll: TdxBarButton
-      Action = actShowAll
+      Action = actShowErased
       Category = 0
     end
     object bbSetErased: TdxBarButton
@@ -428,16 +428,24 @@
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'lpInsertUpdate_Object_ContractSettings'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
+        Name = 'inContractId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'ContractId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisErased'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

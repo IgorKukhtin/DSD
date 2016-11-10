@@ -126,6 +126,13 @@ inherited Report_MovementCheck_PromoForm: TReport_MovementCheck_PromoForm
             Options.Editing = False
             Width = 90
           end
+          object colMainJuridicalName: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MainJuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'

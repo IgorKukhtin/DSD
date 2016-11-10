@@ -20,6 +20,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,InvNumber TVarChar      --№ документа
               ,StatusName TVarChar     --Состояние документа
               ,UnitName TVarChar       --Подразделение
+              ,MainJuridicalName TVarChar  --Наше Юр. лицо
               ,JuridicalName TVarChar  --Юр. лицо
               ,Price TFloat            --Цена в документе
               ,PriceWithVAT TFloat     --Цена прихода с НДС 
@@ -201,6 +202,7 @@ BEGIN
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Status.ValueData                  AS StatusName
             ,Object_Unit.ValueData                    AS UnitName
+            ,Object_MainJuridical.ValueData           AS MainJuridicalName
             ,Object_From.ValueData                    AS JuridicalName
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa / tmpData.Amount ELSE 0 END        :: TFloat AS Price
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
@@ -230,6 +232,11 @@ BEGIN
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                             ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                            AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+        LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
         LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.JuridicalId_Income
 
         LEFT JOIN MovementString AS MovementString_Comment
