@@ -256,7 +256,10 @@ BEGIN
         -- CASE WHEN ResultSet.isTop_calc = TRUE THEN ResultSet.isTop_calc ELSE ResultSet.IsTop END :: Boolean AS IsTop,
         ResultSet.IsTop_Goods,
         ResultSet.IsPromo,
-        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
+        CASE WHEN COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
+                  THEN TRUE
+             WHEN -- COALESCE (inUnitId_to, 0) = 0 AND (ResultSet.isIncome = TRUE /*OR ResultSet.isTop_calc = TRUE*/ OR ResultSet.isPriceFix = TRUE OR ResultSet.PriceFix_Goods <> 0)
+                  COALESCE (inUnitId_to, 0) = 0 AND ResultSet.isIncome = TRUE
                   THEN FALSE
              WHEN COALESCE (inUnitId_to, 0) = 0
                   THEN TRUE
@@ -278,40 +281,26 @@ BEGIN
                                                                        END AS NUMERIC (16, 1))
         )
      -- OR inSession = '3'
-     OR (
-        COALESCE(ResultSet.NewPrice,0) > 0
-        AND
-        (
-            COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Medical()
-            OR
-            (
-                inVAT20 = TRUE
-                AND
-                COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common()
-            )
-        )
-        AND
-        (
-            ResultSet.ExpirationDate IS NULL
-            OR
-            ResultSet.ExpirationDate = '1899-12-30'::TDateTime
-            OR
-            ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 month')
-        )
-        AND
-        (
-            COALESCE(ResultSet.LastPrice,0) = 0
-            OR
-            ABS(CASE 
-                  WHEN COALESCE(ResultSet.LastPrice,0) = 0 THEN 0.0
-                  ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
-                END) >= COALESCE (MarginCondition.MarginPercent, inMinPercent)
-        )
-        ))
-
-        AND ResultSet.RemainsCount > 0 AND (ResultSet.RemainsCount_to > 0 OR COALESCE (inUnitId_to, 0) = 0)
-
-        ;
+     OR (COALESCE(ResultSet.NewPrice,0) > 0
+         AND (COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Medical()
+              OR (inVAT20 = TRUE
+                  AND COALESCE(ResultSet.NDSKindId,0) = zc_Enum_NDSKind_Common()
+                 )
+             )
+         AND (ResultSet.ExpirationDate IS NULL
+           OR ResultSet.ExpirationDate = '1899-12-30'::TDateTime
+           OR ResultSet.ExpirationDate > (CURRENT_DATE + Interval '6 month')
+             )
+         AND (COALESCE(ResultSet.LastPrice,0) = 0
+           OR ABS (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0
+                        ELSE (ResultSet.NewPrice / ResultSet.LastPrice) * 100 - 100
+                   END
+                  ) >= COALESCE (MarginCondition.MarginPercent, inMinPercent)
+             )
+       ))
+   AND ResultSet.RemainsCount > 0
+   AND (ResultSet.RemainsCount_to > 0 OR COALESCE (inUnitId_to, 0) = 0)
+   ;
 
 END;
 $BODY$

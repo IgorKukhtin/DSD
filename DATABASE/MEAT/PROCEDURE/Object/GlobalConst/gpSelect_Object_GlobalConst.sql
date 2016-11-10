@@ -1,6 +1,5 @@
 -- Function: gpSelect_Object_GlobalConst()
 
--- DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_GlobalConst (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GlobalConst(

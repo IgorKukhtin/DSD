@@ -50,6 +50,9 @@ type
     serCount_Work: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    UserStatus: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
+    DayOfWeekName: TcxGridDBColumn;
   private
     { Private declarations }
   public

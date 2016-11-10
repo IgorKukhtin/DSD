@@ -163,7 +163,7 @@ BEGIN
                   , MAX (tmp.Name)      :: TVarChar   AS InvNumber
                   , MAX (tmp.StartDate) :: TDateTime  AS StartDate
                   , MAX (tmp.EndDate)   :: TDateTime  AS EndDate
-             FROM gpSelect_Object_JuridicalSettings (inSession) AS tmp
+             FROM gpSelect_Object_JuridicalSettings (FALSE, inSession) AS tmp
              WHERE tmp.MainJuridicalId = vbJuridicalId
                AND COALESCE (tmp.Name, '') <> ''
              GROUP BY tmp.JuridicalId
@@ -347,7 +347,7 @@ BEGIN
                   , MAX (tmp.Name)      :: TVarChar    AS InvNumber
                   , MAX (tmp.StartDate) :: TDateTime   AS StartDate
                   , MAX (tmp.EndDate)   :: TDateTime   AS EndDate
-             FROM gpSelect_Object_JuridicalSettings (inSession) AS tmp
+             FROM gpSelect_Object_JuridicalSettings (FALSE, inSession) AS tmp
              WHERE tmp.MainJuridicalId = vbJuridicalId
                AND COALESCE (tmp.Name, '') <> '' 
              GROUP BY tmp.JuridicalId
