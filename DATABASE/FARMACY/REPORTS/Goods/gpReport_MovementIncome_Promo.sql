@@ -21,6 +21,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,UnitName TVarChar       --Подразделение
               ,MainJuridicalName TVarChar  --Наше Юр. лицо
               ,JuridicalName TVarChar  --Юр. лицо
+              ,RetailName TVarChar     --Торговая сеть
               ,Price TFloat            --Цена в документе
               ,PriceWithVAT TFloat     --Цена прихода с НДС 
               ,StatusName TVarChar     --Состояние документа
@@ -95,6 +96,7 @@ BEGIN
             ,Object_Unit.ValueData                    AS UnitName
             ,Object_MainJuridical.ValueData           AS MainJuridicalName
             ,Object_From.ValueData                    AS JuridicalName
+            ,Object_Retail.ValueData                  AS RetailName 
             ,MIFloat_Price.ValueData         ::TFloat AS Price
             ,MI_Income_View.PriceWithVAT     ::TFloat
             ,Status.ValueData                         AS STatusName
@@ -161,6 +163,11 @@ BEGIN
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                             AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
         LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_MainJuridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN MovementItemString AS MIString_PartionGoods
                                      ON MIString_PartionGoods.MovementItemId = MovementItem.Id

@@ -31,15 +31,14 @@ BEGIN
      WITH 
      tmpContractSettings AS (SELECT Object_ContractSettings.Id
                                   , Object_ContractSettings.isErased
-                                  , ObjectLink_Retail.ChildObjectId   AS RetailId
-                                  , ObjectLink_Contract.ChildObjectId AS ContractId
-                             FROM ObjectLink AS ObjectLink_Retail
+                                  , ObjectLink_MainJuridical.ChildObjectId   AS MainJuridicalId
+                                  , ObjectLink_Contract.ChildObjectId        AS ContractId
+                             FROM ObjectLink AS ObjectLink_MainJuridical
                                 INNER JOIN ObjectLink AS ObjectLink_Contract
-                                                      ON ObjectLink_Contract.ObjectId = ObjectLink_Retail.ObjectId
+                                                      ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                                      AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
-                                LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_Retail.ObjectId
-                             WHERE ObjectLink_Retail.DescId = zc_ObjectLink_ContractSettings_Retail()
-                               AND ObjectLink_Retail.ChildObjectId = vbObjectId
+                                LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_MainJuridical.ObjectId
+                             WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
                              ) 
 
        SELECT 
@@ -77,8 +76,8 @@ BEGIN
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
 
             LEFT JOIN Object AS Contract ON Contract.Id = LastPriceList_View.ContractId
-                       --                 AND (Contract.isErased = False OR inIsShowErased = TRUE)
-            LEFT JOIN tmpContractSettings ON tmpContractSettings.RetailId = ObjectLink_JuridicalRetail.ChildObjectId 
+
+            LEFT JOIN tmpContractSettings ON tmpContractSettings.MainJuridicalId = Object_MainJuridical.Id
                                          AND tmpContractSettings.ContractId = Contract.Id
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId = LastPriceList_View.ContractId

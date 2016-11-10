@@ -433,6 +433,14 @@
     OutputType = otResult
     Params = <
       item
+        Name = 'inMainJuridicalId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MainJuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inContractId'
         Value = Null
         Component = MasterCDS

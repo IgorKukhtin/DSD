@@ -1,8 +1,10 @@
 -- Function: lpInsertUpdate_Object_ContractSettings()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContractSettings(Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_ContractSettings(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_ContractSettings(
+        IN inMainJuridicalId   Integer   ,    -- Гл. юр. лицо
         IN inContractId        Integer   ,    -- Договор
        OUT outisErased         Boolean   ,
         IN inSession           TVarChar       -- сессия пользователя
@@ -11,22 +13,21 @@ RETURNS Boolean
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
 BEGIN
 
    vbUserId:= inSession;
-   vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+   --vbObjectId := lpGet_DefaultValue('zc_Object_MainJuridical', vbUserId);
 
    -- ищем элемент <Установки для договоров> по связи торг.сеть - договор
-   vbId := (SELECT ObjectLink_Retail.ObjectId AS Id
-            FROM ObjectLink AS ObjectLink_Retail
+   vbId := (SELECT ObjectLink_MainJuridical.ObjectId AS Id
+            FROM ObjectLink AS ObjectLink_MainJuridical
                  INNER JOIN ObjectLink AS ObjectLink_Contract
-                                       ON ObjectLink_Contract.ObjectId = ObjectLink_Retail.ObjectId
+                                       ON ObjectLink_Contract.ObjectId = ObjectLink_MainJuridical.ObjectId
                                       AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
                                       AND ObjectLink_Contract.ChildObjectId = inContractId
-            WHERE ObjectLink_Retail.DescId = zc_ObjectLink_ContractSettings_Retail()
-              AND ObjectLink_Retail.ChildObjectId = vbObjectId
+            WHERE ObjectLink_MainJuridical.DescId = zc_ObjectLink_ContractSettings_MainJuridical()
+              AND ObjectLink_MainJuridical.ChildObjectId = inMainJuridicalId
             );
 
    IF COALESCE (vbId, 0) = 0 -- если связи не существует, тогда создаем ее
@@ -34,8 +35,8 @@ BEGIN
         -- сохранили <Объект>
         vbId := lpInsertUpdate_Object (0, zc_Object_ContractSettings(), 0, '');
       
-        -- сохранили связь <торг.сеть>
-        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_Retail(), vbId, vbObjectId);
+        -- сохранили связь <Гл. юр. лицо>
+        PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_MainJuridical(), vbId, inMainJuridicalId);
         -- сохранили связь <Договор>
         PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContractSettings_Contract(), vbId, inContractId);
      
