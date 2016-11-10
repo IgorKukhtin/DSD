@@ -163,6 +163,13 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             Options.Editing = False
             Width = 113
           end
+          object colMainJuridicalName: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MainJuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
           object colProducerName: TcxGridDBColumn
             Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'ProducerName'

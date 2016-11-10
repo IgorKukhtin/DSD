@@ -31,10 +31,10 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
   private
     { Private declarations }
   public

@@ -4,14 +4,15 @@ DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalSettings(TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_JuridicalSettings(Boolean, TVarChar);
                         
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
-    IN inIsShowAll   Boolean,       -- показать удаденные Да/Нет
+    IN inIsShowErased   Boolean,       -- показать удаденные Да/Нет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
                isPriceClose Boolean, isSite Boolean,
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
-               MainJuridicalId Integer, MainJuridicalName TVarChar, isErased boolean,
+               MainJuridicalId Integer, MainJuridicalName TVarChar,
+               ContractSettingsId Integer,  isErased boolean,
                StartDate TDateTime, EndDate TDateTime,
                InsertName TVarChar, InsertDate TDateTime,
                UpdateName TVarChar, UpdateDate TDateTime
@@ -27,6 +28,20 @@ BEGIN
    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
    RETURN QUERY 
+     WITH 
+     tmpContractSettings AS (SELECT Object_ContractSettings.Id
+                                  , Object_ContractSettings.isErased
+                                  , ObjectLink_Retail.ChildObjectId   AS RetailId
+                                  , ObjectLink_Contract.ChildObjectId AS ContractId
+                             FROM ObjectLink AS ObjectLink_Retail
+                                INNER JOIN ObjectLink AS ObjectLink_Contract
+                                                      ON ObjectLink_Contract.ObjectId = ObjectLink_Retail.ObjectId
+                                                     AND ObjectLink_Contract.DescId = zc_ObjectLink_ContractSettings_Contract()
+                                LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = ObjectLink_Retail.ObjectId
+                             WHERE ObjectLink_Retail.DescId = zc_ObjectLink_ContractSettings_Retail()
+                               AND ObjectLink_Retail.ChildObjectId = vbObjectId
+                             ) 
+
        SELECT 
              JuridicalSettings.JuridicalSettingsId
            , Object_JuridicalSettings.ValueData AS Name 
@@ -41,9 +56,12 @@ BEGIN
            , Contract.ValueData AS ContractName
            , ObjectLink_JuridicalRetail.ObjectId AS MainJuridicalId
            , Object_MainJuridical.ValueData AS MainJuridicalName 
-           , Object_Juridical.isErased
-           , COALESCE (JuridicalSettings.StartDate, Null)  ::TDateTime  AS StartDate
-           , COALESCE (JuridicalSettings.EndDate, Null)  ::TDateTime    AS EndDate
+           --, Contract.isErased
+           , COALESCE (tmpContractSettings.Id, 0)                        AS ContractSettingsId
+           , COALESCE (tmpContractSettings.isErased, False) ::Boolean    AS isErased
+
+           , COALESCE (JuridicalSettings.StartDate, Null)   ::TDateTime  AS StartDate
+           , COALESCE (JuridicalSettings.EndDate, Null)     ::TDateTime  AS EndDate
 
            , Object_User_Insert.ValueData   AS InsertName
            , LoadPriceList.Date_Insert      AS InsertDate
@@ -57,8 +75,11 @@ BEGIN
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = ObjectLink_JuridicalRetail.ObjectId
                                
             JOIN Object AS Object_Juridical ON Object_Juridical.Id = LastPriceList_View.JuridicalId
-                                           AND (Object_Juridical.isErased = False OR inIsShowAll = TRUE)
+
             LEFT JOIN Object AS Contract ON Contract.Id = LastPriceList_View.ContractId
+                       --                 AND (Contract.isErased = False OR inIsShowErased = TRUE)
+            LEFT JOIN tmpContractSettings ON tmpContractSettings.RetailId = ObjectLink_JuridicalRetail.ChildObjectId 
+                                         AND tmpContractSettings.ContractId = Contract.Id
             --   
             LEFT JOIN LoadPriceList ON LoadPriceList.ContractId = LastPriceList_View.ContractId
                                    AND LoadPriceList.JuridicalId = LastPriceList_View.JuridicalId
@@ -128,6 +149,8 @@ BEGIN
                                       ON ObjectFloat_ConditionalPercent.ObjectId = LastPriceList_View.JuridicalId
                                      AND ObjectFloat_ConditionalPercent.DescId = zc_ObjectFloat_Juridical_ConditionalPercent()
 
+           WHERE (COALESCE (tmpContractSettings.isErased, False) = False OR inIsShowErased = TRUE)
+--and Contract.Id =183257
 ;  
 END;
 $BODY$
@@ -139,11 +162,13 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 09.11.16         * add inIsShowAll, Insert, Update
+ 09.11.16         * add inIsShowErased, Insert, Update
  11.02.16         * add PriceLimit Ограничение "Цена до"
  17.02.15                         *
  21.01.15                         *
  13.10.14                         *
 
 */
--- тест SELECT * FROM gpSelect_Object_JuridicalSettings ('2')
+-- тест 
+-- SELECT * FROM gpSelect_Object_JuridicalSettings (True,'2')
+
