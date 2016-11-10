@@ -83,7 +83,7 @@ BEGIN
                               , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
                                           WHEN '{Выход}'    THEN LoginProtocol.OperDate
                                           WHEN '{Работает}' THEN LoginProtocol.OperDate
-                                          WHEN '{}'         THEN LoginProtocol.OperDate + INTERVAL '8 HOUR' -- захардкодили - типа 8ч. отработали
+                                          -- WHEN '{}'         THEN LoginProtocol.OperDate + INTERVAL '8 HOUR' -- захардкодили - типа 8ч. отработали
                                      END)  AS OperDate_Exit
                               , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
                                           WHEN '{Работает}' THEN 1

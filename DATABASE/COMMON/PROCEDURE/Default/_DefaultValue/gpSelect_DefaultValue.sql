@@ -32,7 +32,7 @@ BEGIN
               JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
          LEFT JOIN Object AS Object_User ON Object_User.Id = UserKeyId
          LEFT JOIN ObjectDesc AS ObjectDesc_User ON ObjectDesc_User.Id = Object_User.DescId
-         INNER JOIN Object ON Object.Id = zfConvert_StringToNumber (DefaultValue.DefaultValue)
+         LEFT JOIN Object ON Object.Id = zfConvert_StringToNumber (DefaultValue.DefaultValue)
          LEFT JOIN ObjectDesc AS ObjectDesc_value ON ObjectDesc_value.Id = Object.DescId
         ;
 
