@@ -18,6 +18,7 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus T
              , BranchName     TVarChar
              , DayOfWeekName  TVarChar
              , OperDate       TDateTime
+             , OperDate_Last   TDateTime
              , OperDate_Entry TDateTime
              , OperDate_Exit  TDateTime
              , OperDate_Start TDateTime
@@ -67,18 +68,14 @@ BEGIN
                   AND (tmpPersonal.UnitId = inUnitId OR inUnitId = 0) 
                 )
   -- генерируем таблицу дат
-  , tmpData AS (SELECT generate_series(inStartDate, inEndDate, '1 day' :: INTERVAL) AS OperDate
-                WHERE inIsDay = TRUE
-               UNION 
-                SELECT inStartDate as OperDate
-                WHERE inIsDay = FALSE)
+  , tmpDay AS (SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate)
         -- определяем время Подключения и выхода из программы
       , tmpLogin_all AS (SELECT LoginProtocol.UserId
                               , DATE_TRUNC ('DAY', LoginProtocol.OperDate) AS OperDate
                               , MIN (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
-                                          WHEN '{Подключение}'              THEN LoginProtocol.OperDate
-                                          WHEN '{Подключение(виртуальное)}' THEN LoginProtocol.OperDate
-                                          WHEN '{}'                         THEN LoginProtocol.OperDate
+                                          WHEN '{Подключение}'                 THEN LoginProtocol.OperDate
+                                          WHEN '{"Подключение (виртуальное)"}' THEN LoginProtocol.OperDate
+                                          WHEN '{}'                            THEN LoginProtocol.OperDate
                                      END)  AS OperDate_Entry
                               , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
                                           WHEN '{Выход}'    THEN LoginProtocol.OperDate
@@ -91,24 +88,34 @@ BEGIN
                                      END)  AS isWork
                           FROM LoginProtocol
                                INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
-                          WHERE LoginProtocol.OperDate >= inStartDate AND LoginProtocol.OperDate < inEndDate + INTERVAL '1 day'
+                          WHERE LoginProtocol.OperDate >= inStartDate AND LoginProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+                         -- AND POSITION (LOWER ('Подключение (виртуальное)') IN LOWER (LoginProtocol.ProtocolData)) > 0
                           GROUP BY LoginProtocol.UserId
                                  , DATE_TRUNC ('DAY', LoginProtocol.OperDate)
+                         ) 
+         -- определяем
+       , tmpLoginLast AS (SELECT tmpLogin_all.UserId, MAX (tmpLogin_all.OperDate) AS OperDate
+                          FROM tmpLogin_all
+                          WHERE inIsDay = FALSE
+                          GROUP BY tmpLogin_all.UserId
                          ) 
     -- определяем время Подключения и выхода из программы
   , tmpLoginProtocol AS (SELECT tmpLogin_all.UserId
                               , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END AS OperDate
                               , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END AS OperDate_Entry
                               , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END AS OperDate_Exit
+                              , tmpLoginLast.OperDate                                                          AS OperDate_Last
                               , MAX (tmpLogin_all.isWork)  AS isWork
                               , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
                                    + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
                                     )  AS Minute_calc
                           FROM tmpLogin_all
+                               LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
                           GROUP BY tmpLogin_all.UserId
                                  , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END
                                  , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END
                                  , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END
+                                 , tmpLoginLast.OperDate
                          ) 
 
     -- Данные из протокола документа
@@ -118,7 +125,7 @@ BEGIN
                              , MovementProtocol.MovementId                   AS Id
                         FROM MovementProtocol
                              INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
-                        WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 day'
+                        WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                        ) 
   -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
@@ -127,7 +134,7 @@ BEGIN
                             , MovementItemProtocol.MovementItemId               AS Id
                        FROM MovementItemProtocol
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
-                       WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 day'
+                       WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                       ) 
 
   -- находим время первого действия, время последнего действия
@@ -159,8 +166,10 @@ BEGIN
           , tmpUser.UserCode
           , tmpUser.UserName
 
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND (tmpData.OperDate = CURRENT_DATE OR inIsDay = FALSE) -- CAST (tmpLoginProtocol.OperDate_Exit AS TDateTime) > CURRENT_TIMESTAMP - INTERVAL '10 minute'
-                 THEN 'Работает'
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE
+                      THEN 'Работает'
+                 WHEN tmpLoginProtocol.isWork = 1
+                      THEN 'Завершил*'
                  ELSE 'Завершил'
             END :: TVarChar AS UserStatus
 
@@ -170,29 +179,30 @@ BEGIN
           , Object_Unit.ValueData             AS UnitName
           , Object_Branch.ValueData           AS BranchName
  
-          , CASE WHEN inIsDay = TRUE THEN (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (tmpData.OperDate) AS tmp) ELSE NULL END :: TVarChar AS DayOfWeekName
-          , CASE WHEN inIsDay = TRUE THEN tmpData.OperDate ELSE NULL END ::TDateTime AS OperDate
-          , tmpLoginProtocol.OperDate_Entry ::TDateTime                         -- время входа
-          , CASE WHEN isWork = 1 AND tmpData.OperDate = CURRENT_DATE THEN NULL ELSE tmpLoginProtocol.OperDate_Exit END :: TDateTime                         -- время выхода
-          , tmpTimeMotion.OperDate_Start    ::TDateTime                         -- время первого действия
-          , tmpTimeMotion.OperDate_End      ::TDateTime                         -- время последнего действия
+         , (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate)) AS tmp) AS DayOfWeekName
+          , CASE WHEN inIsDay = TRUE THEN tmpLoginProtocol.OperDate ELSE NULL END ::TDateTime AS OperDate
+          , COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) :: TDateTime AS OperDate_Last
+          , tmpLoginProtocol.OperDate_Entry :: TDateTime AS OperDate_Entry        -- время входа
+          , CASE WHEN isWork = 1 AND tmpDay.OperDate = CURRENT_DATE THEN NULL ELSE tmpLoginProtocol.OperDate_Exit END :: TDateTime                         -- время выхода
+          , tmpTimeMotion.OperDate_Start    :: TDateTime                         -- время первого действия
+          , tmpTimeMotion.OperDate_End      :: TDateTime                         -- время последнего действия
           , COALESCE (tmpMov.Mov_Count,0)   ::TFloat     AS Mov_Count           -- кол-во документов 
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
             -- итого кол-во действий
           , (COALESCE (tmpMov.All_Count,0) + COALESCE (tmpMI.All_Count,0)) :: TFloat AS Count
 
-            -- отработал - Часов (вх/вых)
-          , (tmpLoginProtocol.Minute_calc / 60) :: TFloat AS Count_Work
-            -- отработал - Часов (по док.)
-          , (tmpTimeMotion.Minute_calc / 60) :: TFloat AS Count_Work
+            -- отработал - Кол-во часов (по вх/вых)
+          , CAST (tmpLoginProtocol.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Prog
+            -- отработал - Кол-во часов (по док.)
+          , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Work
 
             -- Подсвечиваем красным если человек еще работает
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpData.OperDate = CURRENT_DATE
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE
                  THEN zc_Color_Red()
                  ELSE zc_Color_Black()
             END AS Color_Calc
-     FROM tmpData
-          INNER JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpData.OperDate
+     FROM tmpDay
+          INNER JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpDay.OperDate
           LEFT JOIN tmpUser ON tmpUser.UserId =  tmpLoginProtocol.UserId 
 
           LEFT JOIN (SELECT tmpMov_Protocol.UserId 
@@ -202,7 +212,7 @@ BEGIN
                      FROM tmpMov_Protocol
                      GROUP BY tmpMov_Protocol.UserId 
                             , tmpMov_Protocol.OperDate
-                     ) AS tmpMov ON tmpMov.OperDate = tmpData.OperDate
+                     ) AS tmpMov ON tmpMov.OperDate = tmpDay.OperDate
                                 AND tmpMov.UserId   = tmpUser.UserId
           LEFT JOIN (SELECT tmpMI_Protocol.UserId 
                           , tmpMI_Protocol.OperDate
@@ -211,9 +221,9 @@ BEGIN
                      FROM tmpMI_Protocol
                      GROUP BY tmpMI_Protocol.UserId 
                             , tmpMI_Protocol.OperDate
-                     ) AS tmpMI ON tmpMI.OperDate = tmpData.OperDate
+                     ) AS tmpMI ON tmpMI.OperDate = tmpDay.OperDate
                                AND tmpMI.UserId   = tmpUser.UserId
-          LEFT JOIN tmpTimeMotion ON tmpTimeMotion.OperDate = tmpData.OperDate
+          LEFT JOIN tmpTimeMotion ON tmpTimeMotion.OperDate = tmpDay.OperDate
                                  AND tmpTimeMotion.UserId = tmpUser.UserId
                                 
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpUser.MemberId

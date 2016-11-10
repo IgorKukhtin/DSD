@@ -3,6 +3,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   ClientHeight = 552
   ClientWidth = 935
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -130
   ExplicitWidth = 951
   ExplicitHeight = 587
   PixelsPerInch = 96
@@ -131,19 +132,26 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Options.Editing = False
             Width = 80
           end
-          object DayOfWeekName: TcxGridDBColumn
-            Caption = #1044#1077#1085#1100
-            DataBinding.FieldName = 'DayOfWeekName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object UserStatus: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1091#1089
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1080#1085#1092#1086#1088#1084'.)'
             DataBinding.FieldName = 'UserStatus'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object DayOfWeekName: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' ('#1080#1085#1092#1086#1088#1084'.)'
+            DataBinding.FieldName = 'DayOfWeekName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate_Last: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1080#1085#1092#1086#1088#1084'.)'
+            DataBinding.FieldName = 'OperDate_Last'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object UserCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -163,7 +171,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             Width = 149
           end
           object Count_Prog: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1095'. ('#1074#1093'/'#1074#1099#1093')'
+            Caption = #1050#1086#1083'. '#1095'. ('#1087#1086' '#1074#1093'/'#1074#1099#1093')'
             DataBinding.FieldName = 'Count_Prog'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -174,7 +182,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
               #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074' - '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086' '#1074#1088#1077#1084#1077#1085#1080' '#1074#1093#1086#1076#1072' '#1080' '#1074#1099#1093#1086#1076#1072' '#1080#1079' ' +
               #1087#1088#1086#1075#1088#1072#1084#1084#1099
             Options.Editing = False
-            Width = 60
+            Width = 70
           end
           object Count_Work: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1095'. ('#1087#1086' '#1076#1086#1082'.)'
@@ -339,19 +347,19 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
           end
           object serMov_Count: TcxGridDBChartSeries
             DataBinding.FieldName = 'Mov_Count'
-            DisplayText = #1050#1086#1083'. '#1076#1086#1082'.'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
           end
           object serMI_Count: TcxGridDBChartSeries
             DataBinding.FieldName = 'MI_Count'
-            DisplayText = #1050#1086#1083'. '#1089#1090#1088#1086#1082' '#1076#1086#1082'.'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1089#1090#1088#1086#1082
           end
           object serCount_Prog: TcxGridDBChartSeries
             DataBinding.FieldName = 'Count_Prog'
-            DisplayText = #1042#1088#1077#1084#1103' '#1074' '#1087#1088#1086#1075#1088'.'
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' ('#1087#1086' '#1074#1093'/'#1074#1099#1093')'
           end
           object serCount_Work: TcxGridDBChartSeries
             DataBinding.FieldName = 'Count_Work'
-            DisplayText = #1042#1088#1077#1084#1103' '#1088#1072#1073#1086#1090#1099
+            DisplayText = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074' ('#1087#1086' '#1076#1086#1082'.)'
           end
         end
         object grChartLevel1: TcxGridLevel
@@ -653,8 +661,8 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 272
-    Top = 144
+    Left = 280
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 144

@@ -53,6 +53,7 @@ type
     UserStatus: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     DayOfWeekName: TcxGridDBColumn;
+    OperDate_Last: TcxGridDBColumn;
   private
     { Private declarations }
   public

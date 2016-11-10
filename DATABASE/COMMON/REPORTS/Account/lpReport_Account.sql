@@ -73,14 +73,20 @@ BEGIN
                 AND (inStartDate = inEndDate
                      -- OR EXISTS (SELECT AccountId FROM Object_Account_View AS View_Account WHERE View_Account.AccountId = inAccountId AND View_Account.AccountCode > 80000 AND View_Account.AccountId <> zc_Enum_Account_100301()) -- > Кредитование AND <> Прибыль текущего периода
                      -- OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604)) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
+                     OR inUserId  = 5
                     )
-                   ) OR inIsMovement
+                   )
+                OR inIsMovement
                 OR (inProfitLossId <> 0 AND inBusinessId <> 0)-- 8371 - Мясо 
                 OR (inAccountGroupId = zc_Enum_AccountGroup_110000()) -- Транзит
                 -- OR (inAccountDirectionId = zc_Enum_AccountDirection_110200()) -- деньги в пути
                   ;
 
+
     --
+    -- RAISE EXCEPTION 'vbIsMovement = <%>', vbIsMovement;
+
+    -- Результат
     RETURN QUERY
     WITH tmpContainer AS  (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount, ContainerLO_Business.ObjectId AS BusinessId
                            FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionId <> zc_Enum_AccountDirection_70500() -- Кредиторы + Сотрудники
