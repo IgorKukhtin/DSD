@@ -57,6 +57,8 @@ type
     actOpenReportForm: TdsdOpenForm;
     bbOpenReport: TdxBarButton;
     FormParams: TdsdFormParams;
+    Time_Prog: TcxGridDBColumn;
+    Time_Work: TcxGridDBColumn;
   private
     { Private declarations }
   public

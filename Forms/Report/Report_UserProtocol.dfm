@@ -26,6 +26,8 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       inherited cxGrid: TcxGrid
         Width = 935
         Height = 200
+        ExplicitLeft = -3
+        ExplicitTop = -6
         ExplicitWidth = 935
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -178,12 +180,14 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
               #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074' - '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086' '#1074#1088#1077#1084#1077#1085#1080' '#1074#1093#1086#1076#1072' '#1080' '#1074#1099#1093#1086#1076#1072' '#1080#1079' ' +
               #1087#1088#1086#1075#1088#1072#1084#1084#1099
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
           end
           object Count_Work: TcxGridDBColumn
@@ -192,13 +196,35 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
               #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074' - '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086' '#1074#1088#1077#1084#1077#1085#1080' '#1087#1077#1088#1074#1086#1075#1086' '#1080' '#1087#1086#1089#1083#1077#1076#1085#1077 +
               #1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1103' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
+          end
+          object Time_Prog: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1095'. ('#1087#1086' '#1074#1093'/'#1074#1099#1093')'
+            DataBinding.FieldName = 'Time_Prog'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DisplayFormat = 'hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Time_Work: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1095'. ('#1087#1086' '#1076#1086#1082'.)'
+            DataBinding.FieldName = 'Time_Work'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DisplayFormat = 'hh:mm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colCount: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1076#1077#1081#1089#1090#1074#1080#1081
