@@ -1,5 +1,6 @@
 inherited Report_UserProtocolViewForm: TReport_UserProtocolViewForm
   Caption = 'Report_UserProtocolViewForm'
+  AddOnFormData.ExecuteDialogAction = nil
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

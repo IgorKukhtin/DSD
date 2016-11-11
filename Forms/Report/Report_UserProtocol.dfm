@@ -610,8 +610,8 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1085#1103#1084
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1085#1103#1084
       ImageIndex = 24
-      FormName = 'TReport_UserProtocolForm'
-      FormNameParam.Value = 'TReport_UserProtocolForm'
+      FormName = 'TReport_UserProtocolViewForm'
+      FormNameParam.Value = 'TReport_UserProtocolViewForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
