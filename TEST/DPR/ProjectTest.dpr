@@ -876,7 +876,8 @@ uses
   ReestrUpdateMovement in '..\..\Forms\Document\ReestrUpdateMovement.pas' {ReestrUpdateMovementForm: TParentForm},
   Report_UserProtocol in '..\..\Forms\Report\Report_UserProtocol.pas' {Report_UserProtocolForm: TParentForm},
   Report_UserProtocolDialog in '..\..\Forms\Report\Report_UserProtocolDialog.pas' {Report_UserProtocolDialogForm: TParentForm},
-  User_Object in '..\..\Forms\Guides\User_Object.pas' {User_ObjectForm: TParentForm};
+  User_Object in '..\..\Forms\Guides\User_Object.pas' {User_ObjectForm: TParentForm},
+  Report_UserProtocolView in '..\..\Forms\Report\Report_UserProtocolView.pas' {Report_UserProtocolViewForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
@@ -887,6 +888,7 @@ begin
   gc_isSetDefault := true;
   dsdProject := prProject;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TReport_UserProtocolViewForm, Report_UserProtocolViewForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
