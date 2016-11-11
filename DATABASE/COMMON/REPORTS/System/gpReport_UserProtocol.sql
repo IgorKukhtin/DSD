@@ -109,13 +109,13 @@ BEGIN
                               , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
                                    + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
                                     )  AS Minute_calc
-                          FROM tmpLogin_all
-                               LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
-                          GROUP BY tmpLogin_all.UserId
-                                 , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END
-                                 , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END
-                                 , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END
-                                 , tmpLoginLast.OperDate
+                         FROM tmpLogin_all
+                              LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
+                         GROUP BY tmpLogin_all.UserId
+                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END
+                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END
+                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END
+                                , tmpLoginLast.OperDate
                          ) 
 
     -- Данные из протокола документа
@@ -127,7 +127,7 @@ BEGIN
                              INNER JOIN tmpUser ON tmpUser.UserId = MovementProtocol.UserId
                         WHERE MovementProtocol.OperDate >= inStartDate AND MovementProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                        ) 
-  -- Данные из протокола строк документа
+    -- Данные из протокола строк документа
   , tmpMI_Protocol AS (SELECT MovementItemProtocol.UserId
                             , DATE_TRUNC ('DAY', MovementItemProtocol.OperDate) AS OperDate
                             , MovementItemProtocol.OperDate                     AS OperDate_Protocol
@@ -136,8 +136,15 @@ BEGIN
                             INNER JOIN tmpUser ON tmpUser.UserId = MovementItemProtocol.UserId
                        WHERE MovementItemProtocol.OperDate >= inStartDate AND MovementItemProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
                       ) 
-
-  -- находим время первого действия, время последнего действия
+         -- определяем
+ , tmpTimeMotion_all AS (SELECT tmp.UserId, tmp.OperDate, MIN (tmp.OperDate_Protocol) AS OperDate_Start, MAX (tmp.OperDate_Protocol) AS OperDate_End
+                         FROM (SELECT * FROM tmpMov_Protocol
+                              UNION ALL
+                               SELECT * FROM tmpMI_Protocol
+                              ) AS tmp
+                         GROUP BY tmp.UserId, tmp.OperDate
+                        ) 
+    -- находим время первого действия, время последнего действия
   , tmpTimeMotion AS (SELECT tmp.UserId
                            , CASE WHEN inIsDay = TRUE THEN tmp.OperDate       ELSE inStartDate END AS OperDate
                            , CASE WHEN inIsDay = TRUE THEN tmp.OperDate_Start ELSE NULL        END AS OperDate_Start
@@ -148,14 +155,7 @@ BEGIN
                                        ELSE EXTRACT (HOUR   FROM (tmp.OperDate_End - tmp.OperDate_Start)) * 60
                                           + EXTRACT (MINUTE FROM (tmp.OperDate_End - tmp.OperDate_Start))
                                   END)  AS Minute_calc
-                      FROM
-                     (SELECT tmp.UserId, tmp.OperDate, MIN (tmp.OperDate_Protocol) AS OperDate_Start, MAX (tmp.OperDate_Protocol) AS OperDate_End
-                      FROM (SELECT * FROM tmpMov_Protocol
-                           UNION ALL
-                            SELECT * FROM tmpMI_Protocol
-                           ) AS tmp
-                      GROUP BY tmp.UserId, tmp.OperDate
-                      ) AS tmp
+                      FROM tmpTimeMotion_all AS tmp
                       GROUP BY tmp.UserId
                              , CASE WHEN inIsDay = TRUE THEN tmp.OperDate       ELSE inStartDate END
                              , CASE WHEN inIsDay = TRUE THEN tmp.OperDate_Start ELSE NULL        END
@@ -166,7 +166,7 @@ BEGIN
           , tmpUser.UserCode
           , tmpUser.UserName
 
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) = CURRENT_DATE
                       THEN 'Работает'
                  WHEN tmpLoginProtocol.isWork = 1
                       THEN 'Завершил*'
@@ -184,10 +184,15 @@ BEGIN
          , (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate)) AS tmp) AS DayOfWeekName
           , CASE WHEN inIsDay = TRUE THEN tmpLoginProtocol.OperDate ELSE NULL END ::TDateTime AS OperDate
           , COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) :: TDateTime AS OperDate_Last
-          , tmpLoginProtocol.OperDate_Entry :: TDateTime AS OperDate_Entry        -- время входа
-          , CASE WHEN isWork = 1 AND tmpDay.OperDate = CURRENT_DATE THEN NULL ELSE tmpLoginProtocol.OperDate_Exit END :: TDateTime                         -- время выхода
-          , tmpTimeMotion.OperDate_Start    :: TDateTime                         -- время первого действия
-          , tmpTimeMotion.OperDate_End      :: TDateTime                         -- время последнего действия
+            -- Время входа
+          , COALESCE (tmpLogin_all.OperDate_Entry, tmpLoginProtocol.OperDate_Entry) :: TDateTime AS OperDate_Entry
+            -- Время выхода
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE THEN NULL ELSE tmpLoginProtocol.OperDate_Exit END :: TDateTime
+            -- Время первого действия
+          , COALESCE (tmpTimeMotion_all.OperDate_Start, tmpTimeMotion.OperDate_Start) :: TDateTime AS OperDate_Start
+            -- Время послед. действия
+          , COALESCE (tmpTimeMotion_all.OperDate_End, tmpTimeMotion.OperDate_End) :: TDateTime AS OperDate_End
+
           , COALESCE (tmpMov.Mov_Count,0)   ::TFloat     AS Mov_Count           -- кол-во документов 
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
             -- итого кол-во действий
@@ -199,15 +204,22 @@ BEGIN
           , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Work
 
             -- Подсвечиваем красным если человек еще работает
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE
-                 THEN zc_Color_Red()
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) = CURRENT_DATE
+                 THEN zc_Color_Blue()
                  ELSE zc_Color_Black()
             END AS Color_Calc
      FROM tmpDay
           INNER JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpDay.OperDate
           LEFT JOIN tmpUser ON tmpUser.UserId =  tmpLoginProtocol.UserId 
 
-          LEFT JOIN (SELECT tmpMov_Protocol.UserId 
+          LEFT JOIN tmpLogin_all      ON tmpLogin_all.UserId   =  tmpLoginProtocol.UserId
+                                     AND tmpLogin_all.OperDate = CURRENT_DATE
+                                     AND inIsDay               = FALSE
+          LEFT JOIN tmpTimeMotion_all ON tmpTimeMotion_all.UserId   =  tmpLoginProtocol.UserId
+                                     AND tmpTimeMotion_all.OperDate = CURRENT_DATE
+                                     AND inIsDay                    = FALSE
+
+          LEFT JOIN (SELECT tmpMov_Protocol.UserId
                           , tmpMov_Protocol.OperDate
                           , COUNT (DISTINCT tmpMov_Protocol.Id) AS Mov_Count
                           , COUNT(*)                            AS All_Count
