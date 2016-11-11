@@ -888,7 +888,6 @@ begin
   gc_isSetDefault := true;
   dsdProject := prProject;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TReport_UserProtocolViewForm, Report_UserProtocolViewForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
