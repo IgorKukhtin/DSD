@@ -54,6 +54,9 @@ type
     isErased: TcxGridDBColumn;
     DayOfWeekName: TcxGridDBColumn;
     OperDate_Last: TcxGridDBColumn;
+    actOpenReportForm: TdsdOpenForm;
+    bbOpenReport: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

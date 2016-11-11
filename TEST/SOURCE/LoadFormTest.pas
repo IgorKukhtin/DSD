@@ -761,7 +761,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-//  exit;
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));

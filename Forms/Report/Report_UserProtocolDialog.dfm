@@ -296,10 +296,10 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
   object UserGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
-    FormNameParam.Value = 'TUserForm'
+    FormNameParam.Value = 'TUser_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUserForm'
+    FormName = 'TUser_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

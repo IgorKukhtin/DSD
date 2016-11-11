@@ -14,8 +14,8 @@ CREATE OR REPLACE FUNCTION gpReport_UserProtocol(
 RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus TVarChar, isErased Boolean
              , MemberName     TVarChar
              , PositionName   TVarChar
-             , UnitName       TVarChar
-             , BranchName     TVarChar
+             , UnitId Integer, UnitName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , DayOfWeekName  TVarChar
              , OperDate       TDateTime
              , OperDate_Last   TDateTime
@@ -176,7 +176,9 @@ BEGIN
           , tmpUser.isErased
           , Object_Member.ValueData           AS MemberName 
           , Object_Position.ValueData         AS PositionName 
+          , Object_Unit.Id                    AS UnitId
           , Object_Unit.ValueData             AS UnitName
+          , Object_Branch.Id                  AS BranchId
           , Object_Branch.ValueData           AS BranchName
  
          , (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate)) AS tmp) AS DayOfWeekName

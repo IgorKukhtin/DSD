@@ -2,10 +2,12 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1091' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 552
   ClientWidth = 935
+  ParentFont = True
+  AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -130
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 587
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -601,6 +603,94 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1085#1103#1084
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1076#1085#1103#1084
+      ImageIndex = 24
+      FormName = 'TReport_UserProtocolForm'
+      FormNameParam.Value = 'TReport_UserProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BranchName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'UserId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UserName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDay'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -661,7 +751,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
+    Left = 296
     Top = 192
   end
   inherited BarManager: TdxBarManager
@@ -696,6 +786,14 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -705,6 +803,10 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     end
     object bbDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenReport: TdxBarButton
+      Action = actOpenReportForm
       Category = 0
     end
   end
@@ -734,7 +836,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       item
         Component = GuidesUser
       end>
-    Left = 192
+    Left = 216
     Top = 184
   end
   object GuidesUnit: TdsdGuides
@@ -769,10 +871,10 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
   object GuidesUser: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
-    FormNameParam.Value = 'TUserForm'
+    FormNameParam.Value = 'TUser_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUserForm'
+    FormName = 'TUser_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -822,5 +924,76 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       end>
     Left = 336
     Top = 65527
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserId'
+        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDay'
+        Value = Null
+        Component = cbisDay
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 488
+    Top = 184
   end
 end

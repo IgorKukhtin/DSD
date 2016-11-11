@@ -875,7 +875,8 @@ uses
   ReestrStartMovement in '..\..\Forms\Document\ReestrStartMovement.pas' {ReestrStartMovementForm: TParentForm},
   ReestrUpdateMovement in '..\..\Forms\Document\ReestrUpdateMovement.pas' {ReestrUpdateMovementForm: TParentForm},
   Report_UserProtocol in '..\..\Forms\Report\Report_UserProtocol.pas' {Report_UserProtocolForm: TParentForm},
-  Report_UserProtocolDialog in '..\..\Forms\Report\Report_UserProtocolDialog.pas' {Report_UserProtocolDialogForm: TParentForm};
+  Report_UserProtocolDialog in '..\..\Forms\Report\Report_UserProtocolDialog.pas' {Report_UserProtocolDialogForm: TParentForm},
+  User_Object in '..\..\Forms\Guides\User_Object.pas' {User_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
