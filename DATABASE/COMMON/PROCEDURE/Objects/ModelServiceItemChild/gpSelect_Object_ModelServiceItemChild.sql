@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
 )
 RETURNS TABLE (Id Integer
              , Comment TVarChar
-             , FromId Integer, FromName TVarChar                
-             , ToId Integer, ToName TVarChar  
+             , FromId Integer, FromCode Integer, FromName TVarChar                
+             , ToId Integer, ToCode Integer, ToName TVarChar  
              , ModelServiceItemMasterId Integer, ModelServiceItemMasterName TVarChar                
              , isErased boolean
              ) AS
@@ -25,10 +25,12 @@ BEGIN
          , ObjectString_Comment.ValueData      AS Comment
                                                         
          , Object_From.Id          AS FromId
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_From.ObjectCode :: TvarChar || ') ' || Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
+         , Object_From.ObjectCode  AS FromCode
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_From.ObjectCode :: TvarChar || ') ' ||*/ Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
 
          , Object_To.Id         AS ToId
-         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN '(' || Object_To.ObjectCode :: TvarChar || ') ' || Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
+         , Object_To.ObjectCode AS ToCode
+         , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
 
          , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
          , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
