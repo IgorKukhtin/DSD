@@ -236,6 +236,8 @@ var
   FilterSQL: string;
   LMessage: string;
   PivotDimensionSQL: TStringList;
+
+  lSelectGroupSQL,lGroupBySQL,lJoinSQL : string;
 begin
   if not CheckReportOption (OlapReportOption, LMessage) then
      raise Exception.Create(LMessage);
@@ -247,19 +249,26 @@ begin
          FilterSQL := FilterSQL + (OlapReportOption.FFields.Objects[i] as TDimensionOLAPField).GetFilterSQL;
       if Visible then begin
          if (OlapReportOption.FFields.Objects[i] is TDimensionOLAPField)
-             or (not OlapReportOption.isOLAPonServer) then begin
+             or (not OlapReportOption.isOLAPonServer) then
+         begin
             if FieldType = ftString then
                FieldDefs.Add(FieldName, FieldType, 250)
             else
                FieldDefs.Add(FieldName, FieldType);
+            //
             if OlapReportOption.FFields.Objects[i] is TDataOLAPField then
                DataList.Add(FieldName)
          end;
+         //
+         lSelectGroupSQL:=GetSelectGroupSQL;
+         if System.Pos(''+ lSelectGroupSQL + '', SelectGroupSQL) = 0 then SelectGroupSQL := SelectGroupSQL + lSelectGroupSQL;
+         lGroupBySQL := GetGroupSQL;
+         if System.Pos(''+ lGroupBySQL + '', GroupBySQL) = 0 then GroupBySQL := GroupBySQL + lGroupBySQL;
+         lJoinSQL:=GetJoinSQL;
+         if System.Pos(''+ lJoinSQL + '', JoinSQL) = 0 then JoinSQL := JoinSQL + lJoinSQL;
+
          SelectSQL := SelectSQL + GetSelectSQL;
-         SelectGroupSQL := SelectGroupSQL + GetSelectGroupSQL;
          PivotSQL := PivotSQL + GetPivotSQL;
-         JoinSQL := JoinSQL + GetJoinSQL;
-         GroupBySQL := GroupBySQL + GetGroupSQL;
          WhereCondition := WhereCondition + GetWhereCondition;
        end;
     end;
@@ -329,8 +338,8 @@ begin
        if FieldByName('FieldType').AsString = 'data' then
        begin
          OLAPField := TDataOLAPField.Create;
-         OLAPField.Caption := FieldByName('Caption').asString;
-         OLAPField.FieldName := FieldByName('FieldName').asString;
+         OLAPField.Caption  := FieldByName('Caption').asString;
+         OLAPField.FieldName:= FieldByName('FieldName').asString;
          // Устанавливаем данные для расчета
          if FieldByName('SummaryType').asString <> '' then begin
             OLAPField.SummaryType := TSummaryType(GetEnumValue(TypeInfo(TSummaryType), FieldByName('SummaryType').asString));

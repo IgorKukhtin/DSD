@@ -106,6 +106,7 @@ BEGIN
                               , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END AS OperDate_Exit
                               , tmpLoginLast.OperDate                                                          AS OperDate_Last
                               , MAX (tmpLogin_all.isWork)  AS isWork
+                              , MAX (CASE WHEN tmpLogin_all.OperDate = CURRENT_DATE THEN tmpLogin_all.isWork ELSE 0 END) AS isWork_current
                               , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
                                    + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
                                     )  AS Minute_calc
@@ -166,9 +167,9 @@ BEGIN
           , tmpUser.UserCode
           , tmpUser.UserName
 
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) = CURRENT_DATE
+          , CASE WHEN tmpLoginProtocol.isWork_current = 1
                       THEN 'Работает'
-                 WHEN tmpLoginProtocol.isWork = 1
+                 WHEN tmpLoginProtocol.isWork = 1 AND inIsDay = TRUE
                       THEN 'Завершил*'
                  ELSE 'Завершил'
             END :: TVarChar AS UserStatus
@@ -184,10 +185,12 @@ BEGIN
          , (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate)) AS tmp) AS DayOfWeekName
           , CASE WHEN inIsDay = TRUE THEN tmpLoginProtocol.OperDate ELSE NULL END ::TDateTime AS OperDate
           , COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) :: TDateTime AS OperDate_Last
+
             -- Время входа
           , COALESCE (tmpLogin_all.OperDate_Entry, tmpLoginProtocol.OperDate_Entry) :: TDateTime AS OperDate_Entry
             -- Время выхода
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE THEN NULL ELSE tmpLoginProtocol.OperDate_Exit END :: TDateTime
+          , CASE WHEN tmpLoginProtocol.isWork = 1 AND tmpDay.OperDate = CURRENT_DATE THEN NULL ELSE COALESCE (tmpLogin_all.OperDate_Exit, tmpLoginProtocol.OperDate_Exit) END :: TDateTime AS OperDate_Exit
+
             -- Время первого действия
           , COALESCE (tmpTimeMotion_all.OperDate_Start, tmpTimeMotion.OperDate_Start) :: TDateTime AS OperDate_Start
             -- Время послед. действия
@@ -204,7 +207,7 @@ BEGIN
           , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Work
 
             -- Подсвечиваем красным если человек еще работает
-          , CASE WHEN tmpLoginProtocol.isWork = 1 AND COALESCE (tmpLoginProtocol.OperDate_Last, tmpLoginProtocol.OperDate) = CURRENT_DATE
+          , CASE WHEN tmpLoginProtocol.isWork_current = 1
                  THEN zc_Color_Blue()
                  ELSE zc_Color_Black()
             END AS Color_Calc
