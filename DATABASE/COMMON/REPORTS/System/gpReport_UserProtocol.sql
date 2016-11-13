@@ -28,6 +28,10 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus T
              , Count        TFloat       
              , Count_Prog   Tfloat      
              , Count_Work   Tfloat
+
+             , Time_Prog   Time      
+             , Time_Work   Time
+
              , Color_Calc   Integer
               )
 AS
@@ -110,6 +114,7 @@ BEGIN
                               , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
                                    + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
                                     )  AS Minute_calc
+                              , SUM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)  AS Time_calc
                          FROM tmpLogin_all
                               LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
                          GROUP BY tmpLogin_all.UserId
@@ -156,6 +161,7 @@ BEGIN
                                        ELSE EXTRACT (HOUR   FROM (tmp.OperDate_End - tmp.OperDate_Start)) * 60
                                           + EXTRACT (MINUTE FROM (tmp.OperDate_End - tmp.OperDate_Start))
                                   END)  AS Minute_calc
+                           , SUM (tmp.OperDate_End - tmp.OperDate_Start)      AS Time_calc
                       FROM tmpTimeMotion_all AS tmp
                       GROUP BY tmp.UserId
                              , CASE WHEN inIsDay = TRUE THEN tmp.OperDate       ELSE inStartDate END
@@ -205,6 +211,13 @@ BEGIN
           , CAST (tmpLoginProtocol.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Prog
             -- отработал - Кол-во часов (по док.)
           , CAST (tmpTimeMotion.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Work
+
+
+            -- отработал - Кол-во часов (по вх/вых)
+          , tmpLoginProtocol.Time_calc      :: Time AS Time_Prog
+            -- отработал - Кол-во часов (по док.) 
+          , tmpTimeMotion.Time_calc         :: Time AS Time_Work
+
 
             -- Подсвечиваем красным если человек еще работает
           , CASE WHEN tmpLoginProtocol.isWork_current = 1
@@ -261,4 +274,4 @@ $BODY$
  07.11.16         *
 */
 -- тест
--- SELECT * FROM gpReport_UserProtocol (inStartDate:= '07.11.2016', inEndDate:= '07.11.2016', inBranchId:= 0, inUnitId:= 0, inUserId:= 76913, inIsDay:= TRUE, inSession:= '5');
+-- SELECT * FROM gpReport_UserProtocol (inStartDate:= '07.11.2016', inEndDate:= '11.11.2016', inBranchId:= 0, inUnitId:= 0, inUserId:= 0, inIsDay:=False, inSession:= '5');
