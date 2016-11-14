@@ -34,23 +34,11 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
-   DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' OR vbUserId = 3 THEN
-      vbUnitKey := '0';
-    END IF;   
-    vbUnitId := vbUnitKey::Integer;
-
-    -- Ограничение на просмотр товарного справочника
-    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
-
+ 
     RETURN QUERY
       WITH
                tmpMI AS (SELECT MIContainer.ContainerId
@@ -63,7 +51,7 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           AND ((MovementLinkObject_Unit.ObjectId = vbUnitId) OR (vbUnitId = 0)) 
+                                                           
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
@@ -209,7 +197,7 @@ BEGIN
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa / tmpData.Amount ELSE 0 END        :: TFloat AS Price
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
 
-            ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale       / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
+            ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale    / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
 
             ,MovementString_Comment.ValueData  :: TVarChar        AS Comment
 

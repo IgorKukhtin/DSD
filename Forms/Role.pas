@@ -100,6 +100,16 @@ type
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
     colisErased: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
+    actProtocolActionForm: TdsdOpenForm;
+    actProtocolProcessForm: TdsdOpenForm;
+    bbProtocolAction: TdxBarButton;
+    bbProtocolProcess: TdxBarButton;
+    actProtocolProcessAccessForm: TdsdOpenForm;
+    bbProtocolProcessAccess: TdxBarButton;
+    actProtocolUserForm: TdsdOpenForm;
+    bbProtocolUser: TdxBarButton;
   private
     { Private declarations }
   public

@@ -37,19 +37,10 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
-   DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' OR vbUserId = 3 THEN
-      vbUnitKey := '0';
-    END IF;   
-    vbUnitId := vbUnitKey::Integer;
-
-
+  
     RETURN QUERY
       WITH 
           -- Товары из Маркетинговых контрактов
@@ -192,7 +183,6 @@ BEGIN
 
     WHERE Movement.DescId = zc_Movement_Income()
       AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
-      AND ((Object_Unit.Id = vbUnitId) OR (vbUnitId = 0)) 
     ;
 
 END;
