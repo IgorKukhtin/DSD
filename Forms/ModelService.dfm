@@ -280,6 +280,16 @@ object ModelServiceForm: TModelServiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object FromCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1088#1072#1089#1093'.)'
+        DataBinding.FieldName = 'FromCode'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
       object clmsicFromName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076')'
         DataBinding.FieldName = 'FromName'
@@ -294,6 +304,16 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 301
+      end
+      object ToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1090#1086#1074'. '#1087#1088#1080#1093'.)'
+        DataBinding.FieldName = 'ToCode'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = '0.####;-0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
       end
       object clmsicToName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' ('#1087#1088#1080#1093#1086#1076')'

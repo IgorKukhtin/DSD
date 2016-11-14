@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxSplitter;
+  DataModul, cxButtonEdit, cxSplitter, cxCurrencyEdit;
 
 type
   TModelServiceForm = class(TParentForm)
@@ -110,6 +110,8 @@ type
     cxLeftSplitter: TcxSplitter;
     cxSplitterBottom: TcxSplitter;
     DocumentKindChoiceForm: TOpenChoiceForm;
+    ToCode: TcxGridDBColumn;
+    FromCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
