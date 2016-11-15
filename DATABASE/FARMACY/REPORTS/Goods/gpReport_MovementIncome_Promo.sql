@@ -39,15 +39,15 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpGetUserBySession (inSession);
+    --vbUserId:= lpGetUserBySession (inSession);
   
     RETURN QUERY
       WITH 
           -- Товары из Маркетинговых контрактов
-          tmpGoods AS (-- всегда товар сети
-                       SELECT DISTINCT
-                              MI_Juridical.ObjectId AS JuridicalId              -- Поставщик
-                            , MI_Goods.ObjectId     AS GoodsId                  -- здесь товар "сети"
+          tmpGoods AS (SELECT DISTINCT
+                              MI_Juridical.ObjectId AS JuridicalId                -- Поставщик
+                            --, MI_Goods.ObjectId     AS GoodsId                  -- здесь товар "сети"
+                            , ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
                        FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
@@ -67,9 +67,19 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.Id
                                                                      AND MI_Juridical.DescId = zc_MI_Child()
                                                                      AND MI_Juridical.isErased = FALSE
+                               -- !!!
+                              INNER JOIN ObjectLink AS ObjectLink_Child
+                                                    ON ObjectLink_Child.ChildObjectId = MI_Goods.ObjectId 
+                                                   AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                              INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                        AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                                         AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
                          WHERE Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId = zc_Movement_Promo()
-                         )
+                       )
 
 
       SELECT Movement.Id                              AS MovementId
