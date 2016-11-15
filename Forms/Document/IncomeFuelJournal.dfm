@@ -149,6 +149,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = clSummPersonal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummaExp
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -230,6 +235,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = clSummPersonal
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = clSummaExp
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -316,6 +326,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object clItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1082#1086#1084#1091
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100', '#1060#1080#1079'.'#1083'.)'
@@ -675,6 +693,16 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       object clSummReal: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
         DataBinding.FieldName = 'SummReal'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clSummaExp: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090#1099
+        DataBinding.FieldName = 'SummaExp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
