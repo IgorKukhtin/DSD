@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
     IN inSession       TVarChar  -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount Tfloat
              , RetailId Integer, RetailName TVarChar
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
@@ -48,6 +48,7 @@ BEGIN
              Object_GoodsListSale.Id          AS Id
 
            , Object_Goods.Id         AS GoodsId
+           , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
 
            , ObjectFloat_GoodsListSale_Amount.ValueData ::Tfloat AS Amount

@@ -2,8 +2,8 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   Left = 0
   Top = 0
   Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1074#1099#1073#1086#1088#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
-  ClientHeight = 384
+  Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
+  ClientHeight = 386
   ClientWidth = 447
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -40,31 +40,31 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   end
   object cxGroupBox1: TcxGroupBox
     Left = 8
-    Top = 8
-    TabOrder = 11
+    Top = 94
+    TabOrder = 10
     Height = 126
     Width = 425
   end
   object edInfoMoneyDestination: TcxButtonEdit
     Left = 146
-    Top = 96
+    Top = 182
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 275
   end
   object cxLabel11: TcxLabel
     Left = 146
-    Top = 77
-    Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
+    Top = 163
+    Caption = #1080#1083#1080' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
   end
   object edInfoMoney: TcxButtonEdit
     Left = 146
-    Top = 46
+    Top = 132
     Properties.Buttons = <
       item
         Default = True
@@ -77,103 +77,108 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   end
   object cxLabel5: TcxLabel
     Left = 146
-    Top = 24
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    Top = 110
+    Caption = #1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object cxLabel3: TcxLabel
     Left = 18
-    Top = 24
+    Top = 110
     Caption = #1055#1077#1088#1080#1086#1076', '#1084#1077#1089#1103#1094#1077#1074':'
   end
   object cxGroupBox2: TcxGroupBox
     Left = 8
-    Top = 127
+    Top = 213
     TabOrder = 12
     Height = 126
     Width = 425
   end
   object cxLabel1: TcxLabel
     Left = 146
-    Top = 140
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    Top = 226
+    Caption = #1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
   end
   object edInfoMoney2: TcxButtonEdit
     Left = 146
-    Top = 162
+    Top = 248
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 5
     Width = 275
   end
   object cxLabel2: TcxLabel
     Left = 146
-    Top = 196
-    Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
+    Top = 282
+    Caption = #1080#1083#1080' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1089' '#1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
   end
   object edInfoMoneyDestination2: TcxButtonEdit
     Left = 146
-    Top = 215
+    Top = 301
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Text = '(30200) '#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077
     Width = 275
   end
   object cxGroupBox3: TcxGroupBox
     Left = 8
-    Top = 251
+    Top = 8
     TabOrder = 13
     Height = 70
     Width = 425
   end
   object cePeriod1: TcxCurrencyEdit
-    Left = 20
-    Top = 47
+    Left = 18
+    Top = 133
     EditValue = 3
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 14
-    Width = 96
+    Width = 94
   end
   object cxLabel4: TcxLabel
     Left = 18
-    Top = 140
+    Top = 226
     Caption = #1055#1077#1088#1080#1086#1076', '#1084#1077#1089#1103#1094#1077#1074':'
   end
   object cePeriod2: TcxCurrencyEdit
     Left = 18
-    Top = 162
+    Top = 248
     EditValue = 3
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 16
-    Width = 96
+    Width = 94
   end
   object cxLabel6: TcxLabel
-    Left = 20
-    Top = 276
+    Left = 18
+    Top = 27
     Caption = #1055#1077#1088#1080#1086#1076', '#1084#1077#1089#1103#1094#1077#1074':'
   end
   object cePeriod3: TcxCurrencyEdit
-    Left = 146
-    Top = 275
+    Left = 18
+    Top = 48
     EditValue = 1
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 18
-    Width = 96
+    Width = 94
+  end
+  object cxLabel7: TcxLabel
+    Left = 146
+    Top = 49
+    Caption = #1076#1083#1103' '#1086#1089#1090#1072#1083#1100#1085#1099#1093' '#1058#1086#1074#1072#1088#1086#1074
   end
   object ActionList: TActionList
-    Left = 368
-    Top = 256
+    Left = 16
+    Top = 158
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -282,8 +287,8 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 312
+    Left = 96
+    Top = 168
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -322,7 +327,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 40
-    Top = 336
+    Top = 280
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -353,8 +358,8 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 298
-    Top = 34
+    Left = 362
+    Top = 128
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
@@ -384,7 +389,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         MultiSelectSeparator = ','
       end>
     Left = 248
-    Top = 77
+    Top = 163
   end
   object GuidesInfoMoney2: TdsdGuides
     KeyField = 'Id'
@@ -419,8 +424,8 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 274
-    Top = 138
+    Left = 322
+    Top = 232
   end
   object GuidesInfoMoneyDestination2: TdsdGuides
     KeyField = 'Id'
@@ -458,6 +463,6 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         MultiSelectSeparator = ','
       end>
     Left = 272
-    Top = 197
+    Top = 283
   end
 end

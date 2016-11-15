@@ -87,15 +87,15 @@ BEGIN
             LEFT JOIN Object AS Object_User_Update ON Object_User_Update.Id = LoadPriceList.UserId_Update  
             
             LEFT JOIN
-                (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId     AS JuridicalId
-                      , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId AS MainJuridicalId
-                      , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
-                      , COALESCE(ObjectBoolean_isBonusVirtual.ValueData, FALSE)  AS isBonusVirtual
-                      , COALESCE(ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
-                      , COALESCE(ObjectBoolean_Site.ValueData, FALSE)            AS isSite
-                      , ObjectFloat_Bonus.ValueData AS Bonus 
-                      , COALESCE(ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
-                      , ObjectLink_JuridicalSettings_Retail.ObjectId AS JuridicalSettingsId
+                (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId      AS JuridicalId
+                      , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId  AS MainJuridicalId
+                      , COALESCE (ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
+                      , COALESCE (ObjectBoolean_isBonusVirtual.ValueData, FALSE)  AS isBonusVirtual
+                      , COALESCE (ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
+                      , COALESCE (ObjectBoolean_Site.ValueData, FALSE)            AS isSite
+                      , ObjectFloat_Bonus.ValueData                               AS Bonus 
+                      , COALESCE (ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
+                      , ObjectLink_JuridicalSettings_Retail.ObjectId              AS JuridicalSettingsId
 
                       , ObjectDate_StartDate.ValueData AS StartDate
                       , ObjectDate_EndDate.ValueData   AS EndDate
