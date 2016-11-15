@@ -1322,6 +1322,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsListSale_Juridical() RETURNS Integ
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsListSale_Juridical', 'ﬁ.ÎËˆÓ', zc_Object_GoodsListSale(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_Juridical');
 --
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SheetWorkTime_DayKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SheetWorkTime_DayKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SheetWorkTime_DayKind', '“ËÔ ‰Ìˇ', zc_Object_SheetWorkTime(), zc_Object_DayKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SheetWorkTime_DayKind');
 
 
 --!!! ¿œ“≈ ¿
