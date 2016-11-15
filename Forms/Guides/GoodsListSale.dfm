@@ -7,7 +7,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1015
-  ExplicitHeight = 426
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -47,7 +47,6 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -62,43 +61,28 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Width = 123
           end
           object clAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079'. ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 110
           end
-          object clContractCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractCode'
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 100
           end
-          object clInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'InvNumber'
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
-          end
-          object clContractTagName: TcxGridDBColumn
-            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractTagName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
+            Width = 60
           end
           object clJuridicalGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083'.'
@@ -133,22 +117,6 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Options.Editing = False
             Width = 132
           end
-          object clOKPO: TcxGridDBColumn
-            Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object clPartnerName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
           object clRetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
@@ -172,6 +140,46 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Options.Editing = False
             Width = 50
           end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object clContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object clJuridicalBasisName: TcxGridDBColumn
+            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalBasisName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object clContractKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractKindName'
@@ -187,26 +195,10 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Options.Editing = False
             Width = 86
           end
-          object clJuridicalBasisName: TcxGridDBColumn
-            Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalBasisName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object clUpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 48
-          end
           object clIsStandart: TcxGridDBColumn
             Caption = #1058#1080#1087#1086#1074#1086#1081
             DataBinding.FieldName = 'isStandart'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -215,6 +207,7 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
           object clIsPersonal: TcxGridDBColumn
             Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
             DataBinding.FieldName = 'isPersonal'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -237,6 +230,14 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
+          end
+          object clUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -322,12 +323,20 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
     Left = 143
     Top = 255
     inherited actInsert: TInsertUpdateChoiceAction
+      ShortCut = 0
       FormName = 'TGoodsListSaleEditForm'
       FormNameParam.Value = 'TGoodsListSaleEditForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      ShortCut = 0
       FormName = 'TGoodsListSaleEditForm'
       FormNameParam.Value = 'TGoodsListSaleEditForm'
+    end
+    inherited dsdSetUnErased: TdsdUpdateErased
+      ShortCut = 0
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      ShortCut = 0
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -466,7 +475,8 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
           Action = actRefresh
         end>
       Caption = 'mactOpenReportForm'
-      ImageIndex = 27
+      Hint = #1055#1077#1088#1077#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093
+      ImageIndex = 38
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -597,14 +607,6 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbExecuteDialog'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -626,24 +628,15 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True

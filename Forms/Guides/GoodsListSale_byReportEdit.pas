@@ -56,6 +56,7 @@ type
     cePeriod2: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
     cePeriod3: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

@@ -10,13 +10,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_UserRole(
 )
   RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UserRole());
+   vbUserId:= lpGetUserBySession (inSession);
 
-   UserId := inSession;
+   -- проверка
+   IF COALESCE (inRoleId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Role>.';
+   END IF;
+   -- проверка
+   IF COALESCE (inUserId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <User>.';
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_UserRole(), 0, '');
@@ -25,23 +34,20 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_User(), ioId, inUserId);
    -- сохранили связь с <Ролью>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_Role(), ioId, inRoleId);
-
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
-
 */
 
 -- тест
