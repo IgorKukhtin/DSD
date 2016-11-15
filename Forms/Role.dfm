@@ -180,6 +180,7 @@ object RoleForm: TRoleForm
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -2
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -444,6 +445,46 @@ object RoleForm: TRoleForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolAction'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolProcess'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolUser'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolProcessAccess'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -495,6 +536,26 @@ object RoleForm: TRoleForm
       Action = actInsertMask
       Category = 0
     end
+    object bbProtocolOpen: TdxBarButton
+      Action = actProtocolOpenForm
+      Category = 0
+    end
+    object bbProtocolAction: TdxBarButton
+      Action = actProtocolActionForm
+      Category = 0
+    end
+    object bbProtocolProcess: TdxBarButton
+      Action = actProtocolProcessForm
+      Category = 0
+    end
+    object bbProtocolProcessAccess: TdxBarButton
+      Action = actProtocolProcessAccessForm
+      Category = 0
+    end
+    object bbProtocolUser: TdxBarButton
+      Action = actProtocolUserForm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -536,10 +597,12 @@ object RoleForm: TRoleForm
       FormName = 'TRoleEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -556,6 +619,7 @@ object RoleForm: TRoleForm
       FormName = 'TRoleMaskEditForm'
       FormNameParam.Value = 'TRoleMaskEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -563,6 +627,7 @@ object RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -579,6 +644,7 @@ object RoleForm: TRoleForm
       FormName = 'TRoleEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -586,6 +652,7 @@ object RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -643,12 +710,14 @@ object RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -656,6 +725,7 @@ object RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -669,12 +739,14 @@ object RoleForm: TRoleForm
       FormName = 'TUserForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = UserCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -682,6 +754,7 @@ object RoleForm: TRoleForm
           Component = UserCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -689,6 +762,7 @@ object RoleForm: TRoleForm
           Component = UserCDS
           ComponentItem = 'BranchName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -696,6 +770,7 @@ object RoleForm: TRoleForm
           Component = UserCDS
           ComponentItem = 'UnitName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PositionName'
@@ -703,6 +778,7 @@ object RoleForm: TRoleForm
           Component = UserCDS
           ComponentItem = 'PositionName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -725,12 +801,14 @@ object RoleForm: TRoleForm
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ProcessAccessCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -738,6 +816,7 @@ object RoleForm: TRoleForm
           Component = ProcessAccessCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -749,12 +828,14 @@ object RoleForm: TRoleForm
       FormName = 'TProcessForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ProcessCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -762,6 +843,7 @@ object RoleForm: TRoleForm
           Component = ProcessCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -773,12 +855,14 @@ object RoleForm: TRoleForm
       FormName = 'TActionForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ActionCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -786,6 +870,7 @@ object RoleForm: TRoleForm
           Component = ActionCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -824,6 +909,156 @@ object RoleForm: TRoleForm
         end>
       Caption = 'ActionUpdateDataSet'
       DataSource = ActionDS
+    end
+    object actProtocolUserForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = UserCDS
+          ComponentItem = 'UserRoleId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = UserCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolProcessAccessForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089' '#1076#1086#1089#1090#1091#1087
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089' '#1076#1086#1089#1090#1091#1087
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProcessAccessCDS
+          ComponentItem = 'RoleProcessId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProcessAccessCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolProcessForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1055#1088#1086#1094#1077#1089#1089#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ProcessCDS
+          ComponentItem = 'RoleProcessId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ProcessCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolActionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1044#1077#1081#1089#1090#1074#1080#1103
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1044#1077#1081#1089#1090#1074#1080#1103
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ActionCDS
+          ComponentItem = 'RoleActionId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ActionCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -877,10 +1112,11 @@ object RoleForm: TRoleForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 120
+    Left = 112
+    Top = 128
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -975,13 +1211,13 @@ object RoleForm: TRoleForm
     MasterSource = DataSource
     PacketRecords = 0
     Params = <>
-    Left = 416
-    Top = 280
+    Left = 432
+    Top = 304
   end
   object UserDS: TDataSource
     DataSet = UserCDS
-    Left = 480
-    Top = 272
+    Left = 472
+    Top = 304
   end
   object spRoleUser: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_RoleUser'
@@ -992,8 +1228,8 @@ object RoleForm: TRoleForm
       end>
     Params = <>
     PackSize = 1
-    Left = 464
-    Top = 320
+    Left = 488
+    Top = 336
   end
   object UserAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1020,6 +1256,7 @@ object RoleForm: TRoleForm
         Component = UserCDS
         ComponentItem = 'UserRoleId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUserId'
@@ -1027,6 +1264,7 @@ object RoleForm: TRoleForm
         Component = UserCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RoleId'
@@ -1034,6 +1272,7 @@ object RoleForm: TRoleForm
         Component = UserCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 520
@@ -1050,6 +1289,7 @@ object RoleForm: TRoleForm
         Component = ActionCDS
         ComponentItem = 'RoleActionId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleId'
@@ -1057,6 +1297,7 @@ object RoleForm: TRoleForm
         Component = ActionCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActionId'
@@ -1064,9 +1305,10 @@ object RoleForm: TRoleForm
         Component = ActionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 520
+    Left = 544
     Top = 88
   end
   object spInsertUpdateRoleProcess: TdsdStoredProc
@@ -1080,6 +1322,7 @@ object RoleForm: TRoleForm
         Component = ProcessCDS
         ComponentItem = 'RoleProcessId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoleId'
@@ -1087,6 +1330,7 @@ object RoleForm: TRoleForm
         Component = ProcessCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProcessId'
@@ -1094,6 +1338,7 @@ object RoleForm: TRoleForm
         Component = ProcessCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 544
@@ -1151,6 +1396,7 @@ object RoleForm: TRoleForm
         Component = ProcessAccessCDS
         ComponentItem = 'RoleProcessId'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inroleid'
@@ -1158,6 +1404,7 @@ object RoleForm: TRoleForm
         Component = ProcessAccessCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inprocessid'
@@ -1165,6 +1412,7 @@ object RoleForm: TRoleForm
         Component = ProcessAccessCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 712

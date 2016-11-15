@@ -80,6 +80,10 @@ type
     User_: TcxGridDBColumn;
     spInsertUpdateUser: TdsdStoredProc;
     UpdateDataSetUser: TdsdUpdateDataSet;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
+    actProtocolRoleForm: TdsdOpenForm;
+    bbProtocolRole: TdxBarButton;
   private
     { Private declarations }
   public

@@ -35,6 +35,9 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
+    colisBonusVirtual: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpen: TdxBarButton;
   private
     { Private declarations }
   public

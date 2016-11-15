@@ -119,6 +119,14 @@
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object colisBonusVirtual: TcxGridDBColumn
+            Caption = #1042#1080#1088#1090'. '#1073#1086#1085#1091#1089
+            DataBinding.FieldName = 'isBonusVirtual'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1088#1090#1091#1072#1083#1100#1085#1099#1081' '#1073#1086#1085#1091#1089
+            Width = 51
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -228,6 +236,36 @@
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -294,6 +332,18 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -311,6 +361,10 @@
     end
     object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
+      Category = 0
+    end
+    object bbProtocolOpen: TdxBarButton
+      Action = actProtocolOpenForm
       Category = 0
     end
   end
@@ -357,6 +411,15 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBonusVirtual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isBonusVirtual'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

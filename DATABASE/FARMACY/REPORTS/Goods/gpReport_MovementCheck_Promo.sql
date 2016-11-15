@@ -34,25 +34,37 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbUnitKey TVarChar;
-   DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
     vbUserId:= lpGetUserBySession (inSession);
-    vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
-    IF vbUnitKey = '' OR vbUserId = 3 THEN
-      vbUnitKey := '0';
-    END IF;   
-    vbUnitId := vbUnitKey::Integer;
-
-    -- Ограничение на просмотр товарного справочника
-    vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
-
-
+ 
     RETURN QUERY
       WITH
+        tmpGoods AS (SELECT MI_Goods.ObjectId                AS GoodsId_MI     -- здесь товар "сети"
+                          , ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
+                       FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId
+
+                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                                 AND MI_Goods.isErased = FALSE
+                               -- !!!
+                              INNER JOIN ObjectLink AS ObjectLink_Child
+                                                    ON ObjectLink_Child.ChildObjectId = MI_Goods.ObjectId 
+                                                   AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                              INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                        AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                                         AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId = zc_Movement_Promo()
+                        ) ,
                tmpMI AS (SELECT MIContainer.ContainerId
                               , Movement_Check.Id                   AS MovementId_Check
                               , MovementLinkObject_Unit.ObjectId    AS UnitId
@@ -63,11 +75,14 @@ BEGIN
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           AND ((MovementLinkObject_Unit.ObjectId = vbUnitId) OR (vbUnitId = 0)) 
+                                                           
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
                                                      AND MI_Check.isErased = FALSE
+                              -- только товары марк.контр.
+                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
+
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                           ON MIFloat_Price.MovementItemId = MI_Check.Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -123,12 +138,10 @@ BEGIN
                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                                                     
                               INNER JOIN MovementDate AS MovementDate_StartPromo
-                                                      ON /*MovementDate_StartPromo.MovementId = Movement.Id
-                                                     AND */MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                      ON MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
                                                      AND MovementDate_StartPromo.ValueData <= Movement_Income.OperDate
                               INNER JOIN MovementDate AS MovementDate_EndPromo
-                                                      ON /*MovementDate_EndPromo.MovementId = Movement.Id
-                                                     AND */MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                      ON MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
                                                      AND MovementDate_EndPromo.ValueData >= Movement_Income.OperDate
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = MovementDate_StartPromo.MovementId
@@ -140,7 +153,11 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement_Promo.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
-                                                                 AND MI_Goods.ObjectId = tmpData_1.GoodsId
+                                                                 --AND MI_Goods.ObjectId = tmpData_1.GoodsId
+                              -- !!!
+                              INNER JOIN tmpGoods ON tmpGoods.GoodsId_MI = MI_Goods.ObjectId
+                                                 AND tmpGoods.GoodsId = tmpData_1.GoodsId
+
                               INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement_Promo.Id
                                                                      AND MI_Juridical.DescId = zc_MI_Child()
                                                                      AND MI_Juridical.isErased = FALSE
@@ -209,7 +226,7 @@ BEGIN
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa / tmpData.Amount ELSE 0 END        :: TFloat AS Price
             ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
 
-            ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale       / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
+            ,CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale    / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
 
             ,MovementString_Comment.ValueData  :: TVarChar        AS Comment
 
@@ -263,3 +280,5 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
+--SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.05.2016', inEndDate:= '08.05.2016', inSession:= '2')
+--select * from gpReport_MovementCheck_Promo(inMakerId := 2336600 , inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');

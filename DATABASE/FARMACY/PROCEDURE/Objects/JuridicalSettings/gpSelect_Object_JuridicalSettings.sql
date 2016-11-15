@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalSettings(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, JuridicalId Integer, JuridicalName TVarChar, 
-               isPriceClose Boolean, isSite Boolean,
+               isBonusVirtual Boolean, isPriceClose Boolean, isSite Boolean,  
                Bonus TFloat, PriceLimit TFloat, ConditionalPercent TFloat,
                ContractId Integer, ContractName TVarChar, 
                MainJuridicalId Integer, MainJuridicalName TVarChar,
@@ -46,8 +46,9 @@ BEGIN
            , Object_JuridicalSettings.ValueData AS Name 
            , Object_Juridical.Id
            , Object_Juridical.ValueData
-           , COALESCE(JuridicalSettings.isPriceClose, TRUE)  AS isPriceClose
-           , COALESCE(JuridicalSettings.isSite, FALSE)       AS isSite 
+           , COALESCE(JuridicalSettings.isBonusVirtual, FALSE)  AS isBonusVirtual
+           , COALESCE(JuridicalSettings.isPriceClose, TRUE)     AS isPriceClose
+           , COALESCE(JuridicalSettings.isSite, FALSE)          AS isSite 
            , JuridicalSettings.Bonus
            , JuridicalSettings.PriceLimit :: TFloat AS PriceLimit
            , COALESCE(ObjectFloat_ConditionalPercent.ValueData, 0) :: TFloat AS ConditionalPercent
@@ -89,8 +90,9 @@ BEGIN
                 (SELECT ObjectLink_JuridicalSettings_Juridical.ChildObjectId     AS JuridicalId
                       , ObjectLink_JuridicalSettings_MainJuridical.ChildObjectId AS MainJuridicalId
                       , COALESCE(ObjectLink_JuridicalSettings_Contract.ChildObjectId, 0) AS ContractId 
-                      , COALESCE(ObjectBoolean_isPriceClose.ValueData, FALSE) AS isPriceClose 
-                      , COALESCE(ObjectBoolean_Site.ValueData, FALSE)         AS isSite
+                      , COALESCE(ObjectBoolean_isBonusVirtual.ValueData, FALSE)  AS isBonusVirtual
+                      , COALESCE(ObjectBoolean_isPriceClose.ValueData, FALSE)    AS isPriceClose 
+                      , COALESCE(ObjectBoolean_Site.ValueData, FALSE)            AS isSite
                       , ObjectFloat_Bonus.ValueData AS Bonus 
                       , COALESCE(ObjectFloat_PriceLimit.ValueData,0) :: TFloat   AS PriceLimit  
                       , ObjectLink_JuridicalSettings_Retail.ObjectId AS JuridicalSettingsId
@@ -113,8 +115,8 @@ BEGIN
                                      AND ObjectLink_JuridicalSettings_Contract.ObjectId = ObjectLink_JuridicalSettings_Juridical.ObjectId 
 
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceClose
-                                  ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
-                                 AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
+                                         ON ObjectBoolean_isPriceClose.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_isPriceClose.DescId = zc_ObjectBoolean_JuridicalSettings_isPriceClose()
 
                  LEFT JOIN ObjectFloat AS ObjectFloat_Bonus 
                                        ON ObjectFloat_Bonus.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
@@ -124,6 +126,11 @@ BEGIN
                                        ON ObjectFloat_PriceLimit.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                       AND ObjectFloat_PriceLimit.DescId = zc_ObjectFloat_JuridicalSettings_PriceLimit()
           
+
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isBonusVirtual
+                                         ON ObjectBoolean_isBonusVirtual.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
+                                        AND ObjectBoolean_isBonusVirtual.DescId = zc_ObjectBoolean_JuridicalSettings_BonusVirtual()
+
                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Site 	
                                          ON ObjectBoolean_Site.ObjectId = ObjectLink_JuridicalSettings_Retail.ObjectId
                                         AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_JuridicalSettings_Site()

@@ -29,8 +29,8 @@ RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus T
              , Count_Prog   Tfloat      
              , Count_Work   Tfloat
 
-             , Time_Prog   Time      
-             , Time_Work   Time
+             , Time_Prog   TVarChar      
+             , Time_Work   TVarChar
 
              , Color_Calc   Integer
               )
@@ -214,11 +214,15 @@ BEGIN
 
 
             -- отработал - Кол-во часов (по вх/вых)
-          , tmpLoginProtocol.Time_calc      :: Time AS Time_Prog
+          --, tmpLoginProtocol.Time_calc      :: Time AS Time_Prog
+          , ((EXTRACT (DAY FROM (tmpLoginProtocol.Time_calc)) * 24 + EXTRACT (HOUR FROM (tmpLoginProtocol.Time_calc)))::tvarchar  ||':' ||
+             lpad (EXTRACT (MINUTE FROM (tmpLoginProtocol.Time_calc))::tvarchar ,2, '0'))  ::TVarChar  AS Time_Prog
             -- отработал - Кол-во часов (по док.) 
-          , tmpTimeMotion.Time_calc         :: Time AS Time_Work
+          --, tmpTimeMotion.Time_calc         :: Time AS Time_Work
+          , ((EXTRACT (DAY FROM (tmpTimeMotion.Time_calc)) * 24 + EXTRACT (HOUR FROM (tmpTimeMotion.Time_calc)))::tvarchar  ||':' ||
+             lpad (EXTRACT (MINUTE FROM (tmpTimeMotion.Time_calc))::tvarchar ,2, '0'))  ::TVarChar  AS Time_Work
 
-
+         
             -- Подсвечиваем красным если человек еще работает
           , CASE WHEN tmpLoginProtocol.isWork_current = 1
                  THEN zc_Color_Blue()
