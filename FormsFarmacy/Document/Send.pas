@@ -72,6 +72,7 @@ type
     edDay: TcxCurrencyEdit;
     ceChecked: TcxCheckBox;
     ChoiceReasonDifferences: TOpenChoiceForm;
+    edisComplete: TcxCheckBox;
   private
     { Private declarations }
   public

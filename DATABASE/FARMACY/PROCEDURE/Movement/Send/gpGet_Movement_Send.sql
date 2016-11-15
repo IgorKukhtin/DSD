@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean
+             , isComplete Boolean
               )
 AS
 $BODY$
@@ -42,6 +43,7 @@ BEGIN
              , CAST (0 AS TFloat)                               AS MCSPeriod
              , CAST (0 AS TFloat)                               AS MCSDay
              , FALSE                                            AS Checked
+             , FALSE                                            AS isComplete
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -58,11 +60,12 @@ BEGIN
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
            , Object_To.ValueData                                AS ToName
-           , COALESCE(MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
-           , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
-           , COALESCE(MovementFloat_MCSPeriod.ValueData,0)     ::TFloat   AS MCSPeriod
-           , COALESCE(MovementFloat_MCSDay.ValueData,0)        ::TFloat   AS MCSDay
-           , COALESCE(MovementBoolean_Checked.ValueData, false) ::Boolean AS Checked
+           , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
+           , COALESCE (MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
+           , COALESCE (MovementFloat_MCSPeriod.ValueData,0)     ::TFloat   AS MCSPeriod
+           , COALESCE (MovementFloat_MCSDay.ValueData,0)        ::TFloat   AS MCSDay
+           , COALESCE (MovementBoolean_Checked.ValueData, false) ::Boolean AS Checked
+           , COALESCE (MovementBoolean_Complete.ValueData, false)::Boolean AS isComplete
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -90,6 +93,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+           LEFT JOIN MovementBoolean AS MovementBoolean_Complete
+                                     ON MovementBoolean_Complete.MovementId = Movement.Id
+                                    AND MovementBoolean_Complete.DescId = zc_MovementBoolean_Complete()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
@@ -112,6 +118,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 15.11.16         * add isComplete
  15.06.16         * CURRENT_DATE::TDateTime 
  14.06.16         *
  21.03.16         *

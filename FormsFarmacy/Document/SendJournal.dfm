@@ -229,6 +229,14 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 95
           end
+          object clisComplete: TcxGridDBColumn
+            Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084'.'
+            DataBinding.FieldName = 'isComplete'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
+            Width = 59
+          end
           object colMCSPeriod: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
             DataBinding.FieldName = 'MCSPeriod'
