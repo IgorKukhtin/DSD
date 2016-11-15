@@ -842,6 +842,15 @@ end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
 begin
+  //справочники
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDayKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDayKindForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTime_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTime_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeEditForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
