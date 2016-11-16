@@ -84,8 +84,8 @@ BEGIN
          , vbInfoMoneyName     AS InfoMoneyName
          , vbInfoMoneyName_all AS InfoMoneyName_all
  
-         , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
-         , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
+         , COALESCE (Object_SheetWorkTime.Id, COALESCE (Object_Position_SheetWorkTime.Id, COALESCE (Object_Unit_SheetWorkTime.Id, 0)) )  AS SheetWorkTimeId 
+         , COALESCE (Object_SheetWorkTime.ValueData, COALESCE ('* '||Object_Position_SheetWorkTime.ValueData, COALESCE ('** '||Object_Unit_SheetWorkTime.ValueData, '')) ) ::TVarChar     AS SheetWorkTimeName
 
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut_user AS DateOut
@@ -120,6 +120,16 @@ BEGIN
                                ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
           LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Position_SheetWorkTime
+                               ON ObjectLink_Position_SheetWorkTime.ObjectId = Object_Personal_View.PositionId
+                              AND ObjectLink_Position_SheetWorkTime.DescId = zc_ObjectLink_Position_SheetWorkTime()
+          LEFT JOIN Object AS Object_Position_SheetWorkTime ON Object_Position_SheetWorkTime.Id = ObjectLink_Position_SheetWorkTime.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
+                               ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
+          LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
      WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
          OR vbAccessKeyAll = TRUE
