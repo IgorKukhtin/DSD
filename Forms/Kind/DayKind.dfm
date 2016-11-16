@@ -1,15 +1,27 @@
 inherited DayKindForm: TDayKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1076#1085#1077#1081'>'
+  ClientHeight = 254
+  ClientWidth = 393
   AddOnFormData.isAlwaysRefresh = True
-  ExplicitWidth = 320
-  ExplicitHeight = 240
+  ExplicitWidth = 409
+  ExplicitHeight = 292
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 393
+    Height = 228
+    ClientRectBottom = 228
+    ClientRectRight = 393
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
+        Width = 393
+        Height = 228
+        ExplicitLeft = 296
+        ExplicitTop = 96
+        ExplicitWidth = 393
+        ExplicitHeight = 325
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -46,9 +58,18 @@ inherited DayKindForm: TDayKindForm
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 160
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Top = 160
+  end
+  inherited ActionList: TActionList
+    Top = 159
+  end
   inherited MasterDS: TDataSource
-    Left = 208
-    Top = 120
+    Left = 224
+    Top = 72
   end
   inherited MasterCDS: TClientDataSet
     Left = 40
@@ -61,7 +82,7 @@ inherited DayKindForm: TDayKindForm
   end
   inherited BarManager: TdxBarManager
     Left = 288
-    Top = 120
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -101,6 +122,9 @@ inherited DayKindForm: TDayKindForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 256
-    Top = 256
+    Top = 152
+  end
+  inherited PopupMenu: TPopupMenu
+    Top = 160
   end
 end

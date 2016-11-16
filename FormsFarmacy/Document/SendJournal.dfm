@@ -221,20 +221,21 @@ inherited SendJournalForm: TSendJournalForm
             Width = 32
           end
           object colChecked: TcxGridDBColumn
-            Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084'.- '#1087#1086#1083#1091#1095'.'
             DataBinding.FieldName = 'Checked'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
             Options.Editing = False
-            Width = 95
+            Width = 72
           end
           object clisComplete: TcxGridDBColumn
-            Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084'.'
+            Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084'.- '#1086#1090#1087#1088#1072#1074'.'
             DataBinding.FieldName = 'isComplete'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084
+            HeaderHint = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
             Width = 59
           end
           object colMCSPeriod: TcxGridDBColumn
@@ -688,6 +689,10 @@ inherited SendJournalForm: TSendJournalForm
       end>
     Left = 400
     Top = 200
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    Left = 456
+    Top = 112
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

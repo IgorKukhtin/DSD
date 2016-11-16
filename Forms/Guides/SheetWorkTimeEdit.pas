@@ -20,12 +20,11 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox,
+  cxSpinEdit, cxTimeEdit;
 
 type
   TSheetWorkTimeEditForm = class(TParentForm)
-    edName: TcxTextEdit;
-    cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
@@ -40,9 +39,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cxLabel3: TcxLabel;
-    ceDayOffWeek: TcxTextEdit;
     cxLabel5: TcxLabel;
-    edStart: TcxDateEdit;
     cxLabel7: TcxLabel;
     ceDayOffPeriod: TcxTextEdit;
     cxLabel8: TcxLabel;
@@ -53,6 +50,14 @@ type
     cxLabel2: TcxLabel;
     edDayOffPeriod: TcxDateEdit;
     cxLabel4: TcxLabel;
+    cbValue1: TcxCheckBox;
+    cbValue2: TcxCheckBox;
+    cbValue3: TcxCheckBox;
+    cbValue4: TcxCheckBox;
+    cbValue5: TcxCheckBox;
+    cbValue6: TcxCheckBox;
+    cbValue7: TcxCheckBox;
+    edStart: TcxDateEdit;
     edWork: TcxDateEdit;
   private
     { Private declarations }

@@ -8,9 +8,10 @@ CREATE OR REPLACE FUNCTION gpGet_Object_SheetWorkTime(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DayKindId Integer, DayKindCode Integer, DayKindName TVarChar
-             , StartTime Time, WorkTime Time, DayOffPeriodDate TDateTime
-             , Comment TVarChar, DayOffPeriod TVarChar, DayOffWeek TVarChar
-             , isErased boolean) AS
+             , StartTime TDateTime, WorkTime TDateTime, DayOffPeriodDate TDateTime
+             , Comment TVarChar, DayOffPeriod TVarChar
+             , Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean, Value5 Boolean, Value6 Boolean, Value7 Boolean
+             , isErased Boolean) AS
 $BODY$
 BEGIN
    
@@ -30,18 +31,26 @@ BEGIN
            , CAST ('' as TVarChar)  AS DayKindName
            
           
-           , CURRENT_DATE :: Time      AS StartTime
-           , CURRENT_DATE :: Time      AS WorkTime
+           , zc_DateStart() :: TDateTime      AS StartTime
+           , zc_DateStart() :: TDateTime      AS WorkTime
            , CURRENT_DATE :: TDateTime AS DayOffPeriodDate
            
            , CAST ('' as TVarChar)  AS Comment
            , CAST ('' as TVarChar)  AS DayOffPeriod
-           , CAST ('' as TVarChar)  AS DayOffWeek
+
+           , FALSE                  AS Value1
+           , FALSE                  AS Value2
+           , FALSE                  AS Value3
+           , FALSE                  AS Value4
+           , FALSE                  AS Value5
+           , FALSE                  AS Value6
+           , FALSE                  AS Value7
            
            , FALSE                  AS isErased
            ;           
    ELSE
      RETURN QUERY 
+       
        SELECT 
            Object_SheetWorkTime.Id              AS Id 
          , Object_SheetWorkTime.ObjectCode      AS Code
@@ -51,13 +60,20 @@ BEGIN
          , Object_DayKind.ObjectCode            AS DayKindCode
          , Object_DayKind.ValueData             AS DayKindName
        
-         , ObjectDate_Start.ValueData        :: Time      AS StartTime
-         , ObjectDate_Work.ValueData         :: Time      AS WorkTime
+         , ObjectDate_Start.ValueData        :: TDateTime AS StartTime
+         , ObjectDate_Work.ValueData         :: TDateTime AS WorkTime
          , ObjectDate_DayOffPeriod.ValueData :: TDateTime AS DayOffPeriodDate
          
          , ObjectString_Comment.ValueData       AS Comment
-         , ObjectString_DayOffPeriod.ValueData  AS DayOffPeriod                                                                                                       
-         , ObjectString_DayOffWeek.ValueData    AS DayOffWeek
+         , ObjectString_DayOffPeriod.ValueData  AS DayOffPeriod    
+                                                                                                   
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 1) ::TFloat = 1 THEN TRUE ELSE FALSE END AS Value1
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 2) ::TFloat = 2 THEN TRUE ELSE FALSE END AS Value2
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 3) ::TFloat = 3 THEN TRUE ELSE FALSE END AS Value3
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 4) ::TFloat = 4 THEN TRUE ELSE FALSE END AS Value4
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 5) ::TFloat = 5 THEN TRUE ELSE FALSE END AS Value5
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 6) ::TFloat = 6 THEN TRUE ELSE FALSE END AS Value6
+         , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 7) ::TFloat = 7 THEN TRUE ELSE FALSE END AS Value7
 
          , Object_SheetWorkTime.isErased        AS isErased
          

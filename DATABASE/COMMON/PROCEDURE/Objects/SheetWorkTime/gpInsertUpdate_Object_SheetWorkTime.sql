@@ -1,29 +1,39 @@
 -- Function: gpInsertUpdate_Object_SheetWorkTime()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SheetWorkTime(Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SheetWorkTime(Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SheetWorkTime(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
     IN inCode                Integer   ,    -- Код объекта 
-    --IN inName                TVarChar  ,    -- Название объекта --сформировать автоматом по св-вам
     IN inStartTime           TDateTime ,    -- Время начала
     IN inWorkTime            TDateTime ,    -- Количество рабочих часов
     IN inDayOffPeriodDate    TDateTime ,    -- Начиная с какого числа расчет периодичности
-    IN inComment             TVarChar  ,    -- Примечание
     IN inDayOffPeriod        TVarChar  ,    -- Периодичность в днях
-    IN inDayOffWeek          TVarChar  ,    -- Дни недели
+    IN inComment             TVarChar  ,    -- Примечание
+    IN inValue1              Boolean   ,    -- Понедельник
+    IN inValue2              Boolean   ,    -- Вторник
+    IN inValue3              Boolean   ,    -- Среда
+    IN inValue4              Boolean   ,    -- Четверг
+    IN inValue5              Boolean   ,    -- Пятница
+    IN inValue6              Boolean   ,    -- Суббота
+    IN inValue7              Boolean   ,    -- Воскресенье
     IN inDayKindId           Integer   ,    -- ссылка на Тип дня
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer; 
    DECLARE vbName TVarChar; 
+   DECLARE vbDayOffWeek TVarChar; 
+   DECLARE vbStartTime TDateTime; 
+   DECLARE vbWorkTime TDateTime; 
 BEGIN
    
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_SheetWorkTime());
+    --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_SheetWorkTime());
+    ---vbUserId := inSession;
 
     -- Если код не установлен, определяем его как последний+1
     vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_SheetWorkTime()); 
@@ -31,25 +41,82 @@ BEGIN
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_SheetWorkTime(), vbCode_calc);
     
-   vbName:= '';
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
+   vbStartTime:= ( '' ||CURRENT_DATE::Date || ' '||inStartTime ::Time):: TDateTime ;
+   vbWorkTime := ( '' ||CURRENT_DATE::Date || ' '||inWorkTime  ::Time):: TDateTime ;
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffPeriod(), ioId, inDayOffPeriod);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffWeek(), ioId, inDayOffWeek);
+
+   IF COALESCE (inDayKindId,0) =0 THEN
+
+	RAISE EXCEPTION 'Не выбран реквизит - Тип дня.';
+
+   ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Calendar() THEN
+
+         vbName:= 'По будням, с ' ||
+                  lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
+         ' до ' ||lpad (EXTRACT (HOUR FROM inWorkTime) ::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ; -- inWorkTime ::Time;
+         -- сохранили <Объект>
+         ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
+
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffPeriod(), ioId, '');
+         -- сохранили свойство <>
+         vbDayOffWeek:= ('0,' || '0,' || '0,' || '0,' || '0,' ||'0,' || '0' ) ::TVarChar;
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffWeek(), ioId, vbDayOffWeek);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_DayOffPeriod(), ioId, zc_DateStart());
+
+   ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Week() THEN
+
+         vbName:= 'Рабочие дни ' || 
+           (CASE WHEN inValue1= FALSE THEN 'Пн., ' ELSE '' END ||
+            CASE WHEN inValue2= FALSE THEN 'Вт., ' ELSE '' END ||
+            CASE WHEN inValue3= FALSE THEN 'Ср., ' ELSE '' END ||
+            CASE WHEN inValue4= FALSE THEN 'Чт., ' ELSE '' END ||
+            CASE WHEN inValue5= FALSE THEN 'Пт., ' ELSE '' END ||
+            CASE WHEN inValue6= FALSE THEN 'Сб., ' ELSE '' END ||
+            CASE WHEN inValue7= FALSE THEN 'Вс., ' ELSE '' END)||
+            ' с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
+            ' до '|| lpad (EXTRACT (HOUR FROM inWorkTime)::tvarchar ,2, '0')  ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ;
+         -- сохранили <Объект>
+         ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
+
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffPeriod(), ioId, '');
+         -- сохранили свойство <>
+         vbDayOffWeek:= (CASE WHEN inValue1 = TRUE THEN '1, ' ELSE '0,' END ||
+                         CASE WHEN inValue2 = TRUE THEN '2, ' ELSE '0,' END ||
+                         CASE WHEN inValue3 = TRUE THEN '3, ' ELSE '0,' END ||
+                         CASE WHEN inValue4 = TRUE THEN '4, ' ELSE '0,' END ||
+                         CASE WHEN inValue5 = TRUE THEN '5, ' ELSE '0,' END ||
+                         CASE WHEN inValue6 = TRUE THEN '6, ' ELSE '0,' END ||
+                         CASE WHEN inValue7 = TRUE THEN '7 '  ELSE '0'  END  ) ::TVarChar;
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffWeek(), ioId, vbDayOffWeek);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_DayOffPeriod(), ioId, zc_DateStart());
+
+   ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Period() THEN
+
+         vbName:= 'Начиная с ' || inDayOffPeriodDate ::Date ||' периодичность '|| inDayOffPeriod ||
+         ' дня , с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
+               ' до '|| lpad (EXTRACT (HOUR FROM inWorkTime)::tvarchar ,2, '0')  ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ;
+         -- сохранили <Объект>
+         ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
+
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffPeriod(), ioId, inDayOffPeriod);
+         -- сохранили свойство <>
+         vbDayOffWeek:= ('0,' || '0,' || '0,' || '0,' || '0,' ||'0,' || '0' ) ::TVarChar;
+         PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_DayOffWeek(), ioId, vbDayOffWeek);
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_DayOffPeriod(), ioId, inDayOffPeriodDate);
+   END IF;
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_SheetWorkTime_Comment(), ioId, inComment);
-
     -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_Start(), ioId, inStartTime);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_Start(), ioId, vbStartTime);
     -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_Work(), ioId, inWorkTime);
-    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_DayOffPeriod(), ioId, inDayOffPeriodDate);
-
-
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_Work(), ioId, vbWorkTime);
    -- сохранили связь <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_SheetWorkTime_DayKind(), ioId, inDayKindId);
 
@@ -66,6 +133,5 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.11.16         * 
 */
-
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_SheetWorkTime()
+-- select * from gpInsertUpdate_Object_SheetWorkTime(ioId := 736960 , inCode := 1 , inStartTime := ('01.01.2000 3:00:00')::TDateTime , inWorkTime := ('01.01.2000 20:00:00')::TDateTime , inDayOffPeriodDate := ('16.11.2016')::TDateTime , inDayOffPeriod := '3' , inComment := 'уаівтпоьлроі' , inValue1 := 'False' , inValue2 := 'True' , inValue3 := 'True' , inValue4 := 'True' , inValue5 := 'False' , inValue6 := 'False' , inValue7 := 'False' , inDayKindId := 736944 ,  inSession := '5');

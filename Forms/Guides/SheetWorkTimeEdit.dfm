@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1099#1081' '#1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099
-  ClientHeight = 375
-  ClientWidth = 390
+  ClientHeight = 291
+  ClientWidth = 345
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,37 +16,26 @@
   AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 24
-    Top = 70
-    TabOrder = 0
-    Width = 312
-  end
-  object cxLabel1: TcxLabel
-    Left = 24
-    Top = 50
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-  end
   object cxButton1: TcxButton
-    Left = 79
-    Top = 338
+    Left = 50
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 229
-    Top = 338
+    Left = 200
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 1
   end
   object Код: TcxLabel
     Left = 24
@@ -58,102 +47,148 @@
     Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 3
     Width = 65
   end
   object cxLabel3: TcxLabel
     Left = 24
-    Top = 185
-    Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080
-  end
-  object ceDayOffWeek: TcxTextEdit
-    Left = 24
-    Top = 205
-    TabOrder = 7
-    Width = 312
+    Top = 98
+    Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' ('#1074#1099#1093#1086#1076#1085#1099#1077')'
   end
   object cxLabel5: TcxLabel
     Left = 24
-    Top = 230
+    Top = 143
     Caption = ' '#9#1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072
   end
-  object edStart: TcxDateEdit
-    Left = 24
-    Top = 250
-    EditValue = 42690d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 9
-    Width = 84
-  end
   object cxLabel7: TcxLabel
-    Left = 24
-    Top = 140
+    Left = 160
+    Top = 50
     Caption = #1055#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1074' '#1076#1085#1103#1093
   end
   object ceDayOffPeriod: TcxTextEdit
-    Left = 24
-    Top = 158
-    TabOrder = 11
-    Width = 312
+    Left = 160
+    Top = 70
+    TabOrder = 7
+    Width = 144
   end
   object cxLabel8: TcxLabel
     Left = 24
-    Top = 275
+    Top = 190
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit
     Left = 24
-    Top = 295
-    TabOrder = 13
-    Width = 312
+    Top = 213
+    TabOrder = 9
+    Width = 280
   end
   object cxLabel9: TcxLabel
-    Left = 24
-    Top = 95
+    Left = 98
+    Top = 5
     Caption = #1058#1080#1087' '#1076#1085#1103
   end
   object ceDayKind: TcxButtonEdit
-    Left = 24
-    Top = 115
+    Left = 98
+    Top = 25
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
-    Width = 312
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 206
   end
   object cxLabel2: TcxLabel
-    Left = 207
-    Top = 230
+    Left = 24
+    Top = 50
     Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1088#1072#1089#1095'. '#1087#1077#1088#1080#1086#1076'.'
   end
   object edDayOffPeriod: TcxDateEdit
-    Left = 207
-    Top = 250
+    Left = 24
+    Top = 70
     EditValue = 42690d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 17
+    TabOrder = 13
     Width = 129
   end
   object cxLabel4: TcxLabel
     Left = 116
-    Top = 230
+    Top = 143
     Caption = #1050#1086#1083'. '#1088#1072#1073'. '#1095#1072#1089#1086#1074
+  end
+  object cbValue1: TcxCheckBox
+    Left = 24
+    Top = 116
+    Caption = #1055#1085'.'
+    TabOrder = 15
+    Width = 40
+  end
+  object cbValue2: TcxCheckBox
+    Left = 64
+    Top = 116
+    Caption = #1042#1090'.'
+    TabOrder = 16
+    Width = 40
+  end
+  object cbValue3: TcxCheckBox
+    Left = 104
+    Top = 116
+    Caption = #1057#1088'.'
+    TabOrder = 17
+    Width = 40
+  end
+  object cbValue4: TcxCheckBox
+    Left = 144
+    Top = 116
+    Caption = #1063#1090'.'
+    TabOrder = 18
+    Width = 40
+  end
+  object cbValue5: TcxCheckBox
+    Left = 184
+    Top = 116
+    Caption = #1055#1090'.'
+    TabOrder = 19
+    Width = 40
+  end
+  object cbValue6: TcxCheckBox
+    Left = 224
+    Top = 116
+    Caption = #1057#1073'.'
+    TabOrder = 20
+    Width = 40
+  end
+  object cbValue7: TcxCheckBox
+    Left = 264
+    Top = 116
+    Caption = #1042#1089'.'
+    TabOrder = 21
+    Width = 40
+  end
+  object edStart: TcxDateEdit
+    Left = 24
+    Top = 165
+    EditValue = 42690d
+    Properties.AssignedValues.EditFormat = True
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 22
+    Width = 80
   end
   object edWork: TcxDateEdit
     Left = 116
-    Top = 250
+    Top = 165
     EditValue = 42690d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 19
-    Width = 84
+    Properties.AssignedValues.EditFormat = True
+    Properties.DisplayFormat = 'HH:MM'
+    Properties.Kind = ckDateTime
+    TabOrder = 23
+    Width = 80
   end
   object ActionList: TActionList
-    Left = 352
+    Left = 323
     Top = 180
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -206,15 +241,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRelease'
+        Name = 'inStartTime'
         Value = 0d
         Component = edStart
         DataType = ftDateTime
@@ -222,31 +249,25 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInvNumber'
+        Name = 'inWorkTime'
         Value = ''
-        DataType = ftString
+        Component = edWork
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFullName'
+        Name = 'inDayOffPeriodDate'
+        Value = ''
+        Component = edDayOffPeriod
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDayOffPeriod'
         Value = ''
         Component = ceDayOffPeriod
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSerialNumber'
-        Value = ''
-        Component = ceDayOffWeek
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPassportNumber'
-        Value = ''
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -260,34 +281,71 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAssetGroupId'
+        Name = 'inValue1'
         Value = ''
+        Component = cbValue1
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inValue2'
+        Value = ''
+        Component = cbValue2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = ''
+        Component = cbValue3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = cbValue4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = cbValue5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = cbValue6
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = cbValue7
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDayKindId'
         Value = ''
         Component = DayKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMakerId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPeriodUse'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 315
     Top = 112
   end
   object dsdFormParams: TdsdFormParams
@@ -298,7 +356,7 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 315
     Top = 160
   end
   object spGet: TdsdStoredProc
@@ -307,7 +365,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -317,7 +375,6 @@
       item
         Name = 'Name'
         Value = ''
-        Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -356,10 +413,52 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DayOffWeek'
+        Name = 'Value1'
         Value = ''
-        Component = ceDayOffWeek
-        DataType = ftString
+        Component = cbValue1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value2'
+        Value = ''
+        Component = cbValue2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value3'
+        Value = ''
+        Component = cbValue3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value4'
+        Value = ''
+        Component = cbValue4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value5'
+        Value = ''
+        Component = cbValue5
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value6'
+        Value = ''
+        Component = cbValue6
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value7'
+        Value = ''
+        Component = cbValue7
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -385,12 +484,12 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 315
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 344
-    Top = 255
+    Left = 315
+    Top = 231
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -404,7 +503,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
+    Left = 315
     Top = 64
   end
   object DayKindGuides: TdsdGuides
@@ -434,6 +533,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 100
+    Top = 10
   end
 end

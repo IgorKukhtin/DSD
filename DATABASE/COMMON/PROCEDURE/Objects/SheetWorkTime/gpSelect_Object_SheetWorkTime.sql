@@ -32,7 +32,13 @@ BEGIN
          
          , ObjectString_Comment.ValueData       AS Comment
          , ObjectString_DayOffPeriod.ValueData  AS DayOffPeriod                                                                                                       
-         , ObjectString_DayOffWeek.ValueData    AS DayOffWeek
+         , (CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 1) ::TFloat = 1 THEN 'œÌ., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 2) ::TFloat = 2 THEN '¬Ú., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 3) ::TFloat = 3 THEN '—., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 4) ::TFloat = 4 THEN '◊Ú., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 5) ::TFloat = 5 THEN 'œÚ., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 6) ::TFloat = 6 THEN '—·., ' ELSE '' END ||
+            CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= 7) ::TFloat = 7 THEN '¬Ò., ' ELSE '' END)     ::TVarChar  AS DayOffWeek
 
          , Object_SheetWorkTime.isErased        AS isErased
          
@@ -73,7 +79,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_SheetWorkTime(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

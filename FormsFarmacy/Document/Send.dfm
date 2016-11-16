@@ -439,7 +439,7 @@ inherited SendForm: TSendForm
   end
   object cxLabel6: TcxLabel [5]
     Left = 787
-    Top = 64
+    Top = 50
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
   object edPeriod: TcxCurrencyEdit [6]
@@ -453,7 +453,7 @@ inherited SendForm: TSendForm
   end
   object edDay: TcxCurrencyEdit [7]
     Left = 960
-    Top = 63
+    Top = 49
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
@@ -462,17 +462,17 @@ inherited SendForm: TSendForm
   end
   object ceChecked: TcxCheckBox [8]
     Left = 701
-    Top = 63
-    Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+    Top = 76
+    Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
-    Width = 74
+    Width = 223
   end
   object edisComplete: TcxCheckBox [9]
     Left = 477
     Top = 76
-    Caption = #1057#1086#1073#1088#1072#1085' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
     TabOrder = 13
-    Width = 188
+    Width = 218
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -1218,6 +1218,7 @@ inherited SendForm: TSendForm
         Control = ceChecked
       end
       item
+        Control = edisComplete
       end
       item
       end
