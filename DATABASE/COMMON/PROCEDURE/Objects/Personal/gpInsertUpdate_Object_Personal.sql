@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inPersonalGroupId               Integer   , -- Группировки Сотрудников
     IN inPersonalServiceListId         Integer   , -- Ведомость начисления(главная)
     IN inPersonalServiceListOfficialId Integer   , -- Ведомость начисления(БН)
+    IN inSheetWorkTimeId               Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inDateIn                        TDateTime , -- Дата принятия
     IN inDateOut                       TDateTime , -- Дата увольнения
     IN inIsDateOut                     Boolean   , -- Уволен
@@ -86,6 +88,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceList(), ioId, inPersonalServiceListId); 
    -- сохранили связь с <Ведомость начисления(БН)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalServiceListOfficial(), ioId, inPersonalServiceListOfficialId); 
+   -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Personal_SheetWorkTime(), ioId, inSheetWorkTimeId);
    -- сохранили свойство <Дата принятия>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
 
@@ -106,12 +110,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.16         * add inSheetWorkTimeId
  26.08.15         * add PersonalServiceListOfficial
  07.05.15         * add PersonalServiceList
  12.09.14                                        * add inIsDateOut and inIsOfficial

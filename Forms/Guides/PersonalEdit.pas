@@ -65,6 +65,9 @@ type
     cxLabel9: TcxLabel;
     cePersonalServiceListOfficial: TcxButtonEdit;
     PersonalServiceListOfficialGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceSheetWorkTime: TcxButtonEdit;
+    SheetWorkTimeGuides: TdsdGuides;
   private
     { Private declarations }
   public

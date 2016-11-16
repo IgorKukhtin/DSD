@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
+               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isLeaf Boolean, isPartionDate Boolean,
                isErased Boolean,
                Address TVarChar
@@ -87,26 +88,29 @@ BEGIN
            , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionCode
            , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionName
 
-           , Object_Route.Id           AS RouteId
-           , Object_Route.ValueData    AS RouteName
+           , Object_Route.Id                AS RouteId
+           , Object_Route.ValueData         AS RouteName
 
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
 
-           , Object_Area.Id            AS AreaId
-           , Object_Area.ValueData     AS AreaName
+           , Object_Area.Id                 AS AreaId
+           , Object_Area.ValueData          AS AreaName
 
            , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
            , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
          
-           , Object_Partner.ObjectCode    AS PartnerCode
-           , Object_Partner.ValueData     AS PartnerName
+           , Object_Partner.ObjectCode             AS PartnerCode
+           , Object_Partner.ValueData              AS PartnerName
 
            , Object_Unit_HistoryCost.ObjectCode    AS UnitCode_HistoryCost
            , Object_Unit_HistoryCost.ValueData     AS UnitName_HistoryCost
 
+           , Object_SheetWorkTime.Id               AS SheetWorkTimeId 
+           , Object_SheetWorkTime.ValueData        AS SheetWorkTimeName
+
            , Object_Unit_View.isLeaf
-           , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
+           , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
 
            , Object_Unit_View.isErased
 
@@ -159,6 +163,11 @@ BEGIN
                                  ON ObjectLink_Partner_Unit.ChildObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Partner_Unit.DescId = zc_ObjectLink_Partner_Unit()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner_Unit.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
+                                 ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
+            LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
        -- WHERE vbAccessKeyAll = TRUE
        WHERE (Object_Unit_View.BranchId = vbObjectId_Constraint
@@ -223,6 +232,9 @@ BEGIN
 
            , CAST (0 as Integer)    AS UnitCode_HistoryCost
            , CAST ('' as TVarChar)  AS UnitName_HistoryCost
+
+           , CAST (0 as Integer)    AS SheetWorkTimeId 
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName
 
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
@@ -291,6 +303,9 @@ BEGIN
            , CAST (0 as Integer)    AS UnitCode_HistoryCost
            , CAST ('' as TVarChar)  AS UnitName_HistoryCost
 
+           , CAST (0 as Integer)    AS SheetWorkTimeId 
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName
+
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
            , FALSE AS isErased
@@ -306,6 +321,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.11.16         * SheetWorkTime
  26.07.16         * Address
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting
  15.04.15         * add Contract

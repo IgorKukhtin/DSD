@@ -95,6 +95,9 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_SheetWorkTime_DayOffPeriod(), ioId, zc_DateStart());
 
    ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Period() THEN
+         IF COALESCE (inDayOffPeriod, '') =  '' THEN
+            RAISE EXCEPTION 'Не заполнет реквизит - Периодичность в днях.';
+         END IF;
 
          vbName:= 'Начиная с ' || inDayOffPeriodDate ::Date ||' периодичность '|| inDayOffPeriod ||
          ' дня , с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 

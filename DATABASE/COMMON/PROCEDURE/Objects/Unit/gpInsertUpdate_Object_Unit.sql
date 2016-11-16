@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
     IN inAreaId                  Integer   , -- регион
     IN inPersonalSheetWorkTimeId Integer   , -- Сотрудник (доступ к табелю р.времени)
+    IN inSheetWorkTimeId         Integer   ,    -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
     IN inSession                 TVarChar    -- сессия пользователя
 )
@@ -93,8 +95,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
    -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalSheetWorkTime(), ioId, inPersonalSheetWorkTimeId);
+   -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_SheetWorkTime(), ioId, inSheetWorkTimeId);
 
-  
 
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
@@ -145,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.16         * add inSheetWorkTimeId
  24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add area
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting

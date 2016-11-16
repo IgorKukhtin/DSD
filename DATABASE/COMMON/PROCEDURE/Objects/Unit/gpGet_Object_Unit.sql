@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteSortingId Integer, RouteSortingName TVarChar,
                AreaId Integer, AreaName TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
+               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
                isPartionDate boolean,
                Address TVarChar
@@ -75,6 +76,9 @@ BEGIN
            , CAST (0 as Integer)    AS PersonalSheetWorkTimeId
            , CAST ('' as TVarChar)  AS PersonalSheetWorkTimeName
 
+           , CAST (0 as Integer)    AS SheetWorkTimeId 
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName
+
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (NULL AS Boolean) AS isPartionDate
@@ -112,23 +116,26 @@ BEGIN
            , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
            , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName
 
-           , Object_Route.Id           AS RouteId
-           , Object_Route.ValueData    AS RouteName
+           , Object_Route.Id                AS RouteId
+           , Object_Route.ValueData         AS RouteName
 
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
          
-           , Object_Area.Id            AS AreaId
-           , Object_Area.ValueData     AS AreaName
+           , Object_Area.Id                 AS AreaId
+           , Object_Area.ValueData          AS AreaName
 
-           , Object_PersonalSheetWorkTime.Id            AS PersonalSheetWorkTimeId
-           , Object_PersonalSheetWorkTime.ValueData     AS PersonalSheetWorkTimeName
+           , Object_PersonalSheetWorkTime.Id        AS PersonalSheetWorkTimeId
+           , Object_PersonalSheetWorkTime.ValueData AS PersonalSheetWorkTimeName
+
+           , Object_SheetWorkTime.Id        AS SheetWorkTimeId 
+           , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
 
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
 
-           , ObjectBoolean_PartionDate.ValueData  AS isPartionDate
-           , ObjectString_Unit_Address.ValueData   AS Address
+           , ObjectBoolean_PartionDate.ValueData    AS isPartionDate
+           , ObjectString_Unit_Address.ValueData    AS Address
 
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -173,6 +180,11 @@ BEGIN
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
+                                 ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
+            LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
+
       WHERE Object_Unit_View.Id = inId;
    END IF;
   
@@ -186,6 +198,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.11.16         * add SheetWorkTime
  26.07.16         *
  24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add Area

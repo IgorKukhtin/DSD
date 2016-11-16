@@ -82,6 +82,7 @@ type
     clPersonalServiceListName: TcxGridDBColumn;
     PersonalServiceListOfficialName: TcxGridDBColumn;
     PersonalServiceListOfficialChoice: TOpenChoiceForm;
+    SheetWorkTimeName: TcxGridDBColumn;
   private
     { Private declarations }
   public

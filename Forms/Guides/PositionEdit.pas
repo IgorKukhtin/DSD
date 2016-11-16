@@ -18,7 +18,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TPositionEditForm = class(TParentForm)
@@ -35,6 +35,9 @@ type
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxLabel10: TcxLabel;
+    ceSheetWorkTime: TcxButtonEdit;
+    SheetWorkTimeGuides: TdsdGuides;
   private
     { Private declarations }
   public
