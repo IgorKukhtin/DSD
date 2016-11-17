@@ -9,7 +9,7 @@ uses
   dxSkinsDefaultPainters, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore,
   cxDateUtils, dsdGuides, cxButtonEdit, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, cxLabel, dsdDB, Vcl.ActnList, dsdAction, cxPropertiesStore,
-  dsdAddOn, Vcl.StdCtrls, cxButtons, ChoicePeriod, cxCheckBox;
+  dsdAddOn, Vcl.StdCtrls, cxButtons, ChoicePeriod, cxCheckBox, cxCurrencyEdit;
 
 type
   TReport_UserProtocolDialogForm = class(TAncestorDialogForm)
@@ -28,6 +28,9 @@ type
     cxLabel5: TcxLabel;
     edUser: TcxButtonEdit;
     UserGuides: TdsdGuides;
+    cbShowAll: TcxCheckBox;
+    ceDeviation: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

@@ -59,6 +59,10 @@ type
     FormParams: TdsdFormParams;
     Time_Prog: TcxGridDBColumn;
     Time_Work: TcxGridDBColumn;
+    cbisShowAll: TcxCheckBox;
+    actRefreshShowAll: TdsdDataSetRefresh;
+    cxLabel6: TcxLabel;
+    ceDeviation: TcxCurrencyEdit;
   private
     { Private declarations }
   public
