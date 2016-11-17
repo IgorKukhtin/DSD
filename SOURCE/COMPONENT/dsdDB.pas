@@ -305,6 +305,17 @@ begin
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
                      '  Value="' + ParamStr + '" />'
+           else
+             if DataType = ftDateTime then
+                try   StrToDateTime (ParamStr);
+                      Result := Result + '<' + Name +
+                           '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                           '  Value="' + DateTimeToStr(StrToDateTime(ParamStr)) + '" />';
+                except
+                      Result := Result + '<' + Name +
+                           '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                           '  Value="' + DateToStr(now) + ' ' + ParamStr + '" />';
+                end
              else
                 Result := Result + '<' + Name +
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+

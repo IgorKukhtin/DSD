@@ -74,6 +74,25 @@ BEGIN
           LEFT JOIN Object AS Object_DayKind ON Object_DayKind.Id = ObjectLink_SheetWorkTime_DayKind.ChildObjectId          
 
      WHERE Object_SheetWorkTime.DescId = zc_Object_SheetWorkTime()
+
+      UNION ALL
+       SELECT 0 AS Id
+            , 0 AS Code
+            , '”ƒ¿À»“‹' :: TVarChar AS Name
+
+            , 0 AS DayKindId
+            , 0 AS DayKindCode
+            , '' :: TVarChar AS DayKindName
+       
+            , NULL :: Time      AS StartTime
+            , NULL :: Time      AS WorkTime
+            , NULL :: TDateTime AS DayOffPeriodDate
+         
+            , '' :: TVarChar AS Comment
+            , '' :: TVarChar AS DayOffPeriod
+            , '' :: TVarChar AS DayOffWeek
+
+            , FALSE AS isErased
      ;  
 
 END;

@@ -20,7 +20,7 @@ $BODY$BEGIN
 
       , Object_DayKind.isErased     AS isErased
       
-   FROM OBJECT AS Object_DayKind
+   FROM Object AS Object_DayKind
    WHERE Object_DayKind.DescId = zc_Object_DayKind();
   
 END;$BODY$

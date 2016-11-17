@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
     IN inAreaId                  Integer   , -- регион
     IN inPersonalSheetWorkTimeId Integer   , -- Сотрудник (доступ к табелю р.времени)
-    IN inSheetWorkTimeId         Integer   ,    -- Режим работы (Шаблон табеля р.вр.)
+    IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
     IN inAddress                 TVarChar  , -- Адрес
     IN inSession                 TVarChar    -- сессия пользователя
 )

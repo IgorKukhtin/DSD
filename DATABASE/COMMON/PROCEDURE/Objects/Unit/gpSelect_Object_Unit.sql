@@ -336,5 +336,3 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Unit (zfCalc_UserAdmin())
-
-
