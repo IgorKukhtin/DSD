@@ -63,7 +63,7 @@
   object cxLabel7: TcxLabel
     Left = 160
     Top = 50
-    Caption = #1055#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1074' '#1076#1085#1103#1093
+    Caption = #1055#1086#1089#1084#1077#1085#1085#1086' ('#1088#1072#1073'./'#1074#1099#1093'. '#1076#1085')'
   end
   object ceDayOffPeriod: TcxTextEdit
     Left = 160
@@ -171,8 +171,8 @@
     Left = 24
     Top = 165
     EditValue = 42690d
-    Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'HH:MM'
+    Properties.EditFormat = 'HH:MM'
     Properties.Kind = ckDateTime
     TabOrder = 22
     Width = 80
@@ -181,8 +181,8 @@
     Left = 116
     Top = 165
     EditValue = 42690d
-    Properties.AssignedValues.EditFormat = True
     Properties.DisplayFormat = 'HH:MM'
+    Properties.EditFormat = 'HH:MM'
     Properties.Kind = ckDateTime
     TabOrder = 23
     Width = 80

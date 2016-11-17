@@ -24,11 +24,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SheetWorkTime(
 RETURNS integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer; 
-   DECLARE vbName TVarChar; 
-   DECLARE vbDayOffWeek TVarChar; 
-   DECLARE vbStartTime TDateTime; 
-   DECLARE vbWorkTime TDateTime; 
+   DECLARE vbCode_calc Integer;
+   DECLARE vbName TVarChar;
+   DECLARE vbDayOffWeek TVarChar;
+   DECLARE vbDayOffPeriod TVarChar;
+   DECLARE vbStartTime TDateTime;
+   DECLARE vbEndTime TDateTime;
+   DECLARE vbWorkTime TDateTime;
 BEGIN
    
     -- проверка прав пользователя на вызов процедуры
@@ -42,8 +44,9 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_SheetWorkTime(), vbCode_calc);
     
    vbStartTime:= ( '' ||CURRENT_DATE::Date || ' '||inStartTime ::Time):: TDateTime ;
+   vbEndTime  := (vbStartTime + inWorkTime ::Time):: TDateTime ;
    vbWorkTime := ( '' ||CURRENT_DATE::Date || ' '||inWorkTime  ::Time):: TDateTime ;
-
+ 
 
    IF COALESCE (inDayKindId,0) =0 THEN
 
@@ -51,9 +54,9 @@ BEGIN
 
    ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Calendar() THEN
 
-         vbName:= 'По будням, с ' ||
-                  lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
-         ' до ' ||lpad (EXTRACT (HOUR FROM inWorkTime) ::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ; -- inWorkTime ::Time;
+         vbName:= 'Рабочие дни - согласно календарным, с ' ||
+                  lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0')||':'||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar,2, '0') ||  --inStartTime ::Time || 
+         ' до ' ||lpad (EXTRACT (HOUR FROM vbEndTime) ::tvarchar ,2, '0') ||':'||lpad (EXTRACT (MINUTE FROM vbEndTime) ::tvarchar ,2, '0') ; -- inWorkTime ::Time;
          -- сохранили <Объект>
          ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
 
@@ -67,16 +70,17 @@ BEGIN
 
    ELSEIF COALESCE (inDayKindId,0) = zc_Enum_DayKind_Week() THEN
 
-         vbName:= 'Рабочие дни ' || 
-           (CASE WHEN inValue1= FALSE THEN 'Пн., ' ELSE '' END ||
-            CASE WHEN inValue2= FALSE THEN 'Вт., ' ELSE '' END ||
-            CASE WHEN inValue3= FALSE THEN 'Ср., ' ELSE '' END ||
-            CASE WHEN inValue4= FALSE THEN 'Чт., ' ELSE '' END ||
-            CASE WHEN inValue5= FALSE THEN 'Пт., ' ELSE '' END ||
-            CASE WHEN inValue6= FALSE THEN 'Сб., ' ELSE '' END ||
-            CASE WHEN inValue7= FALSE THEN 'Вс., ' ELSE '' END)||
-            ' с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
-            ' до '|| lpad (EXTRACT (HOUR FROM inWorkTime)::tvarchar ,2, '0')  ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ;
+         vbName:= 'Рабочие дни - каждые 7 дней, с ' ||
+                    lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar, 2, '0')||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar, 2, '0') ||  --inStartTime ::Time || 
+           ' до '|| lpad (EXTRACT (HOUR FROM vbEndTime)  ::tvarchar, 2, '0')||':' ||lpad (EXTRACT (MINUTE FROM vbEndTime)  ::tvarchar, 2, '0')||
+           ', выходных '||(CASE WHEN inValue1 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue2 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue3 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue4 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue5 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue6 = FALSE THEN 0 ELSE 1 END +
+                           CASE WHEN inValue7 = FALSE THEN 0 ELSE 1 END)||
+            ' дн. '   ;
          -- сохранили <Объект>
          ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
 
@@ -98,10 +102,10 @@ BEGIN
          IF COALESCE (inDayOffPeriod, '') =  '' THEN
             RAISE EXCEPTION 'Не заполнет реквизит - Периодичность в днях.';
          END IF;
-
-         vbName:= 'Начиная с ' || inDayOffPeriodDate ::Date ||' периодичность '|| inDayOffPeriod ||
-         ' дня , с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0') ||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar ,2, '0') ||  --inStartTime ::Time || 
-               ' до '|| lpad (EXTRACT (HOUR FROM inWorkTime)::tvarchar ,2, '0')  ||':' ||lpad (EXTRACT (MINUTE FROM inWorkTime) ::tvarchar ,2, '0') ;
+         vbDayOffPeriod:= (SELECT EXTRACT (DAY FROM inDayOffPeriodDate)||'.'||EXTRACT (MONTH FROM inDayOffPeriodDate)||'.'||EXTRACT (YEAR FROM inDayOffPeriodDate));
+         vbName:= 'Рабочие дни - посменно ' ||inDayOffPeriod||' начиная с '||vbDayOffPeriod||
+         ', с ' || lpad (EXTRACT (HOUR FROM inStartTime)::tvarchar ,2, '0')||':' ||lpad (EXTRACT (MINUTE FROM inStartTime)::tvarchar,2, '0') ||  --inStartTime ::Time || 
+          ' до '|| lpad (EXTRACT (HOUR FROM vbEndTime)::tvarchar ,2, '0')  ||':' ||lpad (EXTRACT (MINUTE FROM vbEndTime) ::tvarchar ,2, '0') ;
          -- сохранили <Объект>
          ioId := lpInsertUpdate_Object(ioId, zc_Object_SheetWorkTime(), vbCode_calc, vbName);
 
