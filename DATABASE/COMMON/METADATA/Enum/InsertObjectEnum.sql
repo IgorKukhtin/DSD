@@ -825,9 +825,9 @@ DO $$
 BEGIN
 
      -- !!! Типы дней
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Calendar() , inDescId:= zc_Object_DayKind(), inCode:= 1, inName:= 'по календарю'        , inEnumName:= 'zc_Enum_DayKind_Calendar');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Week(   )  , inDescId:= zc_Object_DayKind(), inCode:= 2, inName:= 'по дням недели'      , inEnumName:= 'zc_Enum_DayKind_Week');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Period()   , inDescId:= zc_Object_DayKind(), inCode:= 3, inName:= 'периодичность в днях', inEnumName:= 'zc_Enum_DayKind_Period');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Calendar() , inDescId:= zc_Object_DayKind(), inCode:= 1, inName:= 'по календарю'    , inEnumName:= 'zc_Enum_DayKind_Calendar');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Week(   )  , inDescId:= zc_Object_DayKind(), inCode:= 2, inName:= 'по дням недели'  , inEnumName:= 'zc_Enum_DayKind_Week');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Period()   , inDescId:= zc_Object_DayKind(), inCode:= 3, inName:= 'посменный график', inEnumName:= 'zc_Enum_DayKind_Period');
 
 
 END $$;
