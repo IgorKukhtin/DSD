@@ -141,6 +141,8 @@ type
     clNameInteger: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

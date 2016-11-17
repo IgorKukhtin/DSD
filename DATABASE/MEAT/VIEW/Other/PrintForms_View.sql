@@ -86,7 +86,21 @@ AS
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('30487219','32294926','32049199')
+       AND OH_JuridicalDetails.OKPO IN ('30487219','32049199')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- Фоззі-Фуд ТОВ + СІЛЬПО-ФУД
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale32294926' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.

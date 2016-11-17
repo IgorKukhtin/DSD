@@ -179,12 +179,12 @@ BEGIN
                                   AND ObjectLink_Price_Unit.ObjectId = ObjectLink_Price_Goods.ObjectId
                                   AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Top
-                                     ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                     -- ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                     -- ON ObjectBoolean_Top.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                     ON ObjectBoolean_Top.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
              LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
-                                   ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
-                                   -- ON ObjectFloat_PercentMarkup.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                   -- ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Goods.ObjectId
+                                   ON ObjectFloat_PercentMarkup.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
                                   AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
         WHERE ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0
        )
@@ -270,7 +270,7 @@ BEGIN
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
-          , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Goods.isTOP) AS isTOP
+          , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
           , COALESCE (GoodsPrice.PercentMarkup, 0) AS PercentMarkup
         
         FROM -- Остатки + коды ...
@@ -298,6 +298,9 @@ BEGIN
             -- товар "сети"
             LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId
             -- LEFT JOIN Object_Goods_View AS Goods ON Goods.Id = _tmpMinPrice_RemainsList.ObjectId_retail
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                    ON ObjectBoolean_Goods_TOP.ObjectId = _tmpMinPrice_RemainsList.ObjectId_retail
+                                   AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()  
             LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
        
             -- Поставщик
@@ -371,6 +374,7 @@ ALTER FUNCTION lpSelectMinPrice_AllGoods (Integer, Integer, Integer) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 4, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
+-- SELECT * FROM lpSelectMinPrice_AllGoods (3031072, 3031066, 3) WHERE GoodsCode = 1069 -- !!!Никополь!!!
+-- SELECT * FROM lpSelectMinPrice_AllGoods (2144918, 2140932, 3) WHERE GoodsCode = 4797 -- !!!Никополь!!!
 -- SELECT * FROM lpSelectMinPrice_AllGoods (1781716 , 4, 3) WHERE GoodsCode = 8969 -- "Аптека_"
 -- SELECT * FROM lpSelectMinPrice_AllGoods (183292, 4, 3) WHERE GoodsCode = 8969 -- "Аптека_1 пр_Правды_6"

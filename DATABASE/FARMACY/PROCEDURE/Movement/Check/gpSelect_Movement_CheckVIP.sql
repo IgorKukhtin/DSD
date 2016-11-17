@@ -1,4 +1,6 @@
-DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP(Boolean, TVarChar);
+-- Function: gpSelect_Movement_CheckVIP()
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_CheckVIP (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_CheckVIP(
     IN inIsErased      Boolean ,
@@ -44,22 +46,21 @@ BEGIN
 
      RETURN QUERY
        WITH
-           tmpMov AS (SELECT Movement.Id
+           tmpStatus AS (SELECT zc_Enum_Status_UnComplete() AS StatusId UNION ALL SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE)
+         , tmpMov AS (SELECT Movement.Id
                            , MovementLinkObject_Unit.ObjectId AS UnitId
-                      FROM Movement
-                        INNER JOIN MovementBoolean AS MovementBoolean_Deferred
-                                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                  AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                                  AND MovementBoolean_Deferred.ValueData = TRUE
+                      FROM MovementBoolean AS MovementBoolean_Deferred
+                        INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                           AND Movement.DescId = zc_Movement_Check()
+                        INNER JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                         INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                      AND (MovementLinkObject_Unit.ObjectId = vbUnitId OR vbUnitId = 0 /*OR MovementLinkObject_Unit.MovementId = 3400557*/)
-                       WHERE Movement.DescId = zc_Movement_Check()
-                         AND (Movement.StatusId = zc_Enum_Status_UnComplete()
-                              OR (Movement.StatusId = zc_Enum_Status_Erased() AND inIsErased = TRUE)
-                             )
-                       )
+                                                     -- AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                      WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                        AND MovementBoolean_Deferred.ValueData = TRUE
+                      )
       , tmpMI_all AS (SELECT tmpMov.Id AS MovementId, tmpMov.UnitId, MovementItem.ObjectId AS GoodsId, SUM (MovementItem.Amount) AS Amount
                       FROM tmpMov
                            INNER JOIN MovementItem
@@ -200,5 +201,16 @@ ALTER FUNCTION gpSelect_Movement_CheckVIP (Boolean, TVarChar) OWNER TO postgres;
  04.07.15                                                                     * 
 */
 
+/*
+update MovementBoolean set  ValueData = FALSE
+from Movement 
+where Movement.Id = MovementBoolean.MovementId
+  AND Movement.StatusId <> zc_Enum_Status_UnComplete()
+  AND Movement.DescId = zc_Movement_Check()
+  AND MovementBoolean.DescId = zc_MovementBoolean_Deferred()
+  AND Movement.OperDate < CURRENT_DATE - INTERVAL '1 DAY'
+  AND ValueData = TRUE
+*/
 -- тест
+-- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_CheckVIP (inIsErased := FALSE, inSession:= '3')

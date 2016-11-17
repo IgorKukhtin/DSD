@@ -121,6 +121,8 @@ type
     actChoiceRoute_30201: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public

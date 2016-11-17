@@ -233,12 +233,20 @@
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MaskId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -246,18 +254,21 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
         Component = edAddress
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end>
     Left = 8
     Top = 72
@@ -271,12 +282,14 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAddress'
@@ -284,6 +297,7 @@
         Component = edAddress
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -291,6 +305,7 @@
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPrepareDayCount'
@@ -298,6 +313,7 @@
         Component = cePrepareDayCount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocumentDayCount'
@@ -305,42 +321,49 @@
         Component = ceDocumentDayCount
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
         Value = ''
         Component = dsdRouteGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteSortingId'
         Value = ''
         Component = dsdRouteSortingGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTakeId'
         Value = ''
         Component = dsdPersonalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
         Value = ''
         Component = dsdPriceListGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListPromoId'
         Value = ''
         Component = dsdPriceListPromoGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPromo'
@@ -348,6 +371,7 @@
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndPromo'
@@ -355,6 +379,7 @@
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 8
     Top = 168
@@ -363,40 +388,62 @@
     StoredProcName = 'gpGet_Object_Partner'
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMaskId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Address'
         Value = ''
-        Component = edAddress
+        Component = FormParams
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GLNCode'
         Value = ''
         Component = edGLNCode
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PrepareDayCount'
         Value = 0.000000000000000000
         Component = cePrepareDayCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DocumentDayCount'
         Value = 0.000000000000000000
         Component = ceDocumentDayCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteId'
@@ -404,6 +451,7 @@
         Component = dsdRouteGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteName'
@@ -411,6 +459,7 @@
         Component = dsdRouteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteSortingId'
@@ -418,6 +467,7 @@
         Component = dsdRouteSortingGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteSortingName'
@@ -425,6 +475,7 @@
         Component = dsdRouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTakeId'
@@ -432,6 +483,7 @@
         Component = dsdPersonalGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTakeName'
@@ -439,12 +491,14 @@
         Component = dsdPersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListId'
         Value = ''
         Component = dsdPriceListGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
@@ -452,12 +506,14 @@
         Component = dsdPriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListPromoId'
         Value = ''
         Component = dsdPriceListPromoGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListPromoName'
@@ -465,18 +521,21 @@
         Component = dsdPriceListPromoGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPromo'
         Value = 0d
         Component = edStartPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
         Value = 0d
         Component = edEndPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 8
     Top = 16
@@ -486,6 +545,7 @@
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -496,6 +556,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -504,6 +565,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 80
@@ -513,6 +575,7 @@
     LookupControl = cePersonalTake
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -523,6 +586,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -531,6 +595,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 240
@@ -540,6 +605,7 @@
     LookupControl = ceRouteSorting
     FormNameParam.Value = 'TRouteSortingForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -550,6 +616,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -558,6 +625,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 216
@@ -567,6 +635,7 @@
     LookupControl = ceRoute
     FormNameParam.Value = 'TRouteForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -577,6 +646,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -585,6 +655,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 176
@@ -594,6 +665,7 @@
     LookupControl = cePriceList
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -604,6 +676,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -612,6 +685,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 280
@@ -621,6 +695,7 @@
     LookupControl = cePriceListPromo
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -631,6 +706,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -639,6 +715,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 312

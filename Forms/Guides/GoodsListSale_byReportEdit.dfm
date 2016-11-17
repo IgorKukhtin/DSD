@@ -41,7 +41,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   object cxGroupBox1: TcxGroupBox
     Left = 8
     Top = 94
-    TabOrder = 10
+    TabOrder = 9
     Height = 126
     Width = 425
   end
@@ -54,7 +54,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 275
   end
   object cxLabel11: TcxLabel
@@ -106,7 +106,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 4
     Width = 275
   end
   object cxLabel2: TcxLabel
@@ -123,7 +123,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 6
     Text = '(30200) '#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077
     Width = 275
   end
@@ -137,7 +137,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   object cePeriod1: TcxCurrencyEdit
     Left = 18
     Top = 133
-    EditValue = 3
+    EditValue = 12
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 14
@@ -165,7 +165,7 @@ object GoodsListSale_byReportEditForm: TGoodsListSale_byReportEditForm
   object cePeriod3: TcxCurrencyEdit
     Left = 18
     Top = 48
-    EditValue = 1
+    EditValue = 3
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 18

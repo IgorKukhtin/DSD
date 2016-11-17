@@ -1,9 +1,11 @@
 -- Function: gpGet_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
     IN inId          Integer,        -- Контрагенты 
+    IN inMaskId      Integer,       -- 
     IN inJuridicalId Integer,        -- 
     IN inSession     TVarChar        -- сессия пользователя
 )
@@ -44,7 +46,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Partner());
 
-   IF COALESCE (inId, 0) = 0
+   IF COALESCE (inId, 0) = 0 AND COALESCE (inMaskId, 0) = 0
    THEN
        RETURN QUERY 
        SELECT
@@ -126,16 +128,16 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object_Partner.Id               AS Id
-           , Object_Partner.ObjectCode       AS Code
-           , Object_Partner.ValueData        AS Name
+             CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_Partner.Id END :: Integer AS Id
+           , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode (0, zc_Object_Partner()) ELSE Object_Partner.ObjectCode END :: Integer AS Code
+           , CASE WHEN inMaskId <> 0 THEN '' ELSE Object_Partner.ValueData END :: TVarChar AS Name
        
            , ObjectString_ShortName.ValueData AS ShortName
-           , Partner_GLNCode.ValueData        AS GLNCode
+           , CASE WHEN inMaskId <> 0 THEN '' ELSE Partner_GLNCode.ValueData END :: TVarChar AS GLNCode
            
-           , Partner_GLNCodeJuridical.ValueData  AS GLNCodeJuridical
-           , Partner_GLNCodeRetail.ValueData     AS GLNCodeRetail
-           , Partner_GLNCodeCorporate.ValueData  AS GLNCodeCorporate
+           , CASE WHEN inMaskId <> 0 THEN '' ELSE Partner_GLNCodeJuridical.ValueData END :: TVarChar AS GLNCodeJuridical
+           , CASE WHEN inMaskId <> 0 THEN '' ELSE Partner_GLNCodeRetail.ValueData    END :: TVarChar AS GLNCodeRetail
+           , CASE WHEN inMaskId <> 0 THEN Partner_GLNCodeCorporate.ValueData ELSE Partner_GLNCodeCorporate.ValueData END :: TVarChar AS GLNCodeCorporate
 
            , ObjectString_Address.ValueData     AS Address
            , ObjectString_HouseNumber.ValueData AS HouseNumber
@@ -270,6 +272,7 @@ BEGIN
                                 ON Partner_Juridical.ObjectId = Object_Partner.Id 
                                AND Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Partner_Juridical.ChildObjectId
+                                               AND COALESCE (inMaskId, 0) = 0
           
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Route
                                 ON ObjectLink_Partner_Route.ObjectId = Object_Partner.Id 
@@ -337,16 +340,14 @@ BEGIN
                                AND ObjectLink_City_Province.DescId = zc_ObjectLink_City_Province()
            LEFT JOIN Object AS Object_Province ON Object_Province.Id = ObjectLink_City_Province.ChildObjectId
          
-       WHERE Object_Partner.Id = inId;
+       WHERE Object_Partner.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
        
    END IF;
    
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -369,8 +370,7 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgr
  03.07.13          *  + Route, RouteSorting             
  13.06.13          *
  00.06.13          
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Partner (0, 1, '2')
+-- SELECT * FROM gpGet_Object_Partner (0, 0, 1, '2')

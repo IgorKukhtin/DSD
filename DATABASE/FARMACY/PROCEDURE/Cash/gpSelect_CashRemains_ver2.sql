@@ -1,10 +1,10 @@
 -- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver2 (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver2 (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver222(
     IN inMovementId    Integer,    -- Текущая накладная
     IN inCashSessionId TVarChar,   -- Сессия кассового места
     IN inSession       TVarChar    -- сессия пользователя
@@ -82,7 +82,7 @@ BEGIN
     (
         SELECT
             MovementItem_Reserve.GoodsId,
-            SUM(MovementItem_Reserve.Amount)::TFloat as Amount
+            SUM (MovementItem_Reserve.Amount)::TFloat as Amount
         FROM
             gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
         WHERE
@@ -175,7 +175,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_CashRemains_ver222 (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -194,4 +194,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
 
---select * from gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');
+--select * from gpSelect_CashRemains_ver222(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');

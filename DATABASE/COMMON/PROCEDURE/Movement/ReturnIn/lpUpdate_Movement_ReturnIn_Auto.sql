@@ -706,13 +706,14 @@ BEGIN
 
      -- !!!синхронизируем zc_MI_Master и zc_MI_Child!!!
      UPDATE MovementItem SET ObjectId = _tmpItem.GoodsId
-                           , isErased = _tmpItem.isErased
+                           , isErased = CASE WHEN _tmpItem.OperCount = 0 AND _tmpItem.OperCount_Partner = 0 THEN TRUE ELSE _tmpItem.isErased END
      FROM _tmpItem
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Child()
        AND MovementItem.ParentId   = _tmpItem.MovementItemId
        AND (MovementItem.ObjectId  <> _tmpItem.GoodsId
-         OR MovementItem.isErased  <> _tmpItem.isErased)
+         OR MovementItem.isErased  <> CASE WHEN _tmpItem.OperCount = 0 AND _tmpItem.OperCount_Partner = 0 THEN TRUE ELSE _tmpItem.isErased END
+           )
       ;
 
      -- !!!сохранение!!!

@@ -3,7 +3,7 @@ object PartnerAddressForm: TPartnerAddressForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')>'
   ClientHeight = 464
-  ClientWidth = 1444
+  ClientWidth = 1362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object PartnerAddressForm: TPartnerAddressForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 1444
+    Width = 1362
     Height = 438
     Align = alClient
     TabOrder = 1
@@ -724,6 +724,10 @@ object PartnerAddressForm: TPartnerAddressForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -836,7 +840,6 @@ object PartnerAddressForm: TPartnerAddressForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      Enabled = False
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
@@ -845,12 +848,10 @@ object PartnerAddressForm: TPartnerAddressForm
     object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
-      Enabled = False
     end
     object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
-      Enabled = False
     end
     object bbGridToExel: TdxBarButton
       Action = dsdGridToExcel
@@ -935,6 +936,10 @@ object PartnerAddressForm: TPartnerAddressForm
       Action = actShowAll
       Category = 0
     end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -963,19 +968,59 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = 0
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = ''
           Component = JuridicalGuides
           ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ImageIndex = 54
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = 0
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -988,13 +1033,24 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
-          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaskId'
+          Value = 0
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = 0
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1041,12 +1097,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1054,6 +1112,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1065,6 +1124,7 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TStreetKindForm'
       FormNameParam.Value = 'TStreetKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -1072,6 +1132,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'StreetKindId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1080,6 +1141,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'StreetKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1091,6 +1153,7 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TCityKindForm'
       FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
@@ -1098,6 +1161,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'CityKindId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1106,6 +1170,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'CityKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1119,6 +1184,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1126,12 +1192,14 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1139,6 +1207,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1174,6 +1243,7 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PartnerId'
@@ -1181,6 +1251,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1189,6 +1260,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindId'
@@ -1196,6 +1268,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Act_ContactPersonKindId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindName'
@@ -1204,6 +1277,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Act_ContactPersonKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1211,6 +1285,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Act_Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'phone'
@@ -1218,6 +1293,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Act_phone'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'mail'
@@ -1225,6 +1301,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Act_mail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1236,6 +1313,7 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PartnerId'
@@ -1243,6 +1321,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1251,6 +1330,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindId'
@@ -1258,6 +1338,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Order_ContactPersonKindId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindName'
@@ -1266,6 +1347,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Order_ContactPersonKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1273,6 +1355,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Order_Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'phone'
@@ -1280,6 +1363,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Order_phone'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'mail'
@@ -1287,6 +1371,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Order_mail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1298,6 +1383,7 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TContactPersonChoiceForm'
       FormNameParam.Value = 'TContactPersonChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'PartnerId'
@@ -1305,6 +1391,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1313,6 +1400,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindId'
@@ -1320,6 +1408,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Doc_ContactPersonKindId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContactPersonKindName'
@@ -1328,6 +1417,7 @@ object PartnerAddressForm: TPartnerAddressForm
           ComponentItem = 'Doc_ContactPersonKindName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1335,6 +1425,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'doc_Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'phone'
@@ -1342,6 +1433,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'Doc_phone'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'mail'
@@ -1349,6 +1441,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'doc_mail'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1360,12 +1453,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'MemberTakeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1373,6 +1468,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'MemberTakeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1384,12 +1480,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1397,6 +1495,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'PersonalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1408,12 +1507,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = 'TPersonal_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalTradeId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1421,6 +1522,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'PersonalTradeName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1432,12 +1534,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TPartnerTagForm'
       FormNameParam.Value = 'TPartnerTagForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerTagId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1445,6 +1549,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'PartnerTagName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1456,12 +1561,14 @@ object PartnerAddressForm: TPartnerAddressForm
       FormName = 'TAreaForm'
       FormNameParam.Value = 'TAreaForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AreaId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1469,6 +1576,7 @@ object PartnerAddressForm: TPartnerAddressForm
           Component = MasterCDS
           ComponentItem = 'AreaName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -1492,16 +1600,19 @@ object PartnerAddressForm: TPartnerAddressForm
           Value = 41852d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41852d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ReportNameParam.Value = #1064#1072#1073#1083#1086#1085' '#1087#1086' '#1090#1086#1095#1082#1072#1084' '#1076#1086#1089#1090#1072#1074#1082#1080
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actRefreshPeriod: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1546,17 +1657,19 @@ object PartnerAddressForm: TPartnerAddressForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = Null
+        Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPeriod'
@@ -1564,6 +1677,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = cbPeriod
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -1571,6 +1685,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1578,6 +1693,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1585,6 +1701,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -1601,6 +1718,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -1649,6 +1767,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPartnerName'
@@ -1656,6 +1775,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAddress'
@@ -1663,6 +1783,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'Address'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRegionName'
@@ -1671,6 +1792,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'RegionName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProvinceName'
@@ -1679,6 +1801,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'ProvinceName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCityName'
@@ -1687,6 +1810,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'CityName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCityKindId'
@@ -1694,6 +1818,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'CityKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inProvinceCityName'
@@ -1702,6 +1827,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'ProvinceCityName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPostalCode'
@@ -1710,6 +1836,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'PostalCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStreetName'
@@ -1718,6 +1845,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'StreetName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStreetKindId'
@@ -1725,6 +1853,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'StreetKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inHouseNumber'
@@ -1733,6 +1862,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'HouseNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCaseNumber'
@@ -1741,6 +1871,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'CaseNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRoomNumber'
@@ -1749,6 +1880,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'RoomNumber'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShortName'
@@ -1757,6 +1889,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'ShortName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOrdeName'
@@ -1765,6 +1898,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Order_Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderPhone'
@@ -1773,6 +1907,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Order_Phone'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOrderMail'
@@ -1781,6 +1916,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Order_Mail'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocName'
@@ -1789,6 +1925,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Doc_Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocPhone'
@@ -1797,6 +1934,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Doc_Phone'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDocMail'
@@ -1805,6 +1943,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Doc_Mail'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActName'
@@ -1813,6 +1952,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Act_Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActPhone'
@@ -1821,6 +1961,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Act_Phone'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inActMail'
@@ -1829,6 +1970,7 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'Act_Mail'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberTakeId'
@@ -1836,6 +1978,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'MemberTakeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1843,6 +1986,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
@@ -1850,6 +1994,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'PersonalTradeId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAreaId'
@@ -1857,6 +2002,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'AreaId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerTagId'
@@ -1864,6 +2010,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = MasterCDS
         ComponentItem = 'PartnerTagId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 88
@@ -1874,6 +2021,7 @@ object PartnerAddressForm: TPartnerAddressForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1883,6 +2031,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1891,12 +2040,14 @@ object PartnerAddressForm: TPartnerAddressForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -1918,6 +2069,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -1925,6 +2077,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 112
@@ -1940,6 +2093,7 @@ object PartnerAddressForm: TPartnerAddressForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1948,6 +2102,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1955,6 +2110,7 @@ object PartnerAddressForm: TPartnerAddressForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 984
     Top = 69
