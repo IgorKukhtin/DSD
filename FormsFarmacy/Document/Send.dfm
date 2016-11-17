@@ -1,27 +1,27 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 558
-  ClientWidth = 1002
-  ExplicitWidth = 1018
+  ClientWidth = 1015
+  ExplicitWidth = 1031
   ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1002
+    Width = 1015
     Height = 432
     ExplicitTop = 126
-    ExplicitWidth = 1002
+    ExplicitWidth = 1015
     ExplicitHeight = 432
     ClientRectBottom = 432
-    ClientRectRight = 1002
+    ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1002
+      ExplicitWidth = 1015
       ExplicitHeight = 408
       inherited cxGrid: TcxGrid
-        Width = 1002
+        Width = 1015
         Height = 408
-        ExplicitWidth = 1002
+        ExplicitWidth = 1015
         ExplicitHeight = 408
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -340,10 +340,10 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1002
+    Width = 1015
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1002
+    ExplicitWidth = 1015
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -430,15 +430,16 @@ inherited SendForm: TSendForm
   end
   object edIsAuto: TcxCheckBox [4]
     Left = 477
-    Top = 63
+    Top = 50
+    Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086'vfnbxtcrb'
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 187
+    Width = 188
   end
   object cxLabel6: TcxLabel [5]
     Left = 787
-    Top = 64
+    Top = 50
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
   object edPeriod: TcxCurrencyEdit [6]
@@ -452,7 +453,7 @@ inherited SendForm: TSendForm
   end
   object edDay: TcxCurrencyEdit [7]
     Left = 960
-    Top = 63
+    Top = 49
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
@@ -460,11 +461,18 @@ inherited SendForm: TSendForm
     Width = 37
   end
   object ceChecked: TcxCheckBox [8]
-    Left = 706
-    Top = 63
-    Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+    Left = 701
+    Top = 76
+    Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
-    Width = 74
+    Width = 223
+  end
+  object edisComplete: TcxCheckBox [9]
+    Left = 477
+    Top = 76
+    Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
+    TabOrder = 13
+    Width = 218
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -1084,6 +1092,13 @@ inherited SendForm: TSendForm
         Component = ceChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isComplete'
+        Value = Null
+        Component = edisComplete
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1148,59 +1163,11 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisComplete'
         Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
+        Component = edisComplete
         DataType = ftBoolean
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1251,6 +1218,7 @@ inherited SendForm: TSendForm
         Control = ceChecked
       end
       item
+        Control = edisComplete
       end
       item
       end

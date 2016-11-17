@@ -43,6 +43,7 @@ type
     colisAuto: TcxGridDBColumn;
     colMCSDay: TcxGridDBColumn;
     colMCSPeriod: TcxGridDBColumn;
+    clisComplete: TcxGridDBColumn;
   private
     { Private declarations }
   public

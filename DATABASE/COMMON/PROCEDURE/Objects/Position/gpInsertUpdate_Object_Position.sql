@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_Position()
 
--- DROP FUNCTION gpInsertUpdate_Object_Position();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Position (Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Position(
- INOUT ioId	                 Integer   ,   	-- ключ объекта <Должности> 
+ INOUT ioId	             Integer   ,    -- ключ объекта <Должности> 
     IN inCode                Integer   ,    -- код объекта 
-    IN inName                TVarChar  ,    -- Название объекта <
+    IN inName                TVarChar  ,    -- Название объекта 
+    IN inSheetWorkTimeId     Integer   ,    -- Режим работы (Шаблон табеля р.вр.)
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -37,20 +39,23 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Position(), vbCode_calc, inName);
 
+   -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Position_SheetWorkTime(), ioId, inSheetWorkTimeId);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Position(Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.16         * add inSheetWorkTimeId
  09.10.13                                        * пытаемся найти код
- 01.07.13          *
+ 01.07.13         *
 */
 
 -- тест

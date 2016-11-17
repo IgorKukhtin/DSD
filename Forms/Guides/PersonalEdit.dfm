@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
-  ClientHeight = 402
+  ClientHeight = 439
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,8 +17,8 @@
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 85
-    Top = 373
+    Left = 77
+    Top = 410
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,8 +27,8 @@
     TabOrder = 6
   end
   object cxButton2: TcxButton
-    Left = 189
-    Top = 373
+    Left = 181
+    Top = 410
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -212,8 +212,26 @@
     TabOrder = 23
     Width = 305
   end
+  object cxLabel10: TcxLabel
+    Left = 16
+    Top = 364
+    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+  end
+  object ceSheetWorkTime: TcxButtonEdit
+    Left = 16
+    Top = 381
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 25
+    Width = 305
+  end
   object ActionList: TActionList
-    Top = 296
+    Left = 200
+    Top = 232
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -256,6 +274,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId '
@@ -263,6 +282,7 @@
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -270,6 +290,7 @@
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionLevelId'
@@ -277,6 +298,7 @@
         Component = PositionLevelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -284,6 +306,7 @@
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalGroupId'
@@ -291,6 +314,7 @@
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalServiceListId'
@@ -298,6 +322,7 @@
         Component = PersonalServiceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalServiceListOfficialId'
@@ -305,6 +330,15 @@
         Component = PersonalServiceListOfficialGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateIn'
@@ -312,6 +346,7 @@
         Component = edDateIn
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateOut'
@@ -319,6 +354,7 @@
         Component = edDateOut
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsDateOut'
@@ -326,6 +362,7 @@
         Component = cbDateOut
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsMain'
@@ -333,6 +370,7 @@
         Component = cbMain
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 115
@@ -344,11 +382,13 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MaskId'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 96
@@ -364,6 +404,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MaskId'
@@ -371,17 +412,20 @@
         Component = dsdFormParams
         ComponentItem = 'MaskId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberCode'
         Value = 0.000000000000000000
         Component = ceMemberCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId'
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
@@ -389,12 +433,14 @@
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionId'
         Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionName'
@@ -402,12 +448,14 @@
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionLevelId'
         Value = ''
         Component = PositionLevelGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PositionLevelName'
@@ -415,12 +463,14 @@
         Component = PositionLevelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -428,12 +478,14 @@
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalGroupId'
         Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalGroupName'
@@ -441,36 +493,42 @@
         Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateIn'
         Value = 0d
         Component = edDateIn
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'DateOut'
         Value = 0d
         Component = edDateOut
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsDateOut'
         Value = 'False'
         Component = cbDateOut
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IsMain'
         Value = 'False'
         Component = cbMain
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
         Value = Null
         Component = PersonalServiceListGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -478,12 +536,14 @@
         Component = PersonalServiceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListOfficialId'
         Value = Null
         Component = PersonalServiceListOfficialGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListOfficialName'
@@ -491,6 +551,22 @@
         Component = PersonalServiceListOfficialGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeName'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -508,8 +584,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 24
-    Top = 296
+    Left = 264
+    Top = 240
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 304
@@ -520,6 +596,7 @@
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -530,6 +607,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -538,6 +616,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 55
@@ -547,6 +626,7 @@
     LookupControl = ceMember
     FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -557,6 +637,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -565,12 +646,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceMemberCode
         ComponentItem = 'Code'
+        MultiSelectSeparator = ','
       end>
     Left = 277
     Top = 8
@@ -580,6 +663,7 @@
     LookupControl = cePersonalGroup
     FormNameParam.Value = 'TPersonalGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -590,6 +674,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -598,6 +683,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 279
     Top = 96
@@ -607,6 +693,7 @@
     LookupControl = cePosition
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -617,6 +704,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -625,6 +713,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 279
     Top = 144
@@ -634,6 +723,7 @@
     LookupControl = cePositionLevel
     FormNameParam.Value = 'TPositionLevelForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPositionLevelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -644,6 +734,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -652,6 +743,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 287
     Top = 185
@@ -661,6 +753,7 @@
     LookupControl = cePersonalServiceList
     FormNameParam.Value = 'TPersonalServiceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -671,6 +764,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -679,6 +773,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 239
     Top = 289
@@ -688,6 +783,7 @@
     LookupControl = cePersonalServiceListOfficial
     FormNameParam.Value = 'TPersonalServiceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -698,6 +794,7 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -706,8 +803,39 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 167
     Top = 329
+  end
+  object SheetWorkTimeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceSheetWorkTime
+    FormNameParam.Value = 'TSheetWorkTime_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSheetWorkTime_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 159
+    Top = 363
   end
 end

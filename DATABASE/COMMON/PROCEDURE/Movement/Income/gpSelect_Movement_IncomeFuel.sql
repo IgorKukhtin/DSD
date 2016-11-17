@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
-             , FromName TVarChar, ToName TVarChar
+             , FromName TVarChar, ToName TVarChar, ItemName TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , FuelReal       TFloat -- Кол-во л. (заправка)
              , PriceCalc      TFloat -- Цена заправки
              , SummReal       TFloat -- Сумма заправки
+             , SummaExp       TFloat -- Сумма затраты
 
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
@@ -78,8 +79,8 @@ BEGIN
              Movement.Id
            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
-           , Movement_Master.InvNumber AS InvNumberMaster
-           , Movement_Master.OperDate AS OperDateMaster
+           , Movement_Master.InvNumber         AS InvNumberMaster
+           , Movement_Master.OperDate          AS OperDateMaster
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
@@ -99,6 +100,7 @@ BEGIN
 
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
+           , ObjectDesc_To.ItemName
            , Object_PaidKind.ValueData         AS PaidKindName
            , View_Contract_InvNumber.ContractId
            , View_Contract_InvNumber.InvNumber AS ContractName
@@ -217,6 +219,43 @@ BEGIN
              -- Сумма заправки
            , MovementFloat_TotalSumm.ValueData AS SummReal
 
+           -- СУММА затраты 
+             -- Сумма заправки
+           , CASE WHEN Object_To.DescId = zc_Object_Member() 
+                  THEN (MovementFloat_TotalSumm.ValueData       
+                        -- *Сумма грн (амортизация)
+                        - (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                                 THEN COALESCE (MovementFloat_Distance.ValueData, 0)
+                             WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                                 THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0))
+                             ELSE COALESCE (MovementFloat_Distance.ValueData, 0)
+                        END * COALESCE (MovementFloat_Reparation.ValueData, 0))
+             -- 
+                       - ((CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                                 THEN 0
+                                WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                                 THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                                ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                           END
+                         * CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END
+                         + CASE WHEN COALESCE (MovementFloat_Limit.ValueData, 0) + COALESCE (MovementFloat_LimitChange.ValueData, 0) < COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                                 AND (MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0)
+                                 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
+                               ELSE 0
+                           END
+                         - CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                                     THEN COALESCE (MovementFloat_Distance.ValueData, 0)
+                                WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                                     THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0))
+                                ELSE COALESCE (MovementFloat_Distance.ValueData, 0)
+                           END * COALESCE (MovementFloat_Reparation.ValueData, 0)
+                         + CASE WHEN MovementFloat_LimitDistance.ValueData <> 0 OR MovementFloat_LimitDistanceChange.ValueData <> 0
+                                  OR MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0
+                                     THEN 0
+                                ELSE COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                           END) * (-1)) )
+                 ELSE 0 END  :: TFloat  AS SummaExp
+
            , tmpSign.strSign
            , tmpSign.strSignNo
 
@@ -310,6 +349,8 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_To.Id
                                                        AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+
+            LEFT JOIN ObjectDesc AS ObjectDesc_To ON ObjectDesc_To.Id = Object_To.DescId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

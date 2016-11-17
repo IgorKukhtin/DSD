@@ -1,9 +1,9 @@
-object PositionForm: TPositionForm
+object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
-  ClientHeight = 379
-  ClientWidth = 530
+  Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080')'
+  ClientHeight = 346
+  ClientWidth = 895
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object PositionForm: TPositionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 530
-    Height = 353
+    Width = 895
+    Height = 320
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 507
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,7 +45,6 @@ object PositionForm: TPositionForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -55,22 +53,71 @@ object PositionForm: TPositionForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 54
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 237
-      end
-      object SheetWorkTimeName: TcxGridDBColumn
-        Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
-        DataBinding.FieldName = 'SheetWorkTimeName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
-        Options.Editing = False
-        Width = 149
+        Width = 103
+      end
+      object clDayKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1076#1085#1103
+        DataBinding.FieldName = 'DayKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 132
+      end
+      object clStartTime: TcxGridDBColumn
+        Caption = #1042#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072
+        DataBinding.FieldName = 'StartTime'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'HH:MM'
+        Properties.Kind = ckDateTime
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 64
+      end
+      object clWorkTime: TcxGridDBColumn
+        Caption = #1050#1086#1083'. '#1088#1072#1073'. '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'WorkTime'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'HH:MM'
+        Properties.Kind = ckDateTime
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 62
+      end
+      object clDayOffPeriodDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1087#1077#1088#1080#1086#1076'.'
+        DataBinding.FieldName = 'DayOffPeriodDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 81
+      end
+      object clDayOffPeriod: TcxGridDBColumn
+        Caption = #1055#1077#1088#1080#1086#1076'-'#1090#1100', '#1076#1085#1077#1081
+        DataBinding.FieldName = 'DayOffPeriod'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1074' '#1076#1085#1103#1093
+        Width = 81
+      end
+      object clDayOffWeek: TcxGridDBColumn
+        Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' ('#1074#1099#1093#1086#1076#1085#1099#1077')'
+        DataBinding.FieldName = 'DayOffWeek'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 167
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 152
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -79,7 +126,7 @@ object PositionForm: TPositionForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 38
+        Width = 28
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -88,14 +135,14 @@ object PositionForm: TPositionForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 104
+    Left = 48
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 160
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -109,8 +156,8 @@ object PositionForm: TPositionForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 104
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -129,8 +176,8 @@ object PositionForm: TPositionForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 104
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -150,11 +197,19 @@ object PositionForm: TPositionForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
           Visible = True
           ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -169,21 +224,8 @@ object PositionForm: TPositionForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -192,6 +234,14 @@ object PositionForm: TPositionForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -233,22 +283,18 @@ object PositionForm: TPositionForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = ProtocolOpenForm
-      Category = 0
-    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -262,8 +308,8 @@ object PositionForm: TPositionForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPositionEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TSheetWorkTimeEditForm'
+      FormNameParam.Value = 'TSheetWorkTimeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -283,8 +329,8 @@ object PositionForm: TPositionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPositionEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TSheetWorkTimeEditForm'
+      FormNameParam.Value = 'TSheetWorkTimeEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -301,36 +347,6 @@ object PositionForm: TPositionForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
-    end
-    object ProtocolOpenForm: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -380,13 +396,12 @@ object PositionForm: TPositionForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -398,8 +413,8 @@ object PositionForm: TPositionForm
       ShortCut = 16472
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Position'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_SheetWorkTime'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -407,12 +422,12 @@ object PositionForm: TPositionForm
       end>
     Params = <>
     PackSize = 1
-    Left = 48
-    Top = 216
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 160
+    Left = 160
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -456,7 +471,7 @@ object PositionForm: TPositionForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 168
-    Top = 224
+    Left = 448
+    Top = 112
   end
 end

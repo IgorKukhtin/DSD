@@ -14,6 +14,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
+               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean) AS
 $BODY$
 BEGIN
@@ -46,6 +47,9 @@ BEGIN
          , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
          , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
 
+         , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
+         , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -63,6 +67,11 @@ BEGIN
                                ON ObjectLink_Personal_PersonalServiceListOfficial.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
+                               ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
+          LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
 
     WHERE Object_Personal_View.PersonalId = inMaskId;
    END IF;
@@ -92,6 +101,9 @@ BEGIN
 
            , CAST (0 as Integer)   AS PersonalServiceListOfficialId 
            , CAST ('' as TVarChar) AS PersonalServiceListOfficialName
+
+           , CAST (0 as Integer)   AS SheetWorkTimeId 
+           , CAST ('' as TVarChar) AS SheetWorkTimeName
 
            , CURRENT_DATE :: TDateTime AS DateIn
            , CURRENT_DATE :: TDateTime AS DateOut
@@ -125,6 +137,9 @@ BEGIN
          , COALESCE (Object_PersonalServiceListOfficial.Id, CAST (0 as Integer))           AS PersonalServiceListOfficialId 
          , COALESCE (Object_PersonalServiceListOfficial.ValueData, CAST ('' as TVarChar))  AS PersonalServiceListOfficialName 
 
+         , Object_SheetWorkTime.Id           AS SheetWorkTimeId 
+         , Object_SheetWorkTime.ValueData    AS SheetWorkTimeName
+
          , Object_Personal_View.DateIn
          -- , Object_Personal_View.DateOut
          , CASE WHEN Object_Personal_View.DateOut_user IS NULL THEN CURRENT_DATE ELSE Object_Personal_View.DateOut_user END :: TDateTime AS DateOut
@@ -143,6 +158,11 @@ BEGIN
                               AND ObjectLink_Personal_PersonalServiceListOfficial.DescId = zc_ObjectLink_Personal_PersonalServiceListOfficial()
           LEFT JOIN Object AS Object_PersonalServiceListOfficial ON Object_PersonalServiceListOfficial.Id = ObjectLink_Personal_PersonalServiceListOfficial.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_SheetWorkTime
+                               ON ObjectLink_Personal_SheetWorkTime.ObjectId = Object_Personal_View.PersonalId
+                              AND ObjectLink_Personal_SheetWorkTime.DescId = zc_ObjectLink_Personal_SheetWorkTime()
+          LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Personal_SheetWorkTime.ChildObjectId
+
     WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
@@ -156,6 +176,7 @@ ALTER FUNCTION gpGet_Object_Personal (Integer, Integer, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.11.16         * add SheetWorkTime
  07.05.15         * add ObjectLink_Personal_PersonalServiceList
  15.09.14                                                        *
  12.09.14                                        * add isDateOut and isOfficial

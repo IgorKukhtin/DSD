@@ -877,7 +877,10 @@ uses
   Report_UserProtocol in '..\..\Forms\Report\Report_UserProtocol.pas' {Report_UserProtocolForm: TParentForm},
   Report_UserProtocolDialog in '..\..\Forms\Report\Report_UserProtocolDialog.pas' {Report_UserProtocolDialogForm: TParentForm},
   User_Object in '..\..\Forms\Guides\User_Object.pas' {User_ObjectForm: TParentForm},
-  Report_UserProtocolView in '..\..\Forms\Report\Report_UserProtocolView.pas' {Report_UserProtocolViewForm: TParentForm};
+  Report_UserProtocolView in '..\..\Forms\Report\Report_UserProtocolView.pas' {Report_UserProtocolViewForm: TParentForm},
+  DayKind in '..\..\Forms\Kind\DayKind.pas' {DayKindForm: TParentForm},
+  SheetWorkTime_Object in '..\..\Forms\Guides\SheetWorkTime_Object.pas' {SheetWorkTime_ObjectForm: TParentForm},
+  SheetWorkTimeEdit in '..\..\Forms\Guides\SheetWorkTimeEdit.pas' {SheetWorkTimeEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -1,4 +1,4 @@
-unit PersonalEdit;
+unit SheetWorkTimeEdit;
 
 interface
 
@@ -17,57 +17,48 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdGuides, Data.DB,
-  Datasnap.DBClient, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
-  Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
-  cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  cxCheckBox;
+  Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
+  cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
+  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar, cxCheckBox,
+  cxSpinEdit, cxTimeEdit;
 
 type
-  TPersonalEditForm = class(TParentForm)
+  TSheetWorkTimeEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
-    ceMemberCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    cxLabel2: TcxLabel;
-    cxLabel5: TcxLabel;
+    ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel6: TcxLabel;
+    cxPropertiesStore: TcxPropertiesStore;
+    cxLabel3: TcxLabel;
+    cxLabel5: TcxLabel;
     cxLabel7: TcxLabel;
-    cePosition: TcxButtonEdit;
-    ceUnit: TcxButtonEdit;
-    ceMember: TcxButtonEdit;
-    edDateIn: TcxDateEdit;
-    edDateOut: TcxDateEdit;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    cePersonalGroup: TcxButtonEdit;
-    cxLabel1: TcxLabel;
-    UnitGuides: TdsdGuides;
-    MemberGuides: TdsdGuides;
-    PersonalGroupGuides: TdsdGuides;
-    PositionGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    cePositionLevel: TcxButtonEdit;
-    PositionLevelGuides: TdsdGuides;
-    cbDateOut: TcxCheckBox;
-    cbMain: TcxCheckBox;
+    ceDayOffPeriod: TcxTextEdit;
     cxLabel8: TcxLabel;
-    cePersonalServiceList: TcxButtonEdit;
-    PersonalServiceListGuides: TdsdGuides;
+    ceComment: TcxTextEdit;
     cxLabel9: TcxLabel;
-    cePersonalServiceListOfficial: TcxButtonEdit;
-    PersonalServiceListOfficialGuides: TdsdGuides;
-    cxLabel10: TcxLabel;
-    ceSheetWorkTime: TcxButtonEdit;
-    SheetWorkTimeGuides: TdsdGuides;
+    ceDayKind: TcxButtonEdit;
+    DayKindGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edDayOffPeriod: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    cbValue1: TcxCheckBox;
+    cbValue2: TcxCheckBox;
+    cbValue3: TcxCheckBox;
+    cbValue4: TcxCheckBox;
+    cbValue5: TcxCheckBox;
+    cbValue6: TcxCheckBox;
+    cbValue7: TcxCheckBox;
+    edStart: TcxDateEdit;
+    edWork: TcxDateEdit;
   private
     { Private declarations }
   public
@@ -78,5 +69,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TPersonalEditForm);
+  RegisterClass(TSheetWorkTimeEditForm);
+
 end.

@@ -820,10 +820,22 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ReestrKind_Buh()       , inDescId:= zc_Object_ReestrKind(), inCode:= 6, inName:= 'Бухгалтерия'                , inEnumName:= 'zc_Enum_ReestrKind_Buh');
 END $$;
 
+
+DO $$
+BEGIN
+
+     -- !!! Типы дней
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Calendar() , inDescId:= zc_Object_DayKind(), inCode:= 1, inName:= 'по календарю'        , inEnumName:= 'zc_Enum_DayKind_Calendar');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Week(   )  , inDescId:= zc_Object_DayKind(), inCode:= 2, inName:= 'по дням недели'      , inEnumName:= 'zc_Enum_DayKind_Week');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DayKind_Period()   , inDescId:= zc_Object_DayKind(), inCode:= 3, inName:= 'периодичность в днях', inEnumName:= 'zc_Enum_DayKind_Period');
+
+
+END $$;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 15.11.16          * zc_Enum_DayKind
  23.03.16          *
  03.03.16          *  Параметры установок для почты
                       Типы установок для почты

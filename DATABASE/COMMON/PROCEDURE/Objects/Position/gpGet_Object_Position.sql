@@ -1,16 +1,18 @@
-п»ї-- Function: gpGet_Object_Position (Integer,TVarChar)
+-- Function: gpGet_Object_Position (Integer,TVarChar)
 
---DROP FUNCTION gpGet_Object_Position (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Position (Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Position(
-    IN inId          Integer,        -- Р”РѕР»Р¶РЅРѕСЃС‚Рё
-    IN inSession     TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,        -- Должности
+    IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+               SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
+               isErased boolean) AS
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Position());
 
    IF COALESCE (inId, 0) = 0
@@ -19,7 +21,9 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Position()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (0 as Integer)    AS SheetWorkTimeId 
+           , CAST ('' as TVarChar)  AS SheetWorkTimeName
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -27,8 +31,15 @@ BEGIN
            Object_Position.Id             AS Id
          , Object_Position.ObjectCode     AS Code
          , Object_Position.ValueData      AS Name
+         , Object_SheetWorkTime.Id        AS SheetWorkTimeId 
+         , Object_SheetWorkTime.ValueData AS SheetWorkTimeName
          , Object_Position.isErased       AS isErased
-     FROM OBJECT AS Object_Position
+     FROM Object AS Object_Position
+          LEFT JOIN ObjectLink AS ObjectLink_Position_SheetWorkTime
+                               ON ObjectLink_Position_SheetWorkTime.ObjectId = Object_Position.Id
+                              AND ObjectLink_Position_SheetWorkTime.DescId = zc_ObjectLink_Position_SheetWorkTime()
+          LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Position_SheetWorkTime.ChildObjectId
+
      WHERE Object_Position.Id = inId;
    END IF;
    
@@ -40,11 +51,12 @@ ALTER FUNCTION gpGet_Object_Position(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 01.07.13          *
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.11.16         * add SheetWorkTime
+ 01.07.13         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Position('2')

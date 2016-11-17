@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1083#1078#1085#1086#1089#1090#1100'>'
-  ClientHeight = 187
-  ClientWidth = 370
+  ClientHeight = 206
+  ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 32
-    Top = 63
+    Top = 67
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 120
+    Top = 165
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 208
-    Top = 120
+    Top = 165
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,11 +61,29 @@
     TabOrder = 5
     Width = 273
   end
+  object cxLabel10: TcxLabel
+    Left = 32
+    Top = 113
+    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+  end
+  object ceSheetWorkTime: TcxButtonEdit
+    Left = 32
+    Top = 131
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 304
-    Top = 104
+    Left = 320
+    Top = 5
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -78,6 +96,8 @@
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -87,6 +107,8 @@
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -100,12 +122,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -113,7 +137,17 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 320
     Top = 40
   end
@@ -123,9 +157,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 120
+    Left = 24
+    Top = 149
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Position'
@@ -138,20 +173,39 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeName'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 144
+    PackSize = 1
+    Left = 256
+    Top = 37
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -165,10 +219,40 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 24
-    Top = 80
+    Left = 328
+    Top = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
+  end
+  object SheetWorkTimeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceSheetWorkTime
+    FormNameParam.Value = 'TSheetWorkTime_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSheetWorkTime_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 151
+    Top = 142
   end
 end

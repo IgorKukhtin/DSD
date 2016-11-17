@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inToId                Integer   , -- Кому (в документе)
     IN inComment             TVarChar  , -- Примечание
     IN inChecked             Boolean   , -- Проверен
+    IN inisComplete          Boolean   , -- Собрано фармацевтом
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -29,6 +31,7 @@ BEGIN
                                          , inToId             := inToId
                                          , inComment          := inComment
                                          , inChecked          := inChecked
+                                         , inisComplete       := inisComplete
                                          , inUserId           := vbUserId
                                           );
 
@@ -39,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.11.16         * inisComplete
  28.06.16         * 
  29.05.15                                        *
 */

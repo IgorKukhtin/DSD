@@ -30,8 +30,6 @@ object UnitForm: TUnitForm
     Height = 394
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = -416
-    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -250,6 +248,15 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object SheetWorkTimeName: TcxGridDBColumn
+        Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+        DataBinding.FieldName = 'SheetWorkTimeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+        Options.Editing = False
+        Width = 149
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089

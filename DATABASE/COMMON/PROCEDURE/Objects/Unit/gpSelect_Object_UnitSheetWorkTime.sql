@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_UnitSheetWorkTime(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                ParentId Integer, ParentName TVarChar,
                BranchId Integer, BranchName TVarChar,
+               SheetWorkTimeName TVarChar,
                isLeaf Boolean, isErased Boolean
 ) AS
 $BODY$
@@ -60,21 +61,16 @@ BEGIN
 
     RETURN QUERY
         WITH tmpList AS (
-            SELECT DISTINCT 
-                ObjectLink.ObjectId AS UnitId
-            FROM 
-                ObjectLink
-                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                         SELECT DISTINCT 
+                                ObjectLink.ObjectId AS UnitId
+                         FROM ObjectLink
+                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                      ON ObjectLink_Personal_Member.ObjectId = ObjectLink.ChildObjectId
                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-                WHERE 
-                    ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
-                    AND 
-                    (
-                        ObjectLink_Personal_Member.ChildObjectId = vbMemberId 
-                        OR 
-                        vbMemberId = 0)
-                    )
+                         WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
+                           AND ( ObjectLink_Personal_Member.ChildObjectId = vbMemberId 
+                              OR vbMemberId = 0)
+                        )
         SELECT
             Object_Unit.Id                     AS UnitId
           , Object_Unit.Code                   AS UnitCode
@@ -83,27 +79,26 @@ BEGIN
           , Object_Unit.ParentName             AS ParentName
           , Object_Unit.BranchId               AS BranchId
           , Object_Unit.BranchName             AS BranchName
+          , Object_SheetWorkTime.ValueData     AS SheetWorkTimeName
           , Object_Unit.isLeaf
           , Object_Unit.isErased
-        FROM (
-                SELECT DISTINCT 
+        FROM (  SELECT DISTINCT 
                     ChildObjectId AS UnitId 
-                FROM 
-                    ObjectLink 
-                WHERE 
-                    DescId = zc_ObjectLink_StaffList_Unit() 
-                    AND 
-                    ChildObjectId > 0 
-                    AND 
-                    vbMemberId = 0
+                FROM ObjectLink 
+                WHERE DescId = zc_ObjectLink_StaffList_Unit() 
+                  AND ChildObjectId > 0 
+                  AND vbMemberId = 0
                 UNION
-                SELECT 
-                    tmpList.UnitId 
-                FROM 
-                    tmpList
+                SELECT tmpList.UnitId 
+                FROM tmpList
              ) AS ObjectLink_StaffList_Unit
             LEFT JOIN Object_Unit_View AS Object_Unit 
-                                       ON Object_Unit.Id = ObjectLink_StaffList_Unit.UnitId;
+                                       ON Object_Unit.Id = ObjectLink_StaffList_Unit.UnitId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
+                                 ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
+            LEFT JOIN Object AS Object_SheetWorkTime ON Object_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
+            ;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -113,6 +108,7 @@ ALTER FUNCTION gpSelect_Object_UnitSheetWorkTime (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+ 16.11.16         * add SheetWorkTimeName
  27.11.15                                                        *
 */
 

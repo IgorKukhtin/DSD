@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
     IN inToId                Integer   , -- Кому (в документе)
     IN inComment             TVarChar   , -- Примечание
     IN inChecked             Boolean   , -- Проверен
+    IN inisComplete          Boolean   , -- Собрано фармацевтом
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -45,6 +46,8 @@ BEGIN
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Complete(), ioId, inisComplete);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (ioId);
@@ -78,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 15.11.16         * inisComplete
  28.06.16         *
  20.03.16         *
  29.07.15                                                                       *

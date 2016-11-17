@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 488
-  ClientWidth = 497
+  ClientHeight = 530
+  ClientWidth = 507
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 112
-    Top = 457
+    Top = 497
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 306
-    Top = 457
+    Top = 497
     Width = 75
     Height = 25
     Action = FormClose
@@ -217,7 +217,7 @@
   end
   object cxLabel11: TcxLabel
     Left = 40
-    Top = 341
+    Top = 342
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object cxLabel12: TcxLabel
@@ -290,7 +290,7 @@
   end
   object cxLabel16: TcxLabel
     Left = 40
-    Top = 387
+    Top = 390
     Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
@@ -299,8 +299,26 @@
     TabOrder = 35
     Width = 449
   end
+  object cxLabel17: TcxLabel
+    Left = 40
+    Top = 438
+    Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088'.'#1074#1088'.)'
+  end
+  object ceSheetWorkTime: TcxButtonEdit
+    Left = 40
+    Top = 456
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 37
+    Width = 449
+  end
   object ActionList: TActionList
-    Top = 40
+    Left = 16
+    Top = 24
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -460,6 +478,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAddress'
         Value = Null
         Component = edAddress
@@ -468,8 +494,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 424
+    Left = 32
+    Top = 288
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -699,6 +725,21 @@
         Name = 'Address'
         Value = Null
         Component = edAddress
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeId'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SheetWorkTimeName'
+        Value = Null
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1124,7 +1165,37 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 351
+    Left = 303
     Top = 295
+  end
+  object SheetWorkTimeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceSheetWorkTime
+    FormNameParam.Value = 'TSheetWorkTime_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSheetWorkTime_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = SheetWorkTimeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 319
+    Top = 438
   end
 end
