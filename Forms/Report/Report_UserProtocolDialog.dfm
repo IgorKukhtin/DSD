@@ -111,7 +111,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     TabOrder = 13
     Width = 93
   end
-  object ceDeviation: TcxCurrencyEdit [14]
+  object ceDiff: TcxCurrencyEdit [14]
     Left = 297
     Top = 34
     EditValue = 10.000000000000000000
@@ -257,9 +257,9 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Deviation'
+        Name = 'Diff'
         Value = Null
-        Component = ceDeviation
+        Component = ceDiff
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -16,17 +16,17 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Height = 466
     TabOrder = 3
     ExplicitTop = 86
-    ExplicitWidth = 935
+    ExplicitWidth = 887
     ExplicitHeight = 466
     ClientRectBottom = 466
     ClientRectRight = 887
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 935
+      ExplicitWidth = 887
       ExplicitHeight = 466
       inherited cxGrid: TcxGrid
         Width = 887
         Height = 200
-        ExplicitWidth = 935
+        ExplicitWidth = 887
         ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -327,7 +327,6 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         Height = 258
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 206
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -375,14 +374,13 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
-        ExplicitWidth = 935
       end
     end
   end
   inherited Panel: TPanel
     Width = 887
     Height = 60
-    ExplicitWidth = 935
+    ExplicitWidth = 887
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 118
@@ -479,7 +477,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Top = 33
     Caption = #1054#1090#1082#1083'. '#1084#1080#1085'.'
   end
-  object ceDeviation: TcxCurrencyEdit [9]
+  object ceDiff: TcxCurrencyEdit [9]
     Left = 774
     Top = 32
     EditValue = 10.000000000000000000
@@ -653,9 +651,9 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Deviation'
+          Name = 'Diff'
           Value = Null
-          Component = ceDeviation
+          Component = ceDiff
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -821,9 +819,9 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDeviation'
+        Name = 'inDiff'
         Value = Null
-        Component = ceDeviation
+        Component = ceDiff
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -914,7 +912,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         Component = GuidesUser
       end
       item
-        Component = ceDeviation
+        Component = ceDiff
       end>
     Left = 216
     Top = 184

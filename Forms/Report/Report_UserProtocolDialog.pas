@@ -29,7 +29,7 @@ type
     edUser: TcxButtonEdit;
     UserGuides: TdsdGuides;
     cbShowAll: TcxCheckBox;
-    ceDeviation: TcxCurrencyEdit;
+    ceDiff: TcxCurrencyEdit;
     cxLabel6: TcxLabel;
   private
     { Private declarations }
