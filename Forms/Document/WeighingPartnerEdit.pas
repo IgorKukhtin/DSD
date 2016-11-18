@@ -1,4 +1,4 @@
-unit WeighingPartner;
+unit WeighingPartnerEdit;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TWeighingPartnerForm = class(TParentForm)
+  TWeighingPartnerEditForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -145,18 +145,15 @@ type
     MeasureName: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     spUpdateMovement: TdsdStoredProc;
-    HeaderSaver2: THeaderSaver;
     isBarCode: TcxGridDBColumn;
     cbPromo: TcxCheckBox;
     edInvNumberOrder: TcxButtonEdit;
     OrderChoiceGuides: TdsdGuides;
-    HeaderSaver3: THeaderSaver;
-    spUpdateMovement_Order: TdsdStoredProc;
     ChangePercent: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    actOpenDocument: TdsdOpenForm;
-    bbOpenDocument: TdxBarButton;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
   public
   end;
@@ -166,6 +163,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingPartnerForm);
+  RegisterClass(TWeighingPartnerEditForm);
 
 end.

@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementDescId Integer
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
@@ -74,6 +75,14 @@ BEGIN
              , Object_From.ValueData                AS FromName
              , Object_To.Id                         AS ToId
              , Object_To.ValueData                  AS ToName
+             , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_To_Juridical.ChildObjectId
+                    WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_From_Juridical.ChildObjectId
+                    ELSE 0
+               END AS JuridicalId
+             , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_JuridicalTo.ValueDate
+                    WHEN Object_From.DescId = zc_Object_Partner() THEN Object_JuridicalFrom.ValueDate
+                    ELSE ''
+               END AS JuridicalName
 
              , Object_PaidKind.Id                   AS PaidKindId
              , Object_PaidKind.ValueData            AS PaidKindName
@@ -139,6 +148,15 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_From_Juridical
+                                 ON ObjectLink_From_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_From_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_From_Juridical.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_To_Juridical
+                                 ON ObjectLink_To_Juridical.ObjectId = Object_To.Id
+                                AND ObjectLink_To_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_To_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
