@@ -2379,6 +2379,9 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
 end;

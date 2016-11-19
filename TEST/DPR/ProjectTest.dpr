@@ -881,7 +881,8 @@ uses
   DayKind in '..\..\Forms\Kind\DayKind.pas' {DayKindForm: TParentForm},
   SheetWorkTime_Object in '..\..\Forms\Guides\SheetWorkTime_Object.pas' {SheetWorkTime_ObjectForm: TParentForm},
   SheetWorkTimeEdit in '..\..\Forms\Guides\SheetWorkTimeEdit.pas' {SheetWorkTimeEditForm: TParentForm},
-  WeighingPartnerEdit in '..\..\Forms\Document\WeighingPartnerEdit.pas' {WeighingPartnerEditForm: TParentForm};
+  WeighingPartnerEdit in '..\..\Forms\Document\WeighingPartnerEdit.pas' {WeighingPartnerEditForm: TParentForm},
+  WeighingProductionEdit in '..\..\Forms\Document\WeighingProductionEdit.pas' {WeighingProductionEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

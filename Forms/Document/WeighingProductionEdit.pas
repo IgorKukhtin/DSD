@@ -1,4 +1,4 @@
-unit WeighingProduction;
+unit WeighingProductionEdit;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TWeighingProductionForm = class(TParentForm)
+  TWeighingProductionEditForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -88,7 +88,7 @@ type
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     GuidesFiller: TGuidesFiller;
-    actInsertUpdateMovement: TdsdExecStoredProc;
+    actUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
@@ -138,8 +138,7 @@ type
     PrintItemsCDS: TClientDataSet;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    actOpenDocument: TdsdOpenForm;
-    bbOpenDocument: TdxBarButton;
+    spUpdateMovement: TdsdStoredProc;
   private
   public
   end;
@@ -149,6 +148,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingProductionForm);
+  RegisterClass(TWeighingProductionEditForm);
 
 end.
