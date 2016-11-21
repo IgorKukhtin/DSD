@@ -32,7 +32,7 @@ CREATE OR REPLACE VIEW Movement_Income_View AS
        , MovementDate_Branch.ValueData              AS BranchDate
        , COALESCE(MovementBoolean_Checked.ValueData, false)     AS Checked
        , COALESCE(MovementBoolean_Document.ValueData, false)    AS isDocument
-       , COALESCE(MovementBoolean_Registered.ValueData, false)  AS isRegistered
+       , MovementBoolean_Registered.ValueData                   AS isRegistered -- !!!иногда будем возвращать NULL!!!
        , Container.Id                               AS PaymentContainerId
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
