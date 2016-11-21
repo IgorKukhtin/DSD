@@ -60,10 +60,10 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 103
+        Width = 145
       end
       object clDayKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1076#1085#1103
+        Caption = #1058#1080#1087' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
         DataBinding.FieldName = 'DayKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -98,19 +98,19 @@ object SheetWorkTime_ObjectForm: TSheetWorkTime_ObjectForm
         Width = 81
       end
       object clDayOffPeriod: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076'-'#1090#1100', '#1076#1085#1077#1081
+        Caption = #1055#1086#1089#1084#1077#1085#1085#1086' ('#1088#1072#1073'./'#1074#1099#1093'. '#1076#1085')'
         DataBinding.FieldName = 'DayOffPeriod'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1077#1088#1080#1086#1076#1080#1095#1085#1086#1089#1090#1100' '#1074' '#1076#1085#1103#1093
-        Width = 81
+        HeaderHint = #1055#1086#1089#1084#1077#1085#1085#1086' ('#1088#1072#1073'./'#1074#1099#1093'. '#1076#1085#1077#1081')'
+        Width = 98
       end
       object clDayOffWeek: TcxGridDBColumn
         Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' ('#1074#1099#1093#1086#1076#1085#1099#1077')'
         DataBinding.FieldName = 'DayOffWeek'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 167
+        Width = 162
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

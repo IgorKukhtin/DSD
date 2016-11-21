@@ -62,7 +62,7 @@ type
     cbisShowAll: TcxCheckBox;
     actRefreshShowAll: TdsdDataSetRefresh;
     cxLabel6: TcxLabel;
-    ceDeviation: TcxCurrencyEdit;
+    ceDiff: TcxCurrencyEdit;
   private
     { Private declarations }
   public

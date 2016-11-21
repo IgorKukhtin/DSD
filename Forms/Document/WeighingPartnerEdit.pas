@@ -1,4 +1,4 @@
-unit WeighingProduction;
+unit WeighingPartnerEdit;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TWeighingProductionForm = class(TParentForm)
+  TWeighingPartnerEditForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -57,8 +57,8 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colWeightSkewer1: TcxGridDBColumn;
-    colCountSkewer1: TcxGridDBColumn;
+    coPriceListName: TcxGridDBColumn;
+    colChangePercentAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
     actPrint: TdsdPrintAction;
@@ -67,7 +67,6 @@ type
     colUpdateDate: TcxGridDBColumn;
     colRealWeight: TcxGridDBColumn;
     colWeightTare: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colCountTare: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colCount: TcxGridDBColumn;
@@ -79,10 +78,7 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    edMovementDescName: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
-    edMovementDescNumber: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     GridToExcel: TdsdGridToExcel;
@@ -112,34 +108,52 @@ type
     cxLabel8: TcxLabel;
     edUser: TcxButtonEdit;
     UserGuides: TdsdGuides;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    colCountPack: TcxGridDBColumn;
-    edOperDate_parent: TcxDateEdit;
-    cxLabel14: TcxLabel;
-    edInvNumber_parent: TcxTextEdit;
-    cxLabel12: TcxLabel;
     cxLabel10: TcxLabel;
-    edWeighingNumber: TcxCurrencyEdit;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
+    edOperDate_parent: TcxDateEdit;
+    cxLabel12: TcxLabel;
+    edInvNumber_parent: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel17: TcxLabel;
     cxLabel18: TcxLabel;
     edPartionGoods: TcxTextEdit;
-    edisIncome: TcxCheckBox;
-    colStartWeighing: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
+    ContractGuides: TdsdGuides;
+    edWeighingNumber: TcxCurrencyEdit;
+    colBoxCount: TcxGridDBColumn;
+    colBoxNumber: TcxGridDBColumn;
+    colLevelNumber: TcxGridDBColumn;
+    colBoxName: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
-    colCountSkewer2: TcxGridDBColumn;
-    colWeightSkewer2: TcxGridDBColumn;
-    colWeightOther: TcxGridDBColumn;
-    cxLabel13: TcxLabel;
-    edDocumentKind: TcxButtonEdit;
-    GuidesDocumentKind: TdsdGuides;
-    spSelectPrintCeh: TdsdStoredProc;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
+    colAmount_mi: TcxGridDBColumn;
+    colAmountPartner: TcxGridDBColumn;
+    colAmountPartner_mi: TcxGridDBColumn;
+    colCount_mi: TcxGridDBColumn;
+    colHeadCount_mi: TcxGridDBColumn;
+    colBoxCount_mi: TcxGridDBColumn;
+    colAmountChangePercent: TcxGridDBColumn;
+    edContractTag: TcxButtonEdit;
+    ContractTagGuides: TdsdGuides;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel19: TcxLabel;
+    edChangePercent: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    edVATPercent: TcxCurrencyEdit;
+    MeasureName: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
+    spUpdateMovement: TdsdStoredProc;
+    isBarCode: TcxGridDBColumn;
+    cbPromo: TcxCheckBox;
+    edInvNumberOrder: TcxButtonEdit;
+    OrderChoiceGuides: TdsdGuides;
+    ChangePercent: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    actOpenDocument: TdsdOpenForm;
-    bbOpenDocument: TdxBarButton;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
   public
   end;
@@ -149,6 +163,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingProductionForm);
+  RegisterClass(TWeighingPartnerEditForm);
 
 end.

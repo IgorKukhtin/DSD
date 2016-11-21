@@ -155,6 +155,8 @@ type
     ChangePercent: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actOpenDocument: TdsdOpenForm;
+    bbOpenDocument: TdxBarButton;
   private
   public
   end;

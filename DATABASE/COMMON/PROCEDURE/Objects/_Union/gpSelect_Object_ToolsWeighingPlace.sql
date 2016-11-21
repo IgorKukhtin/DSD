@@ -87,6 +87,16 @@ BEGIN
      WHERE Object_DocumentKind.DescId = zc_Object_DocumentKind()
 
     UNION ALL
+     SELECT Object_Partner.Id
+          , Object_Partner.ObjectCode AS Code     
+          , Object_Partner.ValueData  AS Name
+          , ObjectDesc.ItemName
+          , Object_Partner.isErased
+     FROM Object AS Object_Partner
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Partner.DescId
+     WHERE Object_Partner.DescId = zc_Object_Partner()
+
+    UNION ALL
      SELECT MovementDesc.Id
           , MovementDesc.Id       AS Code     
           , MovementDesc.ItemName AS Name
@@ -105,6 +115,7 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighingPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.11.16         * add zc_Object_Partner
  22.01.15         *
 
 */

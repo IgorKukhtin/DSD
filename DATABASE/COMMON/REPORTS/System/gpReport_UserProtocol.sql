@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_UserProtocol(
     IN inUserId      Integer , --
     IN inIsDay       Boolean , --
     IN inIsShowAll   Boolean , -- Показать все
-    IN inDeviation   TFloat  , -- на сколько минут отклонение
+    IN inDiff        TFloat  , -- на сколько минут отклонение
     IN inSession     TVarChar  -- сессия пользователя
 )
 RETURNS TABLE (UserId Integer, UserCode Integer, UserName TVarChar, UserStatus TVarChar, isErased Boolean
@@ -64,8 +64,10 @@ BEGIN
                      , tmpPersonal.PositionId
 
                      , COALESCE (ObjectDate_Start.ValueData, zc_DateStart())        :: Time      AS StartTime
-                     --, COALESCE (ObjectDate_Work.ValueData, zc_DateStart())         :: Time      AS WorkTime
-                     , CAST ('08:00' AS Time)      AS WorkTime
+                     , COALESCE (ObjectDate_Work.ValueData, zc_DateStart())         :: Time      AS WorkTime
+                     --, CAST ('08:00' AS Time)      AS WorkTime
+                     , EXTRACT (HOUR FROM COALESCE (ObjectDate_Work.ValueData, zc_DateStart())) * 60 
+                     + EXTRACT (MINUTE FROM COALESCE (ObjectDate_Work.ValueData, zc_DateStart())) :: TFloat AS Minute_Work
                 FROM Object AS Object_User
                       LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -103,52 +105,32 @@ BEGIN
   -- генерируем таблицу дат
   , tmpDay AS (SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate)
         -- определяем время Подключения и выхода из программы
-      , tmpLogin_all AS (SELECT tmp.UserId
-                              , tmp.OperDate
-                              , tmp.OperDate_Entry
-                              , tmp.OperDate_Exit
-                              , tmp.isWork
-
-                              , (CASE WHEN inIsShowAll = FALSE 
-                                         THEN (EXTRACT (HOUR FROM (tmp.OperDate_Entry - ((tmp.OperDate_Entry::Date||':' ||tmp.StartTime) :: TDateTime))) * 60
-                                             + EXTRACT (MINUTE FROM (tmp.OperDate_Entry - ((tmp.OperDate_Entry::Date||':' ||tmp.StartTime) :: TDateTime))))
-                                         ELSE 0
-                                 END) :: TFloat AS StartDiff
-                              , (CASE WHEN inIsShowAll = FALSE 
-                                         THEN (EXTRACT (HOUR FROM (( ((tmp.OperDate_Entry::Date||':' ||tmp.StartTime) :: TDateTime)+ tmp.WorkTime) - tmp.OperDate_Exit)) * 60
-                                             + EXTRACT (MINUTE FROM (( ((tmp.OperDate_Entry::Date||':' ||tmp.StartTime) :: TDateTime)+ tmp.WorkTime) - tmp.OperDate_Exit))  )    
-                                         ELSE 0
-                                 END) :: TFloat AS ExitDiff
-                         FROM (
-                               SELECT LoginProtocol.UserId
-                                    , DATE_TRUNC ('DAY', LoginProtocol.OperDate) AS OperDate
-                                    , MIN (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
-                                                WHEN '{Подключение}'                 THEN LoginProtocol.OperDate
-                                                WHEN '{"Подключение (виртуальное)"}' THEN LoginProtocol.OperDate
-                                                WHEN '{}'                            THEN LoginProtocol.OperDate
-                                           END)  AS OperDate_Entry
-                                    , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
-                                                WHEN '{Выход}'    THEN LoginProtocol.OperDate
-                                                WHEN '{Работает}' THEN LoginProtocol.OperDate
-                                                -- WHEN '{}'         THEN LoginProtocol.OperDate + INTERVAL '8 HOUR' -- захардкодили - типа 8ч. отработали
-                                           END)  AS OperDate_Exit
-                                    , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
-                                                WHEN '{Работает}' THEN 1
-                                                ELSE 0
-                                           END)  AS isWork
-
-                                    , tmpUser.StartTime
-                                    , tmpUser.WorkTime
-
-                                FROM LoginProtocol
-                                     INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
-                                WHERE LoginProtocol.OperDate >= inStartDate AND LoginProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
-                               -- AND POSITION (LOWER ('Подключение (виртуальное)') IN LOWER (LoginProtocol.ProtocolData)) > 0
-                                GROUP BY LoginProtocol.UserId
-                                       , DATE_TRUNC ('DAY', LoginProtocol.OperDate)
-                                       , tmpUser.StartTime
-                                       , tmpUser.WorkTime
-                                ) AS tmp
+      , tmpLogin_all AS (SELECT LoginProtocol.UserId
+                              , DATE_TRUNC ('DAY', LoginProtocol.OperDate) AS OperDate
+                              , MIN (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
+                                          WHEN '{Подключение}'                 THEN LoginProtocol.OperDate
+                                          WHEN '{"Подключение (виртуальное)"}' THEN LoginProtocol.OperDate
+                                          WHEN '{}'                            THEN LoginProtocol.OperDate
+                                     END)  AS OperDate_Entry
+                              , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
+                                          WHEN '{Выход}'    THEN LoginProtocol.OperDate
+                                          WHEN '{Работает}' THEN LoginProtocol.OperDate
+                                          -- WHEN '{}'         THEN LoginProtocol.OperDate + INTERVAL '8 HOUR' -- захардкодили - типа 8ч. отработали
+                                     END)  AS OperDate_Exit
+                              , MAX (CASE CAST (XPATH ('/XML/Field[3]/@FieldValue', LoginProtocol.ProtocolData :: XML) AS TEXT)
+                                          WHEN '{Работает}' THEN 1
+                                          ELSE 0
+                                     END)  AS isWork
+                              , tmpUser.StartTime
+                              , tmpUser.Minute_Work
+                         FROM LoginProtocol
+                              INNER JOIN tmpUser ON tmpUser.UserId = LoginProtocol.UserId
+                         WHERE LoginProtocol.OperDate >= inStartDate AND LoginProtocol.OperDate < inEndDate + INTERVAL '1 DAY'
+                         -- AND POSITION (LOWER ('Подключение (виртуальное)') IN LOWER (LoginProtocol.ProtocolData)) > 0
+                         GROUP BY LoginProtocol.UserId
+                                , DATE_TRUNC ('DAY', LoginProtocol.OperDate)
+                                , tmpUser.StartTime
+                                , tmpUser.Minute_Work
                          ) 
        -- променяем фильтры "Показать все" , "отклонение, минут"
        
@@ -159,26 +141,37 @@ BEGIN
                           GROUP BY tmpLogin_all.UserId
                          ) 
     -- определяем время Подключения и выхода из программы
-  , tmpLoginProtocol AS (SELECT tmpLogin_all.UserId
-                              , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END AS OperDate
-                              , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END AS OperDate_Entry
-                              , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END AS OperDate_Exit
-                              , tmpLoginLast.OperDate                                                          AS OperDate_Last
-                              , MAX (tmpLogin_all.isWork)  AS isWork
-                              , MAX (CASE WHEN tmpLogin_all.OperDate = CURRENT_DATE THEN tmpLogin_all.isWork ELSE 0 END) AS isWork_current
-                              , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
-                                   + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
-                                    )  AS Minute_calc
-                              , SUM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)  AS Time_calc
-
-                         FROM tmpLogin_all
-                              LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
-                         WHERE inIsShowAll = TRUE OR (tmpLogin_all.StartDiff >= inDeviation OR tmpLogin_all.ExitDiff >= inDeviation)
-                         GROUP BY tmpLogin_all.UserId
-                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END
-                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END
-                                , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END
-                                , tmpLoginLast.OperDate
+  , tmpLoginProtocol AS (SELECT tmp.UserId
+                              , tmp.OperDate
+                              , tmp.OperDate_Entry
+                              , tmp.OperDate_Exit
+                              , tmp.OperDate_Last
+                              , tmp.isWork
+                              , tmp.isWork_current
+                              , tmp.Minute_calc
+                              , tmp.Time_calc
+                              , (tmp.Minute_Work - tmp.Minute_calc) AS Minute_Diff
+                         FROM (
+                               SELECT tmpLogin_all.UserId
+                                    , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END AS OperDate
+                                    , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END AS OperDate_Entry
+                                    , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END AS OperDate_Exit
+                                    , tmpLoginLast.OperDate                                                          AS OperDate_Last
+                                    , MAX (tmpLogin_all.isWork)  AS isWork
+                                    , MAX (CASE WHEN tmpLogin_all.OperDate = CURRENT_DATE THEN tmpLogin_all.isWork ELSE 0 END) AS isWork_current
+                                    , SUM (EXTRACT (HOUR   FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)) * 60
+                                         + EXTRACT (MINUTE FROM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry))
+                                          )  AS Minute_calc
+                                    , SUM (tmpLogin_all.OperDate_Exit - tmpLogin_all.OperDate_Entry)  AS Time_calc
+                                    , SUM (tmpLogin_all.Minute_Work) AS Minute_Work
+                               FROM tmpLogin_all
+                                    LEFT JOIN tmpLoginLast ON tmpLoginLast.UserId = tmpLogin_all.UserId
+                               GROUP BY tmpLogin_all.UserId
+                                      , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate       ELSE inStartDate END
+                                      , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Entry ELSE NULL        END
+                                      , CASE WHEN inIsDay = TRUE THEN tmpLogin_all.OperDate_Exit  ELSE NULL        END
+                                      , tmpLoginLast.OperDate
+                                ) AS tmp
                          ) 
 
     -- Данные из протокола документа
@@ -263,7 +256,7 @@ BEGIN
           , COALESCE (tmpMI.MI_Count,0)     ::TFloat     AS MI_Count            -- кол-во мувИтемов
             -- итого кол-во действий
           , (COALESCE (tmpMov.All_Count,0) + COALESCE (tmpMI.All_Count,0)) :: TFloat AS Count
-        
+          --, tmpLoginProtocol.Minute_Diff  :: TFloat AS Count
             -- отработал - Кол-во часов (по вх/вых)
           , CAST (tmpLoginProtocol.Minute_calc / 60 AS NUMERIC (16, 2)) :: TFloat AS Count_Prog
             -- отработал - Кол-во часов (по док.)
@@ -288,6 +281,7 @@ BEGIN
           
      FROM tmpDay
           INNER JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpDay.OperDate
+                                     AND (inIsShowAll = TRUE OR tmpLoginProtocol.Minute_Diff >= inDiff)
           LEFT JOIN tmpUser ON tmpUser.UserId =  tmpLoginProtocol.UserId 
 
           LEFT JOIN tmpLogin_all      ON tmpLogin_all.UserId   =  tmpLoginProtocol.UserId
