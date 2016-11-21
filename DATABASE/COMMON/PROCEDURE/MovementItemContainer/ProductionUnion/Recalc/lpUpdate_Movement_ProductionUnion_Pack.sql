@@ -431,8 +431,12 @@ BEGIN
                                    , CASE WHEN tmpAll_total.OperCount_Weight = 0
                                                THEN tmpResult_child.OperCount
                                           ELSE CASE WHEN tmpResult_master.OperCount_Weight <> 0
-                                                         THEN CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight / tmpAll_total.OperCount_Weight AS NUMERIC(16, 4))
-                                                    ELSE CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight_two / tmpAll_total.OperCount_Weight AS NUMERIC(16, 4))
+                                                         THEN CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight / tmpAll_total.OperCount_Weight
+                                                                  * CASE WHEN tmpAll.Koeff <> 0 THEN tmpAll.Koeff ELSE 1 END
+                                                                    AS NUMERIC(16, 4))
+                                                    ELSE CAST (tmpResult_child.OperCount * tmpResult_master.OperCount_Weight_two / tmpAll_total.OperCount_Weight
+                                                             * CASE WHEN tmpAll.Koeff <> 0 THEN tmpAll.Koeff ELSE 1 END
+                                                               AS NUMERIC(16, 4))
                                                END
                                      END AS OperCount
                                    , FALSE AS isPeresort
@@ -850,7 +854,7 @@ END;$BODY$
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.09.2016', inEndDate:= '24.09.2016', inUnitId:= 8451, inUserId:= zc_Enum_Process_Auto_Pack())
 
 -- where ContainerId = 568111
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '04.05.2016', inEndDate:= '04.05.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- ÷ех ”паковки
 -- where ContainerId = 119808 119834 -- select * from MovementItemContainer where MovementItemId = 50132454 
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)

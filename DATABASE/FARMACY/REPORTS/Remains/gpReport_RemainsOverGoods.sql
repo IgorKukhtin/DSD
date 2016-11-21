@@ -1,9 +1,6 @@
 -- Function: gpReport_RemainsOverGoods()
 
-DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
@@ -111,7 +108,7 @@ BEGIN
                      );
 
 
-      -- Ищеи cтроки мастера (ключ - ид документа, товар)
+      -- Ищем cтроки мастера (ключ - ид документа, товар)
       INSERT INTO tmpMIMaster (GoodsId, Amount, Summa, InvNumber, MovementId, MIMaster_Id)
          SELECT  MovementItem.ObjectId             AS GoodsId
                , MovementItem.Amount               AS Amount
@@ -128,7 +125,7 @@ BEGIN
            AND MovementItem.DescId = zc_MI_Master()
            AND MovementItem.isErased = FALSE;
 
-      -- Ищеи cтроки чайлда (ключ - ид документа, товар)
+      -- Ищем cтроки чайлда (ключ - ид документа, товар)
       INSERT INTO tmpMIChild (UnitId, GoodsId, Amount, Summa, MIChild_Id)
       SELECT  MovementItem.ObjectId             AS UnitId
             , MI_Master.ObjectId                AS GoodsId
@@ -313,13 +310,13 @@ BEGIN
          AND Price_Unit.DescId         = zc_ObjectLink_Price_Unit();
 
        -- Goods_list - MCSValue
-       UPDATE tmpGoods_list 
+       UPDATE tmpGoods_list
               SET MCSValue = CASE /*WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
                                   WHEN (inisInMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
-                                  */WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN Object_Price_View.MCSValue 
-                                  WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN Object_Price_View.MCSValue 
-                                  ELSE tmpMCS.MCSValue 
-                             END ::Tfloat
+                                  */WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (Object_Price_View.MCSValue, 0)
+                                  WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN COALESCE (Object_Price_View.MCSValue, 0)
+                                  ELSE COALESCE (tmpMCS.MCSValue, 0)
+                             END
        FROM tmpGoods_list AS tmp
            LEFT JOIN Object_Price_View ON Object_Price_View.Id = tmp.PriceId
                                       AND Object_Price_View.UnitId = tmp.UnitId
@@ -361,17 +358,19 @@ BEGIN
                  -- Излишки
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                           THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                           THEN -- FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                         ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                       ELSE 0
                  END AS RemainsMCS_from
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
-                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                          THEN FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
-                              * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
-                              * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
+                      WHEN Object_Remains.RemainsStart > tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue >= 0
+                          THEN -- FLOOR ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                        ((Object_Remains.RemainsStart - tmpGoods_list.MCSValue) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                             * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
+                             * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
                  END AS RemainsMCS_from
 
@@ -379,14 +378,16 @@ BEGIN
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                           THEN -- CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                        ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                       ELSE 0
                  END AS RemainsMCS_to
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
-                           THEN CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                           THEN -- CEIL ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
+                                        ((tmpGoods_list.MCSValue - COALESCE (Object_Remains.RemainsStart, 0)) / COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1)))
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
