@@ -68,6 +68,7 @@ BEGIN
                      --, CAST ('08:00' AS Time)      AS WorkTime
                      , EXTRACT (HOUR FROM COALESCE (ObjectDate_Work.ValueData, zc_DateStart())) * 60 
                      + EXTRACT (MINUTE FROM COALESCE (ObjectDate_Work.ValueData, zc_DateStart())) :: TFloat AS Minute_Work
+                     , Object_SheetWorkTime.Id AS SheetWorkTimeId
                 FROM Object AS Object_User
                       LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = Object_User.Id
@@ -218,6 +219,94 @@ BEGIN
                              , CASE WHEN inIsDay = TRUE THEN tmp.OperDate_Start ELSE NULL        END
                              , CASE WHEN inIsDay = TRUE THEN tmp.OperDate_End   ELSE NULL        END
                       )
+
+
+-------------------------------------
+     , tmpStartDate AS (SELECT MIN (COALESCE (ObjectDate_DayOffPeriod.ValueData, inStartDate) ) :: TDateTime AS OperDate
+                        FROM (SELECT DISTINCT tmpUser.SheetWorkTimeId FROM tmpUser) AS tmp
+                             LEFT JOIN ObjectLink AS ObjectLink_SheetWorkTime_DayKind 
+                                                  ON ObjectLink_SheetWorkTime_DayKind.ObjectId  = tmp.SheetWorkTimeId
+                                                 AND ObjectLink_SheetWorkTime_DayKind.DescId = zc_ObjectLink_SheetWorkTime_DayKind()
+                                                 AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Period()
+                             LEFT JOIN ObjectDate AS ObjectDate_DayOffPeriod
+                                                  ON ObjectDate_DayOffPeriod.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId 
+                                                 AND ObjectDate_DayOffPeriod.DescId = zc_ObjectDate_SheetWorkTime_DayOffPeriod()
+                       )
+
+       , tmpDateList AS (SELECT GENERATE_SERIES (tmpStartDate.OperDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate
+                         FROM tmpStartDate)
+
+       , tmpDateDay AS (SELECT tmpDateList.OperDate
+                             , tmpWeekDay.Number
+                        FROM tmpDateList
+                             LEFT JOIN zfCalc_DayOfWeekName (tmpDateList.OperDate) AS tmpWeekDay ON 1=1
+                        )
+
+       , tmpPeriod_All AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
+                                , ObjectDate_DayOffPeriod.ValueData :: TDateTime AS StartDate
+                                , zfCalc_Word_Split (inValue:= ObjectString_DayOffPeriod.ValueData, inSep:= '/', inIndex:= 1)::TFloat AS DayWork
+                                , zfCalc_Word_Split (inValue:= ObjectString_DayOffPeriod.ValueData, inSep:= '/', inIndex:= 2)::TFloat AS DayOff
+                           FROM (SELECT DISTINCT tmpUser.SheetWorkTimeId FROM tmpUser) AS tmp
+                                INNER JOIN ObjectLink AS ObjectLink_SheetWorkTime_DayKind 
+                                                      ON ObjectLink_SheetWorkTime_DayKind.ObjectId  = tmp.SheetWorkTimeId
+                                                     AND ObjectLink_SheetWorkTime_DayKind.DescId = zc_ObjectLink_SheetWorkTime_DayKind()
+                                                     AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Period()
+                                LEFT JOIN ObjectString AS ObjectString_DayOffPeriod
+                                                       ON ObjectString_DayOffPeriod.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId 
+                                                      AND ObjectString_DayOffPeriod.DescId = zc_ObjectString_SheetWorkTime_DayOffPeriod()
+                                LEFT JOIN ObjectDate AS ObjectDate_DayOffPeriod
+                                                     ON ObjectDate_DayOffPeriod.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId 
+                                                    AND ObjectDate_DayOffPeriod.DescId = zc_ObjectDate_SheetWorkTime_DayOffPeriod()
+                           )
+
+       , D  as (SELECT  row_number() OVER (PARTITION BY SheetWorkTimeId ORDER BY tmpDateDay.OperDate) as ID, * FROM tmpDateDay JOIN tmpPeriod_All ON tmpPeriod_All.StartDate <= tmpDateDay.OperDate)
+       , D1 as (SELECT (D.ID) % (D.daywork + D.dayoff) as i, D.* FROM D)
+       , D2 as (SELECT CASE WHEN ((D1.i > D1.DayWork) or (D1.i = 0 and  DayOff > 0)) THEN FALSE ELSE TRUE END AS IsWork, D1.* from D1)
+       , tmpPeriod AS (SELECT D2.OperDate 
+                            , D2.IsWork 
+                            , D2.SheetWorkTimeId
+                            , D2.i
+                       FROM D2
+                       WHERE D2.OperDate >= inStartDate
+                       ORDER BY 1, 3)
+
+       , tmpCalendar AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
+                              , tmpDateDay.OperDate 
+                              , CASE WHEN tmpDateDay.Number IN (6,7) THEN FALSE ELSE TRUE END IsWork
+                         FROM tmpDateDay
+                              LEFT JOIN ObjectLink AS ObjectLink_SheetWorkTime_DayKind
+                                                   ON ObjectLink_SheetWorkTime_DayKind.DescId = zc_ObjectLink_SheetWorkTime_DayKind()
+                                                  AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Calendar()
+                         WHERE tmpDateDay.OperDate >= inStartDate
+                         )
+
+       , tmpWeek AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
+                          , tmpDateDay.OperDate           
+                          , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= tmpDateDay.Number) ::TFloat <> 0 THEN FALSE ELSE TRUE END IsWork
+                     FROM tmpDateDay 
+                          LEFT JOIN ObjectLink AS ObjectLink_SheetWorkTime_DayKind ON 1=1
+                          LEFT JOIN ObjectString AS ObjectString_DayOffWeek
+                                          ON ObjectString_DayOffWeek.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId  --Object_SheetWorkTime.Id
+                                         AND ObjectString_DayOffWeek.DescId = zc_ObjectString_SheetWorkTime_DayOffWeek()
+                     WHERE ObjectLink_SheetWorkTime_DayKind.DescId = zc_ObjectLink_SheetWorkTime_DayKind()
+                       AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Week()
+                       AND  tmpDateDay.OperDate >= inStartDate
+                     )
+
+       , tmpSheetWorkTime AS (SELECT tmpCalendar.SheetWorkTimeId, tmpCalendar.OperDate, tmpCalendar.IsWork
+                              FROM tmpCalendar
+                              WHERE tmpCalendar.IsWork = TRUE
+                            UNION
+                              SELECT tmpWeek.SheetWorkTimeId, tmpWeek.OperDate, tmpWeek.IsWork
+                              FROM tmpWeek
+                              WHERE tmpWeek.IsWork = TRUE
+                            UNION
+                              SELECT tmpPeriod.SheetWorkTimeId, tmpPeriod.OperDate, tmpPeriod.IsWork
+                              FROM tmpPeriod
+                              WHERE tmpPeriod.IsWork = TRUE
+                             )
+------------------------
+
      -- Результат 
      SELECT tmpUser.UserId
           , tmpUser.UserCode
@@ -271,14 +360,13 @@ BEGIN
           --, tmpTimeMotion.Time_calc         :: Time AS Time_Work
           , ((EXTRACT (DAY FROM (tmpTimeMotion.Time_calc)) * 24 + EXTRACT (HOUR FROM (tmpTimeMotion.Time_calc)))::tvarchar  ||':' ||
              lpad (EXTRACT (MINUTE FROM (tmpTimeMotion.Time_calc))::tvarchar ,2, '0'))  ::TVarChar  AS Time_Work
-
          
             -- Подсвечиваем красным если человек еще работает
           , CASE WHEN tmpLoginProtocol.isWork_current = 1
                  THEN zc_Color_Blue()
                  ELSE zc_Color_Black()
             END AS Color_Calc
-          
+
      FROM tmpDay
           INNER JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpDay.OperDate
                                      AND (inIsShowAll = TRUE OR tmpLoginProtocol.Minute_Diff >= inDiff)
@@ -317,6 +405,80 @@ BEGIN
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
      -- WHERE COALESCE (tmpLoginProtocol.OperDate_Entry , zc_DateStart() ) <> zc_DateStart() 
+UNION 
+     SELECT tmpUser.UserId
+          , tmpUser.UserCode
+          , tmpUser.UserName
+
+          ,  'Не работал'         :: TVarChar AS UserStatus
+
+          , tmpUser.isErased
+          , Object_Member.ValueData           AS MemberName 
+          , Object_Position.ValueData         AS PositionName 
+          , Object_Unit.Id                    AS UnitId
+          , Object_Unit.ValueData             AS UnitName
+          , Object_Branch.Id                  AS BranchId
+          , Object_Branch.ValueData           AS BranchName
+ 
+          , CASE WHEN inIsDay = TRUE THEN (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (tmpSheetWorkTime.OperDate) AS tmp) 
+                                     ELSE (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (inEndDate) AS tmp)  
+            END ::TVarChar  AS DayOfWeekName
+          , CASE WHEN inIsDay = TRUE THEN tmpSheetWorkTime.OperDate ELSE NULL END      :: TDateTime AS OperDate
+          , CASE WHEN inIsDay = TRUE THEN tmpSheetWorkTime.OperDate ELSE inEndDate  END      :: TDateTime AS OperDate_Last
+
+              -- Время входа
+          ,  zc_DateStart() :: TDateTime AS OperDate_Entry
+            -- Время выхода
+          ,  zc_DateStart() :: TDateTime AS OperDate_Exit
+
+            -- Время первого действия
+          ,  zc_DateStart() :: TDateTime AS OperDate_Start
+            -- Время послед. действия
+          ,  zc_DateStart() :: TDateTime AS OperDate_End
+
+          , 0     ::TFloat     AS Mov_Count           -- кол-во документов 
+          , 0     ::TFloat     AS MI_Count            -- кол-во мувИтемов
+            -- итого кол-во действий
+          , 0     :: TFloat AS Count
+            -- отработал - Кол-во часов (по вх/вых)
+          , 0     :: TFloat AS Count_Prog
+            -- отработал - Кол-во часов (по док.)
+          , 0     :: TFloat AS Count_Work
+
+            -- отработал - Кол-во часов (по вх/вых)
+          , '00:00'  ::TVarChar  AS Time_Prog
+            -- отработал - Кол-во часов (по док.) 
+          , '00:00'  ::TVarChar  AS Time_Work
+         
+            -- Подсвечиваем красным если человек не работает
+          , zc_Color_Red() AS Color_Calc
+          
+     FROM tmpSheetWorkTime
+          LEFT JOIN tmpUser ON tmpUser.SheetWorkTimeId =  tmpSheetWorkTime.SheetWorkTimeId
+          LEFT JOIN tmpLoginProtocol ON tmpLoginProtocol.OperDate = tmpSheetWorkTime.OperDate
+                                    AND tmpLoginProtocol.UserId = tmpUser.UserId
+
+          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpUser.MemberId
+          LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
+     WHERE tmpLoginProtocol.UserId is null
+          AND inIsShowAll =TRUE
+     GROUP BY tmpUser.UserId
+            , tmpUser.UserCode
+            , tmpUser.UserName
+            , tmpUser.isErased
+            , Object_Member.ValueData         
+            , Object_Position.ValueData       
+            , Object_Unit.Id                  
+            , Object_Unit.ValueData           
+            , Object_Branch.Id                  
+            , Object_Branch.ValueData           
+            , CASE WHEN inIsDay = TRUE THEN (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (tmpSheetWorkTime.OperDate) AS tmp) 
+                   ELSE (SELECT tmp.DayOfWeekName FROM zfCalc_DayOfWeekName (inEndDate) AS tmp) END
+            , CASE WHEN inIsDay = TRUE THEN tmpSheetWorkTime.OperDate ELSE inEndDate  END   
+            , CASE WHEN inIsDay = TRUE THEN tmpSheetWorkTime.OperDate ELSE NULL END
+             
     ;
 
 END;
