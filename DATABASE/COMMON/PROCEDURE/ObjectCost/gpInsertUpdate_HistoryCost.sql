@@ -1106,8 +1106,8 @@ order by 3
 
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.08.2016', inEndDate:= '31.08.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.09.2016', inEndDate:= '30.09.2016', inBranchId:= 0, inItearationCount:= 300, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inBranchId:= 0, inItearationCount:= 300, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
 /*
 select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
 from Container 

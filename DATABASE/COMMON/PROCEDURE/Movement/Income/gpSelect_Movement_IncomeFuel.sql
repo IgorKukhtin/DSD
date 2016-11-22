@@ -1,9 +1,6 @@
 -- Function: gpSelect_Movement_IncomeFuel()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, Boolean , TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, Integer, Boolean , TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
     IN inStartDate         TDateTime , --
@@ -199,12 +196,14 @@ BEGIN
                        THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
                   ELSE 0
              END
+             -- SummReparation
            - CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
                        THEN COALESCE (MovementFloat_Distance.ValueData, 0)
                   WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
                        THEN (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0))
                   ELSE COALESCE (MovementFloat_Distance.ValueData, 0)
              END * COALESCE (MovementFloat_Reparation.ValueData, 0)
+
            + CASE WHEN MovementFloat_LimitDistance.ValueData <> 0 OR MovementFloat_LimitDistanceChange.ValueData <> 0
                     OR MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0
                        THEN 0
@@ -219,9 +218,33 @@ BEGIN
              -- Сумма заправки
            , MovementFloat_TotalSumm.ValueData AS SummReal
 
+             -- *Сумма затрат
+           , ((CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
+                       THEN 0
+                  WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0) < COALESCE (MovementFloat_Distance.ValueData, 0)
+                       THEN COALESCE (MovementItem.Amount, 0) - (COALESCE (MovementFloat_LimitDistance.ValueData, 0) + COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+                  ELSE COALESCE (MovementItem.Amount, 0) - COALESCE (MovementFloat_Distance.ValueData, 0) * COALESCE (MovementFloat_AmountFuel.ValueData, 0) / 100
+             END
+           * CASE WHEN MovementFloat_TotalCount.ValueData <> 0 THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) / MovementFloat_TotalCount.ValueData ELSE 0 END
+           + CASE WHEN COALESCE (MovementFloat_Limit.ValueData, 0) + COALESCE (MovementFloat_LimitChange.ValueData, 0) < COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+                   AND (MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0)
+                       THEN COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_Limit.ValueData, 0) - COALESCE (MovementFloat_LimitChange.ValueData, 0)
+                  ELSE 0
+             END
+
+           + CASE WHEN MovementFloat_LimitDistance.ValueData <> 0 OR MovementFloat_LimitDistanceChange.ValueData <> 0
+                    OR MovementFloat_Limit.ValueData <> 0 OR MovementFloat_LimitChange.ValueData <> 0
+                       THEN 0
+                  ELSE COALESCE (MovementFloat_TotalSumm.ValueData, 0)
+             END
+
+           + -1 * MovementFloat_TotalSumm.ValueData
+
+             ) * CASE WHEN Object_To.DescId IN (zc_Object_Member(), zc_Object_Founder()) THEN -1 ELSE 0 END) :: TFloat AS SummaExp
+
            -- СУММА затраты 
              -- Сумма заправки
-           , CASE WHEN Object_To.DescId = zc_Object_Member() 
+           /*, CASE WHEN Object_To.DescId = zc_Object_Member() 
                   THEN (MovementFloat_TotalSumm.ValueData       
                         -- *Сумма грн (амортизация)
                         - (CASE WHEN COALESCE (MovementFloat_LimitDistance.ValueData, 0) = 0 AND COALESCE (MovementFloat_LimitDistanceChange.ValueData, 0)  = 0
@@ -254,7 +277,7 @@ BEGIN
                                      THEN 0
                                 ELSE COALESCE (MovementFloat_TotalSumm.ValueData, 0)
                            END) * (-1)) )
-                 ELSE 0 END  :: TFloat  AS SummaExp
+                 ELSE 0 END  :: TFloat  AS SummaExp*/
 
            , tmpSign.strSign
            , tmpSign.strSignNo

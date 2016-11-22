@@ -701,7 +701,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 70
       end
       object clSummaExp: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090#1099
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
         DataBinding.FieldName = 'SummaExp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -792,12 +792,12 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 794
+    Left = 822
     Top = 32
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 895
+    Left = 900
     Top = 32
     Properties.Buttons = <
       item
@@ -806,7 +806,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

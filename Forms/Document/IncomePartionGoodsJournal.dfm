@@ -516,12 +516,12 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
     end
   end
   object cxLabel27: TcxLabel
-    Left = 508
+    Left = 622
     Top = 32
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit
-    Left = 610
+    Left = 700
     Top = 31
     Properties.Buttons = <
       item
@@ -530,7 +530,7 @@ object IncomePartionGoodsJournalForm: TIncomePartionGoodsJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

@@ -48,7 +48,7 @@ type
       : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
     procedure InitializeComSigner(DebugMode: boolean; UserSign, UserSeal, UserKey : string);
-    procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey : string );
+    procedure SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey, NameExite, NameFiscal : string );
 
     procedure PutFileToFTP(FileName: string; Directory: string);
     procedure PutStreamToFTP(Stream: TStream; FileName: string;
@@ -226,6 +226,8 @@ begin
            , HeaderDataSet.FieldByName('UserSign').asString
            , HeaderDataSet.FieldByName('UserSeal').asString
            , HeaderDataSet.FieldByName('UserKey').asString
+           , HeaderDataSet.FieldByName('NameExite').asString
+           , HeaderDataSet.FieldByName('NameFiscal').asString
             );
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
@@ -717,6 +719,8 @@ begin
            , HeaderDataSet.FieldByName('UserSign').asString
            , HeaderDataSet.FieldByName('UserSeal').asString
            , HeaderDataSet.FieldByName('UserKey').asString
+           , HeaderDataSet.FieldByName('NameExite').asString
+           , HeaderDataSet.FieldByName('NameFiscal').asString
             );
 
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
@@ -1058,6 +1062,8 @@ begin
            , HeaderDataSet.FieldByName('UserSign').asString
            , HeaderDataSet.FieldByName('UserSeal').asString
            , HeaderDataSet.FieldByName('UserKey').asString
+           , HeaderDataSet.FieldByName('NameExite').asString
+           , HeaderDataSet.FieldByName('NameFiscal').asString
             );
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
     begin
@@ -1350,6 +1356,8 @@ begin
            , HeaderDataSet.FieldByName('UserSign').asString
            , HeaderDataSet.FieldByName('UserSeal').asString
            , HeaderDataSet.FieldByName('UserKey').asString
+           , HeaderDataSet.FieldByName('NameExite').asString
+           , HeaderDataSet.FieldByName('NameFiscal').asString
             );
 
 //  ShowMessage ('end подписать - SignFile : ' + XMLFileName);
@@ -1630,6 +1638,8 @@ begin
            , HeaderDataSet.FieldByName('UserSign').asString
            , HeaderDataSet.FieldByName('UserSeal').asString
            , HeaderDataSet.FieldByName('UserKey').asString
+           , HeaderDataSet.FieldByName('NameExite').asString
+           , HeaderDataSet.FieldByName('NameFiscal').asString
             );
 
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then
@@ -2043,7 +2053,6 @@ begin
   ComSigner := CreateOleObject('EUTaxServiceFile.Library.1');
 
   ComSigner.Initialize(caType);
-
 
   if DebugMode then begin
      ComSigner.SetUIMode(true);
@@ -2686,6 +2695,8 @@ begin
            , MovementDataSet.FieldByName('UserSign').asString
            , MovementDataSet.FieldByName('UserSeal').asString
            , MovementDataSet.FieldByName('UserKey').asString
+           , MovementDataSet.FieldByName('NameExite').asString
+           , MovementDataSet.FieldByName('NameFiscal').asString
             );
 
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
@@ -2711,7 +2722,7 @@ begin
   FDirectory := Value;
 end;
 
-procedure TEDI.SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey : string);
+procedure TEDI.SignFile(FileName: string; SignType: TSignType; DebugMode: boolean; UserSign, UserSeal, UserKey, NameExite, NameFiscal : string);
 var
   vbSignType: integer;
   i: integer;
@@ -2746,14 +2757,25 @@ begin
           if Error <> okError then
              raise Exception.Create('ComSigner.SignFilesByDigitalStamp(FileName) ' + Error);
       end;
-      if SignType = stDeclar then begin
-//         !!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
-//         EUTaxService_СертификатExite := ComSigner.SelectServerCert;
-//         !!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
-//         EUTaxService_СертификатМДС   := ComSigner.SelectServerCert;
+      if SignType = stDeclar then
+      begin
 
-         EUTaxService_СертификатExite := 'O=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";PostalCode=01042;CN=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";Serial=34241719;C=UA;L=місто КИЇВ;StreetAddress=провулок Новопечерський, буд. 19/3, корпус 1, к. 6';
-         EUTaxService_СертификатМДС   := 'O=Державна фіскальна служба України;OU=Державна фіскальна служба України;Title=електронна печатка;CN=Державна фіскальна служба України. ОТРИМАНО;Serial=1671693;C=UA;L=Київ';
+         if DebugMode then
+         begin
+             //!!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
+             EUTaxService_СертификатExite := ComSigner.SelectServerCert;
+             ShowMessage('EUTaxService_СертификатExite := ' + EUTaxService_СертификатExite);
+             //!!!если изменился - обязтельно выполнить это под отладкой, что б узнать значение строки (и захаркодить её), при этом выбрать нужный сертификат!!!
+             EUTaxService_СертификатМДС   := ComSigner.SelectServerCert;
+             ShowMessage('EUTaxService_СертификатМДС := ' + EUTaxService_СертификатМДС);
+         end;
+
+         if NameExite <> ''
+         then EUTaxService_СертификатExite := NameExite
+         else EUTaxService_СертификатExite := 'O=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";PostalCode=01042;CN=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";Serial=34241719;C=UA;L=місто КИЇВ;StreetAddress=провулок Новопечерський, буд. 19/3, корпус 1, к. 6';
+         if NameFiscal <> ''
+         then EUTaxService_СертификатМДС   := NameFiscal
+         else EUTaxService_СертификатМДС   := 'O=Державна фіскальна служба України;CN=Державна фіскальна служба України.  ОТРИМАНО;Serial=2122385;C=UA;L=Київ';
 
          ddd := VarArrayCreate([0, 1], varOleStr);
          ddd[0] := EUTaxService_СертификатМДС;

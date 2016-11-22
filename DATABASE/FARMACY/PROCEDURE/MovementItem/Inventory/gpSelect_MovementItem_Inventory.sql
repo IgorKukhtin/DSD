@@ -65,7 +65,7 @@ BEGIN
                                                                     AND CLI_Unit.ObjectId = vbUnitId*/
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
-                                                                                 AND MovementItemContainer.Operdate > vbOperDate
+                                                                                 AND MovementItemContainer.Operdate >= vbOperDate
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
                                         AND Container.WhereObjectId = vbUnitId
@@ -173,7 +173,7 @@ BEGIN
                                                                     AND CLI_Unit.ObjectId = vbUnitId*/
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  -- AND DATE_TRUNC ('DAY', MovementItemContainer.Operdate) > vbOperDate
-                                                                                 AND MovementItemContainer.Operdate > vbOperDate
+                                                                                 AND MovementItemContainer.Operdate >= vbOperDate
                                         WHERE 
                                             Container.DescID = zc_Container_Count()
                                         AND Container.WhereObjectId = vbUnitId
