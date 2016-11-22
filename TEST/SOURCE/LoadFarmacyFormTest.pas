@@ -832,6 +832,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryPartionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryPartionForm');
 end;
 
 procedure TLoadFormTest.LoadLossFormTest;
