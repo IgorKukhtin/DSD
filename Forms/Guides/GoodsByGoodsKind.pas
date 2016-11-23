@@ -31,6 +31,7 @@ type
     clReceiptName: TcxGridDBColumn;
     ReceiptChoiceForm: TOpenChoiceForm;
     ReceiptCode: TcxGridDBColumn;
+    colId: TcxGridDBColumn;
   private
     { Private declarations }
   public
