@@ -1,5 +1,5 @@
-inherited InventoryForm: TInventoryForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
+inherited InventoryPartionForm: TInventoryPartionForm
+  Caption = '<'#1055#1072#1088#1090#1080#1080' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080'>'
   ClientHeight = 658
   ClientWidth = 898
   ExplicitWidth = 914
@@ -16,6 +16,7 @@ inherited InventoryForm: TInventoryForm
     ClientRectBottom = 581
     ClientRectRight = 898
     inherited tsMain: TcxTabSheet
+      Caption = #1055#1072#1088#1090#1080#1080
       ExplicitWidth = 898
       ExplicitHeight = 557
       inherited cxGrid: TcxGrid
@@ -28,7 +29,6 @@ inherited InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
             end
             item
               Format = ',0.####'
@@ -57,90 +57,26 @@ inherited InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colRemains_Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = clAmountDeficit
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = clSummAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colRemains_Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colDeficit
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colDeficitSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colProicit
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colProicitSumm
-            end
-            item
-              Format = '+ ,0.####;- ,0.####; '
-              Kind = skSum
-              Column = colDiff
-            end
-            item
-              Format = '+ ,0.00;- ,0.00; '
-              Kind = skSum
-              Column = colDiffSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colRemains_Summ
+              Column = clAmount
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -172,142 +108,97 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 259
-          end
-          object colRemains_Amount: TcxGridDBColumn [2]
-            AlternateCaption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
-            Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains_Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
-            Options.Editing = False
-            Width = 56
-          end
-          object colAmount: TcxGridDBColumn [3]
-            AlternateCaption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
-            Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.AssignedValues.MinValue = True
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
-            Width = 43
-          end
-          object colPrice: TcxGridDBColumn [4]
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 56
-          end
-          object colRemains_Summ: TcxGridDBColumn [5]
-            Caption = 'C'#1091#1084#1084#1072' '#1088#1072#1089#1095'. '#1086#1089#1090'.'
-            DataBinding.FieldName = 'Remains_Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
-          object colSumm: TcxGridDBColumn [6]
-            Caption = 'C'#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1086#1089#1090'.'
-            DataBinding.FieldName = 'Summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
+            Width = 214
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentVert = vaCenter
           end
-          object colDeficit: TcxGridDBColumn
-            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
-            DataBinding.FieldName = 'Deficit'
+          object clJuridicalPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'JuridicalPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
-          end
-          object colDeficitSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
-            DataBinding.FieldName = 'DeficitSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; '
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 58
-          end
-          object colProicit: TcxGridDBColumn
-            Caption = #1048#1079#1083#1080#1096#1077#1082
-            DataBinding.FieldName = 'Proficit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; '
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 57
-          end
-          object colProicitSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
-            DataBinding.FieldName = 'ProficitSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00;-,0.00; '
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 61
-          end
-          object colDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072
-            DataBinding.FieldName = 'Diff'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colDiffSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
-            DataBinding.FieldName = 'DiffSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 69
-          end
-          object colMIComment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-            DataBinding.FieldName = 'MIComment'
-            HeaderAlignmentVert = vaCenter
-            Width = 150
-          end
-          object clisAuto: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
-            DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 59
+          end
+          object clAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1080#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object clAmountDeficit: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1085#1077#1076#1086#1089#1090'.'
+            DataBinding.FieldName = 'AmountDeficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object clSummAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 80
+          end
+          object PartionDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PartionInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#8470
+            DataBinding.FieldName = 'PartionInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionPriceDescName: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1042#1080#1076
+            DataBinding.FieldName = 'PartionPriceDescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object PartionPriceInvNumber: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#8470
+            DataBinding.FieldName = 'PartionPriceInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionPriceOperDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1089'/'#1089' '#1044#1072#1090#1072
+            DataBinding.FieldName = 'PartionPriceOperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
@@ -321,6 +212,7 @@ inherited InventoryForm: TInventoryForm
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Enabled = False
       ExplicitLeft = 8
       ExplicitWidth = 74
       Width = 74
@@ -331,6 +223,8 @@ inherited InventoryForm: TInventoryForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 89
+      Enabled = False
+      Properties.ReadOnly = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
@@ -347,6 +241,7 @@ inherited InventoryForm: TInventoryForm
     end
     inherited ceStatus: TcxButtonEdit
       Left = 607
+      Enabled = False
       ExplicitLeft = 607
       ExplicitWidth = 154
       ExplicitHeight = 22
@@ -360,11 +255,14 @@ inherited InventoryForm: TInventoryForm
     object edUnit: TcxButtonEdit
       Left = 179
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
+          Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 270
     end
@@ -372,7 +270,9 @@ inherited InventoryForm: TInventoryForm
       Left = 455
       Top = 23
       Caption = #1055#1086#1083#1085#1072#1103' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      Enabled = False
       ParentShowHint = False
+      Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 8
       Width = 146
@@ -395,20 +295,24 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spGet
         end
         item
-          StoredProc = spGetTotalSumm
+          StoredProc = spSelect
         end
         item
-          StoredProc = spSelect
         end
         item
         end>
       RefreshOnTabSetChanges = True
     end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProc = spGetTotalSumm
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spGetTotalSumm
+        end>
+    end
+    inherited actPrint: TdsdPrintAction
+      StoredProcList = <
+        item
         end>
       DataSets = <
         item
@@ -447,36 +351,7 @@ inherited InventoryForm: TInventoryForm
         item
         end>
     end
-    object actOpenInventoryPartionForm: TdsdOpenForm [12]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1072#1088#1090#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1072#1088#1090#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
-      ImageIndex = 26
-      FormName = 'TInventoryPartionForm'
-      FormNameParam.Value = 'TInventoryPartionForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = FormParams
-          ComponentItem = 'inOperDate'
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actStorageChoice: TOpenChoiceForm [14]
+    object actStorageChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -503,7 +378,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [15]
+    object actAssetChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -530,151 +405,6 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [16]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMIAmount
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIAmount
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091
-      ImageIndex = 50
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' ' +
-        #1085#1072' '#1076#1072#1090#1091'?'
-      InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
-    end
-    object actUnitChoice: TOpenChoiceForm [17]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'UnitChoice'
-      FormName = 'TUnit_ObjectForm'
-      FormNameParam.Value = 'TUnit_ObjectForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actGoodsKindChoice: TOpenChoiceForm [18]
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'GoodsKindForm'
-      FormName = 'TGoodsKindForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actRefreshPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actStartLoad: TMultiAction
-      Category = 'Load'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGetImportSettingId
-        end
-        item
-          Action = actInsertUpdate_MovementItem_Inventory_Set_Zero
-        end
-        item
-          Action = actDoLoad
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1091#1102' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102'?'
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
-      ImageIndex = 41
-    end
-    object actGetImportSettingId: TdsdExecStoredProc
-      Category = 'Load'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSettingId
-        end>
-      Caption = 'actGetImportSettingId'
-    end
-    object actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc
-      Category = 'Load'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_MovementItem_Inventory_Set_Zero
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate_MovementItem_Inventory_Set_Zero
-        end>
-      Caption = 'actInsertUpdate_MovementItem_Inventory_Set_Zero'
-    end
-    object actDoLoad: TExecuteImportSettingsAction
-      Category = 'Load'
-      MoveParams = <>
-      ImportSettingsId.Value = Null
-      ImportSettingsId.Component = FormParams
-      ImportSettingsId.ComponentItem = 'ImportSettingId'
-      ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <
-        item
-          Name = 'inMovementId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-    end
     object actSelect: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -696,7 +426,7 @@ inherited InventoryForm: TInventoryForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Inventory'
+    StoredProcName = 'gpSelect_MI_InventoryPartion'
     Params = <
       item
         Name = 'inMovementId'
@@ -707,27 +437,29 @@ inherited InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShowAll'
+        Name = 'ffff'
         Value = False
         Component = actShowAll
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
+        Name = 'ffff'
         Value = False
         Component = actShowErased
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ffff'
         Value = ''
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ffff'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
@@ -749,40 +481,7 @@ inherited InventoryForm: TInventoryForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -790,53 +489,7 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMIAmount'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInventoryPartion'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          UserDefine = [udPaintStyle]
-          UserPaintStyle = psCaptionGlyph
-          Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementItemProtocol'
         end
         item
           Visible = True
@@ -847,27 +500,15 @@ inherited InventoryForm: TInventoryForm
           ItemName = 'bbGridToExcel'
         end>
     end
+    inherited bbShowErased: TdxBarButton
+      Action = nil
+    end
     inherited bbAddMask: TdxBarButton
+      Action = nil
       Visible = ivNever
     end
-    object bbInsertUpdateMIAmount: TdxBarButton
-      Action = actInsertUpdateMIAmount
-      Category = 0
-    end
-    object bbPrint1: TdxBarButton
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Category = 0
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Visible = ivNever
-      ImageIndex = 22
-    end
-    object dxBarButton1: TdxBarButton
-      Action = actStartLoad
-      Category = 0
-    end
-    object bbInventoryPartion: TdxBarButton
-      Action = actOpenInventoryPartionForm
-      Category = 0
+    inherited bbMovementItemContainer: TdxBarButton
+      Action = nil
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -950,17 +591,17 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 144
+    Left = 320
+    Top = 168
   end
   inherited StatusGuides: TdsdGuides
-    Left = 72
-    Top = 24
+    Left = 832
+    Top = 16
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Inventory'
-    Left = 144
-    Top = 24
+    Left = 768
+    Top = 8
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Inventory'
@@ -1143,11 +784,10 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 248
+    Left = 224
+    Top = 256
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Inventory'
     Params = <
       item
         Name = 'ioId'
@@ -1270,10 +910,8 @@ inherited InventoryForm: TInventoryForm
       end>
     ActionItemList = <
       item
-        Action = actInsertUpdateMovement
       end
       item
-        Action = actSelect
       end>
     Left = 160
     Top = 192
@@ -1467,7 +1105,6 @@ inherited InventoryForm: TInventoryForm
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefreshPrice
     ComponentList = <>
     Left = 512
     Top = 328
@@ -1475,38 +1112,14 @@ inherited InventoryForm: TInventoryForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 193
+    Left = 788
+    Top = 177
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 508
     Top = 246
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Inventory_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 319
-    Top = 208
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1534,73 +1147,7 @@ inherited InventoryForm: TInventoryForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 16
-  end
-  object spInsertUpdateMIAmount: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_Amount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 330
-    Top = 384
-  end
-  object spGetImportSettingId: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultValue'
-    DataSets = <
-      item
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inDefaultKey'
-        Value = 'TInventoryForm;zc_Object_ImportSetting_Inventory'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserKeyId'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'gpGet_DefaultValue'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ImportSettingId'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 152
-    Top = 448
-  end
-  object spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Inventory_Set_Zero'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 322
-    Top = 432
+    Left = 360
+    Top = 8
   end
 end

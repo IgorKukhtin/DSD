@@ -1,4 +1,4 @@
-unit Inventory;
+unit InventoryPartion;
 
 interface
 
@@ -28,50 +28,25 @@ uses
   cxImageComboBox;
 
 type
-  TInventoryForm = class(TAncestorDocumentForm)
+  TInventoryPartionForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    actGoodsKindChoice: TOpenChoiceForm;
-    spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    colPrice: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
-    actUnitChoice: TOpenChoiceForm;
     actStorageChoice: TOpenChoiceForm;
     actAssetChoice: TOpenChoiceForm;
-    spInsertUpdateMIAmount: TdsdStoredProc;
-    actInsertUpdateMIAmount: TdsdExecStoredProc;
-    bbInsertUpdateMIAmount: TdxBarButton;
-    bbPrint1: TdxBarButton;
-    spGetImportSettingId: TdsdStoredProc;
-    actStartLoad: TMultiAction;
-    actGetImportSettingId: TdsdExecStoredProc;
-    actDoLoad: TExecuteImportSettingsAction;
-    dxBarButton1: TdxBarButton;
-    spInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdStoredProc;
-    actInsertUpdate_MovementItem_Inventory_Set_Zero: TdsdExecStoredProc;
-    colRemains_Amount: TcxGridDBColumn;
-    colDeficit: TcxGridDBColumn;
-    colDeficitSumm: TcxGridDBColumn;
-    colProicit: TcxGridDBColumn;
-    colProicitSumm: TcxGridDBColumn;
-    colDiff: TcxGridDBColumn;
-    colDiffSumm: TcxGridDBColumn;
-    colMIComment: TcxGridDBColumn;
     chbFullInvent: TcxCheckBox;
     actSelect: TdsdExecStoredProc;
-    clisAuto: TcxGridDBColumn;
-    actOpenInventoryPartionForm: TdsdOpenForm;
-    bbInventoryPartion: TdxBarButton;
+    clJuridicalPrice: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
+    clAmountDeficit: TcxGridDBColumn;
+    clSummAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -83,6 +58,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TInventoryForm);
+  RegisterClass(TInventoryPartionForm);
 
 end.

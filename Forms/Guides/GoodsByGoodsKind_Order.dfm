@@ -3,7 +3,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -207,6 +207,14 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 138
+          end
+          object colId: TcxGridDBColumn
+            Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+            DataBinding.FieldName = 'Id'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object ceIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

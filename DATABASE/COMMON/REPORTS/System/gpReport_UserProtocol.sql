@@ -222,6 +222,7 @@ BEGIN
 
 
 -------------------------------------
+     -- определяем мин дату старта посменных графиков работы, 
      , tmpStartDate AS (SELECT MIN (COALESCE (ObjectDate_DayOffPeriod.ValueData, inStartDate) ) :: TDateTime AS OperDate
                         FROM (SELECT DISTINCT tmpUser.SheetWorkTimeId FROM tmpUser) AS tmp
                              LEFT JOIN ObjectLink AS ObjectLink_SheetWorkTime_DayKind 
@@ -232,16 +233,16 @@ BEGIN
                                                   ON ObjectDate_DayOffPeriod.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId 
                                                  AND ObjectDate_DayOffPeriod.DescId = zc_ObjectDate_SheetWorkTime_DayOffPeriod()
                        )
-
+       -- генеруруем список дат,
        , tmpDateList AS (SELECT GENERATE_SERIES (tmpStartDate.OperDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate
                          FROM tmpStartDate)
-
+       -- к датам добавляем дни недели
        , tmpDateDay AS (SELECT tmpDateList.OperDate
                              , tmpWeekDay.Number
                         FROM tmpDateList
                              LEFT JOIN zfCalc_DayOfWeekName (tmpDateList.OperDate) AS tmpWeekDay ON 1=1
                         )
-
+       -- выбираем Режимы работы с типом дня "по сменам", если у нас есть пользователи с таким режимом работы
        , tmpPeriod_All AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
                                 , ObjectDate_DayOffPeriod.ValueData :: TDateTime AS StartDate
                                 , zfCalc_Word_Split (inValue:= ObjectString_DayOffPeriod.ValueData, inSep:= '/', inIndex:= 1)::TFloat AS DayWork
@@ -258,10 +259,11 @@ BEGIN
                                                      ON ObjectDate_DayOffPeriod.ObjectId = ObjectLink_SheetWorkTime_DayKind.ObjectId 
                                                     AND ObjectDate_DayOffPeriod.DescId = zc_ObjectDate_SheetWorkTime_DayOffPeriod()
                            )
-
+       -- определение рабочих/выходных дней посменных графиков работы
        , D  as (SELECT  row_number() OVER (PARTITION BY SheetWorkTimeId ORDER BY tmpDateDay.OperDate) as ID, * FROM tmpDateDay JOIN tmpPeriod_All ON tmpPeriod_All.StartDate <= tmpDateDay.OperDate)
        , D1 as (SELECT (D.ID) % (D.daywork + D.dayoff) as i, D.* FROM D)
        , D2 as (SELECT CASE WHEN ((D1.i > D1.DayWork) or (D1.i = 0 and  DayOff > 0)) THEN FALSE ELSE TRUE END AS IsWork, D1.* from D1)
+       -- таблица посменных графиков работы
        , tmpPeriod AS (SELECT D2.OperDate 
                             , D2.IsWork 
                             , D2.SheetWorkTimeId
@@ -269,7 +271,7 @@ BEGIN
                        FROM D2
                        WHERE D2.OperDate >= inStartDate
                        ORDER BY 1, 3)
-
+       -- таблица календарных графиков работы
        , tmpCalendar AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
                               , tmpDateDay.OperDate 
                               , CASE WHEN tmpDateDay.Number IN (6,7) THEN FALSE ELSE TRUE END IsWork
@@ -279,7 +281,7 @@ BEGIN
                                                   AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Calendar()
                          WHERE tmpDateDay.OperDate >= inStartDate
                          )
-
+       -- таблица недельных графиков работы
        , tmpWeek AS (SELECT ObjectLink_SheetWorkTime_DayKind.ObjectId AS SheetWorkTimeId
                           , tmpDateDay.OperDate           
                           , CASE WHEN zfCalc_Word_Split (inValue:= ObjectString_DayOffWeek.ValueData, inSep:= ',', inIndex:= tmpDateDay.Number) ::TFloat <> 0 THEN FALSE ELSE TRUE END IsWork
@@ -292,7 +294,7 @@ BEGIN
                        AND ObjectLink_SheetWorkTime_DayKind.ChildObjectId = zc_Enum_DayKind_Week()
                        AND  tmpDateDay.OperDate >= inStartDate
                      )
-
+       -- таблица всех рабочих дней графиков 
        , tmpSheetWorkTime AS (SELECT tmpCalendar.SheetWorkTimeId, tmpCalendar.OperDate, tmpCalendar.IsWork
                               FROM tmpCalendar
                               WHERE tmpCalendar.IsWork = TRUE
@@ -405,7 +407,8 @@ BEGIN
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
      -- WHERE COALESCE (tmpLoginProtocol.OperDate_Entry , zc_DateStart() ) <> zc_DateStart() 
-UNION 
+    UNION 
+     -- добавляем сотрудников, которые не работали в программе в рабочие дни согласно графиков работы
      SELECT tmpUser.UserId
           , tmpUser.UserCode
           , tmpUser.UserName
@@ -462,8 +465,8 @@ UNION
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpUser.PositionId
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUser.UnitId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmpUser.BranchId
-     WHERE tmpLoginProtocol.UserId is null
-          AND inIsShowAll =TRUE
+     WHERE tmpLoginProtocol.UserId IS NULL
+          AND inIsShowAll = TRUE
      GROUP BY tmpUser.UserId
             , tmpUser.UserCode
             , tmpUser.UserName
