@@ -651,7 +651,11 @@ BEGIN
                 )
 
         -- результат
-        SELECT tmpGoodsByGoodsKind.ObjectId :: TVarChar
+        SELECT --*** Штрих-код
+               --*** COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
+               -- Внутренний код - справочник - "Параметры Товар и вид товара"
+               tmpGoodsByGoodsKind.ObjectId :: TVarChar
+               -- Кол-во
      || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- Цена с НДС
      || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
@@ -668,8 +672,6 @@ BEGIN
      || ';' || (COALESCE (MIFloat_Summ.ValueData, 0)
               - CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END
                ) :: TVarChar
-               -- Штрих-код
-     || ';' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, COALESCE (tmpObject_GoodsPropertyValueGroup.BarCode, COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')))
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

@@ -61,7 +61,7 @@ BEGIN
                                        LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                             AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                                                             -- AND DATE_TRUNC ('DAY', MovementItemContainer.OperDate) > DATE_TRUNC('day', vbOperDate)
-                                                                            AND MovementItemContainer.OperDate > vbOperDate
+                                                                            AND MovementItemContainer.OperDate >= vbOperDate
                                    WHERE Container.DescId = zc_Container_Count()
                                      AND Container.ObjectId = inGoodsId
                                      AND Container.WhereObjectId = vbUnitId

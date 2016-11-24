@@ -38,6 +38,16 @@ BEGIN
    ELSE
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_1107(), inDescId:= zc_Object_Role(), inCode:= 1107, inName:= 'Бухг + мясо', inEnumName:= 'zc_Enum_Role_1107');
    END IF;
+   -- zc_Enum_Role_CashReplace
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Касса Днепр - ограничены права')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Касса Днепр - ограничены права')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_CashReplace');
+   ELSE
+       RAISE EXCEPTION '!!!Функция <zc_Enum_Role_CashReplace> только для базы Project!!!, тогда можно выполнить строчку ниже';
+       -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_CashReplace(), inDescId:= zc_Object_Role(), inCode:= 56, inName:= 'Касса Днепр - ограничены права', inEnumName:= 'zc_Enum_Role_CashReplace');
+   END IF;
 
 END $$;
 

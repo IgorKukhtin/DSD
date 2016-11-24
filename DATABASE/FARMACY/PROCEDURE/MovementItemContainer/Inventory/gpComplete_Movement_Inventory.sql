@@ -12,13 +12,18 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
   vbUserId:= inSession;
+
   -- пересчитали Итоговые суммы
-  PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
+  -- PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
+
   -- собственно проводки
   PERFORM lpComplete_Movement_Inventory(inMovementId, -- ключ Документа
                                         vbUserId);    -- Пользователь                          
+
+  -- собственно проводки
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
   WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

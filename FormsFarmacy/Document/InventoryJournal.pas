@@ -43,6 +43,10 @@ type
     colDiff: TcxGridDBColumn;
     colDiffSumm: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    Diff_calc: TcxGridDBColumn;
+    DeficitSumm_calc: TcxGridDBColumn;
+    ProficitSumm_calc: TcxGridDBColumn;
+    DiffSumm_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

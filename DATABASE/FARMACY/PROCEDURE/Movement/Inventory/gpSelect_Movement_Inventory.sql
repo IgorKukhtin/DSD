@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , DeficitSumm TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , UnitId Integer, UnitName TVarChar, FullInvent Boolean
+             , Diff_calc TFloat, DeficitSumm_calc TFloat, ProficitSumm_calc TFloat, DiffSumm_calc TFloat
              )
 AS
 $BODY$
@@ -39,6 +40,20 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
 
+        , tmpMovement_calc AS (SELECT Movement.Id
+                                    , SUM (MovementItemContainer.Amount) AS Diff
+                                    , SUM (CASE WHEN MovementItemContainer.Amount < 0 THEN -1 * MovementItemContainer.Amount * COALESCE (MovementItemFloat.ValueData, 0) ELSE 0 END) AS DeficitSumm
+                                    , SUM (CASE WHEN MovementItemContainer.Amount > 0 THEN  1 * MovementItemContainer.Amount * COALESCE (MovementItemFloat.ValueData, 0) ELSE 0 END) AS ProficitSumm
+                               FROM Movement
+                                    INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                                    AND MovementItemContainer.DescId     = zc_MIContainer_Count()
+                                    LEFT JOIN MovementItemFloat ON MovementItemFloat.MovementItemId = MovementItemContainer.MovementItemId
+                                                               AND MovementItemFloat.DescId         = zc_MIFloat_Price()
+                               WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
+                                 AND Movement.DescId = zc_Movement_Inventory()
+                               GROUP BY Movement.Id
+                              )
+       -- Результат
        SELECT
              Movement.Id                                          AS Id
            , Movement.InvNumber                                   AS InvNumber
@@ -52,7 +67,13 @@ BEGIN
            , Object_Unit.Id                                       AS UnitId
            , Object_Unit.ValueData                                AS UnitName
            , COALESCE(MovementBoolean_FullInvent.ValueData,False) AS FullInvent
-       FROM (SELECT Movement.id
+
+           , tmpMovement_calc.Diff         :: TFloat AS Diff_calc
+           , tmpMovement_calc.DeficitSumm  :: TFloat AS DeficitSumm_calc
+           , tmpMovement_calc.ProficitSumm :: TFloat AS ProficitSumm_calc
+           , (tmpMovement_calc.ProficitSumm - tmpMovement_calc.DeficitSumm) :: TFloat AS DiffSumm_calc
+
+       FROM (SELECT Movement.Id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
@@ -62,7 +83,8 @@ BEGIN
                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                   INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
             ) AS tmpMovement
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN tmpMovement_calc ON tmpMovement_calc.Id = tmpMovement.Id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
             
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

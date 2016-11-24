@@ -61,6 +61,6 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummInventory (Integer) OWNER T
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  28.04.15                         * 
 */
--- select lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId:= id) from gpSelect_Movement_WeighingPartner (inStartDate := ('01.06.2014')::TDateTime , inEndDate := ('30.06.2014')::TDateTime ,  inSession := '5') as a
+
 -- тест
--- SELECT lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId:= Movement.Id) from Movement where DescId = zc_Movement_Inventory() and OperDate between ('01.11.2014')::TDateTime and  ('31.12.2014')::TDateTime
+-- SELECT lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId:= Movement.Id) FROM Movement WHERE DescId = zc_Movement_Inventory() and OperDate BETWEEN '01.11.2016' and '31.11.2016'

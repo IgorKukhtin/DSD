@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SheetWorkTime(Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SheetWorkTime(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
     IN inCode                Integer   ,    -- Код объекта 

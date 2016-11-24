@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_CashRemains_Diff_ver2()
 
 DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
 
@@ -25,6 +25,7 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
 BEGIN
+-- if inSession = '3' then return; end if;
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -35,9 +36,11 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
     
-    --Обновили дату последнего обращения по сессии
-    PERFORM lpInsertUpdate_CashSession(inCashSessionId := inCashSessionId,
-                                        inDateConnect := CURRENT_TIMESTAMP::TDateTime);
+    -- Обновили дату последнего обращения по сессии
+    PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
+                                      , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
+                                      , inUserId        := vbUserId
+                                       );
     
     --определяем разницу в остатках реальных и сессионных
     CREATE TEMP TABLE _DIFF (ObjectId  Integer
@@ -50,18 +53,38 @@ BEGIN
                            , NewRow    Boolean
                            , Color_calc Integer
                            , MinExpirationDate TDateTime) ON COMMIT DROP;    
-    WITH GoodsRemains
-    AS
-    (
-        SELECT 
-            SUM(container.Amount) AS Remains, 
-            container.objectid,
-            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
-        FROM 
-            container
+
+    -- Данные
+    WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count() 
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount <> 0
+                         )
+       , tmpCLO AS (SELECT CLO.*
+                    FROM ContainerlinkObject AS CLO
+                    WHERE CLO.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
+                      AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                   )
+       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
+                               FROM tmpCLO
+                                    INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
+                                    INNER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               )
+       , GoodsRemains AS
+     (SELECT Container.ObjectId
+           , SUM (Container.Amount) AS Remains
+           , MIN (COALESCE (tmpExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
+      FROM tmpContainer AS Container
+          -- находим партию
+          LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
+          /*
           -- находим партию
           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                        ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                        ON ContainerLinkObject_MovementItem.Containerid =  Container.Id
                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
           -- элемент прихода
@@ -75,21 +98,12 @@ BEGIN
                      
           LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
                                            ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()*/
+      GROUP BY Container.ObjectId
+     )
 
-        WHERE 
-            container.descid = zc_container_count() 
-            AND
-            container.WhereObjectId = vbUnitId
-            AND 
-            container.Amount<>0
-        GROUP BY 
-            container.objectid
-    ),
-    RESERVE
-    AS
-    (
-        SELECT
+  , RESERVE AS 
+       (SELECT
             MovementItem_Reserve.GoodsId,
             SUM(MovementItem_Reserve.Amount)::TFloat as Amount
         FROM

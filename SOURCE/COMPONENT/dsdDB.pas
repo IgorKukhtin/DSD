@@ -306,15 +306,14 @@ begin
                      '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
                      '  Value="' + ParamStr + '" />'
            else
-             if DataType = ftDateTime then
-                try   StrToDateTime (ParamStr);
-                      Result := Result + '<' + Name +
+             if (DataType = ftDateTime) and (ParamStr <> 'NULL') then
+                try   Result := Result + '<' + Name +
                            '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
                            '  Value="' + DateTimeToStr(StrToDateTime(ParamStr)) + '" />';
                 except
                       Result := Result + '<' + Name +
                            '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                           '  Value="' + DateToStr(now) + ' ' + ParamStr + '" />';
+                           '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
                 end
              else
                 Result := Result + '<' + Name +

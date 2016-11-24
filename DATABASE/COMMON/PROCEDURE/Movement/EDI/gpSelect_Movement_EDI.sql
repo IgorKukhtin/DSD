@@ -45,8 +45,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UserSign TVarChar
              , UserSeal TVarChar
              , UserKey  TVarChar
-             , NameExite  TVarChar
-             , NameFiscal  TVarChar
+             , NameExite  TBlob
+             , NameFiscal  TBlob
               )
 AS
 $BODY$
@@ -158,9 +158,9 @@ BEGIN
            , vbUserKey  AS UserKey
 
            , 'O=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";PostalCode=01042;CN=ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "Е-КОМ";Serial=34241719;C=UA;L=місто КИЇВ;StreetAddress=провулок Новопечерський, буд. 19/3, корпус 1, к. 6'
-              AS NameExite
+              :: TBlob AS NameExite
            , 'O=Державна фіскальна служба України;CN=Державна фіскальна служба України.  ОТРИМАНО;Serial=2122385;C=UA;L=Київ'
-              AS NameFiscal
+              :: TBlob AS NameFiscal
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

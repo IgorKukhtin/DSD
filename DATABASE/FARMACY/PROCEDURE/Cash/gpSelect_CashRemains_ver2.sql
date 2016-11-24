@@ -1,10 +1,8 @@
--- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_CashRemains_ver2()
 
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver222 (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver222(
+CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
     IN inMovementId    Integer,    -- Текущая накладная
     IN inCashSessionId TVarChar,   -- Сессия кассового места
     IN inSession       TVarChar    -- сессия пользователя
@@ -24,6 +22,7 @@ $BODY$
    DECLARE vbUnitKey TVarChar;
    DECLARE vbObjectId Integer;
 BEGIN
+-- if inSession = '3' then return; end if;
 
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -36,21 +35,44 @@ BEGIN
     
     vbObjectId := COALESCE(lpGet_DefaultValue('zc_Object_Retail', vbUserId), '0');
 
-    --Объявили новую сессию кассового места / обновили дату последнего обращения
-    PERFORM lpInsertUpdate_CashSession(inCashSessionId := inCashSessionId,
-                                       inDateConnect   := CURRENT_TIMESTAMP::TDateTime);
+    -- Объявили новую сессию кассового места / обновили дату последнего обращения
+    PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
+                                      , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
+                                      , inUserId        := vbUserId
+                                       );
+
     --Очистили содержимое снапшета сессии
     DELETE FROM CashSessionSnapShot
     WHERE CashSessionId = inCashSessionId;
                                         
-    WITH GoodsRemains
-    AS
-    (
-        SELECT 
-            SUM(container.Amount) AS Remains, 
-            container.objectid, 
-            MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
-        FROM container
+    -- Данные
+    WITH tmpContainer AS (SELECT Container.Id, Container.ObjectId, Container.Amount
+                          FROM Container
+                          WHERE Container.DescId = zc_Container_Count() 
+                            AND Container.WhereObjectId = vbUnitId
+                            AND Container.Amount <> 0
+                         )
+       , tmpCLO AS (SELECT CLO.*
+                    FROM ContainerlinkObject AS CLO
+                    WHERE CLO.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
+                      AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                   )
+       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
+                               FROM tmpCLO
+                                    INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
+                                    INNER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               )
+       , GoodsRemains AS
+    (SELECT Container.ObjectId
+          , SUM (Container.Amount) AS Remains
+          , MIN (COALESCE (tmpExpirationDate.ValueData, zc_DateEnd())) :: TDateTime AS MinExpirationDate -- Срок годности
+     FROM tmpContainer AS Container
+          -- находим партию
+          LEFT JOIN tmpExpirationDate ON tmpExpirationDate.Containerid = Container.Id
+          /*
           -- находим партию
           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                         ON ContainerLinkObject_MovementItem.Containerid =  Container.Id
@@ -67,17 +89,11 @@ BEGIN
                      
           LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
                                            ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-        WHERE 
-            container.descid = zc_container_count() 
-            AND 
-            Container. WhereObjectId = vbUnitId
-            AND
-            container.Amount<>0
-        GROUP BY 
-            container.objectid
-    ),
-    RESERVE
+                                          AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()*/
+        GROUP BY Container.ObjectId
+      )
+
+  , RESERVE
     AS
     (
         SELECT
@@ -175,7 +191,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_CashRemains_ver222 (Integer, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -194,4 +210,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver222 (Integer, TVarChar, TVarChar) OWNER T
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
 
---select * from gpSelect_CashRemains_ver222(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');
+--select * from gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');

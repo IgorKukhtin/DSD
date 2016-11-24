@@ -71,7 +71,7 @@ BEGIN
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!¬–≈ћ≈ЌЌќ!!!
--- inItearationCount:=100;
+ inItearationCount:=100;
 -- !!!¬–≈ћ≈ЌЌќ!!!
 
      -- !!!если не филиал, тогда начальна€ дата всегда 1-ое число мес€ца!!!
@@ -444,6 +444,7 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (142372, 147559); -- 08.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
      --                                                       , 955228, 189406, 955227, 147524, 955226, 147525, 955221, 147522, 1088976, 699999, 955223, 955224, 393568, 149497);
+     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (647643, 663076, 639413, 633042, 633033); -- 11.2016
 
 
      IF inBranchId = 0 -- OR 1 = 1
@@ -1118,7 +1119,7 @@ from Container
 where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.06.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000000)
 order by 3, 5
 SELECT * 
-FROM HistoryCost WHERE ('01.09.2016' BETWEEN StartDate AND EndDate)
+FROM HistoryCost WHERE ('01.11.2016' BETWEEN StartDate AND EndDate)
 and abs (Price) = 1.1234
 and CalcSumm > 1000000
 order by Price desc

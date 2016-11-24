@@ -3,8 +3,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -46
+  ExplicitTop = -113
   ExplicitWidth = 835
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,6 +50,26 @@ inherited InventoryJournalForm: TInventoryJournalForm
               Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
               Column = colDiff
+            end
+            item
+              Format = '+,0.0000;-,0.0000;0,0000;'
+              Kind = skSum
+              Column = Diff_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = DeficitSumm_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = ProficitSumm_calc
+            end
+            item
+              Format = '+,0.00; -,0.00;0.00;'
+              Kind = skSum
+              Column = DiffSumm_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -69,6 +91,26 @@ inherited InventoryJournalForm: TInventoryJournalForm
               Format = '+,0.0000;-,0.0000;0,0000;'
               Kind = skSum
               Column = colDiff
+            end
+            item
+              Format = '+,0.0000;-,0.0000;0,0000;'
+              Kind = skSum
+              Column = Diff_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = DeficitSumm_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = ProficitSumm_calc
+            end
+            item
+              Format = '+,0.00; -,0.00;0.00;'
+              Kind = skSum
+              Column = DiffSumm_calc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -101,6 +143,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 252
           end
           object colDeficitSumm: TcxGridDBColumn
@@ -109,7 +152,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
-            Width = 64
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colProficitSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
@@ -117,23 +161,72 @@ inherited InventoryJournalForm: TInventoryJournalForm
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
-            Width = 64
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077
             DataBinding.FieldName = 'Diff'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+,0.0000;-,0.0000;;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colDiffSumm: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077
             DataBinding.FieldName = 'DiffSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = '+,0.00; -,0.00;;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Diff_calc: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083'-'#1074#1077' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'Diff_calc'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.0000;-,0.0000;;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object DeficitSumm_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'DeficitSumm_calc'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ProficitSumm_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'ProficitSumm_calc'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object DiffSumm_calc: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'DiffSumm_calc'
+            PropertiesClassName = 'TcxCalcEditProperties'
+            Properties.DisplayFormat = '+,0.00; -,0.00;;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colFullInvent: TcxGridDBColumn
             Caption = #1055#1086#1083#1085#1072#1103
             DataBinding.FieldName = 'FullInvent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086#1083#1085#1072#1103' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
             Options.Editing = False
             Width = 52
@@ -176,17 +269,20 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     object actPrint: TdsdPrintAction
@@ -197,10 +293,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -226,11 +324,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       ReportNameParam.Value = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -242,6 +342,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -249,6 +350,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -256,6 +358,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -278,6 +381,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inenddate'
@@ -285,6 +389,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -292,11 +397,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -436,11 +543,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = True
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -454,6 +563,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -467,6 +577,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 208
     Top = 376
@@ -477,30 +588,35 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInventory'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReportNameInventoryTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -540,6 +656,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535

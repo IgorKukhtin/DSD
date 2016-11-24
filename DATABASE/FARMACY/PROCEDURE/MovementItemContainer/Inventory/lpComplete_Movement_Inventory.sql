@@ -1,4 +1,4 @@
- -- Function: lpComplete_Movement_Income (Integer, Integer)
+-- Function: lpComplete_Movement_Inventory (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Inventory (Integer, Integer);
 

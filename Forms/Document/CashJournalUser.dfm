@@ -4,8 +4,8 @@ inherited CashJournalUserForm: TCashJournalUserForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -209
   ExplicitWidth = 998
-  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -371,12 +371,12 @@ inherited CashJournalUserForm: TCashJournalUserForm
       Caption = #1050#1072#1089#1089#1072':'
     end
     object cxLabel27: TcxLabel
-      Left = 782
+      Left = 822
       Top = 7
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 879
+      Left = 900
       Top = 5
       Properties.Buttons = <
         item

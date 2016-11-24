@@ -48,6 +48,18 @@ BEGIN
      THEN
          vbUserId:= NULL;
          RETURN;
+
+     -- Блокируем ему просмотр за ДРУГОЙ период
+     ELSEIF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_CashReplace() AND UserId = vbUserId)
+        -- AND inCashId    <> 296540 -- Касса Днепр БН
+        AND (inStartDate < zc_DateStart_Role_CashReplace() OR inStartDate > zc_DateEnd_Role_CashReplace()
+          OR inEndDate   < zc_DateStart_Role_CashReplace() OR inEndDate   > zc_DateEnd_Role_CashReplace()
+          OR inCashId    <> 14462 -- Касса Днепр
+            )
+     THEN
+         IF inStartDate < zc_DateStart_Role_CashReplace() OR inStartDate > zc_DateEnd_Role_CashReplace() THEN inStartDate:= zc_DateStart_Role_CashReplace(); END IF;
+         IF inEndDate   < zc_DateStart_Role_CashReplace() OR inEndDate   > zc_DateEnd_Role_CashReplace() THEN inEndDate  := zc_DateEnd_Role_CashReplace();   END IF;
+
      END IF;
 
 

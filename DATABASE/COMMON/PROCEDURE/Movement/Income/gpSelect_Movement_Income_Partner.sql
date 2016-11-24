@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Partner (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Income_Partner (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income_Partner(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
