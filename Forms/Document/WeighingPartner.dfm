@@ -901,6 +901,36 @@ object WeighingPartnerForm: TWeighingPartnerForm
     TabOrder = 8
     Width = 104
   end
+  object cxLabel13: TcxLabel
+    Left = 1191
+    Top = 5
+    Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edMovementDescName: TcxButtonEdit
+    Left = 1191
+    Top = 22
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 168
+  end
+  object cxLabel7: TcxLabel
+    Left = 1261
+    Top = 45
+    Caption = #1050#1086#1076' '#1086#1087#1077#1088'.('#1074#1079#1074#1077#1096'.)'
+  end
+  object edMovementDescNumber: TcxTextEdit
+    Left = 1261
+    Top = 63
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 98
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1032,6 +1062,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1049,14 +1087,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
         item
           Visible = True
           ItemName = 'bbProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenDocument'
         end
         item
           Visible = True
@@ -1114,7 +1144,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Category = 0
     end
     object bbOpenDocument: TdxBarButton
-      Action = actOpenDocument
+      Action = actUpdateDocument
       Category = 0
     end
   end
@@ -1387,15 +1417,15 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       isShowModal = False
     end
-    object actOpenDocument: TdsdOpenForm
+    object actUpdateDocument: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 43
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ShortCut = 115
+      ImageIndex = 1
       FormName = 'TWeighingPartnerEditForm'
       FormNameParam.Value = 'TWeighingPartnerEditForm'
-      FormNameParam.Component = FormParams
-      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1404,18 +1434,18 @@ object WeighingPartnerForm: TWeighingPartnerForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = edOperDate
-          DataType = ftDateTime
-          ParamType = ptInput
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
   end
   object MasterDS: TDataSource
@@ -1753,6 +1783,27 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = cbPromo
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoods'
+        Value = Null
+        Component = edPartionGoods
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementDescName'
+        Value = Null
+        Component = MovementDescGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementDescNumber'
+        Value = Null
+        Component = edMovementDescNumber
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2148,5 +2199,33 @@ object WeighingPartnerForm: TWeighingPartnerForm
     PackSize = 1
     Left = 529
     Top = 248
+  end
+  object MovementDescGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementDescName
+    FormNameParam.Value = 'TMovementDescForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMovementDescForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MovementDescGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MovementDescGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1280
   end
 end

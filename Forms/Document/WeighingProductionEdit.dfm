@@ -85,17 +85,6 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
       Top = 5
       Caption = #1050#1086#1084#1091
     end
-    object edMovementDescName: TcxCurrencyEdit
-      Left = 634
-      Top = 62
-      Enabled = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
-      TabOrder = 6
-      Width = 119
-    end
     object cxLabel5: TcxLabel
       Left = 511
       Top = 45
@@ -119,10 +108,10 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
       Left = 511
       Top = 62
       TabOrder = 4
-      Width = 118
+      Width = 115
     end
     object cxLabel7: TcxLabel
-      Left = 634
+      Left = 631
       Top = 45
       Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
@@ -150,7 +139,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 15
+      TabOrder = 14
       Width = 95
     end
     object cxLabel9: TcxLabel
@@ -164,7 +153,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
       EditValue = 42182d
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 17
+      TabOrder = 16
       Width = 105
     end
     object cxLabel8: TcxLabel
@@ -181,7 +170,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 19
+      TabOrder = 18
       Width = 157
     end
     object cxLabel14: TcxLabel
@@ -193,7 +182,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
       Left = 109
       Top = 62
       Enabled = False
-      TabOrder = 21
+      TabOrder = 20
       Width = 80
     end
     object cxLabel12: TcxLabel
@@ -214,14 +203,14 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
-      TabOrder = 24
+      TabOrder = 23
       Width = 80
     end
     object edisIncome: TcxCheckBox
       Left = 917
       Top = 62
       Caption = #1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-      TabOrder = 25
+      TabOrder = 24
       Width = 157
     end
   end
@@ -566,6 +555,18 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
     Properties.ReadOnly = True
     TabOrder = 10
     Width = 170
+  end
+  object edMovementDescName: TcxButtonEdit
+    Left = 631
+    Top = 62
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 122
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1062,8 +1063,8 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 16
+    Left = 368
+    Top = 8
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1092,8 +1093,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 584
-    Top = 8
+    Left = 552
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1145,6 +1145,9 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         Control = edMovementDescNumber
       end
       item
+        Control = edMovementDescName
+      end
+      item
         Control = edFrom
       end
       item
@@ -1154,10 +1157,6 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         Control = edDocumentKind
       end
       item
-        Control = edMovementDescName
-      end
-      item
-        Control = edMovementDescNumber
       end
       item
         Control = ceStatus
@@ -1248,9 +1247,17 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MovementDesc'
+        Value = ''
+        Component = MovementDescGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementDescName'
         Value = 0.000000000000000000
-        Component = edMovementDescName
+        Component = MovementDescGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1288,6 +1295,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1303,6 +1311,7 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1321,14 +1330,11 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'UserName'
         Value = ''
+        Component = UserGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1589,6 +1595,14 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inMovementDescId'
+        Value = Null
+        Component = MovementDescGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementDescNumber'
         Value = 0.000000000000000000
         Component = edMovementDescNumber
@@ -1661,5 +1675,34 @@ object WeighingProductionEditForm: TWeighingProductionEditForm
     PackSize = 1
     Left = 505
     Top = 352
+  end
+  object MovementDescGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementDescName
+    FormNameParam.Value = 'TMovementDescForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMovementDescForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MovementDescGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MovementDescGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 672
+    Top = 48
   end
 end

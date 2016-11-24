@@ -154,6 +154,11 @@ type
     bbProtocol: TdxBarButton;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    edMovementDescNumber: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    edMovementDescName: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    MovementDescGuides: TdsdGuides;
   private
   public
   end;

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , WeighingNumber TFloat, InvNumberTransport TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , MovementDescId Integer
+             , MovementDescNumber Integer, MovementDescName TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -70,6 +71,8 @@ BEGIN
              , MovementFloat_ChangePercent.ValueData          AS ChangePercent
 
              , MovementFloat_MovementDesc.ValueData :: Integer AS MovementDescId
+             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
+             , MovementDesc.ItemName                      AS MovementDescName
 
              , Object_From.Id                       AS FromId
              , Object_From.ValueData                AS FromName
@@ -79,10 +82,10 @@ BEGIN
                     WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_From_Juridical.ChildObjectId
                     ELSE 0
                END AS JuridicalId
-             , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_JuridicalTo.ValueDate
-                    WHEN Object_From.DescId = zc_Object_Partner() THEN Object_JuridicalFrom.ValueDate
+             , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_JuridicalTo.ValueData
+                    WHEN Object_From.DescId = zc_Object_Partner() THEN Object_JuridicalFrom.ValueData
                     ELSE ''
-               END AS JuridicalName
+               END :: TVarChar AS JuridicalName
 
              , Object_PaidKind.Id                   AS PaidKindId
              , Object_PaidKind.ValueData            AS PaidKindName
@@ -131,9 +134,13 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                    ON MovementFloat_MovementDesc.MovementId = Movement.Id
+                                    ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData :: Integer -- COALESCE (Movement_Parent.DescId, MovementFloat_MovementDesc.ValueData)
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                       ON MovementBoolean_Promo.MovementId =  Movement.Id
@@ -200,3 +207,4 @@ ALTER FUNCTION gpGet_Movement_WeighingPartner (Integer, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Movement_WeighingPartner (inMovementId := 1, inSession:= zfCalc_UserAdmin())
+--select * from gpGet_Movement_WeighingPartner(inMovementId := 4312694 ,  inSession := '5');

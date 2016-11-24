@@ -1,11 +1,12 @@
 -- Function: gpUpdate_Movement_WeighingProduction()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingProduction(
     IN inId                  Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
-   -- IN inMovementDescId      Integer   , -- Вид документа
+    IN inMovementDescId      Integer   , -- Вид документа
     IN inMovementDescNumber  Integer   , -- Код операции (взвешивание)
     IN inWeighingNumber      Integer   , -- Номер взвешивания
     IN inFromId              Integer   , -- От кого (в документе)
@@ -46,7 +47,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), inId, inIsProductionIn);
 
      -- сохранили свойство <Вид документа>
-     --PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), inId, inMovementDescId);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), inId, inMovementDescId);
      -- сохранили свойство <Код операции (взвешивание)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDescNumber(), inId, inMovementDescNumber);
      -- сохранили свойство <Номер взвешивания>
@@ -67,7 +68,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
+     --PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
 
 END;
 $BODY$
