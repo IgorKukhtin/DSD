@@ -66,7 +66,7 @@ BEGIN
                     WHERE CLO.ContainerId IN (SELECT tmpContainer.Id FROM tmpContainer)
                       AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
                    )
-       , tmpObject AS (SELECT Object.* FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpObject AS (SELECT Object.Id, Object.ObjectCode FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
        , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
                                FROM tmpCLO
                                     INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
@@ -101,84 +101,96 @@ BEGIN
                                           AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()*/
       GROUP BY Container.ObjectId
      )
-
-  , RESERVE AS 
-       (SELECT
-            MovementItem_Reserve.GoodsId,
-            SUM(MovementItem_Reserve.Amount)::TFloat as Amount
-        FROM
-            gpSelect_MovementItem_CheckDeferred(inSession) as MovementItem_Reserve
-        WHERE
-            MovementItem_Reserve.MovementId <> inMovementId
-        Group By
-            MovementItem_Reserve.GoodsId
-    ),
-    SESSIONDATA --состо€ние в сессии
-    AS
-    (
-        SELECT 
-            CashSessionSnapShot.ObjectId,
-            CashSessionSnapShot.Price,
-            CashSessionSnapShot.Remains,
-            CashSessionSnapShot.MCSValue,
-            CashSessionSnapShot.Reserved,
-            CashSessionSnapShot.MinExpirationDate
-        FROM
-            CashSessionSnapShot
-        WHERE
-            CashSessionSnapShot.CashSessionId = inCashSessionId
-    )
-    --заливаем разницу
+    -- ќтложенные чеки
+  , RESERVE AS (SELECT gpSelect.GoodsId      AS GoodsId
+                     , SUM (gpSelect.Amount) AS Amount
+                 FROM gpSelect_MovementItem_CheckDeferred (inSession) AS gpSelect
+                 WHERE gpSelect.MovementId <> inMovementId
+                 GROUP BY gpSelect.GoodsId
+                )
+    -- состо€ние в сессии
+  , SESSIONDATA AS (SELECT CashSessionSnapShot.ObjectId
+                         , CashSessionSnapShot.Price
+                         , CashSessionSnapShot.Remains
+                         , CashSessionSnapShot.MCSValue
+                         , CashSessionSnapShot.Reserved
+                         , CashSessionSnapShot.MinExpirationDate
+                    FROM CashSessionSnapShot
+                    WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
+                   )
+       , tmpGoods AS (SELECT tmpContainer.ObjectId FROM tmpContainer
+                     UNION
+                      SELECT SESSIONDATA.ObjectId FROM SESSIONDATA
+                     UNION
+                      SELECT RESERVE.GoodsId FROM RESERVE
+                     )
+       , tmpPrice AS (SELECT tmpGoods.ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+                      FROM tmpGoods
+                           INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                 ON ObjectLink_Goods.ChildObjectId = tmpGoods.ObjectId
+                                                AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                           INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
+                                                AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                  ON ObjectFloat_Value.ObjectId = ObjectLink_Goods.ObjectId
+                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_MCS
+                                                 ON ObjectFloat_MCS.ObjectId = ObjectLink_Goods.ObjectId
+                                                AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
+                     )
+    -- –≈«”Ћ№“ј“ - заливаем разницу
     INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow, Color_calc,MinExpirationDate)
-    SELECT
-        COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId)         AS ObjectId
-       ,Object_Goods.ObjectCode::Integer                             AS GoodsCode
-       ,Object_Goods.ValueData                                       AS GoodsName
-       ,ROUND(COALESCE(Object_Price_View.Price,0),2)                 AS Price
-       ,COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0)  AS Remains
-       ,Object_Price_View.MCSValue                                   AS MCSValue
-       ,Reserve.Amount::TFloat                                       AS Reserved
-       ,CASE 
-          WHEN SESSIONDATA.ObjectId Is Null 
-            THEN TRUE 
-        ELSE FALSE 
-        END                                              AS NewRow
-       , CASE WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc 
-       , GoodsRemains.MinExpirationDate
-    FROM
-        GoodsRemains
-        FULL OUTER JOIN SESSIONDATA ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
-        INNER JOIN Object AS Object_Goods
-                          ON COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId) = Object_Goods.Id
-        LEFT OUTER JOIN Object_Price_View ON Object_Goods.Id = Object_Price_View.GoodsId
-                                         AND Object_Price_View.UnitId = vbUnitId
-        LEFT OUTER JOIN RESERVE ON Object_Goods.Id = RESERVE.GoodsId
+       WITH tmpDiff AS (SELECT tmpPrice.ObjectId                                                 AS ObjectId
+                             , tmpPrice.Price                                                    AS Price
+                             , tmpPrice.MCSValue                                                 AS MCSValue
+                             , COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount,0)  AS Remains
+                             , Reserve.Amount                                                    AS Reserved
+                             , CASE WHEN SESSIONDATA.ObjectId IS NULL
+                                         THEN TRUE
+                                     ELSE FALSE
+                               END                                                               AS NewRow
+                             , GoodsRemains.MinExpirationDate                                    AS MinExpirationDate
+                        FROM tmpPrice
+                             LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = tmpPrice.ObjectId
+                             LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = tmpPrice.ObjectId
+                             LEFT JOIN RESERVE      ON RESERVE.GoodsId       = tmpPrice.ObjectId
+                        WHERE tmpPrice.Price    <> COALESCE (SESSIONDATA.Price, 0)
+                           OR tmpPrice.MCSValue <> COALESCE (SESSIONDATA.MCSValue, 0)
+                           OR COALESCE (GoodsRemains.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
+                           OR COALESCE (Reserve.Amount,0) <> COALESCE (SESSIONDATA.Reserved, 0)
+                       ) 
+       -- –≈«”Ћ№“ј“
+       SELECT tmpDiff.ObjectId
+            , Object_Goods.ObjectCode     AS GoodsCode
+            , Object_Goods.ValueData      AS GoodsName
+            , tmpDiff.Price
+            , tmpDiff.Remains
+            , tmpDiff.MCSValue
+            , tmpDiff.Reserved
+            , tmpDiff.NewRow
+            , CASE WHEN COALESCE (ObjectBoolean_First.ValueData, FALSE) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc 
+            , tmpDiff.MinExpirationDate
+       FROM tmpDiff
+            INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpDiff.ObjectId
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_First
+                                    ON ObjectBoolean_First.ObjectId = tmpDiff.ObjectId
+                                   AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
+      ;
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_First
-                                ON ObjectBoolean_First.ObjectId = Object_Goods.Id
-                               AND ObjectBoolean_First.DescId = zc_ObjectBoolean_Goods_First()
-    WHERE
-        ROUND(COALESCE(Object_Price_View.Price,0),2) <> COALESCE(SESSIONDATA.Price,0)
-        OR
-        COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Remains,0)
-        OR
-        COALESCE(Object_Price_View.MCSValue,0) <> COALESCE(SESSIONDATA.MCSValue,0)
-        OR
-        COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Reserved,0);
 
     --ќбновл€ем данные в сессии
     UPDATE CashSessionSnapShot SET
-        Price = _DIFF.Price,
-        Remains = _DIFF.Remains,
-        MCSValue = _DIFF.MCSValue,
-        Reserved = _DIFF.Reserved,
-        MinExpirationDate = _DIFF.MinExpirationDate
+        Price             = _DIFF.Price
+      , Remains           = _DIFF.Remains
+      , MCSValue          = _DIFF.MCSValue
+      , Reserved          = _DIFF.Reserved
+      , MinExpirationDate = _DIFF.MinExpirationDate
     FROM
         _DIFF
-    WHERE
-        CashSessionSnapShot.CashSessionId = inCashSessionId
-        AND
-        CashSessionSnapShot.ObjectId = _DIFF.ObjectId;
+    WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
+      AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId;
     
     --доливаем те, что по€вились
     Insert Into CashSessionSnapShot(CashSessionId,ObjectId,Price,Remains,MCSValue,Reserved,MinExpirationDate)
@@ -220,3 +232,7 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
  16.03.16         * 
  12.09.15                                                                       *CashSessionSnapShot
 */
+
+-- тест
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '3')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '390016')
