@@ -63,6 +63,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 32
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1018,7 +1019,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
+    Left = 96
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1300,7 +1301,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 112
+    Left = 128
     Top = 64
     object N1: TMenuItem
       Action = actComplete

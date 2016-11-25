@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isProductionIn Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDesc TFloat
+             , MovementDescNumber Integer, MovementDescName TVarChar
+             , WeighingNumber TFloat
+             , PartionGoods TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , UserId Integer, UserName TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
@@ -41,6 +44,12 @@ BEGIN
              , CAST (CURRENT_DATE as TDateTime) AS EndWeighing
 
              , CAST (0 as TFloat)    AS MovementDesc
+             , 0                     AS MovementDescNumber
+             , CAST ('' as TVarChar) AS MovementDescName
+
+             , CAST (0 as TFloat)    AS WeighingNumber
+
+             , CAST ('' as TVarChar) AS PartionGoods
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -71,6 +80,11 @@ BEGIN
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
              , MovementFloat_MovementDesc.ValueData  AS MovementDesc
+             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
+             , MovementDesc.ItemName                      AS MovementDescName
+             , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
+
+             , MovementString_PartionGoods.ValueData      AS PartionGoods
 
              , Object_From.Id                  AS FromId
              , Object_From.ValueData           AS FromName
@@ -97,13 +111,26 @@ BEGIN
                                    ON MovementDate_EndWeighing.MovementId =  Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
+            LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                    ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_MovementDescNumber.DescId = zc_MovementFloat_MovementDescNumber()
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+            LEFT JOIN MovementDesc ON MovementDesc.Id = MovementFloat_MovementDesc.ValueData 
             
+
+            LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
+                                    ON MovementFloat_WeighingNumber.MovementId =  Movement.Id
+                                   AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
+
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+
+            LEFT JOIN MovementString AS MovementString_PartionGoods
+                                     ON MovementString_PartionGoods.MovementId =  Movement.Id
+                                    AND MovementString_PartionGoods.DescId = zc_MovementString_PartionGoods()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -136,9 +163,12 @@ ALTER FUNCTION gpGet_Movement_WeighingProduction (Integer, TVarChar) OWNER TO po
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 24.11.16         *
  14.06.16         *
  13.03.14         *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpGet_Movement_WeighingProduction (inMovementId:= 1, inSession:= zfCalc_UserAdmin())
+
+--select * from gpGet_Movement_WeighingProduction(inMovementId := 3950163 ,  inSession := '5');

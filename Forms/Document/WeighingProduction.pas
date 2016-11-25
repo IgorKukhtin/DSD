@@ -79,7 +79,6 @@ type
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    edMovementDescName: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     HeaderSaver: THeaderSaver;
     edMovementDescNumber: TcxTextEdit;
@@ -138,8 +137,10 @@ type
     PrintItemsCDS: TClientDataSet;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbProtocol: TdxBarButton;
-    actOpenDocument: TdsdOpenForm;
     bbOpenDocument: TdxBarButton;
+    actUpdateDocument: TdsdInsertUpdateAction;
+    MovementDescGuides: TdsdGuides;
+    edMovementDescName: TcxButtonEdit;
   private
   public
   end;

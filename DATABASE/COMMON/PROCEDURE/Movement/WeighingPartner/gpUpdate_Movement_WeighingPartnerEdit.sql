@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Movement_WeighingPartnerEdit()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inId                   Integer   , -- Ключ объекта <Документ>
@@ -13,10 +14,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inVATPercent           TFloat    , -- % НДС
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
 
-    IN inInvNumberOrder      TVarChar  , -- Номер заявки у контрагента 
-    IN inPartionGoods        TVarChar  , -- Партия товара
-  --  IN inMovementDescId       Integer   , -- Вид документа
-  --  IN inMovementDescNumber   Integer   , -- Код операции (взвешивание)
+    IN inInvNumberOrder       TVarChar  , -- Номер заявки у контрагента 
+    IN inPartionGoods         TVarChar  , -- Партия товара
+    IN inMovementDescId       Integer   , -- Вид документа
+    IN inMovementDescNumber   Integer   , -- Код операции (взвешивание)
     IN inWeighingNumber       Integer   , -- Номер взвешивания
     IN inFromId               Integer   , -- От кого (в документе)
     IN inToId                 Integer   , -- Кому (в документе)
@@ -63,12 +64,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), inId, inChangePercent);
 
 
-/*
+
      -- сохранили свойство <Вид документа>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), inId, inMovementDescId);
      -- сохранили свойство <Код операции (взвешивание)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDescNumber(), inId, inMovementDescNumber);
-*/
+
      -- сохранили свойство <Номер взвешивания>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), inId, inWeighingNumber);
 
@@ -100,7 +101,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
+     --PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
