@@ -47,6 +47,10 @@ ALTER TABLE CashSessionSnapShot
 
 CREATE INDEX idx_CashSessionSnapShot ON CashSessionSnapShot(CashSessionId);
 CREATE INDEX idx_CashSessionSnapShot_ObjectId ON CashSessionSnapShot(ObjectId);
+
+-- CREATE INDEX idx_CashSessionSnapShot_ObjectId_CashSessionId ON CashSessionSnapShot(ObjectId, CashSessionId);
+-- CREATE INDEX idx_CashSessionSnapShot_CashSessionId_ObjectId ON CashSessionSnapShot(CashSessionId, ObjectId);
+
 /*-------------------------------------------------------------------------------*/
 
 

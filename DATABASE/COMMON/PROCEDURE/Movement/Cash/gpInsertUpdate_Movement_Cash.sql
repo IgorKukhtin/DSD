@@ -41,6 +41,17 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
 
 
+     -- Блокируем ему просмотр за ДРУГОЙ период
+     IF EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_CashReplace() AND UserId = vbUserId)
+        AND (NOT (inOperDate BETWEEN zc_DateStart_Role_CashReplace() AND zc_DateEnd_Role_CashReplace())
+          OR inCashId    <> 14462 -- Касса Днепр
+          OR inAmountOut <> 0
+            )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав на изменение данных для <%>.', lfGet_Object_ValueData (vbUserId);
+     END IF;
+
+
      -- 1. если  update
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash())
      THEN

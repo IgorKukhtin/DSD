@@ -33,3 +33,10 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  10.09.15                                                         *
 */
+
+/*
+-- select  * from CashSession ORDER BY 2 -- select count (*) from CashSessionSnapShot
+-- select  * from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL '180 MIN' ORDER BY 2 
+-- delete from CashSessionSnapShot WHERE CashSessionId IN (select Id from CashSession WHERE lastConnect < CURRENT_TIMESTAMP - INTERVAL '180 MIN');
+-- delete from CashSession WHERE Id NOT IN (SELECT DISTINCT CashSessionId FROM CashSessionSnapShot) AND lastConnect < CURRENT_TIMESTAMP - INTERVAL '180 MIN';
+*/

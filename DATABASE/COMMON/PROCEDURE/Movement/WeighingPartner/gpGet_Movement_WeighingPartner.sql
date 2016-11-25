@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementId_Order Integer, InvNumberOrder TVarChar
-             , PartionGoods TVarChar
+              , PartionGoods TVarChar
              , WeighingNumber TFloat, InvNumberTransport TFloat
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , MovementDescId Integer
