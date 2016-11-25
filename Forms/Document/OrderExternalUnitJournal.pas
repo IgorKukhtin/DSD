@@ -75,6 +75,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrintSilent: TdsdPrintAction;
+    mactSilentPrint: TMultiAction;
+    mactSilentList: TMultiAction;
+    N13: TMenuItem;
   private
     { Private declarations }
   public
