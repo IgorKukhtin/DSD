@@ -6,7 +6,7 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -193,14 +193,14 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
   end
   object edJuridicalBasis: TcxButtonEdit [2]
-    Left = 887
+    Left = 800
     Top = 7
     Properties.Buttons = <
       item
@@ -209,12 +209,12 @@ inherited OrderInternalBasisJournalForm: TOrderInternalBasisJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 186
+    Width = 150
   end
   object cxLabel27: TcxLabel [3]
-    Left = 789
+    Left = 722
     Top = 8
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

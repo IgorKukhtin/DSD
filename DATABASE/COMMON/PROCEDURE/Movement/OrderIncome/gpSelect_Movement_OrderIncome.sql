@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_OrderIncome()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_OrderIncome (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderIncome(

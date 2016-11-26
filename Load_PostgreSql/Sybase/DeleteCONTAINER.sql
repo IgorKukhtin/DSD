@@ -147,3 +147,86 @@ delete from Container                         where Id in (select ContainerId fr
 END $$;
 
 */
+
+
+
+-- update Container set ParentId = tmp.ParentId from  (
+-- update MovementItemContainer set ContainerId = tmp.ContainerId_to from  (
+with tmpAll as  (select Container.*
+                      , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY Container.Id desc) as ORD
+                      , CLO.ObjectId AS UnitId
+                 from Container 
+                      join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id
+                                              and CLO.DescId = zc_ContainerLinkObject_Member()
+                                              and CLO.ObjectId = 239655
+                 where Container.DescId = 1
+--                and  Container.Id in (1082615 , 1178340)
+                )
+--  select * from tmpAll join Container as Container_summ_from on Container_summ_from.ParentId = tmpAll.Id where ORD > 1
+
+, tmp_count as (select tmpAll_to.Id As ContainerId_to, tmpAll_From.Id AS ContainerId_from
+                     , MAX (coalesce (Container_summ_to.Id, Container_summ_from.Id)) AS ContainerId_summ_to
+                from tmpAll as tmpAll_to
+                     left join Container as Container_summ_to on Container_summ_to.ParentId = tmpAll_to.Id
+                     left join tmpAll as tmpAll_From on tmpAll_From.ord > 1 AND tmpAll_From.ObjectId = tmpAll_to.ObjectId
+                                                                            AND tmpAll_From.UnitId   = tmpAll_to.UnitId
+                     left join Container as Container_summ_from on Container_summ_from.ParentId = tmpAll_From.Id
+                     --  join MovementItemContainer on MovementItemContainer.ContainerId = tmpAll_From.Id
+                where tmpAll_to.ord = 1
+                GROUP BY tmpAll_to.Id , tmpAll_From.Id 
+               )
+-- select * from tmp_count
+
+, tmp_summ as (select tmp_count.ContainerId_to, tmp_count.ContainerId_from
+               , tmp_count.ContainerId_summ_to
+               , Container_summ_From.Id AS ContainerId_summ_from
+               , Container_find.ParentId AS ParentId_from
+          from tmp_count
+              left join Container as Container_summ_From on Container_summ_From.ParentId = tmp_count.ContainerId_to
+              inner join Container as Container_find on Container_find.Id = tmp_count.ContainerId_summ_to
+         )
+-- select * from tmp_summ
+
+
+, tmp_all as (select ContainerId_from, ContainerId_to,  1 as Descid, null as ParentId, null as ParentId_from from tmp_count
+           union 
+             select ContainerId_summ_from, ContainerId_summ_to,  2 as Descid, ContainerId_to as ParentId, ParentId_from from tmp_summ -- where ContainerId_summ_from <>  ContainerId_summ_to
+             )
+
+-- select * from tmp_all   where ParentId <>  ParentId_from and DescId = 2
+   select * from tmp_all   where ContainerId_from <> ContainerId_to
+
+-- ) as tmp  where tmp.Descid = 2 and tmp.ContainerId_to = Container.Id
+--  ) as tmp  where tmp.ContainerId_from = MovementItemContainer.ContainerId
+
+
+-- update Container set Amount = OperAmount from  (
+                    SELECT 
+                        containerCount.Amount ,
+                        COALESCE(SUM(MIContainer.Amount), 0) AS OperAmount
+                      , containerCount.Id , containerCount.DescId 
+                      -- , containerCount.ObjectID 
+                    FROM (select Container.*
+                          from Container 
+                          join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id
+                                                  and CLO.DescId = zc_ContainerLinkObject_Member()
+                                                  and CLO.ObjectId = 12573
+                         )AS containerCount
+                        LEFT JOIN MovementItemContainer AS MIContainer 
+                                                        ON MIContainer.ContainerId = containerCount.Id
+                    GROUP BY containerCount.Id, containerCount.DescId , containerCount.ObjectID, containerCount.Amount
+                    having containerCount.Amount <> COALESCE(SUM(MIContainer.Amount), 0) 
+-- ) as tmp where tmp.Id = Container.Id
+
+
+select count(*), goodsId, ObjectId
+from 
+(select distinct Container.ObjectId as goodsId, CLO.ObjectId, Container.Id
+from Container 
+join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id
+                        and CLO.DescId = zc_ContainerLinkObject_Member()
+                        and CLO.ObjectId > 0
+where Container.DescId = 1
+) as tmp
+group by goodsId, ObjectId
+having count(*) >1
