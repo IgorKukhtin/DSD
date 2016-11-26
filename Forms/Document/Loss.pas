@@ -56,6 +56,7 @@ type
     spSelectPrint_Sale: TdsdStoredProc;
     actPrint_Sale: TdsdPrintAction;
     bbPrint_Sale: TdxBarButton;
+    actAssetChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -3,23 +3,23 @@ inherited LossForm: TLossForm
   ClientHeight = 668
   ClientWidth = 984
   ExplicitWidth = 1000
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 984
     Height = 582
-    ExplicitWidth = 985
+    ExplicitWidth = 984
     ExplicitHeight = 582
     ClientRectBottom = 582
     ClientRectRight = 984
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 985
+      ExplicitWidth = 984
       ExplicitHeight = 558
       inherited cxGrid: TcxGrid
         Width = 984
         Height = 558
-        ExplicitWidth = 985
+        ExplicitWidth = 984
         ExplicitHeight = 558
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -111,7 +111,6 @@ inherited LossForm: TLossForm
           object PartionGoodsDate: TcxGridDBColumn [5]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -170,13 +169,19 @@ inherited LossForm: TLossForm
             Width = 80
           end
           object colAssetName: TcxGridDBColumn [11]
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            Caption = #1054#1057'/'#1052#1053#1052#1040
             DataBinding.FieldName = 'AssetName'
-            Visible = False
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actAssetChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
+            Width = 114
           end
           object clInfoMoneyCode: TcxGridDBColumn [12]
             Caption = #1050#1086#1076' '#1059#1055
@@ -273,7 +278,7 @@ inherited LossForm: TLossForm
   inherited DataPanel: TPanel
     Width = 984
     TabOrder = 3
-    ExplicitWidth = 985
+    ExplicitWidth = 984
     inherited edInvNumber: TcxTextEdit
       Left = 182
       ExplicitLeft = 182
@@ -367,7 +372,34 @@ inherited LossForm: TLossForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actGoodsChoiceForm: TOpenChoiceForm [1]
+    object actAssetChoiceForm: TOpenChoiceForm [1]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetToPlaceForm'
+      FormName = 'TAssetToPlaceForm'
+      FormNameParam.Value = 'TAssetToPlaceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AssetName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm [2]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -401,7 +433,7 @@ inherited LossForm: TLossForm
         end>
       isShowModal = True
     end
-    object actPrint_Sale: TdsdPrintAction [9]
+    object actPrint_Sale: TdsdPrintAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint_Sale
@@ -483,7 +515,7 @@ inherited LossForm: TLossForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [15]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1249,7 +1281,7 @@ inherited LossForm: TLossForm
       end
       item
         Name = 'inPartionGoodsDate'
-        Value = 'NULL'
+        Value = 'null'
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime

@@ -3,151 +3,61 @@ unit WeighingProductionEdit;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
-  cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdDB, cxGridLevel,
-  cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
-  cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
-  Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+   AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
+  cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
+  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
+  dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TWeighingProductionEditForm = class(TParentForm)
-    FormParams: TdsdFormParams;
-    spSelectMI: TdsdStoredProc;
-    dxBarManager: TdxBarManager;
-    dxBarManagerBar: TdxBar;
-    bbRefresh: TdxBarButton;
-    cxPropertiesStore: TcxPropertiesStore;
-    ActionList: TActionList;
-    actRefresh: TdsdDataSetRefresh;
-    MasterDS: TDataSource;
-    MasterCDS: TClientDataSet;
-    DataPanel: TPanel;
-    edInvNumber: TcxTextEdit;
+  TWeighingProductionEditForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
+    Код: TcxLabel;
     edOperDate: TcxDateEdit;
+    GuidesFiller: TGuidesFiller;
+    edInvNumber: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edWeighingNumber: TcxCurrencyEdit;
+    edInvNumber_parent: TcxTextEdit;
     cxLabel2: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    dsdGuidesFrom: TdsdGuides;
-    dsdGuidesTo: TdsdGuides;
-    PopupMenu: TPopupMenu;
-    N1: TMenuItem;
-    cxPageControl: TcxPageControl;
-    cxTabSheetMain: TcxTabSheet;
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colWeightSkewer1: TcxGridDBColumn;
-    colCountSkewer1: TcxGridDBColumn;
-    cxGridLevel: TcxGridLevel;
-    actUpdateMasterDS: TdsdUpdateDataSet;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
-    coInsertDate: TcxGridDBColumn;
-    colUpdateDate: TcxGridDBColumn;
-    colRealWeight: TcxGridDBColumn;
-    colWeightTare: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colCountTare: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colCount: TcxGridDBColumn;
-    bbShowAll: TdxBarButton;
-    bbStatic: TdxBarStatic;
-    actShowAll: TBooleanStoredProcAction;
-    MasterViewAddOn: TdsdDBViewAddOn;
-    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel5: TcxLabel;
+    edOperDate_parent: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    edMovementDescName: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edMovementDescNumber: TcxTextEdit;
+    MovementDescGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     edStartWeighing: TcxDateEdit;
-    cxLabel7: TcxLabel;
-    HeaderSaver: THeaderSaver;
-    edMovementDescNumber: TcxTextEdit;
-    spGet: TdsdStoredProc;
-    RefreshAddOn: TRefreshAddOn;
-    GridToExcel: TdsdGridToExcel;
-    bbGridToExel: TdxBarButton;
-    GuidesFiller: TGuidesFiller;
-    actUpdateMovement: TdsdExecStoredProc;
-    bbInsertUpdateMovement: TdxBarButton;
-    SetErased: TdsdUpdateErased;
-    SetUnErased: TdsdUpdateErased;
-    actShowErased: TBooleanStoredProcAction;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    bbShowErased: TdxBarButton;
-    cxLabel11: TcxLabel;
-    spErasedMIMaster: TdsdStoredProc;
-    spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
-    StatusGuides: TdsdGuides;
-    spChangeStatus: TdsdStoredProc;
-    UnCompleteMovement: TChangeGuidesStatus;
-    CompleteMovement: TChangeGuidesStatus;
-    DeleteMovement: TChangeGuidesStatus;
-    ceStatus: TcxButtonEdit;
-    colPartionGoodsDate: TcxGridDBColumn;
     cxLabel9: TcxLabel;
     edEndWeighing: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edFrom: TcxButtonEdit;
+    dsdGuidesFrom: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    edTo: TcxButtonEdit;
+    dsdGuidesTo: TdsdGuides;
     cxLabel8: TcxLabel;
     edUser: TcxButtonEdit;
     UserGuides: TdsdGuides;
-    clGoodsGroupNameFull: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    colCountPack: TcxGridDBColumn;
-    edOperDate_parent: TcxDateEdit;
-    cxLabel14: TcxLabel;
-    edInvNumber_parent: TcxTextEdit;
-    cxLabel12: TcxLabel;
-    cxLabel10: TcxLabel;
-    edWeighingNumber: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     edPartionGoods: TcxTextEdit;
     edisIncome: TcxCheckBox;
-    colStartWeighing: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colCountSkewer2: TcxGridDBColumn;
-    colWeightSkewer2: TcxGridDBColumn;
-    colWeightOther: TcxGridDBColumn;
-    cxLabel13: TcxLabel;
+    cxLabel10: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
-    spSelectPrintCeh: TdsdStoredProc;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    MovementItemProtocolOpenForm: TdsdOpenForm;
-    bbProtocol: TdxBarButton;
-    spUpdateMovement: TdsdStoredProc;
-    MovementDescGuides: TdsdGuides;
-    edMovementDescName: TcxButtonEdit;
   private
+    { Private declarations }
   public
+    { Public declarations }
   end;
 
 implementation
 
 {$R *.dfm}
-
 initialization
   RegisterClass(TWeighingProductionEditForm);
 

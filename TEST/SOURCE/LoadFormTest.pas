@@ -1989,6 +1989,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGoodsPlaceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGoodsPlaceForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetToPlaceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetToPlaceForm');
 end;
 
 procedure TLoadFormTest.LoadArticleLossFormTest;
