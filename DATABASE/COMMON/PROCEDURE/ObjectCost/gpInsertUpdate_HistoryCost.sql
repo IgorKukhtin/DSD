@@ -174,7 +174,7 @@ end if;
                                   HAVING Container_Summ.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0 -- AS StartSumm
                                       OR MAX (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN Container_Summ.Id ELSE 0 END) > 0
                                  )
-     , tmpContainer_zavod AS (SELECT Container.*, COALESCE (ContainerLinkObject_Unit.ObjectId, 0) AS UnitId
+     , tmpContainer_zavod AS (SELECT Container.*, COALESCE (Object_Unit.Id, 0) AS UnitId
                                    , CASE WHEN 1 = 0 /*ObjectLink_Unit_HistoryCost.ChildObjectId > 0*/ THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
                               FROM Container
                                    LEFT JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container.Id
@@ -184,6 +184,9 @@ end if;
                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                  ON ContainerLinkObject_Unit.ContainerId = Container.Id
                                                                 AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id     = ContainerLinkObject_Unit.ObjectId
+                                                                  AND Object_Unit.Id     <> zc_Juridical_Basis()
+                                                                  -- AND Object_Unit.DescId <> zc_Object_Juridical()
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                                         ON ObjectLink_Unit_HistoryCost.ObjectId = ContainerLinkObject_Unit.ObjectId
                                                        AND ObjectLink_Unit_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
@@ -192,7 +195,7 @@ end if;
                                   OR (Container.DescId = zc_Container_Summ() AND Container.ParentId > 0 AND Container.ObjectId <> zc_Enum_Account_110101()) -- Транзит + товар в пути
                                     )
                              )
-    , tmpContainer_branch AS (SELECT Container.*, COALESCE (ContainerLinkObject_Unit.ObjectId, 0) AS UnitId
+    , tmpContainer_branch AS (SELECT Container.*, COALESCE (Object_Unit.Id, 0) AS UnitId
                                    , CASE WHEN ObjectLink_Unit_HistoryCost.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isHistoryCost_ReturnIn
                               FROM Container
                                    INNER JOIN _tmpContainer_branch ON _tmpContainer_branch.ContainerId = Container.Id
@@ -202,6 +205,9 @@ end if;
                                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                                  ON ContainerLinkObject_Unit.ContainerId = Container.Id
                                                                 AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id     = ContainerLinkObject_Unit.ObjectId
+                                                                  AND Object_Unit.Id     <> zc_Juridical_Basis()
+                                                                  -- AND Object_Unit.DescId <> zc_Object_Juridical()
                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_HistoryCost
                                                         ON ObjectLink_Unit_HistoryCost.ObjectId = ContainerLinkObject_Unit.ObjectId
                                                        AND ObjectLink_Unit_HistoryCost.DescId = zc_ObjectLink_Unit_HistoryCost()
@@ -445,6 +451,8 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
      --                                                       , 955228, 189406, 955227, 147524, 955226, 147525, 955221, 147522, 1088976, 699999, 955223, 955224, 393568, 149497);
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (647643, 663076, 639413, 633042, 633033); -- 11.2016
+--     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT CLO.ContainerId FROM ContainerLinkObject as CLO WHERE CLO.DescId = zc_ContainerLinkObject_Member()
+--                                                                                                                      AND CLO.ObjectId = 12573); -- Однокопила Ірина Борисівна
 
 
      IF inBranchId = 0 -- OR 1 = 1
@@ -571,7 +579,10 @@ end if;
      -- проверка1
      IF EXISTS (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1)
      THEN
-         RAISE EXCEPTION 'проверка1 - SELECT ContainerId FROM _tmpMaster GROUP BY ContainerId HAVING COUNT(*) > 1';
+         RAISE EXCEPTION 'проверка1 - SELECT ContainerId FROM _tmpMaster GROUP BY ContainerId HAVING COUNT(*) > 1 ContainerId = % + count = %'
+                      , (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1 LIMIT 1)
+                      , (SELECT COUNT(*) FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT _tmpMaster.ContainerId FROM _tmpMaster GROUP BY _tmpMaster.ContainerId HAVING COUNT(*) > 1))
+                       ;
      END IF;
      -- проверка2
      IF EXISTS (SELECT _tmpChild.MasterContainerId, _tmpChild.ContainerId FROM _tmpChild GROUP BY _tmpChild.MasterContainerId, _tmpChild.ContainerId HAVING COUNT(*) > 1)

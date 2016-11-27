@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Loss(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, ContainerId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountRemains TFloat, Count TFloat, HeadCount TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
@@ -125,7 +125,8 @@ BEGIN
 
             -- Остатки
           , tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
-          , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+          , tmpRemains AS (SELECT Container.Id                                AS ContainerId
+                                , Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM tmpDescWhereObject
@@ -145,6 +146,7 @@ BEGIN
        -- Результат
        SELECT
              0                          AS Id
+           , tmpRemains.ContainerId     AS ContainerId
            , tmpGoods.GoodsId           AS GoodsId
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
@@ -202,6 +204,7 @@ BEGIN
       UNION ALL
        SELECT
              tmpMI.MovementItemId               AS Id
+           , tmpRemains.ContainerId     AS ContainerId
            , Object_Goods.Id          		AS GoodsId
            , Object_Goods.ObjectCode  		AS GoodsCode
            , Object_Goods.ValueData   		AS GoodsName
@@ -280,7 +283,8 @@ BEGIN
      RETURN QUERY
      WITH   -- Остатки
             tmpDescWhereObject AS (SELECT zc_ContainerLinkObject_Unit() AS DescId UNION SELECT zc_ContainerLinkObject_Member() AS DescId)
-          , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+          , tmpRemains AS (SELECT Container.Id                                AS ContainerId
+                                , Container.ObjectId                          AS GoodsId
                                 , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM tmpDescWhereObject
@@ -299,6 +303,7 @@ BEGIN
        -- Результат
        SELECT
              MovementItem.Id                    AS Id
+           , tmpRemains.ContainerId             AS ContainerId
            , Object_Goods.Id                    AS GoodsId
            , Object_Goods.ObjectCode            AS GoodsCode
            , Object_Goods.ValueData             AS GoodsName

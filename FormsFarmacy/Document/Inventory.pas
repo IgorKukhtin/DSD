@@ -72,6 +72,10 @@ type
     clisAuto: TcxGridDBColumn;
     actOpenInventoryPartionForm: TdsdOpenForm;
     bbInventoryPartion: TdxBarButton;
+    Diff_calc: TcxGridDBColumn;
+    DiffSumm_calc: TcxGridDBColumn;
+    Diff_diff: TcxGridDBColumn;
+    DiffSumm_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

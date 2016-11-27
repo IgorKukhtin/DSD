@@ -148,6 +148,109 @@ END $$;
 
 */
 
+/*
+-- start lpInsertFind_Container
+with tmp as (
+                   SELECT  all_my.ContainerId , CLO.DescId , CLO.ObjectId, ObjectId2_new
+                      , ROW_NUMBER() OVER (PARTITION BY all_my.ContainerId ORDER BY CLO.DescId  ) as ORD
+
+from
+(
+                   SELECT  distinct containerCount.Id AS ContainerId
+                         , CLO2.ObjectId  AS ObjectId2_new
+                    FROM (select Container.*
+                               , CLO1.ObjectId AS ObjectId1
+                               , CLO2.ObjectId AS ObjectId2
+                          from Container 
+                          join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id
+                                                  and CLO.DescId = zc_ContainerLinkObject_Member()
+                                                  and CLO.ObjectId = 12573 -- Однокопила Ірина Борисівна
+                          join ContainerLinkObject as CLO1 on CLO1.ContainerId = Container.Id
+                                                  and CLO1.DescId = zc_ContainerLinkObject_InfoMoney()
+                          join ContainerLinkObject as CLO2 on CLO2.ContainerId = Container.Id
+                                                  and CLO2.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+
+                         )AS containerCount
+                        inner JOIN MovementItemContainer AS MIContainer 
+                                                        ON MIContainer.ContainerId = containerCount.Id
+                                                       AND MIContainer.MovementDescId = zc_Movement_Send()
+                          join ContainerLinkObject as CLO2 on CLO2.ContainerId = ContainerId_analyzer
+                                                  and CLO2.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+
+inner JOIN MovementItemContainer AS MIContainer2 
+                                                        ON MIContainer2.ContainerId = MIContainer.ContainerId_analyzer
+                                                       AND MIContainer2.MovementItemId = MIContainer.MovementItemId
+
+ where CLO2.ObjectId <> ObjectId2
+) as all_my
+
+                          join ContainerLinkObject as CLO on CLO.ContainerId = all_my.ContainerId
+                                                         AND CLO.DescId <> zc_ContainerLinkObject_JuridicalBasis()
+                                                         AND CLO.DescId <> zc_ContainerLinkObject_Business()
+                                                         AND CLO.DescId <> zc_ContainerLinkObject_InfoMoneyDetail()
+)
+
+
+select  *
+                       /*, lpInsertFind_Container (inContainerDescId   := Container_find.DescId
+                                                 , inParentId          := Container_find.ParentId
+                                                 , inObjectId          := Container_find.ObjectId
+                                                 , inJuridicalId_basis := CLO_01.ObjectId
+                                                 , inBusinessId        := CLO_02.ObjectId
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1   := tmp1.DescId
+                                                 , inObjectId_1 := tmp1.ObjectId
+                                                 , inDescId_2   := tmp2.DescId
+                                                 , inObjectId_2 := tmp2.ObjectId
+                                                 , inDescId_3   := tmp3.DescId
+                                                 , inObjectId_3 := tmp3.ObjectId
+                                                 , inDescId_4   := tmp4.DescId
+                                                 , inObjectId_4 := tmp4.ObjectId
+                                                 , inDescId_5   := tmp5.DescId
+                                                 , inObjectId_5 := tmp5.ObjectId
+                                                 , inDescId_6   := tmp6.DescId
+                                                 , inObjectId_6 := tmp6.ObjectId
+                                                 , inDescId_7   := tmp7.DescId
+                                                 , inObjectId_7 := tmp7.ObjectId
+                                                 , inDescId_8   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_8 := tmpContainer.ObjectId2_new
+                                                  )*/
+from (select distinct ContainerId, ObjectId2_new from tmp) as tmpContainer
+   join Container as Container_find on Container_find.Id = tmpContainer.ContainerId
+--    select max (Id) from Container  -- 1178541
+/*
+1082637
+1082640
+130475
+1082875
+*
+1178542
+1178543
+1178544
+1178545
+*/
+   join ContainerLinkObject as CLO_01 on CLO_01.ContainerId = tmpContainer.ContainerId
+                                                         AND CLO_01.DescId = zc_ContainerLinkObject_JuridicalBasis()
+   join ContainerLinkObject as CLO_02 on CLO_02.ContainerId = tmpContainer.ContainerId
+                                                         AND CLO_02.DescId = zc_ContainerLinkObject_Business()
+left join tmp as tmp1 on tmp1.ContainerId = tmpContainer.ContainerId
+                     AND tmp1.Ord = 1
+left join tmp as tmp2 on tmp2.ContainerId = tmpContainer.ContainerId
+                     AND tmp2.Ord = 2
+left join tmp as tmp3 on tmp3.ContainerId = tmpContainer.ContainerId
+                     AND tmp3.Ord = 3
+left join tmp as tmp4 on tmp4.ContainerId = tmpContainer.ContainerId
+                     AND tmp4.Ord = 4
+left join tmp as tmp5 on tmp5.ContainerId = tmpContainer.ContainerId
+                     AND tmp5.Ord = 5
+left join tmp as tmp6 on tmp6.ContainerId = tmpContainer.ContainerId
+                     AND tmp6.Ord = 6
+left join tmp as tmp7 on tmp7.ContainerId = tmpContainer.ContainerId
+                     AND tmp7.Ord = 7 
+
+-- end lpInsertFind_Container
+*/
 
 
 -- update Container set ParentId = tmp.ParentId from  (
@@ -210,7 +313,7 @@ with tmpAll as  (select Container.*
                           from Container 
                           join ContainerLinkObject as CLO on CLO.ContainerId = Container.Id
                                                   and CLO.DescId = zc_ContainerLinkObject_Member()
-                                                  and CLO.ObjectId = 12573
+                                                  and CLO.ObjectId = 12573 -- Однокопила Ірина Борисівна
                          )AS containerCount
                         LEFT JOIN MovementItemContainer AS MIContainer 
                                                         ON MIContainer.ContainerId = containerCount.Id

@@ -2,8 +2,10 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 658
   ClientWidth = 898
+  ExplicitLeft = -125
+  ExplicitTop = -236
   ExplicitWidth = 914
-  ExplicitHeight = 696
+  ExplicitHeight = 693
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,6 +148,26 @@ inherited InventoryForm: TInventoryForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colName
+            end
+            item
+              Format = '+ ,0.####;- ,0.####; '
+              Kind = skSum
+              Column = Diff_calc
+            end
+            item
+              Format = '+ ,0.####;- ,0.####; '
+              Kind = skSum
+              Column = Diff_diff
+            end
+            item
+              Format = '+ ,0.00;- ,0.00; '
+              Kind = skSum
+              Column = DiffSumm_calc
+            end
+            item
+              Format = '+ ,0.00;- ,0.00; '
+              Kind = skSum
+              Column = DiffSumm_diff
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -181,6 +203,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             Options.Editing = False
@@ -233,6 +256,7 @@ inherited InventoryForm: TInventoryForm
             Width = 50
           end
           inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
           object colDeficit: TcxGridDBColumn
@@ -241,6 +265,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
@@ -251,6 +276,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
@@ -261,6 +287,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 57
@@ -271,6 +298,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 61
@@ -281,6 +309,7 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
@@ -291,13 +320,63 @@ inherited InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 69
           end
+          object Diff_calc: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'Diff_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object DiffSumm_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099'  ('#1087#1088#1086#1074#1086#1076#1082#1080')'
+            DataBinding.FieldName = 'DiffSumm_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object Diff_diff: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1080#1089#1087#1088#1072#1074#1083'.'
+            DataBinding.FieldName = 'Diff_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.####;- ,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object DiffSumm_diff: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1089#1087#1088#1072#1074#1083'.'
+            DataBinding.FieldName = 'DiffSumm_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '+ ,0.00;- ,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colMIComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'MIComment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end

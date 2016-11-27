@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Remains_Amount TFloat, Remains_Summ TFloat
              , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
+             , Diff_calc TFloat, DiffSumm_calc TFloat, Diff_diff TFloat, DiffSumm_diff TFloat
              , MIComment TVarChar      
              , isAuto Boolean      
              )
@@ -61,7 +62,8 @@ BEGIN
                               FROM Object_Price_View
                               WHERE  Object_Price_View.UnitId = vbUnitId
                              )
-               , REMAINS AS (   -- остатки на начало следующего дня
+                 -- остатки на начало следующего дня
+               , REMAINS AS (
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
@@ -104,6 +106,15 @@ BEGIN
                                 GROUP BY ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
+                 -- проводки
+               , tmpMI_calc AS (SELECT MIContainer.MovementItemId
+                                     , SUM (MIContainer.Amount) AS Diff
+                                FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.MovementId = inMovementId
+                                 AND MIContainer.DescId     = zc_MIContainer_Count()
+                               GROUP BY MIContainer.MovementItemId
+                              )
+                 -- строчная часть
                , tmpMI AS (SELECT MovementItem.Id            AS Id
                                 , MovementItem.ObjectId      AS ObjectId
                                 , MovementItem.Amount        AS Amount
@@ -112,6 +123,11 @@ BEGIN
                                 , MovementItem.isErased      AS isErased
                                 , MIString_Comment.ValueData AS MIComment
                                 , MIBoolean_isAuto.ValueData AS isAuto
+
+                                , COALESCE (tmpMI_calc.Diff, 0) AS Diff_calc
+                                , COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0) AS DiffSumm_calc
+                                , CASE WHEN tmpMI_calc.Diff < 0 THEN -1 * tmpMI_calc.Diff * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END AS DeficitSumm_calc
+                                , CASE WHEN tmpMI_calc.Diff > 0 THEN  1 * tmpMI_calc.Diff * COALESCE (MIFloat_Price.ValueData, 0) ELSE 0 END AS ProficitSumm_calc
 
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -126,6 +142,7 @@ BEGIN
                                  LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                                                ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                                               AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+                                 LEFT JOIN tmpMI_calc ON tmpMI_calc.MovementItemId = MovementItem.Id
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND (MovementItem.isErased  = FALSE
@@ -139,8 +156,11 @@ BEGIN
               , Object_Goods.ObjectCode                                             AS GoodsCode
               , (CASE WHEN MovementItem.ObjectId > 0 THEN '' ELSE '***' END || Object_Goods.ValueData) :: TVarChar AS GoodsName
               , MovementItem.Amount                                                 AS Amount
-              , COALESCE (MovementItem.Price, tmpPrice.Price) :: TFloat             AS Price
-              , MovementItem.Summ                                                   AS Summ
+
+              , CASE WHEN MovementItem.ObjectId > 0 THEN MovementItem.Price ELSE tmpPrice.Price END :: TFloat AS Price
+              -- , MovementItem.Summ                                                                          AS Summ
+              , (COALESCE (MovementItem.Amount, 0) * COALESCE (MovementItem.Price, tmpPrice.Price)) :: TFloat AS Summ
+
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
               , REMAINS.Amount                                                      AS Remains_Amount
 
@@ -162,11 +182,22 @@ BEGIN
                  END * COALESCE (MovementItem.Price, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS DIff
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
 
               , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
                  * COALESCE (MovementItem.Price, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
+
+              , MovementItem.Diff_calc                                    :: TFloat AS Diff_calc
+              , MovementItem.DiffSumm_calc                                :: TFloat AS DiffSumm_calc
+
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+                 - COALESCE (MovementItem.Diff_calc, 0)
+                ) :: TFloat                                                         AS Diff_diff
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+                 * COALESCE (MovementItem.Price, tmpPrice.Price)
+                 - COALESCE (MovementItem.DiffSumm_calc, 0)
+                ) :: TFloat                                                         AS DiffSumm_diff
 
               , MovementItem.MIComment                                              AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MovementItem.isAuto, FALSE) ELSE TRUE END :: Boolean AS isAuto
@@ -188,7 +219,8 @@ BEGIN
                               FROM Object_Price_View
                               WHERE  Object_Price_View.UnitId = vbUnitId
                              )
-               , REMAINS AS (   -- остатки на начало следующего дня
+                 -- остатки на начало следующего дня
+               , REMAINS AS (
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
@@ -231,14 +263,26 @@ BEGIN
                                 GROUP BY ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
+                 -- проводки
+               , tmpMI_calc AS (SELECT MIContainer.MovementItemId
+                                     , SUM (MIContainer.Amount) AS Diff
+                                FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.MovementId = inMovementId
+                                 AND MIContainer.DescId = zc_MIContainer_Count()
+                               GROUP BY MIContainer.MovementItemId
+                              )
+            -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
               , Object_Goods.Id                                                     AS GoodsId
               , Object_Goods.ObjectCode                                             AS GoodsCode
               , Object_Goods.ValueData                                              AS GoodsName
               , MovementItem.Amount                                                 AS Amount
-              , COALESCE (MIFloat_Price.ValueData, tmpPrice.Price) :: TFloat        AS Price
-              , MIFloat_Summ.ValueData                                              AS Summ
+
+              , CASE WHEN MovementItem.ObjectId > 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat AS Price
+              -- , MovementItem.Summ                                                                          AS Summ
+              , (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
+
               , COALESCE (MovementItem.isErased, FALSE) :: Boolean                  AS isErased
               , REMAINS.Amount                                                      AS Remains_Amount
 
@@ -260,16 +304,28 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS DIff
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
 
               , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
 
+              , COALESCE (tmpMI_calc.Diff, 0)                                           :: TFloat AS Diff_calc
+              , (COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm_calc
+
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+                 - COALESCE (tmpMI_calc.Diff, 0)
+                ) :: TFloat                                                         AS Diff_diff
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+                 * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
+                 - COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)
+                ) :: TFloat                                                         AS DiffSumm_diff
+
               , MIString_Comment.ValueData                                          AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MIBoolean_isAuto.ValueData, FALSE) ELSE TRUE END :: Boolean AS isAuto
 
             FROM MovementItem
+                LEFT JOIN tmpMI_calc ON tmpMI_calc.MovementItemId = MovementItem.Id
                 LEFT JOIN REMAINS ON REMAINS.ObjectId = MovementItem.ObjectId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = REMAINS.ObjectId
 
@@ -301,7 +357,8 @@ BEGIN
                               FROM Object_Price_View
                               WHERE  Object_Price_View.UnitId = vbUnitId
                              )
-               , REMAINS AS (   -- остатки на начало следующего дня
+                 -- остатки на начало следующего дня
+               , REMAINS AS (
                                 SELECT 
                                     T0.ObjectId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
@@ -344,14 +401,26 @@ BEGIN
                                 GROUP BY ObjectId
                                 HAVING SUM (T0.Amount) <> 0
                             )
+                 -- проводки
+               , tmpMI_calc AS (SELECT MIContainer.MovementItemId
+                                     , SUM (MIContainer.Amount) AS Diff
+                                FROM MovementItemContainer AS MIContainer
+                               WHERE MIContainer.MovementId = inMovementId
+                                 AND MIContainer.DescId = zc_MIContainer_Count()
+                               GROUP BY MIContainer.MovementItemId
+                              )
+            -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
               , Object_Goods.Id                                                     AS GoodsId
               , Object_Goods.GoodsCodeInt                                           AS GoodsCode
               , Object_Goods.GoodsName                                              AS GoodsName
               , MovementItem.Amount                                                 AS Amount
-              , COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)                  AS Price
-              , MIFloat_Summ.ValueData                                              AS Summ
+
+              , CASE WHEN MovementItem.ObjectId > 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat AS Price
+              -- , MIFloat_Summ.ValueData                                                                          AS Summ
+              , (COALESCE (MovementItem.Amount, 0) * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS Summ
+
               , MovementItem.isErased                                               AS isErased
               , REMAINS.Amount                                                      AS Remains_Amount
 
@@ -374,11 +443,22 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
-              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS DIff
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) :: TFloat AS Diff
 
               , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
                  * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS DiffSumm
+
+              , COALESCE (tmpMI_calc.Diff, 0)                                           :: TFloat AS Diff_calc
+              , (COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm_calc
+
+              , (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)
+                 - COALESCE (tmpMI_calc.Diff, 0)
+                ) :: TFloat                                                         AS Diff_diff
+              , ((COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0))
+                 * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
+                 - COALESCE (tmpMI_calc.Diff, 0) * COALESCE (MIFloat_Price.ValueData, 0)
+                ) :: TFloat                                                         AS DiffSumm_diff
 
               , MIString_Comment.ValueData                                          AS MIComment
               , CASE WHEN MovementItem.ObjectId > 0 THEN COALESCE (MIBoolean_isAuto.ValueData, FALSE) WHEN REMAINS.Amount <> 0 THEN TRUE ELSE FALSE END :: Boolean AS isAuto
@@ -393,6 +473,7 @@ BEGIN
                                       AND (MovementItem.isErased  = FALSE
                                         OR inIsErased             = TRUE
                                           )
+                LEFT JOIN tmpMI_calc ON tmpMI_calc.MovementItemId = MovementItem.Id
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -426,5 +507,5 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 3443092, inShowAll:= TRUE,  inIsErased:= TRUE,  inSession:= '3')
+-- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 3443092, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '3')
