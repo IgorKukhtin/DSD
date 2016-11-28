@@ -61,6 +61,9 @@ type
     JuridicalGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     ceComment: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    ceAsset: TcxButtonEdit;
+    AssetGuides: TdsdGuides;
   private
     { Private declarations }
   public

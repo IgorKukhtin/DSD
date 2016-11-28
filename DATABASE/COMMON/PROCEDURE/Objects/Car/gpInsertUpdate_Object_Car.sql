@@ -3,20 +3,22 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_Car (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
-   INOUT ioId                       Integer, 
-      IN incode                     Integer, 
-      IN inName                     TVarChar, 
-      IN inRegistrationCertificate  TVarChar, 
-      IN inComment                  TVarChar  ,    -- Примечание
-      IN inCarModelId               Integer, 
-      IN inUnitId                   Integer, 
-      IN inPersonalDriverId         Integer, 
-      IN inFuelMasterId             Integer,
-      IN inFuelChildId              Integer,
-      IN inJuridicalId              Integer,        
-      IN inSession                  TVarChar
+   INOUT ioId                       Integer,     -- ид
+      IN incode                     Integer,     -- код автомобиля
+      IN inName                     TVarChar,    -- наименование 
+      IN inRegistrationCertificate  TVarChar,    -- Техпаспорт
+      IN inComment                  TVarChar,    -- Примечание
+      IN inCarModelId               Integer,     -- Марка автомобиля
+      IN inUnitId                   Integer,     -- Подразделение
+      IN inPersonalDriverId         Integer,     -- Сотрудник (водитель)
+      IN inFuelMasterId             Integer,     -- Вид топлива (основной)
+      IN inFuelChildId              Integer,     -- Вид топлива (дополнительный)
+      IN inJuridicalId              Integer,     -- Юридическое лицо(стороннее)
+      IN inAssetId                  Integer,     -- Основные средства
+      IN inSession                  TVarChar     -- Пользователь
       )
   RETURNS Integer AS
 $BODY$
@@ -59,6 +61,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_FuelChild(), ioId, inFuelChildId);
    -- сохранили связь с <юр.лицом>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <Осн.средством>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_Asset(), ioId, inAssetId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -71,6 +75,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.16         * add Asset
  18.11.15         * add comment
  17.12.14         * add Juridical               
  04.09.14                                        * !!!RESTORE!!!

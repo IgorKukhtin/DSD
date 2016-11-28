@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -60,7 +61,11 @@ BEGIN
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName           
            
-           , Object_Car.isErased    AS isErased
+           , Object_Asset.Id          AS AssetId
+           , Object_Asset.ObjectCode  AS AssetCode
+           , Object_Asset.ValueData   AS AssetName    
+
+           , Object_Car.isErased      AS isErased
            
        FROM Object AS Object_Car
             LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
@@ -72,29 +77,40 @@ BEGIN
                                    ON ObjectString_Comment.ObjectId = Object_Car.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_Car_Comment()
                                                              
-            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
-                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN ObjectLink AS Car_CarModel
+                                 ON Car_CarModel.ObjectId = Object_Car.Id
+                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
             
-            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
-                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                 ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
             
-            LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
-                                                                 AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+            LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
+                                 ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId
             
-            LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = Object_Car.Id
-                                                             AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
+            LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster 
+                                 ON ObjectLink_Car_FuelMaster.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
             LEFT JOIN Object AS Object_FuelMaster ON Object_FuelMaster.Id = ObjectLink_Car_FuelMaster.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_FuelChild ON ObjectLink_Car_FuelChild.ObjectId = Object_Car.Id
-                                                            AND ObjectLink_Car_FuelChild.DescId = zc_ObjectLink_Car_FuelChild()
+            LEFT JOIN ObjectLink AS ObjectLink_Car_FuelChild
+                                 ON ObjectLink_Car_FuelChild.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_FuelChild.DescId = zc_ObjectLink_Car_FuelChild()
             LEFT JOIN Object AS Object_FuelChild ON Object_FuelChild.Id = ObjectLink_Car_FuelChild.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
-                                                       AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId            
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical
+                                 ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Juridical.DescId = zc_ObjectLink_Car_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Car_Juridical.ChildObjectId    
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Asset
+                                 ON ObjectLink_Car_Asset.ObjectId = Object_Car.Id
+                                AND ObjectLink_Car_Asset.DescId = zc_ObjectLink_Car_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Car_Asset.ChildObjectId        
 
      WHERE Object_Car.DescId = zc_Object_Car()
        AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 “‡ÌÒÔÓÚ - Ò·˚Ú
@@ -108,6 +124,7 @@ ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.11.16         * add Asset
  17.12.14         * add Juridical
  14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View
