@@ -29,7 +29,7 @@
     Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object Код: TcxLabel [3]
-    Left = 172
+    Left = 169
     Top = 7
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
@@ -43,12 +43,13 @@
     Width = 88
   end
   object edInvNumber: TcxTextEdit [5]
-    Left = 172
+    Left = 169
     Top = 27
+    Enabled = False
     Properties.ReadOnly = True
     TabOrder = 5
     Text = '0'
-    Width = 75
+    Width = 78
   end
   object cxLabel12: TcxLabel [6]
     Left = 110
@@ -82,34 +83,28 @@
     TabOrder = 9
     Width = 99
   end
-  object edInvNumber_parent: TcxTextEdit [10]
-    Left = 347
-    Top = 27
-    Properties.ReadOnly = False
-    TabOrder = 10
-    Width = 105
-  end
-  object cxLabel2: TcxLabel [11]
+  object cxLabel2: TcxLabel [10]
     Left = 458
     Top = 7
     Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085')'
   end
-  object edOperDate_parent: TcxDateEdit [12]
+  object edOperDate_parent: TcxDateEdit [11]
     Left = 458
     Top = 27
     EditValue = 42184d
+    Enabled = False
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 12
+    TabOrder = 11
     Width = 105
   end
-  object cxLabel13: TcxLabel [13]
+  object cxLabel13: TcxLabel [12]
     Left = 111
     Top = 57
     Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object edMovementDescName: TcxButtonEdit [14]
+  object edMovementDescName: TcxButtonEdit [13]
     Left = 111
     Top = 74
     Properties.Buttons = <
@@ -118,63 +113,65 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 14
+    TabOrder = 13
     Width = 229
   end
-  object cxLabel7: TcxLabel [15]
+  object cxLabel7: TcxLabel [14]
     Left = 9
     Top = 56
     Caption = #1050#1086#1076' '#1086#1087#1077#1088'.('#1074#1079#1074#1077#1096'.)'
   end
-  object edMovementDescNumber: TcxTextEdit [16]
+  object edMovementDescNumber: TcxTextEdit [15]
     Left = 9
     Top = 74
-    TabOrder = 16
+    TabOrder = 15
     Width = 99
   end
-  object cxLabel6: TcxLabel [17]
+  object cxLabel6: TcxLabel [16]
     Left = 347
     Top = 56
     Caption = #1053#1072#1095'. '#1074#1079#1074#1077#1096'.'
   end
-  object edStartWeighing: TcxDateEdit [18]
+  object edStartWeighing: TcxDateEdit [17]
     Left = 347
     Top = 74
     EditValue = 42184d
+    Enabled = False
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
     Properties.ReadOnly = False
-    TabOrder = 18
+    TabOrder = 17
     Width = 105
   end
-  object cxLabel9: TcxLabel [19]
+  object cxLabel9: TcxLabel [18]
     Left = 458
     Top = 56
     Caption = #1054#1082#1086#1085#1095'. '#1074#1079#1074#1077#1096'.'
   end
-  object edEndWeighing: TcxDateEdit [20]
+  object edEndWeighing: TcxDateEdit [19]
     Left = 458
     Top = 74
     EditValue = 42184d
+    Enabled = False
     Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
     Properties.EditFormat = 'dd.mm.yyyy hh:mm'
     Properties.Kind = ckDateTime
     Properties.ReadOnly = False
-    TabOrder = 20
+    TabOrder = 19
     Width = 105
   end
-  object cxLabel3: TcxLabel [21]
+  object cxLabel3: TcxLabel [20]
     Left = 347
     Top = 7
     Caption = #8470' '#1076#1086#1082'.('#1075#1083#1072#1074#1085')'
   end
-  object cxLabel4: TcxLabel [22]
+  object cxLabel4: TcxLabel [21]
     Left = 9
     Top = 100
     Caption = #1054#1090' '#1082#1086#1075#1086
   end
-  object edFrom: TcxButtonEdit [23]
+  object edFrom: TcxButtonEdit [22]
     Left = 9
     Top = 117
     Properties.Buttons = <
@@ -183,11 +180,11 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 22
     Width = 331
   end
-  object edJuridical: TcxButtonEdit [24]
-    Left = 145
+  object edJuridical: TcxButtonEdit [23]
+    Left = 73
     Top = 101
     Properties.Buttons = <
       item
@@ -195,16 +192,16 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 23
     Visible = False
     Width = 64
   end
-  object cxLabel5: TcxLabel [25]
+  object cxLabel5: TcxLabel [24]
     Left = 9
     Top = 147
     Caption = #1050#1086#1084#1091
   end
-  object edTo: TcxButtonEdit [26]
+  object edTo: TcxButtonEdit [25]
     Left = 9
     Top = 165
     Properties.Buttons = <
@@ -213,17 +210,18 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 26
+    TabOrder = 25
     Width = 238
   end
-  object cxLabel8: TcxLabel [27]
+  object cxLabel8: TcxLabel [26]
     Left = 347
     Top = 100
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   end
-  object edUser: TcxButtonEdit [28]
+  object edUser: TcxButtonEdit [27]
     Left = 347
     Top = 117
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -231,51 +229,18 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 28
+    TabOrder = 27
     Width = 216
   end
-  object cxLabel10: TcxLabel [29]
+  object cxLabel10: TcxLabel [28]
     Left = 252
     Top = 147
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
-  object edPaidKind: TcxButtonEdit [30]
+  object edPaidKind: TcxButtonEdit [29]
     Left = 252
     Top = 165
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 30
-    Width = 88
-  end
-  object cxLabel16: TcxLabel [31]
-    Left = 347
-    Top = 147
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object edContract: TcxButtonEdit [32]
-    Left = 347
-    Top = 165
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 32
-    Width = 105
-  end
-  object cxLabel11: TcxLabel [33]
-    Left = 458
-    Top = 147
-    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
-  end
-  object edContractTag: TcxButtonEdit [34]
-    Left = 458
-    Top = 165
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -283,63 +248,123 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 34
+    TabOrder = 29
+    Width = 88
+  end
+  object cxLabel16: TcxLabel [30]
+    Left = 347
+    Top = 147
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object edContract: TcxButtonEdit [31]
+    Left = 347
+    Top = 165
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 31
     Width = 105
   end
-  object cxLabel20: TcxLabel [35]
-    Left = 399
+  object cxLabel11: TcxLabel [32]
+    Left = 458
+    Top = 147
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+  end
+  object edContractTag: TcxButtonEdit [33]
+    Left = 458
+    Top = 165
+    Enabled = False
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 33
+    Width = 105
+  end
+  object cxLabel20: TcxLabel [34]
+    Left = 409
     Top = 198
     Caption = '% '#1053#1044#1057
   end
-  object edVATPercent: TcxCurrencyEdit [36]
-    Left = 399
+  object edVATPercent: TcxCurrencyEdit [35]
+    Left = 409
     Top = 215
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = True
-    TabOrder = 36
-    Width = 40
+    TabOrder = 35
+    Width = 43
   end
-  object edPriceWithVAT: TcxCheckBox [37]
-    Left = 444
-    Top = 215
-    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    Properties.ReadOnly = True
-    TabOrder = 37
-    Width = 128
-  end
-  object cxLabel18: TcxLabel [38]
+  object cxLabel18: TcxLabel [36]
     Left = 9
     Top = 197
-    Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
+    Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
   end
-  object edPartionGoods: TcxTextEdit [39]
-    Left = 9
-    Top = 215
-    TabOrder = 39
-    Width = 132
-  end
-  object cxLabel19: TcxLabel [40]
-    Left = 145
+  object cxLabel19: TcxLabel [37]
+    Left = 252
     Top = 197
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
-  object cbPromo: TcxCheckBox [41]
-    Left = 294
-    Top = 215
-    Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
-    Properties.ReadOnly = True
-    TabOrder = 41
-    Width = 100
-  end
-  object edChangePercent: TcxCurrencyEdit [42]
-    Left = 145
+  object edChangePercent: TcxCurrencyEdit [38]
+    Left = 252
     Top = 215
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
+    Properties.ReadOnly = False
+    TabOrder = 38
+    Width = 150
+  end
+  object edInvNumber_Parent: TcxButtonEdit [39]
+    Left = 346
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     Properties.ReadOnly = True
-    TabOrder = 42
-    Width = 144
+    TabOrder = 39
+    Width = 106
+  end
+  object ceTransport: TcxButtonEdit [40]
+    Left = 9
+    Top = 215
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 40
+    Width = 156
+  end
+  object edOperDate_Transport: TcxDateEdit [41]
+    Left = 169
+    Top = 215
+    EditValue = 42184d
+    Enabled = False
+    Properties.ReadOnly = True
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 41
+    Width = 78
+  end
+  object cxLabel14: TcxLabel [42]
+    Left = 169
+    Top = 197
+    Caption = #1044#1072#1090#1072' '#1055'.'#1083'.'
+  end
+  object edPriceWithVAT: TcxCheckBox [43]
+    Left = 458
+    Top = 215
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+    TabOrder = 43
+    Width = 105
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 75
@@ -403,22 +428,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartWeighing'
-        Value = 'NULL'
-        Component = edStartWeighing
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndWeighing'
-        Value = 'NULL'
-        Component = edEndWeighing
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inPriceWithVAT'
         Value = Null
         Component = edPriceWithVAT
@@ -447,14 +456,6 @@
         Value = Null
         Component = OrderChoiceGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoods'
-        Value = Null
-        Component = edPartionGoods
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -520,6 +521,22 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Transport'
+        Value = Null
+        Component = TransportGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = ParentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 392
     Top = 243
@@ -565,9 +582,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_parent'
+        Name = 'MovementId_parent'
         Value = ''
-        Component = edInvNumber_parent
+        Component = ParentGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_parent'
+        Value = Null
+        Component = ParentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -709,7 +735,6 @@
       item
         Name = 'isPromo'
         Value = Null
-        Component = cbPromo
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -731,7 +756,6 @@
       item
         Name = 'PartionGoods'
         Value = Null
-        Component = edPartionGoods
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -754,6 +778,28 @@
         Name = 'MovementDescNumber'
         Value = Null
         Component = edMovementDescNumber
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Transport'
+        Value = Null
+        Component = TransportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Transport'
+        Value = Null
+        Component = TransportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_Transport'
+        Value = 'NULL'
+        Component = edOperDate_Transport
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 320
@@ -937,8 +983,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 152
+    Left = 280
+    Top = 160
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -979,6 +1025,23 @@
         Name = 'ContractTagName'
         Value = ''
         Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1089,7 +1152,128 @@
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 36
+    Left = 44
     Top = 16
+  end
+  object ParentGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumber_Parent
+    Key = '0'
+    FormNameParam.Value = 'TSaleJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSaleJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ParentGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ParentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate_parent
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 42092d
+        Component = edOperDate_parent
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42092d
+        Component = edOperDate_parent
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 380
+    Top = 24
+  end
+  object TransportGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceTransport
+    Key = '0'
+    FormNameParam.Value = 'TTransportJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTransportJournalChoiceForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = TransportGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = TransportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate_Transport
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = 42184d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 59
+    Top = 196
   end
 end

@@ -21,7 +21,6 @@ type
     edWeighingNumber: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
-    edInvNumber_parent: TcxTextEdit;
     cxLabel2: TcxLabel;
     edOperDate_parent: TcxDateEdit;
     cxLabel13: TcxLabel;
@@ -53,16 +52,20 @@ type
     edContractTag: TcxButtonEdit;
     cxLabel20: TcxLabel;
     edVATPercent: TcxCurrencyEdit;
-    edPriceWithVAT: TcxCheckBox;
     PaidKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
     ContractTagGuides: TdsdGuides;
     cxLabel18: TcxLabel;
-    edPartionGoods: TcxTextEdit;
     cxLabel19: TcxLabel;
-    cbPromo: TcxCheckBox;
     edChangePercent: TcxCurrencyEdit;
     OrderChoiceGuides: TdsdGuides;
+    edInvNumber_Parent: TcxButtonEdit;
+    ParentGuides: TdsdGuides;
+    ceTransport: TcxButtonEdit;
+    TransportGuides: TdsdGuides;
+    edOperDate_Transport: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edPriceWithVAT: TcxCheckBox;
   private
     { Private declarations }
   public
