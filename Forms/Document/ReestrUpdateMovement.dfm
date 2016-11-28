@@ -1,23 +1,23 @@
 inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
-  ClientHeight = 535
+  ClientHeight = 405
   ClientWidth = 988
   ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 570
+  ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
     Width = 988
-    Height = 452
+    Height = 322
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 988
     ExplicitHeight = 452
-    ClientRectBottom = 452
+    ClientRectBottom = 322
     ClientRectRight = 988
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 988
@@ -25,7 +25,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 988
-        Height = 369
+        Height = 239
         ExplicitTop = 83
         ExplicitWidth = 988
         ExplicitHeight = 369
@@ -149,7 +149,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 37
           end
-          object BarCode_Sale: TcxGridDBColumn [1]
+          object clReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
+          end
+          object BarCode_Sale: TcxGridDBColumn [2]
             Caption = #1064#1090#1088#1080#1093#1082#1086#1076
             DataBinding.FieldName = 'BarCode_Sale'
             HeaderAlignmentHorz = taCenter
@@ -157,7 +164,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 70
           end
-          inherited colOperDate: TcxGridDBColumn [2]
+          inherited colOperDate: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -167,7 +174,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentHorz = taCenter
             Width = 77
           end
-          inherited colStatus: TcxGridDBColumn [4]
+          inherited colStatus: TcxGridDBColumn [5]
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
@@ -283,14 +290,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
-          end
-          object clReestrKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            DataBinding.FieldName = 'ReestrKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            Width = 74
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -545,7 +544,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Width = 231
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 307
+    Left = 83
+    Top = 283
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -568,7 +568,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           'Width')
       end>
     Left = 40
-    Top = 243
+    Top = 235
   end
   inherited ActionList: TActionList
     Left = 335
@@ -784,8 +784,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 368
-    Top = 299
+    Left = 248
+    Top = 267
   end
   inherited MasterCDS: TClientDataSet
     Left = 288
@@ -819,7 +819,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 168
-    Top = 267
+    Top = 243
   end
   inherited BarManager: TdxBarManager
     Left = 392
@@ -899,8 +899,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Action = actUpdateDataSource
         ShortCut = 13
       end>
-    Left = 320
-    Top = 224
+    Left = 304
+    Top = 208
   end
   inherited PopupMenu: TPopupMenu
     Left = 888
@@ -928,8 +928,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 432
-    Top = 216
+    Left = 248
+    Top = 208
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -939,8 +939,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       item
         Component = ReestrKindGuides
       end>
-    Left = 808
-    Top = 288
+    Left = 800
+    Top = 240
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement'
@@ -960,8 +960,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 944
-    Top = 354
+    Left = 440
+    Top = 338
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement'
@@ -982,8 +982,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 928
-    Top = 346
+    Left = 440
+    Top = 290
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Reestr_ReestrKindErased'
@@ -1004,8 +1004,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
-    Top = 378
+    Left = 80
+    Top = 346
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1046,8 +1046,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 272
+    Left = 496
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement'
@@ -1067,8 +1066,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 936
-    Top = 360
+    Left = 520
+    Top = 296
   end
   object spUpdateMI: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Reestr'
@@ -1101,8 +1100,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 379
+    Left = 368
+    Top = 227
   end
   object ReestrKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1237,8 +1236,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 208
-    Top = 371
+    Left = 184
+    Top = 323
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1274,6 +1273,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end>
     PackSize = 1
     Left = 607
-    Top = 320
+    Top = 240
   end
 end

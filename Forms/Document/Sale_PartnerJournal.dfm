@@ -5,7 +5,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -335
   ExplicitWidth = 1124
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -827,7 +826,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 23
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -871,7 +869,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1026,7 +1023,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1157,6 +1153,7 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      ShortCut = 16464
     end
     object actOpenReportForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -1441,7 +1438,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1482,7 +1478,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1569,7 +1564,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1619,7 +1613,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 20
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1664,7 +1657,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 17
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1708,7 +1700,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1820,7 +1811,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = 'actPrint_TTN'
       Hint = 'actPrint_TTN'
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1904,7 +1894,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS

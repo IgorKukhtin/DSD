@@ -4,7 +4,7 @@
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1314
-  ExplicitHeight = 683
+  ExplicitHeight = 680
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -542,7 +542,6 @@
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
-      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -953,7 +952,7 @@
   object cxLabel26: TcxLabel [18]
     Left = 535
     Top = 85
-    Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+    Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
   end
   object edReestrKind: TcxButtonEdit [19]
     Left = 535
@@ -1041,7 +1040,6 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1103,7 +1101,6 @@
       Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1180,7 +1177,6 @@
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 23
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1212,7 +1208,6 @@
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1461,6 +1456,7 @@
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      ShortCut = 16464
     end
     object mactPrint_Tax_Client: TMultiAction [21]
       Category = 'Print_Tax'
@@ -1540,7 +1536,6 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1578,7 +1573,6 @@
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1051#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1051#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 20
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1832,7 +1826,6 @@
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 17
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1888,7 +1881,6 @@
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1975,7 +1967,6 @@
         end>
       Caption = 'actPrint_TTN'
       Hint = 'actPrint_TTN'
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -3007,15 +2998,11 @@
       item
         Name = 'ReestrKindId'
         Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReestrKindName'
         Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -3247,8 +3234,6 @@
       end
       item
         Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -5112,37 +5097,6 @@
     PackSize = 1
     Left = 984
     Top = 256
-  end
-  object ReestrKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edReestrKind
-    Key = '0'
-    FormNameParam.Value = 'TReestrKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReestrKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ReestrKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 604
-    Top = 96
   end
   object ProductionDocGuides: TdsdGuides
     KeyField = 'Id'

@@ -23,9 +23,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Top = 67
         Width = 927
         Height = 168
-        ExplicitTop = 65
+        ExplicitTop = 67
         ExplicitWidth = 927
-        ExplicitHeight = 170
+        ExplicitHeight = 168
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -68,7 +68,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             Width = 80
           end
           object ReestrKindName: TcxGridDBColumn [2]
-            Caption = #1042#1080#1079#1072' '#1085#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
             DataBinding.FieldName = 'ReestrKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -188,6 +188,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           object Checked: TcxGridDBColumn [15]
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -223,21 +224,22 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             Width = 60
           end
           object InsertDate: TcxGridDBColumn [20]
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1042#1080#1079#1072' - '#1074#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 150
           end
           object MemberCode: TcxGridDBColumn [21]
             Caption = #1050#1086#1076' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'MemberCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object MemberName: TcxGridDBColumn [22]
-            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082' ('#1042#1080#1079#1072' - '#1074#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -377,7 +379,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitTop = 57
       end
     end
   end
@@ -424,7 +425,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 180
-      ExplicitHeight = 22
       Width = 180
     end
   end

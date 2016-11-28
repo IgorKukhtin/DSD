@@ -175,7 +175,7 @@ BEGIN
             , 0 AS ContainerId_Goods         -- сформируем позже
             , _tmp.GoodsId
             , _tmp.GoodsKindId
-            , _tmp.AssetId
+            , 0 AS AssetId -- _tmp.AssetId -- !!!временно отключил, т.к. не должно участвовать в партии!!!
             , _tmp.PartionGoods
             , _tmp.PartionGoodsDate
             , _tmp.PartionGoodsId_Item

@@ -82,7 +82,8 @@ uses
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
-  GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm};
+  GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm},
+  DialogReestrInsert in '..\Scale\DialogReestrInsert.pas' {DialogReestrInsertForm};
 
 {$R *.res}
 
@@ -103,7 +104,8 @@ begin
          if gpCheck_BranchCode = FALSE then exit;
          //
          Application.CreateForm(TdmMain, dmMain);
-         Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TDialogReestrInsertForm, DialogReestrInsertForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

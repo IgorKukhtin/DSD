@@ -1,4 +1,4 @@
-unit DialogMovementDesc;
+unit DialogReestrInsert;
 
 interface
 
@@ -11,34 +11,48 @@ uses
   Data.SqlExpr, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
   cxContainer, cxEdit, dxSkinsCore, dxSkinsDefaultPainters, cxTextEdit,
   cxMaskEdit, cxButtonEdit
-, UtilScale, Vcl.Buttons;
+, UtilScale, Vcl.Buttons, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
+  cxData, cxDataStorage, cxDBData, cxImageComboBox, cxCurrencyEdit, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxClasses,
+  cxGridCustomView, cxGrid;
 
 type
-  TDialogMovementDescForm = class(TAncestorDialogScaleForm)
+  TDialogReestrInsertForm = class(TAncestorDialogScaleForm)
     CDS: TClientDataSet;
     DataSource: TDataSource;
     spSelect: TdsdStoredProc;
     InfoPanel: TPanel;
-    Panel1: TPanel;
     infoPanelPartner: TPanel;
     Panel3: TPanel;
     Label2: TLabel;
     Panel4: TPanel;
     Label3: TLabel;
     PanelPartnerName: TPanel;
+    GridPanel: TPanel;
+    EditPartnerCode: TcxButtonEdit;
+    MessagePanel: TPanel;
+    cxDBGrid: TcxGrid;
+    cxDBGridDBTableView: TcxGridDBTableView;
+    cxDBGridLevel: TcxGridLevel;
+    DBViewAddOn: TdsdDBViewAddOn;
+    infoPanelContract: TPanel;
+    LabelContract: TLabel;
+    PanelContract: TPanel;
+    Panel2: TPanel;
+    Label1: TLabel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    Label4: TLabel;
+    Edit1: TEdit;
     Panel5: TPanel;
     ScaleLabel: TLabel;
     EditBarCode: TEdit;
-    GridPanel: TPanel;
-    DBGrid: TDBGrid;
-    EditPartnerCode: TcxButtonEdit;
-    MessagePanel: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure EditPartnerCodeExit(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure DBGridDrawColumnCell(Sender: TObject; const Rect: TRect;
+    procedure DBGrid111DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
-    procedure DBGridCellClick(Column: TColumn);
+    procedure DBGrid111CellClick(Column: TColumn);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure EditBarCodeExit(Sender: TObject);
     procedure EditBarCodeChange(Sender: TObject);
@@ -50,7 +64,7 @@ type
     procedure EditPartnerCodePropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure FormShow(Sender: TObject);
-    procedure DBGridDblClick(Sender: TObject);
+    procedure DBGrid111DblClick(Sender: TObject);
 
   private
     ChoiceNumber:Integer;
@@ -69,13 +83,13 @@ type
   end;
 
 var
-  DialogMovementDescForm: TDialogMovementDescForm;
+  DialogReestrInsertForm: TDialogReestrInsertForm;
 
 implementation
 {$R *.dfm}
 uses dmMainScale,GuidePartner;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
+function TDialogReestrInsertForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
      isUpdateUnit:= BarCode = 'isUpdateUnit';
      //
@@ -146,7 +160,7 @@ begin
      else begin Result:=(ShowModal=mrOk);end;
 end;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
+function TDialogReestrInsertForm.Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
 begin
      Result:=false;
      //
@@ -162,7 +176,7 @@ begin
         end;
 end;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.Checked: boolean; //Проверка корректного ввода в Edit
+function TDialogReestrInsertForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      ChoiceNumber:=0;
      //
@@ -419,13 +433,13 @@ begin
     MyDelay(400);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditBarCodeEnter(Sender: TObject);
+procedure TDialogReestrInsertForm.EditBarCodeEnter(Sender: TObject);
 begin
     if CDS.Filtered then CDS.Filtered:=false;
     CDS.Locate('Number',IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger),[]);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditBarCodeExit(Sender: TObject);
+procedure TDialogReestrInsertForm.EditBarCodeExit(Sender: TObject);
 var Number:Integer;
     fOK:Boolean;
 begin
@@ -538,13 +552,13 @@ begin
         end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditBarCodeChange(Sender: TObject);
+procedure TDialogReestrInsertForm.EditBarCodeChange(Sender: TObject);
 begin
     isEditBarCode:=true;
     if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then EditBarCodeExit(Self);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);
+procedure TDialogReestrInsertForm.EditPartnerCodeEnter(Sender: TObject);
 begin
   TEdit(Sender).SelectAll;
   isEditPartnerCodeExit:= TRUE;
@@ -558,7 +572,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditPartnerCodeExit(Sender: TObject);
+procedure TDialogReestrInsertForm.EditPartnerCodeExit(Sender: TObject);
 var PartnerCode_int:Integer;
 begin
      //!!!exit!!!
@@ -634,7 +648,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditPartnerCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
+procedure TDialogReestrInsertForm.EditPartnerCodeKeyDown(Sender: TObject;var Key: Word; Shift: TShiftState);
 begin
      if Key = VK_RETURN
      then if CDS.RecordCount=2
@@ -642,7 +656,7 @@ begin
           else ActiveControl:=EditBarCode;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
+procedure TDialogReestrInsertForm.EditPartnerCodePropertiesButtonClick(Sender: TObject; AButtonIndex: Integer);
 var Key:Word;
 begin
     if SettingMain.isCeh = TRUE then exit;
@@ -681,10 +695,10 @@ begin
     //else ActiveControl:=EditBarCode;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.DBGridCellClick(Column: TColumn);
+procedure TDialogReestrInsertForm.DBGrid111CellClick(Column: TColumn);
 begin DBGridDblClick(Self);end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.DBGridDblClick(Sender: TObject);
+procedure TDialogReestrInsertForm.DBGrid111DblClick(Sender: TObject);
 begin
      if (CDS.FieldByName('MovementDescId').AsInteger<=0)
      then CDS.Next
@@ -701,7 +715,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.DBGridDrawColumnCell(Sender: TObject;
+procedure TDialogReestrInsertForm.DBGrid111DrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
      //if (gdSelected in State)and(ChoiceNumber=0) then exit;
@@ -746,7 +760,7 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.FormCreate(Sender: TObject);
+procedure TDialogReestrInsertForm.FormCreate(Sender: TObject);
 begin
   inherited;
   //
@@ -768,13 +782,13 @@ begin
   bbOk.Visible := false;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.FormDestroy(Sender: TObject);
+procedure TDialogReestrInsertForm.FormDestroy(Sender: TObject);
 begin
   ParamsMovement_local.Free;
   ParamsMovement.Free;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
+procedure TDialogReestrInsertForm.FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
 begin
      if Key = VK_RETURN
      then if (ActiveControl=EditBarCode) and (infoPanelPartner.Visible)
@@ -798,14 +812,14 @@ begin
                     then DBGridCellClick(DBGrid.Columns[0]);
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.FormKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
+procedure TDialogReestrInsertForm.FormKeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
 begin
      if (Key = VK_UP)or(Key = VK_DOWN)or(Key = VK_HOME)or(Key = VK_END)or(Key = VK_PRIOR)or(Key = VK_NEXT)
      then if (CDS.FieldByName('MovementDescId').AsInteger<=0)
           then CDS.Next;
 end;
 {------------------------------------------------------------------------}
-procedure TDialogMovementDescForm.FormShow(Sender: TObject);
+procedure TDialogReestrInsertForm.FormShow(Sender: TObject);
 begin
    DialogMovementDescForm.Width:=DialogMovementDescForm.Width+1;
    DialogMovementDescForm.Width:=DialogMovementDescForm.Width-1;

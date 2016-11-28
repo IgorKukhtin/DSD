@@ -14,9 +14,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , CarName TVarChar, CarModelName TVarChar
              , PersonalDriverName TVarChar
              , MemberName TVarChar
-             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
 
-             , InvNumber_Sale TVarChar, OperDate_Sale TDateTime 
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime -- , InvNumber_Transport_Full TVarChar
+             , StatusCode_Transport Integer, StatusName_Transport TVarChar
+
+             , ReestrKindId Integer, ReestrKindName TVarChar
+             , InvNumber_Sale TVarChar, OperDate_Sale TDateTime
+             , StatusCode_Sale Integer, StatusName_Sale TVarChar
 
              , Date_Insert    TDateTime
              , Date_PartnerIn TDateTime
@@ -67,10 +71,17 @@ BEGIN
            , Movement_Transport.Id             AS MovementId_Transport
            , Movement_Transport.InvNumber      AS InvNumber_Transport
            , Movement_Transport.OperDate       AS OperDate_Transport
-           , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
---          
+           -- , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
+           , Object_Status_Transport.ObjectCode AS StatusCode_Transport
+           , Object_Status_Transport.ValueData  AS StatusName_Transport
+
+           , Object_ReestrKind.Id            AS ReestrKindId
+           , Object_ReestrKind.ValueData     AS ReestrKindName
            , Movement_Sale.InvNumber         AS InvNumber_Sale
            , Movement_Sale.OperDate          AS OperDate_Sale
+           , Object_Status_Sale.ObjectCode   AS StatusCode_Sale
+           , Object_Status_Sale.ValueData    AS StatusName_Sale
+
            , MIDate_Insert.ValueData         AS Date_Insert
            , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
            , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
@@ -107,6 +118,7 @@ BEGIN
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
                                           AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
+            LEFT JOIN Object AS Object_Status_Transport ON Object_Status_Transport.Id = Movement_Transport.StatusId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -188,7 +200,13 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = MovementFloat_MovementItemId.MovementId
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementFloat_MovementItemId.MovementId
+            LEFT JOIN Object AS Object_Status_Sale ON Object_Status_Sale.Id = Movement_Sale.StatusId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
      ;
   
 END;

@@ -21,18 +21,67 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
                                               
 
+     -- Проверка
+     IF COALESCE (ioId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не сохранен черезе Ш/К <Путевой лист>.';
+     END IF;
+
+
+     -- Проверка - кроме админа ?
+     IF COALESCE (inMovementId_Transport, 0) = 0 AND (COALESCE (inCarId ,0) = 0 OR COALESCE (inPersonalDriverId, 0) = 0)
+        -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
+     THEN
+         IF COALESCE (inMovementId_Transport, 0) = 0 AND COALESCE (inCarId ,0) = 0 AND COALESCE (inPersonalDriverId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен документ <Путевой лист>.';
+         ELSEIF COALESCE (inCarId ,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен <№ автомобиля>.';
+         ELSEIF COALESCE (inPersonalDriverId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определено <ФИО> водителя.';
+         END IF;
+     END IF;
+
+
+     -- Проверка - кроме админа ? - не меняются основные параметры
+     IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.InvNumber = inInvNumber AND Movement.OperDate = inOperDate AND  Movement.DescId = zc_Movement_Reestr())
+        -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав менять дату документа <%> <%> <%>.', zfConvert_DateToString (inOperDate), inInvNumber, ioId;
+     END IF;
+
+     -- Проверка - кроме админа ? - не меняется Путевой лист
+     IF NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = ioId AND MLM.DescId = zc_MovementLinkMovement_Transport() AND COALESCE (MLM.MovementChildId, 0) = COALESCE (inMovementId_Transport, 0))
+       -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав менять <Путевой лист>.';
+     END IF;
+
+     -- Проверка - кроме админа ? - не меняется Автомобиль или Сотрудник (водитель) если установлен Путевой лист
+     IF inMovementId_Transport > 0
+        AND (NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_Car()            AND COALESCE (MLO.ObjectId, 0) = COALESCE (inCarId, 0))
+          OR NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_PersonalDriver() AND COALESCE (MLO.ObjectId, 0) = COALESCE (inPersonalDriverId, 0))
+            )
+        -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав менять дату <Автомобиль> или <Сотрудник (водитель)>.';
+     END IF;
+
+
      -- только в этом случае - ничего не делаем
-     IF ioId = 0
+     /*IF ioId = 0
         AND inCarId  = 0
         AND inPersonalDriverId = 0
         AND inMemberId          = 0
         AND inMovementId_Transport  = 0
      THEN
          RETURN; -- !!!выход!!!
-     END IF;
+     END IF;*/
 
 
-     -- сохранили <Документ>
+     -- сохранили <Документ>, т.е. изменился ТОЛЬКО <Экспедитор> или Автомобиль или Сотрудник (водитель) но ТОЛЬУО для пустого Путевой лист
      ioId:= lpInsertUpdate_Movement_Reestr (ioId               := ioId
                                           , inInvNumber        := inInvNumber
                                           , inOperDate         := inOperDate
