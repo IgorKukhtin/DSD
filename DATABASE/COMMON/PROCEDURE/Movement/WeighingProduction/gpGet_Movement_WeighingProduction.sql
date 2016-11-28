@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Parent TVarChar
+             , InvNumber_Parent TVarChar, MovementId_parent Integer, OperDate_Parent TDateTime
              , isProductionIn Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
-             , MovementDesc TFloat
-             , MovementDescNumber Integer, MovementDescName TVarChar
+             , MovementDescNumber Integer
+             , MovementDesc Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
@@ -38,13 +38,15 @@ BEGIN
              , Object_Status.Name               AS StatusName
              
              , CAST ('' as TVarChar)            AS Parent
+             , 0                                AS MovementId_Parent
+             , CAST (Null as TDateTime)         AS OperDate_Parent
 
              , FALSE AS isProductionIn
              , CAST (CURRENT_DATE as TDateTime) AS StartWeighing
              , CAST (CURRENT_DATE as TDateTime) AS EndWeighing
 
-             , CAST (0 as TFloat)    AS MovementDesc
              , 0                     AS MovementDescNumber
+             , 0                     AS MovementDesc
              , CAST ('' as TVarChar) AS MovementDescName
 
              , CAST (0 as TFloat)    AS WeighingNumber
@@ -73,14 +75,16 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
-             , Movement_Parent.InvNumber         AS Parent
+             , Movement_Parent.InvNumber         AS InvNumber_Parent
+             , Movement_Parent.Id                AS MovementId_Parent
+             , Movement_Parent.OperDate          AS OperDate_Parent
               
              , MovementBoolean_isIncome.ValueData    AS isProductionIn
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
-             , MovementFloat_MovementDesc.ValueData  AS MovementDesc
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
+             , MovementDesc.Id                            AS MovementDesc
              , MovementDesc.ItemName                      AS MovementDescName
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
