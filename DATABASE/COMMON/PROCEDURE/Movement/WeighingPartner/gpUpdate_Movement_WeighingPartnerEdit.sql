@@ -2,20 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inId                   Integer   , -- Ключ объекта <Документ>
     IN inOperDate             TDateTime , -- Дата документа
-
-    IN inStartWeighing        TDateTime , -- Протокол начало взвешивания
-    IN inEndWeighing          TDateTime , -- Протокол окончание взвешивания
-
     IN inPriceWithVAT         Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent           TFloat    , -- % НДС
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
-
     IN inInvNumberOrder       TVarChar  , -- Номер заявки у контрагента 
-    IN inPartionGoods         TVarChar  , -- Партия товара
     IN inMovementDescId       Integer   , -- Вид документа
     IN inMovementDescNumber   Integer   , -- Код операции (взвешивание)
     IN inWeighingNumber       Integer   , -- Номер взвешивания
@@ -24,6 +20,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inContractId           Integer   , -- Договора
     IN inPaidKindId           Integer   , -- Форма оплаты
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
+    IN inMovementId_Transport Integer   , -- Документ путевой лист
+    IN inParentId             Integer   , -- Главный Документ 
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Void
@@ -34,7 +32,6 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 
    DECLARE vbInvNumber TVarChar;
-   DECLARE vbParentId Integer;
    DECLARE vbStartWeighing TDateTime;
    DECLARE vbPriceWithVAT  Boolean;
    DECLARE vbVATPercent    TFloat;
@@ -46,23 +43,17 @@ BEGIN
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale_Partner());
 
-     SELECT InvNumber, ParentId INTO vbInvNumber, vbParentId FROM Movement WHERE Id = inId;
+     SELECT InvNumber INTO vbInvNumber FROM Movement WHERE Id = inId;
 
      -- сохранили <Документ>
-     inId := lpInsertUpdate_Movement (inId, zc_Movement_WeighingPartner(), vbInvNumber, inOperDate, vbParentId, vbAccessKeyId);
+     inId := lpInsertUpdate_Movement (inId, zc_Movement_WeighingPartner(), vbInvNumber, inOperDate, inParentId, vbAccessKeyId);
 
-     -- сохранили свойство <Протокол начало взвешиванияа>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), inId, inStartWeighing);
-     -- сохранили свойство <Протокол окончание взвешивания>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndWeighing(), inId, inEndWeighing);
-     
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), inId, inPriceWithVAT);
      -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inId, inVATPercent);
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), inId, inChangePercent);
-
 
 
      -- сохранили свойство <Вид документа>
@@ -75,8 +66,6 @@ BEGIN
 
      -- сохранили свойство <Номер заявки у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), inId, inInvNumberOrder);
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), inId, inPartionGoods);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), inId, inFromId);
@@ -92,7 +81,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), inId, inMovementId_Order);
 
      -- сохранили связь с документом <Transport>
-     --PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), inId, inMovementId_Transport);
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), inId, inMovementId_Transport);
 
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), inId, inChangePercent);
@@ -101,7 +90,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
 
      -- сохранили протокол
-     --PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -114,4 +103,4 @@ $BODY$
 */
 
 -- тест
---
+-- select * from gpUpdate_Movement_WeighingPartnerEdit(inId := 4316459 , inOperDate := ('31.08.2016')::TDateTime , inPriceWithVAT := '' , inVATPercent := 20 , inChangePercent := 0 , inInvNumberOrder := '***261779' , inMovementDescId := 0 , inMovementDescNumber := 16 , inWeighingNumber := 2 , inFromId := 133049 , inToId := 309292 , inContractId := 540132 , inPaidKindId := 3 , inMovementId_Order := 4314361 , inMovementId_Transport := 4297350 , inParentId := 4316461 ,  inSession := '5');

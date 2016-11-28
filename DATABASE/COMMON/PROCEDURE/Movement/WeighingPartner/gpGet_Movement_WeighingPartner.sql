@@ -10,8 +10,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementId_Order Integer, InvNumberOrder TVarChar
-              , PartionGoods TVarChar
-             , WeighingNumber TFloat, InvNumberTransport TFloat
+             , PartionGoods TVarChar
+             , WeighingNumber TFloat
+             , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , MovementDescId Integer
              , MovementDescNumber Integer, MovementDescName TVarChar
@@ -64,7 +65,10 @@ BEGIN
              , MovementString_PartionGoods.ValueData      AS PartionGoods
 
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
-             , MovementFloat_InvNumberTransport.ValueData AS InvNumberTransport
+
+             , Movement_Transport.Id                     AS MovementId_Transport
+             , Movement_Transport.InvNumber              AS InvNumber_Transport
+             , Movement_Transport.OperDate               AS OperDate_Transport
 
              , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE) :: Boolean AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
@@ -110,9 +114,6 @@ BEGIN
                                    ON MovementDate_EndWeighing.MovementId = Movement.Id
                                   AND MovementDate_EndWeighing.DescId = zc_MovementDate_EndWeighing()
                                   
-            LEFT JOIN MovementFloat AS MovementFloat_InvNumberTransport
-                                    ON MovementFloat_InvNumberTransport.MovementId = Movement.Id
-                                   AND MovementFloat_InvNumberTransport.DescId = zc_MovementFloat_InvNumberTransport()
             LEFT JOIN MovementFloat AS MovementFloat_WeighingNumber
                                     ON MovementFloat_WeighingNumber.MovementId = Movement.Id
                                    AND MovementFloat_WeighingNumber.DescId = zc_MovementFloat_WeighingNumber()
@@ -187,6 +188,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
                                      ON MovementString_InvNumberPartner_Order.MovementId =  Movement_Order.Id
                                     AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                           ON MovementLinkMovement_Transport.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingPartner();
