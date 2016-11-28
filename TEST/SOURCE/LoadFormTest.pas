@@ -891,8 +891,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalChoiceForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
@@ -1252,6 +1250,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
+
 end;
 
 procedure TLoadFormTest.LoadDocumentKindFormTest;

@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -196,7 +196,7 @@ inherited MainForm: TMainForm
     object actReestr: TdsdOpenForm [6]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       FormName = 'TReestrJournalForm'
       FormNameParam.Value = 'TReestrJournalForm'
       FormNameParam.DataType = ftString
@@ -392,7 +392,7 @@ inherited MainForm: TMainForm
     object actSale_Reestr: TdsdOpenForm [17]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1088#1077#1077#1089#1090#1088#1091')'
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077')'
       FormName = 'TSale_ReestrJournalForm'
       FormNameParam.Value = 'TSale_ReestrJournalForm'
       FormNameParam.DataType = ftString
@@ -4872,7 +4872,6 @@ inherited MainForm: TMainForm
       end
       object N139: TMenuItem
         Action = actSale_Reestr
-        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1099' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081')'
       end
       object miSale_all: TMenuItem
         Action = actSaleAll

@@ -1,12 +1,12 @@
 inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1088#1077#1077#1089#1090#1088#1091')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077')>'
   ClientHeight = 535
   ClientWidth = 1177
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1193
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -162,13 +162,12 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colIsError: TcxGridDBColumn [1]
-            Caption = #1054#1096#1080#1073#1082#1072
-            DataBinding.FieldName = 'isError'
-            Visible = False
+          object clReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+            DataBinding.FieldName = 'ReestrKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 44
+            Width = 74
           end
           inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
@@ -548,28 +547,12 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
-            DataBinding.FieldName = 'RouteSortingName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 36
-          end
-          object clReestrKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            DataBinding.FieldName = 'ReestrKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            Width = 74
           end
           object colInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1101#1082#1089#1087'.)'
@@ -715,7 +698,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1048#1085#1074#1086#1081#1089' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -775,7 +757,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 22
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -825,7 +806,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
       Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
       ImageIndex = 21
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -964,7 +944,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1007,8 +986,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = 'actPrint_Account_ReportName'
     end
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSale_OrderForm'
-      FormNameParam.Value = 'TSale_OrderForm'
+      FormName = 'TSale_PartnerForm'
+      FormNameParam.Value = 'TSale_PartnerForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -1065,8 +1044,8 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       ImageIndex = 52
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSale_OrderForm'
-      FormNameParam.Value = 'TSale_OrderForm'
+      FormName = 'TSale_PartnerForm'
+      FormNameParam.Value = 'TSale_PartnerForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -1304,6 +1283,7 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      ShortCut = 16464
     end
     object mactPrint_Tax_Client: TMultiAction
       Category = 'Print_Tax'
@@ -1381,7 +1361,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1422,7 +1401,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1483,7 +1461,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1101#1082#1089#1087#1086#1088#1090')'
       ImageIndex = 20
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1528,7 +1505,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       Hint = #1059#1087#1072#1082#1086#1074#1086#1095#1085#1099#1081' '#1083#1080#1089#1090' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 23
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1572,7 +1548,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
       Caption = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       Hint = #1057#1087#1077#1094#1080#1092#1080#1082#1072#1094#1080#1103' ('#1092#1086#1079#1079#1080')'
       ImageIndex = 17
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -1762,7 +1737,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -2181,7 +2155,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1086#1081
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS

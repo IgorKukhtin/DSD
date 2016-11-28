@@ -44,7 +44,6 @@ type
     colContractName: TcxGridDBColumn;
     colInvNumberOrder: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
@@ -83,7 +82,6 @@ type
     mactPrint_Account: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colIsError: TcxGridDBColumn;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
     spChecked: TdsdStoredProc;

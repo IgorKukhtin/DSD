@@ -177,7 +177,6 @@ type
     bbOpenReport: TdxBarButton;
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
-    ReestrKindGuides: TdsdGuides;
     ChangePercent: TcxGridDBColumn;
     isPeresort: TcxGridDBColumn;
     Price_Pricelist_vat: TcxGridDBColumn;

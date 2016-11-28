@@ -27,19 +27,6 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
      
 
-     -- только в этом случае - ничего не делаем
-     IF ioMovementId = 0
-        AND inCarId  = 0
-        AND inPersonalDriverId = 0
-        AND inMemberId          = 0
-        AND ioMovementId_TransportTop  = 0
-        AND TRIM (inBarCode_Transport)        = ''
-        AND TRIM (inBarCode)                  = ''
-     THEN
-         RETURN; -- !!!выход!!!
-     END IF;
-
-
      -- найдем Путевой лист
      IF TRIM (inBarCode_Transport) <> ''
      THEN
@@ -69,6 +56,17 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Документ <Путевой лист> с № <%> не найден.', inBarCode_Transport;
          END IF;
 
+     END IF;
+
+
+     -- найдем Документ <Реестр накладных>
+     IF ioMovementId_TransportTop <> 0 AND COALESCE (ioMovementId, 0) = 0
+     THEN
+          ioMovementId:= (SELECT MLM.MovementId
+                          FROM MovementLinkMovement AS MLM
+                          WHERE MLM.MovementChildId = ioMovementId_TransportTop
+                            AND MLM.DescId = zc_MovementLinkMovement_Transport()
+                         );
      END IF;
 
 
@@ -104,10 +102,44 @@ BEGIN
      END IF;
 
 
+     -- только в этом случае - ничего не делаем
+     IF ioMovementId                   = 0
+        AND inCarId                    = 0
+        AND inPersonalDriverId         = 0
+        AND inMemberId                 = 0
+        AND ioMovementId_TransportTop  = 0
+        AND TRIM (inBarCode_Transport) = ''
+        AND TRIM (inBarCode)           = ''
+     THEN
+         RETURN; -- !!!выход!!!
+     END IF;
+
+
+     -- Проверка
+     IF COALESCE (ioMovementId_TransportTop, 0) = 0 AND (COALESCE (inCarId ,0) = 0 OR COALESCE (inPersonalDriverId, 0) = 0)
+     THEN
+         IF COALESCE (ioMovementId_TransportTop, 0) = 0 AND COALESCE (inCarId ,0) = 0 AND COALESCE (inPersonalDriverId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен документ <Путевой лист> с Ш/К = <%>.', inBarCode_Transport;
+         ELSEIF COALESCE (inCarId ,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен <№ автомобиля>.';
+         ELSEIF COALESCE (inPersonalDriverId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определено <ФИО> водителя.';
+         END IF;
+     END IF;
+
+
      -- ВСЕГДА - сохранение Movement
      ioMovementId:= lpInsertUpdate_Movement_Reestr (ioId               := ioMovementId
                                                   , inInvNumber        := CASE WHEN ioMovementId <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = ioMovementId) ELSE CAST (NEXTVAL ('Movement_Reestr_seq') AS TVarChar) END
-                                                  , inOperDate         := CASE WHEN ioMovementId <> 0 THEN (SELECT OperDate  FROM Movement WHERE Id = ioMovementId) ELSE CURRENT_DATE :: TDateTime END
+                                                    -- меняется дата как в Scale для BranchCode = 1
+                                                  , inOperDate         := -- CASE WHEN ioMovementId <> 0 THEN (SELECT OperDate  FROM Movement WHERE Id = ioMovementId) ELSE CURRENT_DATE :: TDateTime END
+                                                                          gpGet_Scale_OperDate (inIsCeh      := FALSE
+                                                                                              , inBranchCode := 1
+                                                                                              , inSession    := inSession
+                                                                                               )
                                                     -- если есть - Определили по путевому, надо будет еще сделать для Начисления наемный транспорт
                                                   , inCarId            := CASE WHEN ioMovementId_TransportTop > 0 THEN (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_Car())            ELSE inCarId            END
                                                     -- если есть - Определили по путевому, надо будет еще сделать для Начисления наемный транспорт

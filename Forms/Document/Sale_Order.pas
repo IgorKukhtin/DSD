@@ -200,7 +200,6 @@ type
     bbOpenReport: TdxBarButton;
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
-    ReestrKindGuides: TdsdGuides;
     isPeresort: TcxGridDBColumn;
     cxLabel27: TcxLabel;
     edInvNumberProduction: TcxButtonEdit;
