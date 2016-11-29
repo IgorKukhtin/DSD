@@ -79,8 +79,12 @@ BEGIN
                        ) AS tmp
                        WHERE tmp.Num = 1);
 
+
     -- Изменили <Состояние по реестру> в документе продажи на предыдущее
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, COALESCE (vbReestrKindId, zc_Enum_ReestrKind_PartnerOut()));
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (inId, vbUserId, FALSE);
 
 END;
 $BODY$

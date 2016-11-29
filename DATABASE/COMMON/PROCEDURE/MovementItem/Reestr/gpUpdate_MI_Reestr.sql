@@ -16,9 +16,10 @@ $BODY$
    DECLARE vbMemberId_user Integer;
    DECLARE vbId_mi Integer;
    DECLARE vbMovementId_sale Integer;
+   DECLARE vbMovementId_reestr Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Reestr());
      
 
      -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
@@ -50,12 +51,14 @@ BEGIN
      END IF;
 
 
-     -- Проверка - должен быть кто сдал документ для визы
+     -- Проверка
      IF inMemberId = 0 AND inReestrKindId IN (zc_Enum_ReestrKind_PartnerIn(), zc_Enum_ReestrKind_RemakeIn())
      THEN
+         -- должен быть кто сдал документ для визы
          RAISE EXCEPTION 'Ошибка.Для визы <%> не определен <Экспедитор / Водитель (от кого получена накладная)>.', lfGet_Object_ValueData (inReestrKindId);
      ELSEIF inMemberId <> 0 AND inReestrKindId NOT IN (zc_Enum_ReestrKind_PartnerIn(), zc_Enum_ReestrKind_RemakeIn())
      THEN
+         -- НЕ должно быть кто сдал документ для визы
          RAISE EXCEPTION 'Ошибка.Для визы <%> значение <Экспедитор / Водитель (от кого получена накладная)> должно быть пустым.', lfGet_Object_ValueData (inReestrKindId);
      END IF;
 
@@ -96,8 +99,45 @@ BEGIN
      -- Проверка
      IF COALESCE (vbId_mi, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не зарегистрирован в реестре.', inBarCode;
-     END IF;
+         -- RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не зарегистрирован в реестре.', inBarCode;
+         --
+         -- Попробуем найти "пустышку"
+         vbMovementId_reestr:= (SELECT Movement.Id
+                                FROM Movement
+                                     LEFT JOIN MovementLinkMovement AS MLM_Transport
+                                                                    ON MLM_Transport.MovementId = Movement.Id
+                                                                   AND MLM_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                WHERE Movement.OperDate = CURRENT_DATE
+                                  AND Movement.DescId = zc_Movement_Reestr()
+                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                  AND MLM_Transport.MovementId IS NULL
+                                LIMIT 1 -- Прийдется так "криво" обойти вариант если вдруг парраллельно создадут новый док.
+                               );
+
+         -- Если не нашли "пустышку"
+         IF COALESCE (vbMovementId_reestr, 0) = 0
+         THEN
+             -- создаем
+             vbMovementId_reestr:=
+                    lpInsertUpdate_Movement_Reestr (ioId               := vbMovementId_reestr
+                                                  , inInvNumber        := NEXTVAL ('Movement_Reestr_seq') :: TVarChar
+                                                  , inOperDate         := CURRENT_DATE
+                                                  , inCarId            := NULL
+                                                  , inPersonalDriverId := NULL
+                                                  , inMemberId         := NULL
+                                                  , inMovementId_Transport := NULL
+                                                  , inUserId           := -1 * vbUserId -- !!! с минусом, значит "пустышка"!!!
+                                                   );
+         END IF;
+
+         -- сохранили <Элемент документа> - но "криво" <кто сформировал визу "Вывезено со склада">
+         vbId_mi := lpInsertUpdate_MovementItem (vbId_mi, zc_MI_Master(), vbMemberId_user, vbMovementId_reestr, 0, NULL);
+
+          -- сохранили свойство у документа продажи <№ строчной части в Реестре накладных>
+          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_sale, vbId_mi);
+
+
+     END IF; -- if COALESCE (vbId_mi, 0) = 0
 
 
 
@@ -157,6 +197,8 @@ BEGIN
     -- Установили "последнее" значение визы - <Состояние по реестру>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_sale, inReestrKindId);
 
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (vbId_mi, vbUserId, FALSE);
 
 END;
 $BODY$

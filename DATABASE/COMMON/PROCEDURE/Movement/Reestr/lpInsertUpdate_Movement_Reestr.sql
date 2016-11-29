@@ -18,7 +18,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- Проверка
-     IF COALESCE (inMovementId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0
+     IF COALESCE (inMovementId_Transport, 0) = 0 AND COALESCE (inCarId, 0) = 0 AND inUserId > 0
      THEN 
          RAISE EXCEPTION 'Ошибка. Необходимо установить документ <Путевой лист> или выбрать из справочника <Автомобиль>.';
      END IF;
@@ -30,24 +30,27 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Reestr(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-     -- сохранили связь с <>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), ioId, inMemberId);
+     -- признак что он НЕ "пустышка"
+     IF inUserId > 0
+     THEN
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), ioId, inMemberId);
 
-     -- сохранили связь с документом <Путевой лист> или <Начисления наемный транспорт>
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
+         -- сохранили связь с документом <Путевой лист> или <Начисления наемный транспорт>
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, inMovementId_Transport);
 
-     -- сохранили свойство <когда сформирована виза "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
-     -- сохранили свойство <кто сформировал визу "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
-
+         -- сохранили свойство <когда сформирована виза "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Update(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <кто сформировал визу "Вывезено со склада" (т.е. добавлен последний документ в реестр)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Update(), ioId, inUserId);
+     END IF;
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     PERFORM lpInsert_MovementProtocol (ioId, ABS (inUserId), vbIsInsert);
 
 END;
 $BODY$
