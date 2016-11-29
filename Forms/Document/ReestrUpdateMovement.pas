@@ -29,12 +29,12 @@ uses
 
 type
   TReestrUpdateMovementForm = class(TAncestorJournalForm)
-    colOperDatePartner: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
-    colDate_Insert: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    Date_Insert: TcxGridDBColumn;
     N13: TMenuItem;
     miInvoice: TMenuItem;
     miOrdSpr: TMenuItem;
@@ -65,6 +65,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    CarModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

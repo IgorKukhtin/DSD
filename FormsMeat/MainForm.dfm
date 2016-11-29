@@ -67,133 +67,24 @@ inherited MainForm: TMainForm
   inherited ActionList: TActionList
     Left = 136
     Top = 32
-    object actReestrRemake: TdsdOpenForm [0]
+    object actSale_Reestr: TdsdOpenForm [0]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
-      FormName = 'TReestrUpdateMovementForm'
-      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077')'
+      FormName = 'TSale_ReestrJournalForm'
+      FormNameParam.Value = 'TSale_ReestrJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inReestrKindId'
-          Value = '736915'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inReestrKindName'
-          Value = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
-          DataType = ftString
+          Name = 'inChangePercentAmount'
+          Value = '1'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
-    object actReestrBuh: TdsdOpenForm [1]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
-      FormName = 'TReestrUpdateMovementForm'
-      FormNameParam.Value = 'TReestrUpdateMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inReestrKindId'
-          Value = '736917'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inReestrKindName'
-          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' ('#1060#1048#1053#1048#1064')'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReestrRemakeBuh: TdsdOpenForm [2]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
-      FormName = 'TReestrUpdateMovementForm'
-      FormNameParam.Value = 'TReestrUpdateMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inReestrKindId'
-          Value = '736916'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inReestrKindName'
-          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReestrRemakeIn: TdsdOpenForm [3]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
-      FormName = 'TReestrUpdateMovementForm'
-      FormNameParam.Value = 'TReestrUpdateMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inReestrKindId'
-          Value = '736914'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inReestrKindName'
-          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReestrPartnerIn: TdsdOpenForm [4]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
-      FormName = 'TReestrUpdateMovementForm'
-      FormNameParam.Value = 'TReestrUpdateMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inReestrKindId'
-          Value = '736913'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inReestrKindName'
-          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReestrStart: TdsdOpenForm [5]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
-      FormName = 'TReestrStartMovementForm'
-      FormNameParam.Value = 'TReestrStartMovementForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = 0
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actReestr: TdsdOpenForm [6]
+    object actReestr: TdsdOpenForm [1]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -210,7 +101,133 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actGoodsListSale: TdsdOpenForm [7]
+    object actReestrStart: TdsdOpenForm [2]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1088#1077#1077#1089#1090#1088' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+      FormName = 'TReestrStartMovementForm'
+      FormNameParam.Value = 'TReestrStartMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = 0
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrPartnerIn: TdsdOpenForm [3]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
+      FormName = 'TReestrUpdateMovementForm'
+      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '640043'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrRemakeIn: TdsdOpenForm [4]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
+      FormName = 'TReestrUpdateMovementForm'
+      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '640044'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrRemakeBuh: TdsdOpenForm [5]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      FormName = 'TReestrUpdateMovementForm'
+      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '860663'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrRemake: TdsdOpenForm [6]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
+      FormName = 'TReestrUpdateMovementForm'
+      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '860664'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actReestrBuh: TdsdOpenForm [7]
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
+      FormName = 'TReestrUpdateMovementForm'
+      FormNameParam.Value = 'TReestrUpdateMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inReestrKindId'
+          Value = '860665'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inReestrKindName'
+          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGoodsListSale: TdsdOpenForm [8]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
@@ -222,7 +239,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actEntryAsset: TdsdOpenForm [8]
+    object actEntryAsset: TdsdOpenForm [9]
       Category = #1054#1057
       MoveParams = <>
       Caption = #1042#1074#1086#1076' '#1074' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1102
@@ -233,7 +250,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPartionGoods: TdsdOpenForm [9]
+    object actPartionGoods: TdsdOpenForm [10]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1072#1088#1090#1080#1080' '#1090#1086#1074#1072#1088#1086#1074
@@ -245,7 +262,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSheetWorkTimeObject: TdsdOpenForm [10]
+    object actSheetWorkTimeObject: TdsdOpenForm [11]
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       MoveParams = <>
       Caption = #1056#1077#1078#1080#1084' '#1088#1072#1073#1086#1090#1099' ('#1064#1072#1073#1083#1086#1085' '#1090#1072#1073#1077#1083#1103' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080')'
@@ -257,7 +274,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTechReceiptDelic: TdsdOpenForm [11]
+    object actProductionUnionTechReceiptDelic: TdsdOpenForm [12]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1044#1077#1083#1080#1082#1072#1090#1077#1089#1086#1074' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
@@ -291,7 +308,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actPartionRemains: TdsdOpenForm [12]
+    object actPartionRemains: TdsdOpenForm [13]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1072#1088#1090#1080#1080' '#1052#1053#1052#1040
@@ -303,7 +320,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Check_ReturnInToSale: TdsdOpenForm [13]
+    object actReport_Check_ReturnInToSale: TdsdOpenForm [14]
       Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084
@@ -332,7 +349,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actExportJuridical: TdsdOpenForm [14]
+    object actExportJuridical: TdsdOpenForm [15]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1101#1082#1089#1087#1086#1088#1090#1072' '#1089' '#1086#1090#1087#1088#1072#1074#1082#1086#1081' '#1087#1086' '#1087#1086#1095#1090#1077
@@ -344,7 +361,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeAsset: TdsdOpenForm [15]
+    object actIncomeAsset: TdsdOpenForm [16]
       Category = #1054#1057
       MoveParams = <>
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -355,7 +372,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actProductionUnionTechReceipt: TdsdOpenForm [16]
+    object actProductionUnionTechReceipt: TdsdOpenForm [17]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1050#1086#1083#1073#1072#1089#1085#1099#1081' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099') '
@@ -385,23 +402,6 @@ inherited MainForm: TMainForm
           Name = 'ToName'
           Value = #1062#1045#1061' '#1082#1086#1083#1073#1072#1089#1085#1099#1081
           DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
-    object actSale_Reestr: TdsdOpenForm [17]
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077')'
-      FormName = 'TSale_ReestrJournalForm'
-      FormNameParam.Value = 'TSale_ReestrJournalForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inChangePercentAmount'
-          Value = '1'
-          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = False

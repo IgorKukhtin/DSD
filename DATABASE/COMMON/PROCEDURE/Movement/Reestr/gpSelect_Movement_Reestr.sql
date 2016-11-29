@@ -21,6 +21,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ReestrKindId Integer, ReestrKindName TVarChar
              , InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , StatusCode_Sale Integer, StatusName_Sale TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
+             , InvNumberOrder TVarChar, RouteGroupName TVarChar, RouteName TVarChar
+             , FromName TVarChar, ToName TVarChar
+             , TotalSumm TFloat
+             , PaidKindName TVarChar
+             , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , JuridicalName_To TVarChar, OKPO_To TVarChar 
 
              , Date_Insert    TDateTime
              , Date_PartnerIn TDateTime
@@ -82,6 +89,22 @@ BEGIN
            , Object_Status_Sale.ObjectCode   AS StatusCode_Sale
            , Object_Status_Sale.ValueData    AS StatusName_Sale
 
+           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+           , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
+           , Object_RouteGroup.ValueData               AS RouteGroupName
+           , Object_Route.ValueData                    AS RouteName
+
+           , Object_From.ValueData                     AS FromName
+           , Object_To.ValueData                       AS ToName
+           , MovementFloat_TotalSumm.ValueData         AS TotalSumm
+           , Object_PaidKind.ValueData                 AS PaidKindName
+           , View_Contract_InvNumber.ContractCode      AS ContractCode
+           , View_Contract_InvNumber.InvNumber         AS ContractName
+           , View_Contract_InvNumber.ContractTagName
+           , Object_JuridicalTo.ValueData              AS JuridicalName_To
+           , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
+
            , MIDate_Insert.ValueData         AS Date_Insert
            , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
            , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
@@ -140,6 +163,7 @@ BEGIN
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
+            -- строчная часть реестра
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = MovementItem.ObjectId
  
@@ -179,7 +203,7 @@ BEGIN
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInFrom
                                              ON MILinkObject_RemakeInFrom.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_PartnerInTo()
+                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_RemakeInFrom()
             LEFT JOIN Object AS Object_RemakeInFrom ON Object_RemakeInFrom.Id = MILinkObject_RemakeInFrom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
@@ -195,7 +219,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
-            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_RemakeBuh.ObjectId
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
@@ -207,6 +231,57 @@ BEGIN
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
+           
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement_Sale.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId = Movement_Sale.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                     ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
+                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement_Sale.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
      ;
   
 END;

@@ -5,6 +5,8 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -409
+  ExplicitTop = -219
   ExplicitWidth = 1258
   ExplicitHeight = 676
   PixelsPerInch = 96

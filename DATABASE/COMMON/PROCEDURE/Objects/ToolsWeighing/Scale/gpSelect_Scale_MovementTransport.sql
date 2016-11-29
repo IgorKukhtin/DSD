@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber Integer, OperDate TDate
              , RouteName TVarChar
              , CarName TVarChar, CarModelName TVarChar
              , PersonalDriverName TVarChar
+             , PersonalName TVarChar
              , UnitForwardingName TVarChar
               )
 AS
@@ -75,6 +76,7 @@ BEGIN
              , Object_Car.ValueData             AS CarName
              , Object_CarModel.ValueData        AS CarModelName
              , Object_PersonalDriver.ValueData  AS PersonalDriverName
+             , Object_Personal.ValueData        AS PersonalName
              , Object_UnitForwarding.ValueData  AS UnitForwardingName
 
        FROM tmpStatus
@@ -113,6 +115,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
                                  ON ObjectLink_Route_Unit.ObjectId = MovementItem.ObjectId
