@@ -22,8 +22,6 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , Member_PartnerInTo TVarChar, Member_PartnerInFrom TVarChar, Member_RemakeInTo TVarChar
               , Member_RemakeInFrom TVarChar, Member_RemakeBuh TVarChar, Member_Remake TVarChar
               , Member_Buh TVarChar
-              , BarCode_Sale Integer, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
-              , OperDatePartner TDateTime, InvNumberPartner TVarChar
               , BarCode_Sale TVarChar, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
               , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_Sale Integer, StatusName_Sale TVarChar
               , TotalSumm TFloat
@@ -123,7 +121,6 @@ BEGIN
             , MIDate_RemakeBuh.ValueData                AS Date_RemakeBuh
             , MIDate_Remake.ValueData                   AS Date_Remake
             , MIDate_Buh.ValueData                      AS Date_Buh
-
             , Object_PartnerInTo.ValueData              AS Member_PartnerInTo
             , Object_PartnerInFrom.ValueData            AS Member_PartnerInFrom
             , Object_RemakeInTo.ValueData               AS Member_RemakeInTo
@@ -132,8 +129,6 @@ BEGIN
             , Object_Remake.ValueData                   AS Member_Remake
             , Object_Buh.ValueData                      AS Member_Buh
 
-
-            , Movement_Sale.Id                          AS BarCode_Sale
             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Sale.Id) AS BarCode_Sale
             , Movement_Sale.OperDate                    AS OperDate_Sale
             , Movement_Sale.InvNumber                   AS InvNumber_Sale
@@ -195,6 +190,7 @@ BEGIN
                                          ON MLO_Reestr_Member.MovementId = Movement_Reestr.Id
                                         AND MLO_Reestr_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Reestr_Member ON Object_Reestr_Member.Id = MLO_Reestr_Member.ObjectId
+
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
