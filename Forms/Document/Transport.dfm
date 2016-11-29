@@ -297,14 +297,12 @@
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 285
     ClientRectBottom = 437
     ClientRectRight = 1200
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 261
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -312,7 +310,6 @@
         Height = 268
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 116
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -650,7 +647,6 @@
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 121
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -955,13 +951,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 116
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitHeight = 261
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -969,7 +963,6 @@
         Height = 413
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 261
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1277,7 +1270,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitHeight = 261
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1285,7 +1277,6 @@
         Height = 413
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 261
         object cxGridReportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ReportDS

@@ -6,7 +6,7 @@ inherited ReestrJournalForm: TReestrJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 854
-  ExplicitHeight = 446
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,17 +16,17 @@ inherited ReestrJournalForm: TReestrJournalForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 838
-    ExplicitHeight = 476
+    ExplicitHeight = 352
     ClientRectBottom = 352
     ClientRectRight = 838
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 838
-      ExplicitHeight = 476
+      ExplicitHeight = 352
       inherited cxGrid: TcxGrid
         Width = 838
         Height = 352
         ExplicitWidth = 838
-        ExplicitHeight = 476
+        ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -315,13 +315,6 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 140
           end
-          object Member_RemakeInFrom: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
-            DataBinding.FieldName = 'Member_RemakeInFrom'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 170
-          end
           object Date_RemakeIn: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
             DataBinding.FieldName = 'Date_RemakeIn'
@@ -329,9 +322,9 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 170
           end
-          object Member_RemakeInTo: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
-            DataBinding.FieldName = 'Member_RemakeInTo'
+          object Member_RemakeInFrom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
+            DataBinding.FieldName = 'Member_RemakeInFrom'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 170
@@ -343,12 +336,12 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 190
           end
-          object Member_RemakeBuh: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103')'
-            DataBinding.FieldName = 'Member_RemakeBuh'
+          object Member_RemakeInTo: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
+            DataBinding.FieldName = 'Member_RemakeInTo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 190
+            Width = 170
           end
           object Date_Remake: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085')'
@@ -356,6 +349,13 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
+          end
+          object Member_RemakeBuh: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Member_RemakeBuh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 190
           end
           object Member_Remake: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085')'
@@ -861,8 +861,8 @@ inherited ReestrJournalForm: TReestrJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 288
+    Left = 168
+    Top = 272
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

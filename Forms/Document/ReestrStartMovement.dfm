@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 420
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -38,6 +38,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSumm
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ToName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -425,6 +430,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 180
+      ExplicitHeight = 22
       Width = 180
     end
   end
@@ -1325,7 +1331,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'PersonalDriverId'
-        Value = Null
+        Value = 0
         Component = PersonalDriverGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1337,10 +1343,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Component = PersonalDriverGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 297
-    Top = 21
+    Left = 289
+    Top = 5
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -1376,10 +1383,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     KeyField = 'Id'
     LookupControl = edPersonalDriver
     Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1398,18 +1405,23 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
       end>
-    Left = 259
+    Left = 251
     Top = 56
   end
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1427,6 +1439,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
         MultiSelectSeparator = ','
       end>
     Left = 506

@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1004
-  ExplicitHeight = 440
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,19 +16,19 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 988
-    ExplicitHeight = 452
+    ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 988
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 988
-      ExplicitHeight = 452
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 988
         Height = 239
         ExplicitTop = 83
         ExplicitWidth = 988
-        ExplicitHeight = 369
+        ExplicitHeight = 239
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -252,9 +252,106 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           object MemberName_Insert: TcxGridDBColumn
             Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082
             DataBinding.FieldName = 'MemberName_Insert'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object Member_PartnerInFrom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Member_PartnerInFrom'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object Date_PartnerIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Date_PartnerIn'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object Member_PartnerInTo: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'Member_PartnerInTo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object Date_RemakeIn: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
+            DataBinding.FieldName = 'Date_RemakeIn'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 170
+          end
+          object Member_RemakeInFrom: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
+            DataBinding.FieldName = 'Member_RemakeInFrom'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 170
+          end
+          object Date_RemakeBuh: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Date_RemakeBuh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 190
+          end
+          object Member_RemakeInTo: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1076#1083#1103' '#1087#1077#1088#1077#1076#1077#1083#1082#1080')'
+            DataBinding.FieldName = 'Member_RemakeInTo'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 170
+          end
+          object Date_Remake: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085')'
+            DataBinding.FieldName = 'Date_Remake'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object Member_RemakeBuh: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' '#1076#1083#1103' '#1080#1089#1087#1088#1072#1074#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'Member_RemakeBuh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 190
+          end
+          object Member_Remake: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1044#1086#1082#1091#1084#1077#1085#1090' '#1080#1089#1087#1088#1072#1074#1083#1077#1085')'
+            DataBinding.FieldName = 'Member_Remake'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 140
+          end
+          object Date_Buh: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
+            DataBinding.FieldName = 'Date_Buh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object Member_Buh: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074#1080#1079#1072' '#1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103')'
+            DataBinding.FieldName = 'Member_Buh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object OperDate_Sale: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076') ('#1087#1088#1086#1076#1072#1078#1072')'
@@ -1130,8 +1227,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 165
-    Top = 7
+    Left = 133
+    Top = 15
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -1149,10 +1246,10 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     KeyField = 'Id'
     LookupControl = edMember
     Key = '0'
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1171,8 +1268,13 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
       end>
-    Left = 405
+    Left = 365
     Top = 13
   end
   object spSelectBarCode: TdsdStoredProc

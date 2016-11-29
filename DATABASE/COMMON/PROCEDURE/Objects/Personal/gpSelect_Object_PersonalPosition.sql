@@ -30,21 +30,6 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
    vbUserId:= lpGetUserBySession (inSession);
-   -- определяется - может ли пользовать видеть весь справочник
-   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
-
-   vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId);
-
-   -- определяется уровень доступа
-   vbObjectId_Constraint:= (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId);
-
-
-   -- определяется Дефолт
-   SELECT View_InfoMoney.InfoMoneyId, View_InfoMoney.InfoMoneyName, View_InfoMoney.InfoMoneyName_all
-          INTO vbInfoMoneyId, vbInfoMoneyName, vbInfoMoneyName_all
-   FROM Object_InfoMoney_View AS View_InfoMoney
-   WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101(); -- 60101 Заработная плата + Заработная плата
-
 
    -- Результат
    RETURN QUERY 
@@ -93,9 +78,7 @@ BEGIN
          
          , Object_Personal_View.isErased
      FROM Object_Personal_View
-          LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
-          LEFT JOIN Object_RoleAccessKeyGuide_View AS View_RoleAccessKeyGuide ON View_RoleAccessKeyGuide.UserId = vbUserId AND View_RoleAccessKeyGuide.UnitId_PersonalService = Object_Personal_View.UnitId AND vbIsAllUnit = FALSE
-
+       
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -129,27 +112,8 @@ BEGIN
                               AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
-     WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL
-         OR vbAccessKeyAll = TRUE
-         OR Object_Personal_View.BranchId = vbObjectId_Constraint
-         OR Object_Personal_View.UnitId     = 8429  -- Отдел логистики
-         OR Object_Personal_View.PositionId = 81178 -- экспедитор
-         OR Object_Personal_View.PositionId = 8466  -- водитель
-         OR Object_Personal_View.PositionId = 12946 -- заготовитель ж/в
-           )
-       AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
-            OR vbIsAllUnit = TRUE
-            OR Object_Personal_View.BranchId = vbObjectId_Constraint
-            OR Object_Personal_View.PositionId = 12436 -- бухгалтер
-            OR Object_Personal_View.UnitId     = 8386  -- Бухгалтерия
-            OR Object_Personal_View.UnitId     = 8408  -- Отдел коммерции ф.Днепр
-           )
-       AND (Object_Personal_View.isErased = FALSE
-            OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE)
-           )
-       AND (inPositionId = 0
-            OR (inPositionId = Object_Personal_View.PositionId)
-            )
+     WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
+       AND (inPositionId = Object_Personal_View.PositionId)
            
     UNION ALL
         SELECT
@@ -198,4 +162,4 @@ $BODY$
  28.11.16         *
 */
 -- тест
--- SELECT * FROM gpSelect_Object_PersonalPosition (inStartDate:= null, inEndDate:= null, inIsPeriod:= FALSE, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PersonalPosition (inPositionId:= 8944, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

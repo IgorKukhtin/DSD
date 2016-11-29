@@ -50,8 +50,6 @@ type
     bbShowAll: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    dxBarControlContainerItem3: TdxBarControlContainerItem;
-    dxBarControlContainerItem4: TdxBarControlContainerItem;
     clIsDateOut: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     clIsMain: TcxGridDBColumn;

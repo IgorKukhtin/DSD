@@ -1,9 +1,9 @@
-object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
+object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
-  ClientHeight = 358
-  ClientWidth = 808
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  ClientHeight = 520
+  ClientWidth = 777
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 808
-    Height = 332
+    Width = 777
+    Height = 494
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -37,124 +37,101 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
+      OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clMemberCode: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'MemberCode'
-        HeaderAlignmentHorz = taCenter
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Options.Editing = False
+        Width = 52
       end
-      object clMemberName: TcxGridDBColumn
+      object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
-        DataBinding.FieldName = 'MemberName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 200
-      end
-      object PersonalServiceListName: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
-        DataBinding.FieldName = 'PersonalServiceListName'
-        Visible = False
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 126
+      end
+      object clCard: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+        DataBinding.FieldName = 'Card'
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object clMember_INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 89
       end
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 102
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object clPositionLevelName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
-        DataBinding.FieldName = 'PositionLevelName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 113
-      end
-      object clPersonalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
-        DataBinding.FieldName = 'PersonalGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 133
-      end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
-      object clDateIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
-        DataBinding.FieldName = 'DateIn'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clDateOut: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'DateOut'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clIsDateOut: TcxGridDBColumn
-        Caption = #1059#1074#1086#1083#1077#1085
-        DataBinding.FieldName = 'isDateOut'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clIsMain: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
-        DataBinding.FieldName = 'isMain'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 80
       end
       object clIsOfficial: TcxGridDBColumn
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'isOfficial'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Options.Editing = False
+        Width = 97
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object clInfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Caption = 'InfoMoneyChoiceForm'
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 126
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+        Width = 150
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -318,9 +295,9 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       Category = 0
     end
     object dxBarControlContainerItem1: TdxBarControlContainerItem
-      Caption = 'TextPosition'
+      Caption = 'textPosition'
       Category = 0
-      Hint = 'TextPosition'
+      Hint = 'textPosition'
       Visible = ivAlways
       Control = cxLabel6
     end
@@ -380,74 +357,18 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MemberCode'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'MemberName'
+          ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PositionId'
+          Name = 'Code'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PositionId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PositionName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PositionName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'UnitName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName_all'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'InfoMoneyName_all'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractId'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ContractName'
-          Value = ''
-          DataType = ftString
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -485,7 +406,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PersonalPosition'
+    StoredProcName = 'gpSelect_Object_MemberPosition'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -494,7 +415,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     Params = <
       item
         Name = 'inPositionId'
-        Value = 'False'
+        Value = 0
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -539,23 +460,13 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 328
-    Top = 264
-  end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = PositionGuides
-      end>
-    Left = 536
-    Top = 160
+    Left = 208
+    Top = 248
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
+    Key = '0'
     FormNameParam.Value = 'TPositionForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -579,28 +490,8 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 592
-    Top = 128
-  end
-  object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'MasterPositionId'
-        Value = ''
-        Component = PositionGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPositionName'
-        Value = ''
-        Component = PositionGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 456
-    Top = 200
+    Left = 576
+    Top = 144
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PersonalPosition'
@@ -609,7 +500,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     Params = <
       item
         Name = 'InId'
-        Value = Null
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -617,7 +508,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       end
       item
         Name = 'PositionId'
-        Value = Null
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
@@ -631,7 +522,37 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 264
+    Left = 496
+    Top = 208
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterPositionId'
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionName'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 408
+    Top = 200
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PositionGuides
+      end>
+    Left = 536
+    Top = 160
   end
 end

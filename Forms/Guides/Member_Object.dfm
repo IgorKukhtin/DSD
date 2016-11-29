@@ -2,7 +2,7 @@ object Member_ObjectForm: TMember_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 544
+  ClientHeight = 537
   ClientWidth = 456
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object Member_ObjectForm: TMember_ObjectForm
     Left = 0
     Top = 26
     Width = 456
-    Height = 518
+    Height = 511
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 518
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -232,6 +233,7 @@ object Member_ObjectForm: TMember_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -239,12 +241,14 @@ object Member_ObjectForm: TMember_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -294,6 +298,7 @@ object Member_ObjectForm: TMember_ObjectForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 48
