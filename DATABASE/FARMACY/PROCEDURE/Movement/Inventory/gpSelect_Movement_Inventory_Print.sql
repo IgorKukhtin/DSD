@@ -59,27 +59,26 @@ BEGIN
 
           LEFT JOIN tmpMIChild ON 1 = 1
 		  
-		  LEFT JOIN MovementFloat AS MovementFloat_Summ
-		                          ON MovementFloat_Summ.MovementId = Movement.Id
-								 AND MovementFloat_Summ.DescId = zc_MovementFloat_TotalSumm() 
+	  LEFT JOIN MovementFloat AS MovementFloat_Summ
+                                  ON MovementFloat_Summ.MovementId = Movement.Id
+                                 AND MovementFloat_Summ.DescId = zc_MovementFloat_TotalSumm() 
 
-		  LEFT JOIN MovementFloat AS MovementFloat_Count
-		                          ON MovementFloat_Count.MovementId = Movement.Id
-								 AND MovementFloat_Count.DescId = zc_MovementFloat_TotalCount()
+	  LEFT JOIN MovementFloat AS MovementFloat_Count
+                                  ON MovementFloat_Count.MovementId = Movement.Id
+                                 AND MovementFloat_Count.DescId = zc_MovementFloat_TotalCount()
 
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId <> zc_Enum_Status_Erased();
 
-
-
     RETURN NEXT Cursor1;
+
     OPEN Cursor2 FOR
-       SELECT Object_Goods.ObjectCode  			 AS GoodsCode
-           , Object_Goods.ValueData   			 AS GoodsName
-           , Object_Measure.ValueData            AS MeasureName
-           , MovementItem.Amount                 AS Amount
-           , MIFloat_Price.ValueData             AS Price
-           , MIFloat_Summ.ValueData              AS Summ
+       SELECT Object_Goods.ObjectCode 	  AS GoodsCode
+            , Object_Goods.ValueData  	  AS GoodsName
+            , Object_Measure.ValueData    AS MeasureName
+            , MovementItem.Amount         AS Amount
+            , MIFloat_Price.ValueData     AS Price
+            , MIFloat_Summ.ValueData      AS Summ
        FROM MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -94,9 +93,12 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId 
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Master()
-          AND MovementItem.isErased   = FALSE;
+          AND MovementItem.isErased   = FALSE
+        ORDER BY Object_Goods.ValueData;
+
     RETURN NEXT Cursor2;
 
 END;

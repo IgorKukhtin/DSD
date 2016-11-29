@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
-  ClientHeight = 411
+  ClientHeight = 563
   ClientWidth = 1200
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -292,24 +292,27 @@
     Left = 0
     Top = 126
     Width = 1200
-    Height = 285
+    Height = 437
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 285
+    ExplicitHeight = 285
+    ClientRectBottom = 437
     ClientRectRight = 1200
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 261
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 116
+        Height = 268
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 116
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -642,11 +645,12 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 121
+        Top = 273
         Width = 1200
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 121
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -946,23 +950,26 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 116
+        Top = 268
         Width = 1200
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 116
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitHeight = 261
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 261
+        Height = 413
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 261
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1270,13 +1277,15 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitHeight = 261
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
         Width = 1200
-        Height = 261
+        Height = 413
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 261
         object cxGridReportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ReportDS
@@ -1420,6 +1429,13 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = '8466 '
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 208
@@ -3061,10 +3077,10 @@
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TPersonalPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TPersonalPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -3083,17 +3099,22 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
       end>
-    Left = 186
-    Top = 35
+    Left = 210
+    Top = 59
   end
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriverMore
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TPersonalPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TPersonalPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -3112,9 +3133,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
       end>
-    Left = 778
-    Top = 91
+    Left = 786
+    Top = 75
   end
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
@@ -4263,10 +4289,10 @@
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TPersonalPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TPersonalPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -4285,9 +4311,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
       end>
-    Left = 922
-    Top = 75
+    Left = 906
+    Top = 59
   end
   object spErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'

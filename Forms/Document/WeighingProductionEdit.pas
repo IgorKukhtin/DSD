@@ -19,7 +19,6 @@ type
     edInvNumber: TcxTextEdit;
     cxLabel12: TcxLabel;
     edWeighingNumber: TcxCurrencyEdit;
-    edInvNumber_parent: TcxTextEdit;
     cxLabel2: TcxLabel;
     edOperDate_parent: TcxDateEdit;
     cxLabel13: TcxLabel;
@@ -49,6 +48,8 @@ type
     cxLabel10: TcxLabel;
     edDocumentKind: TcxButtonEdit;
     GuidesDocumentKind: TdsdGuides;
+    edInvNumber_parent: TcxButtonEdit;
+    ParentGuides: TdsdGuides;
   private
     { Private declarations }
   public

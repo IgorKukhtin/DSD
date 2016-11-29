@@ -2,6 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingProduction(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -13,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingProduction(
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inIsProductionIn      Boolean   , -- 
+    IN InvNumber_Parent      TVarChar  , -- № гл. документа
+    IN inIsProductionIn      Boolean   , -- Приход или расход с производства
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID
@@ -36,13 +39,14 @@ BEGIN
 
      SELECT InvNumber, ParentId INTO vbInvNumber, vbParentId FROM Movement WHERE Id = inId;
 
+     IF COALESCE (InvNumber_Parent, '') = '' 
+        THEN
+            vbParentId:= (SELECT CAST (Null AS Integer)) ;
+     END IF;
 
      -- сохранили <Документ>
      inId := lpInsertUpdate_Movement (inId, zc_Movement_WeighingProduction(), vbInvNumber, inOperDate, vbParentId, vbAccessKeyId);
 
-     -- сохранили свойство <Протокол начало взвешивания>
-     --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartWeighing(), inId, vbStartWeighing);
-     
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isIncome(), inId, inIsProductionIn);
 
@@ -68,7 +72,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inId);
 
      -- сохранили протокол
-     --PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
+     PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
 
 END;
 $BODY$
