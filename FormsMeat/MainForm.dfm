@@ -221,7 +221,7 @@ inherited MainForm: TMainForm
         end
         item
           Name = 'inReestrKindName'
-          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103' ('#1060#1048#1053#1048#1064')'
+          Value = #1041#1091#1093#1075#1072#1083#1090#1077#1088#1080#1103
           DataType = ftString
           MultiSelectSeparator = ','
         end>
