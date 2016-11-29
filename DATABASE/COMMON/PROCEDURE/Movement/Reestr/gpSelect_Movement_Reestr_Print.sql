@@ -177,7 +177,7 @@ BEGIN
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInFrom
                                              ON MILinkObject_RemakeInFrom.MovementItemId = tmpMI.MovementItemId
-                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_PartnerInTo()
+                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_RemakeInFrom()
             LEFT JOIN Object AS Object_RemakeInFrom ON Object_RemakeInFrom.Id = MILinkObject_RemakeInFrom.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
