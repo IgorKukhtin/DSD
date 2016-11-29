@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
 
-             , MovementId_Reestr Integer, InvNumber_Reestr Integer, OperDate_Reestr Integer, ReestrKindId Integer, ReestrKindName TVarChar
+             , MovementId_Reestr Integer, InvNumber_Reestr Integer, OperDate_Reestr TDateTime, ReestrKindId Integer, ReestrKindName TVarChar
 
              , PersonalId1 Integer, PersonalCode1 Integer, PersonalName1 TVarChar
              , PersonalId2 Integer, PersonalCode2 Integer, PersonalName2 TVarChar
@@ -134,7 +134,7 @@ BEGIN
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
              , MI_Reestr.MovementId                           AS MovementId_Reestr
-             , Movement_Reestr.InvNumber                      AS InvNumber_Reestr
+             , Movement_Reestr.InvNumber :: Integer           AS InvNumber_Reestr
              , Movement_Reestr.OperDate                       AS OperDate_Reestr
              , Object_ReestrKind.Id             	      AS ReestrKindId
              , Object_ReestrKind.ValueData       	      AS ReestrKindName
@@ -332,13 +332,13 @@ BEGIN
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.ParentId
                                         AND MovementLinkObject_ReestrKind.DescId     = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
             -- связь со строками в документе Реест
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                    ON MovementFloat_MovementItemId.MovementId =  Movement.Id
+                                    ON MovementFloat_MovementItemId.MovementId =  Movement.ParentId
                                    AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
             LEFT JOIN MovementItem AS MI_Reestr ON MI_Reestr.Id  = MovementFloat_MovementItemId.ValueData :: Integer
             LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id       = MI_Reestr.MovementId

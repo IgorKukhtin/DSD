@@ -2,8 +2,8 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 520
-  ClientWidth = 777
+  ClientHeight = 407
+  ClientWidth = 626
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,15 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 777
-    Height = 494
+    Width = 626
+    Height = 381
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 777
+    ExplicitHeight = 494
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,6 +46,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -61,26 +64,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 126
-      end
-      object clCard: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
-        DataBinding.FieldName = 'Card'
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
-      object clMember_INN: TcxGridDBColumn
-        Caption = #1048#1053#1053
-        DataBinding.FieldName = 'INN'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 89
-      end
-      object clDriverCertificate: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-        DataBinding.FieldName = 'DriverCertificate'
-        HeaderAlignmentVert = vaCenter
-        Width = 102
+        Width = 200
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -88,43 +72,6 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
-      end
-      object clIsOfficial: TcxGridDBColumn
-        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-        DataBinding.FieldName = 'isOfficial'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 97
-      end
-      object clInfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 52
-      end
-      object clInfoMoneyName_all: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-        DataBinding.FieldName = 'InfoMoneyName_all'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Caption = 'InfoMoneyChoiceForm'
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 126
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentVert = vaCenter
-        Width = 150
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -140,13 +87,13 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 412
-    Top = 149
+    Left = 132
+    Top = 69
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object edPosition: TcxButtonEdit
-    Left = 475
-    Top = 148
+    Left = 195
+    Top = 68
     Properties.Buttons = <
       item
         Default = True
@@ -468,10 +415,10 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     KeyField = 'Id'
     LookupControl = edPosition
     Key = '0'
-    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.Value = 'TPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPositionForm'
+    FormName = 'TPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -491,8 +438,8 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 576
-    Top = 144
+    Left = 360
+    Top = 64
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PersonalPosition'
@@ -554,7 +501,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       item
         Component = PositionGuides
       end>
-    Left = 536
-    Top = 160
+    Left = 384
+    Top = 128
   end
 end

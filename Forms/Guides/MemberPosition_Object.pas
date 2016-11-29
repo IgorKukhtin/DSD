@@ -45,17 +45,11 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clMember_INN: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clDriverCertificate: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clIsOfficial: TcxGridDBColumn;
-    clInfoMoneyName_all: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edPosition: TcxButtonEdit;
     PositionGuides: TdsdGuides;
