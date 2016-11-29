@@ -61,7 +61,7 @@ BEGIN
        -- сохранили <когда сформирована виза "Бухгалтерия">   
        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Buh(), inId, Null);
        -- сохранили связь с <кто сформировал визу "Бухгалтерия">
-       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, vbUserId);
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, Null);
     END IF;
 
     -- Находим предыдущее значение <Состояние по реестру> документа продажи

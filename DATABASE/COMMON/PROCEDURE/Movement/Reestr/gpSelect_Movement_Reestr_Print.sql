@@ -113,9 +113,10 @@ BEGIN
                       )
   
        SELECT 
-             Movement_Sale.InvNumber         AS InvNumber_Sale
-           , Movement_Sale.OperDate          AS OperDate_Sale
-           , Object_To.ValueData             AS ToName
+             Movement_Sale.InvNumber                AS InvNumber_Sale
+           , Movement_Sale.OperDate                 AS OperDate_Sale
+           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+           , Object_To.ValueData                    AS ToName
 
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
@@ -196,6 +197,10 @@ BEGIN
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement_Sale.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Sale.Id
