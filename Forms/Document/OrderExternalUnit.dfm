@@ -3,7 +3,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   ClientHeight = 668
   ClientWidth = 1031
   ExplicitWidth = 1047
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2323,10 +2323,10 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
-    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ObjectForm'
+    FormName = 'TMemberPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2344,6 +2344,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
         MultiSelectSeparator = ','
       end>
     Left = 514
