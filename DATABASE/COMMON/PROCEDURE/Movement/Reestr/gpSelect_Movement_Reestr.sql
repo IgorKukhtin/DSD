@@ -219,7 +219,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
                                              ON MILinkObject_Buh.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
-            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_RemakeBuh.ObjectId
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                     ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id -- tmpMI.MovementItemId
