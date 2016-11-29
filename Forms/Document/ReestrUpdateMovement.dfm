@@ -1,5 +1,5 @@
 inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' ('#1074#1080#1079#1072')>'
+  Caption = #1059#1089#1090#1072#1085#1086#1080#1090#1100' '#1074#1080#1079#1091' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
   ClientHeight = 405
   ClientWidth = 988
   ObjectMenuItem = Excel1
@@ -16,19 +16,19 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 988
-    ExplicitHeight = 452
+    ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 988
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 988
-      ExplicitHeight = 452
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 988
         Height = 239
         ExplicitTop = 83
         ExplicitWidth = 988
-        ExplicitHeight = 369
+        ExplicitHeight = 239
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -43,7 +43,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -89,7 +89,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalSumm
+              Column = TotalSumm
             end
             item
               Format = ',0.####'
@@ -149,36 +149,69 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 37
           end
-          object clReestrKindName: TcxGridDBColumn [1]
-            Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            DataBinding.FieldName = 'ReestrKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 74
-          end
-          object BarCode_Sale: TcxGridDBColumn [2]
-            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+          object BarCode_Sale: TcxGridDBColumn [1]
+            Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
             DataBinding.FieldName = 'BarCode_Sale'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          inherited colOperDate: TcxGridDBColumn [3]
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+          object ReestrKindName: TcxGridDBColumn [2]
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Width = 74
           end
-          inherited colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1088#1077#1077#1089#1090#1088
+          object StatusCode_Sale: TcxGridDBColumn [3]
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
+            DataBinding.FieldName = 'StatusCode_Sale'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
             HeaderAlignmentHorz = taCenter
-            Width = 77
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
-          inherited colStatus: TcxGridDBColumn [5]
+          object OperDate_Sale: TcxGridDBColumn [4]
+            Caption = #1044#1072#1090#1072' '#1089#1082#1083#1072#1076' ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
+            DataBinding.FieldName = 'OperDate_Sale'
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
-          object colInvNumberPartner: TcxGridDBColumn
+          object OperDatePartner: TcxGridDBColumn [5]
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object InvNumber_Sale: TcxGridDBColumn [6]
+            Caption = #8470' '#1076#1086#1082'. ('#1085#1072#1082#1083#1072#1076#1085#1072#1103')'
+            DataBinding.FieldName = 'InvNumber_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumberPartner: TcxGridDBColumn [7]
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -186,112 +219,38 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'OperDate_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'InvNumber_Transport'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
-          object CarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalDriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'PersonalDriverName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MemberName: TcxGridDBColumn
-            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
-            DataBinding.FieldName = 'MemberName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colUpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103'  ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object UpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.) '
-            DataBinding.FieldName = 'UpdateName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object colDate_Insert: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103'('#1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'))'
-            DataBinding.FieldName = 'Date_Insert'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object MemberName_Insert: TcxGridDBColumn
-            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1082
-            DataBinding.FieldName = 'MemberName_Insert'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object OperDate_Sale: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076') ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'OperDate_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object InvNumber_Sale: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'InvNumber_Sale'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 108
-          end
-          object colOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'OperDatePartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colFromName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn [8]
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colToName: TcxGridDBColumn
+          object ToName: TcxGridDBColumn [9]
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 80
           end
-          object colTotalSumm: TcxGridDBColumn
+          object JuridicalName_To: TcxGridDBColumn [10]
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_To'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object OKPO_To: TcxGridDBColumn [11]
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_To'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object TotalSumm: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -301,29 +260,155 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CarName_Sale: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'CarName_Sale'
+          object PaidKindName: TcxGridDBColumn [13]
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ContractCode: TcxGridDBColumn [14]
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object ContractName: TcxGridDBColumn [15]
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object ContractTagName: TcxGridDBColumn [16]
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 60
           end
-          object PersonalDriverName_Sale: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'PersonalDriverName_Sale'
+          object StatusCode_Transport: TcxGridDBColumn [17]
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1055'.'#1083'.)'
+            DataBinding.FieldName = 'StatusCode_Transport'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperDate_Transport: TcxGridDBColumn [18]
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'OperDate_Transport'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_Transport_Sale: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'. ('#1087#1088#1086#1076#1072#1078#1072')'
-            DataBinding.FieldName = 'InvNumber_Transport_Sale'
+          object InvNumber_Transport: TcxGridDBColumn [19]
+            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
+            DataBinding.FieldName = 'InvNumber_Transport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object CarModelName: TcxGridDBColumn [20]
+            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object CarName: TcxGridDBColumn [21]
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object PersonalDriverName: TcxGridDBColumn [22]
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'PersonalDriverName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MemberName: TcxGridDBColumn [23]
+            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          inherited colOperDate: TcxGridDBColumn [24]
+            Caption = #1044#1072#1090#1072' ('#1088#1077#1077#1089#1090#1088')'
+            HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          inherited colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1088#1077#1077#1089#1090#1088')'
+            HeaderAlignmentHorz = taCenter
+            Width = 77
+          end
+          inherited colStatus: TcxGridDBColumn [26]
+            Caption = #1057#1090#1072#1090#1091#1089' ('#1088#1077#1077#1089#1090#1088')'
+            HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            DataBinding.FieldName = 'UpdateDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object UpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            DataBinding.FieldName = 'UpdateName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object Date_Insert: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            DataBinding.FieldName = 'Date_Insert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
+          end
+          object MemberName_Insert: TcxGridDBColumn
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            DataBinding.FieldName = 'MemberName_Insert'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 150
           end
         end
       end
@@ -447,11 +532,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object BarCode: TcxGridDBColumn
-            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1053#1072#1082#1083#1072#1076#1085#1072#1103'> '#1080#1083#1080' '#1074#1074#1086#1076' '#8470
             DataBinding.FieldName = 'BarCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 219
+            Width = 180
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -463,7 +548,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Top = 75
         Width = 988
         Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
+        HotZoneClassName = 'TcxXPTaskBarStyle'
+        HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
       end
@@ -475,47 +561,43 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     ExplicitWidth = 988
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 582
+      Left = 639
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 582
+      ExplicitLeft = 639
       ExplicitTop = 22
     end
     inherited deEnd: TcxDateEdit
-      Left = 680
+      Left = 744
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 680
+      ExplicitLeft = 744
       ExplicitTop = 22
       ExplicitWidth = 90
       Width = 90
     end
     inherited cxLabel1: TcxLabel
-      Left = 582
+      Left = 639
       Top = 4
-      Caption = #1044#1072#1090#1072' c:'
-      ExplicitLeft = 582
+      ExplicitLeft = 639
       ExplicitTop = 4
-      ExplicitWidth = 42
     end
     inherited cxLabel2: TcxLabel
-      Left = 679
+      Left = 744
       Top = 4
-      Hint = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
-      Caption = #1044#1072#1090#1072' '#1087#1086':'
-      ExplicitLeft = 679
+      ExplicitLeft = 744
       ExplicitTop = 4
-      ExplicitWidth = 49
     end
   end
   object cxLabel27: TcxLabel [2]
     Left = 8
     Top = 4
-    Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074#1080#1079#1099
   end
   object edReestrKind: TcxButtonEdit [3]
     Left = 8
     Top = 22
+    ParentFont = False
     Properties.Buttons = <
       item
         Default = True
@@ -523,13 +605,20 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
     TabOrder = 7
+    Text = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
     Width = 225
   end
   object cxLabel5: TcxLabel [4]
     Left = 256
     Top = 4
-    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' / '#1074#1086#1076#1080#1090#1077#1083#1100
+    Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' / '#1042#1086#1076#1080#1090#1077#1083#1100' ('#1086#1090' '#1082#1086#1075#1086' '#1087#1086#1083#1091#1095#1077#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1074#1080#1079#1099')'
   end
   object edMember: TcxButtonEdit [5]
     Left = 256
@@ -541,7 +630,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 231
+    Width = 332
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 83
@@ -641,7 +730,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end>
     end
     inherited spErased: TdsdExecStoredProc
-      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
       ImageIndex = 2
     end
     object ExecuteDialog: TExecuteDialog
@@ -693,6 +783,9 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           StoredProc = spSelectBarCode
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource

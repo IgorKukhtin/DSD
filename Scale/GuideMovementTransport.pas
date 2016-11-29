@@ -51,6 +51,7 @@ type
     FormParams: TdsdFormParams;
     IdBarCode: TcxGridDBColumn;
     cbAll: TCheckBox;
+    PersonalName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);

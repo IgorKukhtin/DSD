@@ -45,6 +45,12 @@ type
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;
     ReestrKindName: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    InvNumberOrder: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    MemberName: TcxGridDBColumn;
   private
     { Private declarations }
   public

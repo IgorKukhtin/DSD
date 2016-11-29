@@ -11,30 +11,34 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrUser(
 RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , StatusCode Integer, StatusName TVarChar
               , OperDate TDateTime, InvNumber TVarChar
-              , CarName TVarChar
+              , CarName TVarChar, CarModelName TVarChar
               , PersonalDriverName TVarChar
               , MemberName TVarChar
               , UpdateName TVarChar, UpdateDate TDateTime
-              , InvNumber_Transport TVarChar, OperDate_Transport TDateTime
+              , InvNumber_Transport TVarChar, OperDate_Transport TDateTime, StatusCode_Transport Integer, StatusName_Transport TVarChar
               , Date_Insert TDateTime, MemberName_Insert TVarChar
-              , BarCode_Sale Integer, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
-              , OperDatePartner TDateTime, InvNumberPartner TVarChar
+              , BarCode_Sale TVarChar, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
+              , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_Sale Integer, StatusName_Sale TVarChar
               , TotalSumm TFloat
               , FromName TVarChar, ToName TVarChar
+              , PaidKindName TVarChar
+              , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+              , JuridicalName_To TVarChar, OKPO_To TVarChar 
               , ReestrKindName TVarChar
-              , InvNumber_Transport_Sale TVarChar, OperDate_Transport_Sale TDateTime
-              , CarName_Sale TVarChar, PersonalDriverName_Sale TVarChar
-              )
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbDateDescId Integer;
+
+   DECLARE vbMemberId_user  Integer;
+   DECLARE vbDateDescId     Integer;
    DECLARE vbMILinkObjectId Integer;
-   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Определяется
      vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()  
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
@@ -42,6 +46,7 @@ BEGIN
                                   WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
                              END AS DateDescId
                       );
+     -- Определяется
      vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()  
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
@@ -49,22 +54,40 @@ BEGIN
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
+
+     -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
+     vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+                       (SELECT ObjectLink_User_Member.ChildObjectId
+                        FROM ObjectLink AS ObjectLink_User_Member
+                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                          AND ObjectLink_User_Member.ObjectId = vbUserId)
+                       END
+                      ;
+     -- Проверка
+     IF COALESCE (vbMemberId_user, 0) = 0
+     THEN 
+          RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
+     END IF;
+
+
      -- Результат
      RETURN QUERY
      WITH
+         -- строчная часть реестра - для Одного пользователя
          tmpMI AS (SELECT MIDate.MovementItemId 
                         , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
                    FROM MovementItemDate AS MIDate
                         INNER JOIN MovementItemLinkObject AS MILinkObject_PartnerIn
-                                ON MILinkObject_PartnerIn.MovementItemId = MIDate.MovementItemId
-                               AND MILinkObject_PartnerIn.DescId = vbMILinkObjectId 
+                                                          ON MILinkObject_PartnerIn.MovementItemId = MIDate.MovementItemId
+                                                         AND MILinkObject_PartnerIn.DescId         = vbMILinkObjectId 
+                                                         AND MILinkObject_PartnerIn.ObjectId       = vbMemberId_user 
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                ON MovementFloat_MovementItemId.ValueData ::integer = MIDate.MovementItemId  
-                                               AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId  
+                                               AND MovementFloat_MovementItemId.DescId    = zc_MovementFloat_MovementItemId()
                    WHERE MIDate.DescId = vbDateDescId 
-                     AND date_trunc('day', MIDate.ValueData) BETWEEN inStartDate AND inEndDate
+                     AND MIDate.ValueData >= inStartDate AND MIDate.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
-
+       -- Результат
        SELECT MovementItem.Id
             , MovementItem.MovementId           AS MovementId
             , CAST (ROW_NUMBER() OVER (ORDER BY MovementItem.Id) AS Integer) AS LineNum
@@ -73,6 +96,7 @@ BEGIN
             , Movement_Reestr.OperDate                  AS OperDate
             , Movement_Reestr.InvNumber                 AS InvNumber
             , Object_Reestr_Car.ValueData               AS CarName
+            , Object_CarModel.ValueData                 AS CarModelName
             , Object_Reestr_Personal.ValueData          AS PersonalDriverName
             , Object_Reestr_Member.ValueData            AS MemberName
 
@@ -81,27 +105,32 @@ BEGIN
 
             , Movement_Reestr_Transport.InvNumber      AS InvNumber_Transport
             , Movement_Reestr_Transport.OperDate       AS OperDate_Transport
+            , Object_Status_Transport.ObjectCode       AS StatusCode_Transport
+            , Object_Status_Transport.ValueData        AS StatusName_Transport
   
             , MIDate_Insert.ValueData                   AS Date_Insert
             , Object_Member.ValueData                   AS MemberName_Insert
 
-            , Movement_Sale.Id                          AS BarCode_Sale
+            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Sale.Id) AS BarCode_Sale
             , Movement_Sale.OperDate                    AS OperDate_Sale
             , Movement_Sale.InvNumber                   AS InvNumber_Sale
             , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
             , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+            , Object_Status_Sale.ObjectCode             AS StatusCode_Sale
+            , Object_Status_Sale.ValueData              AS StatusName_Sale
 
             , MovementFloat_TotalSumm.ValueData         AS TotalSumm
 
             , Object_From.ValueData                     AS FromName
             , Object_To.ValueData                       AS ToName   
+            , Object_PaidKind.ValueData                 AS PaidKindName
+            , View_Contract_InvNumber.ContractCode      AS ContractCode
+            , View_Contract_InvNumber.InvNumber         AS ContractName
+            , View_Contract_InvNumber.ContractTagName
+            , Object_JuridicalTo.ValueData              AS JuridicalName_To
+            , ObjectHistory_JuridicalDetails_View.OKPO  AS OKPO_To
 
             , Object_ReestrKind.ValueData               AS ReestrKindName    
-
-            , Movement_Transport.InvNumber              AS InvNumber_Transport_Sale
-            , Movement_Transport.OperDate               AS OperDate_Transport_Sale
-            , Object_Car.ValueData                      AS CarName_Sale
-            , Object_PersonalDriver.ValueData           AS PersonalDriverName_Sale 
 
        FROM tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
@@ -121,11 +150,17 @@ BEGIN
                                            ON MLM_Reestr_Transpor.MovementId = Movement_Reestr.Id
                                           AND MLM_Reestr_Transpor.DescId = zc_MovementLinkMovement_Transport()
             LEFT JOIN Movement AS Movement_Reestr_Transport ON Movement_Reestr_Transport.Id = MLM_Reestr_Transpor.MovementChildId
+            LEFT JOIN Object AS Object_Status_Transport ON Object_Status_Transport.Id = Movement_Reestr_Transport.StatusId
 
             LEFT JOIN MovementLinkObject AS MLO_Reestr_Car
                                          ON MLO_Reestr_Car.MovementId = Movement_Reestr.Id
                                         AND MLO_Reestr_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Reestr_Car ON Object_Reestr_Car.Id = MLO_Reestr_Car.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel
+                                 ON ObjectLink_Car_CarModel.ObjectId = Object_Reestr_Car.Id
+                                AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MLO_Reestr_PersonalDriver
                                          ON MLO_Reestr_PersonalDriver.MovementId = Movement_Reestr.Id
@@ -144,6 +179,7 @@ BEGIN
                                       AND MIDate_Insert.DescId = zc_MIDate_Insert()
             --
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.id = tmpMI.MovementId_Sale  -- док. продажи
+            LEFT JOIN Object AS Object_Status_Sale ON Object_Status_Sale.Id = Movement_Sale.StatusId
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId = Movement_Sale.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -165,25 +201,26 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalTo.Id
+           
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                          ON MovementLinkObject_ReestrKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
-
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                           ON MovementLinkMovement_Transport.MovementId = Movement_Sale.Id
-                                          AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MovementLinkMovement_Transport.MovementChildId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
            ;
 
 END;

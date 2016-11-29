@@ -161,6 +161,13 @@ object TransportJournalChoiceForm: TTransportJournalChoiceForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object PersonalName: TcxGridDBColumn
+        Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
+        DataBinding.FieldName = 'PersonalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
         DataBinding.FieldName = 'BranchCode'

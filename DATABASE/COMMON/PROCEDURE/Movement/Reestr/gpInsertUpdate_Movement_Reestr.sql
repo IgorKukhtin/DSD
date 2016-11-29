@@ -21,6 +21,18 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
                                               
 
+     -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
+     IF ioId                           = 0
+        AND inCarId                    = 0
+        AND inPersonalDriverId         = 0
+        AND inMemberId                 = 0
+        AND inMovementId_Transport     = 0
+        AND TRIM (inInvNumber)         = ''
+     THEN
+         RETURN; -- !!!выход!!!
+     END IF;
+
+
      -- Проверка
      IF COALESCE (ioId, 0) = 0
      THEN

@@ -1,6 +1,5 @@
 -- Function: gpSelect_MI_Reestr()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_Reestr(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_Reestr(Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr(
@@ -9,12 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Reestr(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (Id Integer, LineNum Integer, MemberId Integer, MemberCode Integer, MemberName TVarChar, InsertDate TDateTime, isErased Boolean
-              , MovementId_Sale Integer, BarCode_Sale TVarChar, InvNumber_Sale TVarChar, OperDate_Sale TDateTime, StatusCode Integer, StatusName TVarChar
+              , MovementId_Sale Integer, BarCode_Sale TVarChar, InvNumber_Sale TVarChar, OperDate_Sale TDateTime, StatusCode_Sale Integer, StatusName_Sale TVarChar
               , Checked Boolean
 
               , OperDatePartner TDateTime, InvNumberPartner TVarChar
               , TotalSumm TFloat
-              , InvNumberOrder TVarChar
+              , InvNumberOrder TVarChar, RouteGroupName TVarChar, RouteName TVarChar
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -25,14 +24,14 @@ RETURNS TABLE  (Id Integer, LineNum Integer, MemberId Integer, MemberCode Intege
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
      RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
+       WITH -- строчная часть реестра
+            tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
                            , MovementItem.ObjectId      AS MemberId
                            , MIDate_Insert.ValueData    AS InsertDate
                            , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
@@ -48,6 +47,7 @@ BEGIN
                                                    ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                       )
+       -- Результат
      SELECT  tmp.MovementItemId                           AS Id
            , CAST (ROW_NUMBER() OVER (ORDER BY tmp.MovementItemId) AS Integer) AS LineNum
            , tmp.MemberId                                 AS MemberId
@@ -59,8 +59,8 @@ BEGIN
            , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Sale.Id) AS BarCode_Sale
            , Movement_Sale.InvNumber                      AS InvNumber_Sale
            , Movement_Sale.OperDate                       AS OperDate_Sale
-           , Object_Status.ObjectCode                     AS StatusCode
-           , Object_Status.ValueData                      AS StatusName
+           , Object_Status.ObjectCode                     AS StatusCode_Sale
+           , Object_Status.ValueData                      AS StatusName_Sale
 
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
 
@@ -70,6 +70,9 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData             AS TotalSumm
 
            , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
+           , Object_RouteGroup.ValueData               AS RouteGroupName
+           , Object_Route.ValueData                    AS RouteName
+
            , Object_From.ValueData                     AS FromName
            , Object_To.ValueData                       AS ToName
            , Object_PaidKind.ValueData                 AS PaidKindName
@@ -84,7 +87,7 @@ BEGIN
        FROM tmpMI AS tmp
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmp.MemberId
 
-            INNER JOIN Movement AS Movement_Sale  ON Movement_Sale.Id = tmp.MovementId_Sale
+            LEFT JOIN Movement AS Movement_Sale  ON Movement_Sale.Id = tmp.MovementId_Sale
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Sale.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -104,6 +107,17 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement_Sale.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
+                                                               AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
+            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
+
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Sale.Id

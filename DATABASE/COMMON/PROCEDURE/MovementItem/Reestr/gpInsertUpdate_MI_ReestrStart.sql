@@ -18,14 +18,36 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbId_mi Integer;
+   DECLARE vbIsFindOnly      Boolean;
+   DECLARE vbIsInsert        Boolean;
+   DECLARE vbId_mi           Integer;
    DECLARE vbMovementId_sale Integer;
-   DECLARE vbMemberId Integer;
+   DECLARE vbMemberId        Integer; -- <Физическое лицо> - кто сформировал визу "Вывезено со склада"
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
      
+
+     -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
+     /*IF ioMovementId                   = 0
+        AND inCarId                    = 0
+        AND inPersonalDriverId         = 0
+        AND inMemberId                 = 0
+        AND ioMovementId_TransportTop  = 0
+        AND TRIM (inBarCode_Transport) = ''
+        AND TRIM (inBarCode)           = ''
+     THEN
+         RETURN; -- !!!выход!!!
+     END IF;*/
+
+
+     -- определяется что это режим Find ioMovementId, и если не нашли, тогда будет Insert
+     vbIsFindOnly:= COALESCE (ioMovementId, 0) = 0 AND (ioMovementId_TransportTop <> 0 OR inBarCode_Transport <> '')
+                AND inCarId                    = 0
+                AND inPersonalDriverId         = 0
+                AND inMemberId                 = 0
+                AND TRIM (inBarCode)           = ''
+               ;
 
      -- найдем Путевой лист
      IF TRIM (inBarCode_Transport) <> ''
@@ -59,15 +81,40 @@ BEGIN
      END IF;
 
 
+     -- если меняется Путевой лист - будет режим Find !!!другой!!! ioMovementId
+     IF ioMovementId > 0 AND ioMovementId_TransportTop <> 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = ioMovementId AND MLM.DescId = zc_MovementLinkMovement_Transport() AND COALESCE (MLM.MovementChildId, 0) = COALESCE (ioMovementId_TransportTop, 0))
+     THEN
+         ioMovementId:= 0;
+         vbIsFindOnly:= TRUE;
+     END IF;
+
+
      -- найдем Документ <Реестр накладных>
      IF ioMovementId_TransportTop <> 0 AND COALESCE (ioMovementId, 0) = 0
      THEN
-          ioMovementId:= (SELECT MLM.MovementId
-                          FROM MovementLinkMovement AS MLM
-                          WHERE MLM.MovementChildId = ioMovementId_TransportTop
-                            AND MLM.DescId = zc_MovementLinkMovement_Transport()
-                         );
+          ioMovementId:= COALESCE ((SELECT MLM.MovementId
+                                    FROM MovementLinkMovement AS MLM
+                                    WHERE MLM.MovementChildId = ioMovementId_TransportTop
+                                      AND MLM.DescId = zc_MovementLinkMovement_Transport()
+                                   ), 0);
+          -- криво, но если не нашли - сделаем Insert
+          IF ioMovementId = 0
+          THEN
+              vbIsFindOnly:= FALSE;
+          END IF;
      END IF;
+
+     -- найдем <Физические лица(экспедитор)> в путевом листе, хотя там он как Personal
+     IF ioMovementId_TransportTop <> 0 -- AND COALESCE (inMemberId, 0) = 0
+     THEN
+          inMemberId:= COALESCE ((SELECT COALESCE (ObjectLink.ChildObjectId, MLO.ObjectId) -- т.е. если в путевом листе сразу будет Member
+                                  FROM MovementLinkObject AS MLO
+                                       LEFT JOIN ObjectLink ON ObjectLink.ObjectId = MLO.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Personal_Member()
+                                  WHERE MLO.MovementId = ioMovementId_TransportTop
+                                    AND MLO.DescId     = zc_MovementLinkObject_Personal()
+                                 ),  inMemberId);
+     END IF;
+
 
 
      -- найдем Продажу покупателю
@@ -103,13 +150,13 @@ BEGIN
 
 
      -- только в этом случае - ничего не делаем
-     IF ioMovementId                   = 0
-        AND inCarId                    = 0
+     IF vbIsFindOnly                   = TRUE
+            /*inCarId                  = 0
         AND inPersonalDriverId         = 0
         AND inMemberId                 = 0
         AND ioMovementId_TransportTop  = 0
         AND TRIM (inBarCode_Transport) = ''
-        AND TRIM (inBarCode)           = ''
+        AND TRIM (inBarCode)           = ''*/
      THEN
          RETURN; -- !!!выход!!!
      END IF;
@@ -164,7 +211,7 @@ BEGIN
           -- Проверка
           IF COALESCE (vbMemberId, 0) = 0
           THEN 
-              RAISE EXCEPTION 'Ошибка.У пользователя <%> не назначено значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
+              RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
           END IF;
 
           -- Поиск элемента для документа <Продажа>

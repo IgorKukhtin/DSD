@@ -82,8 +82,7 @@ uses
   GuideMovement in '..\Scale\GuideMovement.pas' {GuideMovementForm},
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
-  GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm},
-  DialogReestrInsert in '..\Scale\DialogReestrInsert.pas' {DialogReestrInsertForm};
+  GuideGoodsPartner in '..\Scale\GuideGoodsPartner.pas' {GuideGoodsPartnerForm};
 
 {$R *.res}
 
@@ -105,7 +104,6 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
-  Application.CreateForm(TDialogReestrInsertForm, DialogReestrInsertForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainForm, MainForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);

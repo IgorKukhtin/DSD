@@ -54,8 +54,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     BarCode_Transport: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    MemberCode: TcxGridDBColumn;
     Checked: TcxGridDBColumn;
+    RouteGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

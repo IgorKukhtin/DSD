@@ -111,6 +111,7 @@ type
     bbShowErased: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoice: TdxBarButton;
+    PersonalName: TcxGridDBColumn;
   private
   public
   end;

@@ -187,6 +187,13 @@ object GuideMovementTransportForm: TGuideMovementTransportForm
           Options.Editing = False
           Width = 150
         end
+        object PersonalName: TcxGridDBColumn
+          Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
+          DataBinding.FieldName = 'PersonalName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 80
+        end
         object RouteName: TcxGridDBColumn
           Caption = #1052#1072#1088#1096#1088#1091#1090
           DataBinding.FieldName = 'RouteName'
@@ -362,6 +369,7 @@ object GuideMovementTransportForm: TGuideMovementTransportForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184
