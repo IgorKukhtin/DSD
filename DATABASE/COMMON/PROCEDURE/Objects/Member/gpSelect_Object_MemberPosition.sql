@@ -27,8 +27,8 @@ BEGIN
                              , Object_Personal.PositionId
                              , Object_Personal.PositionName
                         FROM Object_Personal_View AS Object_Personal
-                        WHERE Object_Personal.PositionId = inPositionId
-                          --AND (Object_Personal.isErased = FALSE OR (Object_Personal.isErased = TRUE AND inIsShowAll = TRUE))
+                        WHERE Object_Personal.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/)
+                          -- AND (Object_Personal.isErased = FALSE OR (Object_Personal.isErased = TRUE AND inIsShowAll = TRUE))
                           AND Object_Personal.isErased = FALSE
                         )
                    
@@ -77,7 +77,7 @@ BEGIN
 
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE))
-  UNION ALL
+  /*UNION ALL
           SELECT
              CAST (0 as Integer)    AS Id
            , 0    AS Code
@@ -94,7 +94,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS InfoMoneyName   
            , CAST ('' as TVarChar)  AS InfoMoneyName_all
 
-           , FALSE AS isErased
+           , FALSE AS isErased*/
     ;
   
 END;

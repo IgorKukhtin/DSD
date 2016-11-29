@@ -113,8 +113,8 @@ BEGIN
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
      WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
-       AND (inPositionId = Object_Personal_View.PositionId)
-           
+       AND Object_Personal_View.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/)
+/*           
     UNION ALL
         SELECT
            0   AS Id
@@ -148,7 +148,7 @@ BEGIN
          , FALSE AS isDateOut
          , FALSE AS isMain
          , FALSE AS isOfficial
-         , FALSE AS isErased
+         , FALSE AS isErased*/
     ;
   
 END;

@@ -3,7 +3,7 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 358
-  ClientWidth = 808
+  ClientWidth = 689
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,16 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 808
+    Width = 689
     Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitTop = 42
+    ExplicitWidth = 808
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,6 +47,8 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -60,22 +65,6 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 200
-      end
-      object PersonalServiceListName: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
-        DataBinding.FieldName = 'PersonalServiceListName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 150
-      end
-      object clDriverCertificate: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
-        DataBinding.FieldName = 'DriverCertificate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
@@ -107,46 +96,6 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 150
       end
-      object clDateIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
-        DataBinding.FieldName = 'DateIn'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clDateOut: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'DateOut'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clIsDateOut: TcxGridDBColumn
-        Caption = #1059#1074#1086#1083#1077#1085
-        DataBinding.FieldName = 'isDateOut'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clIsMain: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1084#1077#1089#1090#1086' '#1088'.'
-        DataBinding.FieldName = 'isMain'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clIsOfficial: TcxGridDBColumn
-        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
-        DataBinding.FieldName = 'isOfficial'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -162,13 +111,13 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
     end
   end
   object cxLabel6: TcxLabel
-    Left = 412
-    Top = 149
+    Left = 228
+    Top = 77
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
   end
   object edPosition: TcxButtonEdit
-    Left = 475
-    Top = 148
+    Left = 291
+    Top = 76
     Properties.Buttons = <
       item
         Default = True
@@ -556,10 +505,10 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPosition
-    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.Value = 'TPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPositionForm'
+    FormName = 'TPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -579,8 +528,8 @@ object PersonalPosition_ObjectForm: TPersonalPosition_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 592
-    Top = 128
+    Left = 408
+    Top = 64
   end
   object FormParams: TdsdFormParams
     Params = <

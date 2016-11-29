@@ -35,8 +35,6 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    clDateIn: TcxGridDBColumn;
-    clDateOut: TcxGridDBColumn;
     clMemberName: TcxGridDBColumn;
     clPositionName: TcxGridDBColumn;
     clUnitName: TcxGridDBColumn;
@@ -45,16 +43,11 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPersonalGroupName: TcxGridDBColumn;
     clPositionLevelName: TcxGridDBColumn;
-    clIsOfficial: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    clIsDateOut: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
-    clIsMain: TcxGridDBColumn;
-    clDriverCertificate: TcxGridDBColumn;
-    PersonalServiceListName: TcxGridDBColumn;
     cxLabel6: TcxLabel;
     edPosition: TcxButtonEdit;
     PositionGuides: TdsdGuides;

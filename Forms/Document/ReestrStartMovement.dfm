@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1383,10 +1383,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     KeyField = 'Id'
     LookupControl = edPersonalDriver
     Key = '0'
-    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.Value = 'TPersonalPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPosition_ObjectForm'
+    FormName = 'TPersonalPosition_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

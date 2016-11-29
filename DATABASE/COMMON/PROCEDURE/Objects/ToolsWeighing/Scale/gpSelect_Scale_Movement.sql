@@ -25,6 +25,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PaidKindName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
+
+             , MovementId_Reestr Integer, InvNumber_Reestr Integer, OperDate_Reestr TDateTime, ReestrKindId Integer, ReestrKindName TVarChar
+
              , PersonalId1 Integer, PersonalCode1 Integer, PersonalName1 TVarChar
              , PersonalId2 Integer, PersonalCode2 Integer, PersonalName2 TVarChar
              , PersonalId3 Integer, PersonalCode3 Integer, PersonalName3 TVarChar
@@ -129,6 +132,13 @@ BEGIN
 
              , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
              , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+
+             , MI_Reestr.MovementId                           AS MovementId_Reestr
+             , Movement_Reestr.InvNumber :: Integer           AS InvNumber_Reestr
+             , Movement_Reestr.OperDate                       AS OperDate_Reestr
+             , Object_ReestrKind.Id             	      AS ReestrKindId
+             , Object_ReestrKind.ValueData       	      AS ReestrKindName
+
 
              , Object_Personal1.Id AS PersonalId1, Object_Personal1.ObjectCode AS PersonalCode1, Object_Personal1.ValueData AS PersonalName1
              , Object_Personal2.Id AS PersonalId2, Object_Personal2.ObjectCode AS PersonalCode2, Object_Personal2.ValueData AS PersonalName2
@@ -321,6 +331,19 @@ BEGIN
                                       ON MovementBoolean_EdiDesadv.MovementId =  Movement.ParentId
                                      AND MovementBoolean_EdiDesadv.DescId = zc_MovementBoolean_EdiDesadv()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.ParentId
+                                        AND MovementLinkObject_ReestrKind.DescId     = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
+
+            -- связь со строками в документе Реест
+            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                    ON MovementFloat_MovementItemId.MovementId =  Movement.ParentId
+                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_Reestr ON MI_Reestr.Id  = MovementFloat_MovementItemId.ValueData :: Integer
+            LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id       = MI_Reestr.MovementId
+                                                 AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()
+                                                 AND MI_Reestr.isErased       = FALSE
 
        ORDER BY COALESCE (MovementDate_EndWeighing.ValueData, MovementDate_StartWeighing.ValueData) DESC
               , MovementDate_StartWeighing.ValueData DESC

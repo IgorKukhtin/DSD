@@ -206,6 +206,12 @@ type
     FormParams: TdsdFormParams;
     TimerProtocol_isProcess: TTimer;
     spProtocol_isProcess: TdsdStoredProc;
+    bbReestrKind_PartnerOut: TSpeedButton;
+    actReestrStart: TdsdOpenForm;
+    actReestrPartnerIn: TdsdOpenForm;
+    actReestrRemakeIn: TdsdOpenForm;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
