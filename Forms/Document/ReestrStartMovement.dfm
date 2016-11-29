@@ -856,8 +856,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 336
+    Left = 120
+    Top = 312
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1411,7 +1411,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Value = 8466
         MultiSelectSeparator = ','
       end>
-    Left = 251
+    Left = 275
     Top = 56
   end
   object MemberGuides: TdsdGuides

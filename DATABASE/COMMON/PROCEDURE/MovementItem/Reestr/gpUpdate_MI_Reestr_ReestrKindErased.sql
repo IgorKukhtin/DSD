@@ -75,9 +75,10 @@ BEGIN
        -- сохранили связь с <кто сформировал визу "Бухгалтерия">
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Buh(), inId, vbUserId);
 
-       -- Изменили <Состояние по реестру> в документе продажи
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
     END IF;
+
+    -- Изменили <Состояние по реестру> в документе продажи
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbId_miSale, Null);
 
 END;
 $BODY$

@@ -42,6 +42,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
@@ -529,6 +530,7 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     Params = <
       item
         Name = 'MasterPositionId'
+        Value = Null
         Component = PositionGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
