@@ -2,7 +2,7 @@ object GuideMovementForm: TGuideMovementForm
   Left = 578
   Top = 242
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
-  ClientHeight = 572
+  ClientHeight = 410
   ClientWidth = 1091
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,10 +22,11 @@ object GuideMovementForm: TGuideMovementForm
     Left = 0
     Top = 41
     Width = 1091
-    Height = 531
+    Height = 369
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 531
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -53,7 +54,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 18
+        Left = 16
         Top = 3
         Width = 31
         Height = 29
@@ -71,7 +72,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChoice: TSpeedButton
-        Left = 86
+        Left = 70
         Top = 3
         Width = 31
         Height = 29
@@ -89,7 +90,7 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
       end
       object bbChangeMember: TSpeedButton
-        Left = 152
+        Left = 127
         Top = 3
         Width = 31
         Height = 29
@@ -127,7 +128,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbPrintClick
       end
       object bbViewMI: TSpeedButton
-        Left = 216
+        Left = 183
         Top = 3
         Width = 31
         Height = 29
@@ -281,8 +282,8 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbEDI_DesadvClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 280
-        Top = 3
+        Left = 287
+        Top = 4
         Width = 31
         Height = 29
         Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1042#1057#1045' - F8'
@@ -305,7 +306,7 @@ object GuideMovementForm: TGuideMovementForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 317
+        Left = 324
         Top = 3
         Width = 31
         Height = 29
@@ -347,14 +348,34 @@ object GuideMovementForm: TGuideMovementForm
         ShowHint = True
         OnClick = bbPrint_diffClick
       end
+      object bbPrint_ReestrKind: TSpeedButton
+        Left = 241
+        Top = 3
+        Width = 31
+        Height = 29
+        Hint = #1056#1077#1077#1089#1090#1088' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' - '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888888888888000000000788888077777777777888788888888887
+          778878888889F9F7708878888888888777787FFFFFFFFFF7777887F0000000FF
+          7778887FFFFFFF0FF7788887F888880777888888788888F8888888888F888880
+          8888888887777777888888888888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbPrint_ReestrKindClick
+      end
     end
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
       Width = 1091
-      Height = 498
+      Height = 336
       Align = alClient
       TabOrder = 1
+      ExplicitHeight = 498
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -422,6 +443,29 @@ object GuideMovementForm: TGuideMovementForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
+          Width = 70
+        end
+        object ReestrKindName: TcxGridDBColumn
+          Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+          DataBinding.FieldName = 'ReestrKindName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object OperDate_Reestr: TcxGridDBColumn
+          Caption = #1044#1072#1090#1072' ('#1088#1077#1077#1089#1090#1088')'
+          DataBinding.FieldName = 'OperDate_Reestr'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
+        object InvNumber_Reestr: TcxGridDBColumn
+          Caption = #8470' '#1076#1086#1082'. ('#1088#1077#1077#1089#1090#1088')'
+          DataBinding.FieldName = 'InvNumber_Reestr'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
           Width = 70
         end
         object MovementDescNumber: TcxGridDBColumn
@@ -1006,8 +1050,8 @@ object GuideMovementForm: TGuideMovementForm
   end
   object DS: TDataSource
     DataSet = CDS
-    Left = 320
-    Top = 336
+    Left = 272
+    Top = 192
   end
   object spSelect: TdsdStoredProc
     DataSet = CDS
@@ -1017,15 +1061,15 @@ object GuideMovementForm: TGuideMovementForm
       end>
     Params = <>
     PackSize = 1
-    Left = 264
-    Top = 296
+    Left = 216
+    Top = 152
   end
   object CDS: TClientDataSet
     Aggregates = <>
     Params = <>
     OnFilterRecord = CDSFilterRecord
-    Left = 272
-    Top = 384
+    Left = 224
+    Top = 240
   end
   object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1041,8 +1085,8 @@ object GuideMovementForm: TGuideMovementForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 408
-    Top = 392
+    Left = 352
+    Top = 240
   end
   object ActionList: TActionList
     Left = 384
@@ -1070,17 +1114,20 @@ object GuideMovementForm: TGuideMovementForm
       FormName = 'TWeighingPartnerForm'
       FormNameParam.Value = 'TWeighingPartnerForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1094,6 +1141,7 @@ object GuideMovementForm: TGuideMovementForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184

@@ -93,11 +93,14 @@ type
     spSelectPrintCeh: TdsdStoredProc;
     actPrintCeh: TdsdPrintAction;
     spGetMovement: TdsdStoredProc;
+    spSelectPrint_ReestrKind: TdsdStoredProc;
+    actPrint_ReestrKind: TdsdPrintAction;
   private
   end;
 
   function Print_Movement (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;
   function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
+  function Print_MovementReestrKind (MovementId_Reestr:Integer):Boolean;
   function Print_Tax      (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Account  (MovementDescId,MovementId:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
   function Print_Spec     (MovementDescId,MovementId,MovementId_by:Integer; myPrintCount:Integer; isPreview:Boolean):Boolean;
@@ -262,6 +265,12 @@ function Print_MovementDiff (MovementDescId,MovementId:Integer):Boolean;
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.actPrint_SendOnPrice_diff.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_MovementReestrKind (MovementId_Reestr:Integer):Boolean;
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId_Reestr;
+  UtilPrintForm.actPrint_ReestrKind.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 function Print_Movement (MovementDescId, MovementId, MovementId_by: Integer; myPrintCount:Integer; isPreview:Boolean; isSendOnPriceIn:Boolean):Boolean;

@@ -74,8 +74,8 @@
 			<VerInfo_Release>4</VerInfo_Release>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<Debugger_RunParams>Scale.ini ves=0.123</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.10;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>10</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.11;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>11</VerInfo_Build>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
