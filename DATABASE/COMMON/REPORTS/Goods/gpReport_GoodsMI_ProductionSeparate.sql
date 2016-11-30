@@ -26,6 +26,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar
              , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat, Price TFloat
              , ChildPrice TFloat, Percent TFloat
+             , Num Integer
              )   
 AS
 $BODY$
@@ -246,6 +247,8 @@ BEGIN
            
            , CASE WHEN tmpOperationGroup.ChildAmount <> 0 THEN COALESCE ((tmpOperationGroup.ChildSumm / tmpOperationGroup.ChildAmount) ,0) ELSE 0 END  :: TFloat         AS ChildPrice
            , CASE WHEN COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount) <> 0 THEN COALESCE((tmpOperationGroup.ChildAmount * 100 / COALESCE (tmpMI_total.Amount, tmpOperationGroup.Amount)) ,0) ELSE 0 END   ::TFloat   AS Percent  
+           
+           , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Goods.ValueData,tmpOperationGroup.PartionGoods,tmpOperationGroup.InvNumber  ORDER BY tmpOperationGroup.PartionGoods,tmpOperationGroup.InvNumber) AS Integer) AS Num
 
       FROM (
             SELECT CASE when inIsMovement = True THEN tmpMI.InvNumber ELSE '' END AS InvNumber
@@ -336,6 +339,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.11.16         *
  27.11.14         *
  19.11.14         *
  21.08.14         * 

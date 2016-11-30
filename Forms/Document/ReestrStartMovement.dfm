@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 420
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -681,6 +681,22 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end>
       isShowModal = True
     end
+    object macMISetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMISetErased
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091'? '
+      InfoAfterExecute = #1042#1080#1079#1072' '#1086#1090#1084#1077#1085#1077#1085#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
+      ImageIndex = 2
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -789,6 +805,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     end
     inherited bbInsertUpdateMovement: TdxBarButton
       Action = actUpdateDataSet
+    end
+    inherited bbErased: TdxBarButton
+      Action = macMISetErased
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
