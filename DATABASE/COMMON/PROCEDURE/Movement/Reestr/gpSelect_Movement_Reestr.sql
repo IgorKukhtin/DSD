@@ -112,7 +112,7 @@ BEGIN
            , MIDate_Remake.ValueData         AS Date_Remake
            , MIDate_Buh.ValueData            AS Date_Buh
 
-           , Object_ObjectMember.ValueData   AS Member_Insert
+           , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
            , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
