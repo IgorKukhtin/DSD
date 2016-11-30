@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Reestr (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale_Reestr (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
-
+                
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale_Reestr(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
@@ -47,6 +47,19 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CarName_Reestr TVarChar
              , PersonalDriverName_Reestr TVarChar, MemberName_Reestr TVarChar
              , InvNumber_Transport_Reestr TVarChar
+
+             , Date_PartnerIn TDateTime
+             , Date_RemakeIn  TDateTime
+             , Date_RemakeBuh TDateTime
+             , Date_Remake    TDateTime
+             , Date_Buh       TDateTime
+             , Member_PartnerInTo   TVarChar
+             , Member_PartnerInFrom TVarChar
+             , Member_RemakeInTo    TVarChar
+             , Member_RemakeInFrom  TVarChar
+             , Member_RemakeBuh     TVarChar
+             , Member_Remake        TVarChar
+             , Member_Buh           TVarChar
               )
 AS
 $BODY$
@@ -188,6 +201,19 @@ BEGIN
            , Object_Reestr_Member.ValueData             AS MemberName_Reestr
 
            , ('π ' || Movement_Reestr_Transport.InvNumber || ' ÓÚ ' || Movement_Reestr_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Reestr
+
+           , MIDate_PartnerIn.ValueData      AS Date_PartnerIn
+           , MIDate_RemakeIn.ValueData       AS Date_RemakeIn
+           , MIDate_RemakeBuh.ValueData      AS Date_RemakeBuh
+           , MIDate_Remake.ValueData         AS Date_Remake
+           , MIDate_Buh.ValueData            AS Date_Buh
+           , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
+           , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
+           , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
+           , Object_RemakeInFrom.ValueData   AS Member_RemakeInFrom
+           , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
+           , Object_Remake.ValueData         AS Member_Remake
+           , Object_Buh.ValueData            AS Member_Buh
 
        FROM (SELECT Movement.Id
                   , tmpRoleAccessKey.AccessKeyId
@@ -405,7 +431,57 @@ BEGIN
                                   AND MI_Reestr.isErased = False
             LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id = MI_Reestr.MovementId
             LEFT JOIN MovementDesc AS MovementDesc_Reestr ON MovementDesc_Reestr.Id = Movement_Reestr.DescId
+--- 
+            LEFT JOIN MovementItemDate AS MIDate_PartnerIn
+                                       ON MIDate_PartnerIn.MovementItemId = MI_Reestr.Id
+                                      AND MIDate_PartnerIn.DescId = zc_MIDate_PartnerIn()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeIn
+                                       ON MIDate_RemakeIn.MovementItemId = MI_Reestr.Id
+                                      AND MIDate_RemakeIn.DescId = zc_MIDate_RemakeIn()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
+                                       ON MIDate_RemakeBuh.MovementItemId = MI_Reestr.Id
+                                      AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Remake
+                                       ON MIDate_Remake.MovementItemId = MI_Reestr.Id
+                                      AND MIDate_Remake.DescId = zc_MIDate_Remake()
+            LEFT JOIN MovementItemDate AS MIDate_Buh
+                                       ON MIDate_Buh.MovementItemId = MI_Reestr.Id
+                                      AND MIDate_Buh.DescId = zc_MIDate_Buh()
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
+                                             ON MILinkObject_PartnerInTo.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_PartnerInTo.DescId = zc_MILinkObject_PartnerInTo()
+            LEFT JOIN Object AS Object_PartnerInTo ON Object_PartnerInTo.Id = MILinkObject_PartnerInTo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInFrom
+                                             ON MILinkObject_PartnerInFrom.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_PartnerInFrom.DescId = zc_MILinkObject_PartnerInFrom()
+            LEFT JOIN Object AS Object_PartnerInFrom ON Object_PartnerInFrom.Id = MILinkObject_PartnerInFrom.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInTo
+                                             ON MILinkObject_RemakeInTo.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_RemakeInTo.DescId = zc_MILinkObject_RemakeInTo()
+            LEFT JOIN Object AS Object_RemakeInTo ON Object_RemakeInTo.Id = MILinkObject_RemakeInTo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInFrom
+                                             ON MILinkObject_RemakeInFrom.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_RemakeInFrom()
+            LEFT JOIN Object AS Object_RemakeInFrom ON Object_RemakeInFrom.Id = MILinkObject_RemakeInFrom.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
+                                             ON MILinkObject_RemakeBuh.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
+            LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Remake
+                                             ON MILinkObject_Remake.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
+            LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Buh
+                                             ON MILinkObject_Buh.MovementItemId = MI_Reestr.Id
+                                            AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
+            LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
 
 --///////
             LEFT JOIN Object AS Object_Status_Reestr ON Object_Status_Reestr.Id = Movement_Reestr.StatusId
@@ -451,6 +527,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.11.16         *
  21.10.16         * 
 */
 
