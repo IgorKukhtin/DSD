@@ -133,9 +133,8 @@ BEGIN
          -- сохранили <Элемент документа> - но "криво" <кто сформировал визу "Вывезено со склада">
          vbId_mi := lpInsertUpdate_MovementItem (vbId_mi, zc_MI_Master(), vbMemberId_user, vbMovementId_reestr, 0, NULL);
 
-          -- сохранили свойство у документа продажи <№ строчной части в Реестре накладных>
-          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_sale, vbId_mi);
-
+         -- сохранили свойство у документа продажи <№ строчной части в Реестре накладных>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_sale, vbId_mi);
 
      END IF; -- if COALESCE (vbId_mi, 0) = 0
 

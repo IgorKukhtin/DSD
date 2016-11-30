@@ -131,7 +131,7 @@ BEGIN
            , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime         AS Date_Remake
            , COALESCE (MIDate_Buh.ValueData, NULL) ::TDateTime            AS Date_Buh
 
-           , Object_ObjectMember.ValueData   AS Member_Insert
+           , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_PartnerInTo.ValueData    AS Member_PartnerInTo
            , Object_PartnerInFrom.ValueData  AS Member_PartnerInFrom
            , Object_RemakeInTo.ValueData     AS Member_RemakeInTo
@@ -240,4 +240,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Reestr_Print (inStartDate:= '20.10.2016', inEndDate:= '25.10.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Reestr_Print (inMovementId:= 1, inSession:= zfCalc_UserAdmin())

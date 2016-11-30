@@ -5,6 +5,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -198
   ExplicitWidth = 1004
   ExplicitHeight = 443
   PixelsPerInch = 96
@@ -404,11 +405,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Width = 150
           end
           object MemberName_Insert: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'MemberName_Insert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 200
           end
           object Member_PartnerInFrom: TcxGridDBColumn
             Caption = #1060#1048#1054' ('#1086#1090' '#1082#1086#1075#1086' '#1076#1083#1103' '#1074#1080#1079#1099' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'

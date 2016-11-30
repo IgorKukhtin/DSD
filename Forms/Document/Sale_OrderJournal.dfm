@@ -5,6 +5,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -113
   ExplicitWidth = 1193
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -164,13 +165,13 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colIsError: TcxGridDBColumn [1]
-            Caption = #1054#1096#1080#1073#1082#1072
-            DataBinding.FieldName = 'isError'
-            Visible = False
+          object clReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 44
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Width = 74
           end
           inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
@@ -624,14 +625,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 36
           end
-          object clReestrKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            DataBinding.FieldName = 'ReestrKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
-            Width = 74
-          end
           object colIsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
@@ -747,6 +740,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colIsError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 44
           end
         end
       end
