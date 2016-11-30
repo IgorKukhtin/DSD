@@ -66,6 +66,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     CarModelName: TcxGridDBColumn;
+    macMISetErased: TMultiAction;
   private
     { Private declarations }
   public

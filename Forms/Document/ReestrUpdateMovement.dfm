@@ -7,7 +7,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.Params = FormParams
   ExplicitLeft = -198
   ExplicitWidth = 1004
-  ExplicitHeight = 440
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -932,6 +932,22 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
+    object macMISetErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091'? '
+      InfoAfterExecute = #1042#1080#1079#1072' '#1086#1090#1084#1077#1085#1077#1085#1072
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
+      ImageIndex = 2
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1069,7 +1085,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Action = MovementItemProtocolOpenForm
     end
     object bbErased: TdxBarButton
-      Action = spErased
+      Action = macMISetErased
       Category = 0
     end
     object bbPrint: TdxBarButton

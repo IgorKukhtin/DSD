@@ -59,6 +59,9 @@ type
     ChildGoodsGuides: TdsdGuides;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrintTotal: TdsdPrintAction;
+    bbPrintTotal: TdxBarButton;
+    clNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

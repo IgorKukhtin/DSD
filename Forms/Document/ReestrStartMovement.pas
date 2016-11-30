@@ -56,6 +56,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     Checked: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
+    macMISetErased: TMultiAction;
   private
     { Private declarations }
   public
