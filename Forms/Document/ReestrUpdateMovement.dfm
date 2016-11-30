@@ -5,7 +5,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -198
   ExplicitWidth = 1004
   ExplicitHeight = 443
   PixelsPerInch = 96
@@ -983,6 +982,44 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object actExternalDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 43
+      FormName = 'TReestrUpdateDialogForm'
+      FormNameParam.Value = 'TReestrUpdateDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DriverId'
+          Value = '0'
+          Component = MemberGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DriverName'
+          Value = ''
+          Component = MemberGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 248
@@ -1058,6 +1095,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbExternalDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1092,6 +1137,10 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Action = actPrint
       Category = 0
       ImageIndex = 3
+    end
+    object bbExternalDialog: TdxBarButton
+      Action = actExternalDialog
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -57,6 +57,8 @@ type
     Checked: TcxGridDBColumn;
     RouteGroupName: TcxGridDBColumn;
     macMISetErased: TMultiAction;
+    ExternalDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
