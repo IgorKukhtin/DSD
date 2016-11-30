@@ -500,10 +500,9 @@ var
   CheckCDS : TClientDataSet;
 
   aOrderRequest : OrderRequest;
-  SendList : ArrayOfCardSaleRequestItem;
+  SendList : ArrayOfOrderRequestItem;
   Item : OrderRequestItem;
-  ResList : CardSaleResult;
-  ResItem : CardSaleResultItem;
+  Res : OrderResult;
   //
   llMsg : String;
 begin
