@@ -1372,10 +1372,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     KeyField = 'Id'
     LookupControl = edCar
     Key = '0'
-    FormNameParam.Value = 'TCarForm'
+    FormNameParam.Value = 'TCar_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCarForm'
+    FormName = 'TCar_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

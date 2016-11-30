@@ -2290,6 +2290,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCar_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCar_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadCarExternalFormTest;

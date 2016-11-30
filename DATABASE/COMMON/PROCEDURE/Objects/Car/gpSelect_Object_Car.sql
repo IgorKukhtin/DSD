@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Car (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Car (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Car (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
+    IN inShowAll     Boolean,  
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar 
@@ -13,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , AssetId Integer, AssetCode Integer, AssetName TVarChar
+             , AssetId Integer, AssetCode Integer, AssetName TVarChar, AssetInvNumber TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -28,6 +30,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
        SELECT 
              Object_Car.Id          AS Id
            , Object_Car.ObjectCode  AS Code
@@ -61,13 +65,18 @@ BEGIN
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName           
            
-           , Object_Asset.Id          AS AssetId
-           , Object_Asset.ObjectCode  AS AssetCode
-           , Object_Asset.ValueData   AS AssetName    
+           , Object_Asset.Id                  AS AssetId
+           , Object_Asset.ObjectCode          AS AssetCode
+           , Object_Asset.ValueData           AS AssetName    
+           , ObjectString_InvNumber.ValueData AS AssetInvNumber
 
            , Object_Car.isErased      AS isErased
            
-       FROM Object AS Object_Car
+       FROM tmpIsErased
+            INNER JOIN Object AS Object_Car
+                              ON Object_Car.isErased = tmpIsErased.isErased 
+                             AND Object_Car.DescId = zc_Object_Car()
+     
             LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
        
             LEFT JOIN ObjectString AS RegistrationCertificate 
@@ -112,18 +121,22 @@ BEGIN
                                 AND ObjectLink_Car_Asset.DescId = zc_ObjectLink_Car_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Car_Asset.ChildObjectId        
 
-     WHERE Object_Car.DescId = zc_Object_Car()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 Транспорт - сбыт
+          LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                 ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
+                                AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+
+     WHERE (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE OR Object_Unit.Id = 8395) -- 21000 Транспорт - сбыт
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.16         * add inShowAll
  28.11.16         * add Asset
  17.12.14         * add Juridical
  14.12.13                                        * add vbAccessKeyAll

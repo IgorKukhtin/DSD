@@ -1,4 +1,4 @@
-object CarForm: TCarForm
+object Car_ObjectForm: TCar_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080'>'
@@ -70,15 +70,19 @@ object CarForm: TCarForm
       object clFuelMasterName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelMasterName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
         Width = 100
       end
       object clFuelChildName: TcxGridDBColumn
         Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelChildName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
         Width = 110
       end
       object clPersonalDriverName: TcxGridDBColumn
@@ -112,24 +116,30 @@ object CarForm: TCarForm
         DataBinding.FieldName = 'AssetCode'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.;-,0.; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
         Width = 50
       end
       object clAssetName: TcxGridDBColumn
         Caption = #1054#1057
         DataBinding.FieldName = 'AssetName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 60
       end
       object clAssetInvNumber: TcxGridDBColumn
         Caption = #1048#1085#1074'. '#1085#1086#1084#1077#1088' '#1054#1057
         DataBinding.FieldName = 'AssetInvNumber'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+        VisibleForCustomization = False
         Width = 142
       end
       object Comment: TcxGridDBColumn
@@ -218,23 +228,6 @@ object CarForm: TCarForm
       FloatClientHeight = 0
       ItemLinks = <
         item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
