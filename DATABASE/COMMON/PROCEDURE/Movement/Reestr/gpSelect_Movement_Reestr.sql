@@ -240,7 +240,6 @@ BEGIN
                                     ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()

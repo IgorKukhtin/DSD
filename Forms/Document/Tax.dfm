@@ -21,6 +21,8 @@ inherited TaxForm: TTaxForm
       inherited cxGrid: TcxGrid
         Width = 1067
         Height = 481
+        ExplicitLeft = -24
+        ExplicitTop = 112
         ExplicitWidth = 1067
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView

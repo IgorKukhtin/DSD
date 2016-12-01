@@ -76,6 +76,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -127,6 +132,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = InvNumber_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -250,7 +260,17 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object TotalSumm: TcxGridDBColumn [12]
+          object TotalCountKg: TcxGridDBColumn [12]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSumm: TcxGridDBColumn [13]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -260,14 +280,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object PaidKindName: TcxGridDBColumn [13]
+          object PaidKindName: TcxGridDBColumn [14]
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object ContractCode: TcxGridDBColumn [14]
+          object ContractCode: TcxGridDBColumn [15]
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -275,7 +295,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object ContractName: TcxGridDBColumn [15]
+          object ContractName: TcxGridDBColumn [16]
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             Visible = False
@@ -283,7 +303,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object ContractTagName: TcxGridDBColumn [16]
+          object ContractTagName: TcxGridDBColumn [17]
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             Visible = False
@@ -292,7 +312,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 60
           end
-          object StatusCode_Transport: TcxGridDBColumn [17]
+          object StatusCode_Transport: TcxGridDBColumn [18]
             Caption = #1057#1090#1072#1090#1091#1089' ('#1055'.'#1083'.)'
             DataBinding.FieldName = 'StatusCode_Transport'
             PropertiesClassName = 'TcxImageComboBoxProperties'
@@ -317,7 +337,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object OperDate_Transport: TcxGridDBColumn [18]
+          object OperDate_Transport: TcxGridDBColumn [19]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'OperDate_Transport'
             Visible = False
@@ -326,7 +346,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 70
           end
-          object InvNumber_Transport: TcxGridDBColumn [19]
+          object InvNumber_Transport: TcxGridDBColumn [20]
             Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
             DataBinding.FieldName = 'InvNumber_Transport'
             HeaderAlignmentHorz = taCenter
@@ -334,14 +354,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 70
           end
-          object CarModelName: TcxGridDBColumn [20]
+          object CarModelName: TcxGridDBColumn [21]
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object CarName: TcxGridDBColumn [21]
+          object CarName: TcxGridDBColumn [22]
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
             HeaderAlignmentHorz = taCenter
@@ -349,7 +369,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 80
           end
-          object PersonalDriverName: TcxGridDBColumn [22]
+          object PersonalDriverName: TcxGridDBColumn [23]
             Caption = #1042#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'PersonalDriverName'
             HeaderAlignmentHorz = taCenter
@@ -357,7 +377,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 70
           end
-          object MemberName: TcxGridDBColumn [23]
+          object MemberName: TcxGridDBColumn [24]
             Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -365,7 +385,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             Options.Editing = False
             Width = 80
           end
-          inherited colOperDate: TcxGridDBColumn [24]
+          inherited colOperDate: TcxGridDBColumn [25]
             Caption = #1044#1072#1090#1072' ('#1088#1077#1077#1089#1090#1088')'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -375,7 +395,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
             HeaderAlignmentHorz = taCenter
             Width = 77
           end
-          inherited colStatus: TcxGridDBColumn [26]
+          inherited colStatus: TcxGridDBColumn [27]
             Caption = #1057#1090#1072#1090#1091#1089' ('#1088#1077#1077#1089#1090#1088')'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -1204,7 +1224,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 440
-    Top = 338
+    Top = 226
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement'

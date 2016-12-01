@@ -12,7 +12,7 @@ RETURNS TABLE  (Id Integer, LineNum Integer, MemberId Integer, MemberCode Intege
               , Checked Boolean
 
               , OperDatePartner TDateTime, InvNumberPartner TVarChar
-              , TotalSumm TFloat
+              , TotalCountKg TFloat, TotalSumm TFloat
               , InvNumberOrder TVarChar, RouteGroupName TVarChar, RouteName TVarChar
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
@@ -67,6 +67,7 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData        AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData     AS InvNumberPartner
 
+           , MovementFloat_TotalCountKg.ValueData          AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData             AS TotalSumm
 
            , MovementString_InvNumberOrder.ValueData   AS InvNumberOrder
@@ -103,6 +104,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId = Movement_Sale.Id
@@ -158,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.12.16         * add TotalCountKg
  21.10.16         * 
 */
 
