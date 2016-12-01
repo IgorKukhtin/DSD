@@ -99,18 +99,69 @@ BEGIN
     RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
-          WITH 
-            tmpMI AS (SELECT MovementItem.Id            AS MovementItemId
-                           , MovementItem.ObjectId      AS MemberId
+      WITH 
+       -- выбираем строки текущего реестра
+       tmpMI_Main AS (SELECT MovementItem.Id                AS MovementItemId
+                           , MovementItem.ObjectId          AS MemberId
                            , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
+                           , MovementLinkObject_To.ObjectId AS ToId
+                           , 1 AS GroupNum
                       FROM MovementItem
                            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                    ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                       )
+
+         -- клиенты реестра
+         , tmpTo AS (SELECT DISTINCT tmpMI_Main.ToId  
+                     FROM tmpMI_Main
+                     )
+         -- выбираем строки из других реестров, по клиентам текущего реестра
+         , tmpMIList AS (SELECT MovementItem.Id         AS MovementItemId
+                           , MovementItem.ObjectId      AS MemberId
+                           , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
+                           , CASE WHEN MovementLinkObject_ReestrKind.ObjectId = zc_Enum_ReestrKind_PartnerOut() THEN 2 ELSE 3 END AS GroupNum
+                         FROM  Movement
+                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId     = zc_MI_Master()
+                                                 AND MovementItem.isErased   = FALSE
+                           LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                   ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
+                                                  AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                           
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+                                        AND MovementLinkObject_ReestrKind.ObjectId IN (zc_Enum_ReestrKind_PartnerOut(), zc_Enum_ReestrKind_Remake())
+      
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                           INNER JOIN tmpTo ON tmpTo.ToId  = MovementLinkObject_To.ObjectId
+
+                         WHERE Movement.DescId = zc_Movement_Reestr() AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           AND Movement.Id <> inMovementId
+                         )
+         -- все нужные строки реестров
+        , tmpMI AS (SELECT tmpMI_Main.MovementItemId
+                         , tmpMI_Main.MemberId
+                         , tmpMI_Main.MovementId_Sale
+                         , tmpMI_Main.GroupNum
+                    FROM tmpMI_Main
+                  UNION 
+                    SELECT tmpMIList.MovementItemId
+                         , tmpMIList.MemberId
+                         , tmpMIList.MovementId_Sale
+                         , tmpMIList.GroupNum
+                    FROM tmpMIList
+                    )
   
        SELECT 
              Movement_Sale.InvNumber                AS InvNumber_Sale
@@ -139,6 +190,7 @@ BEGIN
            , Object_RemakeBuh.ValueData      AS Member_RemakeBuh
            , Object_Remake.ValueData         AS Member_Remake
            , Object_Buh.ValueData            AS Member_Buh
+           , tmpMI.GroupNum
 
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
@@ -225,6 +277,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+         ORDER BY tmpMI.GroupNum
+                , Object_To.ValueData
+                , MovementDate_OperDatePartner.ValueData
 ;
 
     RETURN NEXT Cursor2;
