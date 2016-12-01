@@ -133,14 +133,14 @@ object ReestrUpdateDialogForm: TReestrUpdateDialogForm
       end
       item
         Name = 'inMember'
-        Value = ' '
+        Value = 'Null'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inCar'
-        Value = ' '
+        Value = 'Null'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

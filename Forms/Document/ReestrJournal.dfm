@@ -858,13 +858,6 @@ inherited ReestrJournalForm: TReestrJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 282
@@ -878,14 +871,6 @@ inherited ReestrJournalForm: TReestrJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrinted'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -967,22 +952,6 @@ inherited ReestrJournalForm: TReestrJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Reestr'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 128
     Top = 288
   end
