@@ -72,7 +72,7 @@ BEGIN
 
            , Object_Car.ValueData              AS CarName
            , Object_CarModel.ValueData         AS CarModelName
-           , View_PersonalDriver.PersonalName  AS PersonalDriverName
+           , Object_PersonalDriver.ValueData   AS PersonalDriverName
            , Object_Member.ValueData           AS MemberName
 
            , Movement_Transport.Id             AS MovementId_Transport
@@ -156,7 +156,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                          ON MovementLinkObject_Member.MovementId = Movement.Id

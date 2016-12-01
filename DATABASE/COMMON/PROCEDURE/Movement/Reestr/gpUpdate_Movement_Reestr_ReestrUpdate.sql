@@ -22,7 +22,7 @@ BEGIN
           inDriver:= TRIM (COALESCE (inDriver, ''));
 
           -- ищем водителя в спр.Физ.лиц
-          outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND TRIM(Object.ValueData) LIKE inDriver);
+          outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inDriver));
           IF COALESCE (outDriverId,0)=0
              THEN 
                  -- ищем водителя в спр.Физ.лиц(сторонние)

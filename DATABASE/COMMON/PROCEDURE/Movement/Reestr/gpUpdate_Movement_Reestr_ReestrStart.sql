@@ -27,7 +27,7 @@ BEGIN
           inDriver:= TRIM (COALESCE (inDriver, ''));
 
           -- ищем водителя в спр.Физ.лиц
-          outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND TRIM(Object.ValueData) LIKE inDriver);
+          outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inDriver));
           IF COALESCE (outDriverId,0) = 0
              THEN 
                  -- ищем водителя в спр.Физ.лиц(сторонние)
@@ -51,7 +51,7 @@ BEGIN
           inMember:= TRIM (COALESCE (inMember, ''));
 
           -- ищем экспедитора в спр.Физ.лиц
-          outMemberId:= (SELECT  Object.Id  FROM Object WHERE Object.DescId = zc_Object_Member() AND Object.ValueData LIKE inMember);
+          outMemberId:= (SELECT  Object.Id  FROM Object WHERE Object.DescId = zc_Object_Member() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMember));
           IF COALESCE (outMemberId,0)=0
              THEN 
                  -- ищем экспедитора в спр.Физ.лиц(сторонние)
@@ -75,7 +75,7 @@ BEGIN
           inCar:= TRIM (COALESCE (inCar, ''));
 
           -- ищем экспедитора в спр.авто
-          outCarId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Car() AND Object.ValueData LIKE inCar);
+          outCarId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Car() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inCar));
           IF COALESCE (outCarId,0)=0
              THEN 
                  -- ищем экспедитора в спр.авто(сторонние)
