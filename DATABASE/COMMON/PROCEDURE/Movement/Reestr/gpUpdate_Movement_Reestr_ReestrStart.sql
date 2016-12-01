@@ -1,9 +1,10 @@
 -- Function: gpInsert_Object_External()
 
-DROP FUNCTION  IF EXISTS gpInsert_Object_External(Integer, TVarChar,TVarChar,TVarChar,TVarChar);
+DROP FUNCTION  IF EXISTS gpUpdate_Movement_Reestr_ReestrStart(Integer, TVarChar,TVarChar,TVarChar,TVarChar);
+DROP FUNCTION  IF EXISTS gpUpdate_Movement_Reestr_ReestrStart(TVarChar,TVarChar,TVarChar,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsert_Object_External(
-    IN inId             Integer   ,     -- ключ объекта <Документ реестр> 
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Reestr_ReestrStart(
+-- INOUT ioId             Integer   ,     -- ключ объекта <Документ реестр> 
     IN inDriver         TVarChar  ,     -- Водитель 
     IN inMember         TVarChar  ,     -- Экспедитор
     IN inCar            TVarChar  ,     -- № Авто
@@ -19,12 +20,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Role());
-  -- outDriverId:=0;
-  -- outMemberId:=0;
-  -- outCarId:=0;
-
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    IF COALESCE (inDriver, '') <> ''
       THEN
@@ -32,7 +28,7 @@ BEGIN
 
           -- ищем водителя в спр.Физ.лиц
           outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND TRIM(Object.ValueData) LIKE inDriver);
-          IF COALESCE (outDriverId,0)=0
+          IF COALESCE (outDriverId,0) = 0
              THEN 
                  -- ищем водителя в спр.Физ.лиц(сторонние)
                  outDriverId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberExternal() AND TRIM(Object.ValueData) LIKE inDriver);
@@ -44,6 +40,8 @@ BEGIN
                                                                            , inName  := inDriver
                                                                            , inUserId:= vbUserId
                                                                              );
+                        -- сохранили протокол
+                        PERFORM lpInsert_ObjectProtocol (outDriverId, vbUserId);
                  END IF;  
           END IF;
    END IF;
@@ -58,7 +56,7 @@ BEGIN
              THEN 
                  -- ищем экспедитора в спр.Физ.лиц(сторонние)
                  outMemberId:= (SELECT  Object.Id  FROM Object WHERE Object.DescId = zc_Object_MemberExternal() AND Object.ValueData LIKE inMember);
-                 IF COALESCE (outMemberId,0)=0 
+                 IF COALESCE (outMemberId,0) = 0 
                     THEN 
                         -- не нашли Сохраняем в спр.Физ.лиц(сторонние)
                         outMemberId := lpInsertUpdate_Object_MemberExternal (ioId    := 0
@@ -66,6 +64,8 @@ BEGIN
                                                                            , inName  := inMember
                                                                            , inUserId:= vbUserId
                                                                              );
+                        -- сохранили протокол
+                        PERFORM lpInsert_ObjectProtocol (outMemberId, vbUserId);
                  END IF;  
           END IF;
    END IF;
@@ -74,13 +74,13 @@ BEGIN
       THEN
           inCar:= TRIM (COALESCE (inCar, ''));
 
-          -- ищем экспедитора в спр.Физ.лиц
+          -- ищем экспедитора в спр.авто
           outCarId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Car() AND Object.ValueData LIKE inCar);
           IF COALESCE (outCarId,0)=0
              THEN 
                  -- ищем экспедитора в спр.авто(сторонние)
                  outCarId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_CarExternal() AND Object.ValueData LIKE inCar);
-                 IF COALESCE (outCarId,0)=0 
+                 IF COALESCE (outCarId,0) = 0 
                     THEN 
                         -- не нашли Сохраняем в авто(сторонние)
                         outCarId := lpInsertUpdate_Object_CarExternal (ioId	    := 0
@@ -92,14 +92,12 @@ BEGIN
                                             , inJuridicalId := 0
                                             , inUserId      := vbUserId
                                               );
+                        -- сохранили протокол
+                        PERFORM lpInsert_ObjectProtocol (outCarId, vbUserId);
                  END IF;  
           END IF;
    END IF;
  
-   
-   -- сохранили протокол
-   --PERFORM lpInsert_ObjectProtocol (ioId, UserId);
-   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -114,7 +112,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Object_External()
---select * from gpInsert_Object_External(inId := 0 , inDriver := 'Демчик'  , inMember := 'Демчик' , inCar := '5115' ,  inSession := '5');
+--select * from gpUpdate_Movement_Reestr_ReestrStart(ioId := 0 , inDriver := 'Демчик'  , inMember := 'Демчик' , inCar := '5115' ,  inSession := '5');
 
 --SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Member() AND Object.ValueData LIKE '%Демчик%') 736986

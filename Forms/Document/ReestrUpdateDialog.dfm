@@ -67,64 +67,30 @@ object ReestrUpdateDialogForm: TReestrUpdateDialogForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'DateRegistered'
+        Name = 'DriverName'
         Value = 42156d
-        DataType = ftDateTime
+        Component = edDriver
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isElectron'
-        Value = Null
-        DataType = ftBoolean
+        Name = 'DriverId'
+        Value = 0
+        DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumberRegistered'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = 42156d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = Null
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 56
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_External'
+    StoredProcName = 'gpUpdate_Movement_Reestr_ReestrUpdate'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inDriver'
+        Name = 'DriverName'
         Value = 0.000000000000000000
         Component = edDriver
         DataType = ftString
@@ -132,17 +98,10 @@ object ReestrUpdateDialogForm: TReestrUpdateDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMember'
-        Value = 'Null'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCar'
-        Value = 'Null'
-        DataType = ftString
-        ParamType = ptInput
+        Name = 'outDriverId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'DriverId'
         MultiSelectSeparator = ','
       end>
     PackSize = 1

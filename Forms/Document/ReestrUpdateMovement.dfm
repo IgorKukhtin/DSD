@@ -996,15 +996,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'DriverId'
-          Value = '0'
+          Value = 0
           Component = MemberGuides
           ComponentItem = 'Key'
           MultiSelectSeparator = ','

@@ -59,6 +59,8 @@ type
     macMISetErased: TMultiAction;
     ExternalDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    macUpdateMov: TMultiAction;
+    actUpdate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

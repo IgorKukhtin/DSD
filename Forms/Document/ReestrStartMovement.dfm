@@ -711,13 +711,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'CarId'
           Value = Null
           Component = CarGuides
@@ -764,6 +757,36 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actUpdate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 24
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateMov: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExternalDialog
+        end
+        item
+          Action = actUpdate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 43
     end
   end
   inherited MasterDS: TDataSource
@@ -886,9 +909,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Action = macMISetErased
     end
     object bbExecuteDialog: TdxBarButton
-      Action = ExternalDialog
+      Action = macUpdateMov
       Category = 0
-      ImageIndex = 43
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -918,7 +940,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Params = <
       item
         Name = 'Id'
-        Value = '0'
+        Value = 0
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -1076,7 +1098,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
+        Value = 0
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1131,8 +1153,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
-    Left = 250
-    Top = 320
+    Left = 274
+    Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <

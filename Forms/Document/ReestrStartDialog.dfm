@@ -89,59 +89,55 @@
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'DateRegistered'
+        Name = 'DriverId'
+        Value = 0
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverName'
         Value = 42156d
-        DataType = ftDateTime
+        Component = edDriver
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isElectron'
-        Value = Null
-        DataType = ftBoolean
+        Name = 'MemberId'
+        Value = 0
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumberRegistered'
+        Name = 'MemberName'
         Value = Null
+        Component = edMember
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'OperDate'
-        Value = 42156d
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractId'
-        Value = Null
+        Name = 'CarId'
+        Value = 0
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ContractName'
+        Name = 'CarName'
         Value = Null
+        Component = edCar
         DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_External'
+    StoredProcName = 'gpUpdate_Movement_Reestr_ReestrStart'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -168,9 +164,30 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDriverId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'DriverId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMemberId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'MemberId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCarId'
+        Value = 0
+        Component = FormParams
+        ComponentItem = 'CarId'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
+    Left = 272
     Top = 16
   end
   object ActionList: TActionList
