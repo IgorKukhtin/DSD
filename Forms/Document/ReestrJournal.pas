@@ -51,6 +51,7 @@ type
     RouteName: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     MemberName: TcxGridDBColumn;
+    TotalCountKg: TcxGridDBColumn;
   private
     { Private declarations }
   public
