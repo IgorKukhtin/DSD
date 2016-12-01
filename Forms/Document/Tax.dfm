@@ -376,7 +376,25 @@ inherited TaxForm: TTaxForm
       Left = 9
       Top = 103
       TabOrder = 29
-      Width = 595
+      Width = 413
+    end
+    object cxLabel26: TcxLabel
+      Left = 428
+      Top = 85
+      Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+    end
+    object edReestrKind: TcxButtonEdit
+      Left = 428
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 176
     end
   end
   object cxLabel22: TcxLabel [2]
@@ -1245,6 +1263,21 @@ inherited TaxForm: TTaxForm
         Name = 'EndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindId'
+        Value = 0
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2156,5 +2189,36 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 536
     Top = 456
+  end
+  object ReestrKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edReestrKind
+    Key = '0'
+    FormNameParam.Value = 'TReestrKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TReestrKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ReestrKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 496
+    Top = 96
   end
 end

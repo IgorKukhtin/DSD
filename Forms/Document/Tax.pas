@@ -88,6 +88,9 @@ type
     actShowMessage: TShowMessageAction;
     cxLabel22: TcxLabel;
     edStartDateTax: TcxDateEdit;
+    cxLabel26: TcxLabel;
+    edReestrKind: TcxButtonEdit;
+    ReestrKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
