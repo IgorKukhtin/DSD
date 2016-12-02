@@ -21,8 +21,6 @@ inherited TaxForm: TTaxForm
       inherited cxGrid: TcxGrid
         Width = 1067
         Height = 481
-        ExplicitLeft = -24
-        ExplicitTop = 112
         ExplicitWidth = 1067
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1270,15 +1268,12 @@ inherited TaxForm: TTaxForm
       item
         Name = 'ReestrKindId'
         Value = 0
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReestrKindName'
         Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'TextValue'
+        Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -2191,36 +2186,5 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 536
     Top = 456
-  end
-  object ReestrKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edReestrKind
-    Key = '0'
-    FormNameParam.Value = 'TReestrKindForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReestrKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ReestrKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 496
-    Top = 96
   end
 end

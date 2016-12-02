@@ -90,7 +90,6 @@ type
     edStartDateTax: TcxDateEdit;
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
-    ReestrKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

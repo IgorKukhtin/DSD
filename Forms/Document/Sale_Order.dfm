@@ -3,7 +3,7 @@ inherited Sale_OrderForm: TSale_OrderForm
   ClientHeight = 408
   ClientWidth = 1291
   ExplicitWidth = 1307
-  ExplicitHeight = 443
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -496,6 +496,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -2896,6 +2897,7 @@ inherited Sale_OrderForm: TSale_OrderForm
       item
         Name = 'ReestrKindName'
         Value = Null
+        Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
       end

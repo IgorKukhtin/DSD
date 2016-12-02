@@ -4,7 +4,7 @@
   ClientWidth = 1298
   AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 1314
-  ExplicitHeight = 680
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -542,6 +542,7 @@
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 161
+      ExplicitHeight = 22
       Width = 161
     end
     object cxLabel3: TcxLabel
@@ -3003,6 +3004,7 @@
       item
         Name = 'ReestrKindName'
         Value = Null
+        Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
       end
