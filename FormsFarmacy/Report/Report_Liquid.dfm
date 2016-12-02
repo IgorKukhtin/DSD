@@ -15,6 +15,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
     Width = 1275
     Height = 531
     TabOrder = 3
+    Properties.ActivePage = tsPivot
     ExplicitTop = 48
     ExplicitWidth = 1275
     ExplicitHeight = 531
@@ -576,7 +577,6 @@ inherited Report_LiquidForm: TReport_LiquidForm
     inherited deStart: TcxDateEdit
       Left = 127
       Top = 0
-      EditValue = 42370d
       ExplicitLeft = 127
       ExplicitTop = 0
     end
@@ -712,6 +712,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
       FormName = 'TReport_LiquidDialogForm'
       FormNameParam.Value = 'TReport_LiquidDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -719,6 +720,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -726,6 +728,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitId'
@@ -733,6 +736,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
           Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'UnitName'
@@ -741,6 +745,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -764,6 +769,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -771,6 +777,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -778,6 +785,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inQuasiSchedule'
@@ -785,6 +793,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = actQuasiSchedule
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 664
     Top = 96
@@ -933,6 +942,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
     LookupControl = ceUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -942,6 +952,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -950,12 +961,14 @@ inherited Report_LiquidForm: TReport_LiquidForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 496
     Top = 88
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -974,6 +987,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -981,6 +995,7 @@ inherited Report_LiquidForm: TReport_LiquidForm
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 584
