@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_ProductionSeparate ()
+ -- Function: gpReport_GoodsMI_ProductionSeparate ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
@@ -32,9 +32,9 @@ AS
 $BODY$
     DECLARE vbDescId Integer;
 BEGIN
-    -- !!!Фременно!!
-    inIsMovement:= NOT inIsMovement;
-    inIsPartion:= NOT inIsPartion;
+    -- !!!Временно!!
+    -- inIsMovement:= NOT inIsMovement;
+    -- inIsPartion:= NOT inIsPartion;
 
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;

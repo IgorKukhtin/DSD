@@ -497,83 +497,53 @@ end;
 // Commit Order
 function TDiscountServiceForm.fCommitCDS_Order (var lMsg : string) :Boolean;
 var
+  i : integer;
   CheckCDS : TClientDataSet;
 
   aOrderRequest : OrderRequest;
   SendList : ArrayOfOrderRequestItem;
   Item : OrderRequestItem;
   Res : OrderResult;
-  //
-  llMsg : String;
 begin
   Result:=false;
-  lMsg:='';
+
+  //Первое - формирование
+
 
   try
-    aSaleRequest := CardSaleRequest.Create;
+    aOrderRequest := OrderRequest.Create;
     //
-    //ИД операции в учетной системе
-    aSaleRequest.CheckId := '1';
-    //Номер чека
-    aSaleRequest.CheckCode := fCheckNumber;
-    //Дата/время чека (дата продажи)
-    aSaleRequest.CheckDate:= TXSDateTime.Create;
-    aSaleRequest.CheckDate.AsDateTime:= now;
-    //Код карточки
-    aSaleRequest.MdmCode := lCardNumber;
-    //Тип продажи (0 коммерческий\1 акционный)
-    aSaleRequest.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
+    //ИД накладной в учетной системе
+    aOrderRequest.OrderId := '1';
+    //Номер накладной
+    aOrderRequest.OrderCode := '123';
+    //Дата/время накладной
+    aOrderRequest.OrderDate:= TXSDateTime.Create;
+    aOrderRequest.OrderDate.AsDateTime:= now;
+    //Тип накладной(1-Поставка\2-Возврат Дистрибьютору\3-Возврат Покупателя)
+    aOrderRequest.OrderType := '1';
+    //Код Орг-ции отправителя
+    aOrderRequest.OrganizationFromCode := '555';
+    //Название Орг-ции отправителя
+    aOrderRequest.OrganizationFromName := 'Name555';
+    //Код Орг-ции получателя
+    aOrderRequest.OrganizationToCode := '777';
+    //Название Орг-ции получателя
+    aOrderRequest.OrganizationToName := 'Name777';
 
-    //
     i := 1;
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      //
-      //Start
-      //
-      if (lDiscountExternalId > 0) and (CheckCDS.FieldByName('Amount').AsFloat > 0)
-      then
-        //поиск Штрих-код
-        with spGet_BarCode do begin
-           ParamByName('inObjectId').Value := lDiscountExternalId;
-           ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
-           Execute;
-           BarCode_find := trim (ParamByName('outBarCode').Value);
-        end
-      else
-          BarCode_find := '';
-
-      //если Штрих-код нашелся
-      if BarCode_find <> '' then
-      begin
           try
-            Item         := CardSaleRequestItem.Create;
-            //ИД строки в учетной системе
-            Item.ItemId:= CheckCDS.FieldByName('List_UID').AsString;
-            //Код карточки
-            Item.MdmCode := lCardNumber;
+            Item         := OrderRequestItem.Create;
             //Штрих код товара
-            Item.ProductFormCode := BarCode_find;
-            //Тип продажи (0 коммерческий\1 акционный)
-            Item.SaleType := '1'; // Re: Иногда ставят и 0 - когда продажа без карты
-
-            //Цена без учета скидки
-            Item.PrimaryPrice := TXSDecimal.Create;
-            Item.PrimaryPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('PriceSale').AsFloat));
-            //Сумма без учета скидки
-            Item.PrimaryAmount := TXSDecimal.Create;
-            Item.PrimaryAmount.XSToNative (myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('PriceSale').AsFloat)));
-
-            //Цена товара (с учетом скидки)
-            Item.RequestedPrice := TXSDecimal.Create;
-            Item.RequestedPrice.XSToNative (myFloatToStr (CheckCDS.FieldByName('Price').AsFloat));
-            //Кол-во товара
-            Item.RequestedQuantity := TXSDecimal.Create;
-            Item.RequestedQuantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
-            //Сумма за кол-во товара (с учетом скидки)
-            Item.RequestedAmount := TXSDecimal.Create;
-            Item.RequestedAmount.XSToNative(myFloatToStr( GetSumm (CheckCDS.FieldByName('Amount').AsFloat, CheckCDS.FieldByName('Price').AsFloat)));
+            Item.ProductFormCode:= '';
+            //Тип продукта (0 коммерческий\1 акционный)
+            Item.SaleType := '1';
+            //Кол-во
+            Item.Quantity := TXSDecimal.Create;
+            Item.Quantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
 
             // Подготовили список для отправки
             SetLength(SendList, i);
@@ -584,91 +554,54 @@ begin
 
           except
                 ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
-                + #10+ #13 + 'Для карты № <' + lCardNumber + '>.'
                 + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
                 //ошибка
                 lMsg:='Error';
                 exit;
           end;
 
-      end; // if BarCode_find <> ''
       //
       CheckCDS.Next;
 
     end; // while
 
 
-    //Второй цикл
-
-    // если была хоть одна продажа со штрих-кодом
-    if i > 1 then
+    //Второе - отправка
     try
-          //ResList      := CardSaleResult.Create;
-          //ResItem      := CardSaleResultItem.Create;
-
           //эту инфу и будем отправлять
-          aSaleRequest.Items := SendList;
+          aOrderRequest.Items := SendList;
 
           //!!!для теста!!!
-          //***SaveToXMLFile_ItemCommit(aSaleRequest);
+          //***SaveToXMLFile_ItemOrder(aOrderRequest);
           //!!!для теста!!!
 
           // Отправили запрос
-          ResList := (HTTPRIO as CardServiceSoap).commitCardSale(aSaleRequest, gUserName, gPassword);
+          Res := (HTTPRIO as CardServiceSoap).commitOrder(aOrderRequest, gUserName, gPassword);
 
           //!!!для теста!!!
           //***SaveToXMLFile_ItemCommitRes(ResList);
           //!!!для теста!!!
 
 
-          // Получили результат - если элементов в результате не будет
-          if (Length(ResList.Items)) = 0 then
-          begin
-            //обработали результат
-            llMsg:= ResList.ResultDescription;
-            lMsg:= lMsg + llMsg;
-            Result:= LowerCase(llMsg) = LowerCase('Продажа доступна');
-            //
-            if not Result
-            then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
-          end;
+          //обработали результат
+          lMsg:= Res.ResultDescription;
+          Result:= LowerCase(lMsg) = LowerCase('Продажа доступна');
+          //
+          if not Result
+          then ShowMessage ('Ошибка <' + gService + '>.' + #10+ #13 + lMsg);
 
-          // начало второго цикла - по результату каждого элемента
-          for i := 0 to Length(ResList.Items) - 1 do
-          begin
-
-            // Получили результат - по элементу
-            ResItem := ResList.Items[i];
-
-            //обработали результат
-            llMsg:= ResItem.ResultDescription;
-            lMsg:= lMsg + llMsg;
-            Result:= LowerCase(llMsg) = LowerCase('Продажа осуществлена');
-
-            if not Result
-            then ShowMessage ('Ошибка <' + gService + '>.Карта № <' + lCardNumber + '>.' + #10+ #13 + llMsg);
-
-          end;
 
     except
-        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13
-        + #10+ #13 + 'Для карты № <' + lCardNumber + '>.');
+        ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13);
         //ошибка
         lMsg:='Error';
     end; // if i > 1 // если была хоть одна продажа со штрих-кодом
 
+  finally
     // завершили - очистили
-    aSaleRequest.Free;
+    aOrderRequest.Free;
     SendList:= nil;
     Item := nil;
-    ResList := nil;
-    ResItem := nil;
-
-  finally
-    CheckCDS.Filtered := True;
-    if GoodsId <> 0 then
-      CheckCDS.Locate('GoodsId',GoodsId,[]);
-    CheckCDS.EnableControls;
   end;
 
 end;

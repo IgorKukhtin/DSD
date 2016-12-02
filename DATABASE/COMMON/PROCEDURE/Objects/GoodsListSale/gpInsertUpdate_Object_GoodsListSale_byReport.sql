@@ -65,7 +65,7 @@ BEGIN
                             AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
       WHERE  Object_GoodsListSale.DescId = zc_Object_GoodsListSale();
 
-   -- выбираем товары согдасно статьям
+   -- выбираем товары согласно статьям
    INSERT INTO _tmpGoods (GoodsId, Value) 
         SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
             , CASE WHEN (Object_InfoMoney_View.InfoMoneyId = COALESCE (inInfoMoneyId_1,0) OR Object_InfoMoney_View.InfoMoneyDestinationId = COALESCE (inInfoMoneyDestinationId_1, 0))
@@ -85,7 +85,7 @@ BEGIN
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , SUM(-1 * MIContainer.Amount ) ::TFloat    AS  Amount
+             , -1 * SUM (MIContainer.Amount )    AS  Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
                                 AND _tmpGoods.Value = 1

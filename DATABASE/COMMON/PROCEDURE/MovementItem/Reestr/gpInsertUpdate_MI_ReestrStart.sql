@@ -94,6 +94,9 @@ BEGIN
      THEN
           ioMovementId:= COALESCE ((SELECT MLM.MovementId
                                     FROM MovementLinkMovement AS MLM
+                                         INNER JOIN Movement ON Movement.Id       = MLM.MovementId
+                                                            AND Movement.DescId   = zc_Movement_Reestr()
+                                                            AND Movement.StatusId = zc_Enum_Status_Erased()
                                     WHERE MLM.MovementChildId = ioMovementId_TransportTop
                                       AND MLM.DescId = zc_MovementLinkMovement_Transport()
                                    ), 0);

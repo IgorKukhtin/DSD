@@ -71,7 +71,7 @@ BEGIN
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!¬–≈ћ≈ЌЌќ!!!
- inItearationCount:=100;
+-- inItearationCount:=100;
 -- !!!¬–≈ћ≈ЌЌќ!!!
 
      -- !!!если не филиал, тогда начальна€ дата всегда 1-ое число мес€ца!!!

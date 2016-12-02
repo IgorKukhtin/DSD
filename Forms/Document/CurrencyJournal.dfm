@@ -1,26 +1,26 @@
 inherited CurrencyJournalForm: TCurrencyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
   ClientHeight = 649
-  ClientWidth = 913
+  ClientWidth = 921
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 929
-  ExplicitHeight = 687
+  ExplicitWidth = 937
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 913
+    Width = 921
     Height = 592
     TabOrder = 3
     ExplicitWidth = 913
     ExplicitHeight = 592
     ClientRectBottom = 592
-    ClientRectRight = 913
+    ClientRectRight = 921
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 913
       ExplicitHeight = 592
       inherited cxGrid: TcxGrid
-        Width = 913
+        Width = 921
         Height = 592
         ExplicitWidth = 913
         ExplicitHeight = 592
@@ -105,16 +105,22 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 913
+    Width = 921
     ExplicitWidth = 913
+    inherited deStart: TcxDateEdit
+      EditValue = 42370d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 42370d
+    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 634
+    Left = 422
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 733
+    Left = 500
     Top = 5
     Properties.Buttons = <
       item
@@ -123,7 +129,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 171
+    Width = 150
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -400,7 +406,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Currency'
-    Left = 16
+    Left = 48
     Top = 152
   end
   inherited spMovementUnComplete: TdsdStoredProc
@@ -420,6 +426,9 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited FormParams: TdsdFormParams
     Left = 384
+  end
+  inherited spMovementReComplete: TdsdStoredProc
+    StoredProcName = 'gpReComplete_Movement_Currency'
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'

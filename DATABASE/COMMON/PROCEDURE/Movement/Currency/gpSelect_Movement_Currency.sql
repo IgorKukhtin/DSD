@@ -96,4 +96,4 @@ ALTER FUNCTION gpSelect_Movement_Currency (TDateTime, TDateTime, Integer, Boolea
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_Currency (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_Currency (inStartDate:= '01.01.2016', inEndDate:= '31.12.2016', inJuridicalBasisId:= 0, inIsErased:= false, inSession:= zfCalc_UserAdmin())
