@@ -24,7 +24,7 @@ RETURNS TABLE ( Id Integer, MovementId Integer, LineNum Integer
               , Member_Buh TVarChar
               , BarCode_Sale TVarChar, OperDate_Sale TDateTime, InvNumber_Sale TVarChar
               , OperDatePartner TDateTime, InvNumberPartner TVarChar, StatusCode_Sale Integer, StatusName_Sale TVarChar
-              , TotalSumm TFloat
+              , TotalCountKg TFloat, TotalSumm TFloat
               , FromName TVarChar, ToName TVarChar
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -136,7 +136,8 @@ BEGIN
             , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
             , Object_Status_Sale.ObjectCode             AS StatusCode_Sale
             , Object_Status_Sale.ValueData              AS StatusName_Sale
-
+    
+            , MovementFloat_TotalCountKg.ValueData      AS TotalCountKg
             , MovementFloat_TotalSumm.ValueData         AS TotalSumm
 
             , Object_From.ValueData                     AS FromName
@@ -260,6 +261,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Sale.Id

@@ -73,6 +73,16 @@ inherited ReestrJournalForm: TReestrJournalForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -122,6 +132,21 @@ inherited ReestrJournalForm: TReestrJournalForm
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ToName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -231,16 +256,6 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object JuridicalName_To: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName_To'
@@ -256,6 +271,23 @@ inherited ReestrJournalForm: TReestrJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object TotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountKg'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -858,13 +890,6 @@ inherited ReestrJournalForm: TReestrJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 282
@@ -878,14 +903,6 @@ inherited ReestrJournalForm: TReestrJournalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrinted'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -967,22 +984,6 @@ inherited ReestrJournalForm: TReestrJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Reestr'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 128
     Top = 288
   end

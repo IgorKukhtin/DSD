@@ -474,7 +474,6 @@ inherited Sale_ReestrJournalForm: TSale_ReestrJournalForm
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50

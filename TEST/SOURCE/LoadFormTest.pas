@@ -1254,6 +1254,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrStartDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrStartDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateDialogForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentKindFormTest;
@@ -2290,6 +2294,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCar_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCar_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadCarExternalFormTest;

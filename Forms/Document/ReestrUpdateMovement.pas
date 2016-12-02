@@ -67,6 +67,8 @@ type
     bbPrint: TdxBarButton;
     CarModelName: TcxGridDBColumn;
     macMISetErased: TMultiAction;
+    actExternalDialog: TExecuteDialog;
+    bbExternalDialog: TdxBarButton;
   private
     { Private declarations }
   public

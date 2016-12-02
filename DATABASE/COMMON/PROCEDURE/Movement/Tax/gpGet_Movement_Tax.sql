@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, isMask Boolean, InvNumber TVarChar, OperDate TDateTim
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
              , StartDateTax TDateTime
              , InvNumberBranch TVarChar
              , Comment TVarChar
@@ -72,6 +73,8 @@ BEGIN
              , CAST ('' as TVarChar) 			AS ContractTagName
              , 0                     			AS TaxKindId
              , CAST ('' as TVarChar) 			AS TaxKindName
+             , 0                   		        AS ReestrKindId
+             , '' :: TVarChar                           AS ReestrKindName 
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , tmpInvNumber.InvNumberBranch
              , CAST ('' as TVarChar) 		        AS Comment
@@ -141,6 +144,10 @@ BEGIN
            , Object_Contract.ContractTagName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
+
+           , Object_ReestrKind.Id             	                AS ReestrKindId
+           , Object_ReestrKind.ValueData       	                AS ReestrKindName
+
            , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_InvNumberBranch.ValueData           AS InvNumberBranch
            , MovementString_Comment.ValueData                   AS Comment
@@ -224,8 +231,13 @@ BEGIN
                                           AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
-                                      ON MovementBoolean_Checked.MovementId =  COALESCE (Movement_DocumentMaster.Id, Movement.Id)
+                                      ON MovementBoolean_Checked.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Tax();
@@ -239,6 +251,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, Boolean, TDateTime, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.12.16         * add ReestrKind
  10.05.16         * add StartDateTax
  26.01.15         * add Mask
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax

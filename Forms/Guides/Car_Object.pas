@@ -1,4 +1,4 @@
-unit Car;
+unit Car_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   DataModul, cxButtonEdit, cxCurrencyEdit;
 
 type
-  TCarForm = class(TParentForm)
+  TCar_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -80,5 +80,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TCarForm);
+  RegisterClass(TCar_ObjectForm);
 end.

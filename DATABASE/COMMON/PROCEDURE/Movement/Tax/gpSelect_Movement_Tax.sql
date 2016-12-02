@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isCopy Boolean
              , Comment TVarChar 
              , PersonalSigningName TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
               )
 AS
 $BODY$
@@ -115,9 +116,12 @@ BEGIN
            , COALESCE (MovementBoolean_Electron.ValueData, FALSE)        AS isElectron
            , COALESCE (MovementBoolean_Medoc.ValueData, FALSE)           AS isMedoc
            , COALESCE (MovementBoolean_isCopy.ValueData, FALSE)    :: Boolean  AS isCopy
-           , MovementString_Comment.ValueData       AS Comment
+           , MovementString_Comment.ValueData         AS Comment
 
            , COALESCE (Object_PersonalSigning.PersonalName, COALESCE (Object_PersonalBookkeeper_View.PersonalName, ''))  ::TVarChar    AS PersonalSigningName
+
+           , Object_ReestrKind.Id                     AS ReestrKindId
+           , Object_ReestrKind.ValueData              AS ReestrKindName
 
        FROM (SELECT Movement.Id
              FROM tmpStatus
@@ -165,8 +169,7 @@ BEGIN
                                       ON MovementBoolean_Medoc.MovementId =  Movement.Id
                                      AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
 
-	
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
@@ -265,6 +268,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = COALESCE (Movement_DocumentMaster.Id, Movement.Id)
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
           ;
 
 END;
@@ -275,6 +283,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Integer, Boolean, Bo
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.12.16         * add ReestrKind
  06.10.16         * add inJuridicalBasisId
  06.04.15                        * add InvNumberRegistered, DateRegistered
  15.12.14                        * add isMedoc

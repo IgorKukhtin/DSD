@@ -4,9 +4,8 @@ inherited TaxJournalForm: TTaxJournalForm
   ClientWidth = 1110
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -320
   ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -107,14 +106,23 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 63
           end
-          object colBranchName: TcxGridDBColumn [1]
+          object clReestrKindName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Options.Editing = False
+            Width = 74
+          end
+          object colBranchName: TcxGridDBColumn [2]
             Caption = #1060#1080#1083#1080#1072#1083
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colIsError: TcxGridDBColumn [2]
+          object colIsError: TcxGridDBColumn [3]
             Caption = #1054#1096#1080#1073#1082#1072
             DataBinding.FieldName = 'isError'
             Visible = False
@@ -122,11 +130,11 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          inherited colOperDate: TcxGridDBColumn [3]
+          inherited colOperDate: TcxGridDBColumn [4]
             HeaderAlignmentHorz = taCenter
             Width = 57
           end
-          inherited colInvNumber: TcxGridDBColumn [4]
+          inherited colInvNumber: TcxGridDBColumn [5]
             Caption = #8470' '#1076#1086#1082'.'
             Visible = False
             HeaderAlignmentHorz = taCenter

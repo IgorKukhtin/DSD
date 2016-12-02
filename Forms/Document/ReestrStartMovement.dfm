@@ -32,6 +32,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -43,6 +48,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ToName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -188,7 +198,17 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colTotalSumm: TcxGridDBColumn [15]
+          object TotalCountKg: TcxGridDBColumn [15]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colTotalSumm: TcxGridDBColumn [16]
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -198,7 +218,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Checked: TcxGridDBColumn [16]
+          object Checked: TcxGridDBColumn [17]
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
             Visible = False
@@ -206,14 +226,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colPaidKindName: TcxGridDBColumn [17]
+          object colPaidKindName: TcxGridDBColumn [18]
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colContractCode: TcxGridDBColumn [18]
+          object colContractCode: TcxGridDBColumn [19]
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             Visible = False
@@ -221,14 +241,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colContractName: TcxGridDBColumn [19]
+          object colContractName: TcxGridDBColumn [20]
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colContractTagName: TcxGridDBColumn [20]
+          object colContractTagName: TcxGridDBColumn [21]
             Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractTagName'
             HeaderAlignmentHorz = taCenter
@@ -236,14 +256,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
             Options.Editing = False
             Width = 60
           end
-          object InsertDate: TcxGridDBColumn [21]
+          object InsertDate: TcxGridDBColumn [22]
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object MemberName: TcxGridDBColumn [22]
+          object MemberName: TcxGridDBColumn [23]
             Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
@@ -697,6 +717,98 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
       ImageIndex = 2
     end
+    object ExternalDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 24
+      FormName = 'TReestrStartDialogForm'
+      FormNameParam.Value = 'TReestrStartDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'CarId'
+          Value = Null
+          Component = CarGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = CarGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DriverId'
+          Value = Null
+          Component = PersonalDriverGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DriverName'
+          Value = Null
+          Component = PersonalDriverGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberId'
+          Value = Null
+          Component = MemberGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MemberName'
+          Value = Null
+          Component = MemberGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 24
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateMov: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExternalDialog
+        end
+        item
+          Action = actUpdate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -769,6 +881,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbExecuteDialog'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -809,6 +929,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     inherited bbErased: TdxBarButton
       Action = macMISetErased
     end
+    object bbExecuteDialog: TdxBarButton
+      Action = macUpdateMov
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -837,7 +961,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Params = <
       item
         Name = 'Id'
-        Value = '0'
+        Value = 0
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -883,7 +1007,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
+    StoredProcName = 'gpUpdate_Status_Reestr'
     Left = 16
     Top = 56
   end
@@ -995,7 +1119,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
+        Value = 0
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -1050,8 +1174,8 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         MultiSelectSeparator = ','
       end>
     NeedResetData = True
-    Left = 250
-    Top = 320
+    Left = 274
+    Top = 312
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1372,10 +1496,10 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     KeyField = 'Id'
     LookupControl = edCar
     Key = '0'
-    FormNameParam.Value = 'TCarForm'
+    FormNameParam.Value = 'TCar_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCarForm'
+    FormName = 'TCar_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

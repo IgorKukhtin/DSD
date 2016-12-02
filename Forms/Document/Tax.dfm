@@ -376,7 +376,25 @@ inherited TaxForm: TTaxForm
       Left = 9
       Top = 103
       TabOrder = 29
-      Width = 595
+      Width = 413
+    end
+    object cxLabel26: TcxLabel
+      Left = 428
+      Top = 85
+      Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+    end
+    object edReestrKind: TcxButtonEdit
+      Left = 428
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 176
     end
   end
   object cxLabel22: TcxLabel [2]
@@ -1245,6 +1263,18 @@ inherited TaxForm: TTaxForm
         Name = 'EndDateTax'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindId'
+        Value = 0
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = edReestrKind
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216

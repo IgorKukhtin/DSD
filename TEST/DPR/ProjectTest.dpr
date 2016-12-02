@@ -885,7 +885,10 @@ uses
   WeighingProductionEdit in '..\..\Forms\Document\WeighingProductionEdit.pas' {WeighingProductionEditForm: TParentForm},
   AssetToPlace in '..\..\Forms\Guides\AssetToPlace.pas' {AssetToPlaceForm: TParentForm},
   PersonalPosition_Object in '..\..\Forms\Guides\PersonalPosition_Object.pas' {PersonalPosition_ObjectForm: TParentForm},
-  MemberPosition_Object in '..\..\Forms\Guides\MemberPosition_Object.pas' {MemberPosition_ObjectForm: TParentForm};
+  MemberPosition_Object in '..\..\Forms\Guides\MemberPosition_Object.pas' {MemberPosition_ObjectForm: TParentForm},
+  Car_Object in '..\..\Forms\Guides\Car_Object.pas' {Car_ObjectForm: TParentForm},
+  ReestrStartDialog in '..\..\Forms\Document\ReestrStartDialog.pas' {ReestrStartDialogForm: TParentForm},
+  ReestrUpdateDialog in '..\..\Forms\Document\ReestrUpdateDialog.pas' {ReestrUpdateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
