@@ -53,8 +53,8 @@ type
     edRoute: TcxButtonEdit;
     GuidesRoute: TdsdGuides;
     cxLabel16: TcxLabel;
-    edPersonal: TcxButtonEdit;
-    GuidesPersonal: TdsdGuides;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
     PriceListGuides: TdsdGuides;

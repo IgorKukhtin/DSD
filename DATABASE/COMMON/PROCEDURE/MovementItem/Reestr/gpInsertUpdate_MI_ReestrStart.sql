@@ -107,18 +107,6 @@ BEGIN
           END IF;
      END IF;
 
-     -- найдем <Физические лица(экспедитор)> в путевом листе, хотя там он как Personal
-     IF ioMovementId_TransportTop <> 0 -- AND COALESCE (inMemberId, 0) = 0
-     THEN
-          inMemberId:= COALESCE ((SELECT COALESCE (ObjectLink.ChildObjectId, MLO.ObjectId) -- т.е. если в путевом листе сразу будет Member
-                                  FROM MovementLinkObject AS MLO
-                                       LEFT JOIN ObjectLink ON ObjectLink.ObjectId = MLO.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Personal_Member()
-                                  WHERE MLO.MovementId = ioMovementId_TransportTop
-                                    AND MLO.DescId     = zc_MovementLinkObject_Personal()
-                                 ),  inMemberId);
-     END IF;
-
-
 
      -- найдем Продажу покупателю
      IF TRIM (inBarCode) <> ''
@@ -149,6 +137,30 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не найден.', inBarCode;
          END IF;
 
+     END IF;
+
+
+     -- найдем <Физические лица(экспедитор)> в путевом листе, хотя там он как Personal
+     IF ioMovementId_TransportTop <> 0 -- AND COALESCE (inMemberId, 0) = 0
+     THEN
+          inMemberId:= COALESCE ((SELECT COALESCE (ObjectLink.ChildObjectId, MLO.ObjectId) -- т.е. если в путевом листе сразу будет Member
+                                  FROM MovementLinkObject AS MLO
+                                       LEFT JOIN ObjectLink ON ObjectLink.ObjectId = MLO.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Personal_Member()
+                                  WHERE MLO.MovementId = ioMovementId_TransportTop
+                                    AND MLO.DescId     = zc_MovementLinkObject_Personal()
+                                 ),  inMemberId);
+     END IF;
+     -- если ... - найдем <Физические лица(экспедитор)> в Заявке, называется zc_MovementLinkObject_Personal, на самом деле он там как Member
+     IF COALESCE (inMemberId, 0) = 0
+     THEN
+          inMemberId:= COALESCE ((SELECT MLO.ObjectId
+                                  FROM MovementLinkMovement AS MLM
+                                       LEFT JOIN MovementLinkObject AS MLO
+                                                                    ON MLO.MovementId = MLM.MovementChildId
+                                                                   AND MLO.DescId     = zc_MovementLinkObject_Personal()
+                                  WHERE MLM.MovementId = vbMovementId_sale
+                                    AND MLM.DescId     = zc_MovementLinkMovement_Order()
+                                 ),  inMemberId);
      END IF;
 
 

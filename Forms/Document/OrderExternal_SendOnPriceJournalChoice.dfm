@@ -2,28 +2,28 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
   Caption = 
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')/ '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077 +
     ' '#1087#1086' '#1094#1077#1085#1077'>'
-  ClientHeight = 535
+  ClientHeight = 408
   ClientWidth = 1020
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1036
-  ExplicitHeight = 573
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 478
+    Height = 351
     TabOrder = 3
     ExplicitWidth = 1020
     ExplicitHeight = 478
-    ClientRectBottom = 478
+    ClientRectBottom = 351
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
-        Height = 478
+        Height = 351
         ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -298,8 +298,8 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -910,7 +910,7 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
         Component = PartnerGuides
       end>
     Left = 408
-    Top = 344
+    Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Tax'
@@ -930,8 +930,8 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 320
+    Left = 96
+    Top = 280
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_Tax'
@@ -944,8 +944,8 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 384
+    Left = 64
+    Top = 312
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_Tax'
@@ -958,8 +958,8 @@ inherited OrderExternal_SendOnPriceJournalChoiceForm: TOrderExternal_SendOnPrice
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 376
+    Left = 200
+    Top = 296
   end
   inherited FormParams: TdsdFormParams
     Params = <

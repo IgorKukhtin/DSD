@@ -45,8 +45,6 @@ type
     colInvNumberOrder: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     spTax: TdsdStoredProc;
@@ -87,7 +85,7 @@ type
     spChecked: TdsdStoredProc;
     bbactChecked: TdxBarButton;
     actChecked: TdsdExecStoredProc;
-    clRouteName: TcxGridDBColumn;
+    RouteName: TcxGridDBColumn;
     actPrint_ExpInvoice: TdsdPrintAction;
     actPrint_ExpPack: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
@@ -180,7 +178,10 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clInvNumber_ReestrFull: TcxGridDBColumn;
+    InvNumber_Reestr: TcxGridDBColumn;
+    OperDate_Reestr: TcxGridDBColumn;
+    CarModelName_Reestr: TcxGridDBColumn;
+    OperDate_Transport_reestr: TcxGridDBColumn;
   private
     { Private declarations }
   public

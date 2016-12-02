@@ -1,26 +1,26 @@
 inherited OrderExternalUnitForm: TOrderExternalUnitForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1085#1072' '#1075#1083'.'#1089#1082#1083#1072#1076')>'
-  ClientHeight = 668
+  ClientHeight = 399
   ClientWidth = 1031
   ExplicitWidth = 1047
-  ExplicitHeight = 706
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1031
-    Height = 502
+    Height = 233
     ExplicitTop = 166
     ExplicitWidth = 1031
     ExplicitHeight = 502
-    ClientRectBottom = 502
+    ClientRectBottom = 233
     ClientRectRight = 1031
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1031
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1031
-        Height = 478
+        Height = 209
         ExplicitWidth = 1031
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -423,7 +423,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object cxLabel3: TcxLabel
       Left = 385
-      Top = 86
+      Top = 85
       Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082#1080#1088#1086#1074'.'
     end
     object edOperDateMark: TcxDateEdit
@@ -540,11 +540,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       Width = 130
     end
     object cxLabel16: TcxLabel
-      Left = 472
+      Left = 473
       Top = 85
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+      Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
     end
-    object edPersonal: TcxButtonEdit
+    object edMember: TcxButtonEdit
       Left = 472
       Top = 103
       Properties.Buttons = <
@@ -731,7 +731,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object cxLabel21: TcxLabel
       Left = 833
-      Top = 86
+      Top = 85
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel22: TcxLabel
@@ -741,16 +741,16 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 267
+    Top = 280
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Left = 96
+    Top = 176
   end
   inherited ActionList: TActionList
     Left = 23
-    Top = 279
+    Top = 271
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
@@ -1022,12 +1022,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 32
-    Top = 512
+    Left = 16
+    Top = 312
   end
   inherited MasterCDS: TClientDataSet
-    Left = 88
-    Top = 512
+    Left = 72
+    Top = 320
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_OrderExternalUnit'
@@ -1077,7 +1077,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited BarManager: TdxBarManager
     Left = 72
-    Top = 279
+    Top = 271
     DockControlHeights = (
       0
       0
@@ -1239,12 +1239,12 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 830
-    Top = 265
+    Left = 558
+    Top = 273
   end
   inherited PopupMenu: TPopupMenu
-    Left = 800
-    Top = 464
+    Left = 40
+    Top = 184
     object N2: TMenuItem
       Action = actMISetErased
     end
@@ -1303,8 +1303,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 552
+    Left = 264
+    Top = 336
   end
   inherited StatusGuides: TdsdGuides
     Left = 80
@@ -1450,14 +1450,14 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'PersonalId'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1781,7 +1781,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'inPersonalId'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1827,7 +1827,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     Left = 162
-    Top = 312
+    Top = 296
   end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
@@ -1894,7 +1894,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         Control = edOperDateMark
       end
       item
-        Control = edPersonal
+        Control = edMember
       end
       item
         Control = edPartner
@@ -1916,18 +1916,18 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 616
+    Top = 248
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
-    Left = 718
-    Top = 512
+    Left = 654
+    Top = 304
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 590
+    Top = 344
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderExternal'
@@ -2008,8 +2008,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 368
+    Left = 168
+    Top = 328
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_OrderExternal'
@@ -2080,8 +2080,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Top = 272
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 228
+    Left = 428
+    Top = 244
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2103,19 +2103,19 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
+    Left = 532
     Top = 193
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 508
-    Top = 246
+    Left = 604
+    Top = 190
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 644
+    Left = 356
     Top = 334
   end
   object spSelectPrint: TdsdStoredProc
@@ -2139,8 +2139,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 208
+    Left = 295
+    Top = 232
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -2199,8 +2199,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 640
-    Top = 64
+    Left = 624
+    Top = 8
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -2320,9 +2320,9 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Left = 552
     Top = 48
   end
-  object GuidesPersonal: TdsdGuides
+  object GuidesMember: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPersonal
+    LookupControl = edMember
     FormNameParam.Value = 'TMemberPosition_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2332,7 +2332,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2340,7 +2340,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonal
+        Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2397,7 +2397,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 924
+    Left = 900
     Top = 4
   end
   object GuidesTo: TdsdGuides
@@ -2490,8 +2490,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 432
+    Left = 728
+    Top = 280
   end
   object spUpdateAmountRemains: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderExternal_AmountRemains'
@@ -2523,8 +2523,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 762
-    Top = 192
+    Left = 450
+    Top = 208
   end
   object spUpdateAmountPartner: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderExternal_AmountPartner'
@@ -2556,8 +2556,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
-    Top = 208
+    Left = 384
+    Top = 176
   end
   object spUpdateAmountForecast: TdsdStoredProc
     StoredProcName = 'gpUpdateMI_OrderExternal_AmountForecast'
@@ -2597,8 +2597,8 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 960
-    Top = 208
+    Left = 416
+    Top = 192
   end
   object PartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -2710,7 +2710,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 458
-    Top = 400
+    Left = 434
+    Top = 304
   end
 end

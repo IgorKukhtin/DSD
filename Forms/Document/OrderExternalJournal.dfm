@@ -1,28 +1,28 @@
 inherited OrderExternalJournalForm: TOrderExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072' '#1089#1090#1086#1088#1086#1085#1085#1103#1103' ('#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')>'
-  ClientHeight = 661
+  ClientHeight = 396
   ClientWidth = 1050
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -277
+  ExplicitLeft = -260
   ExplicitWidth = 1066
-  ExplicitHeight = 696
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1050
-    Height = 604
+    Height = 339
     TabOrder = 3
     ExplicitWidth = 1050
     ExplicitHeight = 604
-    ClientRectBottom = 604
+    ClientRectBottom = 339
     ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1050
       ExplicitHeight = 604
       inherited cxGrid: TcxGrid
         Width = 1050
-        Height = 604
+        Height = 339
         ExplicitWidth = 1050
         ExplicitHeight = 604
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -242,8 +242,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
+          object PersonalName: TcxGridDBColumn
+            Caption = #1060#1080#1079'. '#1083#1080#1094#1086' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
             DataBinding.FieldName = 'PersonalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -886,8 +886,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 408
-    Top = 344
+    Left = 400
+    Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_OrderExternal'
@@ -916,8 +916,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 320
+    Left = 64
+    Top = 296
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_OrderExternal'
@@ -938,8 +938,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 384
+    Left = 112
+    Top = 312
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_OrderExternal'
@@ -960,8 +960,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 376
+    Left = 192
+    Top = 288
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1076,8 +1076,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 712
-    Top = 352
+    Left = 704
+    Top = 320
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
