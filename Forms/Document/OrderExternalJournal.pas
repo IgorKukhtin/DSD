@@ -37,7 +37,7 @@ type
     colTotalCount: TcxGridDBColumn;
     colOperDatePartner: TcxGridDBColumn;
     colOperDateMark: TcxGridDBColumn;
-    colPersonalName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     colRouteName: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
