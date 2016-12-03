@@ -809,6 +809,40 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
       ImageIndex = 43
     end
+    object actPrintPeriod: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPeriod
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPeriod
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = 0
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -905,6 +939,14 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -932,6 +974,11 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     object bbExecuteDialog: TdxBarButton
       Action = macUpdateMov
       Category = 0
+    end
+    object bbPrintPeriod: TdxBarButton
+      Action = actPrintPeriod
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1290,7 +1337,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
+    Left = 152
     Top = 176
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
@@ -1672,5 +1719,43 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end>
     Left = 496
     Top = 152
+  end
+  object spSelectPrintPeriod: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 42667d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 42667d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = 640042
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 735
+    Top = 40
   end
 end

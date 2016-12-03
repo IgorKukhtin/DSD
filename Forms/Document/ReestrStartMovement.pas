@@ -61,6 +61,9 @@ type
     bbExecuteDialog: TdxBarButton;
     macUpdateMov: TMultiAction;
     actUpdate: TdsdDataSetRefresh;
+    actPrintPeriod: TdsdPrintAction;
+    spSelectPrintPeriod: TdsdStoredProc;
+    bbPrintPeriod: TdxBarButton;
   private
     { Private declarations }
   public

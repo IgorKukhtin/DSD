@@ -34,13 +34,14 @@ type
     UnitGroupGuides: TdsdGuides;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     ReturnAmount: TcxGridDBColumn;
     ReturnAmountPartner: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     AmountPartner: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    ChildDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

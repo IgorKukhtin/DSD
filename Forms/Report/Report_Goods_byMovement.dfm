@@ -129,66 +129,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SaleAmountPartner
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = SaleAmount
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -204,6 +147,11 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = ReturnAmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SaleAmountPartner
             end
             item
               Format = ',0.####'
@@ -294,7 +242,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = MasterDS
+          DataController.DataSource = ChildDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -367,67 +315,67 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             item
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSaleAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chReturnAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chReturnAmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSaleAmountPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountPartner
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
+              Column = chSaleAmount
             end
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
+              Column = chReturnAmount
             end
             item
-              Format = ',0.00;-,0.00;0.00;'
+              Format = ',0.####'
               Kind = skSum
+              Column = chAmount
             end
             item
-              Format = ',0.00;-,0.00;0.00;'
+              Format = ',0.####'
               Kind = skSum
+              Column = chReturnAmountPartner
             end
             item
-              Format = ',0.00;-,0.00;0.00;'
+              Format = ',0.####'
               Kind = skSum
+              Column = chSaleAmountPartner
             end
             item
-              Format = ',0.00;-,0.00;0.00;'
+              Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
+              Column = chAmountPartner
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -447,21 +395,65 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object cxGridDBColumn1: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
+          object chGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GroupName'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 61
+            Width = 192
           end
-          object cxGridDBColumn2: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object chSaleAmount: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
+            DataBinding.FieldName = 'SaleAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 154
+            Width = 90
+          end
+          object chReturnAmount: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
+            DataBinding.FieldName = 'ReturnAmount'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmount: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
+            DataBinding.FieldName = 'Amount'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object chReturnAmountPartner: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartner'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chSaleAmountPartner: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SaleAmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmountPartner: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'AmountPartner'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -585,13 +577,25 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           'Date')
       end
       item
-        Component = GoodsGroupGuides
+        Component = UnitGuides
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = UnitGuides
+        Component = UnitGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGroupGPGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGroupGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -699,7 +703,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 72
+    Left = 88
     Top = 208
   end
   inherited MasterCDS: TClientDataSet
@@ -708,6 +712,14 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Goods_byMovement'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inStartDate'
@@ -805,12 +817,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 320
-    Top = 232
+    Left = 24
+    Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 104
-    Top = 160
+    Left = 288
+    Top = 136
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -958,5 +970,31 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       end>
     Left = 400
     Top = 16
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 624
+    Top = 120
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 568
+    Top = 120
+  end
+  object ChildDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 680
+    Top = 120
   end
 end
