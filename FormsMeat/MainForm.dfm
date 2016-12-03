@@ -462,18 +462,7 @@ inherited MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inDescId'
-          Value = 5
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InDescName'
-          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
+      GuiParams = <>
       isShowModal = False
     end
     object actEmailSettings: TdsdOpenForm [23]
