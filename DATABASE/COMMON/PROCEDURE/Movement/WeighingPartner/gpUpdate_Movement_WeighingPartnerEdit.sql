@@ -1,9 +1,6 @@
 -- Function: gpUpdate_Movement_WeighingPartnerEdit()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, TDateTime, TDateTime, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inId                   Integer   , -- Ключ объекта <Документ>

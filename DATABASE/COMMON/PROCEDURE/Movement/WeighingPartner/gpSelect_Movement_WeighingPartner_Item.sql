@@ -1,7 +1,5 @@
 -- Function: gpSelect_Movement_WeighingPartner_Item()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_WeighingPartner_Item (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner_Item(

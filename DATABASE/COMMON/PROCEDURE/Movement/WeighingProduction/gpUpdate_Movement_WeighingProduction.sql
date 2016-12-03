@@ -1,9 +1,6 @@
 -- Function: gpUpdate_Movement_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingProduction(
     IN inId                  Integer   , -- Ключ объекта <Документ>
