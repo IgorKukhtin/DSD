@@ -69,6 +69,9 @@ type
     macMISetErased: TMultiAction;
     actExternalDialog: TExecuteDialog;
     bbExternalDialog: TdxBarButton;
+    actPrintPeriod: TdsdPrintAction;
+    spSelectPrintPeriod: TdsdStoredProc;
+    bbPrintPeriod: TdxBarButton;
   private
     { Private declarations }
   public

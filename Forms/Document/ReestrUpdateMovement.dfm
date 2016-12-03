@@ -967,6 +967,40 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
       ImageIndex = 2
     end
+    object actPrintPeriod: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintPeriod
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPeriod
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -996,7 +1030,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Reestr'
-      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
+      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
       ReportNameParam.Value = 'PrintMovement_Reestr'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
@@ -1124,6 +1158,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1154,6 +1196,11 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     object bbExternalDialog: TdxBarButton
       Action = actExternalDialog
       Category = 0
+    end
+    object bbPrintPeriod: TdxBarButton
+      Action = actPrintPeriod
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1268,7 +1315,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 80
-    Top = 346
+    Top = 330
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -1329,8 +1376,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 296
+    Left = 552
+    Top = 312
   end
   object spUpdateMI: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Reestr'
@@ -1542,5 +1589,45 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     PackSize = 1
     Left = 607
     Top = 240
+  end
+  object spSelectPrintPeriod: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestrKindId'
+        Value = Null
+        Component = ReestrKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 631
+    Top = 296
   end
 end
