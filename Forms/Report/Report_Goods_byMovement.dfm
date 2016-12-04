@@ -408,6 +408,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             DataBinding.FieldName = 'SaleAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -416,6 +417,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chReturnAmount: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
             DataBinding.FieldName = 'ReturnAmount'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -424,6 +426,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chAmount: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'Amount'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -432,6 +435,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chReturnAmountPartner: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'ReturnAmountPartner'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -442,6 +446,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             DataBinding.FieldName = 'SaleAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -450,6 +455,59 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chAmountPartner: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'AmountPartner'
+            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object chSaleAmountSh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1096#1090
+            DataBinding.FieldName = 'SaleAmountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chReturnAmountSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090
+            DataBinding.FieldName = 'ReturnAmountSh'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmountSh: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1096#1090
+            DataBinding.FieldName = 'AmountSh'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object chReturnAmountPartnerSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartnerSh'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chSaleAmountPartnerSh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SaleAmountPartnerSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmountPartnerSh: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'AmountPartnerSh'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
