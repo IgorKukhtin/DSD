@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
 
 type
   TReport_Goods_byMovementDialogForm = class(TParentForm)
@@ -35,6 +35,11 @@ type
     cxLabel2: TcxLabel;
     edUnitGroup: TcxButtonEdit;
     GuidesUnitGroup: TdsdGuides;
+    spGetParams: TdsdStoredProc;
+    ActionList: TActionList;
+    actGetParams: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    actRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
