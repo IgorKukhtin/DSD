@@ -42,6 +42,10 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     ChildDBViewAddOn: TdsdDBViewAddOn;
+    actPrintGp: TdsdPrintAction;
+    bbPrintGp: TdxBarButton;
+    isTop: TcxGridDBColumn;
+    chisTop: TcxGridDBColumn;
   private
     { Private declarations }
   public
