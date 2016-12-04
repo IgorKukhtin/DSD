@@ -64,6 +64,8 @@ type
     actPrintPeriod: TdsdPrintAction;
     spSelectPrintPeriod: TdsdStoredProc;
     bbPrintPeriod: TdxBarButton;
+    macPrintPeriod: TMultiAction;
+    actDialog_Print: TExecuteDialog;
   private
     { Private declarations }
   public
