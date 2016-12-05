@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsTag(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
-             , ColorReport TFloat, ColorBgReport TFloat
+             , ColorReportId Integer, ColorBgReportId Integer, Text1 TVarChar, Text2 TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -27,9 +27,12 @@ BEGIN
            , CAST (0 as Integer)    AS GoodsGroupAnalystId
            , CAST ('' as TVarChar)  AS GoodsGroupAnalystName  
 
-           , CAST (0 as TFloat)     AS ColorReport
-           , CAST (0 as TFloat)     AS ColorBgReport
+           , CAST (0 as Integer)     AS ColorReportId
+           , CAST (0 as Integer)     AS ColorBgReportId
            
+           , CAST ('' as TVarChar)   AS Text1
+           , CAST ('' as TVarChar)   AS Text2
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -41,8 +44,10 @@ BEGIN
            , Object_GoodsGroupAnalyst.Id           AS GoodsGroupAnalystId
            , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupAnalystName  
 
-           , ObjectFloat_ColorReport.ValueData     AS ColorReport
-           , ObjectFloat_ColorBgReport.ValueData   AS ColorBgReport
+           , COALESCE (ObjectFloat_ColorReport.ValueData,0)   ::Integer   AS ColorReportId
+           , COALESCE (ObjectFloat_ColorBgReport.ValueData,0) ::Integer   AS ColorBgReportId
+           , CASE WHEN COALESCE (ObjectFloat_ColorReport.ValueData,-1)   = -1 THEN '' ELSE 'Текст' END ::TVarChar  AS Text1
+           , CASE WHEN COALESCE (ObjectFloat_ColorBgReport.ValueData,-1) = -1 THEN '' ELSE 'Фон'   END ::TVarChar  AS Text2
            
            , Object_GoodsTag.isErased   AS isErased
            

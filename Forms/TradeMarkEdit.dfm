@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-  ClientHeight = 149
+  ClientHeight = 198
   ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 9
-    Top = 51
+    Top = 56
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 108
+    Top = 161
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 108
+    Top = 161
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -48,7 +48,7 @@
   end
   object Код: TcxLabel
     Left = 9
-    Top = 7
+    Top = 9
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
@@ -59,11 +59,48 @@
     TabOrder = 5
     Width = 273
   end
+  object cxLabel3: TcxLabel
+    Left = 9
+    Top = 103
+    Hint = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1074' '#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077
+    Caption = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1074' '#1086#1090#1095#1077#1090#1077
+  end
+  object cxLabel4: TcxLabel
+    Left = 152
+    Top = 103
+    Hint = #1062#1074#1077#1090' '#1092#1086#1085#1072' '#1074' '#1086#1090#1095#1077#1090#1077
+    Caption = #1062#1074#1077#1090' '#1092#1086#1085#1072' '#1074' '#1086#1090#1095#1077#1090#1077
+  end
+  object edColorReport: TcxButtonEdit
+    Left = 9
+    Top = 122
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 130
+  end
+  object edColorBgReport: TcxButtonEdit
+    Left = 152
+    Top = 122
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 130
+  end
   object ActionList: TActionList
     Left = 120
-    Top = 120
+    Top = 157
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -72,12 +109,17 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -97,12 +139,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -110,7 +154,27 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorReport'
+        Value = Null
+        Component = ColorReportGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorBgReport'
+        Value = Null
+        Component = ColorBgReportGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 136
     Top = 56
   end
@@ -120,9 +184,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 152
-    Top = 120
+    Top = 157
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_TradeMark'
@@ -135,20 +200,54 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edMeasureName
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorReportId'
+        Value = 0
+        Component = ColorReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'text1'
+        Value = Null
+        Component = ColorReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorBgReportId'
+        Value = Null
+        Component = ColorBgReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'text2'
+        Value = 0
+        Component = ColorBgReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
+    PackSize = 1
     Left = 192
-    Top = 96
+    Top = 149
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -162,10 +261,66 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 40
-    Top = 80
+    Left = 64
+    Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 184
+  end
+  object ColorReportGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edColorReport
+    Key = '0'
+    FormNameParam.Value = 'TColorForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TColorForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ColorReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ColorReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 56
+    Top = 102
+  end
+  object ColorBgReportGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edColorBgReport
+    Key = '0'
+    FormNameParam.Value = 'TColorForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TColorForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = ColorBgReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ColorBgReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 102
   end
 end

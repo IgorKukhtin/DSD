@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TradeMark(
  INOUT ioId                  Integer,       -- Ключ объекта <маршрут>
     IN inCode                Integer,       -- свойство <Код маршрута>
     IN inName                TVarChar,      -- свойство <Наименование маршрута>
-    IN inColorReport         TFloat    ,     -- Цвет текста в "отчет по отгрузке"
-    IN inColorBgReport       TFloat    ,     -- Цвет фона в "отчет по отгрузке"
+    IN inColorReport         TFloat  ,     -- Цвет текста в "отчет по отгрузке"
+    IN inColorBgReport       TFloat  ,     -- Цвет фона в "отчет по отгрузке"
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -39,9 +39,21 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_TradeMark(), Code_max, inName);
    
    -- сохранили свойство <Цвет текста в "отчет по отгрузке">
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorReport(), ioId, inColorReport);
+   IF (COALESCE (inColorReport,0) <> 0 AND COALESCE (inColorBgReport,0) <> zc_Color_White())
+      THEN
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorReport(), ioId, inColorReport);
+      ELSE
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorReport(), ioId, Null);
+   END IF;
+
    -- сохранили свойство <Цвет фона в "отчет по отгрузке">
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorBgReport(), ioId, inColorBgReport);
+   IF (COALESCE (inColorBgReport,0) <> 0 AND COALESCE (inColorBgReport,0) <> zc_Color_White())
+      THEN
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorBgReport(), ioId, inColorBgReport);
+      ELSE
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorBgReport(), ioId, Null);
+   END IF;
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

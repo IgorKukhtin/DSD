@@ -14,6 +14,7 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGetParams
   PixelsPerInch = 96
@@ -434,12 +435,14 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'StartDate'
         Value = 'NULL'
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
+        Name = 'EndDate'
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime

@@ -60,10 +60,41 @@ object TradeMarkForm: TTradeMarkForm
         HeaderAlignmentVert = vaCenter
         Width = 286
       end
+      object Text1: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072
+        DataBinding.FieldName = 'Text1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
+        Options.Editing = False
+        Width = 100
+      end
+      object Text2: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1092#1086#1085#1072
+        DataBinding.FieldName = 'Text2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1074#1077#1090' '#1092#1086#1085#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
+        Options.Editing = False
+        Width = 100
+      end
+      object ColorBgReport: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorBgReport'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object ColorReport: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorReport'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 20
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -102,8 +133,8 @@ object TradeMarkForm: TTradeMarkForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -252,10 +283,12 @@ object TradeMarkForm: TTradeMarkForm
       FormName = 'TTradeMarkEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -271,6 +304,7 @@ object TradeMarkForm: TTradeMarkForm
       FormName = 'TTradeMarkEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -278,6 +312,7 @@ object TradeMarkForm: TTradeMarkForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -326,6 +361,7 @@ object TradeMarkForm: TTradeMarkForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -333,6 +369,7 @@ object TradeMarkForm: TTradeMarkForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -357,6 +394,7 @@ object TradeMarkForm: TTradeMarkForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -364,6 +402,7 @@ object TradeMarkForm: TTradeMarkForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -372,6 +411,7 @@ object TradeMarkForm: TTradeMarkForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -403,6 +443,7 @@ object TradeMarkForm: TTradeMarkForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -429,7 +470,17 @@ object TradeMarkForm: TTradeMarkForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Text1
+        ValueColumn = ColorReport
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Text2
+        BackGroundValueColumn = ColorBgReport
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

@@ -3,7 +3,7 @@ object GoodsTagForm: TGoodsTagForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1080#1079#1085#1072#1082#1080' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
-  ClientWidth = 481
+  ClientWidth = 538
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object GoodsTagForm: TGoodsTagForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 481
+    Width = 538
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 481
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -76,6 +77,36 @@ object GoodsTagForm: TGoodsTagForm
         Options.Editing = False
         Width = 78
       end
+      object Text1: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072
+        DataBinding.FieldName = 'Text1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1074#1077#1090' '#1090#1077#1082#1089#1090#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
+        Options.Editing = False
+        Width = 100
+      end
+      object Text2: TcxGridDBColumn
+        Caption = #1062#1074#1077#1090' '#1092#1086#1085#1072
+        DataBinding.FieldName = 'Text2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1074#1077#1090' '#1092#1086#1085#1072' '#1074' "'#1086#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1075#1088#1091#1079#1082#1077'"'
+        Options.Editing = False
+        Width = 100
+      end
+      object ColorBgReport: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorBgReport'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 30
+      end
+      object ColorReport: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorReport'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 20
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -110,8 +141,8 @@ object GoodsTagForm: TGoodsTagForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -267,10 +298,12 @@ object GoodsTagForm: TGoodsTagForm
       FormName = 'TGoodsTagEditForm'
       FormNameParam.Value = 'TGoodsTagEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -301,6 +334,7 @@ object GoodsTagForm: TGoodsTagForm
       FormName = 'TGoodsTagEditForm'
       FormNameParam.Value = 'TGoodsTagEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -308,6 +342,7 @@ object GoodsTagForm: TGoodsTagForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -324,6 +359,7 @@ object GoodsTagForm: TGoodsTagForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -331,12 +367,14 @@ object GoodsTagForm: TGoodsTagForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupAnalystId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupAnalystId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupAnalystName'
@@ -344,6 +382,7 @@ object GoodsTagForm: TGoodsTagForm
           Component = ClientDataSet
           ComponentItem = 'GoodsGroupAnalystName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -368,6 +407,7 @@ object GoodsTagForm: TGoodsTagForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -375,6 +415,7 @@ object GoodsTagForm: TGoodsTagForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -383,6 +424,7 @@ object GoodsTagForm: TGoodsTagForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -410,6 +452,7 @@ object GoodsTagForm: TGoodsTagForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -440,7 +483,17 @@ object GoodsTagForm: TGoodsTagForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ColorColumn = Text1
+        ValueColumn = ColorReport
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Text2
+        BackGroundValueColumn = ColorBgReport
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>

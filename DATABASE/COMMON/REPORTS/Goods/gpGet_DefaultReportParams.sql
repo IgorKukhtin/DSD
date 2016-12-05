@@ -28,8 +28,8 @@ BEGIN
    --  RETURN QUERY  
     OPEN Cursor1 FOR
 
-           SELECT CURRENT_Date     ::TDateTime   AS StartDate
-                , CURRENT_Date     ::TDateTime   AS EndDate
+           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE) ::TDateTime   AS StartDate
+                , CURRENT_DATE     ::TDateTime   AS EndDate
                 , Object_Unit.Id                 AS UnitId
                 , Object_Unit.ValueData          AS UnitName
 

@@ -39,10 +39,22 @@ BEGIN
    
       -- сохранили св€зь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsTag_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId); 
+
    -- сохранили свойство <÷вет текста в "отчет по отгрузке">
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorReport(), ioId, inColorReport);
+   IF (COALESCE (inColorReport,0) <> 0 AND COALESCE (inColorBgReport,0) <> zc_Color_White())
+      THEN
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorReport(), ioId, inColorReport);
+      ELSE
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorReport(), ioId, Null);
+   END IF;
+
    -- сохранили свойство <÷вет фона в "отчет по отгрузке">
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorBgReport(), ioId, inColorBgReport);
+   IF (COALESCE (inColorBgReport,0) <> 0 AND COALESCE (inColorBgReport,0) <> zc_Color_White())
+      THEN
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorBgReport(), ioId, inColorBgReport);
+      ELSE
+          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorBgReport(), ioId, Null);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

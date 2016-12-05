@@ -179,6 +179,24 @@ object GoodsTagEditForm: TGoodsTagEditForm
         ComponentItem = 'GoodsGroupAnalystId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorReport'
+        Value = 0
+        Component = ColorReportGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inColorBgReport'
+        Value = Null
+        Component = ColorBgReportGuides
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 250
@@ -232,6 +250,36 @@ object GoodsTagEditForm: TGoodsTagEditForm
         Name = 'GoodsGroupAnalystName'
         Value = Null
         Component = GoodsGroupAnalystGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorReportId'
+        Value = 0
+        Component = ColorReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'text1'
+        Value = Null
+        Component = ColorReportGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ColorBgReportId'
+        Value = Null
+        Component = ColorBgReportGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'text2'
+        Value = 0
+        Component = ColorBgReportGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -289,15 +337,16 @@ object GoodsTagEditForm: TGoodsTagEditForm
   object ColorReportGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edColorReport
+    Key = '0'
     FormNameParam.Value = 'TColorForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TColorForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = 0
         Component = ColorReportGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
@@ -310,17 +359,18 @@ object GoodsTagEditForm: TGoodsTagEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 72
+    Left = 56
     Top = 144
   end
   object ColorBgReportGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edColorBgReport
+    Key = '0'
     FormNameParam.Value = 'TColorForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TColorForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
