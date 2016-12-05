@@ -34,7 +34,7 @@ BEGIN
                                                                       , SaleAmountSh TFloat, SaleAmountPartnerSh TFloat, ReturnAmountSh TFloat, ReturnAmountPartnerSh TFloat
                                                                       , SaleAmountDaySh TFloat, SaleAmountPartnerDaySh TFloat, ReturnAmountDaySh TFloat, ReturnAmountPartnerDaySh TFloat
                                                                       , GoodsPlatformId Integer, TradeMarkId Integer, GoodsTagId Integer
-                                   , ColorReport_TradeMark Integer, ColorReport_GoodsTag Integer) ON COMMIT DROP;
+                                   , ColorRecord_TradeMark Integer, ColorRecord_GoodsTag Integer) ON COMMIT DROP;
         
      END IF;
     
@@ -199,7 +199,7 @@ BEGIN
                                                                                            , SaleAmountDay, SaleAmountPartnerDay, ReturnAmountDay, ReturnAmountPartnerDay
                                                                                            , SaleAmountSh, SaleAmountPartnerSh, ReturnAmountSh, ReturnAmountPartnerSh
                                                                                            , SaleAmountDaySh, SaleAmountPartnerDaySh, ReturnAmountDaySh, ReturnAmountPartnerDaySh
-                              , ColorReport_TradeMark, ColorReport_GoodsTag)
+                              , ColorRecord_TradeMark, ColorRecord_GoodsTag)
 
                       SELECT _tmpGoods.GroupNum
                             , tmp.GoodsId
@@ -229,11 +229,11 @@ BEGIN
                             , CASE WHEN _tmpGoods.TradeMarkId = 340616 THEN 33023                      --ТМ ФФ
                                    WHEN _tmpGoods.TradeMarkId = 293382 THEN 33023                      --"тм СПЕЦ ЦЕХ"
                                    ELSE zc_Color_Black()
-                              END AS ColorReport_TradeMark
+                              END AS ColorRecord_TradeMark
                             , CASE WHEN _tmpGoods.GoodsTagId = 340603 THEN 33023                       --"варені/варенокопчені делікатеси"
                                    WHEN _tmpGoods.GoodsTagId = 340595 THEN 33023                       --"ковбаса сирокопчена"
                                    ELSE zc_Color_Black()
-                              END AS ColorReport_GoodsTag
+                              END AS ColorRecord_GoodsTag
                        FROM tmpData AS tmp
                             LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
                        --     LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = _tmpGoods.GoodsPlatformId
@@ -241,7 +241,7 @@ BEGIN
                        --     LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = _tmpGoods.GoodsTagId
                        ;
           
-    ANALYZE _tmpData;
+    -- ANALYZE _tmpData;
 
     OPEN Cursor1 FOR
 
@@ -261,7 +261,8 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , zc_Color_Red() AS ColorReport
+         , zc_Color_Red() AS ColorRecord
+         , FALSE          AS BoldRecord
          , 1 AS Num
     FROM tmpData
   UNION ALL
@@ -273,7 +274,8 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , zc_Color_Black() AS ColorReport
+         , zc_Color_Black() AS ColorRecord
+         , FALSE            AS BoldRecord
          , 1 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpData.GoodsPlatformId
@@ -289,7 +291,8 @@ FROM (
          , SUM (tmpData.SaleAmountDay - tmpData.ReturnAmountDay)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartnerDay - tmpData.ReturnAmountPartnerDay) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , zc_Color_Red() AS ColorReport
+         , zc_Color_Red() AS ColorRecord
+         , FALSE          AS BoldRecord
          , 1 AS Num
     FROM tmpData
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
@@ -302,7 +305,8 @@ FROM (
          , (SUM (tmpData.SaleAmount - tmpData.ReturnAmount)/vbCountDays)               :: TFloat AS Amount
          , (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner)/vbCountDays) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , zc_Color_Red() AS ColorReport
+         , zc_Color_Red() AS ColorRecord
+         , FALSE          AS BoldRecord
          , 1 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
@@ -318,7 +322,9 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , TRUE AS isTop
-         , zc_Color_Black() AS ColorReport
+         , zc_Color_Blue() AS ColorRecord
+         , FALSE            AS BoldRecord
+         -- , TRUE             AS BoldRecord
          , 2 AS Num
     FROM tmpData
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
@@ -332,12 +338,13 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , tmpData.ColorReport_TradeMark AS ColorReport
+         , tmpData.ColorRecord_TradeMark AS ColorRecord
+         , FALSE                         AS BoldRecord
          , 2 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
-    GROUP BY Object_TradeMark.ValueData, tmpData.ColorReport_TradeMark
+    GROUP BY Object_TradeMark.ValueData, tmpData.ColorRecord_TradeMark
     ORDER BY Object_TradeMark.ValueData
     )
 --
@@ -350,7 +357,9 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , TRUE AS isTop
-         , zc_Color_Black() AS ColorReport
+         , zc_Color_Blue() AS ColorRecord
+         , FALSE            AS BoldRecord
+         -- , TRUE             AS BoldRecord
          , 2 AS Num
     FROM tmpData
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
@@ -363,12 +372,13 @@ FROM (
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
-         , tmpData.ColorReport_GoodsTag AS ColorReport
+         , tmpData.ColorRecord_GoodsTag AS ColorRecord
+         , FALSE                        AS BoldRecord
          , 2 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
-    GROUP BY Object_GoodsTag.ValueData, tmpData.ColorReport_GoodsTag
+    GROUP BY Object_GoodsTag.ValueData, tmpData.ColorRecord_GoodsTag
     ORDER BY Object_GoodsTag.ValueData)
     ) AS tmp
     ;
@@ -383,7 +393,8 @@ FROM (
                 )
 
     SELECT * 
-         , zc_Color_Black() AS ColorReport
+         , zc_Color_Black() AS ColorRecord
+         , FALSE            AS BoldRecord
          , CAST (ROW_NUMBER() OVER (ORDER BY tmp.Num)   AS Integer) AS NumLine
     FROM (    
           SELECT '    Итого продано'                  :: TVarChar AS GroupName
@@ -557,4 +568,5 @@ $BODY$
  02.12.16         *
 */
 
---select * from gpReport_Goods_byMovement(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014 23:59:00')::TDateTime ,  inSession := '5');
+-- тест
+-- SELECT * FROM gpReport_Goods_byMovement(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('05.12.2016')::TDateTime , inUnitId := 8459 , inUnitGroupId := 8460 , inGoodsGroupGPId := 1832 , inGoodsGroupId := 1979 ,  inSession := '5');

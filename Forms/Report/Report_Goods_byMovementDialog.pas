@@ -37,8 +37,6 @@ type
     GuidesUnitGroup: TdsdGuides;
     spGetParams: TdsdStoredProc;
     ActionList: TActionList;
-    actGetParams: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
     actRefresh: TdsdDataSetRefresh;
   private
     { Private declarations }

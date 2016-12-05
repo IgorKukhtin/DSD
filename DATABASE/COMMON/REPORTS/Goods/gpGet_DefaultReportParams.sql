@@ -3,19 +3,16 @@
 DROP FUNCTION IF EXISTS gpGet_DefaultReportParams (TVarChar);
 DROP FUNCTION IF EXISTS gpGet_DefaultReportParams (TVarChar, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_DefaultReportParams(
     IN inReportName       TVarChar ,  -- Название отчета
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS SETOF refcursor 
-/*
 RETURNS TABLE (StartDate TDateTime, EndDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , UnitGroupId Integer, UnitGroupName TVarChar
-             , GoodsGroupGPId Integer, GoodsGroupGPName TVarChar
+             , GoodsGroupId_gp Integer, GoodsGroupName_gp TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
-             )*/
+              )
 AS
 $BODY$
 DECLARE
@@ -25,19 +22,18 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession(inSession);
 
-   --  RETURN QUERY  
-    OPEN Cursor1 FOR
-
-           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE) ::TDateTime   AS StartDate
-                , CURRENT_DATE     ::TDateTime   AS EndDate
+     -- Результат
+     RETURN QUERY  
+           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE) :: TDateTime   AS StartDate
+                , CURRENT_DATE     :: TDateTime  AS EndDate
                 , Object_Unit.Id                 AS UnitId
                 , Object_Unit.ValueData          AS UnitName
 
                 , Object_UnitGroup.Id            AS UnitGroupId
                 , Object_UnitGroup.ValueData     AS UnitGroupName     
 
-                , Object_GoodsGroupGP.Id         AS GoodsGroupGPId
-                , Object_GoodsGroupGP.ValueData  AS GoodsGroupGPName
+                , Object_GoodsGroupGP.Id         AS GoodsGroupId_gp
+                , Object_GoodsGroupGP.ValueData  AS GoodsGroupName_gp
 
                 , Object_GoodsGroup.Id           AS GoodsGroupId
                 , Object_GoodsGroup.ValueData    AS GoodsGroupname
@@ -48,7 +44,6 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = 1979      -- группа товаров Тушенка
            WHERE Object_Unit.Id = 8459;                                                   -- Склад Реализации
     
-    RETURN NEXT Cursor1;
  
 END;
 $BODY$
@@ -61,4 +56,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_DefaultReportParams (inSession:= '2'); 
+-- SELECT * FROM gpGet_DefaultReportParams (inReportName:= '', inSession:= '5');

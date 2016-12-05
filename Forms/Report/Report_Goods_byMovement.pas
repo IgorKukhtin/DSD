@@ -42,17 +42,16 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     ChildDBViewAddOn: TdsdDBViewAddOn;
-    actPrintGp: TdsdPrintAction;
-    bbPrintGp: TdxBarButton;
+    bbPrint: TdxBarButton;
     isTop: TcxGridDBColumn;
     chisTop: TcxGridDBColumn;
     bb: TdxBarButton;
-    spGetParams: TdsdStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    ColorReport: TcxGridDBColumn;
-    chColorReport: TcxGridDBColumn;
+    ColorRecord: TcxGridDBColumn;
+    chColorRecord: TcxGridDBColumn;
     NumLine: TcxGridDBColumn;
     chNumLine: TcxGridDBColumn;
+    BoldRecord: TcxGridDBColumn;
+    chBoldRecord: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
   private
     { Private declarations }

@@ -280,7 +280,8 @@ begin
   XMLDocument := TXMLDocument.Create(nil);
   XMLDocument.LoadFromXML(XML);
   for I := 0 to Params.Count - 1 do
-      if Params[i].ParamType in [ptOutput, ptInputOutput] then
+      if (Params[i].ParamType in [ptOutput, ptInputOutput])//and(Params[i].Name<>'')
+      then
          if XMLDocument.DocumentElement.HasAttribute(LowerCase(Params[i].Name)) then
             // XMLDocument режет перевод строки!!! приходится делать так
             Params[i].Value := XMLDocument.DocumentElement.Attributes[LowerCase(Params[i].Name)];

@@ -13,8 +13,7 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGetParams
   PixelsPerInch = 96
@@ -190,14 +189,15 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupGPId'
+        Name = 'GoodsGroupId_gp'
         Value = ''
         Component = GuidesGoodsGroupGP
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupGPName'
+        Name = 'GoodsGroupName_gp'
         Value = ''
         Component = GuidesGoodsGroupGP
         ComponentItem = 'TextValue'
@@ -375,6 +375,35 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'UnitId'
         Value = ''
         Component = GuidesUnit
@@ -405,47 +434,18 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupGPId'
+        Name = 'GoodsGroupId_gp'
         Value = ''
-        Component = GuidesGoodsGroupGP
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'GoodsGroupId_gp'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodsGroupGPName'
+        Name = 'GoodsGroupName_gp'
         Value = ''
-        Component = GuidesGoodsGroupGP
-        ComponentItem = 'TextValue'
+        Component = FormParams
+        ComponentItem = 'GoodsGroupName_gp'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupId'
-        Value = ''
-        Component = GuidesGoodsGroup
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupName'
-        Value = ''
-        Component = GuidesGoodsGroup
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'StartDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 'NULL'
-        Component = deEnd
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -457,26 +457,6 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
     Left = 235
     Top = 17
     object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actGetParams: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetParams
-      StoredProcList = <
-        item
-          StoredProc = spGetParams
-        end>
-      Caption = 'actGetParams'
-    end
-    object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGetParams
