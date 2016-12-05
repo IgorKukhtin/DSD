@@ -436,15 +436,15 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
       item
         Name = 'GoodsGroupId_gp'
         Value = ''
-        Component = FormParams
-        ComponentItem = 'GoodsGroupId_gp'
+        Component = GuidesGoodsGroupGP
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName_gp'
         Value = ''
-        Component = FormParams
-        ComponentItem = 'GoodsGroupName_gp'
+        Component = GuidesGoodsGroupGP
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
