@@ -2,8 +2,8 @@ object DiscountServiceForm: TDiscountServiceForm
   Left = 0
   Top = 0
   Caption = 'DiscountService'
-  ClientHeight = 109
-  ClientWidth = 479
+  ClientHeight = 118
+  ClientWidth = 601
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -93,5 +93,33 @@ object DiscountServiceForm: TDiscountServiceForm
     PackSize = 1
     Left = 120
     Top = 64
+  end
+  object UnloadCDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 304
+    Top = 24
+  end
+  object spSelectUnload: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
+    DataSet = UnloadCDS
+    DataSets = <
+      item
+        DataSet = UnloadCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 40
   end
 end

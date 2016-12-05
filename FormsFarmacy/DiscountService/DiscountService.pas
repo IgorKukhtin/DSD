@@ -5,13 +5,15 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Soap.InvokeRegistry, Vcl.StdCtrls,
-  Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient;
+  Soap.Rio, Soap.SOAPHTTPClient, uCardService, dsdDB, Datasnap.DBClient, Data.DB;
 
 type
   TDiscountServiceForm = class(TForm)
     HTTPRIO: THTTPRIO;
     spGet_BarCode: TdsdStoredProc;
     spGet_DiscountExternal: TdsdStoredProc;
+    UnloadCDS: TClientDataSet;
+    spSelectUnload: TdsdStoredProc;
   private
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;

@@ -45,9 +45,9 @@ BEGIN
       WITH 
           -- Товары из Маркетинговых контрактов
           tmpGoods AS (SELECT DISTINCT
-                              MI_Juridical.ObjectId AS JuridicalId                -- Поставщик
-                            --, MI_Goods.ObjectId     AS GoodsId                  -- здесь товар "сети"
-                            , ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
+                              ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
+                            -- , MI_Goods.ObjectId     AS GoodsId                  -- здесь товар "сети"
+                            -- , MI_Juridical.ObjectId AS JuridicalId                -- Поставщик
                        FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
@@ -127,7 +127,7 @@ BEGIN
                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
        
         INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                           AND tmpGoods.JuridicalId = MovementLinkObject_From.ObjectId
+                           -- AND tmpGoods.JuridicalId = MovementLinkObject_From.ObjectId
         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId 
 
         LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
