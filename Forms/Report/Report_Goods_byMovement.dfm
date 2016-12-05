@@ -951,8 +951,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportName = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
