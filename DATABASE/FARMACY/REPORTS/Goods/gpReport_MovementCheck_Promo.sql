@@ -176,10 +176,10 @@ BEGIN
                                                      AND tmpGoods_All.StartDate_Promo <= Movement_Income.OperDate
                                                      AND tmpGoods_All.EndDate_Promo   >= Movement_Income.OperDate
 
-                              INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = tmpGoods_All.MovementId_Promo
+                              /*INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = tmpGoods_All.MovementId_Promo
                                                                      AND MI_Juridical.DescId = zc_MI_Child()
                                                                      AND MI_Juridical.isErased = FALSE
-                                                                     AND MI_Juridical.ObjectId = MovementLinkObject_From_Income.ObjectId
+                                                                     AND MI_Juridical.ObjectId = MovementLinkObject_From_Income.ObjectId*/
                             ) 
            -- 
            , tmpData AS (SELECT tmpData_all.MovementId_Check
