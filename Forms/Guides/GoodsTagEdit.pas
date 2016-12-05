@@ -30,6 +30,12 @@ type
     cxLabel11: TcxLabel;
     ceGoodsGroupAnalyst: TcxButtonEdit;
     GoodsGroupAnalystGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    edColorReport: TcxButtonEdit;
+    ColorReportGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edColorBgReport: TcxButtonEdit;
+    ColorBgReportGuides: TdsdGuides;
   private
     { Private declarations }
   public

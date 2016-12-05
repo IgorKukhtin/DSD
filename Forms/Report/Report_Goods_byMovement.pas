@@ -46,10 +46,14 @@ type
     bbPrintGp: TdxBarButton;
     isTop: TcxGridDBColumn;
     chisTop: TcxGridDBColumn;
-    actPrint: TdsdPrintAction;
     bb: TdxBarButton;
     spGetParams: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    ColorReport: TcxGridDBColumn;
+    chColorReport: TcxGridDBColumn;
+    NumLine: TcxGridDBColumn;
+    chNumLine: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
   private
     { Private declarations }
   public
