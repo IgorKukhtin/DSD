@@ -26,6 +26,10 @@ BEGIN
  UNION SELECT zc_Color_Warning_Red(),       zc_Color_Warning_Red(),      zc_Color_White(), 'zc_Color_Warning_Red'       ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
  UNION SELECT zc_Color_Warning_Navy(),      zc_Color_Warning_Navy(),     zc_Color_White(), 'zc_Color_Warning_Navy'      ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
  UNION SELECT 33023,                        33023,                       zc_Color_White(), 'Orange'                     ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
+ UNION SELECT 16257790,                     16257790,                    zc_Color_White(), 'Pink'                       ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
+ UNION SELECT 8388863,                      8388863,                     zc_Color_White(), 'Pink_2'                     ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
+ UNION SELECT 1018911,                      1018911,                     zc_Color_White(), 'Green'                      ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
+ UNION SELECT 14866996,                     14866996,                    zc_Color_White(), 'Blue'                      ::TVarChar, 'Текст' ::TVarChar, 'Фон' ::TVarChar
  ;
   
 END;
