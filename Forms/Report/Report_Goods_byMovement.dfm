@@ -6,7 +6,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 816
-  ExplicitHeight = 440
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -32,132 +32,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         ExplicitWidth = 800
         ExplicitHeight = 298
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-              Position = spFooter
-            end
-            item
-              Format = ',0.00;-,0.00'
-              Kind = skSum
-              Position = spFooter
-              Column = SaleAmountPartner
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SaleAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SaleAmount
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00;0.00;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = ReturnAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = ReturnAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountPartner
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SaleAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = ReturnAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = ReturnAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SaleAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountPartner
-            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -178,7 +52,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 192
+            Width = 300
           end
           object SaleAmount: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
@@ -219,6 +93,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -230,6 +105,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -241,6 +117,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 3
             Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -251,12 +128,17 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Visible = False
             Width = 20
           end
-          object ColorReport: TcxGridDBColumn
-            DataBinding.FieldName = 'ColorReport'
+          object ColorRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorRecord'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object BoldRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -264,6 +146,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -585,12 +470,17 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Visible = False
             Width = 20
           end
-          object chColorReport: TcxGridDBColumn
-            DataBinding.FieldName = 'ColorReport'
+          object chColorRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorRecord'
             Visible = False
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object chBoldRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -705,61 +595,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Left = 59
     Top = 312
   end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = UnitGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = UnitGroupGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GoodsGroupGPGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
-        Component = GoodsGroupGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end>
-  end
   inherited ActionList: TActionList
-    object actRefreshStart: TdsdDataSetRefresh [0]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetParams
-      StoredProcList = <
-        item
-          StoredProc = spGetParams
-        end
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -822,7 +658,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsGroupGPId'
+          Name = 'GoodsGroupId_gp'
           Value = ''
           Component = GoodsGroupGPGuides
           ComponentItem = 'Key'
@@ -830,7 +666,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'GoodsGroupGPName'
+          Name = 'GoodsGroupName_gp'
           Value = ''
           Component = GoodsGroupGPGuides
           ComponentItem = 'TextValue'
@@ -859,21 +695,23 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPrintGp: TdsdPrintAction
+    object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
-      ShortCut = 16464
+      ImageIndex = 3
       DataSets = <
         item
+          DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          GridView = cxGridDBTableView
+          IndexFieldNames = 'NumLine'
         end
         item
+          DataSet = ChildCDS
           UserName = 'frxDBDChild'
-          GridView = cxGridDBTableView1
+          IndexFieldNames = 'NumLine'
         end>
       Params = <
         item
@@ -904,51 +742,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          GridView = cxGridDBTableView
-        end
-        item
-          UserName = 'frxDBDChild'
-          GridView = cxGridDBTableView1
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42705d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42705d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BranchName'
-          Value = ''
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1055#1086' '#1054#1090#1075#1088#1091#1079#1082#1072#1084
@@ -1059,7 +852,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintGp'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1078,7 +871,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bbPrintGp: TdxBarButton
+    object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
     end
@@ -1091,10 +884,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = ''
     ColorRuleList = <
       item
-        ValueColumn = ColorReport
+        ValueColumn = ColorRecord
         ColorValueList = <>
+        ValueBoldColumn = BoldRecord
       end>
     Left = 24
     Top = 152
@@ -1264,96 +1059,21 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   end
   object ChildDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
+    View = cxGridDBTableView1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <
       item
-        ValueColumn = ColorReport
+        ValueColumn = chColorRecord
         ColorValueList = <>
+        ValueBoldColumn = chBoldRecord
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 680
     Top = 232
-  end
-  object spGetParams: TdsdStoredProc
-    StoredProcName = 'gpGet_DefaultReportParams'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inReportName'
-        Value = 'Report_Goods_byMovement'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitGroupId'
-        Value = ''
-        Component = UnitGroupGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitGroupName'
-        Value = ''
-        Component = UnitGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupGPId'
-        Value = ''
-        Component = GoodsGroupGPGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupGPName'
-        Value = ''
-        Component = GoodsGroupGPGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupId'
-        Value = ''
-        Component = GoodsGroupGuides
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsGroupName'
-        Value = ''
-        Component = GoodsGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 352
-    Top = 248
   end
 end

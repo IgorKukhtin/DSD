@@ -81,6 +81,7 @@ type
   private
     FColorColumn: TcxGridColumn;
     FValueColumn: TcxGridColumn;
+    FValueBoldColumn: TcxGridColumn;
     FColorInValueColumn: boolean;
     FColorValueList: TCollection;
     FStyle: TcxStyle;
@@ -100,6 +101,8 @@ type
     property ColorInValueColumn: boolean read FColorInValueColumn write FColorInValueColumn default true;
     // Значения для цветов
     property ColorValueList: TCollection read FColorValueList write FColorValueList;
+    // Откуда брать значение для определения Bold
+    property ValueBoldColumn: TcxGridColumn read FValueBoldColumn write FValueBoldColumn;
   end;
 
   TColumnActionOptions = class(TPersistent)
@@ -784,6 +787,7 @@ procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
   out AStyle: TcxStyle);
 var Column: TcxGridColumn;
     i: integer;
+    isBold_calc:Boolean;
 begin
   if Assigned(FOnGetContentStyleEvent) then
      FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
@@ -805,9 +809,16 @@ begin
         if Assigned(ColorColumn) then
         begin
           if AItem = ColorColumn then begin
+           //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+           {isBold_calc:= false;
+           if Assigned(ValueBoldColumn) then
+              if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+              isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+           //
            if Assigned(ValueColumn) then
               if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
                  FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+                 // if isBold_calc = true then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
                  AStyle := FStyle
               end;
            if Assigned(BackGroundValueColumn) then
@@ -818,9 +829,16 @@ begin
            end;
         end
         else begin
+           //сначала Bold, !!!но так не работает, поэтому - отключил!!!!
+           {isBold_calc:= false;
+           if Assigned(ValueBoldColumn) then
+              if not VarIsNull(ARecord.Values[ValueBoldColumn.Index]) then
+              isBold_calc:= AnsiUpperCase(ARecord.Values[ValueBoldColumn.Index]) = AnsiUpperCase('true');}
+           //
            if Assigned(ValueColumn) then
               if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
                  FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+                 // if (isBold_calc = true)and Assigned(FStyle.Font) then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
                  AStyle := FStyle
               end;
            if Assigned(BackGroundValueColumn) then
@@ -2016,6 +2034,7 @@ begin
     begin
       Self.ColorColumn := ColorColumn;
       Self.ValueColumn := ValueColumn;
+      Self.ValueBoldColumn := ValueBoldColumn;
       Self.ColorInValueColumn := ColorInValueColumn;
       Self.ColorValueList.Assign(ColorValueList);
     end
