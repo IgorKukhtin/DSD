@@ -3,8 +3,8 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084'>'
-  ClientHeight = 216
-  ClientWidth = 450
+  ClientHeight = 225
+  ClientWidth = 443
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,9 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isSingle = False
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
+  AddOnFormData.AddOnFormRefresh.GetStoredProc = spGetParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -359,5 +360,126 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
       end>
     Left = 288
     Top = 112
+  end
+  object spGetParams: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultReportParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 42705d
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 42705d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupId'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupName'
+        Value = ''
+        Component = GuidesUnitGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupGPId'
+        Value = ''
+        Component = GuidesGoodsGroupGP
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupGPName'
+        Value = ''
+        Component = GuidesGoodsGroupGP
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    AutoWidth = True
+    Left = 344
+    Top = 16
+  end
+  object ActionList: TActionList
+    Left = 235
+    Top = 17
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actGetParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetParams
+      StoredProcList = <
+        item
+          StoredProc = spGetParams
+        end>
+      Caption = 'actGetParams'
+    end
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetParams
+      StoredProcList = <
+        item
+          StoredProc = spGetParams
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
 end

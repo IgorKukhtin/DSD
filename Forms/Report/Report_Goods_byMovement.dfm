@@ -29,6 +29,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 298
+        ExplicitLeft = -248
+        ExplicitTop = -24
         ExplicitWidth = 800
         ExplicitHeight = 298
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -178,7 +180,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'SaleAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -187,6 +190,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object ReturnAmount: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
             DataBinding.FieldName = 'ReturnAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -195,24 +201,31 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object Amount: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object ReturnAmountPartner: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ReturnAmountPartner'
+          object SaleAmountPartner: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SaleAmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object SaleAmountPartner: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'SaleAmountPartner'
+          object ReturnAmountPartner: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -221,10 +234,18 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object AmountPartner: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object isTop: TcxGridDBColumn
+            DataBinding.FieldName = 'isTop'
+            Visible = False
+            Width = 20
           end
         end
       end
@@ -407,7 +428,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'SaleAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -416,6 +439,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chReturnAmount: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
             DataBinding.FieldName = 'ReturnAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -424,6 +451,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chAmount: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -432,6 +463,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chReturnAmountPartner: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'ReturnAmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -441,7 +476,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'SaleAmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -450,10 +487,85 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object chAmountPartner: TcxGridDBColumn
             Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
             DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object chSaleAmountSh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1096#1090
+            DataBinding.FieldName = 'SaleAmountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chReturnAmountSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090
+            DataBinding.FieldName = 'ReturnAmountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmountSh: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1096#1090
+            DataBinding.FieldName = 'AmountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object chReturnAmountPartnerSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'ReturnAmountPartnerSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chSaleAmountPartnerSh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'SaleAmountPartnerSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object chAmountPartnerSh: TcxGridDBColumn
+            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1096#1090' ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'AmountPartnerSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object chisTop: TcxGridDBColumn
+            DataBinding.FieldName = 'isTop'
+            Visible = False
+            Width = 20
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -602,6 +714,52 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       end>
   end
   inherited ActionList: TActionList
+    object actRefreshStart: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetParams
+      StoredProcList = <
+        item
+          StoredProc = spGetParams
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actPrint: TdsdPrintAction [1]
+      Category = 'Print'
+      TabSheet = tsPivot
+      MoveParams = <>
+      Enabled = False
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView1
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Name = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
+    end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
@@ -700,6 +858,35 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actPrintGp: TdsdPrintAction
+      Category = 'Print'
+      TabSheet = tsMain
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1055
+      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1055
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Name = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
     end
   end
   inherited MasterDS: TDataSource
@@ -804,6 +991,18 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintGp'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -814,6 +1013,16 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
+    end
+    object bbPrintGp: TdxBarButton
+      Action = actPrintGp
+      Category = 0
+      ImageIndex = 3
+    end
+    object bb: TdxBarButton
+      Action = actPrint
+      Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -975,13 +1184,13 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 624
-    Top = 120
+    Left = 632
+    Top = 200
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 568
-    Top = 120
+    Left = 576
+    Top = 216
   end
   object ChildDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -994,7 +1203,90 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 680
-    Top = 120
+    Left = 664
+    Top = 224
+  end
+  object spGetParams: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultReportParams'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = 42132d
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupId'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitGroupName'
+        Value = ''
+        Component = UnitGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupGPId'
+        Value = ''
+        Component = GoodsGroupGPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupGPName'
+        Value = ''
+        Component = GoodsGroupGPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupName'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 248
   end
 end

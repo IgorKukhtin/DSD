@@ -1258,6 +1258,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReestrStartDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrPrintDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrPrintDialogForm');
 end;
 
 procedure TLoadFormTest.LoadDocumentKindFormTest;

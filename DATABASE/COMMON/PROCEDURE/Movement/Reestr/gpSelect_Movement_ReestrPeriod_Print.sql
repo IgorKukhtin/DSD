@@ -1,11 +1,14 @@
 -- Function: gpSelect_Movement_Reestr()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrPeriod_Print(
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inReestrKindId        Integer   ,
+    IN inisShowAll           Boolean   ,
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -74,7 +77,7 @@ BEGIN
                                                         ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                          WHERE Movement.DescId = zc_Movement_Reestr() 
-                           AND ((Movement.OperDate BETWEEN inStartDate AND inEndDate) OR (inReestrKindId = zc_Enum_ReestrKind_PartnerOut()))  --(736912= zc_Enum_ReestrKind_PartnerOut()))-- 
+                           AND (((Movement.OperDate BETWEEN inStartDate AND inEndDate) AND (inisShowAll = False)) OR (inisShowAll = True)) --(736912= zc_Enum_ReestrKind_PartnerOut()))-- 
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                          )
    

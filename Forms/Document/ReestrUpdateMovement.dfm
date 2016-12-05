@@ -968,7 +968,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ImageIndex = 2
     end
     object actPrintPeriod: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrintPeriod
       StoredProcList = <
@@ -988,10 +988,33 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end>
       Params = <
         item
-          Name = 'Id'
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReestrKindName'
+          Value = Null
+          Component = ReestrKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsShowAllPrint'
           Value = Null
           Component = FormParams
-          ComponentItem = 'Id'
+          ComponentItem = 'IsShowAllPrint'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReestrPeriod'
@@ -1002,7 +1025,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -1066,6 +1089,73 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actDialog_Print: TExecuteDialog
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'actDialog_Print'
+      ImageIndex = 16
+      FormName = 'TReestrPrintDialogForm'
+      FormNameParam.Value = 'TReestrPrintDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'IsShowAll'
+          Value = False
+          Component = FormParams
+          ComponentItem = 'IsShowAllPrint'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReestrKindId'
+          Value = 640042
+          Component = ReestrKindGuides
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ReestrKindName'
+          Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
+          Component = ReestrKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macPrintPeriod: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_Print
+        end
+        item
+          Action = actPrintPeriod
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 16
     end
   end
   inherited MasterDS: TDataSource
@@ -1198,9 +1288,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Category = 0
     end
     object bbPrintPeriod: TdxBarButton
-      Action = actPrintPeriod
+      Action = macPrintPeriod
       Category = 0
-      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1354,6 +1443,20 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsShowAllPrint'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsShowAll'
+        Value = True
+        DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 496
@@ -1623,6 +1726,15 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Value = Null
         Component = ReestrKindGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = True
+        Component = FormParams
+        ComponentItem = 'IsShowAllPrint'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

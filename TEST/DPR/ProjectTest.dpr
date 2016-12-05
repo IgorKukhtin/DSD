@@ -890,7 +890,8 @@ uses
   ReestrStartDialog in '..\..\Forms\Document\ReestrStartDialog.pas' {ReestrStartDialogForm: TParentForm},
   ReestrUpdateDialog in '..\..\Forms\Document\ReestrUpdateDialog.pas' {ReestrUpdateDialogForm: TParentForm},
   Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm},
-  Report_Goods_byMovementDialog in '..\..\Forms\Report\Report_Goods_byMovementDialog.pas' {Report_Goods_byMovementDialogForm: TParentForm};
+  Report_Goods_byMovementDialog in '..\..\Forms\Report\Report_Goods_byMovementDialog.pas' {Report_Goods_byMovementDialogForm: TParentForm},
+  ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

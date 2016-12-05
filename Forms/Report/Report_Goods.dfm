@@ -4,7 +4,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   ClientWidth = 1026
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1042
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

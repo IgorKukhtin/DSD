@@ -1,4 +1,4 @@
-unit Report_Goods_byMovementDialog;
+unit ReestrPrintDialog;
 
 interface
 
@@ -9,10 +9,10 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_Goods_byMovementDialogForm = class(TParentForm)
+  TReestrPrintDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deEnd: TcxDateEdit;
@@ -21,25 +21,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoodsGroup: TcxButtonEdit;
-    GuidesGoodsGroup: TdsdGuides;
-    cxLabel1: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    cxLabel4: TcxLabel;
-    GuidesUnit: TdsdGuides;
-    edUnit: TcxButtonEdit;
-    cxLabel8: TcxLabel;
-    GuidesGoodsGroupGP: TdsdGuides;
-    edGoodsGroupGP: TcxButtonEdit;
-    cxLabel2: TcxLabel;
-    edUnitGroup: TcxButtonEdit;
-    GuidesUnitGroup: TdsdGuides;
-    spGetParams: TdsdStoredProc;
-    ActionList: TActionList;
-    actGetParams: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    actRefresh: TdsdDataSetRefresh;
+    edIsShowAll: TcxCheckBox;
+    cxLabel27: TcxLabel;
+    edReestrKind: TcxButtonEdit;
   private
     { Private declarations }
   public
@@ -51,6 +37,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_Goods_byMovementDialogForm);
+  RegisterClass(TReestrPrintDialogForm);
 
 end.
