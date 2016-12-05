@@ -13,12 +13,7 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-<<<<<<< HEAD
   AddOnFormData.RefreshAction = actRefresh
-=======
-  AddOnFormData.RefreshAction = actRefreshStart
-  AddOnFormData.isSingle = False
->>>>>>> origin/master
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGetParams
   PixelsPerInch = 96
@@ -439,7 +434,6 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         MultiSelectSeparator = ','
       end
       item
-<<<<<<< HEAD
         Name = 'GoodsGroupId_gp'
         Value = ''
         Component = FormParams
@@ -452,19 +446,6 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         Component = FormParams
         ComponentItem = 'GoodsGroupName_gp'
         DataType = ftString
-=======
-        Name = 'StartDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 'NULL'
-        Component = deEnd
-        DataType = ftDateTime
->>>>>>> origin/master
         MultiSelectSeparator = ','
       end>
     PackSize = 1
