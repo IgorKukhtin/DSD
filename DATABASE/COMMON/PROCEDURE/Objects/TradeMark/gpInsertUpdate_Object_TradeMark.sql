@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_TradeMark(Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TradeMark(
- INOUT ioId             Integer,       -- Ключ объекта <маршрут>
-    IN inCode           Integer,       -- свойство <Код маршрута>
-    IN inName           TVarChar,      -- свойство <Наименование маршрута>
-    IN inSession        TVarChar       -- сессия пользователя
+ INOUT ioId                  Integer,       -- Ключ объекта <маршрут>
+    IN inCode                Integer,       -- свойство <Код маршрута>
+    IN inName                TVarChar,      -- свойство <Наименование маршрута>
+    IN inColorReport         TFloat    ,     -- Цвет текста в "отчет по отгрузке"
+    IN inColorBgReport       TFloat    ,     -- Цвет фона в "отчет по отгрузке"
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -35,19 +38,25 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_TradeMark(), Code_max, inName);
    
+   -- сохранили свойство <Цвет текста в "отчет по отгрузке">
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorReport(), ioId, inColorReport);
+   -- сохранили свойство <Цвет фона в "отчет по отгрузке">
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_TradeMark_ColorBgReport(), ioId, inColorBgReport);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.12.16         * 
  06.09.13                          *
 
 */

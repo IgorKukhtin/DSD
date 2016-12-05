@@ -29,8 +29,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 298
-        ExplicitLeft = -248
-        ExplicitTop = -24
         ExplicitWidth = 800
         ExplicitHeight = 298
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -168,6 +166,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object NumLine: TcxGridDBColumn
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'NumLine'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object colGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GroupName'
@@ -246,6 +250,13 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             DataBinding.FieldName = 'isTop'
             Visible = False
             Width = 20
+          end
+          object ColorReport: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorReport'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
           end
         end
       end
@@ -416,6 +427,13 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chNumLine: TcxGridDBColumn
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'NumLine'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
           object chGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GroupName'
@@ -567,6 +585,13 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             Visible = False
             Width = 20
           end
+          object chColorReport: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorReport'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -676,6 +701,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Width = 196
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+    Top = 312
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -730,35 +759,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPrint: TdsdPrintAction [1]
-      Category = 'Print'
-      TabSheet = tsPivot
-      MoveParams = <>
-      Enabled = False
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          GridView = cxGridDBTableView1
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.Name = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -860,33 +860,101 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       OpenBeforeShow = True
     end
     object actPrintGp: TdsdPrintAction
-      Category = 'Print'
-      TabSheet = tsMain
+      Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1043#1055
-      Hint = #1055#1077#1095#1072#1090#1100' '#1043#1055
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
           GridView = cxGridDBTableView
+        end
+        item
+          UserName = 'frxDBDChild'
+          GridView = cxGridDBTableView1
         end>
       Params = <
         item
-          Name = 'Id'
+          Name = 'StartDate'
           Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupGPName'
+          Value = Null
+          Component = GoodsGroupGPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = GoodsGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
-      ReportNameParam.Name = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
       ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
       ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
-      PreviewWindowMaximized = False
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end
+        item
+          UserName = 'frxDBDChild'
+          GridView = cxGridDBTableView1
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42705d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42705d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090#1055#1086#1054#1090#1075#1088#1091#1079#1082#1072#1084
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -995,10 +1063,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         end
         item
           Visible = True
-          ItemName = 'bb'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1015,17 +1079,23 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Category = 0
     end
     object bbPrintGp: TdxBarButton
-      Action = actPrintGp
-      Category = 0
-      ImageIndex = 3
-    end
-    object bb: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bb: TdxBarButton
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100
+      Visible = ivAlways
       ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ValueColumn = ColorReport
+        ColorValueList = <>
+      end>
     Left = 24
     Top = 152
   end
@@ -1199,12 +1269,16 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = ColorReport
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 664
-    Top = 224
+    Left = 680
+    Top = 232
   end
   object spGetParams: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultReportParams'
@@ -1212,17 +1286,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     OutputType = otResult
     Params = <
       item
-        Name = 'StartDate'
-        Value = 'NULL'
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 42132d
-        Component = deEnd
-        DataType = ftDateTime
+        Name = 'inReportName'
+        Value = 'Report_Goods_byMovement'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

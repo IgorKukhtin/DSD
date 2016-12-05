@@ -33,7 +33,8 @@ BEGIN
                                                                       , SaleAmountDay TFloat, SaleAmountPartnerDay TFloat, ReturnAmountDay TFloat, ReturnAmountPartnerDay TFloat
                                                                       , SaleAmountSh TFloat, SaleAmountPartnerSh TFloat, ReturnAmountSh TFloat, ReturnAmountPartnerSh TFloat
                                                                       , SaleAmountDaySh TFloat, SaleAmountPartnerDaySh TFloat, ReturnAmountDaySh TFloat, ReturnAmountPartnerDaySh TFloat
-                                                                      , GoodsPlatformId Integer, TradeMarkId Integer, GoodsTagId Integer) ON COMMIT DROP;
+                                                                      , GoodsPlatformId Integer, TradeMarkId Integer, GoodsTagId Integer
+                                   , ColorReport_TradeMark Integer, ColorReport_GoodsTag Integer) ON COMMIT DROP;
         
      END IF;
     
@@ -197,7 +198,9 @@ BEGIN
           INSERT INTO _tmpData (GroupNum, GoodsId, GoodsPlatformId, TradeMarkId, GoodsTagId, SaleAmount, SaleAmountPartner, ReturnAmount, ReturnAmountPartner
                                                                                            , SaleAmountDay, SaleAmountPartnerDay, ReturnAmountDay, ReturnAmountPartnerDay
                                                                                            , SaleAmountSh, SaleAmountPartnerSh, ReturnAmountSh, ReturnAmountPartnerSh
-                                                                                           , SaleAmountDaySh, SaleAmountPartnerDaySh, ReturnAmountDaySh, ReturnAmountPartnerDaySh)
+                                                                                           , SaleAmountDaySh, SaleAmountPartnerDaySh, ReturnAmountDaySh, ReturnAmountPartnerDaySh
+                              , ColorReport_TradeMark, ColorReport_GoodsTag)
+
                       SELECT _tmpGoods.GroupNum
                             , tmp.GoodsId
                             , _tmpGoods.GoodsPlatformId
@@ -222,6 +225,15 @@ BEGIN
                             , CAST (tmp.SaleAmountPartnerDay   AS TFloat)   AS SaleAmountPartnerDaySh
                             , CAST (tmp.ReturnAmountDay        AS TFloat)   AS ReturnAmountDaySh
                             , CAST (tmp.ReturnAmountPartnerDay AS TFloat)   AS ReturnAmountPartnerDaySh
+
+                            , CASE WHEN _tmpGoods.TradeMarkId = 340616 THEN 33023                      --ТМ ФФ
+                                   WHEN _tmpGoods.TradeMarkId = 293382 THEN 33023                      --"тм СПЕЦ ЦЕХ"
+                                   ELSE zc_Color_Black()
+                              END AS ColorReport_TradeMark
+                            , CASE WHEN _tmpGoods.GoodsTagId = 340603 THEN 33023                       --"варені/варенокопчені делікатеси"
+                                   WHEN _tmpGoods.GoodsTagId = 340595 THEN 33023                       --"ковбаса сирокопчена"
+                                   ELSE zc_Color_Black()
+                              END AS ColorReport_GoodsTag
                        FROM tmpData AS tmp
                             LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
                        --     LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = _tmpGoods.GoodsPlatformId
@@ -238,7 +250,9 @@ BEGIN
                 FROM _tmpData 
                 WHERE _tmpData.GroupNum = 1
                 )
-
+SELECT *
+    , CAST (ROW_NUMBER() OVER ( ORDER BY tmp.Num)   AS Integer) AS NumLine
+FROM (  
     SELECT '    Итого продано колбасы'        :: TVarChar AS GroupName
          , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
          , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
@@ -247,6 +261,8 @@ BEGIN
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , zc_Color_Red() AS ColorReport
+         , 1 AS Num
     FROM tmpData
   UNION ALL
     (SELECT Object_GoodsPlatform.ValueData    :: TVarChar AS GroupName
@@ -257,6 +273,8 @@ BEGIN
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , zc_Color_Black() AS ColorReport
+         , 1 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpData.GoodsPlatformId
     GROUP BY Object_GoodsPlatform.ValueData
@@ -271,10 +289,12 @@ BEGIN
          , SUM (tmpData.SaleAmountDay - tmpData.ReturnAmountDay)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartnerDay - tmpData.ReturnAmountPartnerDay) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , zc_Color_Red() AS ColorReport
+         , 1 AS Num
     FROM tmpData
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
   UNION ALL
-    (SELECT 'сред. Кг/сутки Алан'             :: TVarChar AS GroupName
+    (SELECT 'сред. Кг/сутки Алан'                           :: TVarChar AS GroupName
          , (SUM (tmpData.SaleAmount)/vbCountDays)           :: TFloat   AS SaleAmount
          , (SUM (tmpData.SaleAmountPartner)/vbCountDays)    :: TFloat   AS SaleAmountPartner 
          , (SUM (tmpData.ReturnAmount)/vbCountDays)         :: TFloat   AS ReturnAmount
@@ -282,20 +302,27 @@ BEGIN
          , (SUM (tmpData.SaleAmount - tmpData.ReturnAmount)/vbCountDays)               :: TFloat AS Amount
          , (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner)/vbCountDays) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , zc_Color_Red() AS ColorReport
+         , 1 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
     )
 --
   UNION ALL
-    SELECT '    В разрезе торговых марок'    :: TVarChar AS GroupName
-         , NULL    :: TFloat AS SaleAmount
-         , NULL    :: TFloat AS SaleAmountPartner 
-         , NULL    :: TFloat AS ReturnAmount
-         , NULL    :: TFloat AS ReturnAmountPartner
-         , NULL    :: TFloat AS Amount
-         , NULL    :: TFloat AS AmountPartner
+    SELECT '    В разрезе торговых марок'     :: TVarChar AS GroupName
+         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , TRUE AS isTop
+         , zc_Color_Black() AS ColorReport
+         , 2 AS Num
+    FROM tmpData
+    WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
+    
   UNION ALL
     (SELECT Object_TradeMark.ValueData        :: TVarChar AS GroupName
          , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
@@ -305,24 +332,30 @@ BEGIN
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , tmpData.ColorReport_TradeMark AS ColorReport
+         , 2 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
-    GROUP BY Object_TradeMark.ValueData
+    GROUP BY Object_TradeMark.ValueData, tmpData.ColorReport_TradeMark
     ORDER BY Object_TradeMark.ValueData
     )
 --
   UNION ALL
     SELECT '    В разрезе групп товаров'    :: TVarChar AS GroupName
-         , NULL    :: TFloat AS SaleAmount
-         , NULL    :: TFloat AS SaleAmountPartner 
-         , NULL    :: TFloat AS ReturnAmount
-         , NULL    :: TFloat AS ReturnAmountPartner
-         , NULL    :: TFloat AS Amount
-         , NULL    :: TFloat AS AmountPartner
+         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , TRUE AS isTop
+         , zc_Color_Black() AS ColorReport
+         , 2 AS Num
+    FROM tmpData
+    WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
   UNION ALL
-    SELECT Object_GoodsTag.ValueData          :: TVarChar AS GroupName
+    (SELECT Object_GoodsTag.ValueData          :: TVarChar AS GroupName
          , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
          , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
          , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
@@ -330,10 +363,14 @@ BEGIN
          , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
          , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
          , FALSE AS isTop
+         , tmpData.ColorReport_GoodsTag AS ColorReport
+         , 2 AS Num
     FROM tmpData
          LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
     WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
-    GROUP BY Object_GoodsTag.ValueData
+    GROUP BY Object_GoodsTag.ValueData, tmpData.ColorReport_GoodsTag
+    ORDER BY Object_GoodsTag.ValueData)
+    ) AS tmp
     ;
     
     RETURN NEXT Cursor1;
@@ -345,150 +382,166 @@ BEGIN
                 WHERE _tmpData.GroupNum = 2
                 )
 
-    SELECT '    Итого продано'                :: TVarChar AS GroupName
-         , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
-         , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
-         , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
-         , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
-         , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-         , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+    SELECT * 
+         , zc_Color_Black() AS ColorReport
+         , CAST (ROW_NUMBER() OVER (ORDER BY tmp.Num)   AS Integer) AS NumLine
+    FROM (    
+          SELECT '    Итого продано'                  :: TVarChar AS GroupName
+               , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
+               , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
+               , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
+               , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
+               , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+               , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
 
-         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
-         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-         , FALSE AS isTop
-    FROM tmpData
-  UNION ALL
-    (SELECT Object_GoodsPlatform.ValueData    :: TVarChar AS GroupName
-         , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
-         , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
-         , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
-         , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
-         , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-         , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+               , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+               , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+               , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+               , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+               , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+               , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
+               , FALSE AS isTop
+               , 1 AS Num
+          FROM tmpData
+        UNION ALL
+          (SELECT Object_GoodsPlatform.ValueData    :: TVarChar AS GroupName
+                , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
+                , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
+                , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
+                , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
+                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
 
-         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
-         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-         , FALSE AS isTop
-    FROM tmpData
-         LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpData.GoodsPlatformId
-    GROUP BY Object_GoodsPlatform.ValueData
-    ORDER BY Object_GoodsPlatform.ValueData
-    )
-  UNION ALL
-    SELECT '    В разрезе торговых марок'    :: TVarChar AS GroupName
-         , NULL    :: TFloat AS SaleAmountSh
-         , NULL    :: TFloat AS SaleAmountPartnerSh
-         , NULL    :: TFloat AS ReturnAmountSh
-         , NULL    :: TFloat AS ReturnAmountPartnerSh
-         , NULL    :: TFloat AS AmountSh
-         , NULL    :: TFloat AS AmountPartnerSh
+                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
+                , FALSE AS isTop
+                , 1 AS Num
+           FROM tmpData
+                LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpData.GoodsPlatformId
+           GROUP BY Object_GoodsPlatform.ValueData
+           ORDER BY Object_GoodsPlatform.ValueData
+           )
+        UNION ALL
+          SELECT '    В разрезе торговых марок'    :: TVarChar AS GroupName
+               , NULL    :: TFloat AS SaleAmountSh      
+               , NULL    :: TFloat AS SaleAmountPartnerSh
+               , NULL    :: TFloat AS ReturnAmountSh
+               , NULL    :: TFloat AS ReturnAmountPartnerSh
+               , NULL    :: TFloat AS AmountSh
+               , NULL    :: TFloat AS AmountPartnerSh
 
-         , NULL    :: TFloat AS SaleAmount
-         , NULL    :: TFloat AS SaleAmountPartner 
-         , NULL    :: TFloat AS ReturnAmount
-         , NULL    :: TFloat AS ReturnAmountPartner
-         , NULL    :: TFloat AS Amount
-         , NULL    :: TFloat AS AmountPartner
-         , TRUE AS isTop
-  UNION ALL
-    (SELECT Object_TradeMark.ValueData        :: TVarChar AS GroupName
-         , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
-         , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
-         , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
-         , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
-         , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-         , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+               , NULL    :: TFloat AS SaleAmount
+               , NULL    :: TFloat AS SaleAmountPartner 
+               , NULL    :: TFloat AS ReturnAmount
+               , NULL    :: TFloat AS ReturnAmountPartner
+               , NULL    :: TFloat AS Amount
+               , NULL    :: TFloat AS AmountPartner
+               , TRUE AS isTop
+               , 2 AS Num
+        UNION ALL
+          (SELECT Object_TradeMark.ValueData        :: TVarChar AS GroupName
+                , SUM (tmpData.SaleAmountSh)           :: TFloat   AS SaleAmountSh
+                , SUM (tmpData.SaleAmountPartnerSh)    :: TFloat   AS SaleAmountPartnerSh
+                , SUM (tmpData.ReturnAmountSh)         :: TFloat   AS ReturnAmountSh
+                , SUM (tmpData.ReturnAmountPartnerSh)  :: TFloat   AS ReturnAmountPartnerSh
+                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
 
-         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
-         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-         , FALSE AS isTop
-    FROM tmpData
-         LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
-    GROUP BY Object_TradeMark.ValueData
-    ORDER BY Object_TradeMark.ValueData
-    )
-  UNION ALL
-    SELECT '    В разрезе групп товаров'    :: TVarChar AS GroupName
-         , NULL    :: TFloat AS SaleAmountSh
-         , NULL    :: TFloat AS SaleAmountPartnerSh
-         , NULL    :: TFloat AS ReturnAmountSh
-         , NULL    :: TFloat AS ReturnAmountPartnerSh
-         , NULL    :: TFloat AS AmountSh
-         , NULL    :: TFloat AS AmountPartnerSh
+                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
+                , FALSE AS isTop
+                , 2 AS Num
+           FROM tmpData
+                LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
+           GROUP BY Object_TradeMark.ValueData
+           ORDER BY Object_TradeMark.ValueData
+           )
+        UNION ALL
+          SELECT '    В разрезе групп товаров'    :: TVarChar AS GroupName
+               , NULL    :: TFloat AS SaleAmountSh
+               , NULL    :: TFloat AS SaleAmountPartnerSh
+               , NULL    :: TFloat AS ReturnAmountSh
+               , NULL    :: TFloat AS ReturnAmountPartnerSh
+               , NULL    :: TFloat AS AmountSh
+               , NULL    :: TFloat AS AmountPartnerSh
 
-         , NULL    :: TFloat AS SaleAmount
-         , NULL    :: TFloat AS SaleAmountPartner 
-         , NULL    :: TFloat AS ReturnAmount
-         , NULL    :: TFloat AS ReturnAmountPartner
-         , NULL    :: TFloat AS Amount
-         , NULL    :: TFloat AS AmountPartner
-         , TRUE AS isTop
-  UNION ALL
-    SELECT Object_GoodsTag.ValueData           :: TVarChar AS GroupName
-         , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
-         , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
-         , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
-         , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
-         , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-         , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+               , NULL    :: TFloat AS SaleAmount
+               , NULL    :: TFloat AS SaleAmountPartner 
+               , NULL    :: TFloat AS ReturnAmount
+               , NULL    :: TFloat AS ReturnAmountPartner
+               , NULL    :: TFloat AS Amount
+               , NULL    :: TFloat AS AmountPartner
+               , TRUE AS isTop
+               , 3 AS Num
+        UNION ALL
+          (SELECT Object_GoodsTag.ValueData           :: TVarChar AS GroupName
+                , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
+                , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
+                , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
+                , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
+                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
 
-         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
-         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-         , FALSE AS isTop
-    FROM tmpData
-         LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
-    GROUP BY Object_GoodsTag.ValueData
-  UNION ALL
-    SELECT '    В разрезе товаров'    :: TVarChar AS GroupName
-         , NULL    :: TFloat AS SaleAmountSh
-         , NULL    :: TFloat AS SaleAmountPartnerSh
-         , NULL    :: TFloat AS ReturnAmountSh
-         , NULL    :: TFloat AS ReturnAmountPartnerSh
-         , NULL    :: TFloat AS AmountSh
-         , NULL    :: TFloat AS AmountPartnerSh
+                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
+                , FALSE AS isTop
+                , 3 AS Num
+           FROM tmpData
+                LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
+           GROUP BY Object_GoodsTag.ValueData
+           ORDER BY Object_GoodsTag.ValueData
+           )
+        UNION ALL
+          SELECT '    В разрезе товаров'    :: TVarChar AS GroupName
+               , NULL    :: TFloat AS SaleAmountSh
+               , NULL    :: TFloat AS SaleAmountPartnerSh
+               , NULL    :: TFloat AS ReturnAmountSh
+               , NULL    :: TFloat AS ReturnAmountPartnerSh
+               , NULL    :: TFloat AS AmountSh
+               , NULL    :: TFloat AS AmountPartnerSh
 
-         , NULL    :: TFloat AS SaleAmount
-         , NULL    :: TFloat AS SaleAmountPartner 
-         , NULL    :: TFloat AS ReturnAmount
-         , NULL    :: TFloat AS ReturnAmountPartner
-         , NULL    :: TFloat AS Amount
-         , NULL    :: TFloat AS AmountPartner
-         , TRUE AS isTop
-  UNION ALL
-    SELECT Object_Goods.ValueData              :: TVarChar AS GroupName
-         , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
-         , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
-         , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
-         , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
-         , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-         , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+               , NULL    :: TFloat AS SaleAmount
+               , NULL    :: TFloat AS SaleAmountPartner 
+               , NULL    :: TFloat AS ReturnAmount
+               , NULL    :: TFloat AS ReturnAmountPartner
+               , NULL    :: TFloat AS Amount
+               , NULL    :: TFloat AS AmountPartner
+               , TRUE AS isTop
+               , 4 AS Num
+        UNION ALL
+          (SELECT Object_Goods.ValueData              :: TVarChar AS GroupName
+                , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
+                , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
+                , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
+                , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
+                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
 
-         , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-         , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-         , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-         , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-         , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
-         , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-         , FALSE AS isTop
-    FROM tmpData
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
-    GROUP BY Object_Goods.ValueData
+                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
+                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
+                , FALSE AS isTop
+                , 4 AS Num
+           FROM tmpData
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+           GROUP BY Object_Goods.ValueData
+           ORDER BY Object_Goods.ValueData)
+           ) AS tmp
     ;
 
   RETURN NEXT Cursor2;

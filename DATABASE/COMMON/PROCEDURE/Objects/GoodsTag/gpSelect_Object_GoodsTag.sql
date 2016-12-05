@@ -5,7 +5,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsTag(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsTag(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
+             , ColorReport TFloat, ColorBgReport TFloat
+             , isErased boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -20,9 +23,19 @@ $BODY$BEGIN
    , Object_GoodsGroupAnalyst.Id           AS GoodsGroupAnalystId
    , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupAnalystName  
 
+   , ObjectFloat_ColorReport.ValueData     AS ColorReport
+   , ObjectFloat_ColorBgReport.ValueData   AS ColorBgReport
+
    , Object_GoodsTag.isErased   AS isErased
    
    FROM Object AS Object_GoodsTag
+          LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
+                                ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id 
+                               AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsTag_ColorReport()
+          LEFT JOIN ObjectFloat AS ObjectFloat_ColorBgReport
+                                ON ObjectFloat_ColorBgReport.ObjectId = Object_GoodsTag.Id 
+                               AND ObjectFloat_ColorBgReport.DescId = zc_ObjectFloat_GoodsTag_ColorBgReport()
+
           LEFT JOIN ObjectLink AS ObjectLink_GoodsTag_GoodsGroupAnalyst
                                ON ObjectLink_GoodsTag_GoodsGroupAnalyst.ObjectId = Object_GoodsTag.Id 
                               AND ObjectLink_GoodsTag_GoodsGroupAnalyst.DescId = zc_ObjectLink_GoodsTag_GoodsGroupAnalyst()
@@ -41,6 +54,7 @@ ALTER FUNCTION gpSelect_Object_GoodsTag(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.12.16         *
  12.01.15         * add GoodsGroupAnalyst  
  15.09.14         *
 

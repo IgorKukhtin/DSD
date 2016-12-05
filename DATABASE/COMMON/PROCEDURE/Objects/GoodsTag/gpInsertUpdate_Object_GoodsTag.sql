@@ -2,12 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag(Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag(Integer, Integer, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsTag(Integer, Integer, TVarChar, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsTag(
  INOUT ioId                  Integer   ,     -- ключ объекта <Признак товара> 
     IN inCode                Integer   ,     -- Код объекта  
     IN inName                TVarChar  ,     -- Название объекта 
     IN inGoodsGroupAnalystId Integer   ,     -- ссылка на группу Товаров (аналитика) 
+    IN inColorReport         TFloat    ,     -- Цвет текста в "отчет по отгрузке"
+    IN inColorBgReport       TFloat    ,     -- Цвет фона в "отчет по отгрузке"
     IN inSession             TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -36,19 +39,24 @@ BEGIN
    
       -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsTag_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId); 
-   
+   -- сохранили свойство <Цвет текста в "отчет по отгрузке">
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorReport(), ioId, inColorReport);
+   -- сохранили свойство <Цвет фона в "отчет по отгрузке">
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsTag_ColorBgReport(), ioId, inColorBgReport);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_GoodsTag (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.12.16         * 
  12.01.15         * add GoodsGroupAnalyst
  15.09.14         *
 */

@@ -367,17 +367,10 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
     OutputType = otResult
     Params = <
       item
-        Name = 'StartDate'
-        Value = 42705d
-        Component = deStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'EndDate'
-        Value = 42705d
-        Component = deEnd
-        DataType = ftDateTime
+        Name = 'inReportName'
+        Value = 'Report_Goods_byMovement'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -438,6 +431,18 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         Component = GuidesGoodsGroup
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1
