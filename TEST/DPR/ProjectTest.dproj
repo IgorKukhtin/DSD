@@ -281,9 +281,6 @@
 				<Form>ProfitLossEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbTest.pas"/>
-			<DCCReference Include="..\..\Forms\TradeMark.pas">
-				<Form>TradeMarkForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
 				<Form>TradeMarkEditForm</Form>
 			</DCCReference>
@@ -2920,6 +2917,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReestrPrintDialog.pas">
 				<Form>ReestrPrintDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Color.pas">
+				<Form>ColorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\TradeMark.pas">
+				<Form>TradeMarkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

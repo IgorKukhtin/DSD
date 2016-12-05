@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_TradeMark(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , ColorReport TFloat, ColorBgReport TFloat
+             , ColorReport Integer, ColorBgReport Integer, Text1 TVarChar, Text2 TVarChar
              , isErased Boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_TradeMark());
@@ -18,8 +19,12 @@ $BODY$BEGIN
          Object.Id         AS Id 
        , Object.ObjectCode AS Code
        , Object.ValueData  AS Name
-       , ObjectFloat_ColorReport.ValueData     AS ColorReport
-       , ObjectFloat_ColorBgReport.ValueData   AS ColorBgReport
+      
+       , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())    ::Integer  AS ColorReport
+       , COALESCE (ObjectFloat_ColorBgReport.ValueData,zc_Color_White())   ::Integer  AS ColorBgReport
+       , CASE WHEN COALESCE (ObjectFloat_ColorReport.ValueData,-1)   = -1 THEN '' ELSE 'Текст' END ::TVarChar  AS Text1
+       , CASE WHEN COALESCE (ObjectFloat_ColorBgReport.ValueData,-1) = -1 THEN '' ELSE 'Фон'   END ::TVarChar  AS Text2
+   
        , Object.isErased   AS isErased
    FROM Object
           LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
@@ -31,7 +36,8 @@ $BODY$BEGIN
 
    WHERE Object.DescId = zc_Object_TradeMark();
   
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_TradeMark (TVarChar) OWNER TO postgres;

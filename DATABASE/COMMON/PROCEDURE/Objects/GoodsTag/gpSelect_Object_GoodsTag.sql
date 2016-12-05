@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsTag(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
-             , ColorReport TFloat, ColorBgReport TFloat
+             , ColorReport Integer, ColorBgReport Integer, Text1 TVarChar, Text2 TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -23,8 +23,11 @@ $BODY$BEGIN
    , Object_GoodsGroupAnalyst.Id           AS GoodsGroupAnalystId
    , Object_GoodsGroupAnalyst.ValueData    AS GoodsGroupAnalystName  
 
-   , ObjectFloat_ColorReport.ValueData     AS ColorReport
-   , ObjectFloat_ColorBgReport.ValueData   AS ColorBgReport
+
+   , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())    ::Integer  AS ColorReport
+   , COALESCE (ObjectFloat_ColorBgReport.ValueData,zc_Color_White())   ::Integer  AS ColorBgReport
+   , CASE WHEN COALESCE (ObjectFloat_ColorReport.ValueData,-1)   = -1 THEN '' ELSE 'Текст' END ::TVarChar  AS Text1
+   , CASE WHEN COALESCE (ObjectFloat_ColorBgReport.ValueData,-1) = -1 THEN '' ELSE 'Фон'   END ::TVarChar  AS Text2
 
    , Object_GoodsTag.isErased   AS isErased
    

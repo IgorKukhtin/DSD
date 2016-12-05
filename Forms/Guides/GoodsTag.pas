@@ -47,6 +47,10 @@ type
     clGoodsGroupAnalystName: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    Text2: TcxGridDBColumn;
+    Text1: TcxGridDBColumn;
+    ColorBgReport: TcxGridDBColumn;
+    ColorReport: TcxGridDBColumn;
   private
     { Private declarations }
   public

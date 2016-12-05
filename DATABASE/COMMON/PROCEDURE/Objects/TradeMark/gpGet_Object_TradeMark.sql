@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_TradeMark(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , ColorReport TFloat, ColorBgReport TFloat
+             , ColorReportId Integer, ColorBgReportId Integer, Text1 TVarChar, Text2 TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -22,8 +22,11 @@ $BODY$BEGIN
            , lfGet_ObjectCode(0, zc_Object_TradeMark()) AS Code
            , CAST ('' as TVarChar)  AS Name
 
-           , CAST (0 as TFloat)     AS ColorReport
-           , CAST (0 as TFloat)     AS ColorBgReport
+           , CAST (0 as Integer)     AS ColorReportId
+           , CAST (0 as Integer)     AS ColorBgReportId
+           
+           , CAST ('' as TVarChar)   AS Text1
+           , CAST ('' as TVarChar)   AS Text2
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -32,8 +35,12 @@ $BODY$BEGIN
              Object.Id         AS Id
            , Object.ObjectCode AS Code
            , Object.ValueData  AS Name
-           , ObjectFloat_ColorReport.ValueData     AS ColorReport
-           , ObjectFloat_ColorBgReport.ValueData   AS ColorBgReport
+         
+           , COALESCE (ObjectFloat_ColorReport.ValueData,0)   ::Integer   AS ColorReportId
+           , COALESCE (ObjectFloat_ColorBgReport.ValueData,0) ::Integer   AS ColorBgReportId
+           , CASE WHEN COALESCE (ObjectFloat_ColorReport.ValueData,-1)   = -1 THEN '' ELSE 'Текст' END ::TVarChar  AS Text1
+           , CASE WHEN COALESCE (ObjectFloat_ColorBgReport.ValueData,-1) = -1 THEN '' ELSE 'Фон'   END ::TVarChar  AS Text2
+         
            , Object.isErased   AS isErased
        FROM Object 
           LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport

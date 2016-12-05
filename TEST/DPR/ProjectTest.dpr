@@ -113,7 +113,6 @@ uses
   ProfitLossDirectionEdit in '..\..\Forms\Guides\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
   ProfitLossEdit in '..\..\Forms\Guides\ProfitLossEdit.pas' {ProfitLossEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
-  TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
   TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
   Route_Object in '..\..\Forms\Guides\Route_Object.pas' {Route_ObjectForm},
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
@@ -891,7 +890,9 @@ uses
   ReestrUpdateDialog in '..\..\Forms\Document\ReestrUpdateDialog.pas' {ReestrUpdateDialogForm: TParentForm},
   Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm},
   Report_Goods_byMovementDialog in '..\..\Forms\Report\Report_Goods_byMovementDialog.pas' {Report_Goods_byMovementDialogForm: TParentForm},
-  ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm};
+  ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm},
+  Color in '..\..\Forms\System\Color.pas' {ColorForm: TParentForm},
+  TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

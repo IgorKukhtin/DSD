@@ -18,7 +18,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TTradeMarkEditForm = class(TParentForm)
@@ -37,6 +37,12 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edColorReport: TcxButtonEdit;
+    edColorBgReport: TcxButtonEdit;
+    ColorReportGuides: TdsdGuides;
+    ColorBgReportGuides: TdsdGuides;
   private
     { Private declarations }
   public
