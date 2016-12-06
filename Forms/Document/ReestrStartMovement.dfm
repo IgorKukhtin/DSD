@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 420
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -755,11 +755,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ReestrKindId'
-          Value = 640042
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ReestrKindName'
           Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
           DataType = ftString
@@ -903,9 +898,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportName = 'PrintMovement_ReestrStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1824,7 +1819,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
     Top = 152
   end
   object spSelectPrintPeriod: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrStartPeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1850,12 +1845,6 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         Component = FormParams
         ComponentItem = 'inEndDate'
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReestrKindId'
-        Value = 640042
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
