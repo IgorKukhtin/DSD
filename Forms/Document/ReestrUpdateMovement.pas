@@ -74,6 +74,7 @@ type
     bbPrintPeriod: TdxBarButton;
     actDialog_Print: TExecuteDialog;
     macPrintPeriod: TMultiAction;
+    edIsShowAll: TcxCheckBox;
   private
     { Private declarations }
   public

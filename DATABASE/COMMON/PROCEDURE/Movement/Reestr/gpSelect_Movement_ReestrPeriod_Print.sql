@@ -18,6 +18,10 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbDescId Integer;
 
+   DECLARE vbMemberId_User  Integer;
+   DECLARE vbDateDescId     Integer;
+   DECLARE vbMILinkObjectId Integer;
+
    DECLARE Cursor1 refcursor;
    DECLARE Cursor2 refcursor;
 BEGIN
@@ -41,6 +45,32 @@ BEGIN
     END IF;
 */
 
+     -- Определяется
+     vbDateDescId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MIDate_PartnerIn()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MIDate_RemakeIn()  
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MIDate_RemakeBuh()
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MIDate_Remake() 
+                                  WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MIDate_Buh()
+                             END AS DateDescId
+                      );
+     -- Определяется
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeIn()  THEN zc_MILinkObject_RemakeInTo()  
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN zc_MILinkObject_RemakeBuh()
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Remake()    THEN zc_MILinkObject_Remake() 
+                                      WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
+                                 END AS MILinkObjectId
+                      );
+
+     -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
+     vbMemberId_User:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+                       (SELECT ObjectLink_User_Member.ChildObjectId
+                        FROM ObjectLink AS ObjectLink_User_Member
+                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                          AND ObjectLink_User_Member.ObjectId = vbUserId)
+                       END
+                      ;
+
      -- Результат
      OPEN Cursor1 FOR
     
@@ -56,31 +86,22 @@ BEGIN
 
      OPEN Cursor2 FOR
        WITH 
-               -- выбираем строки реестров по выбранной визе
-               tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
-                           , MovementItem.ObjectId      AS MemberId
-                           , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
-                         FROM Movement
-                           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                 AND MovementItem.DescId     = zc_MI_Master()
-                                                 AND MovementItem.isErased   = FALSE
-                           LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                   ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
-                                                  AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                           
-                           INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                                         ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
-                                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
-                                                        AND MovementLinkObject_ReestrKind.ObjectId = inReestrKindId
-      
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                        ON MovementLinkObject_To.MovementId = MovementFloat_MovementItemId.MovementId
-                                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                         WHERE Movement.DescId = zc_Movement_Reestr() 
-                           AND (((Movement.OperDate BETWEEN inStartDate AND inEndDate) AND (inisShowAll = False)) OR (inisShowAll = True)) --(736912= zc_Enum_ReestrKind_PartnerOut()))-- 
-                           AND Movement.StatusId <> zc_Enum_Status_Erased()
-                         )
-   
+       -- выбираем строки реестров по выбранной визе и пользователю (или всем пользователям)
+       tmpMI AS (SELECT MIDate.MovementItemId 
+                        , MILinkObject.ObjectId AS MemberId
+                        , MovementFloat_MovementItemId.MovementId AS MovementId_Sale
+                   FROM MovementItemDate AS MIDate
+                        INNER JOIN MovementItemLinkObject AS MILinkObject
+                                                          ON MILinkObject.MovementItemId = MIDate.MovementItemId
+                                                         AND MILinkObject.DescId = vbMILinkObjectId 
+                                                         AND (MILinkObject.ObjectId = vbMemberId_User OR inisShowAll = True)
+                        LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId  
+                                               AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                   WHERE MIDate.DescId = vbDateDescId 
+                     AND MIDate.ValueData >= inStartDate AND MIDate.ValueData < inEndDate + INTERVAL '1 DAY'
+                   )
+
        SELECT 
              Movement_Sale.InvNumber                AS InvNumber_Sale
            , Movement_Sale.OperDate                 AS OperDate_Sale
@@ -212,3 +233,4 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640042 ,  inSession := '5');
+--select * from gpSelect_Movement_ReestrPeriod_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640043 , inIsShowAll := 'True' ,  inSession := '5');
