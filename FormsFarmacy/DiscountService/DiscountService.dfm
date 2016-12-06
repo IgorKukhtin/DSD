@@ -94,22 +94,22 @@ object DiscountServiceForm: TDiscountServiceForm
     Left = 120
     Top = 64
   end
-  object UnloadCDS: TClientDataSet
+  object UnloadItemCDS: TClientDataSet
     Aggregates = <>
     Filtered = True
     FieldDefs = <>
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 304
-    Top = 24
+    Left = 312
+    Top = 56
   end
-  object spSelectUnload: TdsdStoredProc
+  object spSelectUnloadItem: TdsdStoredProc
     StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
-    DataSet = UnloadCDS
+    DataSet = UnloadItemCDS
     DataSets = <
       item
-        DataSet = UnloadCDS
+        DataSet = UnloadItemCDS
       end>
     Params = <
       item
@@ -120,6 +120,34 @@ object DiscountServiceForm: TDiscountServiceForm
       end>
     PackSize = 1
     Left = 400
-    Top = 40
+    Top = 56
+  end
+  object UnloadMovementCDS: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 312
+    Top = 6
+  end
+  object spSelectUnloadMovement: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
+    DataSet = UnloadMovementCDS
+    DataSets = <
+      item
+        DataSet = UnloadMovementCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 10
   end
 end

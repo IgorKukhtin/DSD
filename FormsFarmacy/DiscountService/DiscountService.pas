@@ -12,8 +12,10 @@ type
     HTTPRIO: THTTPRIO;
     spGet_BarCode: TdsdStoredProc;
     spGet_DiscountExternal: TdsdStoredProc;
-    UnloadCDS: TClientDataSet;
-    spSelectUnload: TdsdStoredProc;
+    UnloadItemCDS: TClientDataSet;
+    spSelectUnloadItem: TdsdStoredProc;
+    UnloadMovementCDS: TClientDataSet;
+    spSelectUnloadMovement: TdsdStoredProc;
   private
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
@@ -44,7 +46,9 @@ type
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
     //
     // Commit Order
-    function fCommitCDS_Order (var lMsg : string) :Boolean;
+    function fPfizer_Send (var lMsg : string) :Boolean;
+    // Commit Order
+    function fPfizer_SendItem (var lMsg : string) :Boolean;
   end;
 
 var

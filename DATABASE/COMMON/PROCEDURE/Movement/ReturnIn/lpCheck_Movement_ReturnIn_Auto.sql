@@ -112,16 +112,16 @@ BEGIN
                                           WHERE tmp.Amount <> 0 AND tmp.ParentId = 0
                                          )
                        -- РЕЗУЛЬТАТ
-                       SELECT 'Ошибка. Для возврата кол-во = <' || tmpMaster.Amount :: TVarChar || '>'
+                       SELECT 'Ошибка. Для возврата кол-во = <' || COALESCE (tmpMaster.Amount, 0) :: TVarChar || '>'
                || CHR (13) || 'не соответствует привязка к продаже с кол-во = <' || COALESCE (tmpResult.Amount, 0) :: TVarChar || '>.'
-               || CHR (13) || 'Товар <' || lfGet_Object_ValueData (ABS (tmpMaster.GoodsId)) || '>'
-                           || CASE WHEN tmpMaster.GoodsKindId > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (tmpMaster.GoodsKindId) || '>' ELSE '' END
+               || CHR (13) || 'Товар <' || lfGet_Object_ValueData (ABS (COALESCE (tmpMaster.GoodsId, tmpResult.GoodsId))) || '>'
+                           || CASE WHEN COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId) > 0 THEN CHR (13) || 'вид <' || lfGet_Object_ValueData (COALESCE (tmpMaster.GoodsKindId, tmpResult.GoodsKindId)) || '>' ELSE '' END
                        FROM tmpMaster
-                            LEFT JOIN tmpResult ON tmpResult.GoodsId         = tmpMaster.GoodsId
+                            FULL JOIN tmpResult ON tmpResult.GoodsId         = tmpMaster.GoodsId
                                                AND tmpResult.GoodsKindId     = tmpMaster.GoodsKindId
                                                AND tmpResult.Price_original  = tmpMaster.Price_original
-                       WHERE tmpMaster.Amount <> COALESCE (tmpResult.Amount, 0)
-                         AND tmpMaster.Price_original <> 0
+                       WHERE COALESCE (tmpMaster.Amount, 0) <> COALESCE (tmpResult.Amount, 0)
+                         AND COALESCE (tmpMaster.Price_original, -12345.0) <> 0
                        LIMIT 1
                       );
 

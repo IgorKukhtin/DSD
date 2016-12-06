@@ -15,7 +15,7 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
     vbUserId := inSession;
 
-    -- сохранили свойство <>
+    -- сохранили свойство <Зарегистрирована (да/нет)> - Загружена приходная накладная от дистрибьютора в медреестр Pfizer МДМ 
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Registered(), Movement.Id, FALSE)
     FROM (SELECT DISTINCT Movement.Id
           FROM Movement
