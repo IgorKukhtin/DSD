@@ -1,30 +1,30 @@
 inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
   ClientHeight = 405
-  ClientWidth = 988
+  ClientWidth = 1001
   ObjectMenuItem = Excel1
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1004
-  ExplicitHeight = 440
+  ExplicitWidth = 1017
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 988
+    Width = 1001
     Height = 322
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 988
     ExplicitHeight = 322
     ClientRectBottom = 322
-    ClientRectRight = 988
+    ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 988
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Top = 83
-        Width = 988
+        Width = 1001
         Height = 239
         ExplicitTop = 83
         ExplicitWidth = 988
@@ -519,11 +519,12 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 988
+        Width = 1001
         Height = 75
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 988
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -650,46 +651,51 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 75
-        Width = 988
+        Width = 1001
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 988
       end
     end
   end
   inherited Panel: TPanel
-    Width = 988
+    Width = 1001
     Height = 57
+    ExplicitLeft = -56
+    ExplicitTop = -14
     ExplicitWidth = 988
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 639
+      Left = 593
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 639
+      ExplicitLeft = 593
       ExplicitTop = 22
+      ExplicitWidth = 91
+      Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 744
+      Left = 698
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 744
+      ExplicitLeft = 698
       ExplicitTop = 22
-      ExplicitWidth = 90
-      Width = 90
+      ExplicitWidth = 91
+      Width = 91
     end
     inherited cxLabel1: TcxLabel
-      Left = 639
+      Left = 593
       Top = 4
-      ExplicitLeft = 639
+      ExplicitLeft = 593
       ExplicitTop = 4
     end
     inherited cxLabel2: TcxLabel
-      Left = 744
+      Left = 698
       Top = 4
-      ExplicitLeft = 744
+      ExplicitLeft = 698
       ExplicitTop = 4
     end
   end
@@ -720,12 +726,12 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Width = 225
   end
   object cxLabel5: TcxLabel [4]
-    Left = 256
+    Left = 241
     Top = 4
     Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' / '#1042#1086#1076#1080#1090#1077#1083#1100' ('#1086#1090' '#1082#1086#1075#1086' '#1087#1086#1083#1091#1095#1077#1085#1072' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1076#1083#1103' '#1074#1080#1079#1099')'
   end
   object edMember: TcxButtonEdit [5]
-    Left = 256
+    Left = 241
     Top = 22
     Properties.Buttons = <
       item
@@ -735,6 +741,14 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Properties.ReadOnly = True
     TabOrder = 9
     Width = 332
+  end
+  object edIsShowAll: TcxCheckBox [6]
+    Left = 812
+    Top = 22
+    Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103#1084
+    State = cbsChecked
+    TabOrder = 10
+    Width = 185
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 83
@@ -977,6 +991,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 16
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1288,7 +1303,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       Category = 0
     end
     object bbPrintPeriod: TdxBarButton
-      Action = macPrintPeriod
+      Action = actPrintPeriod
       Category = 0
     end
   end
@@ -1731,9 +1746,8 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
       end
       item
         Name = 'inIsShowAll'
-        Value = True
-        Component = FormParams
-        ComponentItem = 'IsShowAllPrint'
+        Value = 'True'
+        Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
