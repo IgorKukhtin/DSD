@@ -45,5 +45,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
---SELECT * FROM gpSelect_Color ('2')
-
+-- SELECT * FROM gpSelect_Color ('2')

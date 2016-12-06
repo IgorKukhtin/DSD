@@ -31,10 +31,12 @@ BEGIN
                                                                      , inInvNumber           := NEXTVAL ('movement_taxcorrective_seq') :: TVarChar
                                                                      , inInvNumberPartner    := lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective()
                                                                                                                                 , DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                                                                                -- , CURRENT_DATE
                                                                                                                                 , tmp.InvNumberBranch
                                                                                                                                  ) :: TVarChar
                                                                      , inInvNumberBranch     := tmp.InvNumberBranch
                                                                      , inOperDate            := DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                     -- , inOperDate            := CURRENT_DATE
                                                                      , inChecked             := FALSE
                                                                      , inDocument            := FALSE
                                                                      , inPriceWithVAT        := tmp.PriceWithVAT
