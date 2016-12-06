@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , GoodsKindId_List TVarChar, GoodsKindName_List TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -40,6 +41,9 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerId
            , CAST ('' as TVarChar)  AS PartnerName
 
+           , CAST (0 as TVarChar)    AS GoodsKindId_List
+           , CAST ('' as TVarChar)  AS GoodsKindName_List
+
            , CAST (NULL AS Boolean) AS isErased
 
        ;
@@ -62,12 +66,19 @@ BEGIN
            , Object_Partner.Id                AS PartnerId
            , Object_Partner.ValueData         AS PartnerName
 
+           , ObjectString_GoodsKind.ValueData  AS GoodsKindId_List
+           , ObjectString_GoodsKind.ValueData  AS GoodsKindName_List
+
            , Object_GoodsListSale.isErased    AS isErased
            
        FROM Object AS Object_GoodsListSale
             LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
                                  ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListSale.Id
                                 AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+            LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                   ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                  AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
 
             LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                  ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
@@ -100,8 +111,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.12.16         *
  10.10.16         *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpGet_Object_GoodsListSale (0, inSession := '5')
+--select * from gpGet_Object_GoodsListSale( 737011 ,  inSession := '5');

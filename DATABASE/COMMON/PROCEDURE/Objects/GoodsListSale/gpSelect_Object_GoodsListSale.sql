@@ -22,9 +22,10 @@ RETURNS TABLE (Id Integer
              , PaidKindId Integer, PaidKindName TVarChar
 
              , ContractTagId Integer, ContractTagName TVarChar
+             , GoodsKindId_List TVarChar, GoodsKindName_List TVarChar
                           
              , OKPO TVarChar
-            
+
              , UpdateDate TDateTime
              , isDefault Boolean
              , isStandart Boolean
@@ -39,6 +40,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_GoodsListSale());
      vbUserId:= lpGetUserBySession (inSession);
+  
   
      -- Результат
      RETURN QUERY 
@@ -79,6 +81,9 @@ BEGIN
            , Object_Contract_View.ContractTagId
            , Object_Contract_View.ContractTagName
 
+           , ObjectString_GoodsKind.ValueData  AS GoodsKindId_List
+           , ObjectString_GoodsKind.ValueData  AS GoodsKindName_List
+
            , ObjectHistory_JuridicalDetails_View.OKPO
 
            , ObjectDate_Protocol_Update.ValueData AS UpdateDate
@@ -97,12 +102,12 @@ BEGIN
                          AND Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
 
         LEFT JOIN ObjectLink AS GoodsListSale_Contract
-                              ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
-                             AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
+                             ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
+                            AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
         
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Juridical
-                              ON ObjectLink_GoodsListSale_Juridical.ObjectId = Object_GoodsListSale.Id
-                             AND ObjectLink_GoodsListSale_Juridical.DescId = zc_ObjectLink_GoodsListSale_Juridical()
+                             ON ObjectLink_GoodsListSale_Juridical.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_Juridical.DescId = zc_ObjectLink_GoodsListSale_Juridical()
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_GoodsListSale_Juridical.ChildObjectId
             
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -131,6 +136,10 @@ BEGIN
                              ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListSale.Id
                             AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
 
+        LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                               ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                              AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
@@ -158,7 +167,7 @@ BEGIN
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
-     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
+    WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
        AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
        AND (GoodsListSale_Contract.ChildObjectId = inContractId OR inContractId = 0)
     ;
@@ -170,6 +179,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.12.16         *
  10.10.16         * 
 */
 
