@@ -349,5 +349,96 @@ BEGIN
 END $$;
 */
 
+/*
+!!!!!!!!!!!!!!!!!проверка суммы по строкам
+
+              -- данные <Продажа покупателю> и <Возврат от покупателя>
+              SELECT 1, sum (MovementFloat_TotalSumm.ValueData)
+              FROM MovementDate AS MovementDate_OperDatePartner
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                AND MovementLinkObject_Contract.ObjectId = 882691 
+                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.DescId   = zc_Movement_ReturnIn()
+
+                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                                                -- AND MovementLinkObject.ObjectId = vbPartnerId
+
+                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                        AND ObjectLink_Partner_Juridical.ChildObjectId = 862910
+
+	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+              WHERE MovementDate_OperDatePartner.ValueData BETWEEN '01.11.2016' AND '30.11.2016'
+                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+union all
+              SELECT 2 -- , sum (MovementFloat_TotalSumm.ValueData)
+--  , SUM (coalesce (MIFloat_AmountPartner.ValueData, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
+ , SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
+/ *, Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData, Movement.InvNumber
+, MIFloat_AmountPartner.ValueData
+, MIFloat_Price.ValueData
+, SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2 * /
+              FROM MovementDate AS MovementDate_OperDatePartner
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                 ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                AND MovementLinkObject_Contract.ObjectId = 882691 
+                   INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.DescId   = zc_Movement_ReturnIn()
+
+                   INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
+                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
+                                                -- AND MovementLinkObject.ObjectId = vbPartnerId
+
+                   INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                        AND ObjectLink_Partner_Juridical.ChildObjectId = 862910
+
+	    LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+                          INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                 AND MovementItem.DescId   = zc_MI_Master()
+                                                 AND MovementItem.isErased = FALSE
+                          INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                      AND MIFloat_Price.ValueData <> 0  
+
+                          inner JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                      ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+                          LEFT JOIN MovementItem AS MovementItem_Child ON MovementItem_Child.MovementId = Movement.Id
+                                                                      AND MovementItem_Child.isErased = FALSE
+                                                                      AND MovementItem_Child.DescId   = zc_MI_Child()
+                                                                      AND MovementItem_Child.ParentId = MovementItem.Id
+                                                                      AND MovementItem_Child.Amount   <> 0
+
+
+
+              WHERE MovementDate_OperDatePartner.ValueData BETWEEN '01.11.2016' AND '30.11.2016'
+                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+/ *group by  Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData
+, MIFloat_AmountPartner.ValueData
+, Movement.InvNumber
+, MIFloat_Price.ValueData
+having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Amount, 0))
+* /
+
+-- select lpCheck_Movement_ReturnIn_Auto (4832777, 1);
+*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.12.2015', inEndDate:= '01.12.2015', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

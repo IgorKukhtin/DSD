@@ -60,7 +60,7 @@ BEGIN
                                                 THEN COALESCE (MIFloat_CuterCount.ValueData, 0) + COALESCE (MIFloat_CuterCountSecond.ValueData, 0)
                                            ELSE 0
                                       END) AS CuterCount
-                          FROM (SELECT (inStartDate - INTERVAL '1 DAY') AS StartDate, (inEndDate + INTERVAL '1 DAY') AS EndDate WHERE vbIsOrder = TRUE) AS tmpDate
+                          FROM (SELECT (inStartDate - INTERVAL '5 DAY') AS StartDate, (inEndDate + INTERVAL '5 DAY') AS EndDate WHERE vbIsOrder = TRUE) AS tmpDate
                                INNER JOIN Movement ON Movement.OperDate BETWEEN tmpDate.StartDate AND tmpDate.EndDate
                                                   AND Movement.DescId = zc_Movement_OrderInternal()
                                                   AND Movement.StatusId <> zc_Enum_Status_Erased()
