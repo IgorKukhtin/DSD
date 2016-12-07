@@ -36,11 +36,39 @@ RETURNS TABLE (Id Integer
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbGoodsKindId TVarChar;
+   DECLARE vbIndex Integer;
+   DECLARE cur1 CURSOR FOR SELECT _tmp.GoodsKindId_list FROM _tmp;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_GoodsListSale());
      vbUserId:= lpGetUserBySession (inSession);
   
+    CREATE TEMP TABLE tmp_List (GoodsKindId_list TVarChar, GoodsKindId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmp (GoodsKindId_list TVarChar) ON COMMIT DROP;
+
+    INSERT INTO _tmp (GoodsKindId_list) 
+            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS GoodsKindId
+            FROM ObjectString AS ObjectString_GoodsKind
+            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind();
+ 
+    
+    OPEN cur1 ;
+     LOOP
+         FETCH cur1 Into vbGoodsKindId;
+         IF NOT FOUND THEN EXIT; END IF;
+         -- парсим 
+         vbIndex := 1;
+         WHILE SPLIT_PART (vbGoodsKindId, ',', vbIndex) <> '' LOOP
+             -- добавляем то что нашли
+             INSERT INTO tmp_List (GoodsKindId_list, GoodsKindId) SELECT vbGoodsKindId, SPLIT_PART (vbGoodsKindId, ',', vbIndex) :: Integer;
+             -- теперь следуюющий
+             vbIndex := vbIndex + 1;
+         END LOOP;
+
+     END LOOP;
+    CLOSE cur1;
+
   
      -- Результат
      RETURN QUERY 
@@ -82,7 +110,7 @@ BEGIN
            , Object_Contract_View.ContractTagName
 
            , ObjectString_GoodsKind.ValueData  AS GoodsKindId_List
-           , ObjectString_GoodsKind.ValueData  AS GoodsKindName_List
+           , tmpGoodsKind.GoodsKindName_List :: TVarChar  AS GoodsKindName_List
 
            , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -166,6 +194,14 @@ BEGIN
           
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+
+
+
+        LEFT JOIN (SELECT tmp_List.GoodsKindId_list, STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName_list
+                   FROM tmp_List 
+                       LEFT JOIN Object ON Object.Id = tmp_List.GoodsKindId
+                   GROUP BY tmp_List.GoodsKindId_list
+                   ) AS tmpGoodsKind ON tmpGoodsKind.GoodsKindId_list = ObjectString_GoodsKind.ValueData
 
     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
        AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)

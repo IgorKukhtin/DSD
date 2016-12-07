@@ -16,6 +16,10 @@ RETURNS TABLE (Id Integer
              , isErased boolean
              ) AS
 $BODY$
+
+  DECLARE vbIndex Integer;
+  DECLARE vbGoodsKindId TVarChar;
+
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
@@ -41,13 +45,33 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerId
            , CAST ('' as TVarChar)  AS PartnerName
 
-           , CAST (0 as TVarChar)    AS GoodsKindId_List
+           , CAST ('' as TVarChar)   AS GoodsKindId_List
            , CAST ('' as TVarChar)  AS GoodsKindName_List
 
            , CAST (NULL AS Boolean) AS isErased
 
        ;
    ELSE
+
+
+     -- выбираем GoodsKinId
+     vbGoodsKindId:= (SELECT ObjectString_GoodsKind.ValueData
+                      FROM ObjectString AS ObjectString_GoodsKind
+                      WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                        AND ObjectString_GoodsKind.ObjectId = inId);
+                                   
+
+     CREATE TEMP TABLE tmp_List (GoodsKindId Integer) ON COMMIT DROP;
+     -- парсим 
+     vbIndex := 1;
+     WHILE SPLIT_PART (vbGoodsKindId, ',', vbIndex) <> '' LOOP
+         -- добавляем то что нашли
+         INSERT INTO tmp_List (GoodsKindId) SELECT SPLIT_PART (vbGoodsKindId, ',', vbIndex) :: Integer;
+         -- теперь следуюющий
+         vbIndex := vbIndex + 1;
+     END LOOP;
+
+
        RETURN QUERY 
        SELECT 
              Object_GoodsListSale.Id          AS Id
@@ -66,8 +90,8 @@ BEGIN
            , Object_Partner.Id                AS PartnerId
            , Object_Partner.ValueData         AS PartnerName
 
-           , ObjectString_GoodsKind.ValueData  AS GoodsKindId_List
-           , ObjectString_GoodsKind.ValueData  AS GoodsKindName_List
+           , ObjectString_GoodsKind.ValueData AS GoodsKindId_List
+           , tmp.GoodsKindName  :: TVarChar             AS GoodsKindName_List
 
            , Object_GoodsListSale.isErased    AS isErased
            
@@ -99,7 +123,11 @@ BEGIN
                                  ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                                 AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_GoodsListSale_Partner.ChildObjectId
-            
+
+            LEFT JOIN (SELECT STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName
+                       FROM tmp_List
+                           LEFT JOIN Object ON Object.Id = tmp_List.GoodsKindId
+                       ) AS tmp ON 1=1
        WHERE Object_GoodsListSale.Id = inId;
       
    END IF;

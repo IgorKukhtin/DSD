@@ -12,8 +12,8 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -33,8 +33,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clId
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -85,6 +84,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 16
     Top = 136
@@ -270,7 +270,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
     Params = <>
     PackSize = 1
     Left = 48
-    Top = 184
+    Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 336

@@ -46,8 +46,9 @@ BEGIN
  
    IF COALESCE(vbId,0) <> 0
       THEN
-          RAISE EXCEPTION 'ќшибка.Ёлемент уже существует.';
-          --ioId :=vbId;
+          -- сохранили свойство <>
+          PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), vbId, inGoodsKindId_List);
+          --RAISE EXCEPTION 'ќшибка.Ёлемент уже существует.';
    END IF;
 
 

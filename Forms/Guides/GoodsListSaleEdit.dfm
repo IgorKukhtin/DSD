@@ -115,6 +115,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 275
   end
@@ -297,7 +298,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
       end
       item
         Name = 'GoodsKindId_List'
-        Value = Null
+        Value = ' '
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -477,7 +478,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   object GoodsKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsKind
-    Key = '0'
+    Key = ' '
     FormNameParam.Value = 'TGoodsKind_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -486,11 +487,10 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
     Params = <
       item
         Name = 'KeyList'
-        Value = '0'
+        Value = ' '
         Component = GoodsKindGuides
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -499,7 +499,6 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 175

@@ -30,8 +30,8 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsListSale());
 
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Value Integer) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpResult (GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
@@ -81,11 +81,13 @@ BEGIN
    ANALYZE _tmpGoods;
 
    -- 
-   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, PartnerId, Amount)
+   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId , PartnerId, Amount)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
+             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , -1 * SUM (MIContainer.Amount )    AS  Amount
+             , -1 * SUM (MIContainer.Amount )    AS Amount
+
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
                                 AND _tmpGoods.Value = 1
@@ -95,12 +97,14 @@ BEGIN
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
         HAVING SUM(-1 * MIContainer.Amount ) <> 0
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
+             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , SUM(-1 * MIContainer.Amount )     AS  Amount
+             , SUM(-1 * MIContainer.Amount )     AS Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
                                 AND _tmpGoods.Value = 2
@@ -110,12 +114,14 @@ BEGIN
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
         HAVING SUM(-1 * MIContainer.Amount ) <> 0
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
+             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
-             , SUM(-1 * MIContainer.Amount )     AS  Amount
+             , SUM(-1 * MIContainer.Amount )     AS Amount
         FROM MovementItemContainer AS MIContainer 
             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer 
                                 AND _tmpGoods.Value = 0
@@ -125,19 +131,22 @@ BEGIN
         GROUP BY MIContainer.ContainerId_analyzer
                , MIContainer.ObjectId_analyzer 
                , MIContainer.ObjectExtId_analyzer
+               , MIContainer.ObjectIntId_Analyzer
         HAVING SUM(-1 * MIContainer.Amount ) <> 0;
 
      --!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpMIContainer;
 
 
-     INSERT INTO _tmpResult (GoodsId, Juridical, ContractId, PartnerId, Amount)
+     INSERT INTO _tmpResult (GoodsId, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount)
         SELECT DISTINCT tmpData.GoodsId  
+             , tmpData.GoodsKindId_List
              , tmpData.Juridical
              , tmpData.ContractId
              , tmpData.PartnerId
              , CAST (tmpData.Amount AS NUMERIC (16, 2)) ::Tfloat
         FROM (SELECT _tmpMIContainer.GoodsId  
+                   , STRING_AGG (_tmpMIContainer.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
                    , _tmpMIContainer.PartnerId
                    , ContainerLO_Juridical.ObjectId AS Juridical
                    , ContainerLO_Contract.ObjectId AS ContractId                          
@@ -148,7 +157,8 @@ BEGIN
                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                   JOIN ContainerLinkObject AS ContainerLO_Contract 
                                                ON ContainerLO_Contract.ContainerId = _tmpMIContainer.ContainerId
-                                              AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()            
+                                              AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+               --   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMIContainer.GoodsKindId          
              GROUP BY  _tmpMIContainer.GoodsId  
                      , _tmpMIContainer.PartnerId
                      , ContainerLO_Juridical.ObjectId 
@@ -173,13 +183,14 @@ BEGIN
     
     
     -- обновляем справочник, добавляем новые элементы, снимаем пометку с удаленных
-    PERFORM lpInsertUpdate_Object_GoodsListSale (inId            := COALESCE (_tmpList.Id, 0) :: integer
-                                               , inGoodsId       := _tmpResult.GoodsId
-                                               , inContractId    := _tmpResult.ContractId
-                                               , inJuridicalId   := _tmpResult.Juridical
-                                               , inPartnerId     := _tmpResult.PartnerId
-                                               , inAmount        := _tmpResult.Amount ::Tfloat
-                                               , inUserId        := vbUserId
+    PERFORM lpInsertUpdate_Object_GoodsListSale (inId              := COALESCE (_tmpList.Id, 0) :: integer
+                                               , inGoodsId         := _tmpResult.GoodsId
+                                               , inContractId      := _tmpResult.ContractId
+                                               , inJuridicalId     := _tmpResult.Juridical
+                                               , inPartnerId       := _tmpResult.PartnerId
+                                               , inAmount          := _tmpResult.Amount ::Tfloat
+                                               , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
+                                               , inUserId          := vbUserId
                                                 )
     FROM _tmpResult
        LEFT JOIN _tmpList ON _tmpList.GoodsId    = _tmpResult.GoodsId
@@ -187,7 +198,8 @@ BEGIN
                          AND _tmpList.Juridical  = _tmpResult.Juridical
                          AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
-    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE;
+    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
+;
  --   LIMIT 100
 
    /* -- обновляем справочник, обновляем кол-во в существующих элементах
@@ -208,8 +220,7 @@ BEGIN
     WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
 */
 
-   
-   
+      
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -218,6 +229,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.12.16         * add GoodsKindId_List
  12.10.16         *
 
 */
