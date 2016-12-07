@@ -1198,7 +1198,8 @@ inherited TaxJournalForm: TTaxJournalForm
       ImageIndex = 54
       FormName = 'TDataDialogForm'
       FormNameParam.Value = 'TDataDialogForm'
-      FormNameParam.DataType = ftString
+      FormNameParam.DataType = ftDateTime
+      FormNameParam.ParamType = ptInputOutput
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
@@ -1208,6 +1209,13 @@ inherited TaxJournalForm: TTaxJournalForm
           ComponentItem = 'inOperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True

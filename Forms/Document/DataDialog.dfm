@@ -73,6 +73,7 @@ object DataDialogForm: TDataDialogForm
         Value = 41579d
         Component = deOperDate
         DataType = ftDateTime
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 39
