@@ -892,7 +892,8 @@ uses
   Report_Goods_byMovementDialog in '..\..\Forms\Report\Report_Goods_byMovementDialog.pas' {Report_Goods_byMovementDialogForm: TParentForm},
   ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm},
   Color in '..\..\Forms\System\Color.pas' {ColorForm: TParentForm},
-  TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm};
+  TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm},
+  DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

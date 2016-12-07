@@ -20,7 +20,7 @@ BEGIN
      -- сохранили <Документ>
      select lpInsert_Movement_Tax_Mask( 0, CAST (NEXTVAL ('movement_tax_seq') AS TVarChar)
                                         , '' ::TVarChar
-                                        , tmp.InvNumberBranch, tmp.OperDate
+                                        , tmp.InvNumberBranch, inOperDate --tmp.OperDate
                                         , tmp.Checked, tmp.Document
                                         , tmp.PriceWithVAT, tmp.VATPercent
                                         , tmp.FromId, tmp.ToId
