@@ -43,6 +43,12 @@ type
     colRemains: TcxGridDBColumn;
     actOpenPriceListLoad: TdsdInsertUpdateAction;
     bbOpenPriceListLoad: TdxBarButton;
+    cxLabel6: TcxLabel;
+    spUpdate_Price: TdsdStoredProc;
+    macUpdatePrice: TMultiAction;
+    actUpdatePrice: TdsdExecStoredProc;
+    bb: TdxBarButton;
+    edPercent: TcxTextEdit;
   private
     { Private declarations }
   public

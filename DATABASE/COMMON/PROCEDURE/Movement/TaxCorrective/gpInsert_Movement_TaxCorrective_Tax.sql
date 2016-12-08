@@ -1,9 +1,11 @@
 -- Function: gpInsert_Movement_TaxCorrective_Tax()
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Tax (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Tax (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_TaxCorrective_Tax(
     IN inMovementId_from     Integer   , -- Ключ объекта <Документ>
+    IN inOperDate            TDateTime , -- Дата документа
    OUT outMessageText        Text      ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -35,7 +37,8 @@ BEGIN
                                                                                                                                 , tmp.InvNumberBranch
                                                                                                                                  ) :: TVarChar
                                                                      , inInvNumberBranch     := tmp.InvNumberBranch
-                                                                     , inOperDate            := DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                                                                     , inOperDate            := inOperDate
+                                                                     --, inOperDate            := DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                                      -- , inOperDate            := CURRENT_DATE
                                                                      , inChecked             := FALSE
                                                                      , inDocument            := FALSE

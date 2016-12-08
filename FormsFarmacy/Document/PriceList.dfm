@@ -1,26 +1,28 @@
 inherited PriceListForm: TPriceListForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 668
-  ClientWidth = 753
-  ExplicitWidth = 769
+  ClientWidth = 820
+  ExplicitWidth = 836
   ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 753
+    Width = 820
     Height = 585
     ExplicitTop = 83
     ExplicitWidth = 753
     ExplicitHeight = 585
     ClientRectBottom = 585
-    ClientRectRight = 753
+    ClientRectRight = 820
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 753
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
-        Width = 753
+        Width = 820
         Height = 561
+        ExplicitLeft = 3
+        ExplicitTop = -3
         ExplicitWidth = 753
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -152,9 +154,10 @@ inherited PriceListForm: TPriceListForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 753
+    Width = 820
     Height = 57
     TabOrder = 3
+    ExplicitLeft = -1
     ExplicitWidth = 753
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
@@ -178,21 +181,19 @@ inherited PriceListForm: TPriceListForm
       ExplicitLeft = 89
     end
     inherited cxLabel15: TcxLabel
-      Left = 472
+      Left = 441
       Top = 4
       Visible = False
-      ExplicitLeft = 472
+      ExplicitLeft = 441
       ExplicitTop = 4
     end
     inherited ceStatus: TcxButtonEdit
       Left = 472
-      Top = 22
       Visible = False
       ExplicitLeft = 472
-      ExplicitTop = 22
-      ExplicitWidth = 218
+      ExplicitWidth = 169
       ExplicitHeight = 22
-      Width = 218
+      Width = 169
     end
     object edJuridical: TcxButtonEdit
       Left = 198
@@ -203,21 +204,33 @@ inherited PriceListForm: TPriceListForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 270
+      Width = 228
     end
     object cxLabel4: TcxLabel
       Left = 198
       Top = 5
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
+    object cxLabel6: TcxLabel
+      Left = 689
+      Top = 5
+      Caption = '% '#1089#1082#1080#1076#1082#1080
+    end
+    object edPercent: TcxTextEdit
+      Left = 689
+      Top = 23
+      TabOrder = 9
+      Text = '0'
+      Width = 54
+    end
   end
   object cxLabel3: TcxLabel [2]
-    Left = 472
+    Left = 436
     Top = 5
     Caption = #1050#1086#1085#1090#1088#1072#1082#1090
   end
   object edContract: TcxButtonEdit [3]
-    Left = 472
+    Left = 435
     Top = 23
     Properties.Buttons = <
       item
@@ -225,7 +238,7 @@ inherited PriceListForm: TPriceListForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 270
+    Width = 245
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -256,6 +269,14 @@ inherited PriceListForm: TPriceListForm
           StoredProc = spSelect
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
+      DataSource = nil
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -365,6 +386,32 @@ inherited PriceListForm: TPriceListForm
       isShowModal = False
       ActionType = acUpdate
       IdFieldName = 'Id'
+    end
+    object actUpdatePrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Price
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Price
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1072#1081#1089#1072
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1072#1081#1089#1072
+    end
+    object macUpdatePrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdatePrice
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1077#1088#1077#1089#1095#1077#1090#1077' '#1094#1077#1085' '#1087#1088#1072#1081#1089#1072'?'
+      InfoAfterExecute = #1062#1077#1085#1099' '#1080#1079#1084#1077#1085#1077#1085#1099
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1072#1081#1089#1072
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1087#1088#1072#1081#1089#1072
+      ImageIndex = 41
     end
   end
   inherited MasterDS: TDataSource
@@ -494,6 +541,14 @@ inherited PriceListForm: TPriceListForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -545,6 +600,10 @@ inherited PriceListForm: TPriceListForm
     end
     object bbOpenPriceListLoad: TdxBarButton
       Action = actOpenPriceListLoad
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macUpdatePrice
       Category = 0
     end
   end
@@ -1038,5 +1097,55 @@ inherited PriceListForm: TPriceListForm
       end>
     Left = 512
     Top = 32
+  end
+  object spUpdate_Price: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Price'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = 'FALSE'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercent'
+        Value = '0'
+        Component = edPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 155
   end
 end
