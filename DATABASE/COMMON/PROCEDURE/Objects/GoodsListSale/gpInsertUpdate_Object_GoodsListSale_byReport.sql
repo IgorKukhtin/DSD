@@ -32,7 +32,7 @@ BEGIN
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Value Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
 
    -- период для выбора продаж
    vbStartDate1:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_1, '999')|| ' MONTH') :: INTERVAL));
@@ -42,10 +42,11 @@ BEGIN
 
 
    -- выборка существующих элементов
-   INSERT INTO _tmpList (Id, GoodsId, Juridical, ContractId, PartnerId, isErased) 
+   INSERT INTO _tmpList (Id, GoodsId, GoodsKindId_List, Juridical, ContractId, PartnerId, isErased) 
       SELECT 
              Object_GoodsListSale.Id                           AS Id
            , ObjectLink_GoodsListSale_Goods.ChildObjectId      AS GoodsId 
+           , ObjectString_GoodsKind.ValueData                  AS GoodsKindId_List
            , ObjectLink_GoodsListSale_Juridical.ChildObjectId  AS JuridicalId           
            , GoodsListSale_Contract.ChildObjectId              AS ContractId
            , ObjectLink_GoodsListSale_Partner.ChildObjectId    AS PartnerId
@@ -63,6 +64,9 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                              ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                             AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+        LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                               ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                              AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
       WHERE  Object_GoodsListSale.DescId = zc_Object_GoodsListSale();
 
    -- выбираем товары согласно статьям
@@ -211,6 +215,7 @@ BEGIN
                                                , inPartnerId       := _tmpResult.PartnerId
                                                , inAmount          := _tmpResult.Amount ::Tfloat
                                                , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
+                                               , inisErased        := _tmpList.isErased
                                                , inUserId          := vbUserId
                                                 )
     FROM _tmpResult
@@ -219,7 +224,7 @@ BEGIN
                          AND _tmpList.Juridical  = _tmpResult.Juridical
                          AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
- --   WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
+    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> _tmpResult.GoodsKindId_List
 ;
  --   LIMIT 100
 
