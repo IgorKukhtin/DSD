@@ -159,12 +159,12 @@ BEGIN
                                , _tmpMIContainer.PartnerId
                                , ContainerLO_Juridical.ObjectId 
                                , ContainerLO_Contract.ObjectId 
+                       HAVING SUM (_tmpMIContainer.Amount) <> 0
                        ORDER BY ContainerLO_Juridical.ObjectId 
                               , ContainerLO_Contract.ObjectId
                               , _tmpMIContainer.PartnerId
                               , _tmpMIContainer.GoodsId 
                               , _tmpMIContainer.GoodsKindId
-                       HAVING SUM (_tmpMIContainer.Amount) <> 0
                        )
 
         SELECT DISTINCT tmpData.GoodsId  
@@ -219,7 +219,7 @@ BEGIN
                          AND _tmpList.Juridical  = _tmpResult.Juridical
                          AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
-    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
+ --   WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
 ;
  --   LIMIT 100
 

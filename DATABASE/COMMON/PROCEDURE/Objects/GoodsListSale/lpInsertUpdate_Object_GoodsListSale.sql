@@ -24,9 +24,14 @@ BEGIN
 
    IF COALESCE (inId , 0) <> 0 -- AND vbisErased = TRUE             -- элемент существует но помечен на удаление - снимаем пометку удаления
       THEN
-         -- Меняется признак <Удален> + там же сохраняется протокол
-         PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
-    
+         -- если элемент помечен на удаление нужно снять пометку
+         vbisErased:=(SELECT Object.isErased FROM Object WHERE Object.Id = inId);
+         IF vbisErased = TRUE 
+            THEN
+                -- Меняется признак <Удален> + там же сохраняется протокол
+                PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
+         END IF;
+
          -- сохранили св-во <>
          PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsListSale_Amount(), inId, inAmount);
          
