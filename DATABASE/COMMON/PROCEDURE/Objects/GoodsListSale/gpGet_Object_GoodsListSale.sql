@@ -91,7 +91,7 @@ BEGIN
            , Object_Partner.ValueData         AS PartnerName
 
            , ObjectString_GoodsKind.ValueData AS GoodsKindId_List
-           , tmp.GoodsKindName  :: TVarChar             AS GoodsKindName_List
+           , tmp.GoodsKindName  :: TVarChar   AS GoodsKindName_List
 
            , Object_GoodsListSale.isErased    AS isErased
            

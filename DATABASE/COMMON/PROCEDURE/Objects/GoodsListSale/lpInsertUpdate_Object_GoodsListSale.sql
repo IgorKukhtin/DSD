@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Int
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inId                Integer   ,    -- ид элемента
@@ -13,20 +14,19 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inPartnerId         Integer   ,    -- Контрагент
     IN inAmount            TFloat    ,    -- Кол-во в реализации
     IN inGoodsKindId_List  TVarChar  ,    -- Список всех вид товара
+    IN inisErased          Boolean   ,    -- элемент удален Да/нет
     IN inUserId            Integer        -- сессия пользователя
 )
  RETURNS Void AS
 $BODY$
    DECLARE vbId Integer;
    DECLARE vbIsInsert Boolean;
-   DECLARE vbisErased Boolean;
 BEGIN
 
    IF COALESCE (inId , 0) <> 0 -- AND vbisErased = TRUE             -- элемент существует но помечен на удаление - снимаем пометку удаления
       THEN
          -- если элемент помечен на удаление нужно снять пометку
-         vbisErased:=(SELECT Object.isErased FROM Object WHERE Object.Id = inId);
-         IF vbisErased = TRUE 
+         IF inisErased = TRUE 
             THEN
                 -- Меняется признак <Удален> + там же сохраняется протокол
                 PERFORM lpUpdate_Object_isErased (inObjectId:= inId, inUserId:= inUserId); 
