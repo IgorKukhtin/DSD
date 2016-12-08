@@ -3,7 +3,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   Top = 0
   Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099' '#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'>'
-  ClientHeight = 253
+  ClientHeight = 305
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 66
-    Top = 214
+    Top = 272
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -29,7 +29,7 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
   end
   object cxButton2: TcxButton
     Left = 210
-    Top = 214
+    Top = 272
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -100,6 +100,23 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 9
+    Width = 275
+  end
+  object cxLabel3: TcxLabel
+    Left = 34
+    Top = 211
+    Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceGoodsKind: TcxButtonEdit
+    Left = 34
+    Top = 229
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 275
   end
   object ActionList: TActionList
@@ -178,6 +195,15 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         Value = Null
         Component = PartnerGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId_List'
+        Value = Null
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -266,6 +292,22 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
         Name = 'PartnerName'
         Value = Null
         Component = PartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindId_List'
+        Value = ' '
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindName_List'
+        Value = Null
+        Component = GoodsKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -432,5 +474,34 @@ object GoodsListSaleEditForm: TGoodsListSaleEditForm
       end>
     Left = 103
     Top = 173
+  end
+  object GoodsKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoodsKind
+    Key = ' '
+    FormNameParam.Value = 'TGoodsKind_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsKind_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'KeyList'
+        Value = ' '
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValueList'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 175
+    Top = 219
   end
 end

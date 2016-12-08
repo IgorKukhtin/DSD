@@ -119,6 +119,7 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    ExecuteDialog2: TExecuteDialog;
   private
     { Private declarations }
   public

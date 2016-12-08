@@ -755,6 +755,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           Component = FormParams
           ComponentItem = 'IsShowAllPrint'
           DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -895,10 +896,27 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
         end>
       Params = <
         item
-          Name = 'Id'
+          Name = 'StartDate'
           Value = 0
           Component = FormParams
-          ComponentItem = 'Id'
+          ComponentItem = 'inStartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'InEndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsShowAllPrint'
+          Value = False
+          Component = FormParams
+          ComponentItem = 'IsShowAllPrint'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_ReestrStartPeriod'
@@ -1126,7 +1144,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'IsShowAllPrint'
-        Value = True
+        Value = False
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1853,7 +1871,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       end
       item
         Name = 'inIsShowAll'
-        Value = Null
+        Value = 'false'
         Component = FormParams
         ComponentItem = 'IsShowAllPrint'
         DataType = ftBoolean

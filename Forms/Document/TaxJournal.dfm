@@ -435,10 +435,11 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited Panel: TPanel
     Width = 1110
     Height = 51
+    ExplicitTop = 8
     ExplicitWidth = 1110
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42705d
     end
     inherited deEnd: TcxDateEdit
       EditValue = 42370d
@@ -660,8 +661,10 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Name = 'inOperDate'
           Value = 'NULL'
-          Component = deStart
+          Component = FormParams
+          ComponentItem = 'inOperDate'
           DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -669,6 +672,9 @@ inherited TaxJournalForm: TTaxJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
+        item
+          Action = ExecuteDialog2
+        end
         item
           Action = actInsertMask
         end>
@@ -1183,6 +1189,38 @@ inherited TaxJournalForm: TTaxJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object ExecuteDialog2: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'actDataDialog'
+      ImageIndex = 54
+      FormName = 'TDataDialogForm'
+      FormNameParam.Value = 'TDataDialogForm'
+      FormNameParam.DataType = ftDateTime
+      FormNameParam.ParamType = ptInputOutput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 42705d
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1535,6 +1573,34 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42705d
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 312
     Top = 168
   end

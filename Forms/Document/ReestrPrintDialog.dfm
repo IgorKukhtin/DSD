@@ -127,7 +127,6 @@ object ReestrPrintDialogForm: TReestrPrintDialogForm
         Value = Null
         Component = edIsShowAll
         DataType = ftBoolean
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

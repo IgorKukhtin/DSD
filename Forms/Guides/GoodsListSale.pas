@@ -37,6 +37,7 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     clAmount: TcxGridDBColumn;
+    clGoodsKindName_List: TcxGridDBColumn;
   private
     { Private declarations }
   public

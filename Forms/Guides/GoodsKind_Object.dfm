@@ -12,8 +12,8 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -33,13 +33,13 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clId
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.MultiSelect = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -66,6 +66,12 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object clId: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 20
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -78,6 +84,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 16
     Top = 136
@@ -215,12 +222,29 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KeyList'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'clId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValuelist'
+          Value = Null
+          Component = cxGridDBTableView
+          ComponentItem = 'clName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -246,7 +270,7 @@ object GoodsKind_ObjectForm: TGoodsKind_ObjectForm
     Params = <>
     PackSize = 1
     Left = 48
-    Top = 184
+    Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 336

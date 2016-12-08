@@ -648,9 +648,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
+        Name = 'inJuridicalBasisId'
+        Value = '0'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

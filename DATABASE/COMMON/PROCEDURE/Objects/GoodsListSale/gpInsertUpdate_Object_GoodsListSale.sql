@@ -1,6 +1,8 @@
+
 -- Function: gpInsertUpdate_Object_GoodsListSale  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale(
@@ -9,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale(
     IN inContractId        Integer   ,    -- Договор
     IN inJuridicalId       Integer   ,    -- Юр. лицо
     IN inPartnerId         Integer   ,    -- Контрагент
+    IN inGoodsKindId_List  TVarChar  ,    -- Список всех вид товара
     IN inSession           TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -43,7 +46,9 @@ BEGIN
  
    IF COALESCE(vbId,0) <> 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Элемент уже существует.';
+          -- сохранили свойство <>
+          PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), vbId, inGoodsKindId_List);
+          --RAISE EXCEPTION 'Ошибка.Элемент уже существует.';
    END IF;
 
 
@@ -62,10 +67,11 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsListSale_Partner(), ioId, inPartnerId);
  
-
    -- сохранили свойство <Дата создания/изменений>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), ioId, CURRENT_TIMESTAMP);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), ioId, inGoodsKindId_List);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -84,3 +90,4 @@ $BODY$
 
 -- тест
 -- select * from gpInsertUpdate_Object_GoodsListSale(ioId := 0 , inCode := 1 , inName := 'Белов' , inPhone := '4444' , Mail := 'выа@kjjkj' , Comment := '' , inGoodsId := 258441 , inJuridicalId := 0 , inContractId := 0 , inGoodsListSaleKindId := 153272 ,  inSession := '5');
+--select * from gpInsertUpdate_Object_GoodsListSale(ioId := 737011 , inGoodsId := 5005 , inContractId := 439611 , inJuridicalId := 15158 , inPartnerId := 313098 , inGoodsKindId_List := '8339,8351,8333,8329' ,  inSession := '5');

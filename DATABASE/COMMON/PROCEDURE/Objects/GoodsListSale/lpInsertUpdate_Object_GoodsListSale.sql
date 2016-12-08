@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_GoodsListSale (Integer,Integer,Integer,Integer,Integer, TFloat, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inId                Integer   ,    -- ид элемента
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_GoodsListSale(
     IN inJuridicalId       Integer   ,    -- Юр. лицо
     IN inPartnerId         Integer   ,    -- Контрагент
     IN inAmount            TFloat    ,    -- Кол-во в реализации
+    IN inGoodsKindId_List  TVarChar  ,    -- Список всех вид товара
     IN inUserId            Integer        -- сессия пользователя
 )
  RETURNS Void AS
@@ -27,6 +29,9 @@ BEGIN
     
          -- сохранили св-во <>
          PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_GoodsListSale_Amount(), inId, inAmount);
+         
+         -- сохранили свойство <>
+         PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), inId, inGoodsKindId_List);
 
          -- сохранили свойство <Дата создания/изменений>
          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
@@ -52,6 +57,9 @@ BEGIN
        -- сохранили свойство <Дата создания/изменений>
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), vbId, CURRENT_TIMESTAMP);
 
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsListSale_GoodsKind(), vbId, inGoodsKindId_List);
+
        -- сохранили протокол
        PERFORM lpInsert_ObjectProtocol (vbId, inUserId);
        END IF;
@@ -65,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.12.16         *
  11.10.16         *
 */
 

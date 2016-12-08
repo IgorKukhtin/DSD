@@ -761,6 +761,9 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));

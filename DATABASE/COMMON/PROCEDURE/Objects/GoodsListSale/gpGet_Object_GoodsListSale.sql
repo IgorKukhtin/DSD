@@ -12,9 +12,14 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
+             , GoodsKindId_List TVarChar, GoodsKindName_List TVarChar
              , isErased boolean
              ) AS
 $BODY$
+
+  DECLARE vbIndex Integer;
+  DECLARE vbGoodsKindId TVarChar;
+
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
@@ -40,10 +45,33 @@ BEGIN
            , CAST (0 as Integer)    AS PartnerId
            , CAST ('' as TVarChar)  AS PartnerName
 
+           , CAST ('' as TVarChar)   AS GoodsKindId_List
+           , CAST ('' as TVarChar)  AS GoodsKindName_List
+
            , CAST (NULL AS Boolean) AS isErased
 
        ;
    ELSE
+
+
+     -- выбираем GoodsKinId
+     vbGoodsKindId:= (SELECT ObjectString_GoodsKind.ValueData
+                      FROM ObjectString AS ObjectString_GoodsKind
+                      WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                        AND ObjectString_GoodsKind.ObjectId = inId);
+                                   
+
+     CREATE TEMP TABLE tmp_List (GoodsKindId Integer) ON COMMIT DROP;
+     -- парсим 
+     vbIndex := 1;
+     WHILE SPLIT_PART (vbGoodsKindId, ',', vbIndex) <> '' LOOP
+         -- добавляем то что нашли
+         INSERT INTO tmp_List (GoodsKindId) SELECT SPLIT_PART (vbGoodsKindId, ',', vbIndex) :: Integer;
+         -- теперь следуюющий
+         vbIndex := vbIndex + 1;
+     END LOOP;
+
+
        RETURN QUERY 
        SELECT 
              Object_GoodsListSale.Id          AS Id
@@ -62,12 +90,19 @@ BEGIN
            , Object_Partner.Id                AS PartnerId
            , Object_Partner.ValueData         AS PartnerName
 
+           , ObjectString_GoodsKind.ValueData AS GoodsKindId_List
+           , tmp.GoodsKindName  :: TVarChar             AS GoodsKindName_List
+
            , Object_GoodsListSale.isErased    AS isErased
            
        FROM Object AS Object_GoodsListSale
             LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
                                  ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListSale.Id
                                 AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+            LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                   ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                  AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
 
             LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                  ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
@@ -88,7 +123,11 @@ BEGIN
                                  ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                                 AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_GoodsListSale_Partner.ChildObjectId
-            
+
+            LEFT JOIN (SELECT STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName
+                       FROM tmp_List
+                           LEFT JOIN Object ON Object.Id = tmp_List.GoodsKindId
+                       ) AS tmp ON 1=1
        WHERE Object_GoodsListSale.Id = inId;
       
    END IF;
@@ -100,8 +139,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.12.16         *
  10.10.16         *
 */
 
 -- тест
 -- SELECT * FROM gpGet_Object_GoodsListSale (0, inSession := '5')
+--select * from gpGet_Object_GoodsListSale( 737011 ,  inSession := '5');
