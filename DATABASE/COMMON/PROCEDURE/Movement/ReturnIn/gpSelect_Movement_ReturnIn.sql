@@ -383,10 +383,10 @@ union all
               SELECT 2 -- , sum (MovementFloat_TotalSumm.ValueData)
 --  , SUM (coalesce (MIFloat_AmountPartner.ValueData, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
  , SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
-/ *, Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData, Movement.InvNumber
-, MIFloat_AmountPartner.ValueData
-, MIFloat_Price.ValueData
-, SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2 * /
+/ *, Movement.Id, MovementItem.ObjectId as GoodsId, MIFloat_Price.ValueData AS Price, Movement.InvNumber, Movement.OperDate
+, MIFloat_AmountPartner.ValueData AS AmountPartner
+, MIFloat_Price.ValueData AS Price_add
+, SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2 AS summ * /
               FROM MovementDate AS MovementDate_OperDatePartner
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = MovementDate_OperDatePartner.MovementId
@@ -433,7 +433,7 @@ union all
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 / *group by  Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData
 , MIFloat_AmountPartner.ValueData
-, Movement.InvNumber
+, Movement.InvNumber, Movement.OperDate
 , MIFloat_Price.ValueData
 having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Amount, 0))
 * /
