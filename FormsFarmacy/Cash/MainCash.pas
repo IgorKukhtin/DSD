@@ -725,6 +725,7 @@ end;
 procedure TMainCashForm.actRefreshAllExecute(Sender: TObject);
 var
   AfterScr: TDataSetNotifyEvent;
+  lMsg :String;
 begin
   startSplash('Начало обновления данных с сервера');
   try
@@ -763,6 +764,20 @@ begin
       AfterScr := RemainsCDS.AfterScroll;
       RemainsCDS.AfterScroll := nil;
       try
+        ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
+        lMsg:= '';
+        if not DiscountServiceForm.fPfizer_Send(lMsg) then
+        begin
+             ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
+             sleep(10000);
+        end
+        else
+        begin
+             ChangeStatus('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' + lMsg);
+             sleep(2000);
+        end;
+
+
         ChangeStatus('Получение остатков');
         actRefresh.Execute;
 
@@ -1107,6 +1122,10 @@ var
   F: String;
 begin
   inherited;
+
+  //для
+  DiscountServiceForm:= TDiscountServiceForm.Create(Self);
+
   //сгенерили гуид для определения сессии
   ChangeStatus('Установка первоначальных параметров');
   FormParams.ParamByName('CashSessionId').Value := GenerateGUID;

@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 927
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 943
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -563,6 +563,9 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
           StoredProc = spSelect
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      ShortCut = 0
     end
     object actUpdateDataSet: TdsdUpdateDataSet [8]
       Category = 'DSDLib'

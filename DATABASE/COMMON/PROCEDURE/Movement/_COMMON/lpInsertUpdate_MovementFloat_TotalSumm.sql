@@ -731,6 +731,9 @@ BEGIN
          IF vbDiscountPercent = 0 AND vbExtraChargesPercent = 0
          THEN vbOperSumm_PVAT:= vbOperSumm_Partner;
          END IF;
+         IF vbVATPercent = 0
+         THEN vbOperSumm_MVAT:= vbOperSumm_Partner;
+         END IF;
      END IF;
 
 

@@ -22,6 +22,7 @@ $BODY$
    DECLARE vbIsInsert        Boolean;
    DECLARE vbId_mi           Integer;
    DECLARE vbMovementId_sale Integer;
+   DECLARE vbMovementDescId_TransportTop Integer;
    DECLARE vbMemberId        Integer; -- <Физическое лицо> - кто сформировал визу "Вывезено со склада"
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -71,6 +72,9 @@ BEGIN
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                           );
          END IF;
+
+         -- найдем
+         vbMovementDescId_TransportTop:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = ioMovementId_TransportTop);
 
          -- Проверка
          IF COALESCE (ioMovementId_TransportTop, 0) = 0
@@ -202,9 +206,13 @@ BEGIN
                                                                                               , inBranchCode := 1
                                                                                               , inSession    := inSession
                                                                                                )
-                                                    -- если есть - Определили по путевому, надо будет еще сделать для Начисления наемный транспорт
-                                                  , inCarId            := CASE WHEN ioMovementId_TransportTop > 0 THEN (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_Car())            ELSE inCarId            END
-                                                    -- если есть - Определили по путевому, надо будет еще сделать для Начисления наемный транспорт
+                                                    -- если есть - Определили по путевому ИЛИ  Начисления наемный транспорт
+                                                  , inCarId            := CASE WHEN ioMovementId_TransportTop > 0 THEN COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_Car())
+                                                                                                                               , (SELECT MILinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject AS MILinkObject ON MILinkObject.MovementItemId = MovementItem.Id AND MILinkObject.DescId = zc_MILinkObject_Car() WHERE MovementItem.MovementId = ioMovementId_TransportTop AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE AND vbMovementDescId_TransportTop = zc_Movement_TransportService())
+                                                                                                                                )
+                                                                                                                  ELSE inCarId
+                                                                          END
+                                                    -- если есть - Определили по путевому, НО нельзя будет еще сделать для Начисления наемный транспорт
                                                   , inPersonalDriverId := CASE WHEN ioMovementId_TransportTop > 0 THEN (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = ioMovementId_TransportTop AND DescId = zc_MovementLinkObject_PersonalDriver()) ELSE inPersonalDriverId END
                                                     -- можно будет найти из Заявки
                                                   , inMemberId         := inMemberId

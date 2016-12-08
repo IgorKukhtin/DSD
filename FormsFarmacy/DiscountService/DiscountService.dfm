@@ -105,7 +105,7 @@ object DiscountServiceForm: TDiscountServiceForm
     Top = 56
   end
   object spSelectUnloadItem: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
+    StoredProcName = 'gpSelect_MovementItem_Income_Pfizer'
     DataSet = UnloadItemCDS
     DataSets = <
       item
@@ -133,12 +133,21 @@ object DiscountServiceForm: TDiscountServiceForm
     Top = 6
   end
   object spSelectUnloadMovement: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_DiscountExternal_Unit'
+    StoredProcName = 'gpSelect_Movement_Income_Pfizer'
     DataSet = UnloadMovementCDS
     DataSets = <
       item
         DataSet = UnloadMovementCDS
       end>
+    Params = <>
+    PackSize = 1
+    Left = 400
+    Top = 10
+  end
+  object spUpdateUnload: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_Pfizer'
+    DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
@@ -147,7 +156,7 @@ object DiscountServiceForm: TDiscountServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 10
+    Left = 512
+    Top = 24
   end
 end
