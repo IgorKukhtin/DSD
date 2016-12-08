@@ -22,6 +22,7 @@ CREATE TABLE PeriodClose(
    PaidKindId            INTEGER,
    UserId_excl           INTEGER,
    CloseDate_excl        TDateTime,
+   CloseDate_store       TDateTime,
 
    CONSTRAINT fk_PeriodClose_UserId FOREIGN KEY(UserId) REFERENCES Object(Id),
    CONSTRAINT fk_PeriodClose_RoleId FOREIGN KEY(RoleId) REFERENCES Object(Id),
