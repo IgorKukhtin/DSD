@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
+               JuridicalId Integer, JuridicalName TVarChar, 
+               Deferment Integer, Percent TFloat, 
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
@@ -29,6 +30,7 @@ BEGIN
            , Object_Contract_View.JuridicalId
            , Object_Contract_View.JuridicalName 
            , Object_Contract_View.Deferment
+           , Object_Contract_View.Percent
 
            , Object_Contract_View.Comment
 
@@ -55,6 +57,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.16         * add Percent
  01.07.14         *
 
 */

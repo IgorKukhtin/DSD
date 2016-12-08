@@ -30,11 +30,12 @@ BEGIN
                      
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
-           , ObjectFloat_Deferment.ValueData::Integer AS Deferment
+           , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
+           , ObjectFloat_Percent.ValueData   ::TFloat  AS Percent
 
            , ObjectString_Comment.ValueData AS Comment
            
-           , Object_Contract.isErased           AS isErased
+           , Object_Contract.isErased       AS isErased
            
        
    FROM Object AS Object_Contract
@@ -57,6 +58,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
                                  ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
                                 AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Percent 
+                                 ON ObjectFloat_Percent.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Contract_Percent()
       
    WHERE Object_Contract.isErased = FALSE
   ;
@@ -71,7 +76,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
-
+ 08.12.16         * Percent
  07.07.14         *
 
 */

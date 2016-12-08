@@ -3,7 +3,6 @@ inherited ContractForm: TContractForm
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 814
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -43,6 +42,16 @@ inherited ContractForm: TContractForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Width = 212
+          end
+          object colPercent: TcxGridDBColumn
+            Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'Percent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
           object clStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089

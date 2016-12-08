@@ -11,7 +11,7 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGrid, cxPC, cxPCdxBarPopupMenu, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TContractForm = class(TAncestorGuidesForm)

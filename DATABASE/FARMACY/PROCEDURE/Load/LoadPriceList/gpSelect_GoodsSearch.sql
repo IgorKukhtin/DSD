@@ -109,6 +109,10 @@ BEGIN
                                   ON ObjectFloat_Percent.ObjectId = LoadPriceList.JuridicalId
                                  AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                                  ON ObjectFloat_Contract_Percent.ObjectId = LoadPriceList.ContractId
+                                 AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink  
                                                      ON (Object_MarginCategoryLink.UnitId = vbUnitId)    
                                                     AND Object_MarginCategoryLink.JuridicalId = LoadPriceList.JuridicalId
