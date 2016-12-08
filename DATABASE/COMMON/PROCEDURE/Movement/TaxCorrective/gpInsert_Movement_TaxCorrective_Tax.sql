@@ -1,6 +1,5 @@
 -- Function: gpInsert_Movement_TaxCorrective_Tax()
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Tax (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_TaxCorrective_Tax (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_TaxCorrective_Tax(
@@ -32,14 +31,13 @@ BEGIN
      vbMovementId_to := (SELECT lpInsertUpdate_Movement_TaxCorrective (ioId                  := 0
                                                                      , inInvNumber           := NEXTVAL ('movement_taxcorrective_seq') :: TVarChar
                                                                      , inInvNumberPartner    := lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective()
-                                                                                                                                , DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                                                                                                                                -- , CURRENT_DATE
+                                                                                                                                , inOperDate
+                                                                                                                                -- , DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                                                                                                                                 , tmp.InvNumberBranch
                                                                                                                                  ) :: TVarChar
                                                                      , inInvNumberBranch     := tmp.InvNumberBranch
                                                                      , inOperDate            := inOperDate
                                                                      --, inOperDate            := DATE_TRUNC ('MONTH', tmp.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                                                                     -- , inOperDate            := CURRENT_DATE
                                                                      , inChecked             := FALSE
                                                                      , inDocument            := FALSE
                                                                      , inPriceWithVAT        := tmp.PriceWithVAT
