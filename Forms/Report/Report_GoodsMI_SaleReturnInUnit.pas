@@ -31,27 +31,27 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSale_Summ: TcxGridDBColumn;
-    clSale_Amount_Weight: TcxGridDBColumn;
+    Sale_Summ: TcxGridDBColumn;
+    Sale_Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     FormParams: TdsdFormParams;
-    clSale_Amount_Sh: TcxGridDBColumn;
+    Sale_Amount_Sh: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     PartnerName: TcxGridDBColumn;
-    clReturn_Amount_Sh: TcxGridDBColumn;
-    clReturn_Amount_Weight: TcxGridDBColumn;
-    clReturn_Summ: TcxGridDBColumn;
+    Return_Amount_Sh: TcxGridDBColumn;
+    Return_Amount_Weight: TcxGridDBColumn;
+    Return_Summ: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
-    clSale_AmountPartner_Weight: TcxGridDBColumn;
-    clSale_AmountPartner_Sh: TcxGridDBColumn;
-    clReturn_AmountPartner_Weight: TcxGridDBColumn;
-    clReturn_AmountPartner_Sh: TcxGridDBColumn;
+    Sale_AmountPartner_Weight: TcxGridDBColumn;
+    Sale_AmountPartner_Sh: TcxGridDBColumn;
+    Return_AmountPartner_Weight: TcxGridDBColumn;
+    Return_AmountPartner_Sh: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
-    clReturnPercent: TcxGridDBColumn;
+    ReturnPercent: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
@@ -114,6 +114,9 @@ type
     GoodsPlatformName: TcxGridDBColumn;
     Sale_Summ_10250: TcxGridDBColumn;
     Return_Summ_10700: TcxGridDBColumn;
+    Sale_AmountPartnerR_Weight: TcxGridDBColumn;
+    Sale_AmountPartnerR_Sh: TcxGridDBColumn;
+    Sale_SummReal: TcxGridDBColumn;
   private
     { Private declarations }
   public

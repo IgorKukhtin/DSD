@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrPeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrPeriod_Print(
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,

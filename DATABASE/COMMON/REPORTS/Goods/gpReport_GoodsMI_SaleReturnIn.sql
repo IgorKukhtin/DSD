@@ -716,5 +716,30 @@ $BODY$
  06.02.14         *
 */
 
+/*
+-- 1.
+Прод, вес (склад, без %ск.)
+Прод, шт (склад, без %ск.)
+Без учета %скидки за вес
+
+-- 2.1.
+Прод, вес (покуп, с %ск.)
+Прод, шт (покуп, с %ск.)
+Учтен только %скидки за вес
+-- 2.2.
+Прод, грн (с %ск.вес)
+С учетом %скидки за вес
+
+-- 3.
+Прод, вес (покуп)
+Прод, шт (покуп)
+Прод, грн
+С учетом %скидки за вес и разницы в весе
+
+-- 4.
+Продажа / Возврат по покупателям
+Склад Приход / Расход по покупателям
+Склад Приход / Расход по дате склад
+*/
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.02.2016', inEndDate:= '01.02.2016', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());

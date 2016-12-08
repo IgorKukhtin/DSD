@@ -16,6 +16,7 @@ type
     spSelectUnloadItem: TdsdStoredProc;
     UnloadMovementCDS: TClientDataSet;
     spSelectUnloadMovement: TdsdStoredProc;
+    spUpdateUnload: TdsdStoredProc;
   private
     function myFloatToStr(aValue: Double) : String;
     function myStrToFloat(aValue: String) : Double;
@@ -45,10 +46,15 @@ type
     // update DataSet - еще раз по всем "обновим" Дисконт
     //function fUpdateCDS_Item(CheckCDS : TClientDataSet; var lMsg : string; lDiscountExternalId : Integer; lCardNumber : string) : Boolean;
     //
-    // Commit Order
+    // Send All Movement - Income
     function fPfizer_Send (var lMsg : string) :Boolean;
-    // Commit Order
-    function fPfizer_SendItem (var lMsg : string) :Boolean;
+    // Send Item - Income
+    function fPfizer_SendItem (lMovementId: Integer;
+                               lOperDate : TDateTime;
+                               lInvNumber : String;
+                               lFromOKPO, lFromName : String;
+                               lToOKPO, lToName : String;
+                               var lMsg : string) :Boolean;
   end;
 
 var
@@ -500,11 +506,69 @@ begin
 
 end;
 
-// Commit Order
-function TDiscountServiceForm.fCommitCDS_Order (var lMsg : string) :Boolean;
+// Send All Movement - Income
+function TDiscountServiceForm.fPfizer_Send (var lMsg : string) :Boolean;
+var llMsg : String;
+begin
+    //Получили данные
+    with spGet_DiscountExternal do
+    begin
+         ParamByName('inId').Value := 2807930; // захардкодил - ЗАРАДИ ЖИТТЯ
+         Execute;
+         // сохраним "нужные" параметры-Main
+         gDiscountExternalId:= 2807930;
+         gURL        := ParamByName('URL').Value;
+         gService    := ParamByName('Service').Value;
+         gPort       := ParamByName('Port').Value;
+         gUserName   := ParamByName('UserName').Value;
+         gPassword   := ParamByName('Password').Value;
+    end;
+    //Инициализировали данными
+    HTTPRIO.WSDLLocation := gURL;
+    HTTPRIO.Service := gService;
+    HTTPRIO.Port := gPort;
+    //
+    Application.ProcessMessages;
+    Application.ProcessMessages;
+    Application.ProcessMessages;
+    //
+    //Открыли данные - документы
+    with spSelectUnloadMovement do begin
+       Execute;
+    end;
+
+    UnloadMovementCDS.First;
+    while not UnloadMovementCDS.Eof do
+    begin
+         llMsg:= '';
+         if not fPfizer_SendItem (UnloadMovementCDS.FieldByName('MovementId').AsInteger
+                                , UnloadMovementCDS.FieldByName('OperDate').AsDateTime
+                                , UnloadMovementCDS.FieldByName('InvNumber').AsString
+                                , UnloadMovementCDS.FieldByName('FromOKPO').AsString
+                                , UnloadMovementCDS.FieldByName('FromName').AsString
+                                , UnloadMovementCDS.FieldByName('ToOKPO').AsString
+                                , UnloadMovementCDS.FieldByName('ToName').AsString
+                                , llMsg)
+         then lMsg:= lMsg + llMsg;
+         //
+         Sleep(200);
+         // идем дальше
+         UnloadMovementCDS.Next;
+    end;
+
+    // вернули результат
+    Result:= lMsg = '';
+
+end;
+// Send Item - Income
+function TDiscountServiceForm.fPfizer_SendItem (lMovementId: Integer;
+                                                lOperDate : TDateTime;
+                                                lInvNumber : String;
+                                                lFromOKPO, lFromName : String;
+                                                lToOKPO, lToName : String;
+                                                var lMsg : string) :Boolean;
 var
   i : integer;
-  CheckCDS : TClientDataSet;
 
   aOrderRequest : OrderRequest;
   SendList : ArrayOfOrderRequestItem;
@@ -513,43 +577,56 @@ var
 begin
   Result:=false;
 
-  //Первое - формирование
+  //Открыли данные
+  with spSelectUnloadItem do begin
+     ParamByName('inMovementId').Value := lMovementId;
+     Execute;
+  end;
 
+  //Еще раз определим, что б не отправлять повторно
+  if (UnloadItemCDS.FieldByName('isRegistered').AsBoolean = TRUE) or (UnloadItemCDS.RecordCount = 0)
+  then begin
+    Result:= true;
+    exit;
+  end;
+
+
+  //Первое - формирование
 
   try
     aOrderRequest := OrderRequest.Create;
     //
     //ИД накладной в учетной системе
-    aOrderRequest.OrderId := '1';
+    aOrderRequest.OrderId := IntToStr(lMovementId);
     //Номер накладной
-    aOrderRequest.OrderCode := '123';
+    aOrderRequest.OrderCode := lInvNumber;
     //Дата/время накладной
     aOrderRequest.OrderDate:= TXSDateTime.Create;
-    aOrderRequest.OrderDate.AsDateTime:= now;
+    aOrderRequest.OrderDate.AsDateTime:= lOperDate;
     //Тип накладной(1-Поставка\2-Возврат Дистрибьютору\3-Возврат Покупателя)
     aOrderRequest.OrderType := '1';
     //Код Орг-ции отправителя
-    aOrderRequest.OrganizationFromCode := '555';
+    aOrderRequest.OrganizationFromCode := lFromOKPO;
     //Название Орг-ции отправителя
-    aOrderRequest.OrganizationFromName := 'Name555';
+    aOrderRequest.OrganizationFromName := lFromName;
     //Код Орг-ции получателя
-    aOrderRequest.OrganizationToCode := '777';
+    aOrderRequest.OrganizationToCode := lToOKPO;
     //Название Орг-ции получателя
-    aOrderRequest.OrganizationToName := 'Name777';
+    aOrderRequest.OrganizationToName := lToName;
 
     i := 1;
-    CheckCDS.First;
-    while not CheckCDS.Eof do
+    UnloadItemCDS.First;
+    while not UnloadItemCDS.Eof do
     begin
           try
             Item         := OrderRequestItem.Create;
             //Штрих код товара
-            Item.ProductFormCode:= '';
+            Item.ProductFormCode:= UnloadItemCDS.FieldByName('BarCode').AsString;
             //Тип продукта (0 коммерческий\1 акционный)
             Item.SaleType := '1';
             //Кол-во
             Item.Quantity := TXSDecimal.Create;
-            Item.Quantity.XSToNative (myFloatToStr (CheckCDS.FieldByName('Amount').AsFloat));
+            Item.Quantity.XSToNative (myFloatToStr (UnloadItemCDS.FieldByName('Amount').AsFloat));
 
             // Подготовили список для отправки
             SetLength(SendList, i);
@@ -560,14 +637,14 @@ begin
 
           except
                 ShowMessage ('Ошибка при заполнении структуры SendList.' + #10+ #13
-                + #10+ #13 + 'Товар (' + CheckCDS.FieldByName('GoodsCode').AsString + ')' + CheckCDS.FieldByName('GoodsName').AsString);
+                + #10+ #13 + 'Товар (' + UnloadItemCDS.FieldByName('GoodsCode').AsString + ')' + UnloadItemCDS.FieldByName('GoodsName').AsString);
                 //ошибка
                 lMsg:='Error';
                 exit;
           end;
 
-      //
-      CheckCDS.Next;
+      // идем дальше
+      UnloadItemCDS.Next;
 
     end; // while
 
@@ -591,11 +668,16 @@ begin
 
           //обработали результат
           lMsg:= Res.ResultDescription;
-          Result:= LowerCase(lMsg) = LowerCase('Продажа доступна');
+          Result:= LowerCase(lMsg) = LowerCase('OK');
           //
           if not Result
-          then ShowMessage ('Ошибка <' + gService + '>.' + #10+ #13 + lMsg);
+          then ShowMessage ('Ошибка <' + gService + '>.' + #10+ #13 + lMsg)
 
+          else //запишем в Документе - Загружена приходная накладная от дистрибьютора в медреестр Pfizer МДМ
+               with spUpdateUnload do begin
+                  ParamByName('inMovementId').Value := lMovementId;
+                  Execute;
+               end;
 
     except
         ShowMessage ('Ошибка на сервере <' + gURL + '>.' + #10+ #13);

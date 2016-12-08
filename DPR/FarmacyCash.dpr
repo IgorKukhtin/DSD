@@ -113,7 +113,6 @@ begin
       Application.CreateForm(TdmMain, dmMain);
       Application.CreateForm(TMainCashForm, MainCashForm);
       Application.CreateForm(TfrmSplash, frmSplash);
-      Application.CreateForm(TDiscountServiceForm, DiscountServiceForm); //***20.07.16
       EndSplash;
     end;
   End;

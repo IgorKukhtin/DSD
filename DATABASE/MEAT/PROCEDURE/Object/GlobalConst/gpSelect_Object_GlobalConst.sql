@@ -99,6 +99,7 @@ BEGIN
                                        THEN ' Расчет С/С = <' || COALESCE ((SELECT Res FROM tmpProcess_HistoryCost), '0') || '>'
                                   ELSE ''
                              END
+                          || ' Расчет С/С = <1>'
 
                           || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') <> '0'
                                        THEN ' ВАКУУМ = <' || COALESCE ((SELECT Res FROM tmpProcess_Vacuum), '0') || '>'

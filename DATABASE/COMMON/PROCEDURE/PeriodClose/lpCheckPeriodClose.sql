@@ -175,13 +175,23 @@ BEGIN
                                      AND MovementItem.isErased = FALSE)
                         , tmp3 AS (SELECT zc_Enum_PaidKind_FirstForm()  AS PaidKindId WHERE inMovementDescId = zc_Movement_BankAccount()  AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
                                   UNION ALL
-                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId <> zc_Movement_BankAccount() AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2))
+                                   SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId WHERE inMovementDescId NOT IN (zc_Movement_SendDebt(), zc_Movement_BankAccount()) AND NOT EXISTS (SELECT 1 FROM tmp1) AND NOT EXISTS (SELECT 1 FROM tmp2)
+                                  UNION ALL
+                                   -- индивидуально для zc_Movement_SendDebt, приоритет - НАЛ
+                                   SELECT tmp_record.PaidKindId FROM (SELECT tmp2.PaidKindId FROM tmp2 WHERE inMovementDescId = zc_Movement_SendDebt() ORDER BY CASE WHEN tmp2.PaidKindId = zc_Enum_PaidKind_SecondForm() THEN 0 ELSE 1 END LIMIT 1) AS tmp_record
+                                  )
                      -- подзапрос
-                     SELECT tmp1.PaidKindId FROM tmp1 UNION SELECT tmp2.PaidKindId FROM tmp2 UNION SELECT tmp3.PaidKindId FROM tmp3
+                     SELECT tmp1.PaidKindId FROM tmp1
+               UNION SELECT tmp2.PaidKindId FROM tmp2 WHERE inMovementDescId <> zc_Movement_SendDebt() 
+               UNION SELECT tmp3.PaidKindId FROM tmp3
                     ) AS tmp ON tmp.PaidKindId = _tmpPeriodClose.PaidKindId
      WHERE _tmpPeriodClose.MovementDescId = 0 AND _tmpPeriodClose.UserId = 0 AND _tmpPeriodClose.MovementDescId_excl <> inMovementDescId
        AND (_tmpPeriodClose.BranchId   = 0)
        AND (_tmpPeriodClose.PaidKindId = 0 OR tmp.PaidKindId > 0);
+
+     -- Проверка - tmp
+     IF inUserId = zc_Enum_Process_Auto_PrimeCost() THEN RAISE EXCEPTION 'Ошибка. ??? inUserId = zc_Enum_Process_Auto_PrimeCost() ???'; END IF;
+
      -- Проверка - 1
      IF vbPeriodCloseId <> vbPeriodCloseId_two
      THEN

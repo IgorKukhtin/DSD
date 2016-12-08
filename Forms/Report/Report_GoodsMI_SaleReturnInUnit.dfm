@@ -1,84 +1,84 @@
 ﻿inherited Report_GoodsMI_SaleReturnInUnitForm: TReport_GoodsMI_SaleReturnInUnitForm
   Caption = #1054#1090#1095#1077#1090' <'#1057#1082#1083#1072#1076' '#1055#1088#1080#1093#1086#1076' / '#1056#1072#1089#1093#1086#1076' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'>'
   ClientHeight = 387
-  ClientWidth = 1366
+  ClientWidth = 1362
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -533
-  ExplicitWidth = 1382
+  ExplicitLeft = -642
+  ExplicitWidth = 1378
   ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1366
+    Width = 1362
     Height = 307
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 307
     ClientRectBottom = 307
-    ClientRectRight = 1366
+    ClientRectRight = 1362
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1366
+      ExplicitWidth = 1362
       ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1366
+        Width = 1362
         Height = 307
-        ExplicitWidth = 1366
+        ExplicitWidth = 1362
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Summ
+              Column = Sale_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Amount_Weight
+              Column = Sale_Amount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Amount_Sh
+              Column = Sale_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Amount_Sh
+              Column = Return_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Amount_Weight
+              Column = Return_Amount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Summ
+              Column = Return_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_AmountPartner_Sh
+              Column = Sale_AmountPartner_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_AmountPartner_Weight
+              Column = Sale_AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_AmountPartner_Weight
+              Column = Return_AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_AmountPartner_Sh
+              Column = Return_AmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -144,17 +144,32 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_AmountPartnerR_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_AmountPartnerR_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummReal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Summ
+              Column = Sale_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Amount_Weight
+              Column = Sale_Amount_Weight
             end
             item
               Format = ',0.####'
@@ -163,42 +178,42 @@
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_Amount_Sh
+              Column = Sale_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Amount_Sh
+              Column = Return_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Amount_Weight
+              Column = Return_Amount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_Summ
+              Column = Return_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_AmountPartner_Sh
+              Column = Sale_AmountPartner_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSale_AmountPartner_Weight
+              Column = Sale_AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_AmountPartner_Weight
+              Column = Return_AmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clReturn_AmountPartner_Sh
+              Column = Return_AmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -264,6 +279,21 @@
               Format = ',0.####'
               Kind = skSum
               Column = Return_Summ_10700
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_AmountPartnerR_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_AmountPartnerR_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Sale_SummReal
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -435,19 +465,20 @@
             Options.Editing = False
             Width = 45
           end
-          object clSale_Amount_Weight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'
+          object Sale_Amount_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1089#1082#1083#1072#1076', '#1073#1077#1079' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1077#1079' '#1091#1095#1077#1090#1072' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
-          object clSale_Amount_Sh: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1089#1082#1083#1072#1076')'
+          object Sale_Amount_Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1089#1082#1083#1072#1076', '#1073#1077#1079' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -455,22 +486,24 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1077#1079' '#1091#1095#1077#1090#1072' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
-          object clSale_AmountPartner_Weight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
+          object Sale_AmountPartner_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1087#1086#1082#1091#1087', '#1089' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1090#1077#1085' '#1090#1086#1083#1100#1082#1086' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089
             Options.Editing = False
             Width = 70
           end
-          object clSale_AmountPartner_Sh: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+          object Sale_AmountPartner_Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1087#1086#1082#1091#1087', '#1089' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -478,8 +511,32 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1090#1077#1085' '#1090#1086#1083#1100#1082#1086' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089
             Options.Editing = False
             Width = 70
+          end
+          object Sale_AmountPartnerR_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_AmountPartnerR_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
+            Width = 80
+          end
+          object Sale_AmountPartnerR_Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_AmountPartnerR_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
+            Width = 80
           end
           object Sale_Amount_10500_Weight: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072', '#1074#1077#1089' ('#1087#1088#1080' '#1087#1088#1086#1076'. 1%)'
@@ -503,16 +560,28 @@
             Options.Editing = False
             Width = 80
           end
-          object clSale_Summ: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1075#1088#1085
+          object Sale_Summ: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1089' %'#1089#1082'.'#1074#1077#1089')'
             DataBinding.FieldName = 'Sale_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089
             Options.Editing = False
-            Width = 70
+            Width = 78
+          end
+          object Sale_SummReal: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'Sale_SummReal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
+            Width = 80
           end
           object Sale_Summ_10200: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085'. '#1087#1088#1072#1081#1089' (-<) (+>) ('#1087#1088#1080' '#1087#1088#1086#1076'.)'
@@ -548,7 +617,7 @@
             Width = 80
           end
           object Sale_SummCost: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076' '#1089'/'#1089', '#1075#1088#1085
+            Caption = #1055#1088#1086#1076' '#1089'/'#1089', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -556,6 +625,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057' '#1091#1095#1077#1090#1086#1084' %'#1089#1082#1080#1076#1082#1080' '#1079#1072' '#1074#1077#1089' '#1080' '#1088#1072#1079#1085#1080#1094#1099' '#1074' '#1074#1077#1089#1077
             Options.Editing = False
             Width = 70
           end
@@ -583,7 +653,7 @@
             Options.Editing = False
             Width = 80
           end
-          object clReturn_Amount_Weight: TcxGridDBColumn
+          object Return_Amount_Weight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Return_Amount_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -594,7 +664,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clReturn_Amount_Sh: TcxGridDBColumn
+          object Return_Amount_Sh: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1096#1090' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Return_Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -606,7 +676,7 @@
             Options.Editing = False
             Width = 70
           end
-          object clReturn_AmountPartner_Weight: TcxGridDBColumn
+          object Return_AmountPartner_Weight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1074#1077#1089' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Return_AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -617,7 +687,7 @@
             Options.Editing = False
             Width = 75
           end
-          object clReturn_AmountPartner_Sh: TcxGridDBColumn
+          object Return_AmountPartner_Sh: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1096#1090' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Return_AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -640,7 +710,7 @@
             Options.Editing = False
             Width = 80
           end
-          object clReturn_Summ: TcxGridDBColumn
+          object Return_Summ: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088', '#1075#1088#1085
             DataBinding.FieldName = 'Return_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -741,7 +811,7 @@
             Options.Editing = False
             Width = 100
           end
-          object clReturnPercent: TcxGridDBColumn
+          object ReturnPercent: TcxGridDBColumn
             Caption = '% '#1074#1086#1079#1074#1088#1072#1090#1072
             DataBinding.FieldName = 'ReturnPercent'
             HeaderAlignmentHorz = taCenter
@@ -770,9 +840,9 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1366
+    Width = 1362
     Height = 54
-    ExplicitWidth = 1366
+    ExplicitWidth = 1362
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 60
