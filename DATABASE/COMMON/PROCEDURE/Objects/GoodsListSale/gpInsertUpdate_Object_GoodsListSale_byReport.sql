@@ -136,34 +136,55 @@ BEGIN
 
      --!!!!!!!!!!!!!!!!!!!!!
      ANALYZE _tmpMIContainer;
-
+     
 
      INSERT INTO _tmpResult (GoodsId, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount)
+        WITH
+        tmpData_all AS (SELECT _tmpMIContainer.GoodsId  
+                          -- , STRING_AGG (_tmpMIContainer.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
+                             , _tmpMIContainer.GoodsKindId
+                             , _tmpMIContainer.PartnerId
+                             , ContainerLO_Juridical.ObjectId AS Juridical
+                             , ContainerLO_Contract.ObjectId AS ContractId                          
+                             , SUM (_tmpMIContainer.Amount) AS Amount
+                        FROM _tmpMIContainer
+                            JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                                     ON ContainerLO_Juridical.ContainerId = _tmpMIContainer.ContainerId
+                                                    AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                            JOIN ContainerLinkObject AS ContainerLO_Contract 
+                                                     ON ContainerLO_Contract.ContainerId = _tmpMIContainer.ContainerId
+                                                    AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                       GROUP BY  _tmpMIContainer.GoodsId  
+                               , _tmpMIContainer.GoodsKindId
+                               , _tmpMIContainer.PartnerId
+                               , ContainerLO_Juridical.ObjectId 
+                               , ContainerLO_Contract.ObjectId 
+                       ORDER BY ContainerLO_Juridical.ObjectId 
+                              , ContainerLO_Contract.ObjectId
+                              , _tmpMIContainer.PartnerId
+                              , _tmpMIContainer.GoodsId 
+                              , _tmpMIContainer.GoodsKindId
+                       HAVING SUM (_tmpMIContainer.Amount) <> 0
+                       )
+
         SELECT DISTINCT tmpData.GoodsId  
              , tmpData.GoodsKindId_List
              , tmpData.Juridical
              , tmpData.ContractId
              , tmpData.PartnerId
              , CAST (tmpData.Amount AS NUMERIC (16, 2)) ::Tfloat
-        FROM (SELECT _tmpMIContainer.GoodsId  
-                   , STRING_AGG (_tmpMIContainer.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
-                   , _tmpMIContainer.PartnerId
-                   , ContainerLO_Juridical.ObjectId AS Juridical
-                   , ContainerLO_Contract.ObjectId AS ContractId                          
-                   , SUM (_tmpMIContainer.Amount) AS Amount
-              FROM _tmpMIContainer 
-                  JOIN ContainerLinkObject AS ContainerLO_Juridical
-                                               ON ContainerLO_Juridical.ContainerId = _tmpMIContainer.ContainerId
-                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                  JOIN ContainerLinkObject AS ContainerLO_Contract 
-                                               ON ContainerLO_Contract.ContainerId = _tmpMIContainer.ContainerId
-                                              AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-               --   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmpMIContainer.GoodsKindId          
-             GROUP BY  _tmpMIContainer.GoodsId  
-                     , _tmpMIContainer.PartnerId
-                     , ContainerLO_Juridical.ObjectId 
-                     , ContainerLO_Contract.ObjectId 
-             HAVING SUM (_tmpMIContainer.Amount) <> 0
+        FROM (SELECT tmpData_all.GoodsId  
+                   , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
+                   , tmpData_all.PartnerId
+                   , tmpData_all.Juridical
+                   , tmpData_all.ContractId                          
+                   , SUM (tmpData_all.Amount) AS Amount
+              FROM tmpData_all
+             GROUP BY  tmpData_all.GoodsId  
+                     , tmpData_all.PartnerId
+                     , tmpData_all.Juridical
+                     , tmpData_all.ContractId  
+             HAVING SUM (tmpData_all.Amount) <> 0
              ) as tmpData
         WHERE tmpData.Amount <> 0;
 

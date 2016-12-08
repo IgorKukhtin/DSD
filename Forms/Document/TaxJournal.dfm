@@ -435,7 +435,6 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited Panel: TPanel
     Width = 1110
     Height = 51
-    ExplicitTop = 8
     ExplicitWidth = 1110
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
@@ -661,8 +660,7 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           Name = 'inOperDate'
           Value = 'NULL'
-          Component = FormParams
-          ComponentItem = 'inOperDate'
+          Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -672,9 +670,6 @@ inherited TaxJournalForm: TTaxJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
-        item
-          Action = ExecuteDialog2
-        end
         item
           Action = actInsertMask
         end>
@@ -1026,6 +1021,21 @@ inherited TaxJournalForm: TTaxJournalForm
           Action = actCopyTaxCorrective
         end>
       View = cxGridDBTableView
+      Caption = 
+        #1057#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086 +
+        #1074#1072#1103'>'
+      ImageIndex = 10
+    end
+    object mactCopyTaxCorrectiveList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog2
+        end
+        item
+          Action = mactCopyTaxCorrective
+        end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072'> '#1085#1072' '#1086#1089#1085#1086#1074#1072#1085#1080#1080' '#1076#1086#1082 +
         #1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'>?'
@@ -1195,7 +1205,7 @@ inherited TaxJournalForm: TTaxJournalForm
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
       Caption = 'actDataDialog'
-      ImageIndex = 54
+      ImageIndex = 10
       FormName = 'TDataDialogForm'
       FormNameParam.Value = 'TDataDialogForm'
       FormNameParam.DataType = ftDateTime
@@ -1493,7 +1503,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Category = 0
     end
     object bbCopyTaxCorrective: TdxBarButton
-      Action = mactCopyTaxCorrective
+      Action = mactCopyTaxCorrectiveList
       Category = 0
     end
   end
@@ -2041,6 +2051,15 @@ inherited TaxJournalForm: TTaxJournalForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

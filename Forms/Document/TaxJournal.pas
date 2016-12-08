@@ -120,6 +120,7 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog2: TExecuteDialog;
+    mactCopyTaxCorrectiveList: TMultiAction;
   private
     { Private declarations }
   public
