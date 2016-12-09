@@ -406,7 +406,8 @@ BEGIN
                                                                 ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
                                                                AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SendSumm_in()
                                                                AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                               AND MIContainer.AccountId NOT IN (zc_Enum_Account_110101() -- Транзит + товар в пути
+                                                               AND MIContainer.AccountId NOT IN (zc_Enum_Account_100301() -- Собственный капитал + Прибыль текущего периода
+                                                                                               , zc_Enum_Account_110101() -- Транзит + товар в пути
                                                                                                , zc_Enum_AnalyzerId_SummIn_110101()
                                                                                                , zc_Enum_AnalyzerId_SummOut_110101()
                                                                                                , zc_Enum_AnalyzerId_SummIn_80401()
