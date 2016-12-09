@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
+               JuridicalId Integer, JuridicalName TVarChar,
+               Deferment Integer, Percent TFloat,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
@@ -31,6 +32,7 @@ BEGIN
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
            , 0                     AS Deferment
+           , CAST (0 AS TFloat)    AS Percent
 
            , CAST (NULL AS TVarChar) AS Comment  
 
@@ -52,6 +54,7 @@ BEGIN
            , Object_Contract_View.JuridicalId
            , Object_Contract_View.JuridicalName 
            , Object_Contract_View.Deferment
+           , Object_Contract_View.Percent
 
            , Object_Contract_View.Comment
 
@@ -80,6 +83,7 @@ ALTER FUNCTION gpGet_Object_Contract (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.16         *
  01.07.14         *
 
 */

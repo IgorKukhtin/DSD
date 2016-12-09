@@ -893,7 +893,8 @@ uses
   ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm},
   Color in '..\..\Forms\System\Color.pas' {ColorForm: TParentForm},
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm},
-  DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm};
+  DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm},
+  GoodsByGoodsKind_ScaleCeh in '..\..\Forms\Guides\GoodsByGoodsKind_ScaleCeh.pas' {GoodsByGoodsKind_ScaleCehForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

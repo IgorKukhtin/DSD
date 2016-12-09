@@ -781,6 +781,8 @@ type
     actReport_Goods_byMovement: TdsdOpenForm;
     N143: TMenuItem;
     N144: TMenuItem;
+    actGoodsByGoodsKind_ScaleCeh: TdsdOpenForm;
+    ScaleCeh1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

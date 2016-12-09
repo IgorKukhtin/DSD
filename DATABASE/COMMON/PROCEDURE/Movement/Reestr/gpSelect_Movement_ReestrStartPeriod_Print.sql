@@ -67,6 +67,7 @@ BEGIN
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
            , Object_To.ValueData                    AS ToName
            , Object_ReestrKind.ValueData    	    AS ReestrKindName
+           , Object_PaidKind.ValueData              AS PaidKindName 
 
            , MovementFloat_TotalCountKg.ValueData           AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
@@ -174,6 +175,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
          ORDER BY Object_To.ValueData
                 , MovementDate_OperDatePartner.ValueData
 ;

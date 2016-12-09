@@ -1,5 +1,5 @@
-inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1079#1072#1103#1074#1082#1080')'
+inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> (ScaleCeh)'
   ClientHeight = 420
   ClientWidth = 1030
   ExplicitWidth = 1046
@@ -168,8 +168,10 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
           object clisOrder: TcxGridDBColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
             DataBinding.FieldName = 'isOrder'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object clisScaleCeh: TcxGridDBColumn
@@ -177,7 +179,6 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
             DataBinding.FieldName = 'isScaleCeh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -462,7 +463,7 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isOrder'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind_isScaleCeh'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -491,10 +492,10 @@ inherited GoodsByGoodsKind_OrderForm: TGoodsByGoodsKind_OrderForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOrder'
+        Name = 'inisScaleCeh'
         Value = 'Felse'
         Component = MasterCDS
-        ComponentItem = 'isOrder'
+        ComponentItem = 'isScaleCeh'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

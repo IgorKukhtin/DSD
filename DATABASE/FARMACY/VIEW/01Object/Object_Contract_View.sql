@@ -22,11 +22,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                      
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
-           , ObjectFloat_Deferment.ValueData::Integer AS Deferment
+           , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
+           , ObjectFloat_Percent.ValueData   ::Tfloat  AS Percent
 
            , ObjectString_Comment.ValueData AS Comment
            
-           , Object_Contract.isErased           AS isErased
+           , Object_Contract.isErased       AS isErased
            , 0 AS InfoMoneyId
            , 0 AS Contractstatekindid           
 
@@ -49,6 +50,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                                  ON ObjectFloat_Deferment.ObjectId = Object_Contract.Id
                                 AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_Percent
+                                 ON ObjectFloat_Percent.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+
        WHERE Object_Contract.DescId = zc_Object_Contract();
 
 ALTER TABLE Object_Contract_View
@@ -58,6 +63,7 @@ ALTER TABLE Object_Contract_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.12.16         * add PercentCorr
  25.12.14                        * 
 */
 

@@ -31,6 +31,8 @@ type
     edStartDate: TcxDateEdit;
     cxLabel8: TcxLabel;
     edEndDate: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    cePercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

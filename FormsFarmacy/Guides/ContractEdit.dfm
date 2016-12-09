@@ -43,7 +43,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 8
     Top = 32
     TabOrder = 3
-    Width = 335
+    Width = 168
   end
   object cxLabel4: TcxLabel [6]
     Left = 8
@@ -70,15 +70,15 @@ inherited ContractEditForm: TContractEditForm
     Left = 8
     Top = 179
     TabOrder = 7
-    Width = 335
+    Width = 339
   end
   object cxLabel5: TcxLabel [10]
-    Left = 178
-    Top = 59
+    Left = 182
+    Top = 61
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit [11]
-    Left = 178
+    Left = 182
     Top = 81
     Properties.Buttons = <
       item
@@ -103,12 +103,12 @@ inherited ContractEditForm: TContractEditForm
     Width = 95
   end
   object cxLabel7: TcxLabel [14]
-    Left = 122
+    Left = 125
     Top = 115
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1089
   end
   object edStartDate: TcxDateEdit [15]
-    Left = 122
+    Left = 125
     Top = 133
     EditValue = 42370d
     Properties.SaveTime = False
@@ -117,12 +117,12 @@ inherited ContractEditForm: TContractEditForm
     Width = 103
   end
   object cxLabel8: TcxLabel [16]
-    Left = 240
+    Left = 244
     Top = 115
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
   object edEndDate: TcxDateEdit [17]
-    Left = 240
+    Left = 244
     Top = 133
     EditValue = 42370d
     Properties.SaveTime = False
@@ -130,13 +130,25 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 17
     Width = 103
   end
+  object cxLabel9: TcxLabel [18]
+    Left = 182
+    Top = 11
+    Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
+  end
+  object cePercent: TcxCurrencyEdit [19]
+    Left = 182
+    Top = 32
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 19
+    Width = 165
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 315
-    Top = 1
+    Left = 291
+    Top = 73
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 248
-    Top = 65533
+    Left = 312
+    Top = 149
   end
   inherited ActionList: TActionList
     Left = 119
@@ -155,12 +167,14 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -168,6 +182,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -175,6 +190,7 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -182,12 +198,22 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDeferment'
         Value = 0.000000000000000000
         Component = ceDeferment
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercent'
+        Value = Null
+        Component = cePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -195,6 +221,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -202,6 +229,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -209,6 +237,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 274
     Top = 177
@@ -222,23 +251,27 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = ''
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
@@ -246,12 +279,14 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalBasisGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -259,29 +294,41 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Deferment'
         Value = 0.000000000000000000
         Component = ceDeferment
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
         Value = 'NULL'
         Component = edStartDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 'NULL'
         Component = edEndDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Percent'
+        Value = Null
+        Component = cePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 226
     Top = 177
@@ -291,6 +338,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = ceJuridicalBasis
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -300,6 +348,7 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -308,6 +357,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 24
     Top = 68
@@ -317,6 +367,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -326,6 +377,7 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -334,6 +386,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 202
     Top = 68
