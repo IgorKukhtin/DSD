@@ -2,25 +2,27 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
- INOUT ioId	        Integer   ,     -- ключ объекта
-    IN inCode           Integer   ,     -- 
-    IN inName           TVarChar  ,     -- Описание
-    IN inRoleId         Integer   ,     -- Роль
-    IN inRoleCode       Integer   ,     -- Роль
-    IN inUserId_excl    Integer   ,     -- Пользователь - Исключение
-    IN inUserCode_excl  Integer   ,     -- Пользователь - Исключение
-    IN inDescId         Integer   ,     -- Вид Документа
-    IN inDescId_excl    Integer   ,     -- Вид Документа - Исключение
-    IN inBranchId       Integer   ,     -- 
-    IN inBranchCode     Integer   ,     -- 
-    IN inPaidKindId     Integer   ,     -- 
-    IN inPaidKindCode   Integer   ,     -- 
-    IN inPeriod         Integer   ,     -- Дни
-    IN inCloseDate      TDateTime ,     -- Закрытый период
-    IN inCloseDate_excl TDateTime ,     -- Закрытый период - Исключение
-    IN inSession        TVarChar        -- сессия пользователя
+ INOUT ioId	         Integer   ,     -- ключ объекта
+    IN inCode            Integer   ,     -- 
+    IN inName            TVarChar  ,     -- Описание
+    IN inRoleId          Integer   ,     -- Роль
+    IN inRoleCode        Integer   ,     -- Роль
+    IN inUserId_excl     Integer   ,     -- Пользователь - Исключение
+    IN inUserCode_excl   Integer   ,     -- Пользователь - Исключение
+    IN inDescId          Integer   ,     -- Вид Документа
+    IN inDescId_excl     Integer   ,     -- Вид Документа - Исключение
+    IN inBranchId        Integer   ,     -- 
+    IN inBranchCode      Integer   ,     -- 
+    IN inPaidKindId      Integer   ,     -- 
+    IN inPaidKindCode    Integer   ,     -- 
+    IN inPeriod          Integer   ,     -- Дни
+    IN inCloseDate       TDateTime ,     -- Закрытый период
+    IN inCloseDate_excl  TDateTime ,     -- Закрытый период - Исключение
+    IN inCloseDate_store TDateTime ,     -- Период закрыт до (для кол-во склад)
+    IN inSession         TVarChar        -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$

@@ -776,7 +776,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
@@ -784,7 +784,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProtocolForm'));
@@ -810,6 +810,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodClose_UserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodClose_UserForm');
 
