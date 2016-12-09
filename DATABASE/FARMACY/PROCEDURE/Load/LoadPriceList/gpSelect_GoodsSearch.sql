@@ -85,16 +85,19 @@ BEGIN
          Object_Goods.NDS,
          LinkGoods.Id AS LinkGoodsId 
        , CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
-                   THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0)) -- - COALESCE(ObjectFloat_Percent.valuedata, 0)
-              ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
+                   THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0)) -- - COALESCE(ObjectFloat_Juridical_Percent.valuedata, 0)
+              ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
          END :: TFloat AS MarginPercent
-         --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Percent.valuedata, 0))::TFloat,
-       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                     -- Цена С НДС
-                           MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0), -- % наценки в КАТЕГОРИИ
-                           COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),          -- ТОП позиция
+         --(MarginCondition.MarginPercent + COALESCE(ObjectFloat_Juridical_Percent.valuedata, 0))::TFloat,
+       , zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                         -- Цена С НДС
+                           CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
+                                    THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
+                                ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
+                           END,                                                                             -- % наценки в КАТЕГОРИИ
+                           COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),              -- ТОП позиция
                            COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
-                           0.0, --ObjectFloat_Percent.valuedata,                                        -- % корректировки у Юр Лица для ТОПа
-                           ObjectGoodsView.Price                                                        -- Цена у товара (фиксированная)
+                           0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
+                           ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
                          ) :: TFloat AS NewPrice
 
        FROM LoadPriceListItem 
@@ -105,9 +108,9 @@ BEGIN
                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
                    AND JuridicalSettings.ContractId = LoadPriceList.ContractId 
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                  ON ObjectFloat_Percent.ObjectId = LoadPriceList.JuridicalId
-                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
+                                  ON ObjectFloat_Juridical_Percent.ObjectId = LoadPriceList.JuridicalId
+                                 AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
                                   ON ObjectFloat_Contract_Percent.ObjectId = LoadPriceList.ContractId
@@ -138,7 +141,7 @@ BEGIN
         AND
         upper(LoadPriceListItem.ProducerName) LIKE UPPER ('%' || inProducerSearch || '%')
         AND 
-        upper (CAST (COALESCE (Object_Goods.GoodsCode, 0) :: TVarChar)) LIKE UPPER ('%' || inCodeSearch || '%')
+        upper (CAST (COALESCE (Object_Goods.GoodsCode, 0) AS TVarChar)) LIKE UPPER ('%' || inCodeSearch || '%')
         AND
         (
             inGoodsSearch <> ''

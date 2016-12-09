@@ -140,15 +140,21 @@ BEGIN
             RemainsTo.Amount                  AS RemainsCount_to,
             Object_Goods.NDS                  AS NDS
           , CASE WHEN SelectMinPrice_AllGoods.isTop = TRUE
-                      THEN  COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0)) /*- COALESCE(ObjectFloat_Percent.valuedata, 0)*/
-                 ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Percent.valuedata, 0)
+                      THEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (Object_Goods.PercentMarkup, 0)) /*- COALESCE(ObjectFloat_Juridical_Percent.ValueData, 0)*/
+                 ELSE CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
+                                THEN COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0)
+                           ELSE COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)
+                      END
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
           , zfCalc_SalePrice((SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
-                            , MarginCondition.MarginPercent + COALESCE (ObjectFloat_Percent.valuedata, 0) -- % наценки в КАТЕГОРИИ
+                            , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0 
+                                       THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) -- % наценки в КАТЕГОРИИ
+                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.ValueData, 0)) -- % наценки в КАТЕГОРИИ
+                              END
                             , SelectMinPrice_AllGoods.isTop                                               -- ТОП позиция
                             , COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), Object_Goods.PercentMarkup) -- % наценки у товара
-                            , 0 /*ObjectFloat_Percent.valuedata*/                                         -- % корректировки у Юр Лица для ТОПа
+                            , 0 /*ObjectFloat_Juridical_Percent.ValueData*/                                         -- % корректировки у Юр Лица для ТОПа
                             , CASE WHEN Object_Price.Fix = TRUE THEN Object_Price.Price ELSE Object_Goods.Price END -- Цена у товара (почти фиксированная)
                              ) ::TFloat AS NewPrice
           , SelectMinPrice_AllGoods.PartionGoodsDate         AS ExpirationDate,
@@ -188,9 +194,14 @@ BEGIN
                                               ON Object_Goods.ObjectId = vbObjectId
                                                  -- !!!берем из сети!!!
                                              AND Object_Goods.Id = SelectMinPrice_AllGoods.GoodsId_retail -- SelectMinPrice_AllGoods.GoodsId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                  ON ObjectFloat_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
-                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
+                                  ON ObjectFloat_Juridical_Percent.ObjectId = SelectMinPrice_AllGoods.JuridicalId
+                                 AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                                  ON ObjectFloat_Contract_Percent.ObjectId = SelectMinPrice_AllGoods.ContractId
+                                 AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
                                                      ON Object_MarginCategoryLink_unit.UnitId      = inUnitId
                                                     AND Object_MarginCategoryLink_unit.JuridicalId = SelectMinPrice_AllGoods.JuridicalId
