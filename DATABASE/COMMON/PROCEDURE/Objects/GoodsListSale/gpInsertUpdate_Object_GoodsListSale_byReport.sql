@@ -1,8 +1,6 @@
-
--- Function: gpInsertUpdate_Object_GoodsListSale_byReport  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
+-- Function: gpInsertUpdate_Object_GoodsListSale_byReport
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsListSale_byReport (TFloat,TFloat,TFloat,Integer,Integer,Integer,Integer, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsListSale_byReport(
     IN inPeriod_1                  TFloat ,  
@@ -46,7 +44,7 @@ BEGIN
       SELECT 
              Object_GoodsListSale.Id                           AS Id
            , ObjectLink_GoodsListSale_Goods.ChildObjectId      AS GoodsId 
-           , ObjectString_GoodsKind.ValueData                  AS GoodsKindId_List
+           , COALESCE (ObjectString_GoodsKind.ValueData, '')   AS GoodsKindId_List
            , ObjectLink_GoodsListSale_Juridical.ChildObjectId  AS JuridicalId           
            , GoodsListSale_Contract.ChildObjectId              AS ContractId
            , ObjectLink_GoodsListSale_Partner.ChildObjectId    AS PartnerId
@@ -88,7 +86,7 @@ BEGIN
    INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId , PartnerId, Amount)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
-             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
              , -1 * SUM (MIContainer.Amount )    AS Amount
 
@@ -106,7 +104,7 @@ BEGIN
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
-             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
              , SUM(-1 * MIContainer.Amount )     AS Amount
         FROM MovementItemContainer AS MIContainer 
@@ -123,7 +121,7 @@ BEGIN
       UNION
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
-             , MIContainer.ObjectIntId_Analyzer  AS GoodsKindId
+             , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
              , MIContainer.ObjectExtId_analyzer  AS PartnerId
              , SUM(-1 * MIContainer.Amount )     AS Amount
         FROM MovementItemContainer AS MIContainer 
@@ -225,26 +223,7 @@ BEGIN
                          AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
     WHERE _tmpList.Id IS NULL OR  _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> _tmpResult.GoodsKindId_List
-;
- --   LIMIT 100
-
-   /* -- обновляем справочник, обновляем кол-во в существующих элементах
-    PERFORM lpInsertUpdate_Object_GoodsListSale (inId            := COALESCE (_tmpList.Id, 0) :: integer
-                                               , inGoodsId       := _tmpResult.GoodsId
-                                               , inContractId    := _tmpResult.ContractId
-                                               , inJuridicalId   := _tmpResult.Juridical
-                                               , inPartnerId     := _tmpResult.PartnerId
-                                               , inAmount        := CAST (_tmpResult.Amount AS NUMERIC (16, 2)) ::Tfloat
-                                               , inUserId        := vbUserId
-                                                )
-    FROM _tmpResult
-       LEFT JOIN _tmpList ON _tmpList.GoodsId    = _tmpResult.GoodsId
-                         AND _tmpList.ContractId = _tmpResult.ContractId
-                         AND _tmpList.Juridical  = _tmpResult.Juridical
-                         AND _tmpList.PartnerId  = _tmpResult.PartnerId
-                                 
-    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased   = TRUE
-*/
+   ;
 
       
 END;
@@ -257,7 +236,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  07.12.16         * add GoodsKindId_List
  12.10.16         *
-
 */
 
 -- тест

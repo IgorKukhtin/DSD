@@ -424,12 +424,17 @@ BEGIN
              , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
 
-             , tmpOperationGroup.Sale_Summ :: TFloat AS Sale_Summ, tmpOperationGroup.Sale_Summ_10200 :: TFloat AS Sale_Summ_10200, tmpOperationGroup.Sale_Summ_10250 :: TFloat AS Sale_Summ_10250, tmpOperationGroup.Sale_Summ_10300 :: TFloat AS Sale_Summ_10300
+             , tmpOperationGroup.Sale_Summ :: TFloat AS Sale_Summ
+             , tmpOperationGroup.Sale_Summ :: TFloat AS Sale_SummReal
+             , tmpOperationGroup.Sale_Summ_10200 :: TFloat AS Sale_Summ_10200, tmpOperationGroup.Sale_Summ_10250 :: TFloat AS Sale_Summ_10250, tmpOperationGroup.Sale_Summ_10300 :: TFloat AS Sale_Summ_10300
              , 0 :: TFloat AS Sale_SummCost, 0 :: TFloat AS Sale_SummCost_10500, 0 :: TFloat AS Sale_SummCost_40200
 
              , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight + tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
              , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     + tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
-             , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight, tmpOperationGroup.Sale_AmountPartner_Sh :: TFloat AS Sale_AmountPartner_Sh
+             , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
+             , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+             , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartnerR_Weight
+             , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartnerR_Sh
 
              , tmpOperationGroup.Return_Summ :: TFloat AS Return_Summ, tmpOperationGroup.Return_Summ_10300 :: TFloat AS Return_Summ_10300, tmpOperationGroup.Return_Summ_PriceList :: TFloat AS Return_Summ_10700
              , 0 :: TFloat AS Return_SummCost, 0 :: TFloat AS Return_SummCost_40200
@@ -563,6 +568,7 @@ BEGIN
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
          , tmpOperationGroup.Amount_Summ         :: TFloat AS Sale_Summ
+         , tmpOperationGroup.Amount_Summ         :: TFloat AS Sale_SummReal
          , (tmpOperationGroup.Sale_Summ_10100 - tmpOperationGroup.Amount_Summ) :: TFloat AS Sale_Summ_10200
          , 0 :: TFloat  AS Sale_Summ_10250
          , 0 :: TFloat  AS Sale_Summ_10300
@@ -575,6 +581,8 @@ BEGIN
 
          , tmpOperationGroup.Amount_CountWeight :: TFloat AS Sale_AmountPartner_Weight
          , tmpOperationGroup.Amount_CountSh     :: TFloat AS Sale_AmountPartner_Sh
+         , tmpOperationGroup.Amount_CountWeight :: TFloat AS Sale_AmountPartnerR_Weight
+         , tmpOperationGroup.Amount_CountSh     :: TFloat AS Sale_AmountPartnerR_Sh
 
          , tmpOperationGroup.Amount_SummRet :: TFloat AS Return_Summ
          , 0 :: TFloat AS Return_Summ_10300

@@ -535,7 +535,8 @@ BEGIN
                                                                       ON MIContainer.WhereObjectId_analyzer = tmp_Unit.UnitId
                                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                                                      AND MIContainer.MovementDescId = zc_Movement_SendOnPrice()
-                                                                     AND COALESCE (MIContainer.AccountId, 0) NOT IN (zc_Enum_Account_110101() -- Транзит + товар в пути
+                                                                     AND COALESCE (MIContainer.AccountId, 0) NOT IN (zc_Enum_Account_100301() -- Собственный капитал + Прибыль текущего периода
+                                                                                                                   , zc_Enum_Account_110101() -- Транзит + товар в пути
                                                                                                                    , zc_Enum_AnalyzerId_SummIn_110101()
                                                                                                                    , zc_Enum_AnalyzerId_SummOut_110101()
                                                                                                                    , zc_Enum_AnalyzerId_SummIn_80401()
