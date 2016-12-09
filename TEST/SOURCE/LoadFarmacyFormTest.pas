@@ -247,6 +247,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
 end;
 
 procedure TLoadFormTest.LoadContactPersonFormTest;

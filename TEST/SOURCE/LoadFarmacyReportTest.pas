@@ -60,7 +60,7 @@ var
  i : integer;
 begin
 // exit;
-
+  LoadReportFromFile('Копия чека клиенту', ReportPath + '\Копия чека клиенту.fr3');
   // Другие
   LoadReportFromFile('Расходная_накладная', ReportPath + '\Расходная_накладная.fr3');
   LoadReportFromFile('Расходная_накладная_для_менеджера', ReportPath + '\Расходная_накладная_для_менеджера.fr3');

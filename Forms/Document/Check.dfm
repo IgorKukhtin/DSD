@@ -1,17 +1,20 @@
 inherited CheckForm: TCheckForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1095#1077#1082
+  ClientHeight = 406
+  ExplicitWidth = 845
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 147
-    Height = 269
+    Height = 259
     ExplicitTop = 147
     ExplicitHeight = 269
-    ClientRectBottom = 269
+    ClientRectBottom = 259
     inherited tsMain: TcxTabSheet
       ExplicitHeight = 245
       inherited cxGrid: TcxGrid
-        Height = 245
+        Height = 235
         ExplicitHeight = 245
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -300,7 +303,6 @@ inherited CheckForm: TCheckForm
       Top = 14
       Properties.ReadOnly = True
       TabOrder = 17
-      Text = 'edFiscalCheckNumber'
       Width = 93
     end
     object chbNotMCS: TcxCheckBox
@@ -392,25 +394,35 @@ inherited CheckForm: TCheckForm
     inherited actUpdateMainDS: TdsdUpdateDataSet
       Enabled = False
     end
-    inherited actUnCompleteMovement: TChangeGuidesStatus
+    inherited actUnCompleteMovement: TChangeGuidesStatus [8]
       Enabled = False
     end
-    inherited actCompleteMovement: TChangeGuidesStatus
+    inherited actCompleteMovement: TChangeGuidesStatus [9]
       Enabled = False
     end
-    inherited actDeleteMovement: TChangeGuidesStatus
+    inherited actDeleteMovement: TChangeGuidesStatus [10]
       Enabled = False
     end
-    inherited MultiAction: TMultiAction
+    inherited actMovementItemContainer: TdsdOpenForm [11]
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm [12]
+    end
+    inherited MultiAction: TMultiAction [13]
       Enabled = False
     end
-    inherited actNewDocument: TdsdInsertUpdateAction
+    inherited actNewDocument: TdsdInsertUpdateAction [14]
       Enabled = False
     end
-    inherited actAddMask: TdsdExecStoredProc
+    inherited actFormClose: TdsdFormClose [15]
+    end
+    inherited actAddMask: TdsdExecStoredProc [16]
       Enabled = False
     end
-    object ChoiceCashRegister: TOpenChoiceForm
+    object actShowMessage: TShowMessageAction [17]
+      Category = 'DSDLib'
+      MoveParams = <>
+    end
+    object ChoiceCashRegister: TOpenChoiceForm [18]
       Category = 'EditMovement'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -434,6 +446,63 @@ inherited CheckForm: TCheckForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    inherited actPrint: TdsdPrintAction [19]
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBayer'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBayer'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inFiscalCheckNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inFiscalCheckNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091
+      ReportNameParam.Value = #1050#1086#1087#1080#1103' '#1095#1077#1082#1072' '#1082#1083#1080#1077#1085#1090#1091
+      ReportNameParam.ParamType = ptInput
+    end
+    object macPrint: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = PrintDialog
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1095#1077#1082#1072
+      ImageIndex = 3
     end
     object ChoicePaidType: TOpenChoiceForm
       Category = 'EditMovement'
@@ -500,9 +569,52 @@ inherited CheckForm: TCheckForm
       Hint = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1080' '#1090#1080#1087' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 43
     end
-    object actShowMessage: TShowMessageAction
+    object PrintDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'actCheckPrintDialog'
+      ImageIndex = 3
+      FormName = 'TCheckPrintDialogForm'
+      FormNameParam.Value = 'TCheckPrintDialogForm'
+      FormNameParam.DataType = ftDateTime
+      FormNameParam.ParamType = ptInputOutput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFiscalCheckNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inFiscalCheckNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBayer'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBayer'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inFiscalCheckNumber'
+          Component = edFiscalCheckNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBayer'
+          Value = Null
+          Component = edBayer
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -581,6 +693,9 @@ inherited CheckForm: TCheckForm
     inherited dxBarStatic: TdxBarStatic
       ShowCaption = False
     end
+    inherited bbPrint: TdxBarButton
+      Action = macPrint
+    end
     object dxBarButton1: TdxBarButton
       Action = actEditDocument
       Category = 0
@@ -640,6 +755,8 @@ inherited CheckForm: TCheckForm
         Value = Null
         MultiSelectSeparator = ','
       end>
+    Left = 56
+    Top = 312
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Check'
@@ -668,6 +785,7 @@ inherited CheckForm: TCheckForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
+    Left = 160
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check'
@@ -823,20 +941,23 @@ inherited CheckForm: TCheckForm
       end>
   end
   inherited HeaderSaver: THeaderSaver
-    Left = 288
-    Top = 305
+    Left = 320
+    Top = 313
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 390
-    Top = 208
+    Left = 422
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     Left = 536
     Top = 280
   end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    Left = 408
+    Top = 304
+  end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 460
-    Top = 204
+    Left = 516
+    Top = 212
   end
   object spUpdate_Movement_Check: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Check'
@@ -869,6 +990,42 @@ inherited CheckForm: TCheckForm
       end>
     PackSize = 1
     Left = 186
-    Top = 320
+    Top = 328
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Check_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 232
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 748
+    Top = 233
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 740
+    Top = 286
   end
 end

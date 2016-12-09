@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Juridical()
+-- Function: gpGet_Object_Juridical()
 
 DROP FUNCTION IF EXISTS gpGet_Object_Juridical(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
-    IN inId          Integer,       -- РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ 
+    IN inId          Integer,       -- Подразделение 
+    IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                RetailId Integer, RetailName TVarChar,
@@ -13,9 +13,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PayOrder TFloat,
                isErased boolean) AS
 $BODY$
-BEGIN
+BEGIN 
 
-  -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+  -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Juridical());
    IF COALESCE (inId, 0) = 0
    THEN
@@ -80,12 +80,12 @@ ALTER FUNCTION gpGet_Object_Juridical (integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.  Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
  02.12.15                                                         * PayOrder               
  01.07.14         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Juridical(0,'2')

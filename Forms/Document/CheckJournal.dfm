@@ -5,7 +5,7 @@ inherited CheckJournalForm: TCheckJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 847
-  ExplicitHeight = 589
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -571,6 +571,7 @@ inherited CheckJournalForm: TCheckJournalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -669,7 +670,7 @@ inherited CheckJournalForm: TCheckJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 761
-    Top = 178
+    Left = 241
+    Top = 346
   end
 end

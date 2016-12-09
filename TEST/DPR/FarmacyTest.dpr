@@ -459,7 +459,8 @@ uses
   CheckVIP_Error in '..\..\FormsFarmacy\Document\CheckVIP_Error.pas' {CheckVIP_ErrorForm: TParentForm},
   Report_MovementIncome_Promo in '..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas' {Report_MovementIncome_PromoForm: TParentForm},
   Report_MovementCheck_Promo in '..\..\FormsFarmacy\Report\Report_MovementCheck_Promo.pas' {Report_MovementCheck_PromoForm: TParentForm},
-  InventoryPartion in '..\..\FormsFarmacy\Document\InventoryPartion.pas' {InventoryPartionForm: TParentForm};
+  InventoryPartion in '..\..\FormsFarmacy\Document\InventoryPartion.pas' {InventoryPartionForm: TParentForm},
+  CheckPrintDialog in '..\..\FormsFarmacy\Document\CheckPrintDialog.pas' {CheckPrintDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
