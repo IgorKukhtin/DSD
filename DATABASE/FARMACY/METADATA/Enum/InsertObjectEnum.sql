@@ -1274,6 +1274,46 @@ BEGIN
 END $$;
 
 
+
+--
+-- Загрузка прайсов по 3-м контрактам - !!!копируем из "Загрузка прайсов по 2-м контрактам"!!!
+DO $$
+  DECLARE vbImportTypeId_from Integer;
+  DECLARE vbImportTypeId Integer;
+BEGIN
+    -- Поиск, из кого будем копировать
+    vbImportTypeId_from:= (SELECT Id FROM Object WHERE DescId = zc_Object_ImportType() AND LOWER (ValueData) = LOWER ('Загрузка прайсов по 2-м контрактам'));
+    -- Поиск, если уже создали
+    vbImportTypeId:= (SELECT Id FROM Object WHERE DescId = zc_Object_ImportType() AND LOWER (ValueData) = LOWER ('Загрузка прайсов по 3-м контрактам'));
+    -- Создаем Тип загрузки данных по Маркетинговому контракту
+    vbImportTypeId:= gpInsertUpdate_Object_ImportType (ioId            := vbImportTypeId
+                                                     , inCode          := (SELECT ObjectCode FROM Object WHERE Id = vbImportTypeId)
+                                                     , inName          := COALESCE ((SELECT ValueData FROM Object WHERE Id = vbImportTypeId), 'Загрузка прайсов по 3-м контрактам')
+                                                     , inProcedureName := 'gpInsertUpdate_Movement_LoadPriceList_3Contract'
+                                                     , inSession       := zfCalc_UserAdmin()
+                                                      );
+    -- !!!копируем!!! - 1 раз, т.к. Insert
+    PERFORM gpInsertUpdate_Object_ImportTypeItems (ioId            := 0
+                                                 , inParamNumber   := tmpFrom.ParamNumber + CASE WHEN tmpFrom.ParamNumber >=4 THEN 1 ELSE 0 END
+                                                 , inName          := tmpFrom.Name
+                                                 , inParamType     := tmpFrom.ParamType
+                                                 , inUserParamName := tmpFrom.UserParamName
+                                                 , inImportTypeId  := vbImportTypeId
+                                                 , inSession       := zfCalc_UserAdmin()
+                                                  )
+    FROM gpSelect_Object_ImportTypeItems (inSession := zfCalc_UserAdmin()) AS tmpFrom
+    WHERE tmpFrom.ImportTypeId = vbImportTypeId_from
+      AND NOT EXISTS (SELECT 1 FROM gpSelect_Object_ImportTypeItems (inSession := zfCalc_UserAdmin()) AS tmpTo WHERE tmpTo.ImportTypeId = vbImportTypeId)
+   ;
+
+    -- !!!переброска!!!
+    -- select * from gpInsertUpdate_Object_ImportGroupItems (ioId:= 977343, inImportSettingsId:= 977329, inImportGroupId:= 2489142, inSession:= zfCalc_UserAdmin());
+                                         
+END $$;
+
+
+
+
 DO $$
     DECLARE vbKey TVarChar;
     DECLARE vbDefaultKeyId Integer;

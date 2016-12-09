@@ -510,18 +510,24 @@ end;
 function TDiscountServiceForm.fPfizer_Send (var lMsg : string) :Boolean;
 var llMsg : String;
 begin
-    //Получили данные
-    with spGet_DiscountExternal do
-    begin
-         ParamByName('inId').Value := 2807930; // захардкодил - ЗАРАДИ ЖИТТЯ
-         Execute;
-         // сохраним "нужные" параметры-Main
-         gDiscountExternalId:= 2807930;
-         gURL        := ParamByName('URL').Value;
-         gService    := ParamByName('Service').Value;
-         gPort       := ParamByName('Port').Value;
-         gUserName   := ParamByName('UserName').Value;
-         gPassword   := ParamByName('Password').Value;
+    try
+      //Получили данные
+      with spGet_DiscountExternal do
+      begin
+           ParamByName('inId').Value := 2807930; // захардкодил - ЗАРАДИ ЖИТТЯ
+           Execute;
+           // сохраним "нужные" параметры-Main
+           gDiscountExternalId:= 2807930;
+           gURL        := ParamByName('URL').Value;
+           gService    := ParamByName('Service').Value;
+           gPort       := ParamByName('Port').Value;
+           gUserName   := ParamByName('UserName').Value;
+           gPassword   := ParamByName('Password').Value;
+      end;
+    except
+       Result:=false;
+       lMsg:= 'Для аптеки программа <ЗАРАДИ ЖИТТЯ> НЕ подключена.';
+       exit;
     end;
     //Инициализировали данными
     HTTPRIO.WSDLLocation := gURL;
