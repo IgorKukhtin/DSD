@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchId   Integer, BranchCode   Integer, BranchName TVarChar
              , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
 
-             , Period Integer, CloseDate TDateTime, CloseDate_excl TDateTime
+             , Period Integer, CloseDate TDateTime, CloseDate_excl TDateTime, CloseDate_store TDateTime
              , UserId Integer, UserName TVarChar, OperDate TDateTime
               )
 AS
@@ -79,6 +79,7 @@ BEGIN
              , EXTRACT (DAY FROM PeriodClose.Period) :: Integer AS Period
              , PeriodClose.CloseDate
              , CASE WHEN Object_User_excl.Id > 0 THEN PeriodClose.CloseDate_excl ELSE NULL END :: TDateTime AS CloseDate_excl
+             , PeriodClose.CloseDate_store
 
              , Object_User.Id        AS UserId
              , Object_User.ValueData AS UserName
@@ -106,6 +107,7 @@ ALTER FUNCTION gpSelect_PeriodClose (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.16         * add CloseDate_store
  24.04.16                                        *
  11.11.13                        *  
 */
