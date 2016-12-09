@@ -1,24 +1,28 @@
 inherited PeriodCloseForm: TPeriodCloseForm
   Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072' ('#1076#1083#1103' '#1040#1076#1084#1080#1085#1080#1089#1090#1088#1072#1090#1086#1088#1072')'
+  ClientHeight = 306
   ClientWidth = 798
   ExplicitWidth = 814
+  ExplicitHeight = 344
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
     Width = 798
-    Height = 250
+    Height = 248
     ExplicitTop = 58
     ExplicitWidth = 798
     ExplicitHeight = 250
-    ClientRectBottom = 250
+    ClientRectBottom = 248
     ClientRectRight = 798
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 798
-        Height = 250
+        Height = 248
+        ExplicitLeft = 328
+        ExplicitTop = 3
         ExplicitWidth = 798
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -53,6 +57,14 @@ inherited PeriodCloseForm: TPeriodCloseForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object CloseDate_store: TcxGridDBColumn
+            Caption = #1055#1077#1088#1080#1086#1076' '#1079#1072#1082#1088#1099#1090' '#1076#1086' ('#1076#1083#1103' '#1082#1086#1083'-'#1074#1086' '#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'CloseDate_store'
+            PropertiesClassName = 'TcxDateEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
           end
           object Period: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072', '#1082#1086#1083'-'#1074#1086' '#1076#1085'.'
@@ -635,10 +647,19 @@ inherited PeriodCloseForm: TPeriodCloseForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCloseDate_store'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'CloseDate_store'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 112
+    Left = 144
+    Top = 152
   end
   object spUpdate_CloseDate: TdsdStoredProc
     StoredProcName = 'gpUpdate_PeriodClose_CloseDate'
@@ -662,7 +683,7 @@ inherited PeriodCloseForm: TPeriodCloseForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 184
+    Left = 248
+    Top = 200
   end
 end
