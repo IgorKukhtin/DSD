@@ -1,3 +1,5 @@
+-- Function: gpInsertUpdate_Movement_LoadPriceList()
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
           (Integer, Integer, Integer, 
            TVarChar, TVarChar, TVarChar, TVarChar,
@@ -6,7 +8,6 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList
            TVarChar, TVarChar, 
            Boolean,
            TVarChar);
-
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList 
           (Integer, Integer, Integer, 
@@ -46,153 +47,50 @@ BEGIN
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
    vbUserId:= lpGetUserBySession (inSession);
 	
+
    -- такое не загружаем
    IF COALESCE (inPrice, 0) = 0 THEN 
       RETURN;
    END IF;
 
-  -- Проверка 
-  IF COALESCE (inJuridicalId, 0) = 0 THEN 
-     RAISE EXCEPTION 'Не установлено значение параметра Юридическое лицо (JuridicalId)';
-  END IF;
-  -- Проверка что передано таки Юр лицо а не Договор
-  IF (SELECT DescId FROM Object WHERE Id = inJuridicalId) <> zc_Object_Juridical() THEN
-     RAISE EXCEPTION 'Не правильно передается значение параметра Юридическое лицо (JuridicalId)';
-  END IF;
-  -- Проверка что передано таки Договор а не Юр лицо 
-  IF COALESCE (inContractId, 0) <> 0 THEN 
-     IF (SELECT DescId FROM Object WHERE Id = inContractId) <> zc_Object_Contract() THEN
-        RAISE EXCEPTION 'Не правильно передается значение параметра Договор (ContractId)';
-     END IF;
-  END IF;
+
+   -- Проверка 
+   IF COALESCE (inJuridicalId, 0) = 0 THEN 
+      RAISE EXCEPTION 'Не установлено значение параметра Юридическое лицо (JuridicalId)';
+   END IF;
+   -- Проверка что передано таки Юр лицо а не Договор
+   IF (SELECT DescId FROM Object WHERE Id = inJuridicalId) <> zc_Object_Juridical() THEN
+      RAISE EXCEPTION 'Не правильно передается значение параметра Юридическое лицо (JuridicalId)';
+   END IF;
+    -- Проверка что передано таки Договор а не Юр лицо - будет в lp
+
   
-  -- !!!Удаление!!! предыдущих данных - элементы
-  DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
-    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
-                                    AND OperDate < CURRENT_DATE);
-  -- !!!Удаление!!! предыдущих данных - шапка
-  DELETE FROM LoadPriceList WHERE Id IN
-    (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
-                                    AND OperDate < CURRENT_DATE);
+   -- !!!Удаление!!! предыдущих данных - элементы
+   DELETE FROM LoadPriceListItem WHERE LoadPriceListId IN
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE);
+   -- !!!Удаление!!! предыдущих данных - шапка
+   DELETE FROM LoadPriceList WHERE Id IN
+     (SELECT Id FROM LoadPriceList WHERE JuridicalId = inJuridicalId AND COALESCE (ContractId, 0) = inContractId
+                                     AND OperDate < CURRENT_DATE);
+
    
-  -- Поиск "шапки" за "сегодня"
-  SELECT Id INTO vbLoadPriceListId 
-  FROM LoadPriceList
-  WHERE JuridicalId = inJuridicalId AND OperDate = CURRENT_DATE AND COALESCE (ContractId, 0) = inContractId;
-
-  -- если нет "шапки" - создадим
-  IF COALESCE (vbLoadPriceListId, 0) = 0 THEN
-     INSERT INTO LoadPriceList (JuridicalId, ContractId, OperDate, NDSinPrice/*, UserId_Insert*/, Date_Insert)
-                        VALUES (inJuridicalId, inContractId, CURRENT_DATE, inNDSinPrice/*, vbUserId*/, CURRENT_TIMESTAMP);
-  ELSE
-      -- иначе запишем что его надо перенести
-      UPDATE LoadPriceList SET isMoved = FALSE WHERE Id = vbLoadPriceListId;
-     /*
-      -- иначе в протокол запишем что типа Insert
-      UPDATE LoadPriceList SET UserId_Insert = vbUserId, Date_Insert = CURRENT_TIMESTAMP WHERE Id = vbLoadPriceListId;*/
-  END IF;
-
-  -- Поиск "элемента"
-  SELECT Id INTO vbLoadPriceListItemsId FROM LoadPriceListItem WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
-
-
-   -- Ищем по общему коду 
-   IF COALESCE (vbGoodsId, 0) = 0 AND inCommonCode > 0
-   THEN
-      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
-        /*FROM Object_Goods_View 
-        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                        ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods_View.Id
-                       AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                        ON ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                       AND ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-       WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_Marion() AND GoodsCodeInt = inCommonCode;*/
-      FROM Object AS Object_Goods
-           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                 ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_Marion()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-      WHERE Object_Goods.ObjectCode = inCommonCode
-        AND Object_Goods.DescId = zc_Object_Goods();
-   END IF;
-   
-
-   -- Ищем по штрих-коду 
-   IF COALESCE(vbGoodsId, 0) = 0 AND inBarCode <> ''
-   THEN
-      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
-        /*FROM Object_Goods_View 
-        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                        ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods_View.Id
-                       AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                        ON ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                       AND ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-       WHERE Object_Goods_View.ObjectId = zc_Enum_GlobalConst_BarCode() AND GoodsName = inBarCode;*/
-      FROM Object AS Object_Goods
-           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                 ON ObjectLink_Goods_Object.ObjectId      = Object_Goods.Id
-                                AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-      WHERE Object_Goods.ValueData = inBarCode
-        AND Object_Goods.DescId = zc_Object_Goods();
-   END IF;
-
-   -- Ищем по коду и inJuridicalId
-   IF COALESCE (vbGoodsId, 0) = 0 THEN
-      SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId INTO vbGoodsId
-        /*FROM Object_Goods_View 
-        JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                        ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods_View.Id
-                       AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-        JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                        ON ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                       AND ObjectLink_LinkGoods_Goods.ObjectId   = ObjectLink_LinkGoods_GoodsMain.ObjectId                         
-       WHERE Object_Goods_View.ObjectId = inJuridicalId AND GoodsCode = inGoodsCode;*/
-      FROM ObjectString
-           INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                 ON ObjectLink_Goods_Object.ObjectId      = ObjectString.ObjectId
-                                AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
-                                AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                 ON ObjectLink_LinkGoods_Goods.ChildObjectId = ObjectString.ObjectId
-                                AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
-           INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                 ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                AND ObjectLink_LinkGoods_GoodsMain.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-      WHERE ObjectString.ValueData = inGoodsCode
-        AND ObjectString.DescId = zc_ObjectString_Goods_Code();
-   END IF;
-
-    -- !!!замена параметра!!!
-    IF inExpirationDate IS NULL OR inExpirationDate = CURRENT_DATE
-    THEN 
-        inExpirationDate := zc_DateEnd();
-    END IF;	
-
-    -- сохранение "элемента"
-   IF COALESCE (vbLoadPriceListItemsId, 0) = 0 THEN
-      INSERT INTO LoadPriceListItem (LoadPriceListId, CommonCode, BarCode, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
-                             VALUES (vbLoadPriceListId, inCommonCode, inBarCode, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
-   ELSE
-      UPDATE LoadPriceListItem 
-         SET GoodsName = inGoodsName, CommonCode = inCommonCode, BarCode = inBarCode, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, 
-             Price = inPrice, ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
-       WHERE Id = vbLoadPriceListItemsId;
-   END IF;
+    -- сохранили - inContractId and inPrice
+    PERFORM lpInsertUpdate_Movement_LoadPriceList_Contract (inJuridicalId   := inJuridicalId
+                                                          , inContractId    := inContractId
+                                                          , inCommonCode    := inCommonCode
+                                                          , inBarCode       := inBarCode
+                                                          , inGoodsCode     := inGoodsCode
+                                                          , inGoodsName     := inGoodsName
+                                                          , inGoodsNDS      := inGoodsNDS
+                                                          , inPrice         := inPrice
+                                                          , inRemains       := inRemains
+                                                          , inExpirationDate:= inExpirationDate
+                                                          , inPackCount     := inPackCount
+                                                          , inProducerName  := inProducerName
+                                                          , inNDSinPrice    := inNDSinPrice
+                                                          , inUserId        := vbUserId
+                                                           );
 
 END;
 $BODY$
@@ -201,6 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.12.2016                                      *
  14.03.2016                                      * all
  17.02.15                        *   убрал вьюхи из поиска. 
  11.11.14                        *   

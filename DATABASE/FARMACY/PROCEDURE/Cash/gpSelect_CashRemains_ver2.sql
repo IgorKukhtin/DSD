@@ -193,7 +193,6 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
@@ -209,5 +208,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 
 -- тест
 -- SELECT * FROM gpSelect_CashRemains (inSession:= '308120')
-
---select * from gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');
+-- SELECT * FROM gpSelect_CashRemains_ver2(inMovementId := 0 , inCashSessionId := '{1590AD6F-681A-4B34-992A-87AEABB4D33F}' ,  inSession := '3');
