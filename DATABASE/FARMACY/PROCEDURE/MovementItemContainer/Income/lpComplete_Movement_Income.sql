@@ -241,9 +241,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), _tmpItem.MovementItemId, COALESCE (MIFloat_Price.ValueData, 0) / CASE WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS.ValueData, 0) / 100 END)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(),    _tmpItem.MovementItemId, COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE  THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS.ValueData, 0) / 100 END)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_JuridicalPrice(),  _tmpItem.MovementItemId, COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE  THEN 1 ELSE 1 + COALESCE (ObjectFloat_NDS.ValueData, 0) / 100 END
-                                                                                                    / CASE WHEN ObjectFloat_Juridical_Percent.ValueData > 0
-                                                                                                                THEN 1 + ObjectFloat_Juridical_Percent.ValueData / 100
-                                                                                                           ELSE 1
+                                                                                                    / CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData,0) > 0
+                                                                                                                THEN 1 + ObjectFloat_Contract_Percent.ValueData / 100
+                                                                                                           ELSE CASE WHEN COALESCE (ObjectFloat_Juridical_Percent.ValueData,0) > 0
+                                                                                                                          THEN 1 + ObjectFloat_Juridical_Percent.ValueData / 100
+                                                                                                                     ELSE 1
+                                                                                                                END             
                                                                                                       END)
      FROM _tmpItem
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -252,6 +255,12 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
                                 ON ObjectFloat_Juridical_Percent.ObjectId = MovementLinkObject_From.ObjectId
                                AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = inMovementId
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                                ON ObjectFloat_Contract_Percent.ObjectId = MovementLinkObject_Contract.ObjectId
+                               AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = _tmpItem.MovementItemId
@@ -282,6 +291,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.12.16         * ObjectFloat_Contract_Percent
  14.03.16                                        * 
  11.02.14                        * 
  05.02.14                        * 

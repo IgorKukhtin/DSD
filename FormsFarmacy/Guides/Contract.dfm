@@ -53,6 +53,17 @@ inherited ContractForm: TContractForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object colPercent_Juridical: TcxGridDBColumn
+            Caption = '% '#1082#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' '#1102#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'Percent_Juridical'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
           object clStartDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1089
             DataBinding.FieldName = 'StartDate'

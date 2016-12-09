@@ -12,8 +12,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , NDS TFloat, PriceDiff TFloat
              , JuridicalId Integer, JuridicalName TVarChar
              , Juridical_GoodsName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , MakerName TVarChar
-             , Percent TFloat
+             , Percent_Juridical TFloat, Percent_Contract TFloat
              , MarginPercent TFloat
              )
 AS
@@ -78,9 +79,16 @@ BEGIN
              , COALESCE(Object_Juridical.Id ,0)  ::Integer                      AS JuridicalId
              , COALESCE(Object_Juridical.ValueData,'')::TVarChar                AS JuridicalName
              , tmpLinkGoods.Juridical_GoodsName ::TVarChar AS Juridical_GoodsName
+             , COALESCE(Object_Contract.Id ,0)  ::Integer                       AS ContractId
+             , COALESCE(Object_Contract.ValueData,'')::TVarChar                 AS ContractName
+
              , tmpLinkGoods.MakerName           ::TVarChar AS MakerName
-             , ObjectFloat_Percent.ValueData  ::TFloat AS Percent
-             , (COALESCE(MarginCondition.MarginPercent,0) + COALESCE(ObjectFloat_Percent.valuedata, 0) ) ::TFloat AS MarginPercent
+             , ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Percent_Juridical
+             , ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Percent_Contract
+             , CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData,0) <> 0
+                         THEN (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)) 
+                    ELSE (COALESCE (MarginCondition.MarginPercent,0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)) 
+               END ::TFloat AS MarginPercent
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -113,6 +121,11 @@ BEGIN
                                             AND MI_Juridical.DescId = zc_MILinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MI_Juridical.ObjectId 
 
+            LEFT JOIN MovementItemLinkObject AS MI_Contract
+                                             ON MI_Contract.MovementItemId = MovementItem.Id
+                                            AND MI_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MI_Contract.ObjectId 
+
             LEFT JOIN tmpLinkGoods ON tmpLinkGoods.GoodsId = MovementItem.ObjectId
                                   AND tmpLinkGoods.JuridicalId = Object_Juridical.Id
 
@@ -121,9 +134,12 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = MovementItem.MovementId
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                  ON ObjectFloat_Percent.ObjectId = Object_Juridical.Id
-                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
+                                  ON ObjectFloat_Juridical_Percent.ObjectId = Object_Juridical.Id
+                                 AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                                  ON ObjectFloat_Contract_Percent.ObjectId = ContractId
+                                 AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
             LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_unit
                                                      ON Object_MarginCategoryLink_unit.UnitId = MovementLinkObject_Unit.ObjectId -- 377605/*inUnitId*/

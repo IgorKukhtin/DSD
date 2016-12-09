@@ -38,17 +38,28 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
        WHERE MovementLinkObject_To.ObjectId = Object_MarginCategoryLink.UnitId OR COALESCE (Object_MarginCategoryLink.UnitId, 0) = 0;
-
             
      --
-     SELECT ObjectFloat_Percent.valuedata INTO vbJuridicalPercent      
+     SELECT CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData,0) <> 0 
+                      THEN COALESCE (ObjectFloat_Contract_Percent.ValueData,0)
+                 ELSE COALESCE (ObjectFloat_Juridical_Percent.ValueData,0)
+            END
+     INTO vbJuridicalPercent      
      FROM Movement
           INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN ObjectFloat AS ObjectFloat_Percent
-                                ON ObjectFloat_Percent.ObjectId = MovementLinkObject_From.ObjectId
-                               AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
+                                ON ObjectFloat_Juridical_Percent.ObjectId = MovementLinkObject_From.ObjectId
+                               AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                                ON ObjectFloat_Contract_Percent.ObjectId = MovementLinkObject_Contract.ObjectId
+                               AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
+
      WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Income();
             
             
@@ -117,6 +128,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 09.12.16         * add ObjectFloat_Contract_Percent
  13.05.15                        *   
  26.01.15                        *   
 */
