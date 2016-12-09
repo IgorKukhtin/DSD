@@ -492,10 +492,10 @@ inherited GoodsByGoodsKind_ScaleCehForm: TGoodsByGoodsKind_ScaleCehForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisOrder'
+        Name = 'inisScaleCeh'
         Value = 'Felse'
         Component = MasterCDS
-        ComponentItem = 'isOrder'
+        ComponentItem = 'isScaleCeh'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
