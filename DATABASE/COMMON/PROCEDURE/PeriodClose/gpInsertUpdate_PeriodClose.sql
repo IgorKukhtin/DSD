@@ -79,31 +79,37 @@ BEGIN
 
    -- отброслили время
    inCloseDate:= DATE_TRUNC ('DAY', inCloseDate);
+   inCloseDate_store:= DATE_TRUNC ('DAY', inCloseDate_store);
    -- преобразовали в период
    vbInterval := (TO_CHAR (inPeriod, '999') || ' DAY') :: INTERVAL;
 
 
    IF COALESCE (ioId, 0) = 0 THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
-      INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl)
-                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl) RETURNING Id INTO ioId;
+      INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl,CloseDate_store)
+                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store) RETURNING Id INTO ioId;
    ELSE
        -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE PeriodClose SET OperDate = CURRENT_TIMESTAMP, UserId = vbUserId, RoleId = inRoleId, Period = vbInterval, CloseDate = inCloseDate
-            , Code           = inCode
-            , Name           = inName
-            , DescId         = inDescId
-            , DescId_excl    = inDescId_excl
-            , BranchId       = inBranchId
-            , PaidKindId     = inPaidKindId
-            , UserId_excl    = inUserId_excl
-            , CloseDate_excl = inCloseDate_excl
+       UPDATE PeriodClose SET OperDate        = CURRENT_TIMESTAMP
+                            , UserId          = vbUserId
+                            , RoleId          = inRoleId
+                            , Period          = vbInterval
+                            , CloseDate       = inCloseDate
+                            , Code            = inCode
+                            , Name            = inName
+                            , DescId          = inDescId
+                            , DescId_excl     = inDescId_excl
+                            , BranchId        = inBranchId
+                            , PaidKindId      = inPaidKindId
+                            , UserId_excl     = inUserId_excl
+                            , CloseDate_excl  = inCloseDate_excl
+                            , CloseDate_store = inCloseDate_store 
        WHERE Id = ioId;
        -- если такой элемент не был найден
        IF NOT FOUND THEN
           -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl)
-                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl)
+          INSERT INTO PeriodClose (OperDate, UserId, RoleId, Period, CloseDate, Code, Name, DescId, DescId_excl, BranchId, PaidKindId, UserId_excl, CloseDate_excl, CloseDate_store)
+                  VALUES (CURRENT_TIMESTAMP, vbUserId, inRoleId, vbInterval, inCloseDate, inCode, inName, inDescId, inDescId_excl, inBranchId, inPaidKindId, inUserId_excl, inCloseDate_excl, inCloseDate_store)
                   RETURNING Id INTO ioId;
        END IF; -- if NOT FOUND
 
@@ -117,6 +123,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.16         * add inCloseDate_store
  24.04.16                                        *
  25.05.14                                        *
  23.09.13                         *
