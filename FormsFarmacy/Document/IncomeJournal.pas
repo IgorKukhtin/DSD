@@ -28,7 +28,7 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbPrintTax_Us: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
+    bbPrintSticker: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colTotalSumm: TcxGridDBColumn;
@@ -66,6 +66,8 @@ type
     ExecuteDialog: TExecuteDialog;
     FromOKPO: TcxGridDBColumn;
     PaymentDays: TcxGridDBColumn;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
   private
     { Private declarations }
   public

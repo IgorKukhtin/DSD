@@ -1112,6 +1112,7 @@
       DataSets = <
         item
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <

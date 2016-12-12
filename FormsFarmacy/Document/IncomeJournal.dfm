@@ -492,6 +492,50 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1088#1080#1075#1080#1085#1072#1083' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -802,6 +846,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton1'
         end
         item
@@ -851,12 +903,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Visible = ivAlways
       ImageIndex = 16
     end
-    object bbPrintTax_Client: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+    object bbPrintSticker: TdxBarButton
+      Action = actPrintSticker
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
     end
     object bbPrint_Bill: TdxBarButton
       Caption = #1057#1095#1077#1090
@@ -1078,8 +1127,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 48
+    Left = 496
+    Top = 104
   end
   object spGetDataForSendNew: TdsdStoredProc
     StoredProcName = 'gpGetDataForSendNew'
@@ -1173,5 +1222,26 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 760
     Top = 139
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 551
+    Top = 160
   end
 end
