@@ -10,19 +10,19 @@
     Top = 138
     Width = 946
     Height = 378
-    ExplicitTop = 134
+    ExplicitTop = 138
     ExplicitWidth = 946
-    ExplicitHeight = 382
+    ExplicitHeight = 378
     ClientRectBottom = 378
     ClientRectRight = 946
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 946
-      ExplicitHeight = 358
+      ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 946
         Height = 354
         ExplicitWidth = 946
-        ExplicitHeight = 358
+        ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -492,6 +492,12 @@
             VisibleForCustomization = False
             Width = 30
           end
+          object IdBarCode: TcxGridDBColumn
+            DataBinding.FieldName = 'IdBarCode'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 30
+          end
         end
       end
     end
@@ -500,7 +506,6 @@
     Width = 946
     Height = 112
     TabOrder = 3
-    ExplicitTop = -7
     ExplicitWidth = 946
     ExplicitHeight = 112
     inherited edInvNumber: TcxTextEdit
@@ -1097,6 +1102,36 @@
         end>
       Caption = 'actUpdateReturnOut_PartnerData'
     end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42371d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1220,6 +1255,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Bill'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbCalculateSalePrice'
         end
         item
@@ -1260,11 +1303,8 @@
         end>
     end
     object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
+      Action = actPrintSticker
       Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
     object bbPrintTax: TdxBarButton [6]
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'

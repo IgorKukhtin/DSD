@@ -8,7 +8,7 @@ uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization, Vcl.Menus, cxPropertiesStore, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
-  Vcl.Controls, cxLabel, dxSkinsdxBarPainter;
+  Vcl.Controls, cxLabel, frxBarcode, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TAncestorMainForm)
