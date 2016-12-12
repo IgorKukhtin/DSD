@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, IdBarCode TVarChar, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsCode TVarChar, PartnerGoodsName TVarChar
              , Amount TFloat
              , Price TFloat
@@ -170,6 +170,7 @@ BEGIN
                       
             SELECT
                 0                          AS Id
+              , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
               , tmpGoods.GoodsId           AS GoodsId
               , tmpGoods.GoodsCode         AS GoodsCode
               , tmpGoods.GoodsName         AS GoodsName
@@ -229,6 +230,7 @@ BEGIN
             UNION ALL
             SELECT
                 MovementItem.Id
+              , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
               , MovementItem.GoodsId
               , MovementItem.GoodsCode
               , MovementItem.GoodsName
@@ -391,6 +393,7 @@ BEGIN
                                           
             SELECT
                 MovementItem.Id
+              , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
               , MovementItem.GoodsId
               , MovementItem.GoodsCode
               , MovementItem.GoodsName
@@ -500,6 +503,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 12.12.16         * add IdBarCode
  14.09.16         *
  27.04.16         *
  23.04.16         *

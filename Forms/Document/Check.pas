@@ -48,6 +48,11 @@ type
     edConfirmedKindClient: TcxTextEdit;
     cxLabel11: TcxLabel;
     actShowMessage: TShowMessageAction;
+    spSelectPrint: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    PrintDialog: TExecuteDialog;
+    macPrint: TMultiAction;
   private
     { Private declarations }
   public

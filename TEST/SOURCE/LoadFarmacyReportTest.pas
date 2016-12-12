@@ -60,7 +60,8 @@ var
  i : integer;
 begin
 // exit;
-
+  LoadReportFromFile('Печать стикера самоклейки', ReportPath + '\Печать стикера самоклейки.fr3');
+  LoadReportFromFile('Копия чека клиенту', ReportPath + '\Копия чека клиенту.fr3');
   // Другие
   LoadReportFromFile('Расходная_накладная', ReportPath + '\Расходная_накладная.fr3');
   LoadReportFromFile('Расходная_накладная_для_менеджера', ReportPath + '\Расходная_накладная_для_менеджера.fr3');

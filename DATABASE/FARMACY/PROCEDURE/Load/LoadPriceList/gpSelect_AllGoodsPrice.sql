@@ -32,7 +32,10 @@ RETURNS TABLE (
     MarginPercent       TFloat,     --% наценки по точке
     Juridical_GoodsName TVarChar,   --Наименование у поставщика
     ProducerName        TVarChar,   --производитель
+    ContractId          Integer,    -- договор Ид
     ContractName        TVarChar,   -- договор
+    Juridical_Percent   TFloat,     -- % Корректировки наценки Поставщика
+    Contract_Percent    TFloat,     -- % Корректировки наценки Договора
     SumReprice          TFloat,     --сумма переоценки
     MidPriceSale        TFloat,     --средняя цена остатка
     MidPriceDiff        TFloat,     --отклонение от средняя цена остатка
@@ -162,6 +165,7 @@ BEGIN
             SelectMinPrice_AllGoods.JuridicalName            AS JuridicalName,
             SelectMinPrice_AllGoods.Partner_GoodsName        AS Partner_GoodsName,
             SelectMinPrice_AllGoods.MakerName                AS ProducerName,
+            Object_Contract.Id                               AS ContractId,
             Object_Contract.ValueData                        AS ContractName,
             SelectMinPrice_AllGoods.MinExpirationDate        AS MinExpirationDate,
             RemainsTo.MinExpirationDate                      AS MinExpirationDate_to,
@@ -251,7 +255,11 @@ BEGIN
         ResultSet.MarginPercent          AS MarginPercent,
         ResultSet.Partner_GoodsName      AS Juridical_GoodsName,
         ResultSet.ProducerName           AS ProducerName,
+        ResultSet.ContractId,
         ResultSet.ContractName,
+        ObjectFloat_Juridical_Percent.ValueData  ::TFloat AS Juridical_Percent,
+        ObjectFloat_Contract_Percent.ValueData   ::TFloat AS Contract_Percent,
+
         ROUND ((CASE WHEN inUnitId_to <> 0 THEN CASE WHEN ResultSet.LastPrice_to > 0 THEN (ResultSet.LastPrice_to - ResultSet.LastPrice) ELSE 0 END ELSE (ResultSet.NewPrice - ResultSet.LastPrice) END
                * ResultSet.RemainsCount
                )
@@ -285,6 +293,13 @@ BEGIN
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId
                                        AND ResultSet.LastPrice >= MarginCondition.MinPrice 
                                        AND ResultSet.LastPrice < MarginCondition.MaxPrice
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
+                              ON ObjectFloat_Juridical_Percent.ObjectId = ResultSet.JuridicalId
+                             AND ObjectFloat_Juridical_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Contract_Percent
+                              ON ObjectFloat_Contract_Percent.ObjectId = ResultSet.ContractId
+                             AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
     WHERE
        ((inUnitId_to > 0 AND ResultSet.LastPrice_to > 0 AND 0 <> CAST (CASE WHEN COALESCE (ResultSet.LastPrice,0) = 0 THEN 0.0

@@ -47,6 +47,13 @@ type
     ConfirmedKindClientName: TcxGridDBColumn;
     CommentError: TcxGridDBColumn;
     actShowMessage: TShowMessageAction;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    PrintDialog: TExecuteDialog;
+    macPrint: TMultiAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

@@ -294,6 +294,12 @@ object RepriceUnitForm: TRepriceUnitForm
         VisibleForCustomization = False
         Width = 60
       end
+      object colContractId: TcxGridDBColumn
+        DataBinding.FieldName = 'ContractId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 60
+      end
       object colId: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
@@ -305,6 +311,18 @@ object RepriceUnitForm: TRepriceUnitForm
         DataBinding.FieldName = 'IsTop_Goods'
         HeaderHint = #1058#1086#1087' '#1089#1077#1090#1080
         Options.Editing = False
+      end
+      object colContract_Percent: TcxGridDBColumn
+        DataBinding.FieldName = 'Contract_Percent'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 60
+      end
+      object colJuridical_Percent: TcxGridDBColumn
+        DataBinding.FieldName = 'Juridical_Percent'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 60
       end
     end
     object AllGoodsPriceGridLevel: TcxGridLevel
@@ -730,6 +748,18 @@ object RepriceUnitForm: TRepriceUnitForm
       item
         Name = 'PriceFix_Goods'
         DataType = ftFloat
+      end
+      item
+        Name = 'ContractId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Juridical_Percent'
+        DataType = ftFloat
+      end
+      item
+        Name = 'Contract_Percent'
+        DataType = ftFloat
       end>
     IndexDefs = <>
     Params = <>
@@ -738,7 +768,7 @@ object RepriceUnitForm: TRepriceUnitForm
     Left = 168
     Top = 360
     Data = {
-      320400009619E0BD010000001800000023000000000003000000320402496404
+      780400009619E0BD010000001800000026000000000003000000780402496404
       0001000000000004436F6465040001000000000009476F6F64734E616D650200
       49000000010005574944544802000200FF00094C617374507269636508000400
       0000010007535542545950450200490006004D6F6E6579000C52656D61696E73
@@ -771,7 +801,9 @@ object RepriceUnitForm: TRepriceUnitForm
       6579000C5072696365446966665F746F08000400000001000753554254595045
       0200490006004D6F6E657900144D696E45787069726174696F6E446174655F74
       6F04000600000000000B4973546F705F476F6F647302000300000000000E5072
-      6963654669785F476F6F647308000400000000000000}
+      6963654669785F476F6F647308000400000000000A436F6E7472616374496404
+      00010000000000114A757269646963616C5F50657263656E7408000400000000
+      0010436F6E74726163745F50657263656E7408000400000000000000}
     object cdsResultId: TIntegerField
       FieldName = 'Id'
     end
@@ -888,6 +920,15 @@ object RepriceUnitForm: TRepriceUnitForm
     object cdsResultPriceFix_Goods: TFloatField
       FieldName = 'PriceFix_Goods'
     end
+    object cdsResultContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object cdsResultJuridical_Percent: TFloatField
+      FieldName = 'Juridical_Percent'
+    end
+    object cdsResultContract_Percent: TFloatField
+      FieldName = 'Contract_Percent'
+    end
   end
   object UnitsCDS: TClientDataSet
     Aggregates = <>
@@ -931,6 +972,12 @@ object RepriceUnitForm: TRepriceUnitForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContractId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inExpirationDate'
         Value = 'NULL'
         DataType = ftDateTime
@@ -967,6 +1014,20 @@ object RepriceUnitForm: TRepriceUnitForm
       end
       item
         Name = 'inJuridical_Price'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridical_Percent'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContract_Percent'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
@@ -1028,7 +1089,7 @@ object RepriceUnitForm: TRepriceUnitForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 872
-    Top = 232
+    Left = 816
+    Top = 256
   end
 end

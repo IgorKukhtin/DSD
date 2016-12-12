@@ -114,6 +114,8 @@ type
     HeaderSaver1: THeaderSaver;
     Color_ExpirationDate: TcxGridDBColumn;
     cbisRegistered: TcxCheckBox;
+    actPrintSticker: TdsdPrintAction;
+    IdBarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

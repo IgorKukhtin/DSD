@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractJuridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar, Deferment Integer, 
+               JuridicalId Integer, JuridicalName TVarChar,
+               Deferment Integer, Percent TFloat,
                Comment TVarChar,
                isErased boolean
               )

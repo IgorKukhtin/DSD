@@ -126,6 +126,12 @@ type
     cdsResultPriceFix_Goods: TFloatField;
     colIsTop_Goods: TcxGridDBColumn;
     colPriceFix_Goods: TcxGridDBColumn;
+    colContractId: TcxGridDBColumn;
+    cdsResultContractId: TIntegerField;
+    cdsResultJuridical_Percent: TFloatField;
+    cdsResultContract_Percent: TFloatField;
+    colJuridical_Percent: TcxGridDBColumn;
+    colContract_Percent: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure btnRepriceClick(Sender: TObject);
     procedure btnSelectNewPriceClick(Sender: TObject);
@@ -204,24 +210,29 @@ begin
           except ShowMessage('3');exit;end;
 
           try
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inContractId').Value :=
+           AllGoodsPriceGridTableView.DataController.Values[RecIndex,colContractId.Index];
+          except ShowMessage('4');exit;end;
+
+          try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inMinExpirationDate').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colMinExpirationDate.Index];
-          except ShowMessage('4');exit;end;
+          except ShowMessage('5');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inExpirationDate').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colExpirationDate.Index];
-          except ShowMessage('5');exit;end;
+          except ShowMessage('6');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inAmount').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colRemainsCount.Index];
-          except ShowMessage('6');exit;end;
+          except ShowMessage('7');exit;end;
 
           try
           if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index] = null then
             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value := 0;
-          except ShowMessage('7');exit;end;
+          except ShowMessage('8');exit;end;
 
           try
           if AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index] = null then
@@ -229,7 +240,7 @@ begin
           else
             spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceOld').Value :=
               AllGoodsPriceGridTableView.DataController.Values[RecIndex,colOldPrice.Index];
-          except ShowMessage('8');exit;end;
+          except ShowMessage('9');exit;end;
 
           try
           if edUnit.Text <> ''
@@ -237,20 +248,29 @@ begin
                   AllGoodsPriceGridTableView.DataController.Values[RecIndex,colLastPrice_to.Index]
           else spInsertUpdate_MovementItem_Reprice.ParamByName('inPriceNew').Value :=
                   AllGoodsPriceGridTableView.DataController.Values[RecIndex,colNewPrice.Index];
-          except ShowMessage('9');exit;end;
+          except ShowMessage('10');exit;end;
 
           try
           spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridical_Price').Value :=
             AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Price.Index];
-          except ShowMessage('10');exit;end;
-
-          try
-          spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
           except ShowMessage('11');exit;end;
 
           try
-          spInsertUpdate_MovementItem_Reprice.Execute;
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inContract_Percent').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colContract_Percent.Index];
           except ShowMessage('12');exit;end;
+          try
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inJuridical_Percent').Value :=
+            AllGoodsPriceGridTableView.DataController.Values[RecIndex,colJuridical_Percent.Index];
+          except ShowMessage('13');exit;end;
+
+          try
+          spInsertUpdate_MovementItem_Reprice.ParamByName('inGUID').Value := GUID_Str;
+          except ShowMessage('14');exit;end;
+
+          try
+          spInsertUpdate_MovementItem_Reprice.Execute;
+          except ShowMessage('15');exit;end;
 
         End;
         Application.ProcessMessages;
@@ -400,6 +420,7 @@ begin
           cdsResult.FieldByName('MinExpirationDate_to').AsDateTime := AllGoodsPriceCDS.FieldByName('MinExpirationDate_to').AsDateTime;
           cdsResult.FieldByName('isOneJuridical').AsBoolean := AllGoodsPriceCDS.FieldByName('isOneJuridical').AsBoolean;
           cdsResult.FieldByName('JuridicalId').AsInteger := AllGoodsPriceCDS.FieldByName('JuridicalId').AsInteger;
+          cdsResult.FieldByName('ContractId').AsInteger := AllGoodsPriceCDS.FieldByName('ContractId').AsInteger;
           cdsResult.FieldByName('isPriceFix').AsBoolean := AllGoodsPriceCDS.FieldByName('isPriceFix').AsBoolean;
           cdsResult.FieldByName('isIncome').AsBoolean := AllGoodsPriceCDS.FieldByName('isIncome').AsBoolean;
           cdsResult.FieldByName('isTop').AsBoolean := AllGoodsPriceCDS.FieldByName('isTop').AsBoolean;
@@ -407,6 +428,8 @@ begin
           cdsResult.FieldByName('isPromo').AsBoolean := AllGoodsPriceCDS.FieldByName('isPromo').AsBoolean;
           cdsResult.FieldByName('MidPriceDiff').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceDiff').AsCurrency;
           cdsResult.FieldByName('MidPriceSale').AsCurrency := AllGoodsPriceCDS.FieldByName('MidPriceSale').AsCurrency;
+          cdsResult.FieldByName('Juridical_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Juridical_Percent').AsCurrency;
+          cdsResult.FieldByName('Contract_Percent').AsCurrency := AllGoodsPriceCDS.FieldByName('Contract_Percent').AsCurrency;
           cdsResult.Post;
           AllGoodsPriceCDS.Next;
         end;

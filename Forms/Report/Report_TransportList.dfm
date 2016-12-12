@@ -555,6 +555,7 @@ object Report_TransportListForm: TReport_TransportListForm
       FormName = 'TReport_TransportListDialogForm'
       FormNameParam.Value = 'TReport_TransportListDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -562,6 +563,7 @@ object Report_TransportListForm: TReport_TransportListForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -569,6 +571,7 @@ object Report_TransportListForm: TReport_TransportListForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -576,6 +579,7 @@ object Report_TransportListForm: TReport_TransportListForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -584,6 +588,7 @@ object Report_TransportListForm: TReport_TransportListForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -611,16 +616,19 @@ object Report_TransportListForm: TReport_TransportListForm
           Value = 42217d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 42217d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
       ReportNameParam.Value = #1056#1077#1077#1089#1090#1088' '#1087#1091#1090#1077#1074#1099#1093' '#1080' '#1085#1072#1077#1084#1085#1086#1075#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1072
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -637,6 +645,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -644,6 +653,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -651,6 +661,7 @@ object Report_TransportListForm: TReport_TransportListForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -682,6 +693,7 @@ object Report_TransportListForm: TReport_TransportListForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -706,6 +718,7 @@ object Report_TransportListForm: TReport_TransportListForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -716,6 +729,7 @@ object Report_TransportListForm: TReport_TransportListForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -724,6 +738,7 @@ object Report_TransportListForm: TReport_TransportListForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 27

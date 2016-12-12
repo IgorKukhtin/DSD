@@ -126,6 +126,33 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object colJuridical_Percent: TcxGridDBColumn
+            Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090'.)'
+            DataBinding.FieldName = 'Juridical_Percent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086#1089#1090#1072#1074#1097#1080#1082')'
+            Width = 71
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 49
+          end
+          object colContract_Percent: TcxGridDBColumn
+            Caption = '% '#1050#1086#1088#1088'. '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
+            DataBinding.FieldName = 'Contract_Percent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080' ('#1076#1086#1075#1086#1074#1086#1088')'
+            Width = 71
+          end
           object colJuridical_GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
             DataBinding.FieldName = 'Juridical_GoodsName'
@@ -408,10 +435,21 @@ inherited RepriceForm: TRepriceForm
         MultiSelectSeparator = ','
       end>
   end
+  inherited spInsertUpdateMovement: TdsdStoredProc
+    Left = 218
+    Top = 320
+  end
   inherited HeaderSaver: THeaderSaver
     StoredProc = nil
     Left = 584
     Top = 177
+  end
+  inherited spUnErasedMIMaster: TdsdStoredProc
+    Left = 430
+  end
+  inherited spInsertUpdateMIMaster: TdsdStoredProc
+    Left = 496
+    Top = 248
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
