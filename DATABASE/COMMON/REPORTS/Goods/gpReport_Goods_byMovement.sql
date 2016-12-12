@@ -207,25 +207,25 @@ BEGIN
                             , _tmpGoods.TradeMarkId
                             , _tmpGoods.GoodsTagId
                             , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmp.GoodsId ELSE 0 END AS GoodsId
-                            , CAST (SUM (tmp.SaleAmount          * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS SaleAmount
-                            , CAST (SUM (tmp.SaleAmountPartner   * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS SaleAmountPartner
-                            , CAST (SUM (tmp.ReturnAmount        * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS ReturnAmount
-                            , CAST (SUM (tmp.ReturnAmountPartner * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS ReturnAmountPartner
+                            , (SUM (tmp.SaleAmount          * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS SaleAmount
+                            , (SUM (tmp.SaleAmountPartner   * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS SaleAmountPartner
+                            , (SUM (tmp.ReturnAmount        * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmount
+                            , (SUM (tmp.ReturnAmountPartner * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmountPartner
 
-                            , CAST (SUM (tmp.SaleAmountDay          * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS SaleAmountDay
-                            , CAST (SUM (tmp.SaleAmountPartnerDay   * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS SaleAmountPartnerDay
-                            , CAST (SUM (tmp.ReturnAmountDay        * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS ReturnAmountDay
-                            , CAST (SUM (tmp.ReturnAmountPartnerDay * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  AS Numeric(16, 0)) AS ReturnAmountPartnerDay
+                            , (SUM (tmp.SaleAmountDay          * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS SaleAmountDay
+                            , (SUM (tmp.SaleAmountPartnerDay   * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS SaleAmountPartnerDay
+                            , (SUM (tmp.ReturnAmountDay        * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmountDay
+                            , (SUM (tmp.ReturnAmountPartnerDay * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)  ) AS ReturnAmountPartnerDay
 
-                            , CAST (SUM (tmp.SaleAmount)             AS Numeric(16, 0)) AS SaleAmountSh
-                            , CAST (SUM (tmp.SaleAmountPartner)      AS Numeric(16, 0)) AS SaleAmountPartnerSh
-                            , CAST (SUM (tmp.ReturnAmount)           AS Numeric(16, 0)) AS ReturnAmountSh
-                            , CAST (SUM (tmp.ReturnAmountPartner)    AS Numeric(16, 0)) AS ReturnAmountPartnerSh
+                            , (SUM (tmp.SaleAmount)             ) AS SaleAmountSh
+                            , (SUM (tmp.SaleAmountPartner)      ) AS SaleAmountPartnerSh
+                            , (SUM (tmp.ReturnAmount)           ) AS ReturnAmountSh
+                            , (SUM (tmp.ReturnAmountPartner)    ) AS ReturnAmountPartnerSh
 
-                            , CAST (SUM (tmp.SaleAmountDay)          AS Numeric(16, 0)) AS SaleAmountDaySh
-                            , CAST (SUM (tmp.SaleAmountPartnerDay)   AS Numeric(16, 0)) AS SaleAmountPartnerDaySh
-                            , CAST (SUM (tmp.ReturnAmountDay)        AS Numeric(16, 0)) AS ReturnAmountDaySh
-                            , CAST (SUM (tmp.ReturnAmountPartnerDay) AS Numeric(16, 0)) AS ReturnAmountPartnerDaySh
+                            , (SUM (tmp.SaleAmountDay)          ) AS SaleAmountDaySh
+                            , (SUM (tmp.SaleAmountPartnerDay)   ) AS SaleAmountPartnerDaySh
+                            , (SUM (tmp.ReturnAmountDay)        ) AS ReturnAmountDaySh
+                            , (SUM (tmp.ReturnAmountPartnerDay) ) AS ReturnAmountPartnerDaySh
 
                       FROM tmpData AS tmp
                            LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
@@ -295,13 +295,13 @@ BEGIN
 
         UNION ALL
           -- 1.4.
-          SELECT 'сред. Кг/сутки Алан'                           :: TVarChar AS GroupName
-               , CAST (SUM (tmpData.SaleAmount)          / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS SaleAmount
-               , CAST (SUM (tmpData.SaleAmountPartner)   / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS SaleAmountPartner 
-               , CAST (SUM (tmpData.ReturnAmount)        / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS ReturnAmount
-               , CAST (SUM (tmpData.ReturnAmountPartner) / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS ReturnAmountPartner
-               , CAST (SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               / vbCountDays AS Numeric(16, 0)) :: TFloat AS Amount
-               , CAST (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) / vbCountDays AS Numeric(16, 0)) :: TFloat AS AmountPartner
+          SELECT 'сред. Кг/сутки Алан'                             :: TVarChar AS GroupName
+               , (SUM (tmpData.SaleAmount)          / vbCountDays) :: TFloat   AS SaleAmount
+               , (SUM (tmpData.SaleAmountPartner)   / vbCountDays) :: TFloat   AS SaleAmountPartner 
+               , (SUM (tmpData.ReturnAmount)        / vbCountDays) :: TFloat   AS ReturnAmount
+               , (SUM (tmpData.ReturnAmountPartner) / vbCountDays) :: TFloat   AS ReturnAmountPartner
+               , (SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               / vbCountDays) :: TFloat AS Amount
+               , (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) / vbCountDays) :: TFloat AS AmountPartner
                , FALSE AS isTop
                , zc_Color_Red() :: Integer AS ColorRecord
                , 1 AS Num
@@ -442,20 +442,20 @@ BEGIN
 
       UNION ALL
           -- 1.3.
-          SELECT 'сред. шт/сутки Чапли'                           :: TVarChar AS GroupName
-                , CAST (SUM (tmpData.SaleAmountSh) / vbCountDays           AS Numeric(16, 0)) :: TFloat   AS SaleAmountSh
-                , CAST (SUM (tmpData.SaleAmountPartnerSh) / vbCountDays    AS Numeric(16, 0)) :: TFloat   AS SaleAmountPartnerSh
-                , CAST (SUM (tmpData.ReturnAmountSh) / vbCountDays         AS Numeric(16, 0)) :: TFloat   AS ReturnAmountSh
-                , CAST (SUM (tmpData.ReturnAmountPartnerSh) / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS ReturnAmountPartnerSh
-                , CAST (SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh) / vbCountDays AS Numeric(16, 0))                :: TFloat AS AmountSh
-                , CAST (SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) / vbCountDays AS Numeric(16, 0))  :: TFloat AS AmountPartnerSh
+          SELECT 'сред. шт/сутки Чапли'                                 :: TVarChar AS GroupName
+                , (SUM (tmpData.SaleAmountSh) / vbCountDays           ) :: TFloat   AS SaleAmountSh
+                , (SUM (tmpData.SaleAmountPartnerSh) / vbCountDays    ) :: TFloat   AS SaleAmountPartnerSh
+                , (SUM (tmpData.ReturnAmountSh) / vbCountDays         ) :: TFloat   AS ReturnAmountSh
+                , (SUM (tmpData.ReturnAmountPartnerSh) / vbCountDays  ) :: TFloat   AS ReturnAmountPartnerSh
+                , (SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh) / vbCountDays)                :: TFloat AS AmountSh
+                , (SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) / vbCountDays)  :: TFloat AS AmountPartnerSh
 
-                , CAST (SUM (tmpData.SaleAmount) / vbCountDays           AS Numeric(16, 0)) :: TFloat   AS SaleAmount
-                , CAST (SUM (tmpData.SaleAmountPartner) / vbCountDays    AS Numeric(16, 0)) :: TFloat   AS SaleAmountPartner 
-                , CAST (SUM (tmpData.ReturnAmount) / vbCountDays         AS Numeric(16, 0)) :: TFloat   AS ReturnAmount
-                , CAST (SUM (tmpData.ReturnAmountPartner) / vbCountDays  AS Numeric(16, 0)) :: TFloat   AS ReturnAmountPartner
-                , CAST (SUM (tmpData.SaleAmount - tmpData.ReturnAmount) / vbCountDays               AS Numeric(16, 0)) :: TFloat AS Amount
-                , CAST (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) / vbCountDays AS Numeric(16, 0)) :: TFloat AS AmountPartner
+                , (SUM (tmpData.SaleAmount) / vbCountDays           ) :: TFloat   AS SaleAmount
+                , (SUM (tmpData.SaleAmountPartner) / vbCountDays    ) :: TFloat   AS SaleAmountPartner 
+                , (SUM (tmpData.ReturnAmount) / vbCountDays         ) :: TFloat   AS ReturnAmount
+                , (SUM (tmpData.ReturnAmountPartner) / vbCountDays  ) :: TFloat   AS ReturnAmountPartner
+                , (SUM (tmpData.SaleAmount - tmpData.ReturnAmount) / vbCountDays              ) :: TFloat AS Amount
+                , (SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) / vbCountDays) :: TFloat AS AmountPartner
                 , FALSE AS isTop
                 , zc_Color_Red()  :: Integer AS ColorRecord
                 , 1 AS Num
