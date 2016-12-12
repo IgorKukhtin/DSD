@@ -757,8 +757,7 @@ BEGIN
                                      LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                )
 
-, tmpOperationGroup2 AS (SELECT MIContainer.ContainerId_Analyzer
-                              , MIContainer.ObjectId_Analyzer                 AS GoodsId
+, tmpOperationGroup2 AS (SELECT MIContainer.ObjectId_Analyzer                 AS GoodsId
                               , MIContainer.ObjectIntId_Analyzer              AS GoodsKindId -- COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                               , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer /*MovementLinkObject_Partner.ObjectId*/ END AS PartnerId
                               , 0                                            AS BranchId
@@ -778,10 +777,12 @@ BEGIN
                               , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_40200() AND tmpAccount.AccountGroupId IS NULL THEN  1 * COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS Return_SummCost_40200
 
                                 -- Сумма Реализация
+                              , 0 AS Sale_Summ
+                                -- Сумма Реализация
                               , SUM (CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() THEN 1 * MIContainer.Amount ELSE 0 END
                                    + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = TRUE  THEN  1 * MIContainer.Amount ELSE 0 END
                                    - CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_Sale()     AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummOut_110101() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END
-                                    ) AS Sale_Summ
+                                    ) AS Sale_SummReal
                                 -- Сумма Возврат
                               , SUM (CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() THEN -1 * MIContainer.Amount ELSE 0 END
                                    + CASE WHEN tmpAnalyzer.isCost = FALSE AND MIContainer.MovementDescId = zc_Movement_ReturnIn() AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.AnalyzerId <> zc_Enum_AnalyzerId_LossSumm_20200() AND MIContainer.AccountId = zc_Enum_AnalyzerId_SummIn_110101()  AND MIContainer.isActive = FALSE /* TRUE  */ THEN  1 * MIContainer.Amount ELSE 0 END
@@ -849,12 +850,100 @@ BEGIN
                               LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ContainerLO_Juridical.ObjectId
 
                          WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
-                         GROUP BY MIContainer.ContainerId_Analyzer
-                                , MIContainer.ObjectId_Analyzer
+                         GROUP BY MIContainer.ObjectId_Analyzer
                                 , MIContainer.ObjectIntId_Analyzer
                                 , CASE WHEN MIContainer.MovementDescId = zc_Movement_Service() THEN MIContainer.ObjectId_Analyzer ELSE MIContainer.ObjectExtId_Analyzer END
                                 , ContainerLO_Juridical.ObjectId
                                 , ContainerLO_InfoMoney.ObjectId
+                        UNION ALL
+                         SELECT MovementItem.ObjectId AS GoodsId
+                              , CASE WHEN inIsGoodsKind = TRUE  THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
+                              , CASE WHEN inIsPartner   = FALSE THEN 0 ELSE MovementLinkObject_To.ObjectId  END AS PartnerId
+                              , 0 AS BranchId
+                              , CASE WHEN inIsPartner = TRUE THEN ObjectLink_Juridical.ChildObjectId ELSE 0 END AS JuridicalId
+                              , ObjectLink_InfoMoney.ChildObjectId AS InfoMoneyId
+
+                              , 0 AS Sale_AmountPartner
+                              , 0 AS Return_AmountPartner
+                              , 0 AS Sale_Amount_10500
+                              , 0 AS Sale_Amount_40200
+                              , 0 AS Return_Amount_40200
+
+                              , 0 AS Sale_SummCost
+                              , 0 AS Return_SummCost
+                              , 0 AS Sale_SummCost_10500
+                              , 0 AS Sale_SummCost_40200
+                              , 0 AS Return_SummCost_40200
+
+                                -- Сумма Реализация
+                              , SUM (COALESCE (MIFloat_SummFrom.ValueData, 0)) AS Sale_Summ
+                                -- Сумма Реализация
+                              , 0 AS Sale_SummReal
+                                -- Сумма Возврат
+                              , 0 AS Return_Summ
+
+                                -- Сумма Реализация - По прайсу
+                              , 0 AS Sale_Summ_PriceList
+                                -- Сумма Возврат - По прайсу
+                              , 0 AS Return_Summ_PriceList
+
+
+                                -- Сумма Реализация - Разница с оптовыми ценами
+                              , 0 AS Sale_Summ_10200
+                                -- Сумма Реализация - Скидка Акция
+                              , 0 AS Sale_Summ_10250
+                                -- Сумма Возврат - Разница с оптовыми ценами
+                              , 0 AS Return_Summ_10200
+
+                                -- Сумма Реализация - Скидка / Наценка дополнительная
+                              , 0 AS Sale_Summ_10300
+                                -- Сумма Возврат - Скидка / Наценка дополнительная
+                              , 0 AS Return_Summ_10300
+
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = Movement.Id
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               INNER JOIN tmp_Unit AS tmp_Unit_From ON tmp_Unit_From.UnitId = MovementLinkObject_From.ObjectId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                    ON ObjectLink_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                               LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                                                    ON ObjectLink_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                   AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                      AND MovementItem.DescId     = zc_MI_Master()
+                                                      AND MovementItem.isErased   = FALSE
+                               LEFT JOIN _tmpGoods_report ON _tmpGoods_report.GoodsId = MovementItem.ObjectId
+
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummFrom
+                                                           ON MIFloat_SummFrom.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummFrom.DescId = zc_MIFloat_SummFrom()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                              LEFT JOIN _tmpJuridical ON _tmpJuridical.JuridicalId = ObjectLink_Juridical.ChildObjectId
+
+                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.DescId = zc_Movement_Sale()
+                            AND (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
+
+                          GROUP BY MovementItem.ObjectId
+                                 , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
+                                 , CASE WHEN inIsPartner = FALSE THEN 0 ELSE MovementLinkObject_To.ObjectId END
+                                 , CASE WHEN inIsPartner = TRUE THEN ObjectLink_Juridical.ChildObjectId ELSE 0 END
+                                 , ObjectLink_InfoMoney.ChildObjectId
                         )
 
  , tmpOperationGroup AS (SELECT CASE WHEN inIsPartner = TRUE THEN tmpOperationGroup2.JuridicalId ELSE 0 END AS JuridicalId
@@ -994,8 +1083,8 @@ BEGIN
          , tmpOperationGroup.Sale_SummCost_10500 :: TFloat AS Sale_SummCost_10500
          , tmpOperationGroup.Sale_SummCost_40200 :: TFloat AS Sale_SummCost_40200
 
-         , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight + tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
-         , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     + tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
+         , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight - tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
+         , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     - tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
 
          , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh

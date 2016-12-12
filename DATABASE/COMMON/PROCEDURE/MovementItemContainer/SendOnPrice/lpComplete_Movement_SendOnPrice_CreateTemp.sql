@@ -20,7 +20,9 @@ BEGIN
          -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItem (MovementItemId Integer, isLossMaterials Boolean
                                    , MIContainerId_To BigInt, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, ContainerId_GoodsTransit Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                                   , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
+                                   , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat
+                                   , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
+                                   , tmpOperSumm_PartnerVirt TFloat, OperSumm_PartnerVirt_ChangePercent TFloat
                                    , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                    , BusinessId_From Integer, BusinessId_To Integer
                                    , isPartionCount Boolean, isPartionSumm Boolean

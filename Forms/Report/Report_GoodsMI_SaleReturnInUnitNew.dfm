@@ -601,7 +601,7 @@
             Width = 100
           end
           object Sale_SummReal: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1075#1088#1085
+            Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

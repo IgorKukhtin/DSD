@@ -114,6 +114,7 @@ BEGIN
 
         WHERE MovementBoolean.DescId    = zc_MovementBoolean_Registered()
           AND MovementBoolean.ValueData = FALSE
+          AND inSession <> zfCalc_UserAdmin()
         ORDER BY Movement.OperDate DESC, Movement.Id DESC
         LIMIT 1
        ;
@@ -129,4 +130,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_Pfizer (inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_Income_Pfizer (inSession:= zfCalc_UserAdmin())

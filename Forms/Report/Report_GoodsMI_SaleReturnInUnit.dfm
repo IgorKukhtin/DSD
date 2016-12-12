@@ -5,7 +5,7 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -642
+  ExplicitLeft = -572
   ExplicitWidth = 1378
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -573,7 +573,7 @@
             Width = 78
           end
           object Sale_SummReal: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1075#1088#1085
+            Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Sale_SummReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
