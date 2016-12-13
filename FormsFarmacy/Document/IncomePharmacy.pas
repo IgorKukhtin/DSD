@@ -82,6 +82,12 @@ type
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
     cbisRegistered: TcxCheckBox;
+    actPrintStickerOld: TdsdPrintAction;
+    cxLabel13: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    GuidesJuridical: TdsdGuides;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
   private
     { Private declarations }
   public

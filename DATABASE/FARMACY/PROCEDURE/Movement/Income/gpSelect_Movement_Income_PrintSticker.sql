@@ -16,6 +16,19 @@ $BODY$
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
     DECLARE vbUnitId Integer;
+
+    DECLARE vbId Integer;
+    DECLARE vbAmount TFloat;
+    DECLARE vbIndex Integer;
+
+    DECLARE cur1 CURSOR FOR
+        SELECT MovementItem.Id
+             , MovementItem.Amount
+        FROM MovementItem 
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId     = zc_MI_Master()
+          AND MovementItem.isErased   = FALSE;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -39,13 +52,31 @@ BEGIN
     END IF;
      --
 
+    CREATE TEMP TABLE tmp_List (MIId Integer) ON COMMIT DROP;
+
+    OPEN cur1 ;
+     LOOP
+         FETCH cur1 Into vbId, vbAmount;
+         IF NOT FOUND THEN EXIT; END IF;
+         -- парсим 
+         vbIndex := 1;
+         WHILE vbIndex <= vbAmount LOOP
+             -- добавляем cтроку
+             INSERT INTO tmp_List (MIId) SELECT vbId;
+             -- теперь следуюющий
+             vbIndex := vbIndex + 1;
+         END LOOP;
+     END LOOP;
+
+
     OPEN Cursor1 FOR
       SELECT
              zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
            , Object_Goods.ValueData                                          AS GoodsName
            , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat                 AS SalePrice
           
-       FROM  MovementItem 
+       FROM tmp_List
+            LEFT JOIN MovementItem ON MovementItem.Id = tmp_List.MIId
             LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                         ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
@@ -54,10 +85,6 @@ BEGIN
 
             LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.ObjectId
                                              AND Object_Price_View.UnitId = vbUnitId
-
-        WHERE MovementItem.MovementId = inMovementId
-          AND MovementItem.DescId     = zc_MI_Master()
-          AND MovementItem.isErased   = FALSE
         ORDER BY Object_Goods.ValueData;
 
     RETURN NEXT Cursor1;

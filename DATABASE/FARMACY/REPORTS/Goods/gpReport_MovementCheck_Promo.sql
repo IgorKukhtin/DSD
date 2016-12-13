@@ -46,7 +46,7 @@ BEGIN
                               , MI_Goods.ObjectId                AS GoodsId_MI     -- здесь товар "сети"
                               , ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
                               , MovementDate_StartPromo.ValueData  AS StartDate_Promo
-                              , MovementDate_EndPromo.ValueData    AS EndDate_Promo
+                              , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
                        FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
