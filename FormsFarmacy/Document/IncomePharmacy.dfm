@@ -259,12 +259,6 @@ inherited IncomePharmacyForm: TIncomePharmacyForm
             Properties.ReadOnly = True
             Width = 131
           end
-          object IdBarCode: TcxGridDBColumn
-            DataBinding.FieldName = 'IdBarCode'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 30
-          end
         end
       end
     end

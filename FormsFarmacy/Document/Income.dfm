@@ -492,12 +492,6 @@
             VisibleForCustomization = False
             Width = 30
           end
-          object IdBarCode: TcxGridDBColumn
-            DataBinding.FieldName = 'IdBarCode'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 30
-          end
         end
       end
     end

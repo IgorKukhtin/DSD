@@ -71,9 +71,9 @@ BEGIN
 
     OPEN Cursor1 FOR
       SELECT
-             zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
-           , Object_Goods.ValueData                                          AS GoodsName
-           , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat                 AS SalePrice
+             zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
+           , Object_Goods.ValueData                            AS GoodsName
+           , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat   AS SalePrice
           
        FROM tmp_List
             LEFT JOIN MovementItem ON MovementItem.Id = tmp_List.MIId
@@ -83,8 +83,13 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = MovementItem.ObjectId
-                                             AND Object_Price_View.UnitId = vbUnitId
+            -- получается GoodsMainId
+            LEFT JOIN ObjectLink AS ObjectLink_Child 
+                                 ON ObjectLink_Child.ChildObjectId = Object_Goods.Id
+                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+            LEFT JOIN ObjectLink AS ObjectLink_Main
+                                 ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
         ORDER BY Object_Goods.ValueData;
 
     RETURN NEXT Cursor1;

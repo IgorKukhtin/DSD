@@ -31,9 +31,8 @@ BEGIN
         
     RETURN QUERY
    WITH
-    -- все документы Промо и товары , нач./ конечн. даты действия 
-    tmpGoods_Promo AS (SELECT MI_Goods.ObjectId                    AS GoodsId_MI     -- здесь товар "сети"
-                              , ObjectLink_Child_R.ChildObjectId   AS GoodsId        -- здесь товар
+      -- все документы Промо и товары , нач./ конечн. даты действия 
+      tmpGoods_Promo AS (SELECT ObjectLink_Child_R.ChildObjectId   AS GoodsId        -- здесь товар
                               , MovementDate_StartPromo.ValueData  AS StartDate_Promo
                               , MovementDate_EndPromo.ValueData    AS EndDate_Promo
                        FROM Movement
@@ -63,7 +62,7 @@ BEGIN
                            AND Movement.DescId = zc_Movement_Promo()
                         ) 
  
-           -- выбираем все чеки с товарами маркетингового контракта
+           -- выбираем все чеки за выбранный период
            ,   tmpMI AS (SELECT MIContainer.ContainerId
                               , date_trunc('month', Movement_Check.OperDate)::TDateTime AS PlanDate
                               , MovementLinkObject_Unit.ObjectId    AS UnitId
@@ -71,7 +70,7 @@ BEGIN
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM Movement AS Movement_Check
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                            
@@ -135,7 +134,7 @@ BEGIN
                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                          )
 
-       -- здесь ограничиваем товарами маркетингового контракта
+       -- здесь віделяем кол-во/сумму продажи товаров маркетингового контракта
        , tmpData AS (SELECT tmp.PlanDate
                               , tmp.UnitId
                               , SUM (tmp.Amount)      AS TotalAmount
@@ -151,7 +150,7 @@ BEGIN
                          GROUP BY tmp.PlanDate
                                 , tmp.UnitId
                          ) 
-
+         -- результат
          SELECT tmpData.PlanDate
               , Object_Unit.ValueData      AS UnitName
               , tmpData.TotalAmount        :: TFloat
@@ -172,8 +171,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 23.11.16         *
- 08.11.16         *
+ 12.12.16         *
 */
 
 -- тест

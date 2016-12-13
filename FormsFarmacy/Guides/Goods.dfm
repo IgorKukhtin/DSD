@@ -46,6 +46,14 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 89
           end
+          object colIdBarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' ('#1072#1087#1090#1077#1082#1072')'
+            DataBinding.FieldName = 'IdBarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
           object clName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'

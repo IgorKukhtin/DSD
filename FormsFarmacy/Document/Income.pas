@@ -115,7 +115,6 @@ type
     Color_ExpirationDate: TcxGridDBColumn;
     cbisRegistered: TcxCheckBox;
     actPrintStickerOld: TdsdPrintAction;
-    IdBarCode: TcxGridDBColumn;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
   private

@@ -151,14 +151,6 @@ inherited PriceForm: TPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colIdBarCode: TcxGridDBColumn
-            Caption = #1064#1090#1088#1080#1093#1082#1086#1076
-            DataBinding.FieldName = 'IdBarCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
           object clIsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'

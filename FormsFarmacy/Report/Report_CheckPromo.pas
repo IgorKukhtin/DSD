@@ -36,6 +36,8 @@ type
     dgDate: TcxGridDBChartDataGroup;
     dgUnit: TcxGridDBChartDataGroup;
     cxSplitter1: TcxSplitter;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
   private
     { Private declarations }
   public
