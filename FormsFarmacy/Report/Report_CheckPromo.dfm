@@ -234,21 +234,21 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             DataBinding.FieldName = 'unitname'
             DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
           end
-          object serPlanAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamount'
-            DisplayText = #1055#1083#1072#1085
+          object serTotalSumma: TcxGridDBChartSeries
+            DataBinding.FieldName = 'TotalSumma'
+            DisplayText = #1048#1090#1086#1075#1086', '#1075#1088#1085
           end
-          object serPlanAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'planamountaccum'
-            DisplayText = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serSummaPromo: TcxGridDBChartSeries
+            DataBinding.FieldName = 'SummaPromo'
+            DisplayText = #1057#1091#1084#1084#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075'.)'
           end
-          object serFactAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamount'
-            DisplayText = #1060#1072#1082#1090
+          object serSumma: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Summa'
+            DisplayText = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1095#1077#1077')'
           end
-          object serFactAmountAccum: TcxGridDBChartSeries
-            DataBinding.FieldName = 'factamountaccum'
-            DisplayText = #1060#1072#1082#1090' '#1089' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077#1084
+          object serPercentPromo: TcxGridDBChartSeries
+            DataBinding.FieldName = 'PercentPromo'
+            DisplayText = '% '#1074#1099#1087'.'
           end
         end
         object grChartLevel1: TcxGridLevel

@@ -29,10 +29,10 @@ type
     grChartLevel1: TcxGridLevel;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
-    serPlanAmount: TcxGridDBChartSeries;
-    serPlanAmountAccum: TcxGridDBChartSeries;
-    serFactAmount: TcxGridDBChartSeries;
-    serFactAmountAccum: TcxGridDBChartSeries;
+    serTotalSumma: TcxGridDBChartSeries;
+    serSummaPromo: TcxGridDBChartSeries;
+    serSumma: TcxGridDBChartSeries;
+    serPercentPromo: TcxGridDBChartSeries;
     dgDate: TcxGridDBChartDataGroup;
     dgUnit: TcxGridDBChartDataGroup;
     cxSplitter1: TcxSplitter;

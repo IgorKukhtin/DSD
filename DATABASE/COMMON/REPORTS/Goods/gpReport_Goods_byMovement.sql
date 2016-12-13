@@ -18,6 +18,7 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
     DECLARE vbCountDays TFloat;
 BEGIN
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoods')
@@ -28,7 +29,8 @@ BEGIN
          -- таблица - 
          CREATE TEMP TABLE _tmpGoods (GroupNum Integer, GoodsId Integer, MeasureId Integer, Weight TFloat, GoodsPlatformId Integer, TradeMarkId Integer, GoodsTagId Integer) ON COMMIT DROP;
          CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
-         CREATE TEMP TABLE _tmpData (GroupNum Integer, GoodsId Integer, SaleAmount TFloat, SaleAmountPartner TFloat, ReturnAmount TFloat, ReturnAmountPartner TFloat
+         CREATE TEMP TABLE _tmpData (OperDate TDateTime
+                                   , GroupNum Integer, GoodsId Integer, SaleAmount TFloat, SaleAmountPartner TFloat, ReturnAmount TFloat, ReturnAmountPartner TFloat
                                                                       , SaleAmountDay TFloat, SaleAmountPartnerDay TFloat, ReturnAmountDay TFloat, ReturnAmountPartnerDay TFloat
                                                                       , SaleAmountSh TFloat, SaleAmountPartnerSh TFloat, ReturnAmountSh TFloat, ReturnAmountPartnerSh TFloat
                                                                       , SaleAmountDaySh TFloat, SaleAmountPartnerDaySh TFloat, ReturnAmountDaySh TFloat, ReturnAmountPartnerDaySh TFloat
@@ -123,6 +125,7 @@ BEGIN
 
         -- Ёлементы - что считаем "продажей"
       , tmpMI_Sale AS (SELECT MovementItem.ObjectId AS GoodsId
+                            , tmp.OperDate
                             , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData /*MovementItem.Amount*/, 0))  AS Amount
                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0)) AS AmountPartner
 
@@ -140,10 +143,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                       GROUP BY MovementItem.ObjectId
+                       GROUP BY MovementItem.ObjectId, tmp.OperDate
                        )
         -- Ёлементы - что считаем "возвратом"
       , tmpMI_Ret AS (SELECT MovementItem.ObjectId AS GoodsId
+                           , tmp.OperDate
                            , SUM (COALESCE (CASE WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END, 0))  AS Amount
                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
 
@@ -158,10 +162,11 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                      GROUP BY MovementItem.ObjectId
+                      GROUP BY MovementItem.ObjectId, tmp.OperDate
                       )
           -- Ёлементы - что считаем "возвратом"
         , tmpData  AS (SELECT tmp.GoodsId
+                            , tmp.OperDate
                             , SUM (tmp.SaleAmount)           AS SaleAmount
                             , SUM (tmp.SaleAmountPartner)    AS SaleAmountPartner
                             , SUM (tmp.ReturnAmount)         AS ReturnAmount
@@ -172,6 +177,7 @@ BEGIN
                             , SUM (tmp.ReturnAmountDay)         AS ReturnAmountDay
                             , SUM (tmp.ReturnAmountPartnerDay)  AS ReturnAmountPartnerDay
                        FROM (SELECT tmp.GoodsId
+                                  , tmp.OperDate
                                   , tmp.Amount              AS SaleAmount
                                   , tmp.AmountPartner       AS SaleAmountPartner
                                   , tmp.DayAmount           AS SaleAmountDay
@@ -183,6 +189,7 @@ BEGIN
                              FROM tmpMI_Sale AS tmp
                            UNION
                              SELECT tmp.GoodsId
+                                  , tmp.OperDate
                                   , 0 AS SaleAmount
                                   , 0 AS SaleAmountPartner
                                   , 0 AS SaleAmountDay
@@ -193,16 +200,18 @@ BEGIN
                                   , tmp.DayAmountPartner AS ReturnAmountPartnerDay
                              FROM tmpMI_Ret AS tmp
                              ) AS tmp
-                       GROUP BY tmp.GoodsId
+                       GROUP BY tmp.GoodsId, tmp.OperDate
                       )  
           -- –езультат
-          INSERT INTO _tmpData (GroupNum, GoodsPlatformId, TradeMarkId, GoodsTagId, GoodsId, SaleAmount,      SaleAmountPartner,      ReturnAmount,      ReturnAmountPartner
+          INSERT INTO _tmpData (OperDate
+                               ,GroupNum, GoodsPlatformId, TradeMarkId, GoodsTagId, GoodsId, SaleAmount,      SaleAmountPartner,      ReturnAmount,      ReturnAmountPartner
                                                                                            , SaleAmountDay,   SaleAmountPartnerDay,   ReturnAmountDay,   ReturnAmountPartnerDay
                                                                                            , SaleAmountSh,    SaleAmountPartnerSh,    ReturnAmountSh,    ReturnAmountPartnerSh
                                                                                            , SaleAmountDaySh, SaleAmountPartnerDaySh, ReturnAmountDaySh, ReturnAmountPartnerDaySh
                                 )
 
-                       SELECT _tmpGoods.GroupNum
+                       SELECT tmp.OperDate
+                            , _tmpGoods.GroupNum
                             , _tmpGoods.GoodsPlatformId
                             , _tmpGoods.TradeMarkId
                             , _tmpGoods.GoodsTagId
@@ -230,10 +239,11 @@ BEGIN
                       FROM tmpData AS tmp
                            LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
                       GROUP BY _tmpGoods.GroupNum
-                              , _tmpGoods.GoodsPlatformId
-                              , _tmpGoods.TradeMarkId
-                              , _tmpGoods.GoodsTagId
-                              , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmp.GoodsId ELSE 0 END
+                             , _tmpGoods.GoodsPlatformId
+                             , _tmpGoods.TradeMarkId
+                             , _tmpGoods.GoodsTagId
+                             , CASE WHEN _tmpGoods.GroupNum = 2 THEN tmp.GoodsId ELSE 0 END
+                             , tmp.OperDate
                      ;
           
 
@@ -610,6 +620,40 @@ BEGIN
     ;
 
   RETURN NEXT Cursor2;
+
+    -- –езультат дл€ 3-ой страницы
+    OPEN Cursor3 FOR
+       WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
+
+           SELECT tmpData.OperDate
+                , Object_GoodsTag.ValueData           :: TVarChar AS GroupName
+                , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
+                , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
+                , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
+                , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
+                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
+                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+
+                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
+                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
+                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)                :: TFloat AS Amount
+                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner)  :: TFloat AS AmountPartner
+                , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord
+                , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsTag.ValueData)   AS Integer) AS NumLine
+           FROM tmpData
+                LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
+                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
+                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id
+                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsTag_ColorReport() 
+           GROUP BY Object_GoodsTag.ValueData
+                  , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
+                  , tmpData.OperDate
+    ;
+
+  RETURN NEXT Cursor3;
+
        
 END;
 $BODY$

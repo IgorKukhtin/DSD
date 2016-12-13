@@ -230,7 +230,7 @@ BEGIN
             UNION ALL
             SELECT
                 MovementItem.Id
-              , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
+             -- , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
               , MovementItem.GoodsId
               , MovementItem.GoodsCode
               , MovementItem.GoodsName

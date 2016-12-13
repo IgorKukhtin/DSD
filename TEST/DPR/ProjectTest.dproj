@@ -2907,10 +2907,6 @@
 				<Form>ReestrUpdateDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods_byMovement.pas">
-				<Form>Report_Goods_byMovementForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods_byMovementDialog.pas">
 				<Form>Report_Goods_byMovementDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2933,6 +2929,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind_ScaleCeh.pas">
 				<Form>GoodsByGoodsKind_ScaleCehForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_byMovement.pas">
+				<Form>Report_Goods_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
