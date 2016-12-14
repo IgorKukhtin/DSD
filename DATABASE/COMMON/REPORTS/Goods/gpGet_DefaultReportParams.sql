@@ -24,8 +24,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY  
-           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE) :: TDateTime   AS StartDate
-                , CURRENT_DATE     :: TDateTime  AS EndDate
+           SELECT DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '1 DAY') :: TDateTime   AS StartDate
+                , (CURRENT_DATE - INTERVAL '1 DAY')  :: TDateTime  AS EndDate
                 , Object_Unit.Id                 AS UnitId
                 , Object_Unit.ValueData          AS UnitName
 

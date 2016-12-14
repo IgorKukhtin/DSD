@@ -491,7 +491,7 @@
             Width = 70
           end
           object Sale_AmountPartner_Weight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1087#1086#1082#1091#1087', '#1089' %'#1089#1082'.)'
+            Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1089#1082#1083#1072#1076', '#1089' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -503,7 +503,7 @@
             Width = 70
           end
           object Sale_AmountPartner_Sh: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1087#1086#1082#1091#1087', '#1089' %'#1089#1082'.)'
+            Caption = #1055#1088#1086#1076', '#1096#1090' ('#1089#1082#1083#1072#1076', '#1089' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_AmountPartner_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -561,7 +561,7 @@
             Width = 80
           end
           object Sale_Summ: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1089' %'#1089#1082'.'#1074#1077#1089')'
+            Caption = #1055#1088#1086#1076', '#1075#1088#1085' ('#1089#1082#1083#1072#1076', '#1089' %'#1089#1082'.'#1074#1077#1089')'
             DataBinding.FieldName = 'Sale_Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1133,9 +1133,8 @@
           StoredProc = spSelect
         end>
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       ImageIndex = 21
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = MasterCDS
@@ -1167,9 +1166,8 @@
       MoveParams = <>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
       ImageIndex = 19
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1237,7 +1235,6 @@
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1075#1088#1091#1087#1087#1077' '#1073#1091#1093#1075'. '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
       ImageIndex = 20
-      ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -1660,14 +1657,6 @@
         item
           Visible = True
           ItemName = 'bbPrint_byJuridical'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_byStatGroup'
         end
         item
           Visible = True

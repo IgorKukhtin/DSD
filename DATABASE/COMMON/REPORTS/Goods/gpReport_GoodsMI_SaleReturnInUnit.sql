@@ -215,8 +215,8 @@ BEGIN
                                                           AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
 
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                             AND Movement.StatusId = zc_Enum_Status_Complete()
