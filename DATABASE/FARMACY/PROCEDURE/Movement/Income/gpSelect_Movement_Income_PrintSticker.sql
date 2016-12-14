@@ -72,6 +72,7 @@ BEGIN
     OPEN Cursor1 FOR
       SELECT
              zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
+           , Object_Goods.ObjectCode                           AS GoodsCode
            , Object_Goods.ValueData                            AS GoodsName
            , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat   AS SalePrice
           

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_byMovement (
     IN inUnitGroupId         Integer   ,
     IN inGoodsGroupGPId      Integer   ,
     IN inGoodsGroupId        Integer   ,
-    IN inSessiON             TVarChar    -- сессия пользователя
+    IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor  
 AS
@@ -623,7 +623,7 @@ BEGIN
 
     -- Результат для 3-ой страницы
     OPEN Cursor3 FOR
-       WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
+       --WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
 
            SELECT tmpData.OperDate
                 , Object_GoodsTag.ValueData           :: TVarChar AS GroupName
@@ -641,8 +641,8 @@ BEGIN
                 , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)                :: TFloat AS Amount
                 , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner)  :: TFloat AS AmountPartner
                 , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord
-                , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsTag.ValueData)   AS Integer) AS NumLine
-           FROM tmpData
+                , CAST (ROW_NUMBER() OVER (PARTITION BY tmpData.GroupNum  ORDER BY tmpData.GroupNum, Object_GoodsTag.ValueData, tmpData.OperDate ) AS Integer) AS NumLine
+           FROM _tmpData AS tmpData
                 LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
                 LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
                                       ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id
@@ -650,6 +650,7 @@ BEGIN
            GROUP BY Object_GoodsTag.ValueData
                   , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
                   , tmpData.OperDate
+                  , tmpData.GroupNum
     ;
 
   RETURN NEXT Cursor3;

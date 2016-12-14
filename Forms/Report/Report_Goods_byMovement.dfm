@@ -14,6 +14,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Width = 800
     Height = 462
     TabOrder = 3
+    Properties.ActivePage = tsDetail
     ExplicitTop = 80
     ExplicitWidth = 800
     ExplicitHeight = 462
@@ -204,9 +205,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -321,37 +319,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
               Kind = skSum
               Column = chAmountPartner
             end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSaleAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chReturnAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chReturnAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSaleAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountPartner
-            end>
+          DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -667,37 +635,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
               Kind = skSum
               Column = cdAmountPartner
             end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdSaleAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdReturnAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdReturnAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdSaleAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = cdAmountPartner
-            end>
+          DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -887,10 +825,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           end
           object cdColorRecord: TcxGridDBColumn
             DataBinding.FieldName = 'ColorRecord'
-            Visible = False
             Options.Editing = False
-            VisibleForCustomization = False
-            Width = 30
+            Width = 75
           end
           object cdBoldRecord: TcxGridDBColumn
             DataBinding.FieldName = 'BoldRecord'
@@ -1504,6 +1440,25 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   object DSDetail: TDataSource
     DataSet = DetailCDS
     Left = 632
+    Top = 352
+  end
+  object DetaildsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ValueColumn = cdColorRecord
+        ColorValueList = <>
+        ValueBoldColumn = cdBoldRecord
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 553
     Top = 352
   end
 end

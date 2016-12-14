@@ -69,6 +69,7 @@ type
     serReturnAmountSh: TcxGridDBChartSeries;
     serAmountSh: TcxGridDBChartSeries;
     cdOperDate: TcxGridDBColumn;
+    DetaildsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
