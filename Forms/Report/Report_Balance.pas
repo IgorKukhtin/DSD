@@ -78,6 +78,8 @@ type
     pvAmountPassiveEnd: TcxDBPivotGridField;
     pvByObjectItemName: TcxDBPivotGridField;
     pvGoodsItemName: TcxDBPivotGridField;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;

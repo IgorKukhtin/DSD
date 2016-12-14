@@ -13,7 +13,8 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxSplitter,
+  cxGridChartView, cxGridDBChartView;
 
 type
   TReport_Goods_byMovementForm = class(TAncestorReportForm)
@@ -53,6 +54,22 @@ type
     BoldRecord: TcxGridDBColumn;
     chBoldRecord: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
+    grChart: TcxGrid;
+    grChartDBChartView1: TcxGridDBChartView;
+    dgOperDate: TcxGridDBChartDataGroup;
+    dgGroupName: TcxGridDBChartDataGroup;
+    serSaleAmount: TcxGridDBChartSeries;
+    serReturnAmount: TcxGridDBChartSeries;
+    serAmount: TcxGridDBChartSeries;
+    serSaleAmountSh: TcxGridDBChartSeries;
+    grChartLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    DetailCDS: TClientDataSet;
+    DSDetail: TDataSource;
+    serReturnAmountSh: TcxGridDBChartSeries;
+    serAmountSh: TcxGridDBChartSeries;
+    cdOperDate: TcxGridDBColumn;
+    DetaildsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

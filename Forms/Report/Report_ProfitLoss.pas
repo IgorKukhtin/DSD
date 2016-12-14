@@ -70,6 +70,8 @@ type
     dxBarStatic: TdxBarStatic;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;

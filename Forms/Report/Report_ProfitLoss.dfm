@@ -293,6 +293,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -322,6 +330,10 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -565,6 +577,79 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deStart
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42370d
+          FromParam.Component = deEnd
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1055#1080#1059
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDItems'
+          IndexFieldNames = 'ProfitLossGroupName;ProfitLossDirectionName;ProfitLossName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'maintext'
+          Value = #1088'/'#1089#1095#1077#1090#1091
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1054#1055#1080#1059
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1054#1055#1080#1059
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_ProfitLoss'
@@ -620,14 +705,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountGroupId'
-        Value = '0'
+        Value = '9023'
         Component = FormParams
         ComponentItem = 'AccountGroupId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
-        Value = Null
+        Value = '100000 '#1057#1086#1073#1089#1090#1074#1077#1085#1085#1099#1081' '#1082#1072#1087#1080#1090#1072#1083
         Component = FormParams
         ComponentItem = 'AccountGroupName'
         DataType = ftString
@@ -635,14 +720,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountDirectionId'
-        Value = '0'
+        Value = '9072'
         Component = FormParams
         ComponentItem = 'AccountDirectionId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
-        Value = Null
+        Value = '100300 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
         Component = FormParams
         ComponentItem = 'AccountDirectionName'
         DataType = ftString
@@ -650,14 +735,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountId'
-        Value = '0'
+        Value = '9210'
         Component = FormParams
         ComponentItem = 'AccountId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
-        Value = Null
+        Value = '100301 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
         Component = FormParams
         ComponentItem = 'AccountName'
         DataType = ftString
@@ -665,14 +750,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'InfoMoneyId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'InfoMoneyId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'InfoMoneyName'
         DataType = ftString
@@ -701,14 +786,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'BusinessId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'BusinessId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'BusinessName'
         DataType = ftString
@@ -716,14 +801,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossGroupId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossGroupId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossGroupName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossGroupName'
         DataType = ftString
@@ -731,14 +816,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossDirectionId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossDirectionId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossDirectionName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossDirectionName'
         DataType = ftString
@@ -746,14 +831,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'ProfitLossId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProfitLossName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'ProfitLossName'
         DataType = ftString
@@ -761,21 +846,21 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'BranchId'
-        Value = '0'
+        Value = ''
         Component = FormParams
         ComponentItem = 'BranchId'
         MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'BranchName'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
+    Left = 240
     Top = 304
   end
   object PivotAddOn: TPivotAddOn
@@ -790,64 +875,148 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         Action = MultiAction1
         ShortCut = 13
       end>
-    Left = 392
-    Top = 272
+    Left = 424
+    Top = 240
   end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'AccountId'
-        Value = '0'
+        Value = '9210'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
-        Value = Null
+        Value = '100301 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupId'
-        Value = '0'
+        Value = '9023'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountGroupName'
-        Value = Null
+        Value = '100000 '#1057#1086#1073#1089#1090#1074#1077#1085#1085#1099#1081' '#1082#1072#1087#1080#1090#1072#1083
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionId'
-        Value = '0'
+        Value = '9072'
         MultiSelectSeparator = ','
       end
       item
         Name = 'AccountDirectionName'
-        Value = Null
+        Value = '100300 '#1055#1088#1080#1073#1099#1083#1100' '#1090#1077#1082#1091#1097#1077#1075#1086' '#1087#1077#1088#1080#1086#1076#1072
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
-        Value = '0'
+        Value = ''
         MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
-        Value = Null
+        Value = ''
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessId'
-        Value = '0'
+        Value = ''
         MultiSelectSeparator = ','
       end
       item
         Name = 'BusinessName'
-        Value = Null
+        Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RootType'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectDirectionId'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectDestinationId'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossGroupId'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossGroupName'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossId'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProfitLossName'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 360

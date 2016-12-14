@@ -460,7 +460,9 @@ uses
   Report_MovementIncome_Promo in '..\..\FormsFarmacy\Report\Report_MovementIncome_Promo.pas' {Report_MovementIncome_PromoForm: TParentForm},
   Report_MovementCheck_Promo in '..\..\FormsFarmacy\Report\Report_MovementCheck_Promo.pas' {Report_MovementCheck_PromoForm: TParentForm},
   InventoryPartion in '..\..\FormsFarmacy\Document\InventoryPartion.pas' {InventoryPartionForm: TParentForm},
-  CheckPrintDialog in '..\..\FormsFarmacy\Document\CheckPrintDialog.pas' {CheckPrintDialogForm: TParentForm};
+  CheckPrintDialog in '..\..\FormsFarmacy\Document\CheckPrintDialog.pas' {CheckPrintDialogForm: TParentForm},
+  Report_CheckPromo in '..\..\FormsFarmacy\Report\Report_CheckPromo.pas' {Report_CheckPromoForm: TParentForm},
+  Report_PeriodDialog in '..\..\FormsFarmacy\Report\Report_PeriodDialog.pas' {Report_PeriodDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

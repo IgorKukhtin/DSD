@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Goods_Retail(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
@@ -60,6 +60,7 @@ BEGIN
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -108,6 +109,12 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
+        -- получается GoodsMainId
+        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
+                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
     WHERE Object_Retail.DescId = zc_Object_Retail();
 
    ELSE
@@ -137,6 +144,7 @@ BEGIN
              Object_Goods_View.Id
            , Object_Goods_View.GoodsCodeInt
 --           , ObjectString.ValueData                           AS GoodsCode
+           , zfFormat_BarCode(zc_BarCodePref_Object(), ObjectLink_Main.ChildObjectId) AS IdBarCode
            , Object_Goods_View.GoodsName
            , Object_Goods_View.isErased
            , Object_Goods_View.GoodsGroupId
@@ -185,6 +193,12 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
+        -- получается GoodsMainId
+        LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
+                                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+        LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 
    END IF;
@@ -198,6 +212,7 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.12.16         *
  13.07.16         * protocol
  30.04.16         *
  12.04.16         *

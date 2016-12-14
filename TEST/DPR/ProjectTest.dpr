@@ -888,13 +888,13 @@ uses
   Car_Object in '..\..\Forms\Guides\Car_Object.pas' {Car_ObjectForm: TParentForm},
   ReestrStartDialog in '..\..\Forms\Document\ReestrStartDialog.pas' {ReestrStartDialogForm: TParentForm},
   ReestrUpdateDialog in '..\..\Forms\Document\ReestrUpdateDialog.pas' {ReestrUpdateDialogForm: TParentForm},
-  Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm},
   Report_Goods_byMovementDialog in '..\..\Forms\Report\Report_Goods_byMovementDialog.pas' {Report_Goods_byMovementDialogForm: TParentForm},
   ReestrPrintDialog in '..\..\Forms\Document\ReestrPrintDialog.pas' {ReestrPrintDialogForm: TParentForm},
   Color in '..\..\Forms\System\Color.pas' {ColorForm: TParentForm},
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm},
   DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm},
-  GoodsByGoodsKind_ScaleCeh in '..\..\Forms\Guides\GoodsByGoodsKind_ScaleCeh.pas' {GoodsByGoodsKind_ScaleCehForm: TParentForm};
+  GoodsByGoodsKind_ScaleCeh in '..\..\Forms\Guides\GoodsByGoodsKind_ScaleCeh.pas' {GoodsByGoodsKind_ScaleCehForm: TParentForm},
+  Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

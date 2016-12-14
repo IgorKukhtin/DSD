@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Price(
 )
 RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
-             , GoodsId Integer, GoodsCode Integer, IdBarCode TVarChar, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer,/* IdBarCode TVarChar,*/ GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
@@ -68,7 +68,7 @@ BEGIN
                ,NULL::TDateTime                  AS StartDate
                ,NULL::Integer                    AS GoodsId
                ,NULL::Integer                    AS GoodsCode
-               ,NULL::TVarChar                   AS IdBarCode
+--               ,NULL::TVarChar                   AS IdBarCode
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
@@ -166,7 +166,7 @@ BEGIN
                               
                , Object_Goods_View.id                            AS GoodsId
                , Object_Goods_View.GoodsCodeInt                  AS GoodsCode
-               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar  AS IdBarCode
+--               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar  AS IdBarCode
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
@@ -300,7 +300,7 @@ BEGIN
                                         
                , Object_Goods_View.id                      AS GoodsId
                , Object_Goods_View.GoodsCodeInt            AS GoodsCode
-               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar AS IdBarCode
+--               , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) ::TVarChar AS IdBarCode
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName

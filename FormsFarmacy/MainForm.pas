@@ -299,6 +299,8 @@ type
     N108: TMenuItem;
     actReport_MovementCheck_Promo: TdsdOpenForm;
     N109: TMenuItem;
+    actReport_CheckPromo: TdsdOpenForm;
+    N110: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

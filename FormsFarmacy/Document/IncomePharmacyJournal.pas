@@ -50,6 +50,8 @@ type
     actisDocument: TdsdExecStoredProc;
     bbisDocument: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdPrintAction;
   private
     { Private declarations }
   public

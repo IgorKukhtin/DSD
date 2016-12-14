@@ -77,7 +77,6 @@ type
     GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     Color_ExpirationDate: TcxGridDBColumn;
-    colIdBarCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
