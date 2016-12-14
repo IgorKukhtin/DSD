@@ -5,7 +5,6 @@
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -572
   ExplicitWidth = 1378
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -995,6 +994,30 @@
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object Sale_SummReal: TcxGridDBColumn
+            DataBinding.FieldName = 'Sale_SummReal'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Sale_AmountPartnerR_Weight: TcxGridDBColumn
+            DataBinding.FieldName = 'Sale_AmountPartnerR_Weight'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Sale_AmountPartnerR_Sh: TcxGridDBColumn
+            DataBinding.FieldName = 'Sale_AmountPartnerR_Sh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 55
+          end
         end
       end
     end
@@ -1348,7 +1371,7 @@
       MoveParams = <>
       StoredProcList = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
       ImageIndex = 19
       DataSets = <
         item

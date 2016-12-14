@@ -504,6 +504,7 @@ BEGIN
                                      , CASE WHEN inIsGoodsKind = TRUE THEN MIContainer.ObjectIntId_Analyzer ELSE 0 END AS GoodsKindId
 
                                      , 0 AS Sale_Summ
+                                     , 0 AS Sale_SummReal
                                      , 0 AS Sale_Summ_PriceList
                                      , 0 AS Sale_Summ_10200
                                      , 0 AS Sale_Summ_10250
@@ -557,9 +558,13 @@ BEGIN
                                      , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
 
                                      , SUM (CASE WHEN tmp_Unit_From.UnitId > 0
-                                                 THEN COALESCE (MIFloat_Summ.ValueData, 0)
+                                                 THEN COALESCE (MIFloat_SummFrom.ValueData, 0)
                                                  ELSE 0
                                             END) AS Sale_Summ
+                                     , SUM (CASE WHEN tmp_Unit_From.UnitId > 0
+                                                 THEN COALESCE (MIFloat_Summ.ValueData, 0)
+                                                 ELSE 0
+                                            END) AS Sale_SummReal
                                      , SUM (CASE WHEN tmp_Unit_From.UnitId > 0
                                                  THEN COALESCE (MIFloat_SummPriceList.ValueData, 0)
                                                  ELSE 0
@@ -615,6 +620,9 @@ BEGIN
                                                             AND MovementItem.DescId     = zc_MI_Master()
                                                             AND MovementItem.isErased   = FALSE
 
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummFrom
+                                                                 ON MIFloat_SummFrom.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummFrom.DescId = zc_MIFloat_SummFrom()
                                      LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                                                  ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
@@ -623,8 +631,8 @@ BEGIN
                                                                 AND MIFloat_SummPriceList.DescId = zc_MIFloat_SummPriceList()
 
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                                 WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -657,6 +665,7 @@ BEGIN
                                      , Object_Location_by.Id AS LocationId_by, Object_Location_by.ObjectCode AS LocationCode_by, Object_Location_by.ValueData AS LocationName_by
 
                                      , tmp_Send.Sale_Summ
+                                     , tmp_Send.Sale_SummReal
                                      , tmp_Send.Sale_Summ_PriceList
                                      , tmp_Send.Sale_Summ_10200
                                      , tmp_Send.Sale_Summ_10250
@@ -669,8 +678,11 @@ BEGIN
                                      , (tmp_Send.Sale_Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_Amount_Weight
                                      , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_Amount ELSE 0 END) AS Sale_Amount_Sh
 
-                                     , (tmp_Send.Sale_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartner_Weight
-                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_AmountPartner ELSE 0 END) AS Sale_AmountPartner_Sh
+                                     , ((tmp_Send.Sale_AmountPartner - tmp_Send.Sale_Amount_40200) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartner_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_AmountPartner - tmp_Send.Sale_Amount_40200 ELSE 0 END) AS Sale_AmountPartner_Sh
+
+                                     , (tmp_Send.Sale_AmountPartner * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS Sale_AmountPartnerR_Weight
+                                     , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmp_Send.Sale_AmountPartner ELSE 0 END) AS Sale_AmountPartnerR_Sh
 
                                      , tmp_Send.Return_Summ
                                      , tmp_Send.Return_Summ_PriceList
@@ -695,6 +707,7 @@ BEGIN
                                            , tmpMISendOnPrice.GoodsKindId
 
                                            , SUM (tmpMISendOnPrice.Sale_Summ)           AS Sale_Summ
+                                           , SUM (tmpMISendOnPrice.Sale_SummReal)       AS Sale_SummReal
                                            , SUM (tmpMISendOnPrice.Sale_Summ_PriceList) AS Sale_Summ_PriceList
                                            , SUM (tmpMISendOnPrice.Sale_Summ_10200)     AS Sale_Summ_10200
                                            , SUM (tmpMISendOnPrice.Sale_Summ_10250)     AS Sale_Summ_10250
@@ -922,7 +935,6 @@ BEGIN
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.DescId     = zc_MI_Master()
                                                       AND MovementItem.isErased   = FALSE
-                               LEFT JOIN _tmpGoods_report ON _tmpGoods_report.GoodsId = MovementItem.ObjectId
 
                                LEFT JOIN MovementItemFloat AS MIFloat_SummFrom
                                                            ON MIFloat_SummFrom.MovementItemId = MovementItem.Id
@@ -957,8 +969,9 @@ BEGIN
                               , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId     ELSE 0 END AS GoodsId
                               , CASE WHEN inIsGoodsKind = TRUE THEN tmpOperationGroup2.GoodsKindId ELSE 0 END AS GoodsKindId
 
-                              , SUM (tmpOperationGroup2.Sale_Summ)   AS Sale_Summ
-                              , SUM (tmpOperationGroup2.Return_Summ) AS Return_Summ
+                              , SUM (tmpOperationGroup2.Sale_Summ)         AS Sale_Summ
+                              , SUM (tmpOperationGroup2.Sale_SummReal)     AS Sale_SummReal
+                              , SUM (tmpOperationGroup2.Return_Summ)       AS Return_Summ
 
                               , SUM (tmpOperationGroup2.Sale_Summ_PriceList)   AS Sale_Summ_PriceList
                               , SUM (tmpOperationGroup2.Return_Summ_PriceList) AS Return_Summ_PriceList
@@ -1074,7 +1087,7 @@ BEGIN
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
          , tmpOperationGroup.Sale_Summ           :: TFloat AS Sale_Summ
-         , tmpOperationGroup.Sale_Summ           :: TFloat AS Sale_SummReal
+         , tmpOperationGroup.Sale_SummReal       :: TFloat AS Sale_SummReal
          , tmpOperationGroup.Sale_Summ_PriceList :: TFloat AS Sale_Summ_PriceList
          , tmpOperationGroup.Sale_Summ_10200     :: TFloat AS Sale_Summ_10200
          , tmpOperationGroup.Sale_Summ_10250     :: TFloat AS Sale_Summ_10250
@@ -1086,8 +1099,8 @@ BEGIN
          , (tmpOperationGroup.Sale_AmountPartner_Weight + tmpOperationGroup.Sale_Amount_10500_Weight - tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat  AS Sale_Amount_Weight
          , (tmpOperationGroup.Sale_AmountPartner_Sh     + tmpOperationGroup.Sale_Amount_10500_Sh     - tmpOperationGroup.Sale_Amount_40200_Sh    ) :: TFloat  AS Sale_Amount_Sh
 
-         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
-         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+         , (tmpOperationGroup.Sale_AmountPartner_Weight - tmpOperationGroup.Sale_Amount_40200_Weight) :: TFloat AS Sale_AmountPartner_Weight
+         , (tmpOperationGroup.Sale_AmountPartner_Sh     - tmpOperationGroup.Sale_Amount_40200_Sh)     :: TFloat AS Sale_AmountPartner_Sh
          , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartnerR_Weight
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartnerR_Sh
 
@@ -1251,7 +1264,7 @@ BEGIN
           , View_InfoMoney.InfoMoneyName_all               AS InfoMoneyName_all
 
          , tmpSendOnPrice_group.Sale_Summ           :: TFloat AS Sale_Summ
-         , tmpSendOnPrice_group.Sale_Summ           :: TFloat AS Sale_SummR
+         , tmpSendOnPrice_group.Sale_SummReal       :: TFloat AS Sale_SummR
          , tmpSendOnPrice_group.Sale_Summ_PriceList :: TFloat AS Sale_Summ_PriceList
          , tmpSendOnPrice_group.Sale_Summ_10200     :: TFloat AS Sale_Summ_10200
          , tmpSendOnPrice_group.Sale_Summ_10250     :: TFloat AS Sale_Summ_10250
@@ -1263,10 +1276,10 @@ BEGIN
          , (tmpSendOnPrice_group.Sale_Amount_Weight) :: TFloat  AS Sale_Amount_Weight
          , (tmpSendOnPrice_group.Sale_Amount_Sh)     :: TFloat  AS Sale_Amount_Sh
 
-         , tmpSendOnPrice_group.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
-         , tmpSendOnPrice_group.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
-         , tmpSendOnPrice_group.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartnerR_Weight
-         , tmpSendOnPrice_group.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartnerR_Sh
+         , tmpSendOnPrice_group.Sale_AmountPartner_Weight  :: TFloat AS Sale_AmountPartner_Weight
+         , tmpSendOnPrice_group.Sale_AmountPartner_Sh      :: TFloat AS Sale_AmountPartner_Sh
+         , tmpSendOnPrice_group.Sale_AmountPartnerR_Weight :: TFloat AS Sale_AmountPartnerR_Weight
+         , tmpSendOnPrice_group.Sale_AmountPartnerR_Sh     :: TFloat AS Sale_AmountPartnerR_Sh
 
          , tmpSendOnPrice_group.Return_Summ           :: TFloat AS Return_Summ
          , tmpSendOnPrice_group.Return_Summ_PriceList :: TFloat AS Return_Summ_PriceList

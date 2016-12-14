@@ -128,6 +128,9 @@ type
     Promo_AmountPartner_Weight: TcxGridDBColumn;
     Promo_AmountPartner_Sh: TcxGridDBColumn;
     Return_Summ_10700: TcxGridDBColumn;
+    Sale_SummReal: TcxGridDBColumn;
+    Sale_AmountPartnerR_Weight: TcxGridDBColumn;
+    Sale_AmountPartnerR_Sh: TcxGridDBColumn;
   private
     { Private declarations }
   public

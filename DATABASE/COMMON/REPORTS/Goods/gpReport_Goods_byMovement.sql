@@ -102,7 +102,8 @@ BEGIN
                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                      ON MovementLinkObject_From.MovementId = Movement.Id
                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                    AND MovementLinkObject_From.ObjectId = inUnitId                    -- Склад Реализации
+                                    -- AND MovementLinkObject_From.ObjectId = inUnitId                    -- Склад Реализации
+                             INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate

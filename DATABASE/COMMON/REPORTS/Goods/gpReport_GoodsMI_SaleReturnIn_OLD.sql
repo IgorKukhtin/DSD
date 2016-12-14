@@ -35,9 +35,9 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
 
-             , Promo_Summ TFloat, Sale_Summ TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
+             , Promo_Summ TFloat, Sale_Summ TFloat, Sale_SummReal TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
-             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat
+             , Promo_AmountPartner_Weight TFloat, Promo_AmountPartner_Sh TFloat, Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat, Sale_AmountPartner_Sh TFloat, Sale_AmountPartnerR_Weight TFloat, Sale_AmountPartnerR_Sh TFloat
              , Return_Summ TFloat, Return_Summ_10300 TFloat, Return_Summ_10700 TFloat, Return_SummCost TFloat, Return_SummCost_40200 TFloat
              , Return_Amount_Weight TFloat, Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat, Return_AmountPartner_Sh TFloat
              , Sale_Amount_10500_Weight TFloat
@@ -374,6 +374,7 @@ BEGIN
 
          , 0                                    :: TFloat  AS Promo_Summ
          , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_Summ
+         , tmpOperationGroup.Sale_Summ          :: TFloat  AS Sale_SummReal
          , tmpOperationGroup.Sale_Summ_10200    :: TFloat  AS Sale_Summ_10200
          , 0                                    :: TFloat  AS Sale_Summ_10250
          , tmpOperationGroup.Sale_Summ_10300    :: TFloat  AS Sale_Summ_10300
@@ -390,6 +391,8 @@ BEGIN
          , 0                                           :: TFloat AS Promo_AmountPartner_Sh
          , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartner_Weight
          , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartner_Sh
+         , tmpOperationGroup.Sale_AmountPartner_Weight :: TFloat AS Sale_AmountPartnerR_Weight
+         , tmpOperationGroup.Sale_AmountPartner_Sh     :: TFloat AS Sale_AmountPartnerR_Sh
 
          , tmpOperationGroup.Return_Summ          :: TFloat AS Return_Summ
          , 0                                      :: TFloat AS Return_Summ_10300
