@@ -105,7 +105,7 @@ BEGIN
                                , NewRow    Boolean) ON COMMIT DROP;
         
         WITH -- Текущий остаток
-             GoodsRemains AS (SELECT Container.ObjectId 
+             tmpContainer AS (SELECT Container.ObjectId 
                                    , SUM (Amount) AS Remains
                               FROM Container
                                    -- INNER JOIN Containerlinkobject AS CLO_Unit
@@ -133,37 +133,52 @@ BEGIN
                           FROM CashSessionSnapShot
                           WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
                          )
+       , tmpGoods AS (SELECT tmpContainer.ObjectId FROM tmpContainer
+                     UNION
+                      SELECT SESSIONDATA.ObjectId FROM SESSIONDATA
+                     UNION
+                      SELECT RESERVE.GoodsId FROM RESERVE
+                     )
+       , tmpPrice AS (SELECT tmpGoods.ObjectId, COALESCE (ROUND (ObjectFloat_Value.ValueData, 2), 0) AS Price, COALESCE (ObjectFloat_MCS.ValueData, 0) AS MCSValue
+                      FROM tmpGoods
+                           INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                 ON ObjectLink_Goods.ChildObjectId = tmpGoods.ObjectId
+                                                AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                           INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                 ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
+                                                AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                AND ObjectLink_Unit.ChildObjectId = vbUnitId
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                  ON ObjectFloat_Value.ObjectId = ObjectLink_Goods.ObjectId
+                                                 AND ObjectFloat_Value.DescId   = zc_ObjectFloat_Price_Value()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_MCS
+                                                 ON ObjectFloat_MCS.ObjectId = ObjectLink_Goods.ObjectId
+                                                AND ObjectFloat_MCS.DescId = zc_ObjectFloat_Price_MCSValue()
+                     )
         -- заливаем разницу
         INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MCSValue, Reserved, NewRow)
         SELECT
-            COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId)        AS ObjectId
-           ,Object_Goods.ObjectCode::Integer                            AS GoodsCode
-           ,Object_Goods.ValueData                                      AS GoodsName
-           ,ROUND(COALESCE(Object_Price_View.Price,0),2)                AS Price
-           ,COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0) AS Remains
-           ,Object_Price_View.MCSValue                                  AS MCSValue
-           ,Reserve.Amount::TFloat                                      AS Reserved
-           ,CASE 
-              WHEN SESSIONDATA.ObjectId Is Null 
-                THEN TRUE 
-            ELSE FALSE 
-            END                                                         AS NewRow
-        FROM
-            GoodsRemains
-            FULL OUTER JOIN SESSIONDATA ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
-            INNER JOIN Object AS Object_Goods
-                              ON COALESCE(GoodsRemains.ObjectId,SESSIONDATA.ObjectId) = Object_Goods.Id
-            LEFT OUTER JOIN Object_Price_View ON Object_Goods.Id = Object_Price_View.GoodsId
-                                             AND Object_Price_View.UnitId = vbUnitId
-            LEFT OUTER JOIN RESERVE ON Object_Goods.Id = RESERVE.GoodsId                  
-        WHERE
-            ROUND(COALESCE(Object_Price_View.Price,0),2) <> COALESCE(SESSIONDATA.Price,0)
-            OR
-            COALESCE(GoodsRemains.Remains,0)-COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Remains,0)
-            OR
-            COALESCE(Object_Price_View.MCSValue,0) <> COALESCE(SESSIONDATA.MCSValue,0)
-            OR
-            COALESCE(Reserve.Amount,0) <> COALESCE(SESSIONDATA.Reserved,0);
+             tmpPrice.ObjectId                                                 AS ObjectId
+           , Object_Goods.ObjectCode :: Integer                                AS GoodsCode
+           , Object_Goods.ValueData                                            AS GoodsName
+           , tmpPrice.Price                                                    AS Price
+           , COALESCE (tmpContainer.Remains, 0) - COALESCE (Reserve.Amount, 0) AS Remains
+           , tmpPrice.MCSValue                                                 AS MCSValue
+           , Reserve.Amount :: TFloat                                          AS Reserved
+           , CASE WHEN SESSIONDATA.ObjectId IS NULL
+                       THEN TRUE
+                  ELSE FALSE
+             END                                                               AS NewRow
+        FROM tmpPrice
+            LEFT JOIN tmpContainer ON tmpContainer.ObjectId = tmpPrice.ObjectId
+            LEFT JOIN SESSIONDATA  ON SESSIONDATA.ObjectId  = tmpPrice.ObjectId
+            LEFT JOIN RESERVE      ON RESERVE.GoodsId       = tmpPrice.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpPrice.ObjectId
+        WHERE tmpPrice.Price    <> COALESCE (SESSIONDATA.Price, 0)
+           OR tmpPrice.MCSValue <> COALESCE (SESSIONDATA.MCSValue, 0)
+           OR COALESCE (tmpContainer.Remains, 0) - COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Remains, 0)
+           OR COALESCE (Reserve.Amount, 0) <> COALESCE (SESSIONDATA.Reserved, 0)
+       ;
 
         -- Обновляем данные в сессии
         UPDATE CashSessionSnapShot SET

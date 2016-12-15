@@ -639,7 +639,7 @@ object Report_BalanceForm: TReport_BalanceForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1041#1072#1083#1072#1085#1089
+      Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
@@ -664,8 +664,8 @@ object Report_BalanceForm: TReport_BalanceForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = #1041#1072#1083#1072#1085#1089
-      ReportNameParam.Value = #1041#1072#1083#1072#1085#1089
+      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

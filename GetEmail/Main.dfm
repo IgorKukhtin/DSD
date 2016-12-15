@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086'-'#1079#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1095#1090#1099
-  ClientHeight = 423
-  ClientWidth = 684
+  ClientHeight = 413
+  ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object MainForm: TMainForm
   TextHeight = 13
   object BtnStart: TBitBtn
     Left = 258
-    Top = 390
+    Top = 381
     Width = 75
     Height = 25
     Caption = 'Start !!!'
@@ -26,15 +26,16 @@ object MainForm: TMainForm
   object PanelHost: TPanel
     Left = 0
     Top = 24
-    Width = 684
+    Width = 984
     Height = 70
     Align = alTop
     Caption = 'Host : '
     TabOrder = 1
+    ExplicitWidth = 684
     object GaugeHost: TGauge
       Left = 1
       Top = 50
-      Width = 682
+      Width = 982
       Height = 19
       Align = alBottom
       Progress = 50
@@ -46,15 +47,16 @@ object MainForm: TMainForm
   object PanelMailFrom: TPanel
     Left = 0
     Top = 94
-    Width = 684
+    Width = 984
     Height = 70
     Align = alTop
     Caption = 'Mail From : '
     TabOrder = 2
+    ExplicitWidth = 684
     object GaugeMailFrom: TGauge
       Left = 1
       Top = 50
-      Width = 682
+      Width = 982
       Height = 19
       Align = alBottom
       Progress = 50
@@ -66,15 +68,16 @@ object MainForm: TMainForm
   object PanelParts: TPanel
     Left = 0
     Top = 164
-    Width = 684
+    Width = 984
     Height = 70
     Align = alTop
     Caption = 'Parts : '
     TabOrder = 3
+    ExplicitWidth = 684
     object GaugeParts: TGauge
       Left = 1
       Top = 50
-      Width = 682
+      Width = 982
       Height = 19
       Align = alBottom
       Progress = 50
@@ -86,15 +89,16 @@ object MainForm: TMainForm
   object PanelLoadXLS: TPanel
     Left = 0
     Top = 234
-    Width = 684
+    Width = 984
     Height = 70
     Align = alTop
     Caption = 'Load XLS : '
     TabOrder = 4
+    ExplicitWidth = 684
     object GaugeLoadXLS: TGauge
       Left = 1
       Top = 50
-      Width = 682
+      Width = 982
       Height = 19
       Align = alBottom
       Progress = 50
@@ -106,15 +110,16 @@ object MainForm: TMainForm
   object PanelMove: TPanel
     Left = 0
     Top = 304
-    Width = 684
+    Width = 984
     Height = 70
     Align = alTop
     Caption = 'Move : '
     TabOrder = 5
+    ExplicitWidth = 684
     object GaugeMove: TGauge
       Left = 1
       Top = 50
-      Width = 682
+      Width = 982
       Height = 19
       Align = alBottom
       Progress = 50
@@ -125,8 +130,8 @@ object MainForm: TMainForm
   end
   object cbTimer: TCheckBox
     Left = 352
-    Top = 394
-    Width = 306
+    Top = 385
+    Width = 400
     Height = 17
     Caption = 'Timer ON '
     TabOrder = 6
@@ -134,7 +139,7 @@ object MainForm: TMainForm
   end
   object cbBeginMove: TCheckBox
     Left = 24
-    Top = 395
+    Top = 386
     Width = 217
     Height = 17
     Caption = 'Move '#1087#1088#1072#1081#1089' '#1074' '#1072#1082#1090#1091#1072#1083#1100#1085#1099#1077' '#1094#1077#1085#1099
@@ -143,7 +148,7 @@ object MainForm: TMainForm
   object PanelError: TPanel
     Left = 0
     Top = 0
-    Width = 684
+    Width = 984
     Height = 24
     Align = alTop
     Caption = 'Error : '
@@ -154,6 +159,7 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 8
+    ExplicitWidth = 684
   end
   object IdPOP33: TIdPOP3
     AutoLogin = True
@@ -253,9 +259,6 @@ object MainForm: TMainForm
         end
         item
           Action = actProtocol
-        end
-        item
-          Action = actRefreshMovementItemLastPriceList_View
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072
     end
@@ -331,7 +334,7 @@ object MainForm: TMainForm
     Params = <>
     PackSize = 1
     Left = 200
-    Top = 312
+    Top = 296
   end
   object spUpdateGoods: TdsdStoredProc
     StoredProcName = 'gpUpdatePartnerGoods'
@@ -348,7 +351,7 @@ object MainForm: TMainForm
       end>
     PackSize = 1
     Left = 192
-    Top = 360
+    Top = 344
   end
   object spLoadPriceList: TdsdStoredProc
     StoredProcName = 'gpLoadPriceList'
@@ -364,8 +367,8 @@ object MainForm: TMainForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 384
+    Left = 136
+    Top = 368
   end
   object Timer: TTimer
     Enabled = False
