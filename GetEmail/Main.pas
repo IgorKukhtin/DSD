@@ -95,6 +95,7 @@ type
   private
     vbIsBegin :Boolean;// запущена обработка
     vbOnTimer :TDateTime;// время когда сработал таймер
+    fIsOptimizeLastPriceList_View :Boolean;// если была загрузка прайса - надо потом запустить оптимизацию
 
     vbArrayMail :TArrayMail; // массив почтовых ящиков
     vbArrayImportSettings :TArrayImportSettings; // массив поставщиков и параметров загрузки информации
@@ -112,6 +113,7 @@ type
     function fBeginXLS  : Boolean; // обработка всех XLS
     function fBeginMMO (inUserName:String;inImportSettingsId:Integer;msgDate:TDateTime)  : Boolean; // обработка MMO
     function fBeginMove : Boolean; // перенос цен
+    function fRefreshMovementItemLastPriceList_View : Boolean; // оптимизация если была загрузка XLS
   public
   end;
 
@@ -379,24 +381,31 @@ begin
      for ii := 0 to Length(vbArrayMail)-1 do
        // если после предыдущей обработки прошло > onTime МИНУТ
        if (NOW - vbArrayMail[ii].BeginTime) * 24 * 60 > vbArrayMail[ii].onTime
-       then begin
+       then try
+
+           PanelHost.Caption:= 'Start Mail (0.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdPOP3:=TIdIMAP4.Create(Self);
+           PanelHost.Caption:= 'Start Mail (0.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdPOP3.IOHandler:=IdSSLIOHandlerSocketOpenSSL;
+           PanelHost.Caption:= 'Start Mail (0.3) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdPOP3.UseTLS:=utUseRequireTLS;
+           PanelHost.Caption:= 'Start Mail (0.4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdPOP3.AuthType:=iatUserPass;
+           PanelHost.Caption:= 'Start Mail (0.5) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            IdPOP3.MilliSecsToWaitToClearBuffer:=100;
 
            with IdPOP3 do
            begin
               //
-              PanelHost.Caption:= 'Start Mail : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
+              PanelHost.Caption:= 'Start Mail (1.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
               Application.ProcessMessages;
-              Sleep(5000);
+              Sleep(2000);
               //current directory to store the email
               mailFolderMain:= vbArrayMail[ii].Directory + '\' + ReplaceStr(vbArrayMail[ii].UserName, '@', '_') + '_' + Session;
               //создали папку для писем если таковой нет + это протокол что по данному ящику была обработка
               ForceDirectories(mailFolderMain);
 
+              PanelHost.Caption:= 'Start Mail (1.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
               //параметры подключения к ящику
               Host    := vbArrayMail[ii].Host;
               UserName:= vbArrayMail[ii].UserName;
@@ -404,13 +413,17 @@ begin
               Port    := vbArrayMail[ii].Port;
 
               try
+                 PanelHost.Caption:= 'Start Mail (2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //подключаемся к ящику
                  //***IdPOP3.Connect;          //POP3
                  IdPOP3.Connect(TRUE);         //IMAP
+                 PanelHost.Caption:= 'Start Mail (3.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  IdPOP3.SelectMailBox('INBOX');//IMAP
+                 PanelHost.Caption:= 'Start Mail (3.2) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //количество писем
                  //***msgcnt:= IdPOP3.CheckMessages;  //POP3
                  msgcnt:= IdPOP3.MailBox.TotalMsgs;   //IMAP
+                 PanelHost.Caption:= 'Start Mail (3.4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                  //
                  GaugeMailFrom.Progress:=0;
                  GaugeMailFrom.MaxValue:=msgcnt;
@@ -418,15 +431,18 @@ begin
                  //цикл по входящим письмам
                  for I:= msgcnt downto 1 do
                  begin
+                   PanelHost.Caption:= 'Start Mail (4) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    IdMessage.Clear; // очистка буфера для сообщения
                    flag:= false;
 
                    //такого файла - нет
                    fMMO:= false;
 
+                   PanelHost.Caption:= 'Start Mail (5.1.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    //если вытянулось из почты письмо
                    if (IdPOP3.Retrieve(i, IdMessage)) then
                    begin
+                        PanelHost.Caption:= 'Start Mail (5.2.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                         //IdMessage.CharSet := 'UTF-8';
 
                         //находим поставщика, который отправил на этот UserName + есть в нашем списке + время
@@ -448,6 +464,7 @@ begin
                              GaugeParts.Progress:=0;
                              GaugeParts.MaxValue:=IdMessage.MessageParts.Count;
                              Application.ProcessMessages;
+                             PanelHost.Caption:= 'Start Mail (5.3.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                              //пройдемся по всем частям письма
                              for j := 0 to IdMessage.MessageParts.Count - 1 do
                              begin
@@ -597,7 +614,9 @@ begin
 
                    //удаление письма
                    //***if flag then IdPOP3.Delete(i);   //POP3
+                   PanelHost.Caption:= 'Start Mail (5.4.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    if flag then IdPOP3.DeleteMsgs(i);    //IMAP
+                   PanelHost.Caption:= 'Start Mail (5.5.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
                    //
 
                    //все, идем дальше
@@ -607,20 +626,33 @@ begin
 
                  end;//финиш - цикл по входящим письмам
 
+                 PanelHost.Caption:= 'End Mail (5.6) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+
                  //осталось сохранить время последней обработки почтового ящика
                  vbArrayMail[ii].BeginTime:=vbOnTimer;
                  //
-                 PanelHost.Caption:= 'End Mail : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+                 PanelHost.Caption:= 'End Mail (5.7): '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
                  GaugeHost.Progress:=GaugeHost.Progress + 1;
                  Application.ProcessMessages;
               finally
-               //***IdPOP3.Disconnect;    // POP3
-               IdPOP3.Disconnect();       //IMAP
-               IdPOP3.Free;               //IMAP
+                 PanelHost.Caption:= 'End Mail (6.1.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+                 //***IdPOP3.Disconnect;    // POP3
+                 IdPOP3.Disconnect();       //IMAP
+                 PanelHost.Caption:= 'End Mail (6.2.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+                 IdPOP3.Free;               //IMAP
+                 PanelHost.Caption:= 'End Mail (6.3) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
               end;
 
-           end;//финиш - цикл по почтовым ящикам
-       end;
+              PanelHost.Caption:= 'OK - End Mail (7.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+              Application.ProcessMessages;
+              Sleep(3000);
+
+           end;// with IdPOP3 do
+       except
+           PanelHost.Caption:= 'ERROR - TIdIMAP4 - try on Next Step - End Mail (8.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+           Application.ProcessMessages;
+           Sleep(5000);
+       end;//финиш - цикл по почтовым ящикам
 
      // завершена обработка
      vbIsBegin:= false;
@@ -635,6 +667,8 @@ begin
      if vbIsBegin = true then exit;
      // запущена обработка
      vbIsBegin:= true;
+     // если НЕ было загрузка прайса - НЕ надо потом запускать оптимизацию
+     fIsOptimizeLastPriceList_View:= false;
 
      with ClientDataSet do begin
         GaugeLoadXLS.Progress:=0;
@@ -657,9 +691,12 @@ begin
                           begin
                                searchResult_save:=searchResult;
                                if System.SysUtils.FindNext(searchResult) <> 0
-                               then
+                               then begin
                                    // выполняется загрузка
-                                   mactExecuteImportSettings.Execute
+                                   mactExecuteImportSettings.Execute;
+                                   // если была загрузка прайса - надо потом запустить оптимизацию
+                                   fIsOptimizeLastPriceList_View:= true;
+                               end
                                else
                                    //ошибка - найден НЕ ОДИН файл xls для загрузки
                                    fError_SendEmail(FieldByName('Id').AsInteger
@@ -695,6 +732,35 @@ begin
      // завершена обработка
      vbIsBegin:= false;
 
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fRefreshMovementItemLastPriceList_View : Boolean; // оптимизация если была загрузка XLS
+var StartTime:TDateTime;
+    oldCaption:String;
+begin
+    //если НЕ было загрузка прайса - НЕ надо запускать оптимизацию
+    if fIsOptimizeLastPriceList_View = false then exit;
+    //
+    oldCaption:= PanelLoadXLS.Caption;
+    StartTime:=NOW;
+    PanelLoadXLS.Caption:= 'start: ' + FormatDateTime('hh-mm-ss',StartTime) + ' - fRefreshMovementItemLastPriceList_View' + oldCaption;
+    //
+    Application.ProcessMessages;
+    Application.ProcessMessages;
+    Application.ProcessMessages;
+    //
+    try
+       // выполняется загрузка - Отдельно для оптимизации
+       actRefreshMovementItemLastPriceList_View.Execute;
+       // поставили что оптимизация прошла
+       fIsOptimizeLastPriceList_View := false;
+       //
+       PanelLoadXLS.Caption:= 'start/end: ' + FormatDateTime('hh-mm-ss',StartTime) + ' _ '  +FormatDateTime('hh-mm-ss',now) + ' - fRefreshMovementItemLastPriceList_View' + oldCaption;
+       Sleep(10000);
+    except
+       PanelLoadXLS.Caption:= '!!!ERROR!!! start/end: ' + FormatDateTime('hh-mm-ss',StartTime) + ' _ '  +FormatDateTime('hh-mm-ss',now) + ' - fRefreshMovementItemLastPriceList_View' + oldCaption;
+       Sleep(20000);
+    end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всех MMO
@@ -830,6 +896,8 @@ begin
      fBeginMail;
      // обработка всех XLS
      fBeginXLS;
+     // оптимизация если была загрузка XLS
+     fRefreshMovementItemLastPriceList_View;
      // перенос цен
      if cbBeginMove.Checked = TRUE then fBeginMove;
 end;

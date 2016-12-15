@@ -15,6 +15,12 @@ $BODY$
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
    DECLARE vbExportKindId Integer;
+
+   DECLARE vbPaidKindId Integer;
+   DECLARE vbChangePercent TFloat;
+
+   DECLARE vbIsChangePrice Boolean;
+   DECLARE vbIsDiscountPrice Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Email_Send());
@@ -30,14 +36,26 @@ BEGIN
           , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
           , tmp.ExportKindId
-            INTO vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId
+          , tmp.PaidKindId
+          , tmp.ChangePercent
+          , tmp.isDiscountPrice_juridical
+            INTO vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
      SELECT Object_Partner.Id AS PartnerId
           , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id), Object_Partner.Id) AS GoodsPropertyId
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0) AS GoodsPropertyId_basis
           , tmpExportJuridical.ExportKindId
+          , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
+          , COALESCE (MovementFloat_ChangePercent.ValueData, 0) AS ChangePercent
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice_juridical
      FROM Movement
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                       ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
                                       AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
@@ -48,14 +66,32 @@ BEGIN
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
-
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+                                  ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                 AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
           LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
      WHERE Movement.Id = inMovementId
     ) AS tmp
     ;
+
+
+     -- !!!надо определить - есть ли скидка в цене!!!
+     vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
+                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()           -- это БН
+                    OR (vbChangePercent <> 0                                 -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
+                        AND EXISTS (SELECT 1
+                                    FROM MovementItem
+                                         LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                                     ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                                    AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                    WHERE MovementItem.MovementId = inMovementId
+                                      AND MovementItem.DescId = zc_MI_Master()
+                                      AND MovementItem.isErased = FALSE
+                                      AND COALESCE (MIFloat_ChangePercent.ValueData, 0) = 0
+                                   ));
 
 
      -- !!!1.Формат XML - zc_Enum_ExportKind_Mida35273055!!!
@@ -467,10 +503,16 @@ BEGIN
                -- количество
      || '" KOL="' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- цена с НДС (Ваша) 
-     || '" CEN="' || CAST(((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
-		     +
-		     ((CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END)
-		      * (select ValueData/100 from movementfloat where descid = 3 and movementid = inmovementid))) AS NUMERIC(16, 2))/*СЃРєРёРґРєР°/РЅР°РєСЂСѓС‚РєР°*/ :: TVarChar
+     || '" CEN="' || CAST (1.2
+                         * CAST(CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                              * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                                          THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                                     WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                          THEN 1 + vbChangePercent / 100
+                                     ELSE 1
+                                END
+                                AS NUMERIC(16, 2))
+                           AS NUMERIC(16, 2)) :: TVarChar
                -- имя товара на всяк случай если забыли сообщить штрихкод
      || '" NAM="' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
                -- магазин (мы номер магаза по нашей кодификации или ваша кака-нить уникальность ТТ)
@@ -490,8 +532,11 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -744,4 +789,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
--- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
+-- SELECT * FROM gpSelect_Movement_Email_Send (inMovementId:= 4953855, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()

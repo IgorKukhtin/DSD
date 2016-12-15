@@ -93,9 +93,11 @@ BEGIN
           , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)       AS GoodsPropertyId_basis
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)        AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0)        AS ContractId
-          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice
-          , case when COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) = zc_Enum_InfoMoney_30201() -- Параметр для Мясное сырье
-                     then 1 else 0 end
+          , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, FALSE) AS isDiscountPrice_juridical
+          , CASE WHEN COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) = zc_Enum_InfoMoney_30201() -- Параметр для Мясное сырье
+                     THEN TRUE
+                 ELSE FALSE
+            END AS isInfoMoney_30200
             INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
                , vbIsInfoMoney_30200
      FROM Movement
@@ -140,9 +142,9 @@ BEGIN
     ;
 
      -- !!!надо определить - есть ли скидка в цене!!!
-     vbIsChangePrice:= vbIsDiscountPrice = TRUE
-                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()
-                    OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0)
+     vbIsChangePrice:= vbIsDiscountPrice = TRUE                              -- у Юр лица есть галка
+                    OR vbPaidKindId = zc_Enum_PaidKind_FirstForm()           -- это БН
+                    OR ((vbDiscountPercent > 0 OR vbExtraChargesPercent > 0) -- в шапке есть скидка, но есть хоть один элемент со скидкой = 0%
                         AND EXISTS (SELECT 1
                                     FROM MovementItem
                                          LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
