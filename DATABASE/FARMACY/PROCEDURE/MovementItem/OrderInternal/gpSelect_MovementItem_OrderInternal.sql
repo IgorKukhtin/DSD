@@ -240,7 +240,7 @@ BEGIN
            , Object_PartnerGoods.ObjectCode                         AS PartnerGoodsCode 
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
            , tmpMI.JuridicalId               
-           , tmpMI.JuridicalName --***
+           , tmpMI.JuridicalName -- ***
            , tmpMI.ContractId
            , tmpMI.ContractName 
            , tmpMI.MakerName                                        AS MakerName
@@ -272,7 +272,7 @@ BEGIN
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-           , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+           -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
            
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
@@ -388,7 +388,7 @@ BEGIN
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+              -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN MovementItem AS MI_Child 
@@ -678,7 +678,7 @@ BEGIN
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-           , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+           -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
 
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
@@ -889,7 +889,7 @@ BEGIN
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo
+              -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
 
         FROM _tmpMI
@@ -963,5 +963,5 @@ where Movement.DescId = zc_Movement_OrderInternal()
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818'); FETCH ALL "<unnamed portal 6>";
--- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";
+-- SELECT * FROM gpSelect_MovementItem_OrderInternal (inMovementId:= 3961103, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '3'); -- FETCH ALL "<unnamed portal 6>";

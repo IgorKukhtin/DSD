@@ -615,7 +615,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1055#1080#1059
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       DataSets = <
         item
@@ -644,8 +644,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1054#1055#1080#1059
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1054#1055#1080#1059
+      ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1054#1055#1080#1059
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1054#1055#1080#1059
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
