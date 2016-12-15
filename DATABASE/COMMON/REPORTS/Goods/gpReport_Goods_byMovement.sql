@@ -622,37 +622,120 @@ BEGIN
 
   RETURN NEXT Cursor2;
 
-    -- Результат для 3-ой страницы
+    -- Результат для 3-ой страницы Данные для графика
     OPEN Cursor3 FOR
-       --WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
 
-           SELECT tmpData.OperDate
-                , Object_GoodsTag.ValueData           :: TVarChar AS GroupName
-                , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
-                , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
-                , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
-                , SUM (tmpData.ReturnAmountPartnerSh) :: TFloat   AS ReturnAmountPartnerSh
-                , SUM (tmpData.SaleAmountSh - tmpData.ReturnAmountSh)               :: TFloat AS AmountSh
-                , SUM (tmpData.SaleAmountPartnerSh - tmpData.ReturnAmountPartnerSh) :: TFloat AS AmountPartnerSh
+       WITH tmpData AS (SELECT _tmpData.*
+                        FROM _tmpData)
+     , tmp_All AS ( 
+                    SELECT tmp.*
+                         , CAST (ROW_NUMBER() OVER (PARTITION BY tmp.GroupNum,tmp.OperDate  ORDER BY tmp.OperDate, tmp.GroupNum, tmp.Num, tmp.Num2 , GroupName) AS Integer) AS NumLine
+            
+                    FROM
+                        (-- 1.1.
+                        SELECT '    Итого продано '        :: TVarChar AS GroupName
+                             , tmpData.OperDate AS OperDate
+                             , tmpData.GroupNum AS GroupNum
+                             , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
+                             , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
+                             , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                             , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                             , 1 AS Num
+                             , 1 AS Num2
+                       FROM tmpData
+                       GROUP BY tmpData.OperDate
+                              , tmpData.GroupNum
+                     UNION ALL
+                       -- 1.2.
+                       SELECT Object_GoodsPlatform.ValueData    :: TVarChar AS GroupName
+                            , tmpData.OperDate
+                            , tmpData.GroupNum
+                            , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
+                            , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
+                            , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                            , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                            , 1 AS Num
+                            , 2 AS Num2
+                       FROM tmpData
+                            LEFT JOIN Object AS Object_GoodsPlatform ON Object_GoodsPlatform.Id = tmpData.GoodsPlatformId
+                       WHERE COALESCE (Object_GoodsPlatform.ValueData,'')<>''
+                         AND tmpData.GroupNum = 1
+                       GROUP BY Object_GoodsPlatform.ValueData
+                            , tmpData.OperDate
+                            , tmpData.GroupNum
+                     UNION ALL
+                        -- 2.2.--
+                        SELECT trim(Object_TradeMark.ObjectCode :: TVarChar )  :: TVarChar AS GroupName
+                             , tmpData.OperDate
+                             , tmpData.GroupNum
+                             , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
+                             , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
+                             , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
+                             , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+                             , 2 AS Num        
+                             , CAST (ROW_NUMBER() OVER (ORDER BY Object_TradeMark.ObjectCode)   AS Integer) AS Num2
+                        FROM tmpData
+                             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
+                        WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%' 
+                           OR tmpData.GroupNum = 2             --- тушенка
+                        GROUP BY Object_TradeMark.ObjectCode
+                               , tmpData.OperDate
+                               , tmpData.GroupNum
+                        ) as tmp
+                )
 
-                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
-                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner 
-                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
-                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
-                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)                :: TFloat AS Amount
-                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner)  :: TFloat AS AmountPartner
-                , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord
-                , CAST (ROW_NUMBER() OVER (PARTITION BY tmpData.GroupNum  ORDER BY tmpData.GroupNum, Object_GoodsTag.ValueData, tmpData.OperDate ) AS Integer) AS NumLine
-           FROM _tmpData AS tmpData
-                LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
-                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
-                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id
-                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsTag_ColorReport() 
-           GROUP BY Object_GoodsTag.ValueData
-                  , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
-                  , tmpData.OperDate
-                  , tmpData.GroupNum
-    ;
+         SELECT tmp.OperDate
+              -- итого колбаса
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.SaleAmount ELSE 0 END)   AS SaleAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.ReturnAmount ELSE 0 END)   AS ReturnAmount_11
+              -- алан
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 2 THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_12
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 2 THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_12
+              -- ирна
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 3 THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_13
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 3 THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_13
+              -- торговые марки колбаса
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '1' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Alan
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '1' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Alan
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '2' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_SpecCeh
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '2' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_SpecCeh
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '3' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Varto
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '3' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Varto
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '4' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Nashi
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '4' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Nashi
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '5' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Amstor
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '5' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Amstor
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '6' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Fitness
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '6' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Fitness
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '7' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_PovnaChasha
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '7' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_PovnaChasha
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '8' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Premiya
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '8' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Premiya
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '9' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Irna
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '9' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Irna
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '10' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Ashan
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '10' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Ashan
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '11' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Horeca
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '11' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Horeca
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '12' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Aro
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '12' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Aro
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '13' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Hit
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '13' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Hit
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '14' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Num1
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '14' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Num1
+
+              -- итого тушенка
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.SaleAmountSh ELSE 0 END) AS SaleAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_21
+              -- торговые марки тушенка
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '1' THEN tmp.SaleAmountSh ELSE 0 END) AS SaleAmount_2_Alan
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '1' THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_2_Alan
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '4' THEN tmp.SaleAmountSh ELSE 0 END) AS SaleAmount_2_Nashi
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '4' THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_2_Nashi
+
+         FROM tmp_All AS tmp
+         GROUP BY tmp.OperDate
+;
 
   RETURN NEXT Cursor3;
 

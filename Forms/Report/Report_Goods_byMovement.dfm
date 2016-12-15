@@ -12,13 +12,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 800
-    Height = 462
+    Height = 248
     TabOrder = 3
-    Properties.ActivePage = tsDetail
     ExplicitTop = 80
     ExplicitWidth = 800
-    ExplicitHeight = 462
-    ClientRectBottom = 462
+    ExplicitHeight = 169
+    ClientRectBottom = 248
     ClientRectRight = 800
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -26,7 +25,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 800
-      ExplicitHeight = 438
+      ExplicitHeight = 224
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 224
@@ -143,64 +142,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           end
         end
       end
-      object grChart: TcxGrid
-        Left = 0
-        Top = 232
-        Width = 800
-        Height = 206
-        Align = alBottom
-        TabOrder = 1
-        object grChartDBChartView1: TcxGridDBChartView
-          DataController.DataSource = DSDetail
-          DiagramLine.Active = True
-          ToolBox.CustomizeButton = True
-          ToolBox.DiagramSelector = True
-          object dgOperDate: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'OperDate'
-            DisplayText = #1044#1072#1090#1072
-          end
-          object dgGroupName: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'GroupName'
-            DisplayText = #1043#1088#1091#1087#1087#1072
-          end
-          object serSaleAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'SaleAmount'
-            DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
-          end
-          object serReturnAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'ReturnAmount'
-            DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
-          end
-          object serAmount: TcxGridDBChartSeries
-            DataBinding.FieldName = 'Amount'
-            DisplayText = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
-          end
-          object serSaleAmountSh: TcxGridDBChartSeries
-            DataBinding.FieldName = 'SaleAmountSh'
-            DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076'.'
-          end
-          object serReturnAmountSh: TcxGridDBChartSeries
-            DataBinding.FieldName = 'ReturnAmountSh'
-            DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076'.'
-          end
-          object serAmountSh: TcxGridDBChartSeries
-            DataBinding.FieldName = 'AmountSh'
-            DisplayText = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1077#1076'.'
-          end
-        end
-        object grChartLevel1: TcxGridLevel
-          GridView = grChartDBChartView1
-        end
-      end
-      object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 224
-        Width = 800
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salBottom
-        Control = grChart
-      end
     end
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
@@ -209,7 +150,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         Left = 0
         Top = 0
         Width = 800
-        Height = 438
+        Height = 224
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -525,7 +466,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         Left = 0
         Top = 0
         Width = 800
-        Height = 438
+        Height = 224
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -608,34 +549,230 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdSaleAmount
+              Column = cdSaleAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdReturnAmount
+              Column = cdReturnAmount_11
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdReturnAmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdSaleAmountPartner
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = cdAmountPartner
             end>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_11
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_11
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_12
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_12
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_13
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_13
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_21
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_21
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Alan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Alan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_SpecCeh
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_SpecCeh
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Varto
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Varto
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Nashi
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Nashi
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Amstor
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Amstor
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Fitness
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Fitness
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_PovnaChasha
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_PovnaChasha
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Premiya
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Premiya
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Irna
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Irna
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Ashan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Ashan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Horeca
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Horeca
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Aro
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Aro
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Hit
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Hit
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_1_Num1
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_1_Num1
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_2_Alan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_2_Alan
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdSaleAmount_2_Nashi
+            end
+            item
+              Format = ',0.#'
+              Kind = skSum
+              Column = cdReturnAmount_2_Nashi
+            end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -657,26 +794,54 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object cdNumLine: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
             DataBinding.FieldName = 'NumLine'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
+            Width = 60
           end
-          object cdOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
+          object GroupNum: TcxGridDBColumn
+            DataBinding.FieldName = 'GroupNum'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 52
+          end
+          object Num: TcxGridDBColumn
+            DataBinding.FieldName = 'Num'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
+          object Num2: TcxGridDBColumn
+            DataBinding.FieldName = 'Num2'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
           end
           object cdGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GroupName'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 300
           end
-          object cdSaleAmount: TcxGridDBColumn
+          object cdColorRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorRecord'
+            Visible = False
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 75
+          end
+          object cdBoldRecord: TcxGridDBColumn
+            DataBinding.FieldName = 'BoldRecord'
+            Visible = False
+            VisibleForCustomization = False
+          end
+          object dSaleAmount: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075
             DataBinding.FieldName = 'SaleAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -686,9 +851,10 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 90
           end
-          object cdReturnAmount: TcxGridDBColumn
+          object dReturnAmount: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
             DataBinding.FieldName = 'ReturnAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -698,140 +864,481 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 90
           end
-          object cdAmount: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object cdReturnAmountPartner: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ReturnAmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object cdSaleAmountPartner: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'SaleAmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object cdAmountPartner: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'AmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object cdSaleAmountSh: TcxGridDBColumn
+          object dSaleAmountSh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076'.'
             DataBinding.FieldName = 'SaleAmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 100
           end
-          object cdReturnAmountSh: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076'.'
+          object dReturnAmountSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076
             DataBinding.FieldName = 'ReturnAmountSh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object cdAmountSh: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1077#1076'.'
-            DataBinding.FieldName = 'AmountSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object cdReturnAmountPartnerSh: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076'. ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'ReturnAmountPartnerSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
+            Width = 90
+          end
+          object cdOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object cdSaleAmount_11: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'SaleAmount_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdSaleAmountPartnerSh: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076'. ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'SaleAmountPartnerSh'
+          object cdReturnAmount_11: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'ReturnAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object cdAmountPartnerSh: TcxGridDBColumn
-            Caption = #1063#1080#1089#1090#1072#1103' '#1087#1088#1086#1076#1072#1078#1072', '#1077#1076'. ('#1080#1085#1092'.)'
-            DataBinding.FieldName = 'AmountPartnerSh'
+          object cdSaleAmount_12: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1040#1083#1072#1085')'
+            DataBinding.FieldName = 'SaleAmount_12'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
-            Visible = False
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object cdReturnAmount_12: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1040#1083#1072#1085')'
+            DataBinding.FieldName = 'ReturnAmount_12'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object cdSaleAmount_13: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1048#1088#1085#1072')'
+            DataBinding.FieldName = 'SaleAmount_13'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object cdReturnAmount_13: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1048#1088#1085#1072')'
+            DataBinding.FieldName = 'ReturnAmount_13'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Alan: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
+            DataBinding.FieldName = 'SaleAmount_1_Alan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Alan: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
+            DataBinding.FieldName = 'ReturnAmount_1_Alan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_SpecCeh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
+            DataBinding.FieldName = 'SaleAmount_1_SpecCeh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_SpecCeh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
+            DataBinding.FieldName = 'ReturnAmount_1_SpecCeh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Varto: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
+            DataBinding.FieldName = 'SaleAmount_1_Varto'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Varto: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
+            DataBinding.FieldName = 'ReturnAmount_1_Varto'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Nashi: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
+            DataBinding.FieldName = 'SaleAmount_1_Nashi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Nashi: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
+            DataBinding.FieldName = 'ReturnAmount_1_Nashi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Amstor: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
+            DataBinding.FieldName = 'SaleAmount_1_Amstor'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Amstor: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
+            DataBinding.FieldName = 'ReturnAmount_1_Amstor'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Fitness: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
+            DataBinding.FieldName = 'SaleAmount_1_Fitness'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Fitness: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
+            DataBinding.FieldName = 'ReturnAmount_1_Fitness'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_PovnaChasha: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
+            DataBinding.FieldName = 'SaleAmount_1_PovnaChasha'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_PovnaChasha: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
+            DataBinding.FieldName = 'ReturnAmount_1_PovnaChasha'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Premiya: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
+            DataBinding.FieldName = 'SaleAmount_1_Premiya'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Premiya: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
+            DataBinding.FieldName = 'ReturnAmount_1_Premiya'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Irna: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
+            DataBinding.FieldName = 'SaleAmount_1_Irna'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Irna: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
+            DataBinding.FieldName = 'ReturnAmount_1_Irna'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Ashan: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
+            DataBinding.FieldName = 'SaleAmount_1_Ashan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Ashan: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
+            DataBinding.FieldName = 'ReturnAmount_1_Ashan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Horeca: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' Horeca Select)'
+            DataBinding.FieldName = 'SaleAmount_1_Horeca'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Horeca: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' Horeca Select)'
+            DataBinding.FieldName = 'ReturnAmount_1_Horeca'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Aro: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' ARO)'
+            DataBinding.FieldName = 'SaleAmount_1_Aro'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Aro: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' ARO)'
+            DataBinding.FieldName = 'ReturnAmount_1_Aro'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Hit: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
+            DataBinding.FieldName = 'SaleAmount_1_Hit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Hit: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
+            DataBinding.FieldName = 'ReturnAmount_1_Hit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_1_Num1: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#8470' 1)'
+            DataBinding.FieldName = 'SaleAmount_1_Num1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_1_Num1: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#8470' 1)'
+            DataBinding.FieldName = 'ReturnAmount_1_Num1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdSaleAmount_21: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'SaleAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_21: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'ReturnAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object cdisTop: TcxGridDBColumn
-            DataBinding.FieldName = 'isTop'
-            Visible = False
-            VisibleForCustomization = False
-            Width = 20
+          object cdSaleAmount_2_Alan: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1084' '#1040#1083#1072#1085') ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'SaleAmount_2_Alan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
-          object cdColorRecord: TcxGridDBColumn
-            DataBinding.FieldName = 'ColorRecord'
-            Options.Editing = False
-            Width = 75
+          object cdReturnAmount_2_Alan: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1084' '#1040#1083#1072#1085') ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'ReturnAmount_2_Alan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
-          object cdBoldRecord: TcxGridDBColumn
-            DataBinding.FieldName = 'BoldRecord'
-            Visible = False
-            VisibleForCustomization = False
+          object cdSaleAmount_2_Nashi: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080') ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'SaleAmount_2_Nashi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdReturnAmount_2_Nashi: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080') ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'ReturnAmount_2_Nashi'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
         end
         object cxGridLevel2: TcxGridLevel
@@ -941,6 +1448,196 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       TabOrder = 11
       Width = 196
     end
+  end
+  object grChart: TcxGrid [2]
+    Left = 0
+    Top = 336
+    Width = 800
+    Height = 206
+    Align = alBottom
+    TabOrder = 6
+    object grChartDBChartView1: TcxGridDBChartView
+      DataController.DataSource = DSDetail
+      DiagramLine.Active = True
+      ToolBox.CustomizeButton = True
+      ToolBox.DiagramSelector = True
+      object dgOperDate: TcxGridDBChartDataGroup
+        DataBinding.FieldName = 'OperDate'
+        DisplayText = #1044#1072#1090#1072
+      end
+      object serSaleAmount_11: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_11'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+      end
+      object serReturnAmount_11: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_11'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+      end
+      object serSaleAmount_12: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_12'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1040#1083#1072#1085')'
+      end
+      object serReturnAmount_12: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_12'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1040#1083#1072#1085')'
+      end
+      object serSaleAmount_13: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_13'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1048#1088#1085#1072')'
+      end
+      object serReturnAmount_13: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_13'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1048#1088#1085#1072')'
+      end
+      object serSaleAmount_1_Alan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Alan'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
+      end
+      object serReturnAmount_1_Alan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Alan'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1083#1072#1085')'
+      end
+      object serSaleAmount_1_SpecCeh: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_SpecCeh'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
+      end
+      object serReturnAmount_1_SpecCeh: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_SpecCeh'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1057#1087#1077#1094' '#1062#1077#1093')'
+      end
+      object serSaleAmount_1_Varto: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Varto'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
+      end
+      object serReturnAmount_1_Varto: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Varto'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1042#1072#1088#1090#1086')'
+      end
+      object serSaleAmount_1_Nashi: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Nashi'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
+      end
+      object serReturnAmount_1_Nashi: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Nashi'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080')'
+      end
+      object serSaleAmount_1_Amstor: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Amstor'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
+      end
+      object serReturnAmount_1_Amstor: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Amstor'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1084#1089#1090#1086#1088')'
+      end
+      object serSaleAmount_1_Fitness: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Fitness'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
+      end
+      object serReturnAmount_1_Fitness: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Fitness'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1060#1080#1090#1085#1077#1089' '#1060#1086#1088#1084#1072#1090')'
+      end
+      object serSaleAmount_1_PovnaChasha: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_PovnaChasha'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
+      end
+      object serReturnAmount_1_PovnaChasha: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_PovnaChasha'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1086#1074#1085#1072' '#1063#1072#1096#1072')'
+      end
+      object serSaleAmount_1_Premiya: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Premiya'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
+      end
+      object serReturnAmount_1_Premiya: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Premiya'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1055#1088#1077#1084#1080#1103')'
+      end
+      object serSaleAmount_1_Irna: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Irna'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
+      end
+      object serReturnAmount_1_Irna: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Irna'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1048#1088#1085#1072')'
+      end
+      object serSaleAmount_1_Ashan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Ashan'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
+      end
+      object serReturnAmount_1_Ashan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Ashan'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1040#1096#1072#1085')'
+      end
+      object serSaleAmount_1_Horeca: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Horeca'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' Horeca Select)'
+      end
+      object serReturnAmount_1_Horeca: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Horeca'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' Horeca Select)'
+      end
+      object serSaleAmount_1_Aro: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Aro'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' ARO)'
+      end
+      object serReturnAmount_1_Aro: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Aro'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' ARO)'
+      end
+      object serSaleAmount_1_Hit: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Hit'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
+      end
+      object serReturnAmount_1_Hit: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Hit'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#1061#1080#1090' '#1055#1088#1086#1076#1091#1082#1090')'
+      end
+      object serSaleAmount_1_Num1: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_1_Num1'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1082#1075' ('#1090#1084' '#8470' 1)'
+      end
+      object serReturnAmount_1_Num1: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_1_Num1'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1090#1084' '#8470' 1)'
+      end
+      object serSaleAmount_21: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_21'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serReturnAmount_21: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_21'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serSaleAmount_2_Alan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_2_Alan'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1084' '#1040#1083#1072#1085') ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serReturnAmount_2_Alan: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_2_Alan'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1084' '#1040#1083#1072#1085') ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serSaleAmount_2_Nashi: TcxGridDBChartSeries
+        DataBinding.FieldName = 'SaleAmount_2_Nashi'
+        DisplayText = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080') ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serReturnAmount_2_Nashi: TcxGridDBChartSeries
+        DataBinding.FieldName = 'ReturnAmount_2_Nashi'
+        DisplayText = #1042#1086#1079#1074#1088#1072#1090', '#1077#1076' ('#1090#1084' '#1053#1072#1096#1080' '#1050#1086#1074#1073#1072#1089#1080') ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+    end
+    object grChartLevel1: TcxGridLevel
+      GridView = grChartDBChartView1
+    end
+  end
+  object cxSplitter1: TcxSplitter [3]
+    Left = 0
+    Top = 328
+    Width = 800
+    Height = 8
+    HotZoneClassName = 'TcxMediaPlayer8Style'
+    AlignSplitter = salBottom
+    Control = grChart
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59

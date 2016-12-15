@@ -54,22 +54,20 @@ type
     BoldRecord: TcxGridDBColumn;
     chBoldRecord: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
+    DetailCDS: TClientDataSet;
+    DSDetail: TDataSource;
+    cdOperDate: TcxGridDBColumn;
+    DetaildsdDBViewAddOn: TdsdDBViewAddOn;
+    GroupNum: TcxGridDBColumn;
+    Num: TcxGridDBColumn;
+    Num2: TcxGridDBColumn;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
     dgOperDate: TcxGridDBChartDataGroup;
-    dgGroupName: TcxGridDBChartDataGroup;
-    serSaleAmount: TcxGridDBChartSeries;
-    serReturnAmount: TcxGridDBChartSeries;
-    serAmount: TcxGridDBChartSeries;
-    serSaleAmountSh: TcxGridDBChartSeries;
+    serSaleAmount_11: TcxGridDBChartSeries;
+    serReturnAmount_11: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    DetailCDS: TClientDataSet;
-    DSDetail: TDataSource;
-    serReturnAmountSh: TcxGridDBChartSeries;
-    serAmountSh: TcxGridDBChartSeries;
-    cdOperDate: TcxGridDBColumn;
-    DetaildsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
