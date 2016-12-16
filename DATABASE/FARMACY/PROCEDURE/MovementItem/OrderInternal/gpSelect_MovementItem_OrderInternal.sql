@@ -272,7 +272,7 @@ BEGIN
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-           -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
+           , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
            
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
@@ -388,7 +388,7 @@ BEGIN
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-              -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
+              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN MovementItem AS MI_Child 
@@ -628,7 +628,7 @@ BEGIN
            , COALESCE (Object_Price_View.isTOP, False)               AS isTOP_Price
 
            , COALESCE(tmpMI.GoodsGroupId, tmpGoods.GoodsGroupId)     AS GoodsGroupId
-           , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName -- ***
+           -- , COALESCE(tmpMI.GoodsGroupName, tmpGoods.GoodsGroupName) AS GoodsGroupName -- ***
            , COALESCE(tmpMI.NDSKindId, tmpGoods.NDSKindId)           AS NDSKindId
            , COALESCE(tmpMI.NDSKindName, tmpGoods.NDSKindName)       AS NDSKindName
            , COALESCE(tmpMI.NDS, tmpGoods.NDS)                       AS NDS
@@ -678,12 +678,13 @@ BEGIN
            
            , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
            , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-           -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
+           , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
 
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar AS OperDate_Zakaz
            , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
+
 --, (select count (*) from OrderSheduleList) ::TVarChar AS OperDate_Dostavka
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
@@ -693,7 +694,7 @@ BEGIN
                   , COALESCE (Object_Goods.isTOP, False)         AS Goods_isTOP
                   , COALESCE (GoodsPrice.isTop, False)           AS Price_isTOP
                   , Object_Goods.GoodsGroupId                    AS GoodsGroupId
-                  , Object_Goods.GoodsGroupName                  AS GoodsGroupName
+                  -- , Object_Goods.GoodsGroupName                  AS GoodsGroupName -- ***
                   , Object_Goods.NDSKindId                       AS NDSKindId
                   , Object_Goods.NDSKindName                     AS NDSKindName
                   , Object_Goods.NDS                             AS NDS
@@ -719,7 +720,7 @@ BEGIN
                             , Object_Goods.GoodsName                                           AS GoodsName
                             , Object_Goods.MinimumLot                                          AS Multiplicity
                             , Object_Goods.GoodsGroupId                                        AS GoodsGroupId
-                            , Object_Goods.GoodsGroupName                                      AS GoodsGroupName
+                            -- , Object_Goods.GoodsGroupName                                      AS GoodsGroupName -- ***
                             , Object_Goods.NDSKindId                                           AS NDSKindId
                             , Object_Goods.NDSKindName                                         AS NDSKindName
                             , Object_Goods.NDS                                                 AS NDS
@@ -889,7 +890,7 @@ BEGIN
 
               , CASE WHEN COALESCE (GoodsPromo.GoodsId ,0) = 0 THEN False ELSE True END  ::Boolean AS isPromo
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
-              -- , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
+              , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
 
         FROM _tmpMI
