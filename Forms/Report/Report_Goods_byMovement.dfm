@@ -1,26 +1,24 @@
 inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1086#1090#1075#1088#1091#1079#1082#1072#1084'>'
   ClientHeight = 542
-  ClientWidth = 800
+  ClientWidth = 894
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -27
-  ExplicitTop = -120
-  ExplicitWidth = 816
-  ExplicitHeight = 577
+  ExplicitWidth = 910
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 800
+    Width = 894
     Height = 248
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 800
     ExplicitHeight = 248
     ClientRectBottom = 248
-    ClientRectRight = 800
+    ClientRectRight = 894
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1043#1086#1090#1086#1074#1072#1103' '#1087#1088#1086#1076#1091#1082#1094#1080#1103
@@ -29,7 +27,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ExplicitWidth = 800
       ExplicitHeight = 224
       inherited cxGrid: TcxGrid
-        Width = 800
+        Width = 894
         Height = 224
         ExplicitWidth = 800
         ExplicitHeight = 224
@@ -148,14 +146,16 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitWidth = 800
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 800
+        Width = 894
         Height = 224
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 800
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -464,14 +464,16 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitWidth = 800
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
-        Width = 800
+        Width = 894
         Height = 224
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 800
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DSDetail
@@ -895,12 +897,33 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             VisibleForCustomization = False
             Width = 90
           end
-          object cdOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
+          object cdDOW_StartDate: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1085#1072#1095'.'
+            DataBinding.FieldName = 'DOW_StartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 40
+          end
+          object cdStartDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object cdDOW_EndDate: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1082#1086#1085'.'
+            DataBinding.FieldName = 'DOW_EndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object cdEndDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'  '#1082#1086#1085'.'
+            DataBinding.FieldName = 'EndDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object cdSaleAmount_11: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
@@ -1374,7 +1397,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     end
   end
   inherited Panel: TPanel
-    Width = 800
+    Width = 894
     Height = 54
     ExplicitWidth = 800
     ExplicitHeight = 54
@@ -1407,12 +1430,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ExplicitWidth = 52
     end
     object cxLabel4: TcxLabel
-      Left = 489
+      Left = 472
       Top = 31
       Caption = #1043#1088'. '#1090#1086#1074'. '#1058#1091#1096#1077#1085#1082#1072':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 591
+      Left = 574
       Top = 30
       Properties.Buttons = <
         item
@@ -1424,12 +1447,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Width = 196
     end
     object cxLabel3: TcxLabel
-      Left = 164
+      Left = 148
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 254
+      Left = 238
       Top = 5
       Properties.Buttons = <
         item
@@ -1441,12 +1464,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Width = 226
     end
     object cxLabel5: TcxLabel
-      Left = 164
+      Left = 148
       Top = 31
       Caption = #1043#1088'. '#1087#1086#1076#1088#1072#1079#1076'. '#1042#1086#1079#1074#1088#1072#1090':'
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 280
+      Left = 264
       Top = 30
       Properties.Buttons = <
         item
@@ -1458,12 +1481,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       Width = 200
     end
     object cxLabel8: TcxLabel
-      Left = 486
+      Left = 469
       Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074' '#1043#1055':'
     end
     object edGoodsGroupGP: TcxButtonEdit
-      Left = 591
+      Left = 574
       Top = 5
       Properties.Buttons = <
         item
@@ -1474,14 +1497,29 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       TabOrder = 11
       Width = 196
     end
+    object chWeek: TcxCheckBox
+      Left = 784
+      Top = 5
+      Caption = #1087#1086' '#1085#1077#1076#1077#1083#1103#1084
+      TabOrder = 12
+      Width = 97
+    end
+    object chMonth: TcxCheckBox
+      Left = 784
+      Top = 30
+      Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      TabOrder = 13
+      Width = 97
+    end
   end
   object grChart: TcxGrid [2]
     Left = 0
     Top = 336
-    Width = 800
+    Width = 894
     Height = 206
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 800
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = DSDetail
       DiagramArea.Values.LineWidth = 2
@@ -1700,11 +1738,12 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   object cxSplitter1: TcxSplitter [3]
     Left = 0
     Top = 328
-    Width = 800
+    Width = 894
     Height = 8
     HotZoneClassName = 'TcxMediaPlayer8Style'
     AlignSplitter = salBottom
     Control = grChart
+    ExplicitWidth = 800
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -1932,6 +1971,22 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeek'
+        Value = Null
+        Component = chWeek
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = chMonth
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -90,9 +90,11 @@ var
  i : integer;
 begin
 
-   LoadReportFromFile('Отчет ОПиУ', ReportPath + '\Отчеты (УП)\Отчет ОПиУ.fr3');
-   LoadReportFromFile('Баланс', ReportPath + '\Отчеты (УП)\Баланс.fr3');
-   exit;
+  // Отчеты УП
+  LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
+  LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
+  LoadReportFromFile('Отчет УП Баланс (Дебет Кредит)', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит).fr3');
+  exit;
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
    LoadReportFromFile('PrintMovement_ReestrPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrStartPeriod.fr3');
@@ -167,7 +169,10 @@ begin
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (Отчеты (товарные)\Отчет по просрочке.fr3');
  }
   LoadReportFromFile('Отчет По Отгрузкам', ReportPath + '\Отчеты (товарные)\Отчет По Отгрузкам.fr3');
- 
+
+  // Отчеты УП
+  LoadReportFromFile('Отчет УП ОПиУ', ReportPath + '\Отчеты (УП)\Отчет УП ОПиУ.fr3');
+  LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
   exit;
   // Отчеты производство
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение.fr3');
