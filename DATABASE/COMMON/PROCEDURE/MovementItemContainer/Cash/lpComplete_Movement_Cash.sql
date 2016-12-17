@@ -154,6 +154,11 @@ BEGIN
          RAISE EXCEPTION 'У кассы не установлено главное юр лицо. Проведение невозможно.';
      END IF;
 
+     -- проверка
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperSumm = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Введите сумму.';
+     END IF;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpMI_Child AS (SELECT MI.* FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)

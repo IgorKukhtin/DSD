@@ -1184,5 +1184,30 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
  05.02.14                                                       *
 */
 
+/*
+-- PrintMovement_Sale01074874.fr3
+++ PrintMovement_Sale1.fr3
+++ PrintMovement_Sale2.fr3
+-- PrintMovement_Sale22447463.fr3
+++ PrintMovement_Sale2DiscountPrice.fr3
+-- PrintMovement_Sale30487219.fr3
+++ PrintMovement_Sale30982361.fr3
+++ PrintMovement_Sale31929492.fr3
+++ PrintMovement_Sale32049199.fr3
+++ PrintMovement_Sale32294926.fr3
+-- PrintMovement_Sale32516492.fr3
+-- PrintMovement_Sale35275230.fr3
+++ PrintMovement_Sale35442481.fr3
+++ PrintMovement_Sale36003603.fr3
+++ PrintMovement_Sale36387249.fr3
+-- PrintMovement_Sale37910513.fr3
+++ PrintMovement_Sale39118745.fr3
+
+
+++ PrintMovement_Transport.fr3
+++ PrintMovement_Transport32049199.fr3
+-- PrintMovement_Transport32516492.fr3
+++ PrintMovement_Transport36003603.fr3
+*/
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId:= 4115668 , inSession:= zfCalc_UserAdmin()); FETCH ALL "<unnamed portal 1>";

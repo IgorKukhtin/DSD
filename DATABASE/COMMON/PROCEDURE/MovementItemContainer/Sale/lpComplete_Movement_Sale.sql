@@ -2734,7 +2734,11 @@ BEGIN
                     WHERE MovementLinkMovement_Master.MovementId = inMovementId
                       AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                    )
-     THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
+     THEN
+          -- Админу только отладка
+          if inUserId = 5 then RAISE EXCEPTION 'Админу только отладка'; end if;
+          --
+          PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
                                                        , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
                                                        , inDocumentTaxKindId_inf := NULL
                                                        , inStartDateTax          := NULL
