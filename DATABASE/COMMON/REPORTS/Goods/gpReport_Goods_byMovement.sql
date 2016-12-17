@@ -1,6 +1,7 @@
 -- FunctiON: gpReport_Goods_byMovement ()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Goods_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods_byMovement (
     IN inStartDate           TDateTime ,  
@@ -9,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpReport_Goods_byMovement (
     IN inUnitGroupId         Integer   ,
     IN inGoodsGroupGPId      Integer   ,
     IN inGoodsGroupId        Integer   ,
+    IN inWeek                Boolean   , -- график по неделям
+    IN inMonth               Boolean   , -- график по месяцам
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor  
@@ -626,16 +629,25 @@ BEGIN
     OPEN Cursor3 FOR
 
        WITH tmpData AS (SELECT _tmpData.*
+                             , CASE WHEN inMonth = TRUE THEN DATE_TRUNC ('MONTH', _tmpData.OperDate)
+                                    WHEN inWeek  = TRUE THEN (_tmpData.OperDate - (((DATE_PART ('DoW', _tmpData.OperDate)::int)-1)|| 'day')::interval)
+                                    ELSE _tmpData.OperDate
+                               END  :: tdatetime AS StartDate
+                             , CASE WHEN inMonth = TRUE THEN (DATE_TRUNC ('MONTH', _tmpData.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                    WHEN inWeek  = TRUE THEN (_tmpData.OperDate + ((7-(DATE_PART ('DoW', _tmpData.OperDate)::int))|| 'day')::interval)
+                                    ELSE _tmpData.OperDate
+                               END  :: tdatetime AS EndDate
                         FROM _tmpData)
      , tmp_All AS ( 
                     SELECT tmp.*
-                         , CAST (ROW_NUMBER() OVER (PARTITION BY tmp.GroupNum,tmp.OperDate  ORDER BY tmp.OperDate, tmp.GroupNum, tmp.Num, tmp.Num2 , GroupName) AS Integer) AS NumLine
+                         , CAST (ROW_NUMBER() OVER (PARTITION BY tmp.GroupNum, tmp.StartDate, tmp.EndDate  ORDER BY tmp.StartDate, tmp.EndDate, tmp.GroupNum, tmp.Num, tmp.Num2 , GroupName) AS Integer) AS NumLine
             
                     FROM
                         (-- 1.1.
                         SELECT '    Итого продано '        :: TVarChar AS GroupName
-                             , tmpData.OperDate AS OperDate
-                             , tmpData.GroupNum AS GroupNum
+                             , tmpData.StartDate
+                             , tmpData.EndDate
+                             , tmpData.GroupNum 
                              , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
                              , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
                              , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
@@ -643,12 +655,14 @@ BEGIN
                              , 1 AS Num
                              , 1 AS Num2
                        FROM tmpData
-                       GROUP BY tmpData.OperDate
+                       GROUP BY tmpData.StartDate
+                              , tmpData.EndDate
                               , tmpData.GroupNum
                      UNION ALL
                        -- 1.2.
                        SELECT Object_GoodsPlatform.ValueData    :: TVarChar AS GroupName
-                            , tmpData.OperDate
+                            , tmpData.StartDate
+                            , tmpData.EndDate
                             , tmpData.GroupNum
                             , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
                             , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
@@ -661,12 +675,14 @@ BEGIN
                        WHERE COALESCE (Object_GoodsPlatform.ValueData,'')<>''
                          AND tmpData.GroupNum = 1
                        GROUP BY Object_GoodsPlatform.ValueData
-                            , tmpData.OperDate
+                            , tmpData.StartDate
+                            , tmpData.EndDate
                             , tmpData.GroupNum
                      UNION ALL
                         -- 2.2.--
                         SELECT trim(Object_TradeMark.ObjectCode :: TVarChar )  :: TVarChar AS GroupName
-                             , tmpData.OperDate
+                             , tmpData.StartDate
+                             , tmpData.EndDate
                              , tmpData.GroupNum
                              , SUM (tmpData.SaleAmountSh)         :: TFloat   AS SaleAmountSh
                              , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
@@ -679,12 +695,17 @@ BEGIN
                         WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%' 
                            OR tmpData.GroupNum = 2             --- тушенка
                         GROUP BY Object_TradeMark.ObjectCode
-                               , tmpData.OperDate
+                               , tmpData.StartDate
+                               , tmpData.EndDate
                                , tmpData.GroupNum
                         ) as tmp
                 )
 
-         SELECT tmp.OperDate
+         SELECT --tmp.OperDate
+                tmp.StartDate 
+              , tmp.EndDate
+              , tmpWeekDay_Start.DayOfWeekName AS DOW_StartDate
+              , tmpWeekDay_End.DayOfWeekName   AS DOW_EndDate
               -- итого колбаса
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.SaleAmount ELSE 0 END)   AS SaleAmount_11
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.ReturnAmount ELSE 0 END)   AS ReturnAmount_11
@@ -734,7 +755,11 @@ BEGIN
               , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '4' THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_2_Nashi
 
          FROM tmp_All AS tmp
-         GROUP BY tmp.OperDate
+              LEFT JOIN zfCalc_DayOfWeekName(tmp.StartDate) AS tmpWeekDay_Start ON 1=1
+              LEFT JOIN zfCalc_DayOfWeekName(tmp.EndDate) AS tmpWeekDay_End ON 1=1
+         GROUP BY tmp.StartDate, tmp.EndDate
+                , tmpWeekDay_Start.DayOfWeekName
+                , tmpWeekDay_End.DayOfWeekName  
 ;
 
   RETURN NEXT Cursor3;

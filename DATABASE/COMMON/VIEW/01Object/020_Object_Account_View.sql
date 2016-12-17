@@ -1,4 +1,5 @@
--- View: Object_Account_View
+--DROP VIEW IF EXISTS Object_Account_View CASCADE;
+
 
 CREATE OR REPLACE VIEW Object_Account_View
 AS
@@ -6,14 +7,17 @@ AS
              Object_AccountGroup.Id            AS AccountGroupId
            , Object_AccountGroup.ObjectCode    AS AccountGroupCode
            , CAST ((CASE WHEN Object_AccountGroup.ObjectCode < 100000 THEN '0' ELSE '' END || Object_AccountGroup.ObjectCode || ' ' || Object_AccountGroup.ValueData) AS TVarChar) AS AccountGroupName
+           , Object_AccountGroup.ValueData     AS AccountGroupName_original
           
            , Object_AccountDirection.Id           AS AccountDirectionId
            , Object_AccountDirection.ObjectCode   AS AccountDirectionCode
            , CAST ((CASE WHEN Object_AccountDirection.ObjectCode < 100000 THEN '' ELSE '' END || Object_AccountDirection.ObjectCode || ' ' || Object_AccountDirection.ValueData) AS TVarChar) AS AccountDirectionName
+           , Object_AccountDirection.ValueData    AS AccountDirectionName_original
           
            , Object_Account.Id           AS AccountId
            , Object_Account.ObjectCode   AS AccountCode
            , CAST ((CASE WHEN Object_Account.ObjectCode < 100000 THEN '' ELSE '' END || Object_Account.ObjectCode || ' ' || Object_Account.ValueData) AS TVarChar) AS AccountName
+           , Object_Account.ValueData    AS AccountName_original
           
            , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupId, Object_InfoMoney_View.InfoMoneyGroupId)     AS InfoMoneyGroupId
            , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupCode, Object_InfoMoney_View.InfoMoneyGroupCode) AS InfoMoneyGroupCode

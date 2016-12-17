@@ -80,6 +80,8 @@ type
     pvGoodsItemName: TcxDBPivotGridField;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    actPrint2: TdsdPrintAction;
+    bbPrint2: TdxBarButton;
   private
   public
   end;

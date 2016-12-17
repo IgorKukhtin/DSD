@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
+             , AccountGroupName_original TVarChar, AccountDirectionName_original TVarChar, AccountName_original  TVarChar
              , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectItemName TVarChar, ByObjectName TVarChar, GoodsItemName TVarChar, GoodsName TVarChar
              , PaidKindName TVarChar
@@ -105,6 +106,11 @@ BEGIN
            , Object_Account_View.AccountGroupName
            , Object_Account_View.AccountDirectionName
            , Object_Account_View.AccountName
+           --для печатной формы без кода
+           , Object_Account_View.AccountGroupName_original
+           , Object_Account_View.AccountDirectionName_original
+           , Object_Account_View.AccountName_original
+
            , Object_Account_View.onComplete AS AccountOnComplete
 
            --, lfObject_InfoMoney.InfoMoneyCode

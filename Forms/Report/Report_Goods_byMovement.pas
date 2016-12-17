@@ -14,7 +14,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus, cxSplitter,
-  cxGridChartView, cxGridDBChartView;
+  cxGridChartView, cxGridDBChartView, cxCheckBox;
 
 type
   TReport_Goods_byMovementForm = class(TAncestorReportForm)
@@ -56,7 +56,7 @@ type
     actPrint: TdsdPrintAction;
     DetailCDS: TClientDataSet;
     DSDetail: TDataSource;
-    cdOperDate: TcxGridDBColumn;
+    cdStartDate: TcxGridDBColumn;
     DetaildsdDBViewAddOn: TdsdDBViewAddOn;
     GroupNum: TcxGridDBColumn;
     Num: TcxGridDBColumn;
@@ -68,6 +68,11 @@ type
     serReturnAmount_11: TcxGridDBChartSeries;
     grChartLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    chWeek: TcxCheckBox;
+    chMonth: TcxCheckBox;
+    cdEndDate: TcxGridDBColumn;
+    cdDOW_StartDate: TcxGridDBColumn;
+    cdDOW_EndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
