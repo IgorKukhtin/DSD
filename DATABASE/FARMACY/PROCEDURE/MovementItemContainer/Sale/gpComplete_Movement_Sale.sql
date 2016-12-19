@@ -1,6 +1,7 @@
 -- Function: gpComplete_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Sale  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Sale  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
@@ -19,6 +20,23 @@ $BODY$
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
+
+    -- Проверить, что бы не было переучета позже даты документа
+    SELECT Movement_Sale.OperDate,
+           Movement_Sale.UnitId
+    INTO vbOperDate,
+         vbUnitId
+    FROM Movement_Sale_View AS Movement_Sale
+    WHERE Movement_Sale.Id = inMovementId;
+
+    -- дата накладной перемещения должна совпадать с текущей датой.
+    -- Если пытаются провести док-т числом позже - выдаем предупреждение
+    IF (vbOperDate > CURRENT_DATE) 
+    THEN
+        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+    END IF;
+
+
     --Проверка на то что бы не продали больше чем есть на остатке
     SELECT 
         MI_Sale.GoodsName
@@ -50,17 +68,6 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
     END IF;
-    -- Проверить, что бы не было переучета позже даты документа
-    SELECT
-        Movement_Sale.OperDate,
-        Movement_Sale.UnitId
-    INTO
-        vbOperDate,
-        vbUnitId
-    FROM 
-        Movement_Sale_View AS Movement_Sale
-    WHERE 
-        Movement_Sale.Id = inMovementId;
 
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory

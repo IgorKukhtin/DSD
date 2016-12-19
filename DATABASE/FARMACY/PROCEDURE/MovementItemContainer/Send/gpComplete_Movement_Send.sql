@@ -1,6 +1,7 @@
 -- Function: gpComplete_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_Send  (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Send  (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inMovementId        Integer               , -- ключ Документа
@@ -41,6 +42,13 @@ BEGIN
                                       ON Movement_To.MovementId = Movement.Id
                                      AND Movement_To.DescId = zc_MovementLinkObject_To()
     WHERE Movement.Id = inMovementId;
+
+    -- дата накладной перемещения должна совпадать с текущей датой.
+    -- Если пытаются провести док-т числом позже - выдаем предупреждение
+    IF (vbOperDate > CURRENT_DATE) 
+    THEN
+        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+    END IF;
 
     --
     vbGoodsName := '';

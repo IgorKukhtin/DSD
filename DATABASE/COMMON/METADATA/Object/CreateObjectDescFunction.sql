@@ -861,6 +861,18 @@ CREATE OR REPLACE FUNCTION zc_Object_ContractSettings() RETURNS Integer AS $BODY
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ContractSettings', 'Установки для договоров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractSettings');
 
+CREATE OR REPLACE FUNCTION zc_Object_BrandSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BrandSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_BrandSP', 'Торговельна назва лікарського засобу (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BrandSP');
+  
+CREATE OR REPLACE FUNCTION zc_Object_IntenalSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_IntenalSP', 'Міжнародна непатентована назва (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_IntenalSP');
+  
+CREATE OR REPLACE FUNCTION zc_Object_KindOutSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_KindOutSP', 'Форма випуску (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_KindOutSP');
+  
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
@@ -878,6 +890,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.
+ 19.12.16         * zc_Object_BrandSP
+                    zc_Object_IntenalSP
+                    zc_Object_KindOutSP
  15.11.16         * zc_Object_DayKind,
                     zc_Object_SheetWorkTime
  10.11.16         * zc_Object_ContractSettings

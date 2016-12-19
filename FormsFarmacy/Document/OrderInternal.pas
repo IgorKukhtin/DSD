@@ -101,6 +101,9 @@ type
     bbMovementItemProtocolChild: TdxBarButton;
     edIsDocument: TcxCheckBox;
     colSendAmount: TcxGridDBColumn;
+    InsertRecord: TInsertRecord;
+    actGoodsChoiceForm: TOpenChoiceForm;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

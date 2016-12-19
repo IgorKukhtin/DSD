@@ -131,6 +131,20 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
     TabOrder = 13
     Width = 200
   end
+  object chWeek: TcxCheckBox
+    Left = 232
+    Top = 27
+    Caption = #1087#1086' '#1085#1077#1076#1077#1083#1103#1084
+    TabOrder = 14
+    Width = 97
+  end
+  object chMonth: TcxCheckBox
+    Left = 348
+    Top = 27
+    Caption = #1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+    TabOrder = 15
+    Width = 84
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -235,6 +249,22 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
         Component = GuidesUnitGroup
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeek'
+        Value = Null
+        Component = chWeek
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = chMonth
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -450,12 +480,12 @@ object Report_Goods_byMovementDialogForm: TReport_Goods_byMovementDialogForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 344
-    Top = 16
+    Left = 280
+    Top = 72
   end
   object ActionList: TActionList
-    Left = 235
-    Top = 17
+    Left = 187
+    Top = 65
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
