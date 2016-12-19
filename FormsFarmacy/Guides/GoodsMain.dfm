@@ -3,14 +3,13 @@ inherited GoodsMainForm: TGoodsMainForm
   ClientHeight = 423
   ClientWidth = 782
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 790
-  ExplicitHeight = 450
+  ExplicitWidth = 798
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 782
     Height = 397
-    ExplicitTop = 26
     ExplicitWidth = 782
     ExplicitHeight = 397
     ClientRectBottom = 397
@@ -111,6 +110,7 @@ inherited GoodsMainForm: TGoodsMainForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -118,12 +118,14 @@ inherited GoodsMainForm: TGoodsMainForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
     end
   end

@@ -468,7 +468,8 @@ uses
   IntenalSPEdit in '..\..\FormsFarmacy\Guides\IntenalSPEdit.pas' {IntenalSPEditForm: TParentForm},
   IntenalSP in '..\..\FormsFarmacy\Guides\IntenalSP.pas' {IntenalSPForm: TParentForm},
   BrandSP in '..\..\FormsFarmacy\Guides\BrandSP.pas' {BrandSPForm: TParentForm},
-  BrandSPEdit in '..\..\FormsFarmacy\Guides\BrandSPEdit.pas' {BrandSPEditForm: TParentForm};
+  BrandSPEdit in '..\..\FormsFarmacy\Guides\BrandSPEdit.pas' {BrandSPEditForm: TParentForm},
+  GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

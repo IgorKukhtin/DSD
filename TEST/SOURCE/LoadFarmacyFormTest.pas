@@ -1101,6 +1101,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

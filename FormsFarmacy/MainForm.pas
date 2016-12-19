@@ -308,6 +308,8 @@ type
     actIntenalSP: TdsdOpenForm;
     N113: TMenuItem;
     N114: TMenuItem;
+    actGoodsSP: TdsdOpenForm;
+    N115: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
