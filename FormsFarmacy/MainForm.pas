@@ -301,6 +301,13 @@ type
     N109: TMenuItem;
     actReport_CheckPromo: TdsdOpenForm;
     N110: TMenuItem;
+    N111: TMenuItem;
+    actKindOutSP: TdsdOpenForm;
+    N112: TMenuItem;
+    actBrandSP: TdsdOpenForm;
+    actIntenalSP: TdsdOpenForm;
+    N113: TMenuItem;
+    N114: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
