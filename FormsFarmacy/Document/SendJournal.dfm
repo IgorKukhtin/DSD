@@ -367,6 +367,11 @@ inherited SendJournalForm: TSendJournalForm
           MultiSelectSeparator = ','
         end>
     end
+    inherited actComplete: TdsdChangeMovementStatus
+      QuestionBeforeExecute = 
+        #1042#1053#1048#1052#1040#1053#1048#1045'! '#1042' '#1050#1040#1057#1057#1059' '#1041#1059#1044#1059#1058' '#1047#1040#1043#1056#1059#1046#1045#1053#1067' '#1082#1086#1083'-'#1074#1072' '#1080#1079' '#1082#1086#1083#1086#1085#1082#1080' "'#1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1091 +
+        #1095#1072#1090#1077#1083#1103'". '#1055#1056#1054#1042#1045#1056#1068#1058#1045' '#1048#1061'.'
+    end
     object actPrint: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <
@@ -617,7 +622,7 @@ inherited SendJournalForm: TSendJournalForm
         Name = 'inislastcomplete'
         Value = True
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80

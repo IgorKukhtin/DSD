@@ -462,7 +462,14 @@ uses
   InventoryPartion in '..\..\FormsFarmacy\Document\InventoryPartion.pas' {InventoryPartionForm: TParentForm},
   CheckPrintDialog in '..\..\FormsFarmacy\Document\CheckPrintDialog.pas' {CheckPrintDialogForm: TParentForm},
   Report_CheckPromo in '..\..\FormsFarmacy\Report\Report_CheckPromo.pas' {Report_CheckPromoForm: TParentForm},
-  Report_PeriodDialog in '..\..\FormsFarmacy\Report\Report_PeriodDialog.pas' {Report_PeriodDialogForm: TParentForm};
+  Report_PeriodDialog in '..\..\FormsFarmacy\Report\Report_PeriodDialog.pas' {Report_PeriodDialogForm: TParentForm},
+  KindOutSP in '..\..\FormsFarmacy\Guides\KindOutSP.pas' {KindOutSPForm: TParentForm},
+  KindOutSPEdit in '..\..\FormsFarmacy\Guides\KindOutSPEdit.pas' {KindOutSPEditForm: TParentForm},
+  IntenalSPEdit in '..\..\FormsFarmacy\Guides\IntenalSPEdit.pas' {IntenalSPEditForm: TParentForm},
+  IntenalSP in '..\..\FormsFarmacy\Guides\IntenalSP.pas' {IntenalSPForm: TParentForm},
+  BrandSP in '..\..\FormsFarmacy\Guides\BrandSP.pas' {BrandSPForm: TParentForm},
+  BrandSPEdit in '..\..\FormsFarmacy\Guides\BrandSPEdit.pas' {BrandSPEditForm: TParentForm},
+  GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

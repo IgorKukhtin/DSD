@@ -19,18 +19,22 @@ $BODY$
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
-    SELECT
-        Movement.OperDate,
-        MovementLinkObject.ObjectId
-    INTO
-        vbOperDate,
-        vbUnitId
-    FROM
-        Movement
+    SELECT Movement.OperDate,
+           MovementLinkObject.ObjectId
+    INTO vbOperDate,
+         vbUnitId
+    FROM Movement
         INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit()
-    WHERE
-        MovementId = inMovementId;
+    WHERE MovementId = inMovementId;
+
+    -- дата накладной перемещения должна совпадать с текущей датой.
+    -- Если пытаются провести док-т числом позже - выдаем предупреждение
+    IF (vbOperDate > CURRENT_DATE) 
+    THEN
+        RAISE EXCEPTION 'Ошибка. ПОМЕНЯЙТЕ ДАТУ НАКЛАДНОЙ НА ТЕКУЩУЮ.';
+    END IF;
+
   --Проверка на то что бы не списали больше чем есть на остатке
     WITH REMAINS AS ( --остатки на дату документа
                                 SELECT 

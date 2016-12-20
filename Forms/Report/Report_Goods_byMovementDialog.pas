@@ -38,6 +38,8 @@ type
     spGetParams: TdsdStoredProc;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    chWeek: TcxCheckBox;
+    chMonth: TcxCheckBox;
   private
     { Private declarations }
   public

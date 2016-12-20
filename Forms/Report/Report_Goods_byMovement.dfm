@@ -157,7 +157,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 800
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1747,6 +1746,29 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Left = 59
     Top = 312
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = chWeek
+        Properties.Strings = (
+          'Checked')
+      end
+      item
+        Component = chMonth
+        Properties.Strings = (
+          'Checked')
+      end>
+  end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1840,6 +1862,22 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inWeek'
+          Value = Null
+          Component = chWeek
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMonth'
+          Value = Null
+          Component = chMonth
+          DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

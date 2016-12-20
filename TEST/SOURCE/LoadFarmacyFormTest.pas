@@ -91,6 +91,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
+    procedure LoadSPObjectFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnitFormTest;
     procedure FormTest;
@@ -1082,6 +1083,27 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 
+end;
+
+procedure TLoadFormTest.LoadSPObjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TKindOutSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TKindOutSPEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandSPEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

@@ -3,7 +3,7 @@ inherited OrderInternalForm: TOrderInternalForm
   ClientHeight = 532
   ClientWidth = 1229
   ExplicitWidth = 1245
-  ExplicitHeight = 567
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -710,8 +710,8 @@ inherited OrderInternalForm: TOrderInternalForm
     Top = 160
   end
   inherited ActionList: TActionList
-    Left = 55
-    Top = 303
+    Left = 127
+    Top = 215
     object mactDeleteLinkGroup: TMultiAction [0]
       Category = 'DeleteLink'
       MoveParams = <>
@@ -930,6 +930,55 @@ inherited OrderInternalForm: TOrderInternalForm
         end>
       isShowModal = False
     end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actGoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -1011,6 +1060,10 @@ inherited OrderInternalForm: TOrderInternalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -1137,6 +1190,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbMovementItemProtocolChild: TdxBarButton
       Action = actMovementItemProtocolChild
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = InsertRecord
       Category = 0
     end
   end
@@ -1673,7 +1730,16 @@ inherited OrderInternalForm: TOrderInternalForm
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
+    ColumnEnterList = <
+      item
+        Column = colGoodsName
+      end
+      item
+        Column = colAmount
+      end
+      item
+        Column = colCalcAmountAll
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
