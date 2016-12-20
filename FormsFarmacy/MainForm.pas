@@ -310,6 +310,10 @@ type
     N114: TMenuItem;
     actGoodsSP: TdsdOpenForm;
     N115: TMenuItem;
+    actReport_CheckSP: TdsdOpenForm;
+    N117: TMenuItem;
+    N118: TMenuItem;
+    N119: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

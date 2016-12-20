@@ -1104,6 +1104,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
+  // отчет по продажам товара соц. проекта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
+
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
