@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, GoodsKindId_list TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , ChangePercentAmount TFloat
              , Amount_Order TFloat
@@ -233,6 +233,7 @@ BEGIN
             , Object_GoodsKind.Id         AS GoodsKindId
             , Object_GoodsKind.ObjectCode AS GoodsKindCode
             , Object_GoodsKind.ValueData  AS GoodsKindName
+            , '' :: TVarChar              AS GoodsKindId_list
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
@@ -309,6 +310,35 @@ BEGIN
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
       ;
    ELSE
+
+    -- 
+    CREATE TEMP TABLE _tmpWord_Goods (GoodsId Integer, WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
+    -- 
+    INSERT INTO _tmpWord_Goods (GoodsId, WordList) 
+                            SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                                 , COALESCE (ObjectString_GoodsKind.ValueData, '')       AS WordList
+                            FROM Object AS Object_GoodsListSale
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                                       ON ObjectLink_GoodsListSale_Partner.ObjectId      = Object_GoodsListSale.Id
+                                                      AND ObjectLink_GoodsListSale_Partner.DescId        = zc_ObjectLink_GoodsListSale_Partner()
+                                                      -- !!!ограничение по контрагенту!!!
+                                                      AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
+                                                      ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                                     AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                 LEFT JOIN ObjectString AS ObjectString_GoodsKind
+                                                        ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                                       AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                            WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
+                              AND Object_GoodsListSale.isErased = FALSE
+                           ;
+    -- 
+    INSERT INTO _tmpWord_Split_from (WordList) 
+       SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods;
+
+
     -- 
     inMovementId:= COALESCE (inMovementId, 0);
     -- Результат - все товары
@@ -345,27 +375,78 @@ BEGIN
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                             )
                             )
-      , tmpGoods_Return AS (SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                            FROM Object AS Object_GoodsListSale 
-                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                         ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                        AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                        AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
-
-                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
-                                        ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                       AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                            WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-                              AND Object_GoodsListSale.isErased = FALSE
-                          )
+      , tmpGoods_Return AS (SELECT _tmpWord_Goods.GoodsId
+                                 , _tmpWord_Goods.WordList
+                                 , STRING_AGG (Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
+                            FROM _tmpWord_Goods
+                                 LEFT JOIN zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId) AS zfSelect ON zfSelect.WordList = _tmpWord_Goods.WordList
+                                 LEFT JOIN Object ON Object.Id = zfSelect.Word :: Integer
+                            GROUP BY _tmpWord_Goods.GoodsId
+                                   , _tmpWord_Goods.WordList
+                           )
+      , tmpGoods AS (SELECT Object_Goods.Id                               AS GoodsId
+                          , Object_Goods.ObjectCode                       AS GoodsCode
+                          , Object_Goods.ValueData                        AS GoodsName
+                          , tmpGoods_Return.WordList                      AS GoodsKindId_list
+                          , tmpGoods_Return.GoodsKindName_list            AS GoodsKindName_list
+                          , tmpInfoMoney.InfoMoneyId
+                          , tmpInfoMoney.InfoMoneyDestinationId
+                     FROM tmpInfoMoney
+                          JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                          ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
+                                         AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                          JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                                     AND Object_Goods.isErased = FALSE
+                                                     AND Object_Goods.ObjectCode <> 0
+                          LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
+                     WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE
+                    )
+      , tmpPrice1 AS (SELECT tmpGoods.GoodsId
+                           , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price
+                      FROM tmpGoods
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                  ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                  ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                 AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                   AND inOperDate >= ObjectHistory_PriceListItem.StartDate AND inOperDate < ObjectHistory_PriceListItem.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                     )
+      , tmpPrice2 AS (SELECT tmpGoods.GoodsId
+                           , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price
+                      FROM tmpGoods
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                  ON ObjectLink_PriceListItem_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                 AND ObjectLink_PriceListItem_Goods.DescId = zc_ObjectLink_PriceListItem_Goods()
+                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                  ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                 AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
+                                                 AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                            LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                    ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
+                                                   AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                   AND (inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL) >= ObjectHistory_PriceListItem.StartDate
+                                                   AND (inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL) < ObjectHistory_PriceListItem.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                     )
        -- Результат
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
             , tmpGoods.GoodsCode          AS GoodsCode
             , tmpGoods.GoodsName          AS GoodsName
-            , Object_GoodsKind.Id         AS GoodsKindId
-            , Object_GoodsKind.ObjectCode AS GoodsKindCode
-            , Object_GoodsKind.ValueData  AS GoodsKindName
+            , 0                           AS GoodsKindId
+            , 0                           AS GoodsKindCode
+            , tmpGoods.GoodsKindName_list :: TVarChar AS GoodsKindName
+            , tmpGoods.GoodsKindId_list   :: TVarChar AS GoodsKindId_list
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() THEN 0 -- Доходы + Переработка
@@ -379,32 +460,15 @@ BEGIN
             , 0 :: TFloat AS Amount_diff
             , 0 :: TFloat AS Amount_diffWeight
             , FALSE :: Boolean AS isTax_diff
-            , lfObjectHistory_PriceListItem.ValuePrice :: TFloat                        AS Price
-            , lfObjectHistory_PriceListItem_Return.ValuePrice :: TFloat                 AS Price_Return
+            , lfObjectHistory_PriceListItem.Price        :: TFloat AS Price
+            , lfObjectHistory_PriceListItem_Return.Price :: TFloat AS Price_Return
             , 1 :: TFloat                 AS CountForPrice
             , 1 :: TFloat                 AS CountForPrice_Return
             , 0                           AS Color_calc -- clBlack
             , 0                           AS MovementId_Promo
             , FALSE                       AS isPromo
             , FALSE                       AS isTare
-       FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
-                  , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0)            AS GoodsKindId
-                  , tmpInfoMoney.InfoMoneyId
-                  , tmpInfoMoney.InfoMoneyDestinationId
-             FROM tmpInfoMoney
-                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
-                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
-                                             AND Object_Goods.isErased = FALSE
-                                             AND Object_Goods.ObjectCode <> 0
-                  LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
-                  LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-                                                        AND 1=0
-             WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE
-            ) AS tmpGoods
+       FROM tmpGoods
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpGoods.GoodsId
@@ -415,11 +479,8 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inOperDate - (inDayPrior_PriceReturn :: TVarChar || ' DAY') :: INTERVAL)
-                   AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPrice1 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            LEFT JOIN tmpPrice2 AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId
 
        ORDER BY tmpGoods.GoodsName
               -- , ObjectString_Goods_GoodsGroupFull.ValueData
@@ -440,4 +501,4 @@ ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.01.2015', inMovementId:= 0, inOrderExternalId:=1, inPriceListId:=0, inGoodsCode:= 4444, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.12.2016', inMovementId:= -17345, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 4444, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())

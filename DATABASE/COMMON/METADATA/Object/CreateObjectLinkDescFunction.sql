@@ -1330,6 +1330,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsListSale_Goods() RETURNS Integer A
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsListSale_Goods', 'Товары', zc_Object_GoodsListSale(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_Goods');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsListSale_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_GoodsListSale_GoodsKind', 'Товары', zc_Object_GoodsListSale(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_GoodsKind');
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsListSale_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsListSale_Juridical', 'Юр.лицо', zc_Object_GoodsListSale(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsListSale_Juridical');

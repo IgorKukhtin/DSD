@@ -6,8 +6,9 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -165
   ExplicitWidth = 1015
-  ExplicitHeight = 426
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -28,11 +29,32 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
         ExplicitWidth = 999
         ExplicitHeight = 331
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountChoice
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = clGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountChoice
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -60,20 +82,60 @@ inherited GoodsListSaleForm: TGoodsListSaleForm
             Options.Editing = False
             Width = 123
           end
+          object GoodsKindCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1074#1080#1076' '#1090#1086#1074'. ('#1052#1040#1050#1057')'
+            DataBinding.FieldName = 'GoodsKindCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object GoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1052#1040#1050#1057')'
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object GoodsKindId_List: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1082#1083#1102#1095', '#1042#1057#1045')'
+            DataBinding.FieldName = 'GoodsKindId_List'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object clGoodsKindName_List: TcxGridDBColumn
-            Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1042#1057#1045')'
             DataBinding.FieldName = 'GoodsKindName_List'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
-          object clAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1088#1077#1072#1083#1080#1079'. ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1088#1077#1072#1083#1080#1079'. ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
+          end
+          object AmountChoice: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1088#1077#1072#1083#1080#1079'. ('#1076#1083#1103' '#1052#1040#1050#1057', '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            DataBinding.FieldName = 'AmountChoice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object clPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090

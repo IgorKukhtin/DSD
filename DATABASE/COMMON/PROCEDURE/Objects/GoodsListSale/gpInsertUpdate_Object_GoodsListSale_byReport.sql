@@ -29,8 +29,8 @@ BEGIN
 
    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, Value Integer) ON COMMIT DROP;
    CREATE TEMP TABLE _tmpMIContainer (ContainerId Integer, GoodsId Integer, GoodsKindId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat) ON COMMIT DROP;
-   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, isErased Boolean) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpResult (GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat) ON COMMIT DROP;
+   CREATE TEMP TABLE _tmpList (Id Integer, GoodsId Integer, GoodsKindId_max Integer, GoodsKindId_List TVarChar, Juridical Integer, ContractId Integer, PartnerId Integer, Amount TFloat, AmountChoice TFloat, isErased Boolean) ON COMMIT DROP;
 
    -- период дл€ выбора продаж
    vbStartDate1:= DATE_TRUNC ('MONTH', (SELECT CURRENT_DATE - (TO_CHAR (inPeriod_1, '999')|| ' MONTH') :: INTERVAL));
@@ -40,16 +40,26 @@ BEGIN
 
 
    -- выборка существующих элементов
-   INSERT INTO _tmpList (Id, GoodsId, GoodsKindId_List, Juridical, ContractId, PartnerId, isErased) 
+   INSERT INTO _tmpList (Id, GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice, isErased)
       SELECT 
-             Object_GoodsListSale.Id                           AS Id
-           , ObjectLink_GoodsListSale_Goods.ChildObjectId      AS GoodsId 
-           , COALESCE (ObjectString_GoodsKind.ValueData, '')   AS GoodsKindId_List
-           , ObjectLink_GoodsListSale_Juridical.ChildObjectId  AS JuridicalId           
-           , GoodsListSale_Contract.ChildObjectId              AS ContractId
-           , ObjectLink_GoodsListSale_Partner.ChildObjectId    AS PartnerId
-           , Object_GoodsListSale.isErased                     AS isErased
+             Object_GoodsListSale.Id                                         AS Id
+           , ObjectLink_GoodsListSale_Goods.ChildObjectId                    AS GoodsId 
+           , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0)  AS GoodsKindId_max
+           , COALESCE (ObjectString_GoodsKind.ValueData, '')                 AS GoodsKindId_List
+           , ObjectLink_GoodsListSale_Juridical.ChildObjectId                AS JuridicalId           
+           , GoodsListSale_Contract.ChildObjectId                            AS ContractId
+           , ObjectLink_GoodsListSale_Partner.ChildObjectId                  AS PartnerId
+           , ObjectFloat_GoodsListSale_Amount.ValueData                      AS Amount
+           , ObjectFloat_GoodsListSale_AmountChoice.ValueData                AS AmountChoice
+           , Object_GoodsListSale.isErased                                   AS isErased
       FROM Object AS Object_GoodsListSale 
+        LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_Amount
+                              ON ObjectFloat_GoodsListSale_Amount.ObjectId = Object_GoodsListSale.Id
+                             AND ObjectFloat_GoodsListSale_Amount.DescId = zc_ObjectFloat_GoodsListSale_Amount()
+        LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_AmountChoice
+                              ON ObjectFloat_GoodsListSale_AmountChoice.ObjectId = Object_GoodsListSale.Id
+                             AND ObjectFloat_GoodsListSale_AmountChoice.DescId = zc_ObjectFloat_GoodsListSale_AmountChoice()
+
         LEFT JOIN ObjectLink AS GoodsListSale_Contract
                              ON GoodsListSale_Contract.ObjectId = Object_GoodsListSale.Id
                             AND GoodsListSale_Contract.DescId = zc_ObjectLink_GoodsListSale_Contract()
@@ -59,13 +69,16 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                              ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                             AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                             ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                              ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                             AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
         LEFT JOIN ObjectString AS ObjectString_GoodsKind
                                ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
                               AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
-      WHERE  Object_GoodsListSale.DescId = zc_Object_GoodsListSale();
+      WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale();
 
    -- выбираем товары согласно стать€м
    INSERT INTO _tmpGoods (GoodsId, Value) 
@@ -83,7 +96,7 @@ BEGIN
    ANALYZE _tmpGoods;
 
    -- 
-   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId , PartnerId, Amount)
+   INSERT INTO _tmpMIContainer (ContainerId, GoodsId, GoodsKindId, PartnerId, Amount)
         SELECT MIContainer.ContainerId_analyzer  AS ContainerId
              , MIContainer.ObjectId_analyzer     AS GoodsId
              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)  AS GoodsKindId
@@ -140,9 +153,17 @@ BEGIN
      ANALYZE _tmpMIContainer;
      
 
-     INSERT INTO _tmpResult (GoodsId, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount)
+     INSERT INTO _tmpResult (GoodsId, GoodsKindId_max, GoodsKindId_List, Juridical, ContractId, PartnerId, Amount, AmountChoice)
         WITH
-        tmpData_all AS (SELECT _tmpMIContainer.GoodsId  
+        tmpData_all AS (SELECT tmp.GoodsId
+                             , tmp.GoodsKindId
+                             , tmp.PartnerId
+                             , tmp.Juridical
+                             , tmp.ContractId
+                             , tmp.Amount
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.PartnerId, tmp.GoodsId ORDER BY tmp.Amount DESC) AS Ord
+                        FROM
+                       (SELECT _tmpMIContainer.GoodsId
                           -- , STRING_AGG (_tmpMIContainer.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
                              , _tmpMIContainer.GoodsKindId
                              , _tmpMIContainer.PartnerId
@@ -153,33 +174,36 @@ BEGIN
                             JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                      ON ContainerLO_Juridical.ContainerId = _tmpMIContainer.ContainerId
                                                     AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                            JOIN ContainerLinkObject AS ContainerLO_Contract 
+                            JOIN ContainerLinkObject AS ContainerLO_Contract
                                                      ON ContainerLO_Contract.ContainerId = _tmpMIContainer.ContainerId
                                                     AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-                       GROUP BY  _tmpMIContainer.GoodsId  
-                               , _tmpMIContainer.GoodsKindId
-                               , _tmpMIContainer.PartnerId
-                               , ContainerLO_Juridical.ObjectId 
-                               , ContainerLO_Contract.ObjectId 
-                       HAVING SUM (_tmpMIContainer.Amount) <> 0
-                       ORDER BY ContainerLO_Juridical.ObjectId 
-                              , ContainerLO_Contract.ObjectId
-                              , _tmpMIContainer.PartnerId
-                              , _tmpMIContainer.GoodsId 
-                              , _tmpMIContainer.GoodsKindId
+                        GROUP BY  _tmpMIContainer.GoodsId  
+                                , _tmpMIContainer.GoodsKindId
+                                , _tmpMIContainer.PartnerId
+                                , ContainerLO_Juridical.ObjectId 
+                                , ContainerLO_Contract.ObjectId 
+                        HAVING SUM (_tmpMIContainer.Amount) <> 0
+                       ) AS tmp
+                        ORDER BY tmp.Juridical
+                               , tmp.ContractId
+                               , tmp.PartnerId
+                               , tmp.GoodsId
+                               , tmp.GoodsKindId
                        )
-
+        -- –езультат
         SELECT DISTINCT tmpData.GoodsId  
+             , tmpData_all.GoodsKindId AS GoodsKindId_max
              , tmpData.GoodsKindId_List
              , tmpData.Juridical
              , tmpData.ContractId
              , tmpData.PartnerId
-             , CAST (tmpData.Amount AS NUMERIC (16, 2)) ::Tfloat
+             , CAST (tmpData.Amount AS NUMERIC (16, 2))     :: TFloat AS Amount
+             , CAST (tmpData_all.Amount AS NUMERIC (16, 2)) :: TFloat AS AmountChoice
         FROM (SELECT tmpData_all.GoodsId  
                    , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
                    , tmpData_all.PartnerId
                    , tmpData_all.Juridical
-                   , tmpData_all.ContractId                          
+                   , tmpData_all.ContractId
                    , SUM (tmpData_all.Amount) AS Amount
               FROM tmpData_all
              GROUP BY  tmpData_all.GoodsId  
@@ -187,7 +211,10 @@ BEGIN
                      , tmpData_all.Juridical
                      , tmpData_all.ContractId  
              HAVING SUM (tmpData_all.Amount) <> 0
-             ) as tmpData
+             ) AS tmpData
+             LEFT JOIN tmpData_all ON tmpData_all.GoodsId   = tmpData.GoodsId
+                                  AND tmpData_all.PartnerId = tmpData.PartnerId
+                                  AND tmpData_all.Ord       = 1
         WHERE tmpData.Amount <> 0;
 
 
@@ -208,10 +235,12 @@ BEGIN
     -- обновл€ем справочник, добавл€ем новые элементы, снимаем пометку с удаленных
     PERFORM lpInsertUpdate_Object_GoodsListSale (inId              := COALESCE (_tmpList.Id, 0) :: integer
                                                , inGoodsId         := _tmpResult.GoodsId
+                                               , inGoodsKindId_max := _tmpResult.GoodsKindId_max
                                                , inContractId      := _tmpResult.ContractId
                                                , inJuridicalId     := _tmpResult.Juridical
                                                , inPartnerId       := _tmpResult.PartnerId
-                                               , inAmount          := _tmpResult.Amount ::Tfloat
+                                               , inAmount          := _tmpResult.Amount
+                                               , inAmountChoice    := _tmpResult.AmountChoice
                                                , inGoodsKindId_List:= _tmpResult.GoodsKindId_List ::TVarChar
                                                , inisErased        := _tmpList.isErased
                                                , inUserId          := vbUserId
@@ -222,7 +251,8 @@ BEGIN
                          AND _tmpList.Juridical  = _tmpResult.Juridical
                          AND _tmpList.PartnerId  = _tmpResult.PartnerId
                                  
-    WHERE _tmpList.Id IS NULL OR  _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> _tmpResult.GoodsKindId_List
+    WHERE _tmpList.Id IS NULL OR _tmpList.isErased = TRUE OR _tmpList.GoodsKindId_List <> COALESCE (_tmpResult.GoodsKindId_List, '') OR _tmpList.GoodsKindId_max <> COALESCE (_tmpResult.GoodsKindId_max, 0)
+       OR _tmpList.AmountChoice <> COALESCE (_tmpResult.AmountChoice, 0) OR _tmpList.Amount <> COALESCE (_tmpResult.Amount, 0)
    ;
 
       
@@ -239,5 +269,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_GoodsListSale_byReport(inStartDate_1 := ('01.06.2016')::TDateTime , inEndDate_1 := ('31.08.2016')::TDateTime , inStartDate_2 := ('01.06.2016')::TDateTime , inEndDate_2 := ('31.08.2016')::TDateTime 
---, inStartDate_3 := ('01.08.2016')::TDateTime , inEndDate_3 := ('10.08.2016')::TDateTime , inInfoMoneyId_1 := 8963 , inInfoMoneyDestinationId_1 := 0 , inInfoMoneyId_2 := 0 , inInfoMoneyDestinationId_2 := 8879 ,  inSession := '5');
+-- select * from gpInsertUpdate_Object_GoodsListSale_byReport (inPeriod_1:= 12, inPeriod_2:= 3, inPeriod_3:= 6, inInfoMoneyId_1:= 8963, inInfoMoneyDestinationId_1:= 0, inInfoMoneyId_2:= 0, inInfoMoneyDestinationId_2:= 8879,  inSession := '5');
