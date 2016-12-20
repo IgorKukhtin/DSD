@@ -11,22 +11,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект)
     IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект)
-
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Void
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
-   DECLARE vbMainGoodsId Integer;
-   DECLARE vbCode Integer;
    DECLARE vbIntenalSPId Integer;
    DECLARE vbKindOutSPId Integer;
    DECLARE vbBrandSPId Integer;
    DECLARE vbName TVarChar;
-   DECLARE vbCount Integer;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_...());
@@ -37,31 +31,25 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Значение <Товар> должно быть установлено.';
      END IF;
 
-
-    vbMainGoodsId:= inId;
     -- !!!поиск ИД главного товара!!!
-   /* vbMainGoodsId:= (SELECT ObjectLink_Main.ChildObjectId
+   /* inId:= (SELECT ObjectLink_Main.ChildObjectId
                         FROM ObjectLink AS ObjectLink_Child 
                              LEFT JOIN ObjectLink AS ObjectLink_Main
                                                   ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                  AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                         WHERE ObjectLink_Child.ChildObjectId = inId                      --Object_Goods.Id
                           AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods());
-*/
-
-
+   */
      -- проверяем существует ли уже такой товар
-  /*   SELECT Object_Goods.ValueData , COUNT(*)
-     INTO vbName, vbCount
+  /* SELECT Object_Goods.ValueData 
+     INTO vbName
      FROM ObjectBoolean
           LEFT JOIN Object AS Object_Goods 
                            ON Object_Goods.Id = ObjectBoolean.ObjectId
      WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_SP() 
-       AND ObjectBoolean.ObjectId = vbMainGoodsId
-     GROUP BY Object_Goods.ValueData;
+       AND ObjectBoolean.ObjectId = inId;
     
-
-     IF COALESCE(vbName, '') <> '' AND vbCount > 1 THEN
+     IF COALESCE(vbName, '') <> ''
         RAISE EXCEPTION 'Ошибка.Для товара % уже сформированы данные по Соц.проекту.',vbName;
      END IF;
 */
@@ -99,24 +87,23 @@ BEGIN
                                                     , inSession:= inSession
                                                      );
      END IF; 
-   
-    
+       
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_IntenalSP(), vbMainGoodsId, vbIntenalSPId);
+    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_IntenalSP(), inId, vbIntenalSPId);
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_BrandSP(), vbMainGoodsId, vbBrandSPId);
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_BrandSP(), inId, vbBrandSPId);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_KindOutSP(), vbMainGoodsId, vbKindOutSPId ); 
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_KindOutSP(), inId, vbKindOutSPId ); 
 
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CountSP(), vbMainGoodsId, inCountSP); 
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CountSP(), inId, inCountSP); 
 
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceSP(), vbMainGoodsId, inPriceSP);
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceSP(), inId, inPriceSP);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), vbMainGoodsId, inGroupSP);
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), vbMainGoodsId, inisSP);
+    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), inId, TRUE);
 
 
     -- сохранили протокол
@@ -132,5 +119,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsSP
---SELECT * FROM gpInsertUpdate_Object_GoodsSP (324, '17', True, 4::TFloat, 5::TFloat, 0, 0, 0, '3');
+-- SELECT * FROM gpInsertUpdate_Object_GoodsSP (324, '17', True, 4::TFloat, 5::TFloat, 0, 0, 0, '3');

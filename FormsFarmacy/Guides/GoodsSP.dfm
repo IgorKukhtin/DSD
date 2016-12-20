@@ -705,7 +705,7 @@ object GoodsSPForm: TGoodsSPForm
       end
       item
         Name = 'inisSP'
-        Value = Null
+        Value = 'True'
         Component = ClientDataSet
         ComponentItem = 'isSP'
         DataType = ftBoolean
