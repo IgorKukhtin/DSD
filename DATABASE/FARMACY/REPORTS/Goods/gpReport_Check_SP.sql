@@ -1,21 +1,27 @@
 -- Function:  gpReport_Check_SP()
 
 DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Check_SP(
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
+    IN inJuridicalId      Integer  ,  -- Юр.лицо
+    IN inUnitId           Integer  ,  -- Аптека
+    IN inHospitalId       Integer  ,  -- Больница
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitName       TVarChar
+             , JuridicalName  TVarChar
+             , HospitalName   TVarChar
              , IntenalSPName  TVarChar
              , BrandSPName    TVarChar
              , KindOutSPName  TVarChar
-             , CountSP        TVarChar
+             , CountDozSP     TVarChar
+             , CountSP        TFloat
              , PriceSP        TFloat 
              , GroupSP        TFloat 
              , Amount         TFloat 
-             , PriceSale      TFloat 
              , SummaSP        TFloat 
              , NumLine        Integer
 )
@@ -26,6 +32,26 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    
+    -- Таблицы
+    CREATE TEMP TABLE tmpUnit (UnitId Integer, JuridicalId Integer) ON COMMIT DROP;
+ 
+    IF (COALESCE (inJuridicalId,0) <> 0) OR (COALESCE (inUnitId,0) <> 0) THEN
+       INSERT INTO tmpUnit (UnitId, JuridicalId)
+                  SELECT OL_Unit_Juridical.ObjectId       AS UnitId
+                       , OL_Unit_Juridical.ChildObjectId  AS JuridicalId
+                  FROM ObjectLink AS OL_Unit_Juridical
+                  WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                    AND ((OL_Unit_Juridical.ChildObjectId = inJuridicalId AND COALESCE (inUnitId,0) = 0)
+                          OR OL_Unit_Juridical.ObjectId = inUnitId);
+    ELSE 
+       INSERT INTO tmpUnit (UnitId, JuridicalId)
+                  SELECT OL_Unit_Juridical.ObjectId AS UnitId
+                       , OL_Unit_Juridical.ChildObjectId  AS JuridicalId
+                  FROM ObjectLink AS OL_Unit_Juridical
+                  WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -42,6 +68,7 @@ BEGIN
                               , ObjectFloat_Goods_PriceSP.ValueData          AS PriceSP
                               , ObjectFloat_Goods_GroupSP.ValueData          AS GroupSP
                               , ObjectString_Goods_CountSP.ValueData         AS CountSP
+                              , 0      AS CountDozSP  --дозировка
 
                           FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
@@ -91,23 +118,27 @@ BEGIN
                           )
             -- выбираем продажи по товарам соц.проекта
             ,  tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId                          AS UnitId
+                              , tmpUnit.JuridicalId
+                              , 0                                                         AS HospitalId
                               , tmpGoods.GoodsMainId                                      AS GoodsMainId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
+                              , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                              INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                              -- еще нужно добавить ограничение по больнице
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
                                                      AND MI_Check.isErased = FALSE
 
                               INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
-
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MI_Check.Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              --Сумма Скидки
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                          ON MIFloat_SummChangePercent.MovementItemId = MI_Check.Id
+                                                         AND MIFloat_SummChangePercent.DescId = zc_MIFloat_SummChangePercent()
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementItemId = MI_Check.Id
                                                              AND MIContainer.DescId = zc_MIContainer_Count() 
@@ -115,32 +146,39 @@ BEGIN
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                          GROUP BY MovementLinkObject_Unit.ObjectId
-                              , tmpGoods.GoodsMainId
+                                , tmpUnit.JuridicalId
+                                , tmpGoods.GoodsMainId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
       , tmpData AS (SELECT tmpMI.UnitId
+                         , tmpMI.JuridicalId
+                         , tmpMI.HospitalId
                          , tmpMI.GoodsMainId
                          , tmpMI.Amount
-                         , CASE WHEN tmpMI.Amount<>0 THEN tmpMI.SummaSale / tmpMI.Amount ELSE 0 END AS PriceSale
+                         , tmpMI.SummChangePercent
                     FROM tmpMI 
                     )
 
         -- результат
-        SELECT Object_Unit.ValueData    AS UnitName
+        SELECT Object_Unit.ValueData         AS UnitName
+             , Object_Juridical.ValueData    AS JuridicalName
+             , Object_Hospital.ValueData     AS HospitalName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
-             , tmpGoodsSP.CountSP
+             , tmpGoodsSP.CountDozSP  ::TVarChar
+             , tmpGoodsSP.CountSP :: TFloat 
              , tmpGoodsSP.PriceSP :: TFloat 
              , tmpGoodsSP.GroupSP :: TFloat 
              , tmpData.Amount     :: TFloat 
-             , tmpData.PriceSale  :: TFloat 
-             , (tmpGoodsSP.PriceSP * tmpData.Amount) :: TFloat  AS SummaSP
+             , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData ORDER BY Object_Unit.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
         FROM tmpData
              LEFT JOIN tmpGoodsSP AS tmpGoodsSP ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
           
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
+             LEFT JOIN Object AS Object_Hospital ON Object_Hospital.Id = tmpData.HospitalId
 
         ORDER BY Object_Unit.ValueData
                , tmpGoodsSP.IntenalSPName

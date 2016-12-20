@@ -21,7 +21,6 @@ type
     dxBarButton1: TdxBarButton;
     colIntenalSPName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colPriceSale: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clUnitName: TcxGridDBColumn;
@@ -36,6 +35,15 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     clNumLine: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuide: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceHospital: TcxButtonEdit;
+    HospitalGuides: TdsdGuides;
   private
     { Private declarations }
   public

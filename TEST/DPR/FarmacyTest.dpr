@@ -470,7 +470,8 @@ uses
   BrandSP in '..\..\FormsFarmacy\Guides\BrandSP.pas' {BrandSPForm: TParentForm},
   BrandSPEdit in '..\..\FormsFarmacy\Guides\BrandSPEdit.pas' {BrandSPEditForm: TParentForm},
   GoodsSP in '..\..\FormsFarmacy\Guides\GoodsSP.pas' {GoodsSPForm: TParentForm},
-  Report_CheckSP in '..\..\FormsFarmacy\Report\Report_CheckSP.pas' {Report_CheckSPForm: TParentForm};
+  Report_CheckSP in '..\..\FormsFarmacy\Report\Report_CheckSP.pas' {Report_CheckSPForm: TParentForm},
+  Report_CheckSPDialog in '..\..\FormsFarmacy\Report\Report_CheckSPDialog.pas' {Report_CheckSPDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

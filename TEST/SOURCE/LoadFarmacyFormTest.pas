@@ -1107,6 +1107,8 @@ begin
   // отчет по продажам товара соц. проекта
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
 
 end;
 
