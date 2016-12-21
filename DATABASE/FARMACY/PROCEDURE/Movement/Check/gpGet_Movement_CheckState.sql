@@ -1,17 +1,22 @@
 -- Function: gpGet_Movement_CheckState()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_CheckState (Integer, TVarChar);
-
+-- DROP FUNCTION IF EXISTS gpGet_Movement_CheckState (Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Movement_CheckState (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_CheckState(
     IN inMovementId        Integer  , -- ключ Документа
    OUT outState            Integer  , -- состояние документа
+    in userSession	   TVarChar , -- сессия пользователя (подменяем реальную)
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS Integer
 AS
 $BODY$
 BEGIN
+    if coalesce(userSession, '') <> '' then 
+     inSession := userSession;
+    end if;
 
     SELECT
         Object.ObjectCode

@@ -15,7 +15,17 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, Math,
-  VKDBFDataSet, FormStorage, CommonData, ParentForm;
+  VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   THeadRecord = record
@@ -365,7 +375,7 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService;
+     LocalWorkUnit, Splash, DiscountService, MainCash2;
 
 const
   StatusUnCompleteCode = 1;
@@ -581,8 +591,13 @@ end;
 
 procedure TMainCashForm.TimerMoneyInCashTimer(Sender: TObject);
 begin
+ TimerMoneyInCash.Enabled:=False;
+ try
   lblMoneyInCash.Caption := '0.00';
   TimerMoneyInCash.Enabled:=False;
+ finally
+   TimerMoneyInCash.Enabled:=True;
+ end;
 end;
 
 procedure TMainCashForm.actInsertUpdateCheckItemsExecute(Sender: TObject);
@@ -2574,6 +2589,9 @@ end;
 
 procedure TMainCashForm.TimerBlinkBtnTimer(Sender: TObject);
 begin
+ TimerBlinkBtn.Enabled:=False;
+ try
+
   SetBlinkVIP (false);
   SetBlinkCheck (false);
 
@@ -2589,6 +2607,9 @@ begin
        then begin btnCheck.Colors.NormalText:= clDefault; btnCheck.Colors.Default := clDefault; end
        else begin btnCheck.Colors.NormalText:= clBlue; btnCheck.Colors.Default := clRed; end
   else begin btnCheck.Colors.NormalText := clDefault; btnCheck.Colors.Default := clDefault; end;
+ finally
+   TimerBlinkBtn.Enabled:=True;
+ end;
 
 end;
 
@@ -2656,6 +2677,8 @@ end;
 
 procedure TMainCashForm.TimerSaveAllTimer(Sender: TObject);
 begin
+ TimerSaveAll.Enabled:=False;
+ try
   //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
   try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
       spUpdate_UnitForFarmacyCash.Execute;
@@ -2663,6 +2686,9 @@ begin
   //
   if not FLocalDataBaseHead.IsEmpty then
     SaveRealAll;
+ finally
+   TimerSaveAll.Enabled:=True;
+ end;
 end;
 
 { TSaveRealThread }

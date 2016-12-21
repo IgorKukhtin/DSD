@@ -75,7 +75,8 @@ uses
   DiscountDialog in '..\FormsFarmacy\Cash\DiscountDialog.pas' {DiscountDialogForm: TParentForm},
   VIPDialog in '..\FormsFarmacy\Cash\VIPDialog.pas' {VIPDialogForm: TParentForm},
   DiscountService in '..\FormsFarmacy\DiscountService\DiscountService.pas' {DiscountServiceForm},
-  uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas';
+  uCardService in '..\FormsFarmacy\DiscountService\uCardService.pas',
+  MainCash2 in '..\FormsFarmacy\Cash\MainCash2.pas' {MainCashForm2: TParentForm};
 
 {$R *.res}
 
@@ -111,8 +112,13 @@ begin
         gc_isSetDefault := True;
       //
       Application.CreateForm(TdmMain, dmMain);
-      Application.CreateForm(TMainCashForm, MainCashForm);
+      if False then
+       Application.CreateForm(TMainCashForm, MainCashForm)
+      else
+       Application.CreateForm(TMainCashForm2, MainCashForm);
+
       Application.CreateForm(TfrmSplash, frmSplash);
+
       EndSplash;
     end;
   End;
