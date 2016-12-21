@@ -125,7 +125,6 @@ object GoodsSPForm: TGoodsSPForm
         Width = 105
       end
       object colPriceSP: TcxGridDBColumn
-        AlternateCaption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
         Caption = #1056#1077#1092#1077#1088#1077#1085#1090#1085#1072' '#1094#1110#1085#1072' '#1079#1072' '#1091#1087'., '#1075#1088#1085
         DataBinding.FieldName = 'PriceSP'
         PropertiesClassName = 'TcxCurrencyEditProperties'
