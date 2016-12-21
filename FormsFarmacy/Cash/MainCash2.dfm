@@ -1,23 +1,24 @@
-inherited MainCashForm: TMainCashForm
+inherited MainCashForm2: TMainCashForm2
   ActiveControl = lcName
   Caption = #1055#1088#1086#1076#1072#1078#1072
   ClientHeight = 415
-  ClientWidth = 812
+  ClientWidth = 1024
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = ParentFormDestroy
   OnKeyDown = ParentFormKeyDown
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 828
+  ExplicitWidth = 1040
   ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
     Left = 0
     Top = 219
-    Width = 812
+    Width = 1024
     Height = 196
     Align = alBottom
     BevelOuter = bvNone
@@ -25,7 +26,7 @@ inherited MainCashForm: TMainCashForm
     object CheckGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 558
+      Width = 770
       Height = 196
       Align = alClient
       TabOrder = 0
@@ -117,7 +118,7 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object AlternativeGrid: TcxGrid
-      Left = 561
+      Left = 773
       Top = 0
       Width = 251
       Height = 196
@@ -191,7 +192,7 @@ inherited MainCashForm: TMainCashForm
       end
     end
     object cxSplitter1: TcxSplitter
-      Left = 558
+      Left = 770
       Top = 0
       Width = 3
       Height = 196
@@ -202,7 +203,7 @@ inherited MainCashForm: TMainCashForm
   object cxSplitter2: TcxSplitter [1]
     Left = 0
     Top = 216
-    Width = 812
+    Width = 1024
     Height = 3
     AlignSplitter = salBottom
     Control = BottomPanel
@@ -210,7 +211,7 @@ inherited MainCashForm: TMainCashForm
   object MainPanel: TPanel [2]
     Left = 0
     Top = 35
-    Width = 812
+    Width = 1024
     Height = 181
     Align = alClient
     BevelOuter = bvNone
@@ -218,7 +219,7 @@ inherited MainCashForm: TMainCashForm
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 812
+      Width = 1024
       Height = 148
       Align = alClient
       TabOrder = 0
@@ -550,7 +551,7 @@ inherited MainCashForm: TMainCashForm
     object SearchPanel: TPanel
       Left = 0
       Top = 148
-      Width = 812
+      Width = 1024
       Height = 33
       Align = alBottom
       TabOrder = 1
@@ -764,12 +765,21 @@ inherited MainCashForm: TMainCashForm
         Font.Style = [fsBold]
         ParentFont = False
       end
+      object Button1: TButton
+        Left = 779
+        Top = 6
+        Width = 118
+        Height = 25
+        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1089#1077#1088#1074#1080#1089
+        TabOrder = 12
+        OnClick = Button1Click
+      end
     end
   end
   object pnlVIP: TPanel [3]
     Left = 0
     Top = 0
-    Width = 812
+    Width = 1024
     Height = 17
     Align = alTop
     Color = 15656679
@@ -794,7 +804,7 @@ inherited MainCashForm: TMainCashForm
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 407
+      Width = 619
       Height = 15
       Align = alClient
       Caption = '...'
@@ -808,7 +818,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 13
     end
     object Label2: TLabel
-      Left = 479
+      Left = 691
       Top = 1
       Width = 64
       Height = 15
@@ -823,7 +833,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 13
     end
     object lblBayer: TLabel
-      Left = 543
+      Left = 755
       Top = 1
       Width = 268
       Height = 15
@@ -842,7 +852,7 @@ inherited MainCashForm: TMainCashForm
   object pnlDiscount: TPanel [4]
     Left = 0
     Top = 17
-    Width = 812
+    Width = 1024
     Height = 18
     Align = alTop
     Color = 15656679
@@ -867,7 +877,7 @@ inherited MainCashForm: TMainCashForm
     object lblDiscountExternalName: TLabel
       Left = 56
       Top = 1
-      Width = 423
+      Width = 635
       Height = 16
       Align = alClient
       Caption = '...'
@@ -881,7 +891,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 14
     end
     object Label5: TLabel
-      Left = 479
+      Left = 691
       Top = 1
       Width = 114
       Height = 16
@@ -896,7 +906,7 @@ inherited MainCashForm: TMainCashForm
       ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
-      Left = 593
+      Left = 805
       Top = 1
       Width = 218
       Height = 16
@@ -1377,6 +1387,22 @@ inherited MainCashForm: TMainCashForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072' - <'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'>'
       OnExecute = actSetConfirmedKind_CompleteExecute
     end
+    object actAddDiffMemdata: TAction
+      Caption = 'actAddDiffMemdata'
+      OnExecute = actAddDiffMemdataExecute
+    end
+    object actSetRimainsFromMemdata: TAction
+      Caption = 'actSetRimainsFromMemdata'
+      OnExecute = actSetRimainsFromMemdataExecute
+    end
+    object actSaveCashSesionIdToFile: TAction
+      Caption = 'actSaveCashSesionIdToFile'
+      OnExecute = actSaveCashSesionIdToFileExecute
+    end
+    object actServiseRun: TAction
+      Caption = 'actServiseRun'
+      OnExecute = actServiseRunExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1652,6 +1678,12 @@ inherited MainCashForm: TMainCashForm
       end
       item
         Name = 'ConfirmedKindClientName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Usersesion'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2090,5 +2122,36 @@ inherited MainCashForm: TMainCashForm
     PackSize = 1
     Left = 408
     Top = 248
+  end
+  object MemData: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 816
+    Top = 88
+    object MemDataID: TIntegerField
+      FieldName = 'ID'
+    end
+    object MemDataGOODSCODE: TIntegerField
+      FieldName = 'GOODSCODE'
+    end
+    object MemDataGOODSNAME: TStringField
+      FieldName = 'GOODSNAME'
+      Size = 254
+    end
+    object MemDataPRICE: TFloatField
+      FieldName = 'PRICE'
+    end
+    object MemDataREMAINS: TFloatField
+      FieldName = 'REMAINS'
+    end
+    object MemDataMCSVALUE: TFloatField
+      FieldName = 'MCSVALUE'
+    end
+    object MemDataRESERVED: TFloatField
+      FieldName = 'RESERVED'
+    end
+    object MemDataNEWROW: TBooleanField
+      FieldName = 'NEWROW'
+    end
   end
 end

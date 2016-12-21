@@ -5,12 +5,14 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarCha
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Check_ver2(
     IN inMovementId        Integer              , -- ключ Документа
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
     IN inCashRegister      TVarChar             , --№ кассового аппарата
     IN inCashSessionId     TVarChar             , --Сессия программы
+    in userSession	   TVarChar             , -- сессия пользователя (подменяем реальную)
     IN inSession           TVarChar DEFAULT ''    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -30,6 +32,9 @@ $BODY$
   DECLARE vbCashRegisterId Integer;
   DECLARE vbMessageText Text;
 BEGIN
+    if coalesce(userSession, '') <> '' then 
+     inSession := userSession;
+    end if;
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Check());
     vbUserId:= lpGetUserBySession (inSession);

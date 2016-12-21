@@ -1,10 +1,12 @@
 -- Function: gpSelect_CashRemains_Diff_ver2()
 
-DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpselect_cashremains_diff_ver2( Integer, TVarChar, TVarChar, TVarChar)
 
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
     IN inMovementId    Integer,    -- Текущая накладная
     IN inCashSessionId TVarChar,   -- Сессия кассового места
+    in userSession     TVarChar,   -- сессия пользователя (подменяем реальную)
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -25,6 +27,10 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
 BEGIN
+    if coalesce(userSession, '') <> '' then 
+     inSession := userSession;
+    end if;
+
 -- if inSession = '3' then return; end if;
 
     -- проверка прав пользователя на вызов процедуры

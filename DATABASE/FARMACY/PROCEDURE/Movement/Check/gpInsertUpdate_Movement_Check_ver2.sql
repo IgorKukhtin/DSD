@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Check()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
   
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inBayerPhone          TVarChar  , -- ***Контактный телефон (Покупателя)
     IN inConfirmedKindName   TVarChar  , -- ***Статус заказа (Состояние VIP-чека)
     IN inInvNumberOrder      TVarChar  , -- ***Номер заказа (с сайта)
+    in userSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -31,6 +33,9 @@ $BODY$
    DECLARE vbCashRegisterId Integer;
    DECLARE vbPaidTypeId Integer;
 BEGIN
+    if coalesce(userSession, '') <> '' then 
+     inSession := userSession;
+    end if;
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_...());
     vbUserId := lpGetUserBySession (inSession);

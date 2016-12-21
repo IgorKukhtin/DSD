@@ -160,6 +160,14 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actPrintPack_Transport: TdsdPrintAction;
+    macPrintPack_Transport: TMultiAction;
+    macPrintPackList_Transport: TMultiAction;
+    actPrintPack: TdsdPrintAction;
+    macPrintPack: TMultiAction;
+    macPrintPacklist: TMultiAction;
+    N13: TMenuItem;
+    N14: TMenuItem;
   private
     { Private declarations }
   public

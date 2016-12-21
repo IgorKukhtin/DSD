@@ -1,21 +1,16 @@
 ﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 		<PropertyGroup>
-			<ProjectGuid>{A55784B3-0B8C-47D7-9499-BF8D9E287BE3}</ProjectGuid>
+			<ProjectGuid>{0A06019A-10CD-4BC1-9406-C8D1C8CEDCF6}</ProjectGuid>
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
-			<MainSource>FarmacyCash.dpr</MainSource>
+			<MainSource>FarmacyCashServise.dpr</MainSource>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Application</AppType>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
-			<Base_Win64>true</Base_Win64>
-			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
@@ -39,37 +34,30 @@
 			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
-			<Cfg_2_Win32>true</Cfg_2_Win32>
-			<CfgParent>Cfg_2</CfgParent>
-			<Cfg_2>true</Cfg_2>
-			<Base>true</Base>
-		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<Manifest_File>None</Manifest_File>
+			<VerInfo_Locale>1049</VerInfo_Locale>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
 			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-			<DCC_UsePackage>IndySystem;JvCrypt;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DataSnapClient;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;IndyCore;inetdbxpress;rtl;dbrtl;DbxClientDriver;inetdb;xmlrtl;ibxpress;DBXMySQLDriver;IndyProtocols;soaprtl;kbmMemRunDXE2Pro;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
-			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
-			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;cxLibraryRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;cxSpreadSheetRS16;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;officeXPrt;vclimg;cxTreeListRS16;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;dxDockingRS16;cxPageControldxBarPopupMenuRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;Tee;DBXOdbcDriver;dxSkinsCoreRS16;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxServerModeRS16;ipstudiowin;Jcl;vclie;cxSchedulerRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;vclx;dxFlowChartRS16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;CustomIPTransport;dsnap;IndyCore;CloudService;FmxTeeUI;IPIndyImpl;bindcompfmx;dbrtl;bindcomp;inetdb;xmlrtl;ibxpress;soaprtl;FMXTee;bindengine;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;IndySystem;DataSnapClient;DataSnapProviderClient;DBXOracleDriver;fmxase;inetdbxpress;rtl;DbxClientDriver;IndyProtocols;DBXMySQLDriver;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
+			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+			<DCC_E>false</DCC_E>
+			<DCC_N>false</DCC_N>
+			<DCC_S>false</DCC_S>
+			<DCC_F>false</DCC_F>
+			<DCC_K>false</DCC_K>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<VerInfo_Build>8</VerInfo_Build>
-			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Release>6</VerInfo_Release>
-			<DCC_UsePackage>dxTileControlRS16;dxdborRS16;fsADO16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;ipstudiowindataset;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;cxSpreadSheetRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;ProjectComponent;frxTee16;inetdbbde;frxBDE16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;officeXPrt;vclimg;QR5RunDXE2;cxTreeListRS16;RtmRxCtl160;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;frxADO16;frxe16;vtable160;navXE2;vcl;RaudusD160;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;fsTee16;Intraweb_15_DXE2;cxSchedulerGridRS16;ADDONS_XE2;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;ExcelExportXE2;dclCrossTalk_XE2;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;frxDBX16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;ZPlain;Tee;JSONDataSet;DBXOdbcDriver;dxdbtrRS16;kassa;dxSkinsCoreRS16;svnui;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;frxDB16;fsBDE16;cxGridRS16;fs16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxServerModeRS16;ipstudiowin;frxcs16;Jcl;vclie;QImport3RT_D16;inernetpackage;cxSchedulerRS16;F1Book;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;cefcomponent;fsDB16;DataSnapConnectors;dclfrxTee16;dsdLib;dsnapcon;dxPSdxFCLnkRS16;dd;dxThemeRS16;JclVcl;dcldxSkinsCoreRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;frxIBX16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>dxTileControlRS16;cxLibraryRS16;dxSkinSevenRS16;ProjectComponent;dxPsPrVwAdvRS16;dxSkinSummer2008RS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;cxPageControlRS16;dxSkinVS2010RS16;vclimg;dxSkinDevExpressStyleRS16;dxSkinWhiteprintRS16;fmi;dxComnRS16;vcldb;dxSkinBlackRS16;dxADOServerModeRS16;dxBarExtDBItemsRS16;dxSkinXmas2008BlueRS16;dxSkinOffice2007BlueRS16;dxSkinOffice2007GreenRS16;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;dxPSLnksRS16;dxBarExtItemsRS16;dxPSTeeChartRS16;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxSkinSharpRS16;dxSkinOffice2007BlackRS16;dxorgcRS16;ProjectDesignComponent;dxSkinBlueprintRS16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;DBXOdbcDriver;dxdbtrRS16;dxSkinFoggyRS16;dxPScxSSLnkRS16;dxSkinDarkSideRS16;intrawebdb_120_160;frxDB16;dxSkinscxPCPainterRS16;dxPSdxDBTVLnkRS16;vclactnband;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;fs16;vclie;dxSkinSilverRS16;dsnapcon;dcldxSkinsCoreRS16;dxSkinLilianRS16;vclx;dxSkinValentineRS16;dxFlowChartRS16;dxGDIPlusRS16;dxSkinSharpPlusRS16;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;dxSkinsdxNavBarPainterRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;dxSkinCoffeeRS16;frxTee16;Rave100VCL;vclib;inetdbbde;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;ZLibEx;dxSkinOffice2007SilverRS16;dxSkinsdxRibbonPainterRS16;vcldsnap;dxSkinBlueRS16;DBXDb2Driver;Intraweb_120_160;vclribbon;dxSkinDarkRoomRS16;frxe16;dxSkinscxSchedulerPainterRS16;vcl;dxSkinDevExpressDarkStyleRS16;DBXMSSQLDriver;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;dxSkinsdxDLPainterRS16;dxSkinTheAsphaltWorldRS16;dxSkinOffice2010BlackRS16;dxSkinMoneyTwinsRS16;dxSkinPumpkinRS16;adortl;dxSkinHighContrastRS16;dxSkiniMaginaryRS16;ZDbc;frx16;dxPSdxDBOCLnkRS16;dxSkinLondonLiquidSkyRS16;dxSkinsdxBarPainterRS16;ZPlain;Tee;dxSkinGlassOceansRS16;dxSkinLiquidSkyRS16;dxSkinsCoreRS16;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;dxPSPrVwRibbonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;dxSkinSevenClassicRS16;cxSchedulerRS16;dxSkinOffice2010SilverRS16;vcltouch;ZCore;websnap;dxSkinOffice2007PinkRS16;VclSmp;dxSkinSpringTimeRS16;dxTabbedMDIRS16;DataSnapConnectors;dxSkinStardustRS16;dxPSdxOCLnkRS16;dxSkinOffice2010BlueRS16;dxPSdxFCLnkRS16;dxThemeRS16;dxPScxPCProdRS16;ZParseSql;svn;dxSkinCaramelRS16;bdertl;dxSkinMcSkinRS16;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.6.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1)'!=''">
-			<Manifest_File>None</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0</VerInfo_Keys>
-			<VerInfo_Locale>1049</VerInfo_Locale>
 			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
 			<DCC_Optimize>false</DCC_Optimize>
 			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
@@ -77,40 +65,23 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.8.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Release>8</VerInfo_Release>
-			<VerInfo_Build>5</VerInfo_Build>
-			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
-			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
-			<Manifest_File>None</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0</VerInfo_Keys>
-			<VerInfo_Locale>1049</VerInfo_Locale>
 			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>/autologin</Debugger_RunParams>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.8.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
-			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
-			<VerInfo_Build>24</VerInfo_Build>
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<VerInfo_MinorVer>1</VerInfo_MinorVer>
-			<VerInfo_Release>8</VerInfo_Release>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-		</PropertyGroup>
 		<ItemGroup>
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\FormsFarmacy\Cash\FarmacyCashService.pas">
+				<Form>MainCashForm2</Form>
+			</DCCReference>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\dsdException.pas"/>
 			<DCCReference Include="..\SOURCE\Log.pas"/>
@@ -173,21 +144,13 @@
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\MainCash.pas">
-				<Form>MainCashForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\Forms\Ancestor\AncestorBase.pas">
 				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\CashInterface.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\CashFactory.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\FP3141_TLB.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\CashCloseDialog.pas">
 				<Form>CashCloseDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -202,28 +165,9 @@
 			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\Cash_FP320.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas"/>
 			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
 			<DCCReference Include="..\FormsFarmacy\Cash\Splash.pas">
 				<Form>frmSplash</Form>
-				<FormType>dfm</FormType>
-			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\Cash\DiscountDialog.pas">
-				<Form>DiscountDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\Cash\VIPDialog.pas">
-				<Form>VIPDialogForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\DiscountService\DiscountService.pas">
-				<Form>DiscountServiceForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\DiscountService\uCardService.pas"/>
-			<DCCReference Include="..\FormsFarmacy\Cash\MainCash2.pas">
-				<Form>MainCashForm2</Form>
-				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
@@ -269,6 +213,9 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
+					<Source>
+						<Source Name="MainSource">FarmacyCashServise.dpr</Source>
+					</Source>
 					<Excluded_Packages>
 						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfs16.bpl">File C:\Program Files\FastReports\LibD16\dclfs16.bpl not found</Excluded_Packages>
 						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfsDB16.bpl">File C:\Program Files\FastReports\LibD16\dclfsDB16.bpl not found</Excluded_Packages>
@@ -284,13 +231,9 @@
 						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxdbx16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
 						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfstee16.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
 					</Excluded_Packages>
-					<Source>
-						<Source Name="MainSource">FarmacyCash.dpr</Source>
-					</Source>
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>
-					<Platform value="Win64">False</Platform>
 					<Platform value="Win32">True</Platform>
 				</Platforms>
 			</BorlandProject>
