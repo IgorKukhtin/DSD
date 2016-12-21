@@ -19,6 +19,7 @@ function iniPortSpeed:String;
 //¬озвращает путь к локальной базе данных
 function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
+function iniLocalDataBaseDiff: String;
 
 function iniCashSerialNumber: String;
 //возвращает номер налоговой группы дл€ FP320
@@ -32,6 +33,8 @@ const
   FileName: String = '\DEFAULTS.INI';
   LocalDBNameHead: String = 'FarmacyCashHead.dbf';
   LocalDBNameBody: String = 'FarmacyCashBody.dbf';
+  LocalDBNameDiff: String = 'FarmacyCashDiff.dbf';
+
 function GetIniFile(out AIniFileName: String):boolean;
 var
   dir: string;
@@ -55,6 +58,7 @@ Begin
         F.WriteString('Common','SoldParallel','false');
         F.WriteString('Common','LocalDataBaseHead',ExtractFilePath(Application.ExeName)+LocalDBNameHead);
         F.WriteString('Common','LocalDataBaseBody',ExtractFilePath(Application.ExeName)+LocalDBNameBody);
+        F.WriteString('Common','LocalDataBaseDiff',ExtractFilePath(Application.ExeName)+LocalDBNameDiff);
         F.WriteString('TSoldWithCompMainForm','CashType','FP3530T_NEW');
         F.WriteString('TSoldWithCompMainForm','CashId','0');
         F.WriteString('TSoldWithCompMainForm','PortNumber','1');
@@ -142,6 +146,23 @@ begin
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
       f.WriteString('Common','LocalDatBaseBody',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
+function iniLocalDataBaseDiff: String;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','LocalDatBaseDiff','');
+  if Result = '' then
+  Begin
+    Result := ExtractFilePath(Application.ExeName)+LocalDBNameDiff;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','LocalDatBaseDiff',Result);
     finally
       f.Free;
     end;
