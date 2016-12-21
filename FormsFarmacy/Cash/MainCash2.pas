@@ -1,0 +1,3615 @@
+unit MainCash2;
+
+interface
+
+uses
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
+  cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, Vcl.ExtCtrls, cxSplitter, dsdDB, Datasnap.DBClient, cxContainer,
+  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
+  cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
+  cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
+  ActiveX,  Math, ShellApi,
+  VKDBFDataSet, FormStorage, CommonData, ParentForm;
+
+type
+  THeadRecord = record
+    ID: Integer;//id чека
+    PAIDTYPE:Integer; //тип оплаты
+    MANAGER:Integer; //Id Менеджера (VIP)
+    NOTMCS:Boolean; //Не для НТЗ
+    COMPL:Boolean; //Напечатан
+    SAVE:Boolean; //Сохранен
+    NEEDCOMPL: Boolean; //Необходимо проведение
+    DATE: TDateTime; //дата/Время чека
+    UID: String[50];//uid чека
+    CASH: String[20]; //серийник аппарата
+    BAYER:String[254]; //Покупатель (VIP)
+    FISCID:String[50]; //Номер фискального чека
+    //***20.07.16
+    DISCOUNTID : Integer;     //Id Проекта дисконтных карт
+    DISCOUNTN  : String[254]; //Название Проекта дисконтных карт
+    DISCOUNT   : String[50];  //№ Дисконтной карты
+    //***16.08.16
+    BAYERPHONE  : String[50];  //Контактный телефон (Покупателя) - BayerPhone
+    CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+    NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
+    CONFIRMEDC  : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+    // Для сервиса передает рельную сесию при которой была продажа
+    USERSESION: string[50]; // Номер индификационной сесии
+  end;
+  TBodyRecord = record
+    ID: Integer;            //ид записи
+    GOODSID: Integer;       //ид товара
+    GOODSCODE: Integer;     //Код товара
+    NDS: Currency;          //НДС товара
+    AMOUNT: Currency;       //Кол-во
+    PRICE: Currency;        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+    CH_UID: String[50];     //uid чека
+    GOODSNAME: String[254]; //наименование товара
+    //***20.07.16
+    PRICESALE: Currency;    // Цена без скидки
+    CHPERCENT: Currency;    // % Скидки
+    SUMMCH: Currency;       // Сумма Скидки
+    //***19.08.16
+    AMOUNTORD: Currency;    // Кол-во заявка
+    //***10.08.16
+    LIST_UID: String[50]    // UID строки продажи
+  end;
+  TBodyArr = Array of TBodyRecord;
+
+  TSaveRealThread = class(TThread)
+    DiffCDS : TClientDataSet;
+    FCheckUID: String;
+    FShapeColor: TColor;
+    FNeedSaveVIP: Boolean;
+    FLastError: String;
+    procedure SetShapeState(AColor: TColor);
+    procedure SyncShapeState;
+    procedure UpdateRemains;
+    procedure SendError(const AErrorMessage: String);
+  private
+    procedure SendErrorMineForm;
+  protected
+    procedure Execute; override;
+  end;
+  TSaveRealAllThread = class(TThread)
+  protected
+    procedure Execute; override;
+  end;
+
+  TRefreshDiffThread = class(TThread)
+    FShapeColor: TColor;
+    procedure SetShapeState(AColor: TColor);
+    procedure SyncShapeState;
+    procedure UpdateRemains;
+  protected
+    procedure Execute; override;
+  end;
+
+  TMainCashForm2 = class(TAncestorBaseForm)
+    MainGridDBTableView: TcxGridDBTableView;
+    MainGridLevel: TcxGridLevel;
+    MainGrid: TcxGrid;
+    BottomPanel: TPanel;
+    CheckGridDBTableView: TcxGridDBTableView;
+    CheckGridLevel: TcxGridLevel;
+    CheckGrid: TcxGrid;
+    AlternativeGridDBTableView: TcxGridDBTableView;
+    AlternativeGridLevel: TcxGridLevel;
+    AlternativeGrid: TcxGrid;
+    cxSplitter1: TcxSplitter;
+    SearchPanel: TPanel;
+    cxSplitter2: TcxSplitter;
+    MainPanel: TPanel;
+    CheckGridColCode: TcxGridDBColumn;
+    CheckGridColName: TcxGridDBColumn;
+    CheckGridColPrice: TcxGridDBColumn;
+    CheckGridColAmount: TcxGridDBColumn;
+    CheckGridColSumm: TcxGridDBColumn;
+    AlternativeGridColGoodsCode: TcxGridDBColumn;
+    AlternativeGridColGoodsName: TcxGridDBColumn;
+    MainColCode: TcxGridDBColumn;
+    MainColName: TcxGridDBColumn;
+    MainColRemains: TcxGridDBColumn;
+    MainColPrice: TcxGridDBColumn;
+    MainColReserved: TcxGridDBColumn;
+    dsdDBViewAddOnMain: TdsdDBViewAddOn;
+    spSelectRemains: TdsdStoredProc;
+    RemainsDS: TDataSource;
+    RemainsCDS: TClientDataSet;
+    ceAmount: TcxCurrencyEdit;
+    cxLabel1: TcxLabel;
+    lcName: TcxLookupComboBox;
+    actChoiceGoodsInRemainsGrid: TAction;
+    actSold: TAction;
+    PopupMenu: TPopupMenu;
+    actSold1: TMenuItem;
+    N1: TMenuItem;
+    FormParams: TdsdFormParams;
+    cbSpec: TcxCheckBox;
+    actCheck: TdsdOpenForm;
+    btnCheck: TcxButton;
+    actInsertUpdateCheckItems: TAction;
+    spSelectCheck: TdsdStoredProc;
+    CheckDS: TDataSource;
+    CheckCDS: TClientDataSet;
+    MainColMCSValue: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    lblTotalSumm: TcxLabel;
+    dsdDBViewAddOnCheck: TdsdDBViewAddOn;
+    actPutCheckToCash: TAction;
+    AlternativeGridColLinkType: TcxGridDBColumn;
+    AlternativeCDS: TClientDataSet;
+    AlternativeDS: TDataSource;
+    spSelect_Alternative: TdsdStoredProc;
+    dsdDBViewAddOnAlternative: TdsdDBViewAddOn;
+    actSetVIP: TAction;
+    VIP1: TMenuItem;
+    AlternativeGridColTypeColor: TcxGridDBColumn;
+    AlternativeGridDColPrice: TcxGridDBColumn;
+    AlternativeGridColRemains: TcxGridDBColumn;
+    btnVIP: TcxButton;
+    actOpenCheckVIP: TOpenChoiceForm;
+    actLoadVIP: TMultiAction;
+    actUpdateRemains: TAction;
+    actCalcTotalSumm: TAction;
+    actCashWork: TAction;
+    N3: TMenuItem;
+    actClearAll: TAction;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    lblMoneyInCash: TcxLabel;
+    actClearMoney: TAction;
+    N7: TMenuItem;
+    actGetMoneyInCash: TAction;
+    N8: TMenuItem;
+    spGetMoneyInCash: TdsdStoredProc;
+    spGet_Password_MoneyInCash: TdsdStoredProc;
+    actSpec: TAction;
+    N9: TMenuItem;
+    actRefreshLite: TdsdDataSetRefresh;
+    actOpenMCS_LiteForm: TdsdOpenForm;
+    btnOpenMCSForm: TcxButton;
+    spGet_User_IsAdmin: TdsdStoredProc;
+    actSetFocus: TAction;
+    N10: TMenuItem;
+    actRefreshRemains: TAction;
+    spDelete_CashSession: TdsdStoredProc;
+    DiffCDS: TClientDataSet;
+    spSelect_CashRemains_Diff: TdsdStoredProc;
+    actExecuteLoadVIP: TAction;
+    actRefreshAll: TAction;
+    ShapeState: TShape;
+    actSelectCheck: TdsdExecStoredProc;
+    TimerSaveAll: TTimer;
+    pnlVIP: TPanel;
+    Label1: TLabel;
+    lblCashMember: TLabel;
+    Label2: TLabel;
+    lblBayer: TLabel;
+    chbNotMCS: TcxCheckBox;
+    mainColor_calc: TcxGridDBColumn;
+    MaincolisFirst: TcxGridDBColumn;
+    MaincolisSecond: TcxGridDBColumn;
+    cxButton1: TcxButton;
+    actChoiceGoodsFromRemains: TOpenChoiceForm;
+    TimerMoneyInCash: TTimer;
+    mainColisPromo: TcxGridDBColumn;
+    actSelectLocalVIPCheck: TAction;
+    actCheckConnection: TAction;
+    N2: TMenuItem;
+    N11: TMenuItem;
+    spUpdate_UnitForFarmacyCash: TdsdStoredProc;
+    CheckGridColPriceSale: TcxGridDBColumn;
+    CheckGridColChangePercent: TcxGridDBColumn;
+    CheckGridColSummChangePercent: TcxGridDBColumn;
+    CheckGridColAmountOrder: TcxGridDBColumn;
+    pnlDiscount: TPanel;
+    Label3: TLabel;
+    lblDiscountExternalName: TLabel;
+    Label5: TLabel;
+    lblDiscountCardNumber: TLabel;
+    VIP2: TMenuItem;
+    actSetDiscountExternal: TAction;
+    TimerBlinkBtn: TTimer;
+    spGet_BlinkVIP: TdsdStoredProc;
+    actSetConfirmedKind_UnComplete: TAction;
+    actSetConfirmedKind_Complete: TAction;
+    N12: TMenuItem;
+    VIP3: TMenuItem;
+    VIP4: TMenuItem;
+    spUpdate_ConfirmedKind: TdsdStoredProc;
+    mainMinExpirationDate: TcxGridDBColumn;
+    MainColor_ExpirationDate: TcxGridDBColumn;
+    actOpenMCSForm: TdsdOpenForm;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    spGet_BlinkCheck: TdsdStoredProc;
+    actOpenCheckVIP_Error: TOpenChoiceForm;
+    actOpenCheckVIPError1: TMenuItem;
+    spCheck_RemainsError: TdsdStoredProc;
+    actShowMessage: TShowMessageAction;
+    MemData: TdxMemData;
+    MemDataID: TIntegerField;
+    MemDataGOODSCODE: TIntegerField;
+    MemDataGOODSNAME: TStringField;
+    MemDataPRICE: TFloatField;
+    MemDataREMAINS: TFloatField;
+    MemDataMCSVALUE: TFloatField;
+    MemDataRESERVED: TFloatField;
+    MemDataNEWROW: TBooleanField;
+    actAddDiffMemdata: TAction;
+    actSetRimainsFromMemdata: TAction;
+    actSaveCashSesionIdToFile: TAction;
+    Button1: TButton;
+    actServiseRun: TAction;
+    procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
+    procedure FormCreate(Sender: TObject);
+    procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
+    procedure lcNameKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure actSoldExecute(Sender: TObject);
+    procedure actInsertUpdateCheckItemsExecute(Sender: TObject);
+    procedure ceAmountKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure ceAmountExit(Sender: TObject);
+    procedure actPutCheckToCashExecute(Sender: TObject);           {********************}
+    procedure ParentFormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure actSetVIPExecute(Sender: TObject);
+    procedure RemainsCDSAfterScroll(DataSet: TDataSet);
+    procedure actCalcTotalSummExecute(Sender: TObject);
+    procedure MainColReservedGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+    procedure actCashWorkExecute(Sender: TObject);
+    procedure actClearAllExecute(Sender: TObject);
+    procedure actClearMoneyExecute(Sender: TObject);
+    procedure actGetMoneyInCashExecute(Sender: TObject);
+    procedure actSpecExecute(Sender: TObject);
+    procedure ParentFormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure lcNameExit(Sender: TObject);
+    procedure actUpdateRemainsExecute(Sender: TObject);
+    procedure actSetFocusExecute(Sender: TObject);
+    procedure actRefreshRemainsExecute(Sender: TObject);
+    procedure actExecuteLoadVIPExecute(Sender: TObject);
+    procedure actRefreshAllExecute(Sender: TObject);
+    procedure SaveLocalVIP;
+    procedure MainGridDBTableViewFocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure TimerSaveAllTimer(Sender: TObject);
+    procedure lcNameEnter(Sender: TObject);
+    procedure TimerMoneyInCashTimer(Sender: TObject);
+    procedure ParentFormShow(Sender: TObject);
+    procedure actSelectLocalVIPCheckExecute(Sender: TObject);
+    procedure actCheckConnectionExecute(Sender: TObject);
+    procedure actSetDiscountExternalExecute(Sender: TObject);  //***20.07.16
+    procedure CheckCDSBeforePost(DataSet: TDataSet);
+    procedure TimerBlinkBtnTimer(Sender: TObject);
+    procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
+    procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
+    procedure btnCheckClick(Sender: TObject);
+    procedure ParentFormDestroy(Sender: TObject);
+    procedure actAddDiffMemdataExecute(Sender: TObject);
+    procedure actSetRimainsFromMemdataExecute(Sender: TObject);
+    procedure actSaveCashSesionIdToFileExecute(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure actServiseRunExecute(Sender: TObject); //***10.08.16
+  private
+    FSoldRegim: boolean;
+    fShift: Boolean;
+    FTotalSumm: Currency;
+    Cash: ICash;
+    SoldParallel: Boolean;
+    SourceClientDataSet: TClientDataSet;
+    ThreadErrorMessage:String;
+    ASalerCash{,ASdacha}: Currency;
+    PaidType: TPaidType;
+    FiscalNumber: String;
+
+    VipCDS, VIPListCDS: TClientDataSet;
+    VIPForm: TParentForm;
+    // для мигания кнопки
+    fBlinkVIP, fBlinkCheck : Boolean;
+    time_onBlink, time_onBlinkCheck :TDateTime;
+    MovementId_BlinkVIP:String;
+    procedure SetBlinkVIP (isRefresh : boolean);
+    procedure SetBlinkCheck (isRefresh : boolean);
+
+    procedure SetSoldRegim(const Value: boolean);
+    // процедура обновляет параметры для введения нового чека
+    procedure NewCheck(ANeedRemainsRefresh: Boolean = True);
+    // Изменение тела чека
+    procedure InsertUpdateBillCheckItems;
+    //Обновить остаток согласно пришедшей разнице
+    procedure UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
+    //Возвращает товар в верхний грид
+    procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+
+    //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
+    function fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;
+
+    // Обновляет сумму по чеку
+    procedure CalcTotalSumm;
+    // Пробивает чек через ЭККА
+    function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
+      out AFiscalNumber, ACheckNumber: String): boolean;
+    //подключение к локальной базе данных
+    function InitLocalStorage: Boolean;
+    //Сохранение чека в локальной базе. возвращает УИД
+    function SaveLocal(ADS :TClientDataSet; AManagerId: integer; AManagerName: String;
+      ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
+      ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+      NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+    //сохраняет чек в реальную базу
+    procedure SaveReal(AUID: String; ANeedComplete: boolean = False);
+
+    //Перечитывает остаток
+    procedure StartRefreshDiffThread;
+
+    //проверили что есть остаток
+    function fCheck_RemainsError : Boolean;
+
+    //Находит в локальной базе и досылает всечеки
+    procedure SaveRealAll;
+    property SoldRegim: boolean read FSoldRegim write SetSoldRegim;
+    procedure Thread_Exception(var Msg: TMessage); message UM_THREAD_EXCEPTION;
+    procedure ConnectionModeChange(var Msg: TMessage); message UM_LOCAL_CONNECTION;
+    procedure SetWorkMode(ALocal: Boolean);
+    procedure AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
+  public
+  end;
+
+
+
+var
+  MainCashForm: TMainCashForm2;
+  CountRRT: Integer = 0;
+  CountSaveThread: Integer = 0;
+  ActualRemainSession: Integer = 0;
+  FLocalDataBaseHead : TVKSmartDBF;
+  FLocalDataBaseBody : TVKSmartDBF;
+  FLocalDataBaseDiff : TVKSmartDBF;
+
+  LocalDataBaseisBusy: Integer = 0;
+  csCriticalSection,
+  csCriticalSection_Save,
+  csCriticalSection_All: TRTLCriticalSection;
+
+  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative: THandle;
+  LastErr: Integer;
+  FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом
+  function GetSumm(Amount,Price:currency): currency;
+  function GenerateGUID: String;
+
+
+implementation
+
+{$R *.dfm}
+
+uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
+     LocalWorkUnit, Splash, DiscountService, MainCash;
+
+const
+  StatusUnCompleteCode = 1;
+  StatusCompleteCode = 2;
+  StatusUnCompleteId = 14;
+  StatusCompleteId = 15;
+
+procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
+begin
+  Handled := (Msg.hwnd = Application.Handle) and (Msg.message = FM_SERVISE);
+  if Handled and (Msg.wParam = 1) then   //   WPARAM = 1 значит сообщения от сервиса в приложения  WPARAM = 2 от приложения в сервис
+    case Msg.lParam of
+     1: // получино сообщение на обновление diff разницы из дбф
+        begin
+//         ShowMessage('получино сообщение на обновление diff разницы из дбф');
+         actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
+         actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
+        end;
+     2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
+        begin
+//         ShowMessage('получен запрос на сохранение CashSessionId в  CashSessionId.ini');
+         actSaveCashSesionIdToFile.Execute;
+        end;
+
+    end;
+end;
+
+
+
+function GetSumm(Amount,Price:currency): currency;
+var
+  A, P, RI: Cardinal;
+  S1,S2:String;
+begin
+  if (Amount = 0) or (Price = 0) then
+  Begin
+    result := 0;
+    exit;
+  End;
+  A := trunc(Amount * 1000);
+  P := trunc(Price * 100);
+  RI := A*P;
+  S1 := IntToStr(RI);
+  if Length(S1) < 4 then
+    RI := 0
+  else
+    RI := StrToInt(Copy(S1,1,length(S1)-3));
+  if (Length(S1)>=3) AND
+     (StrToint(S1[length(S1)-2])>=5) then
+    RI := RI + 1;
+  Result := (RI / 100);
+end;
+
+function GenerateGUID: String;
+var
+  G: TGUID;
+begin
+  CreateGUID(G);
+  Result := GUIDToString(G);
+end;
+
+
+
+procedure TMainCashForm2.actAddDiffMemdataExecute(Sender: TObject);
+begin
+  WaitForSingleObject(MutexDBFDiff, INFINITE);
+  FLocalDataBaseDiff.Open;
+  if not MemData.Active then
+  MemData.Open;
+  MemData.DisableControls;
+  FLocalDataBaseDiff.First;
+    while not FLocalDataBaseDiff.Eof  do
+     begin
+      MemData.Append;
+      MemData.FieldByName('ID').AsInteger:=FLocalDataBaseDiff.FieldByName('ID').AsInteger;
+      MemData.FieldByName('GOODSCODE').AsInteger:=FLocalDataBaseDiff.FieldByName('GOODSCODE').AsInteger;
+      MemData.FieldByName('GOODSNAME').AsString:=FLocalDataBaseDiff.FieldByName('GOODSNAME').AsString;
+      MemData.FieldByName('PRICE').AsFloat:=FLocalDataBaseDiff.FieldByName('PRICE').AsFloat;
+      MemData.FieldByName('REMAINS').AsFloat:=FLocalDataBaseDiff.FieldByName('REMAINS').AsFloat;
+      MemData.FieldByName('MCSVALUE').AsFloat:=FLocalDataBaseDiff.FieldByName('MCSVALUE').AsFloat;
+      MemData.FieldByName('RESERVED').AsFloat:=FLocalDataBaseDiff.FieldByName('RESERVED').AsFloat;
+      MemData.FieldByName('NEWROW').AsBoolean:=FLocalDataBaseDiff.FieldByName('NEWROW').AsBoolean;
+      FLocalDataBaseDiff.Edit;
+      FLocalDataBaseDiff.DeleteRecord;
+      FLocalDataBaseDiff.Post;
+      MemData.Post;
+      FLocalDataBaseDiff.Next;
+     end;
+  FLocalDataBaseDiff.Pack;
+  FLocalDataBaseDiff.Close;
+  MemData.EnableControls;
+  ReleaseMutex(MutexDBFDiff);
+end;
+
+procedure TMainCashForm2.actCalcTotalSummExecute(Sender: TObject);
+begin
+  CalcTotalSumm;
+end;
+
+procedure TMainCashForm2.actCashWorkExecute(Sender: TObject);
+begin
+  inherited;
+  with TCashWorkForm.Create(Cash, RemainsCDS) do begin
+    ShowModal;
+    Free;
+  end;
+end;
+
+procedure TMainCashForm2.actChoiceGoodsInRemainsGridExecute(Sender: TObject);
+begin
+  if MainGrid.IsFocused then
+  Begin
+    if RemainsCDS.isempty then exit;
+    if RemainsCDS.FieldByName('Remains').asCurrency>0 then begin
+       SourceClientDataSet := RemainsCDS;
+       SoldRegim := true;
+       lcName.Text := RemainsCDS.FieldByName('GoodsName').asString;
+       ceAmount.Enabled := true;
+       ceAmount.Value := 1;
+       ActiveControl := ceAmount;
+    end
+  end
+  else
+  if AlternativeGrid.IsFocused then
+  Begin
+    if AlternativeCDS.isempty then exit;
+    if AlternativeCDS.FieldByName('Remains').asCurrency>0 then begin
+       SourceClientDataSet := AlternativeCDS;
+       SoldRegim := true;
+       lcName.Text := AlternativeCDS.FieldByName('GoodsName').asString;
+       ceAmount.Enabled := true;
+       ceAmount.Value := 1;
+       ActiveControl := ceAmount;
+    end
+  End
+  else
+  Begin
+    if CheckCDS.isEmpty then exit;
+    if CheckCDS.FieldByName('Amount').asCurrency>0 then begin
+       SourceClientDataSet := CheckCDS;
+       SoldRegim := False;
+       lcName.Text := CheckCDS.FieldByName('GoodsName').asString;
+       ceAmount.Enabled := true;
+       ceAmount.Value := -1;
+       ActiveControl := ceAmount;
+    end;
+  End;
+end;
+
+procedure TMainCashForm2.actClearAllExecute(Sender: TObject);
+begin
+  //if CheckCDS.IsEmpty then exit;
+  if MessageDlg('Очистить все?',mtConfirmation,mbYesNo,0)<>mrYes then exit;
+  //Вернуть товар в верхний грид
+  FormParams.ParamByName('CheckId').Value   := 0;
+  FormParams.ParamByName('ManagerId').Value := 0;
+  FormParams.ParamByName('BayerName').Value := '';
+  //***20.07.16
+  FormParams.ParamByName('DiscountExternalId').Value   := 0;
+  FormParams.ParamByName('DiscountExternalName').Value := '';
+  FormParams.ParamByName('DiscountCardNumber').Value   := '';
+  //***16.08.16
+  FormParams.ParamByName('BayerPhone').Value              := '';
+  FormParams.ParamByName('ConfirmedKindName').Value       := '';
+  FormParams.ParamByName('InvNumberOrder').Value          := '';
+  FormParams.ParamByName('ConfirmedKindClientName').Value := '';
+
+  FiscalNumber := '';
+  pnlVIP.Visible := False;
+  pnlDiscount.Visible := False;
+  lblCashMember.Caption := '';
+  lblBayer.Caption := '';
+  chbNotMCS.Checked := False;
+  UpdateRemainsFromCheck;
+  CheckCDS.EmptyDataSet;
+  StartRefreshDiffThread;
+end;
+
+procedure TMainCashForm2.actClearMoneyExecute(Sender: TObject);
+begin
+  lblMoneyInCash.Caption := '0.00';
+end;
+
+procedure TMainCashForm2.actExecuteLoadVIPExecute(Sender: TObject);
+var lMsg: String;
+begin
+  inherited;
+  //
+  SetBlinkVIP(true);
+  //
+  if not CheckCDS.IsEmpty then
+  Begin
+    ShowMessage('Текущий чек не пустой. Сначала очистите чек!');
+    exit;
+  End;
+  if gc_User.Local then
+  Begin
+    WaitForSingleObject(MutexVip, INFINITE);
+    LoadLocalData(vipCDS, Vip_lcl);
+    LoadLocalData(vipListCDS, VipList_lcl);
+    ReleaseMutex(MutexVip);
+  End;
+  if actLoadVIP.Execute then
+  Begin
+    //обновим "нужные" параметры-Main ***20.07.16
+    DiscountServiceForm.pGetDiscountExternal (FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+    // ***20.07.16
+    if FormParams.ParamByName('DiscountExternalId').Value > 0 then
+    begin
+         //проверка карты + сохраним "текущие" параметры-Main
+         if not DiscountServiceForm.fCheckCard (lMsg
+                                               ,DiscountServiceForm.gURL
+                                               ,DiscountServiceForm.gService
+                                               ,DiscountServiceForm.gPort
+                                               ,DiscountServiceForm.gUserName
+                                               ,DiscountServiceForm.gPassword
+                                               ,FormParams.ParamByName('DiscountCardNumber').Value
+                                               ,FormParams.ParamByName('DiscountExternalId').Value
+                                               )
+         then begin
+            // обнулим, пусть фармацевт начнет заново
+            FormParams.ParamByName('DiscountExternalId').Value:= 0;
+            // обнулим "нужные" параметры-Item
+            //DiscountServiceForm.pSetParamItemNull;
+         end;
+
+    end;
+    // Update Дисконт в CDS - по всем "обновим" Дисконт
+    DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+    //***20.07.16
+    lblDiscountExternalName.Caption:= '  ' + FormParams.ParamByName('DiscountExternalName').Value + '  ';
+    lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
+    pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
+
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
+    if (FormParams.ParamByName('ConfirmedKindName').AsString <> '')
+    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString;
+    if (FormParams.ParamByName('InvNumberOrder').AsString <> '')
+    then lblCashMember.Caption := lblCashMember.Caption + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+
+    lblBayer.Caption := FormParams.ParamByName('BayerName').AsString;
+    if (FormParams.ParamByName('BayerPhone').AsString <> '')
+    then lblBayer.Caption := lblBayer.Caption + ' * ' + FormParams.ParamByName('BayerPhone').AsString;
+
+    pnlVIP.Visible := true;
+  End;
+  if not gc_User.Local then
+  Begin
+    WaitForSingleObject(MutexVip, INFINITE);
+    SaveLocalData(VIPCDS,vip_lcl);
+    SaveLocalData(VIPListCDS,vipList_lcl);
+    ReleaseMutex(MutexVip);
+  End;
+end;
+
+procedure TMainCashForm2.actGetMoneyInCashExecute(Sender: TObject);
+begin
+  if gc_User.local then exit;
+
+  spGet_Password_MoneyInCash.Execute;
+  //временно будем без пароля
+  //if InputBox('Пароль','Введите пароль:','') <> spGet_Password_MoneyInCash.ParamByName('outPassword').AsString then exit;
+  //
+  spGetMoneyInCash.ParamByName('inDate').Value := Date;
+  spGetMoneyInCash.Execute;
+  lblMoneyInCash.Caption := FormatFloat(',0.00',spGetMoneyInCash.ParamByName('outTotalSumm').AsFloat);
+  //
+  TimerMoneyInCash.Enabled:=True;
+end;
+
+procedure TMainCashForm2.TimerMoneyInCashTimer(Sender: TObject);
+begin
+ TimerMoneyInCash.Enabled:=False;
+ try
+  lblMoneyInCash.Caption := '0.00';
+  TimerMoneyInCash.Enabled:=False;
+ finally
+  TimerMoneyInCash.Enabled:=True;
+ end;
+end;
+
+procedure TMainCashForm2.actInsertUpdateCheckItemsExecute(Sender: TObject);
+begin
+  if ceAmount.Value <> 0 then begin //ЕСЛИ введенное кол-во 0 то просто переходим к следующему коду
+    if not Assigned(SourceClientDataSet) then
+      SourceClientDataSet := RemainsCDS;
+
+    if SoldRegim AND (SourceClientDataSet.FieldByName('Price').asCurrency = 0) then begin
+       ShowMessage('Нельзя продать товар с 0 ценой! Свяжитесь с менеджером');
+       exit;
+    end;
+    InsertUpdateBillCheckItems;
+  end;
+  SoldRegim := true;
+  ActiveControl := lcName;
+end;
+
+//проверили что есть остаток
+function TMainCashForm2.fCheck_RemainsError : Boolean;
+var GoodsId_list, Amount_list : String;
+    B:TBookmark;
+begin
+  Result:=false;
+  //
+  GoodsId_list:= '';
+  Amount_list:= '';
+  //
+  //формируется список товаров
+  with CheckCDS do
+  begin
+    B:= GetBookmark;
+    DisableControls;
+    try
+      First;
+      while Not Eof do
+      Begin
+        if GoodsId_list <> '' then begin GoodsId_list :=  GoodsId_list + ';'; Amount_list :=  Amount_list + ';';end;
+        GoodsId_list:= GoodsId_list + IntToStr(FieldByName('GoodsId').AsInteger);
+        Amount_list:= Amount_list + FloatToStr(FieldByName('Amount').asCurrency);
+        Next;
+      End;
+      GotoBookmark(B);
+      FreeBookmark(B);
+    finally
+      EnableControls;
+    end;
+  end;
+  //
+  //теперь вызов
+  with spCheck_RemainsError do
+  try
+      ParamByName('inGoodsId_list').Value := GoodsId_list;
+      ParamByName('inAmount_list').Value := Amount_list;
+      Execute;
+      Result:=ParamByName('outMessageText').Value = '';
+      //if not Result then ShowMessage(ParamByName('outMessageText').Value);
+  except
+       //т.е. нет связи и это не является ошибкой
+       Result:=true;
+  end;
+  if not Result then
+  begin actShowMessage.MessageText:= spCheck_RemainsError.ParamByName('outMessageText').Value;
+        actShowMessage.Execute;
+  end;
+end;
+
+procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
+var
+  UID,CheckNumber: String;
+  lMsg: String;
+  fErr: Boolean;
+begin
+  if CheckCDS.RecordCount = 0 then exit;
+  PaidType:=ptMoney;
+  //спросили сумму и тип оплаты
+  if not fShift then
+  begin// если с Shift, то считаем, что дали без сдачи
+    if not CashCloseDialogExecute(FTotalSumm,ASalerCash,PaidType) then
+    Begin
+      if Self.ActiveControl <> ceAmount then
+        Self.ActiveControl := MainGrid;
+      exit;
+    End;
+  end
+  else
+    ASalerCash:=FTotalSumm;
+  //показали что началась печать
+  ShapeState.Brush.Color := clYellow;
+  ShapeState.Repaint;
+  application.ProcessMessages;
+
+  //проверили что есть остаток
+  if fCheck_RemainsError = false then exit;
+
+  //послали на печать
+  try
+    if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
+    Begin
+
+      if (FormParams.ParamByName('DiscountExternalId').Value > 0)
+      then fErr:= not DiscountServiceForm.fCommitCDS_Discount (CheckNumber, CheckCDS, lMsg , FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value)
+      else fErr:= false;
+
+      if fErr = true
+      then ShowMessage ('Ошибка.Чек распечатан.Продажа не сохранена')
+      else
+      begin
+       ShapeState.Brush.Color := clRed;
+       ShapeState.Repaint;
+              if SaveLocal(CheckCDS,
+                           FormParams.ParamByName('ManagerId').Value,
+                           FormParams.ParamByName('ManagerName').Value,
+                           FormParams.ParamByName('BayerName').Value,
+                           //***16.08.16
+                           FormParams.ParamByName('BayerPhone').Value,
+                           FormParams.ParamByName('ConfirmedKindName').Value,
+                           FormParams.ParamByName('InvNumberOrder').Value,
+                           FormParams.ParamByName('ConfirmedKindClientName').Value,
+                           //***20.07.16
+                           FormParams.ParamByName('DiscountExternalId').Value,
+                           FormParams.ParamByName('DiscountExternalName').Value,
+                           FormParams.ParamByName('DiscountCardNumber').Value,
+
+                           True,  // NEEDCOMPL
+                           CheckNumber,
+                           UID) then
+              Begin
+                SaveReal(UID, True);
+                NewCheck(false);
+
+              End;
+      end; // else if fErr = true
+    End;
+  finally
+    ShapeState.Brush.Color := clGreen;
+    ShapeState.Repaint;
+  end;
+end;
+
+procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
+var
+  AfterScr: TDataSetNotifyEvent;
+begin
+  startSplash('Начало обновления данных с сервера');
+  try
+    if gc_User.Local AND RemainsCDS.IsEmpty then
+    begin
+//      ShowMessage('Загрузка из Remains');
+      MainGridDBTableView.BeginUpdate;
+      AfterScr := RemainsCDS.AfterScroll;
+      RemainsCDS.AfterScroll := nil;
+      RemainsCDS.DisableControls;
+      AlternativeCDS.DisableControls;
+      try
+        if not FileExists(Remains_lcl) or
+           not FileExists(Alternative_lcl) then
+        Begin
+          ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
+          Close;
+        End;
+        WaitForSingleObject(MutexRemains, INFINITE);
+        LoadLocalData(RemainsCDS, Remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
+        LoadLocalData(AlternativeCDS, Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
+      finally
+        RemainsCDS.EnableControls;
+        AlternativeCDS.EnableControls;
+        MainGridDBTableView.EndUpdate;
+        RemainsCDS.AfterScroll := AfterScr;
+        RemainsCDS.AfterScroll(RemainsCDS);
+      end;
+    end
+    else
+    if not gc_User.Local then
+    Begin
+      if Sender <> nil then
+        InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
+      MainGridDBTableView.BeginUpdate;
+      RemainsCDS.DisableControls;
+      AlternativeCDS.DisableControls;
+      AfterScr := RemainsCDS.AfterScroll;
+      RemainsCDS.AfterScroll := nil;
+      try
+        ChangeStatus('Получение остатков');
+        actRefresh.Execute;
+
+        ChangeStatus('Сохранение остатков в локальной базе');
+        WaitForSingleObject(MutexRemains, INFINITE);
+        SaveLocalData(RemainsCDS,Remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
+        SaveLocalData(AlternativeCDS,Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
+
+        ChangeStatus('Получение ВИП чеков');
+
+        SaveLocalVIP;
+        ChangeStatus('Сохранение ВИП чеков в локальной базе');
+      finally
+        ChangeStatus('Перезагрузка данных в окне программы');
+        RemainsCDS.EnableControls;
+        AlternativeCDS.EnableControls;
+        MainGridDBTableView.EndUpdate;
+        RemainsCDS.AfterScroll := AfterScr;
+        RemainsCDS.AfterScroll(RemainsCDS);
+      end;
+    End;
+  finally
+    EndSplash;
+  end;
+end;
+
+procedure TMainCashForm2.actRefreshRemainsExecute(Sender: TObject);
+begin
+  StartRefreshDiffThread;
+end;
+
+procedure TMainCashForm2.actSaveCashSesionIdToFileExecute(Sender: TObject);
+var
+  myFile : TextFile;
+  text   : string;
+
+begin
+  // Попытка открыть Test.txt файл для записи
+  AssignFile(myFile, 'CashSessionId.ini');
+  ReWrite(myFile);
+  // Запись нескольких известных слов в этот файл
+  WriteLn(myFile, FormParams.ParamByName('CashSessionId').Value);
+  // Закрытие файла
+  CloseFile(myFile);
+  PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 2);  // отправляем сообщение что можно забирать вайлс с кешсешнид
+end;
+
+
+
+procedure TMainCashForm2.actSelectLocalVIPCheckExecute(Sender: TObject);
+var
+  vip,vipList: TClientDataSet;
+begin
+  inherited;
+  vip := TClientDataSet.Create(Nil);
+  vipList := TClientDataSet.Create(nil);
+  try
+    WaitForSingleObject(MutexVip, INFINITE);
+    LoadLocalData(vip,vip_lcl);
+    LoadLocalData(vipList,vipList_lcl);
+    ReleaseMutex(MutexVip);
+    if VIP.Locate('Id',FormParams.ParamByName('CheckId').Value,[]) then
+    Begin
+      vipList.Filter := 'MovementId = '+FormParams.ParamByName('CheckId').AsString;
+      vipList.Filtered := True;
+      vipList.First;
+      While not vipList.Eof do
+      Begin
+        CheckCDS.Append;
+        CheckCDS.FieldByName('Id').AsInteger := VipList.FieldByName('Id').AsInteger;
+        CheckCDS.FieldByName('GoodsId').AsInteger := VipList.FieldByName('GoodsId').AsInteger;
+        CheckCDS.FieldByName('GoodsCode').AsInteger := VipList.FieldByName('GoodsCode').AsInteger;
+        CheckCDS.FieldByName('GoodsName').AsString := VipList.FieldByName('GoodsName').AsString;
+        CheckCDS.FieldByName('Amount').AsFloat := 0;//VipList.FieldByName('Amount').AsFloat; //маленькая ошибочка, поставил 0, ***20.07.16
+        CheckCDS.FieldByName('Price').AsFloat := VipList.FieldByName('Price').AsFloat;
+        CheckCDS.FieldByName('Summ').AsFloat := VipList.FieldByName('Summ').AsFloat;
+        CheckCDS.FieldByName('NDS').AsFloat := VipList.FieldByName('NDS').AsFloat;
+        //***20.07.16
+        checkCDS.FieldByName('PriceSale').asCurrency         :=VipList.FieldByName('PriceSale').asCurrency;
+        checkCDS.FieldByName('ChangePercent').asCurrency     :=VipList.FieldByName('ChangePercent').asCurrency;
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=VipList.FieldByName('SummChangePercent').asCurrency;
+        //***19.08.16
+        checkCDS.FieldByName('AmountOrder').asCurrency :=VipList.FieldByName('AmountOrder').asCurrency;
+        //***10.08.16
+        checkCDS.FieldByName('List_UID').AsString := VipList.FieldByName('List_UID').AsString;
+
+        CheckCDS.Post;
+        if FormParams.ParamByName('CheckId').Value > 0 then
+          //UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
+          //маленькая ошибочка, попробуем с VipList, ***20.07.16
+          UpdateRemainsFromCheck(VipList.FieldByName('GoodsId').AsInteger, VipList.FieldByName('Amount').AsFloat, VipList.FieldByName('PriceSale').asCurrency);
+        vipList.Next;
+      End;
+    End;
+
+  finally
+    vip.Close;
+    vip.Free;
+    vipList.Close;
+    vipList.Free;
+  end;
+end;
+
+procedure TMainCashForm2.actServiseRunExecute(Sender: TObject);
+var
+SEInfo: TShellExecuteInfo;
+ExitCode: DWORD;
+ExecuteFile, ParamString, StartInString: string;
+begin
+  ExecuteFile := 'FarmacyCashServise.exe';
+  FillChar(SEInfo, SizeOf(SEInfo), 0);
+  SEInfo.cbSize := SizeOf(TShellExecuteInfo);
+  with SEInfo do
+    begin
+      fMask := SEE_MASK_NOCLOSEPROCESS;
+      Wnd := Application.Handle;
+      lpFile := PChar(ExecuteFile);
+      //ParamString:='/autologin';
+      // ParamString:= gc_User.Session;
+      {ParamString can contain theapplication parameters.}
+       lpParameters := PChar(ParamString);
+      {StartInString specifies thename of the working
+      directory.If ommited, the current directory is used.}
+      // lpDirectory := PChar(StartInString);
+      nShow := SW_SHOWNORMAL;
+    end;
+
+    if ShellExecuteEx(@SEInfo) then
+    begin
+//      repeat Application.HandleMessage;
+//        GetExitCodeProcess(SEInfo.hProcess, ExitCode);
+//      until (ExitCode <> STILL_ACTIVE) or Application.Terminated;
+//     ShowMessage('Программа отработала');
+    end
+    else
+      ShowMessage('Ошибка запуска сервиса');
+end;
+
+procedure TMainCashForm2.actSetFocusExecute(Sender: TObject);
+begin
+  ActiveControl := lcName;
+end;
+
+procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);
+var
+  GoodsId: Integer;
+  Amount_find: Currency;
+  oldFilter:String;
+  oldFiltered:Boolean;
+begin
+  AlternativeCDS.DisableControls;
+  RemainsCDS.AfterScroll := Nil;
+  RemainsCDS.DisableControls;
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  RemainsCDS.Filtered := False;
+  AlternativeCDS.Filtered := False;
+  CheckCDS.DisableControls;
+  oldFilter:= CheckCDS.Filter;
+  oldFiltered:= CheckCDS.Filtered;
+  try
+    MemData.First;
+    while not MemData.eof do
+    begin
+          // сначала найдем кол-во в чеках
+          CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger);
+          CheckCDS.Filtered:=true;
+          CheckCDS.First;
+          Amount_find:=0;
+          while not CheckCDS.EOF do begin
+              Amount_find:= Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
+              CheckCDS.Next;
+          end;
+          CheckCDS.Filter := oldFilter;
+          CheckCDS.Filtered:= oldFiltered;
+
+      if not RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) and  MemData.FieldByName('NewRow').AsBoolean then
+      Begin
+        RemainsCDS.Append;
+        RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
+        RemainsCDS.FieldByName('GoodsCode').AsInteger := MemData.FieldByName('GoodsCode').AsInteger;
+        RemainsCDS.FieldByName('GoodsName').AsString := MemData.FieldByName('GoodsName').AsString;
+        RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
+        RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
+        RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
+        RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.Post;
+      End
+      else
+      Begin
+        if RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) then
+        Begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
+          RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
+          RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
+          RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - Amount_find;
+          RemainsCDS.Post;
+        End;
+      End;
+      MemData.Next;
+    end;
+
+    AlternativeCDS.First;
+    while Not AlternativeCDS.eof do
+    Begin
+      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+      Begin
+        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
+        Begin
+          AlternativeCDS.Edit;
+          AlternativeCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+                                                            - Amount_find;
+          AlternativeCDS.Post;
+        End;
+      End;
+      AlternativeCDS.Next;
+    End;
+    MemData.Close;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id',GoodsId,[]);
+    RemainsCDS.EnableControls;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+    AlternativeCDS.Filtered := true;
+    RemainsCDSAfterScroll(RemainsCDS);
+    AlternativeCDS.EnableControls;
+    CheckCDS.EnableControls;
+    CheckCDS.Filter := oldFilter;
+    CheckCDS.Filtered:= oldFiltered;
+  end;
+
+
+end;
+
+procedure TMainCashForm2.actSetConfirmedKind_CompleteExecute(Sender: TObject);
+var UID: String;
+    lConfirmedKindName:String;
+begin
+  if FormParams.ParamByName('CheckId').Value = 0 then
+  begin
+       ShowMessage('Ошибка.VIP-чек не загружен.');
+       exit
+  end;
+
+  // Изменили <Статус заказа> и получили его название
+  with spUpdate_ConfirmedKind do
+  try
+      ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
+      ParamByName('inDescName').Value := 'zc_Enum_ConfirmedKind_Complete';
+      Execute;
+      lConfirmedKindName:=ParamByName('ouConfirmedKindName').Value;
+  except
+        ShowMessage('Ошибка.Нет связи с сервером');
+  end;
+
+  if spUpdate_ConfirmedKind.ParamByName('outMessageText').Value <> '' then
+  begin actShowMessage.MessageText:= spUpdate_ConfirmedKind.ParamByName('outMessageText').Value;
+        actShowMessage.Execute;
+  end;
+
+  if lConfirmedKindName = '' then
+  begin
+        ShowMessage('Ошибка.Нельзя изменить статус чека');
+        exit;
+  end;
+
+  FormParams.ParamByName('ConfirmedKindName').Value:= lConfirmedKindName;
+
+  if SaveLocal(CheckCDS
+              ,FormParams.ParamByName('ManagerId').Value
+              ,FormParams.ParamByName('ManagerName').Value
+              ,FormParams.ParamByName('BayerName').Value
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,lConfirmedKindName
+              ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
+              ,False,'',UID)
+  then begin
+    SaveReal(UID);
+    //
+    NewCheck(False);
+    //
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString
+                   + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString
+                   + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+  End;
+
+  //
+  SetBlinkVIP (true);
+end;
+
+procedure TMainCashForm2.actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
+var UID: String;
+    lConfirmedKindName:String;
+begin
+  if FormParams.ParamByName('CheckId').Value = 0 then
+  begin
+       ShowMessage('Ошибка.VIP-чек не загружен.');
+       exit
+  end;
+
+  // Изменили <Статус заказа> и получили его название
+  with spUpdate_ConfirmedKind do
+  try
+      ParamByName('inMovementId').Value := FormParams.ParamByName('CheckId').Value;
+      ParamByName('inDescName').Value := 'zc_Enum_ConfirmedKind_UnComplete';
+      Execute;
+      lConfirmedKindName:=ParamByName('ouConfirmedKindName').Value;
+  except
+        ShowMessage('Ошибка.Нет связи с сервером');
+  end;
+
+  if lConfirmedKindName = '' then
+  begin
+        ShowMessage('Ошибка.Нельзя изменить статус чека');
+        exit;
+  end;
+
+  FormParams.ParamByName('ConfirmedKindName').Value:= lConfirmedKindName;
+
+  if SaveLocal(CheckCDS
+              ,FormParams.ParamByName('ManagerId').Value
+              ,FormParams.ParamByName('ManagerName').Value
+              ,FormParams.ParamByName('BayerName').Value
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,lConfirmedKindName
+              ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
+              ,False,'',UID)
+  then begin
+    SaveReal(UID);
+    //
+    NewCheck(False);
+    //
+    lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString
+                   + ' * ' + FormParams.ParamByName('ConfirmedKindName').AsString
+                   + ' * ' + '№ ' + FormParams.ParamByName('InvNumberOrder').AsString;
+  End;
+
+  //
+  SetBlinkVIP (true);
+end;
+
+//***20.07.16
+procedure TMainCashForm2.actSetDiscountExternalExecute(Sender: TObject);
+var
+  DiscountExternalId:Integer;
+  DiscountExternalName,DiscountCardNumber: String;
+  lMsg: String;
+begin
+  with TDiscountDialogForm.Create(nil) do
+  try
+     DiscountExternalId  := Self.FormParams.ParamByName('DiscountExternalId').Value;
+     DiscountExternalName:= Self.FormParams.ParamByName('DiscountExternalName').Value;
+     DiscountCardNumber  := Self.FormParams.ParamByName('DiscountCardNumber').Value;
+     if not DiscountDialogExecute(DiscountExternalId,DiscountExternalName,DiscountCardNumber)
+     then exit;
+  finally
+     Free;
+  end;
+  //
+  FormParams.ParamByName('DiscountExternalId').Value := DiscountExternalId;
+  FormParams.ParamByName('DiscountExternalName').Value := DiscountExternalName;
+  FormParams.ParamByName('DiscountCardNumber').Value := DiscountCardNumber;
+  // update DataSet - еще раз по всем "обновим" Дисконт
+  DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+  //
+  pnlDiscount.Visible    := DiscountExternalId > 0;
+  lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
+  lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
+end;
+
+procedure TMainCashForm2.actSetVIPExecute(Sender: TObject);
+var
+  ManagerID:Integer;
+  ManagerName,BayerName: String;
+  ConfirmedKindName_calc: String;
+  UID: String;
+begin
+  ShowMessage('actSetVIPExecute');
+  if not VIPDialogExecute(ManagerID,ManagerName,BayerName) then exit;
+  //
+  FormParams.ParamByName('ManagerId').Value   := ManagerId;
+  FormParams.ParamByName('ManagerName').Value := ManagerName;
+  FormParams.ParamByName('BayerName').Value   := BayerName;
+  if FormParams.ParamByName('ConfirmedKindName').Value = ''
+  then FormParams.ParamByName('ConfirmedKindName').Value:= 'подтвержден';
+  ConfirmedKindName_calc:=FormParams.ParamByName('ConfirmedKindName').Value;
+  //
+  if SaveLocal(CheckCDS,ManagerId,ManagerName,BayerName
+               //***16.08.16
+              ,FormParams.ParamByName('BayerPhone').Value
+              ,ConfirmedKindName_calc
+              ,FormParams.ParamByName('InvNumberOrder').Value
+              ,FormParams.ParamByName('ConfirmedKindClientName').Value
+               //***20.07.16
+              ,FormParams.ParamByName('DiscountExternalId').Value
+              ,FormParams.ParamByName('DiscountExternalName').Value
+              ,FormParams.ParamByName('DiscountCardNumber').Value
+
+              ,False,'',UID)
+  then begin
+    NewCheck(False);
+    SaveReal(UID);
+  End;
+end;
+
+procedure TMainCashForm2.actSoldExecute(Sender: TObject);
+begin
+  SoldRegim:= not SoldRegim;
+  ceAmount.Enabled := false;
+  lcName.Text := '';
+  Activecontrol := lcName;
+end;
+
+procedure TMainCashForm2.actSpecExecute(Sender: TObject);
+begin
+  if Assigned(Cash) then
+    Cash.AlwaysSold := actSpec.Checked;
+end;
+
+procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
+begin
+  UpdateRemainsFromDiff(nil);
+end;
+
+procedure TMainCashForm2.btnCheckClick(Sender: TObject);
+begin
+  SetBlinkCheck(true);
+  if fBlinkCheck = true
+  then actOpenCheckVIP_Error.Execute
+  else actCheck.Execute;
+end;
+
+procedure TMainCashForm2.Button1Click(Sender: TObject);
+begin
+actServiseRun.Execute;
+
+end;
+
+procedure TMainCashForm2.ceAmountExit(Sender: TObject);
+begin
+  ceAmount.Enabled := false;
+  lcName.Text := '';
+end;
+
+procedure TMainCashForm2.ceAmountKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key=VK_Return then
+     actInsertUpdateCheckItems.Execute
+end;
+
+procedure TMainCashForm2.actCheckConnectionExecute(Sender: TObject);
+begin
+  try
+    spGet_User_IsAdmin.Execute;
+    gc_User.Local := False;
+    ShowMessage('Режим работы: В сети');
+  except
+    Begin
+      gc_User.Local := True;
+      ShowMessage('Режим работы: Автономно');
+    End;
+  end;
+end;
+
+procedure TMainCashForm2.CheckCDSBeforePost(DataSet: TDataSet);
+
+begin
+  inherited;
+  if DataSet.FieldByName('List_UID').AsString = '' then
+    DataSet.FieldByName('List_UID').AsString := GenerateGUID;
+end;
+
+procedure TMainCashForm2.ConnectionModeChange(var Msg: TMessage);
+begin
+  SetWorkMode(gc_User.Local);
+end;
+
+procedure TMainCashForm2.FormCreate(Sender: TObject);
+var
+  F: String;
+begin
+  inherited;
+
+  Application.OnMessage := AppMsgHandler;
+
+  // создаем мутексы если не созданы
+  MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
+  LastErr := GetLastError;
+  MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
+  LastErr := GetLastError;
+  MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
+  LastErr := GetLastError;
+  MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
+  LastErr := GetLastError;
+  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+  LastErr := GetLastError;
+
+
+
+  //сгенерили гуид для определения сессии
+  ChangeStatus('Установка первоначальных параметров');
+  FormParams.ParamByName('CashSessionId').Value := GenerateGUID;
+  actSaveCashSesionIdToFile.Execute;
+
+  FormParams.ParamByName('ClosedCheckId').Value := 0;
+  FormParams.ParamByName('CheckId').Value := 0;
+  ShapeState.Brush.Color := clGreen;
+  if NOT GetIniFile(F) then
+  Begin
+    Application.Terminate;
+    exit;
+  End;
+  ChangeStatus('Загрузка профиля пользователя');
+  UserSettingsStorageAddOn.LoadUserSettings;
+  try
+    ChangeStatus('Инициализация оборудования');
+    Cash:=TCashFactory.GetCash(iniCashType);
+
+    if (Cash <> nil) AND (Cash.FiscalNumber = '') then
+    Begin
+      MessageDlg('Ошибка инициализации кассового аппарата. Дальнейшая работа программы невозможна.' + #13#10 +
+                 'Для кассового апарата типа "DATECS FP-320" ' + #13#10 +
+                 'необходимо внести его серийный номер в файл настроек' + #13#10 +
+                 '(Секция [TSoldWithCompMainForm] параметр "FP320SERIAL")', mtError, [mbOK], 0);
+
+      Application.Terminate;
+      exit;
+    End;
+
+  except
+    Begin
+      ShowMessage('Внимание! Программа не может подключиться к фискальному аппарату.'+#13+
+                  'Дальнейшая работа программы возможна только в нефискальном режиме!');
+    End;
+  end;
+
+  ChangeStatus('Инициализация локального хранилища');
+  if not InitLocalStorage then
+  Begin
+    Application.Terminate;
+    exit;
+  End;
+
+ // SetWorkMode(gc_User.Local);
+
+  SoldParallel:=iniSoldParallel;
+  CheckCDS.CreateDataSet;
+  ChangeStatus('Подготовка нового чека');
+  NewCheck;
+  OnCLoseQuery := ParentFormCloseQuery;
+  OnShow := ParentFormShow;
+
+//   TimerSaveAll.Enabled := true;
+// временно отключим
+
+  SetBlinkVIP (true);
+  SetBlinkCheck (true);
+  TimerBlinkBtn.Enabled := true;
+end;
+
+function TMainCashForm2.InitLocalStorage: Boolean;
+var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
+    fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
+  procedure InitTable(DS: TVKSmartDBF; AFileName: String);
+  Begin
+    DS.DBFFileName := AnsiString(AFileName);
+    DS.OEM := False;
+    DS.AccessMode.OpenReadWrite := true;
+  End;
+begin
+  result := False;
+  WaitForSingleObject(MutexDBF, INFINITE);
+  WaitForSingleObject(MutexDBFDiff, INFINITE);
+  InitTable(FLocalDataBaseHead, iniLocalDataBaseHead);
+  InitTable(FLocalDataBaseBody, iniLocalDataBaseBody);
+  InitTable(FLocalDataBaseDiff, iniLocalDataBaseDiff);
+   if (not FileExists(iniLocalDataBaseDiff)) then
+  begin
+    AddIntField(FLocalDataBaseDiff,'ID'); //id записи
+    AddIntField(FLocalDataBaseDiff,'GOODSCODE'); //Код товара
+    AddStrField(FLocalDataBaseDiff,'GOODSNAME',254); //наименование товара
+    AddFloatField(FLocalDataBaseDiff,'PRICE'); //Цена
+    AddFloatField(FLocalDataBaseDiff,'REMAINS'); // Остатки
+    AddFloatField(FLocalDataBaseDiff,'MCSVALUE'); //
+    AddFloatField(FLocalDataBaseDiff,'RESERVED'); //
+    AddBoolField(FLocalDataBaseDiff,'NEWROW'); //
+
+    try
+      FLocalDataBaseDiff.CreateTable;
+    except ON E: Exception do
+      Begin
+        Application.OnException(Application.MainForm,E);
+//        ShowMessage('Ошибка создания локального хранилища: '+E.Message);
+        Exit;
+      End;
+    end;
+  end;
+
+  if (not FileExists(iniLocalDataBaseHead)) then
+  begin
+    AddIntField(FLocalDataBaseHead,'ID');//id чека
+    AddStrField(FLocalDataBaseHead,'UID',50);//uid чека
+    AddDateField(FLocalDataBaseHead,'DATE'); //дата/Время чека
+    AddIntField(FLocalDataBaseHead,'PAIDTYPE'); //тип оплаты
+    AddStrField(FLocalDataBaseHead,'CASH',20); //серийник аппарата
+    AddIntField(FLocalDataBaseHead,'MANAGER'); //Id Менеджера (VIP)
+    AddStrField(FLocalDataBaseHead,'BAYER',254); //Покупатель (VIP)
+    AddBoolField(FLocalDataBaseHead,'SAVE'); //Покупатель (VIP)
+    AddBoolField(FLocalDataBaseHead,'COMPL'); //Покупатель (VIP)
+    AddBoolField(FLocalDataBaseHead,'NEEDCOMPL'); //нужно провести документ
+    AddBoolField(FLocalDataBaseHead,'NOTMCS'); //Не участвует в расчете НТЗ
+    AddStrField(FLocalDataBaseHead,'FISCID',50); //Номер фискального чека
+    //***20.07.16
+    AddIntField(FLocalDataBaseHead,'DISCOUNTID');    //Id Проекта дисконтных карт
+    AddStrField(FLocalDataBaseHead,'DISCOUNTN',254); //Название Проекта дисконтных карт
+    AddStrField(FLocalDataBaseHead,'DISCOUNT',50);   //№ Дисконтной карты
+    //***16.08.16
+    AddStrField(FLocalDataBaseHead,'BAYERPHONE',50); //Контактный телефон (Покупателя) - BayerPhone
+    AddStrField(FLocalDataBaseHead,'CONFIRMED',50);  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+    AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
+    AddStrField(FLocalDataBaseHead,'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+
+      // Для сервиса передает рельную сесию при которой была продажа // Номер индификационной сесии
+    AddStrField(FLocalDataBaseHead,'USERSESION',50);
+    try
+      FLocalDataBaseHead.CreateTable;
+    except ON E: Exception do
+      Begin
+        Application.OnException(Application.MainForm,E);
+//        ShowMessage('Ошибка создания локального хранилища: '+E.Message);
+        Exit;
+      End;
+    end;
+     FLocalDataBaseHead.Close;
+  end
+  // !!!добавляем НОВЫЕ поля
+  else begin
+          FLocalDataBaseHead.Open;
+
+          //
+          if FLocalDataBaseHead.FindField('DISCOUNTID') = nil then
+          begin
+               fields11:=TVKDBFFieldDefs.Create(self);
+               with fields11.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'DISCOUNTID';
+                    field_type := 'N';
+                    len := 10;
+               end;
+               FLocalDataBaseHead.AddFields(fields11,1000);
+           end;
+          //
+          if FLocalDataBaseHead.FindField('DISCOUNTN') = nil then
+          begin
+               fields12:=TVKDBFFieldDefs.Create(self);
+               with fields12.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'DISCOUNTN';
+                    field_type := 'C';
+                    len := 254;
+               end;
+               FLocalDataBaseHead.AddFields(fields12,1000);
+           end;
+          //
+          if FLocalDataBaseHead.FindField('DISCOUNT') = nil then
+          begin
+               fields13:=TVKDBFFieldDefs.Create(self);
+               with fields13.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'DISCOUNT';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields13,1000);
+           end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('BAYERPHONE') = nil then
+          begin
+               fields14:=TVKDBFFieldDefs.Create(self);
+               with fields14.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'BAYERPHONE';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields14,1000);
+           end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('CONFIRMED') = nil then
+          begin
+               fields15:=TVKDBFFieldDefs.Create(self);
+               with fields15.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'CONFIRMED';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields15,1000);
+           end;
+          //***16.08.16
+          if FLocalDataBaseHead.FindField('NUMORDER') = nil then
+          begin
+               fields16:=TVKDBFFieldDefs.Create(self);
+               with fields16.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'NUMORDER';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields16,1000);
+           end;
+          //***25.08.16
+          if FLocalDataBaseHead.FindField('CONFIRMEDC') = nil then
+          begin
+               fields17:=TVKDBFFieldDefs.Create(self);
+               with fields17.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'CONFIRMEDC';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields17,1000);
+           end;
+           //
+              if FLocalDataBaseHead.FindField('USERSESION') = nil then
+          begin
+               fields18:=TVKDBFFieldDefs.Create(self);
+               with fields18.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'USERSESION';
+                    field_type := 'С';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields18,1000);
+           end;
+
+
+           FLocalDataBaseHead.Close;
+  end;// !!!добавляем НОВЫЕ поля
+
+
+  if (not FileExists(iniLocalDataBaseBody)) then
+  begin
+    AddIntField(FLocalDataBaseBody,'ID'); //id записи
+    AddStrField(FLocalDataBaseBody,'CH_UID',50); //uid чека
+    AddIntField(FLocalDataBaseBody,'GOODSID'); //ид товара
+    AddIntField(FLocalDataBaseBody,'GOODSCODE'); //Код товара
+    AddStrField(FLocalDataBaseBody,'GOODSNAME',254); //наименование товара
+    AddFloatField(FLocalDataBaseBody,'NDS'); //НДС товара
+    AddFloatField(FLocalDataBaseBody,'AMOUNT'); //Кол-во
+    AddFloatField(FLocalDataBaseBody,'PRICE'); //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+    //***20.07.16
+    AddFloatField(FLocalDataBaseBody,'PRICESALE'); //Цена без скидки
+    AddFloatField(FLocalDataBaseBody,'CHPERCENT'); //% Скидки
+    AddFloatField(FLocalDataBaseBody,'SUMMCH');    //Сумма Скидки
+    //***19.08.16
+    AddFloatField(FLocalDataBaseBody,'AMOUNTORD'); //Кол-во заявка
+    //***10.08.16
+    AddStrField(FLocalDataBaseBody,'LIST_UID',50); //UID строки продажи
+    try
+      FLocalDataBaseBody.CreateTable;
+    except ON E: Exception do
+      Begin
+        Application.OnException(Application.MainForm,E);
+//        ShowMessage('Ошибка создания локального хранилища: '+E.Message);
+        Exit;
+      End;
+    end;
+  end
+  // !!!добавляем НОВЫЕ поля
+  else begin
+          FLocalDataBaseBody.Open;
+          //
+          if FLocalDataBaseBody.FindField('PRICESALE') = nil then
+          begin
+               fields21:=TVKDBFFieldDefs.Create(self);
+               with fields21.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'PRICESALE';
+                    field_type := 'N';
+                    len := 10;
+                    dec := 4;
+               end;
+               FLocalDataBaseBody.AddFields(fields21,1000);
+           end;
+          //
+          if FLocalDataBaseBody.FindField('CHPERCENT') = nil then
+          begin
+               fields22:=TVKDBFFieldDefs.Create(self);
+               with fields22.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'CHPERCENT';
+                    field_type := 'N';
+                    len := 10;
+                    dec := 4;
+               end;
+               FLocalDataBaseBody.AddFields(fields22,1000);
+           end;
+          //
+          if FLocalDataBaseBody.FindField('SUMMCH') = nil then
+          begin
+               fields23:=TVKDBFFieldDefs.Create(self);
+               with fields23.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'SUMMCH';
+                    field_type := 'N';
+                    len := 10;
+                    dec := 4;
+               end;
+               FLocalDataBaseBody.AddFields(fields23,1000);
+          end;
+          //***19.08.16
+          if FLocalDataBaseBody.FindField('AMOUNTORD') = nil then
+          begin
+               fields24:=TVKDBFFieldDefs.Create(self);
+               with fields24.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'AMOUNTORD';
+                    field_type := 'N';
+                    len := 10;
+                    dec := 4;
+               end;
+               FLocalDataBaseBody.AddFields(fields24,1000);
+          end;
+          //***10.08.16
+          if FLocalDataBaseBody.FindField('LIST_UID') = nil then
+          begin
+               fields25:=TVKDBFFieldDefs.Create(self);
+               with fields25.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'LIST_UID';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseBody.AddFields(fields25,1000);
+          end;
+          //
+          FLocalDataBaseBody.Close;
+  end; // !!!добавляем НОВЫЕ поля
+
+  try
+    FLocalDataBaseHead.Open;
+    FLocalDataBaseBody.Open;
+    FLocalDataBaseDiff.Open;
+  except ON E: Exception do
+    Begin
+        Application.OnException(Application.MainForm,E);
+//      ShowMessage('Ошибка открытия локального хранилища: '+E.Message);
+      Exit;
+    End;
+  end;
+  //проверка структуры
+  if (FLocalDataBaseHead.FindField('ID') = nil) or
+     (FLocalDataBaseHead.FindField('UID') = nil) or
+     (FLocalDataBaseHead.FindField('DATE') = nil) or
+     (FLocalDataBaseHead.FindField('PAIDTYPE') = nil) or
+     (FLocalDataBaseHead.FindField('CASH') = nil) or
+     (FLocalDataBaseHead.FindField('MANAGER') = nil) or
+     (FLocalDataBaseHead.FindField('BAYER') = nil) or
+     (FLocalDataBaseHead.FindField('COMPL') = nil) or
+     (FLocalDataBaseHead.FindField('SAVE') = nil) or
+     (FLocalDataBaseHead.FindField('NEEDCOMPL') = nil) or
+     (FLocalDataBaseHead.FindField('NOTMCS') = nil) or
+     (FLocalDataBaseHead.FindField('FISCID') = nil) or
+      //***20.07.16
+     (FLocalDataBaseHead.FindField('DISCOUNTID') = nil) or
+     (FLocalDataBaseHead.FindField('DISCOUNTN') = nil) or
+     (FLocalDataBaseHead.FindField('DISCOUNT') = nil) or
+      //***16.08.16
+     (FLocalDataBaseHead.FindField('BAYERPHONE') = nil) or
+     (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
+     (FLocalDataBaseHead.FindField('NUMORDER') = nil) or
+     (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil) or
+     (FLocalDataBaseHead.FindField('USERSESION') = nil)
+
+  then begin
+    ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
+    Exit;
+  End;
+
+  if (FLocalDataBaseBody.FindField('ID') = nil) or
+     (FLocalDataBaseBody.FindField('CH_UID') = nil) or
+     (FLocalDataBaseBody.FindField('GOODSID') = nil) or
+     (FLocalDataBaseBody.FindField('GOODSCODE') = nil) or
+     (FLocalDataBaseBody.FindField('GOODSNAME') = nil) or
+     (FLocalDataBaseBody.FindField('NDS') = nil) or
+     (FLocalDataBaseBody.FindField('AMOUNT') = nil) or
+     (FLocalDataBaseBody.FindField('PRICE') = nil) or
+      //***20.07.16
+     (FLocalDataBaseBody.FindField('PRICESALE') = nil) or
+     (FLocalDataBaseBody.FindField('CHPERCENT') = nil) or
+     (FLocalDataBaseBody.FindField('SUMMCH') = nil) or
+      //***19.08.16
+     (FLocalDataBaseBody.FindField('AMOUNTORD') = nil) or
+      //***10.08.16
+     (FLocalDataBaseBody.FindField('LIST_UID') = nil)
+  then begin
+    ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseBody.DBFFileName+')');
+    Exit;
+  End;
+
+  LocalDataBaseisBusy := 0;
+  Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active and FLocalDataBaseDiff.Active;
+
+  if Result then
+  begin
+   FLocalDataBaseHead.Active:=False;
+   FLocalDataBaseBody.Active:=False;
+   FLocalDataBaseDiff.Active:=False;
+  end;
+  ReleaseMutex(MutexDBF);
+  ReleaseMutex(MutexDBFDiff);
+end;
+
+procedure TMainCashForm2.InsertUpdateBillCheckItems;
+var lQuantity, lPrice, lPriceSale, lChangePercent, lSummChangePercent : Currency;
+    lMsg : String;
+    lGoodsId_bySoldRegim : Integer;
+    lPriceSale_bySoldRegim : Currency;
+begin
+  if ceAmount.Value = 0 then
+     exit;
+  if not assigned(SourceClientDataSet) then
+    SourceClientDataSet := RemainsCDS;
+  if SoldRegim AND
+     (ceAmount.Value > 0) and
+     (ceAmount.Value > SourceClientDataSet.FieldByName('Remains').asFloat) then
+  begin
+    ShowMessage('Не хватает количества для продажи!');
+    exit;
+  end;
+  if not SoldRegim AND
+     (ceAmount.Value < 0) and
+     (abs(ceAmount.Value) > abs(CheckCDS.FieldByName('Amount').asFloat)) then
+  begin
+    ShowMessage('Не хватает количества для возврата!');
+    exit;
+  end;
+  //
+  // потому что криво, надо правильно определить ТОВАР + цена БЕЗ скидки
+  if SoldRegim
+  then begin lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
+             lPriceSale_bySoldRegim := SourceClientDataSet.FieldByName('Price').asCurrency;
+       end
+  else begin lGoodsId_bySoldRegim   := CheckCDS.FieldByName('GoodsId').AsInteger;
+             if CheckCDS.FieldByName('PriceSale').asCurrency > 0 // !!!на всяк случай, временно
+             then lPriceSale_bySoldRegim := CheckCDS.FieldByName('PriceSale').asCurrency
+             else lPriceSale_bySoldRegim := CheckCDS.FieldByName('Price').asCurrency;
+       end;
+  {
+  //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
+  lQuantity := fGetCheckAmountTotal (lGoodsId_bySoldRegim, ceAmount.Value);
+  //если установлен Проект (дисконтные карты) ***20.07.16
+  if (FormParams.ParamByName('DiscountExternalId').Value > 0)
+    and (lQuantity > 0)
+  then begin
+         // цена БЕЗ скидки
+         lPriceSale := lPriceSale_bySoldRegim;
+         // попробуем получить Дисконт
+         if not DiscountServiceForm.fGetSale (lMsg, lPrice, lChangePercent, lSummChangePercent
+                                            , FormParams.ParamByName('DiscountCardNumber').Value
+                                            , FormParams.ParamByName('DiscountExternalId').Value
+                                            , lGoodsId_bySoldRegim
+                                            , lQuantity // для "ИТОГО" кол-во
+                                            , lPriceSale
+                                            , SourceClientDataSet.FieldByName('GoodsCode').asInteger
+                                            , SourceClientDataSet.FieldByName('GoodsName').AsString
+                                             )
+         then if lMsg = ''
+              then // не найден штрих код и сохраним БЕЗ скидки
+              else exit // !!!выход ???и еще раз ругнуться
+         else // все хорошо и сохраним скидку
+  end
+  else} begin
+         lPrice             := lPriceSale_bySoldRegim;
+         lPriceSale         := lPriceSale_bySoldRegim;
+         lChangePercent     := 0;
+         lSummChangePercent := 0;
+         // обнулим "нужные" параметры-Item
+         //DiscountServiceForm.pSetParamItemNull;
+  end; // else если установлен Проект (дисконтные карты) ***20.07.16
+  //
+  //
+  if SoldRegim AND (ceAmount.Value > 0) then
+  Begin
+    CheckCDS.DisableControls;
+    try
+      CheckCDS.Filtered := False;
+      if not checkCDS.Locate('GoodsId;PriceSale',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,lPriceSale]),[]) then
+      Begin
+        checkCDS.Append;
+        checkCDS.FieldByName('Id').AsInteger:=0;
+        checkCDS.FieldByName('ParentId').AsInteger:=0;
+        checkCDS.FieldByName('GoodsId').AsInteger:=SourceClientDataSet.FieldByName('Id').asInteger;
+        checkCDS.FieldByName('GoodsCode').AsInteger:=SourceClientDataSet.FieldByName('GoodsCode').asInteger;
+        checkCDS.FieldByName('GoodsName').AsString:=SourceClientDataSet.FieldByName('GoodsName').AsString;
+        checkCDS.FieldByName('Amount').asCurrency:= 0;
+        checkCDS.FieldByName('Price').asCurrency:= lPrice;
+        checkCDS.FieldByName('Summ').asCurrency:=0;
+        checkCDS.FieldByName('NDS').asCurrency:=SourceClientDataSet.FieldByName('NDS').asCurrency;
+        checkCDS.FieldByName('isErased').AsBoolean:=False;
+        //***20.07.16
+        checkCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
+        checkCDS.FieldByName('ChangePercent').asCurrency     :=lChangePercent;
+        checkCDS.FieldByName('SummChangePercent').asCurrency :=lSummChangePercent;
+        //***19.08.16
+        checkCDS.FieldByName('AmountOrder').asCurrency       :=0;
+        //***10.08.16
+        checkCDS.FieldByName('List_UID').AsString := GenerateGUID;
+        checkCDS.Post;
+      End;
+    finally
+      CheckCDS.Filtered := True;
+      CheckCDS.EnableControls;
+    end;
+    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger,ceAmount.Value, lPriceSale);
+    //Update Дисконт в CDS - по всем "обновим" Дисконт
+    if FormParams.ParamByName('DiscountExternalId').Value > 0
+    then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+
+    CalcTotalSumm;
+  End
+  else
+  if not SoldRegim AND (ceAmount.Value < 0) then
+  Begin
+    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger,ceAmount.Value,CheckCDS.FieldByName('PriceSale').asCurrency);
+    //Update Дисконт в CDS - по всем "обновим" Дисконт
+    if FormParams.ParamByName('DiscountExternalId').Value > 0
+    then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
+
+    CalcTotalSumm;
+  End
+  else
+  if SoldRegim AND (ceAmount.Value < 0) then
+    ShowMessage('Для продажи можно указывать только количество больше 0!')
+  else
+  if not SoldRegim AND (ceAmount.Value > 0) then
+    ShowMessage('Для возврата можно указывать только количество меньше 0!');
+end;
+
+{------------------------------------------------------------------------------}
+
+procedure TMainCashForm2.UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
+var
+  GoodsId: Integer;
+  Amount_find: Currency;
+  oldFilter:String;
+  oldFiltered:Boolean;
+begin
+  //Если нет расхождений - ничего не делаем
+  if ADiffCDS = nil then
+    ADiffCDS := DiffCDS;
+  if ADIffCDS.IsEmpty then
+    exit;
+  //отключаем реакции
+
+  AlternativeCDS.DisableControls;
+  RemainsCDS.AfterScroll := Nil;
+  RemainsCDS.DisableControls;
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  RemainsCDS.Filtered := False;
+  AlternativeCDS.Filtered := False;
+  ADIffCDS.DisableControls;
+  CheckCDS.DisableControls;
+  oldFilter:= CheckCDS.Filter;
+  oldFiltered:= CheckCDS.Filtered;
+
+  try
+    ADIffCDS.First;
+    while not ADIffCDS.eof do
+    begin
+          // сначала найдем кол-во в чеках
+          CheckCDS.Filter:='GoodsId = ' + IntToStr(ADIffCDS.FieldByName('Id').AsInteger);
+          CheckCDS.Filtered:=true;
+          CheckCDS.First;
+          Amount_find:=0;
+          while not CheckCDS.EOF do begin
+              Amount_find:= Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
+              CheckCDS.Next;
+          end;
+          CheckCDS.Filter := oldFilter;
+          CheckCDS.Filtered:= oldFiltered;
+
+      if ADIffCDS.FieldByName('NewRow').AsBoolean then
+      Begin
+        RemainsCDS.Append;
+        RemainsCDS.FieldByName('Id').AsInteger := ADIffCDS.FieldByName('Id').AsInteger;
+        RemainsCDS.FieldByName('GoodsCode').AsInteger := ADIffCDS.FieldByName('GoodsCode').AsInteger;
+        RemainsCDS.FieldByName('GoodsName').AsString := ADIffCDS.FieldByName('GoodsName').AsString;
+        RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
+        RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
+        RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
+        RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
+        RemainsCDS.Post;
+      End
+      else
+      Begin
+        if RemainsCDS.Locate('Id',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+        Begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
+          RemainsCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
+          RemainsCDS.FieldByName('MCSValue').asCurrency := ADIffCDS.FieldByName('MCSValue').asCurrency;
+          RemainsCDS.FieldByName('Reserved').asCurrency := ADIffCDS.FieldByName('Reserved').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - Amount_find;
+          RemainsCDS.Post;
+        End;
+      End;
+      ADIffCDS.Next;
+    end;
+
+    AlternativeCDS.First;
+    while Not AlternativeCDS.eof do
+    Begin
+      if ADIffCDS.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+      Begin
+        if AlternativeCDS.FieldByName('Remains').asCurrency <> ADIffCDS.FieldByName('Remains').asCurrency then
+        Begin
+          AlternativeCDS.Edit;
+          AlternativeCDS.FieldByName('Remains').asCurrency := ADIffCDS.FieldByName('Remains').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+                                                            - Amount_find;
+          AlternativeCDS.Post;
+        End;
+      End;
+      AlternativeCDS.Next;
+    End;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id',GoodsId,[]);
+    RemainsCDS.EnableControls;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+    AlternativeCDS.Filtered := true;
+    RemainsCDSAfterScroll(RemainsCDS);
+    AlternativeCDS.EnableControls;
+    CheckCDS.EnableControls;
+    CheckCDS.Filter := oldFilter;
+    CheckCDS.Filtered:= oldFiltered;
+  end;
+end;
+
+procedure TMainCashForm2.CalcTotalSumm;
+var
+  B:TBookmark;
+Begin
+  FTotalSumm := 0;
+  WITH CheckCDS DO
+  Begin
+    B:= GetBookmark;
+    DisableControls;
+    try
+      First;
+      while Not Eof do
+      Begin
+        FTotalSumm := FTotalSumm + FieldByName('Summ').asCurrency;
+        Next;
+      End;
+      GotoBookmark(B);
+      FreeBookmark(B);
+    finally
+      EnableControls;
+    end;
+  End;
+  lblTotalSumm.Caption := FormatFloat(',0.00',FTotalSumm);
+End;
+
+procedure TMainCashForm2.WM_KEYDOWN(var Msg: TWMKEYDOWN);
+begin
+  if (Msg.charcode = VK_TAB) and (ActiveControl=lcName) then
+     ActiveControl:=MainGrid;
+end;
+
+procedure TMainCashForm2.lcNameEnter(Sender: TObject);
+begin
+  inherited;
+  SourceClientDataSet := nil;
+end;
+
+procedure TMainCashForm2.lcNameExit(Sender: TObject);
+begin
+  inherited;
+  if (GetKeyState(VK_TAB)<0) and (GetKeyState(VK_CONTROL)<0) then begin
+     ActiveControl:=CheckGrid;
+     exit
+  end;
+  if GetKeyState(VK_TAB)<0 then
+     ActiveControl:=MainGrid;
+end;
+
+procedure TMainCashForm2.lcNameKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  if (Key = VK_Return)
+     and
+     (
+       (
+         SoldRegim
+         AND
+         (lcName.Text = RemainsCDS.FieldByName('GoodsName').AsString)
+       )
+       or
+       (
+         not SoldRegim
+         AND
+         (lcName.Text = CheckCDS.FieldByName('GoodsName').AsString)
+       )
+     ) then begin
+     ceAmount.Enabled := true;
+     if SoldRegim then
+        ceAmount.Value := 1
+     else
+        ceAmount.Value := - 1;
+     ActiveControl := ceAmount;
+  end;
+  if Key = VK_TAB then
+    ActiveControl:=MainGrid;
+end;
+
+procedure TMainCashForm2.MainColReservedGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+  var AText: string);
+begin
+  if AText = '0' then
+    AText := '';
+end;
+
+procedure TMainCashForm2.MainGridDBTableViewFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+ Cnt: integer;
+begin
+  if MainGrid.IsFocused then exit;
+
+  Cnt := Sender.ViewInfo.RecordsViewInfo.VisibleCount;
+  Sender.Controller.TopRecordIndex := Sender.Controller.FocusedRecordIndex - Round((Cnt+1)/2);
+end;
+
+// процедура обновляет параметры для введения нового чека
+procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
+begin
+  FormParams.ParamByName('CheckId').Value := 0;
+  FormParams.ParamByName('ManagerId').Value := 0;
+  FormParams.ParamByName('ManagerName').Value := '';
+  FormParams.ParamByName('BayerName').Value := '';
+  //***20.07.16
+  FormParams.ParamByName('DiscountExternalId').Value := 0;
+  FormParams.ParamByName('DiscountExternalName').Value := '';
+  FormParams.ParamByName('DiscountCardNumber').Value := '';
+  //***16.08.16
+  FormParams.ParamByName('BayerPhone').Value        := '';
+  FormParams.ParamByName('ConfirmedKindName').Value := '';
+  FormParams.ParamByName('InvNumberOrder').Value    := '';
+  FormParams.ParamByName('ConfirmedKindClientName').Value := '';
+  FormParams.ParamByName('USERSESION').Value:=gc_User.Session;
+
+
+  FiscalNumber := '';
+  pnlVIP.Visible := False;
+  pnlDiscount.Visible := False;
+  lblCashMember.Caption := '';
+  lblBayer.Caption := '';
+  CheckCDS.DisableControls;
+  chbNotMCS.Checked := False;
+  try
+    CheckCDS.EmptyDataSet;
+  finally
+    CheckCDS.EnableControls;
+  end;
+
+  MainCashForm.SoldRegim := true;
+  MainCashForm.actSpec.Checked := false;
+  if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
+    MainCashForm.Cash.AlwaysSold := False;
+
+  if Self.Visible then       { TODO -oUfomaster -cИзменить : Добавить механизм обновления из local }
+  Begin
+//     ShowMessage('При работе');
+    if ANeedRemainsRefresh then
+      StartRefreshDiffThread;
+  End
+  else
+  Begin
+//    ShowMessage('При старте');
+    actRefreshAllExecute(nil);
+  End;
+  CalcTotalSumm;
+  ceAmount.Value := 0;
+  ActiveControl := lcName;
+end;
+
+procedure TMainCashForm2.ParentFormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+  if not CheckCDS.IsEmpty then
+  Begin
+    CanClose := False;
+    ShowMessage('Сначала обнулите чек.');
+  End
+  else
+    CanClose := MessageDlg('Вы действительно хотите выйти?',mtConfirmation,[mbYes,mbCancel], 0) = mrYes;
+  while CountRRT>0 do //Ждем пока закроются все потоки
+    Application.ProcessMessages;
+  if CanClose then
+  Begin
+    try
+      if not gc_User.Local then
+      Begin
+        spDelete_CashSession.Execute;
+        actRefreshAllExecute(nil);
+      End
+      else
+      begin
+        WaitForSingleObject(MutexRemains, INFINITE);
+        SaveLocalData(RemainsCDS,remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
+        SaveLocalData(AlternativeCDS,Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
+      end;
+    Except
+    end;
+        PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9);
+  End;
+end;
+
+procedure TMainCashForm2.ParentFormDestroy(Sender: TObject);
+begin
+  inherited;
+ CloseHandle(MutexDBF);
+ CloseHandle(MutexDBFDiff);
+ CloseHandle(MutexVip);
+ CloseHandle(MutexRemains);
+ CloseHandle(MutexAlternative);
+end;
+
+procedure TMainCashForm2.ParentFormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key=VK_Tab) and (CheckGrid.IsFocused) then ActiveControl:=lcName;
+  if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
+  Begin
+    Key := 0;
+    fShift := ssShift in Shift;
+    actPutCheckToCashExecute(nil);
+  End;
+end;
+
+procedure TMainCashForm2.ParentFormShow(Sender: TObject);
+  procedure SetVIPCDS;
+  var
+    C: TComponent;
+  Begin
+    for C in VIPForm do
+    begin
+      if (C is TClientDataSet) then
+      Begin
+        with (C as TClientDataSet) do
+        begin
+          if sametext(Name, 'MasterCDS') then
+            VIPCDS := (C as TClientDataSet)
+          else
+          if sametext(Name, 'ClientDataSet1') then
+            VIPListCDS := (C as TClientDataSet);
+        end;
+      End;
+    end;
+  End;
+begin
+  inherited;
+  if not gc_User.Local then
+  Begin
+    VIPForm := TdsdFormStorageFactory.GetStorage.Load('TCheckVIPForm');
+    WriteComponentResFile(VipDfm_lcl,VIPForm);
+    SetVIPCDS;
+  End
+  else
+  Begin
+    Application.CreateForm(TParentForm, VIPForm);
+    VIPForm.FormClassName := 'TCheckVIPForm';
+    ReadComponentResFile(VipDfm_lcl, VIPForm);
+    VIPForm.AddOnFormData.isAlwaysRefresh := False;
+    VIPForm.AddOnFormData.isSingle := true;
+    VIPForm.isAlreadyOpen := True;
+    SetVIPCDS;
+    VipCDS.LoadFromFile(Vip_lcl);
+    VIPListCDS.LoadFromFile(VipList_lcl);
+  End;
+end;
+
+function TMainCashForm2.PutCheckToCash(SalerCash: Currency;
+  PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String): boolean;
+{------------------------------------------------------------------------------}
+  function PutOneRecordToCash: boolean; //Продажа одного наименования
+  begin
+     // посылаем строку в кассу и если все OK, то ставим метку о продаже
+     if not Assigned(Cash) or Cash.AlwaysSold then
+        result := true
+     else
+       if not SoldParallel then
+         with CheckCDS do begin
+            result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                      AnsiUpperCase(FieldByName('GoodsName').Text),
+                                      FieldByName('Amount').asCurrency,
+                                      FieldByName('Price').asCurrency,
+                                      FieldByName('NDS').asCurrency)
+         end
+       else result:=true;
+  end;
+{------------------------------------------------------------------------------}
+begin
+  ACheckNumber := '';
+  try
+    if Assigned(Cash) AND NOT Cash.AlwaysSold then
+      AFiscalNumber := Cash.FiscalNumber
+    else
+      AFiscalNumber := '';
+    result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
+    with CheckCDS do
+    begin
+      First;
+      while not EOF do
+      begin
+        if result then
+           begin
+             if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
+                result := PutOneRecordToCash;//послали строку в кассу
+           end;
+        Next;
+      end;
+      if Assigned(Cash) AND not Cash.AlwaysSold then
+      begin
+        Cash.SubTotal(true, true, 0, 0);
+        Cash.TotalSumm(SalerCash, PaidType);
+        result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
+      end;
+    end;
+  except
+    result := false;
+    raise;
+  end;
+end;
+
+procedure TMainCashForm2.RemainsCDSAfterScroll(DataSet: TDataSet);
+begin
+  if RemainsCDS.FieldByName('AlternativeGroupId').AsInteger = 0 then
+    AlternativeCDS.Filter := 'Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString
+  else
+    AlternativeCDS.Filter := '(Remains > 0 AND MainGoodsId='+RemainsCDS.FieldByName('Id').AsString +
+      ') or (Remains > 0 AND AlternativeGroupId='+RemainsCDS.FieldByName('AlternativeGroupId').AsString+
+           ' AND Id <> '+RemainsCDS.FieldByName('Id').AsString+')';
+end;
+
+//Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
+function TMainCashForm2.fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;
+var
+  GoodsId: Integer;
+begin
+  Result :=AAmount;
+  //Если пусто - ничего не делаем
+  CheckCDS.DisableControls;
+  CheckCDS.filtered := False;
+  if CheckCDS.IsEmpty then
+  Begin
+    CheckCDS.filtered := true;
+    CheckCDS.EnableControls;
+    exit;
+  End;
+
+  //открючаем реакции
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+
+  try
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+      if (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) then
+      Begin
+        if (AAmount = 0) or
+           (
+             (AAmount < 0)
+             AND
+             (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+           ) then
+          Result := 0
+        else
+          Result := CheckCDS.FieldByName('Amount').asCurrency + AAmount;
+      End;
+      CheckCDS.Next;
+    end;
+  finally
+    CheckCDS.Filtered := True;
+    if AGoodsId <> 0 then
+      CheckCDS.Locate('GoodsId',AGoodsId,[]);
+    CheckCDS.EnableControls;
+  end;
+end;
+
+procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+var
+  GoodsId: Integer;
+  //lPriceSale : Currency;
+begin
+  //Если пусто - ничего не делаем
+  CheckCDS.DisableControls;
+  CheckCDS.filtered := False;
+  if CheckCDS.IsEmpty then
+  Begin
+    CheckCDS.filtered := true;
+    CheckCDS.EnableControls;
+    exit;
+  End;
+  //открючаем реакции
+  AlternativeCDS.DisableControls;
+  RemainsCDS.AfterScroll := Nil;
+  RemainsCDS.DisableControls;
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  RemainsCDS.Filtered := False;
+  AlternativeCDS.Filtered := False;
+  try
+    CheckCDS.First;
+    while not CheckCDS.eof do
+    begin
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').AsCurrency = APriceSale)) then
+      Begin
+        if RemainsCDS.Locate('Id',CheckCDS.FieldByName('GoodsId').AsInteger,[]) then
+        Begin
+          RemainsCDS.Edit;
+          if (AAmount = 0)
+             or
+             (
+               (AAmount < 0)
+               AND
+               (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+             ) then
+            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+              + CheckCDS.FieldByName('Amount').asCurrency
+          else
+            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+              - AAmount;
+          RemainsCDS.Post;
+        End;
+      End;
+      CheckCDS.Next;
+    end;
+
+    AlternativeCDS.First;
+    while Not AlternativeCDS.eof do
+    Begin
+      if (AGoodsId = 0) or ((AlternativeCDS.FieldByName('Id').AsInteger = AGoodsId) and (AlternativeCDS.FieldByName('Price').AsFloat = APriceSale)) then
+      Begin
+        //if (AAmount < 0) and (CheckCDS.FieldByName('PriceSale').asCurrency > 0)
+        //then lPriceSale:= CheckCDS.FieldByName('PriceSale').asCurrency
+        //else lPriceSale:= AlternativeCDS.fieldByName('Price').asCurrency;
+
+        if CheckCDS.locate('GoodsId;PriceSale',VarArrayOf([AlternativeCDS.fieldByName('Id').AsInteger,APriceSale]),[]) then
+        Begin
+          AlternativeCDS.Edit;
+          if (AAmount = 0) or
+             (
+               (AAmount < 0)
+               AND
+               (abs(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+             ) then
+            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+              + CheckCDS.FieldByName('Amount').asCurrency
+          else
+            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+              - AAmount;
+          AlternativeCDS.Post;
+        End;
+      End;
+      AlternativeCDS.Next;
+    End;
+
+    CheckCDS.First;
+    while not CheckCDS.Eof do
+    begin
+      if (AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) then
+      Begin
+        CheckCDS.Edit;
+        {
+        //сначала допишем скидку, и изменим цену, надеюсь она сохранена правильно ***20.07.16
+        if (FormParams.ParamByName('DiscountExternalId').Value > 0) and (AGoodsId <> 0)
+          // На всяк случай условие
+          and (DiscountServiceForm.gGoodsId = AGoodsId)
+          and (DiscountServiceForm.gDiscountExternalId = FormParams.ParamByName('DiscountExternalId').Value)
+        then begin
+            // на всяк случай условие - восстановим если Цена СО скидкой была запонена
+            if DiscountServiceForm.gPrice > 0
+            then checkCDS.FieldByName('Price').asCurrency        :=DiscountServiceForm.gPrice;
+            checkCDS.FieldByName('ChangePercent').asCurrency     :=DiscountServiceForm.gChangePercent;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
+        end
+        else} begin
+            // на всяк случай условие - восстановим если Цена БЕЗ скидки была запонена
+            if checkCDS.FieldByName('PriceSale').asCurrency > 0
+            then checkCDS.FieldByName('Price').asCurrency        := checkCDS.FieldByName('PriceSale').asCurrency;
+            // и обнулим скидку
+            checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
+            checkCDS.FieldByName('SummChangePercent').asCurrency := 0;
+        end;
+
+
+        if (AAmount = 0) or
+           (
+             (AAmount < 0)
+             AND
+             (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)
+           ) then
+          CheckCDS.FieldByName('Amount').asCurrency := 0
+        else
+          CheckCDS.FieldByName('Amount').asCurrency := CheckCDS.FieldByName('Amount').asCurrency
+            + AAmount;
+        CheckCDS.FieldByName('Summ').asCurrency := GetSumm(CheckCDS.FieldByName('Amount').asCurrency,CheckCDS.FieldByName('Price').asCurrency);
+
+        CheckCDS.Post;
+      End;
+      CheckCDS.Next;
+    end;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id',GoodsId,[]);
+    RemainsCDS.EnableControls;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+    AlternativeCDS.Filtered := true;
+    RemainsCDSAfterScroll(RemainsCDS);
+    AlternativeCDS.EnableControls;
+    CheckCDS.Filtered := True;
+    if AGoodsId <> 0 then
+      CheckCDS.Locate('GoodsId',AGoodsId,[]);
+    CheckCDS.EnableControls;
+  end;
+end;
+
+function TMainCashForm2.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AManagerName: String;
+  ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;
+  ADiscountExternalId: integer; ADiscountExternalName, ADiscountCardNumber: String;
+  NeedComplete: Boolean; FiscalCheckNumber: String; out AUID: String): Boolean;
+var
+  NextVIPId: integer;
+  myVIPCDS, myVIPListCDS: TClientDataSet;
+begin
+  //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
+  if gc_User.Local And not NeedComplete AND ((AManagerId <> 0) or (ABayerName <> '')) then
+  Begin
+    myVIPCDS := TClientDataSet.Create(nil);
+    myVIPListCDS := TClientDataSet.Create(nil);
+    AUID := GenerateGUID;
+    WaitForSingleObject(MutexVip, INFINITE);
+    LoadLocalData(MyVipCDS, Vip_lcl);
+    LoadLocalData(MyVipListCDS, VipList_lcl);
+    ReleaseMutex(MutexVip);
+    if not MyVipCDS.Locate('Id',FormParams.ParamByName('CheckId').Value,[]) then
+    Begin
+      MyVipCDS.IndexFieldNames := 'Id';
+      MyVipCDS.First;
+      if MyVipCDS.FieldByName('Id').AsInteger > 0 then
+        NextVIPID := -1
+      else
+        NextVIPId := MyVipCDS.FieldByName('Id').AsInteger - 1;
+
+      MyVipCDS.Append;
+      MyVipCDS.FieldByName('Id').AsInteger := NextVIPId;
+      MyVipCDS.FieldByName('InvNumber').AsString := AUID;
+      MyVipCDS.FieldByName('OperDate').AsDateTime := Now;
+    end
+    else
+    Begin
+      MyVipCDS.Edit;
+      AUID := MyVipCDS.FieldByName('InvNumber').AsString;
+
+    end;
+    MyVipCDS.FieldByName('StatusId').AsInteger := StatusUncompleteID;
+    MyVipCDS.FieldByName('StatusCode').AsInteger := StatusUncompleteCode;
+    MyVipCDS.FieldByName('TotalCount').AsFloat := 0;
+    MyVipCDS.FieldByName('TotalSumm').AsFloat := FTotalSumm;
+    MyVipCDS.FieldByName('UnitName').AsString := '';
+    MyVipCDS.FieldByName('CashRegisterName').AsString := '';
+    MyVipCDS.FieldByName('CashMemberId').AsInteger := AManagerId;
+    MyVipCDS.FieldByName('CashMember').AsString := AManagerName;
+    MyVipCDS.FieldByName('Bayer').AsString := ABayerName;
+    //***20.07.16
+    MyVipCDS.FieldByName('DiscountExternalId').AsInteger  := ADiscountExternalId;
+    MyVipCDS.FieldByName('DiscountExternalName').AsString := ADiscountExternalName;
+    MyVipCDS.FieldByName('DiscountCardNumber').AsString   := ADiscountCardNumber;
+    //***16.08.16
+    MyVipCDS.FieldByName('BayerPhone').AsString        := ABayerPhone;
+    MyVipCDS.FieldByName('ConfirmedKindName').AsString := AConfirmedKindName;
+    MyVipCDS.FieldByName('InvNumberOrder').AsString    := AInvNumberOrder;
+    MyVipCDS.FieldByName('ConfirmedKindClientName').AsString := AConfirmedKindClientName;
+
+    MyVipCDS.Post;
+
+    MyVipListCDS.Filter := 'MovementId = '+MyVipCDS.FieldByName('Id').AsString;
+    MyVipListCDS.Filtered := True;
+    while not MyVipListCDS.eof do
+      MyVipListCDS.Delete;
+    MyVipListCDS.Filtered := False;
+    ADS.DisableControls;
+    try
+      ADS.Filtered := False;
+      ADS.First;
+      while not ADS.Eof do
+      Begin
+        MyVipListCDS.Append;
+        MyVipListCDS.FieldByname('Id').Value := ADS.FieldByName('Id').AsInteger;
+        MyVipListCDS.FieldByname('MovementId').Value := MyVipCDS.FieldByName('Id').AsInteger;
+        MyVipListCDS.FieldByname('GoodsId').Value := ADS.FieldByName('GoodsId').AsInteger;
+        MyVipListCDS.FieldByname('GoodsCode').Value := ADS.FieldByName('GoodsCode').AsInteger;
+        MyVipListCDS.FieldByname('GoodsName').Value := ADS.FieldByName('GoodsName').AsString;
+        MyVipListCDS.FieldByname('Amount').Value := ADS.FieldByName('Amount').AsFloat;
+        MyVipListCDS.FieldByname('Price').Value := ADS.FieldByName('Price').AsFloat;
+        MyVipListCDS.FieldByname('Summ').Value := GetSumm(ADS.FieldByName('Amount').AsFloat,ADS.FieldByName('Price').AsFloat);
+        //***20.07.16
+        MyVipListCDS.FieldByName('PriceSale').asCurrency         := ADS.FieldByName('PriceSale').asCurrency;
+        MyVipListCDS.FieldByName('ChangePercent').asCurrency     := ADS.FieldByName('ChangePercent').asCurrency;
+        MyVipListCDS.FieldByName('SummChangePercent').asCurrency := ADS.FieldByName('SummChangePercent').asCurrency;
+        //***19.08.16
+        MyVipListCDS.FieldByName('AmountOrder').asCurrency       := ADS.FieldByName('AmountOrder').asCurrency;
+        //***10.08.16
+        MyVipListCDS.FieldByName('List_UID').asString := ADS.FieldByName('List_UID').AsString;
+
+        MyVipListCDS.Post;
+        ADS.Next;
+      End;
+    finally
+      ADS.Filtered := true;
+      ADS.EnableControls;
+    end;
+    WaitForSingleObject(MutexVip, INFINITE);
+    SaveLocalData(MyVipCDS, vip_lcl);
+    MyVipListCDS.Filtered := False;
+    SaveLocalData(MyVipListCDS, vipList_lcl);
+    MyVipCDS.Free;
+    MyVIPListCDS.Free;
+    ReleaseMutex(MutexVip);
+  End;  //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
+
+  //сохраняем в дбф
+  WaitForSingleObject(MutexDBF, INFINITE);
+  FLocalDataBaseHead.Active:=True;
+  FLocalDataBaseBody.Active:=True;
+  try
+    //сгенерили гуид для чека
+    if AUID = '' then
+      AUID := GenerateGUID;
+    Result := True;
+    //сохраняем шапку
+    try
+      if (FormParams.ParamByName('CheckId').Value = 0) or
+         not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
+      Begin
+        FLocalDataBaseHead.AppendRecord([FormParams.ParamByName('CheckId').Value, //id чека
+                                         AUID,                                    //uid чека
+                                         Now,                                     //дата/Время чека
+                                         Integer(PaidType),                       //тип оплаты
+                                         FiscalNumber,                            //серийник аппарата
+                                         AManagerId,                              //Id Менеджера (VIP)
+                                         ABayerName,                              //Покупатель (VIP)
+                                         False,                                   //Распечатан на фискальном регистраторе
+                                         False,                                   //Сохранен в реальную базу данных
+                                         NeedComplete,                            //Необходимо проведение
+                                         chbNotMCS.Checked,                       //Не участвует в расчете НТЗ
+                                         FiscalCheckNumber,                       //Номер фискального чека
+                                         //***20.07.16
+                                         ADiscountExternalId,                     //Id Проекта дисконтных карт
+                                         ADiscountExternalName,                   //Название Проекта дисконтных карт
+                                         ADiscountCardNumber,                     //№ Дисконтной карты
+                                         //***20.07.16
+                                         ABayerPhone,                             //Контактный телефон (Покупателя) - BayerPhone
+                                         AConfirmedKindName,                      //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+                                         AInvNumberOrder,                         //Номер заказа (с сайта) - InvNumberOrder
+                                         AConfirmedKindClientName,                 //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+                                         gc_User.Session
+                                        ]);
+      End
+      else
+      Begin
+        AUID := FLocalDataBaseHead.FieldByName('UID').Value;//uid чека
+        FLocalDataBaseHead.Edit;
+        FLocalDataBaseHead.FieldByName('PAIDTYPE').Value := Integer(PaidType); //тип оплаты
+        FLocalDataBaseHead.FieldByName('CASH').Value := FiscalNumber; //серийник аппарата
+        FLocalDataBaseHead.FieldByName('MANAGER').Value := AManagerId; //Id Менеджера (VIP)
+        FLocalDataBaseHead.FieldByName('BAYER').Value := ABayerName; //Покупатель (VIP)
+        FLocalDataBaseHead.FieldByName('SAVE').Value := False; //Покупатель (VIP)
+        FLocalDataBaseHead.FieldByName('COMPL').Value := False; //Покупатель (VIP)
+        FLocalDataBaseHead.FieldByName('NEEDCOMPL').Value := NeedComplete; //нужно провести документ
+        FLocalDataBaseHead.FieldByName('NOTMCS').Value := chbNotMCS.Checked; //Не участвует в расчете НТЗ
+        FLocalDataBaseHead.FieldByName('FISCID').Value := FiscalCheckNumber; //Номер фискального чека
+        //***20.07.16
+        FLocalDataBaseHead.FieldByName('DISCOUNTID').Value := ADiscountExternalId;   //Id Проекта дисконтных карт
+        FLocalDataBaseHead.FieldByName('DISCOUNTN').Value  := ADiscountExternalName; //Название Проекта дисконтных карт
+        FLocalDataBaseHead.FieldByName('DISCOUNT').Value   := ADiscountCardNumber;   //№ Дисконтной карты
+        //***16.08.16
+        FLocalDataBaseHead.FieldByName('BAYERPHONE').Value := ABayerPhone;              //Контактный телефон (Покупателя) - BayerPhone
+        FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName;       //Статус заказа (Состояние VIP-чека) - ConfirmedKind
+        FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;          //Номер заказа (с сайта) - InvNumberOrder
+        FLocalDataBaseHead.FieldByName('CONFIRMEDC').Value := AConfirmedKindClientName; //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+        FLocalDataBaseHead.FieldByName('USERSESION').Value := gc_User.Session;
+        FLocalDataBaseHead.post;
+      End;
+    except ON E:Exception do
+      Begin
+        Application.OnException(Application.MainForm,E);
+//        ShowMessage('Ошибка локального сохранения чека: '+E.Message);
+        result := False;
+        exit;
+      End;
+    end; //сохранили шапку
+
+    //сохраняем тело
+    ADS.DisableControls;
+    try
+      try
+        ADS.Filtered := False;
+        ADS.First;
+        FLocalDataBaseBody.First;
+        while not FLocalDataBaseBody.eof do
+        Begin
+          if trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = AUID then
+            FLocalDataBaseBody.Delete;
+          FLocalDataBaseBody.Next;
+        End;
+        FLocalDataBaseBody.Pack;
+        while not ADS.Eof do
+        Begin
+          FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
+                                           AUID,                                    //uid чека
+                                           ADS.FieldByName('GoodsId').AsInteger,    //ид товара
+                                           ADS.FieldByName('GoodsCode').AsInteger,  //Код товара
+                                           ADS.FieldByName('GoodsName').AsString,   //наименование товара
+                                           ADS.FieldByName('NDS').asCurrency,          //НДС товара
+                                           ADS.FieldByName('Amount').asCurrency,       //Кол-во
+                                           ADS.FieldByName('Price').asCurrency,        //Цена, с 20.07.16 если есть скидка по Проекту дисконта, здесь будет цена с учетом скидки
+                                           //***20.07.16
+                                           ADS.FieldByName('PriceSale').asCurrency,         // Цена без скидки
+                                           ADS.FieldByName('ChangePercent').asCurrency,     // % Скидки
+                                           ADS.FieldByName('SummChangePercent').asCurrency, // Сумма Скидки
+                                           //***19.08.16
+                                           ADS.FieldByName('AmountOrder').asCurrency, // Кол-во заявка
+                                           //***10.08.16
+                                           ADS.FieldByName('List_UID').AsString // UID строки продажи
+                                           ]);
+        ADS.Next;
+        End;
+
+      Except ON E:Exception do
+        Begin
+        Application.OnException(Application.MainForm,E);
+//          ShowMessage('Ошибка локального сохранения содержимого чека: '+E.Message);
+          result := False;
+          exit;
+        End;
+      end;
+    finally
+      ADS.Filtered := true;
+      ADS.EnableControls;
+      FLocalDataBaseBody.Filter := '';
+      FLocalDataBaseBody.Filtered := True;
+    end;
+  finally
+    FLocalDataBaseBody.Active:=False;
+    FLocalDataBaseHead.Active:=False;
+    ReleaseMutex(MutexDBF);
+    PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 3);
+  end;
+
+  // update VIP
+  if ((AManagerId <> 0) or (ABayerName <> '')) and  (gc_User.Local) { TODO -oUfomaster -cИзменить : возможно потом нужно будет убрать (gc_User.Local) }
+      and NeedComplete then
+  Begin
+    WaitForSingleObject(MutexVip, INFINITE);
+    LoadLocalData(VipCDS, Vip_lcl);
+    if (FormParams.ParamByName('CheckId').AsString <> '') and
+       (StrToInt(FormParams.ParamByName('CheckId').AsString) <> 0) then
+    Begin
+      if VipCDS.Locate('Id', FormParams.ParamByName('CheckId').Value, []) then
+        VipCDS.Delete;
+    End
+    else
+    if VipCDS.Locate('InvNumber', AUID, []) then
+      VipCDS.Delete;
+    SaveLocalData(VipCDS,vip_lcl);
+    ReleaseMutex(MutexVip);
+  End;
+end;
+
+procedure TMainCashForm2.SaveLocalVIP;
+var
+  sp : TdsdStoredProc;
+  ds : TClientDataSet;
+begin  //+
+  sp := TdsdStoredProc.Create(nil);
+  try
+    ds := TClientDataSet.Create(nil);
+    try
+      sp.OutputType := otDataSet;
+      sp.DataSet := ds;
+
+      sp.StoredProcName := 'gpSelect_Object_Member';
+      sp.Params.Clear;
+      sp.Params.AddParam('inIsShowAll',ftBoolean,ptInput,False);
+      sp.Execute(False,False);
+      SaveLocalData(ds,Member_lcl);
+
+      sp.StoredProcName := 'gpSelect_Movement_CheckVIP';
+      sp.Params.Clear;
+      sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
+      sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE);
+      SaveLocalData(ds,Vip_lcl);
+      ReleaseMutex(MutexVip);
+
+      sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
+      sp.Params.Clear;
+      sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE);
+      SaveLocalData(ds,VipList_lcl);
+      ReleaseMutex(MutexVip);
+    finally
+      ds.free;
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure TMainCashForm2.SaveReal(AUID: String; ANeedComplete: boolean = False);
+Begin
+ {
+  With TSaveRealThread.Create(true) do
+  Begin
+    FreeOnTerminate := true;
+    FCheckUID := AUID;
+    Start;
+  End;
+ //}
+  //f Отключили для кассы
+End;
+
+procedure TMainCashForm2.SaveRealAll;
+begin
+  { TODO -oufo : В програме отключить }
+//
+{
+  With TSaveRealAllThread.Create(true) do
+  Begin
+    FreeOnTerminate := true;
+    Start;
+  End;
+//  }
+  //f Отключили для кассы
+end;
+
+procedure TMainCashForm2.StartRefreshDiffThread;
+Begin
+  {
+  With TRefreshDiffThread.Create(true) do
+  Begin
+    FreeOnTerminate := true;
+    Start;
+  End;
+  //}
+End;
+
+procedure TMainCashForm2.SetSoldRegim(const Value: boolean);
+begin
+  FSoldRegim := Value;
+  if SoldRegim then begin
+     actSold.Caption := 'Продажа';
+     ceAmount.Value := 1;
+  end
+  else begin
+     actSold.Caption := 'Возврат';
+     ceAmount.Value := -1;
+  end;
+end;
+
+procedure TMainCashForm2.SetWorkMode(ALocal: Boolean);
+begin
+  actCheck.Enabled := not gc_User.Local;
+  actGetMoneyInCash.Enabled := not gc_User.Local;
+  actRefreshRemains.Enabled := not gc_User.Local;
+  actOpenMCSForm.Enabled := not gc_User.Local;
+  if not gc_User.Local then
+  Begin
+    spGet_User_IsAdmin.Execute;
+    if spGet_User_IsAdmin.ParamByName('gpGet_User_IsAdmin').Value = True then
+      actCheck.FormNameParam.Value := 'TCheckJournalForm'
+    Else
+      actCheck.FormNameParam.Value := 'TCheckJournalUserForm';
+  End
+  else
+  Begin
+    if Assigned(VIPForm) then
+    Begin
+      VIPForm.AddOnFormData.isAlwaysRefresh := False;
+      VIPForm.AddOnFormData.isSingle := true;
+      VIPForm.isAlreadyOpen := True;
+    End;
+  End;
+  actSelectLocalVIPCheck.Enabled := gc_User.Local;
+  actSelectCheck.Enabled := not gc_User.Local;
+  actRefreshLite.Enabled := not gc_User.Local;
+  actUpdateRemains.Enabled := not gc_User.Local;
+end;
+
+procedure TMainCashForm2.Thread_Exception(var Msg: TMessage);
+var
+  spUserProtocol : TdsdStoredProc;
+begin
+  spUserProtocol := TdsdStoredProc.Create(nil);
+  try
+    spUserProtocol.StoredProcName := 'gpInsert_UserProtocol';
+    spUserProtocol.OutputType := otResult;
+    spUserProtocol.Params.AddParam('inProtocolData', ftBlob, ptInput, ThreadErrorMessage);
+    try
+      spUserProtocol.Execute;
+    except
+    end;
+  finally
+    spUserProtocol.free;
+  end;
+//  ShowMessage('Во время проведения чека возникла ошибка:'+#13+
+//              ThreadErrorMessage+#13#13+
+//              'Проверьте состояние чека и, при необходимости, проведите чек вручную.');
+end;
+
+
+procedure TMainCashForm2.TimerBlinkBtnTimer(Sender: TObject);
+begin
+ TimerBlinkBtn.Enabled:=False;
+ try
+
+
+  SetBlinkVIP (false);
+  SetBlinkCheck (false);
+
+
+  if fBlinkVIP = true
+  then if btnVIP.Colors.NormalText <> clDefault
+       then begin btnVIP.Colors.NormalText:= clDefault; btnVIP.Colors.Default := clDefault; end
+       else begin {Beep;} btnVIP.Colors.NormalText:= clYellow; btnVIP.Colors.Default := clRed; end
+  else begin btnVIP.Colors.NormalText := clDefault; btnVIP.Colors.Default := clDefault; end;
+
+  if fBlinkCheck = true
+  then if btnCheck.Colors.NormalText <> clDefault
+       then begin btnCheck.Colors.NormalText:= clDefault; btnCheck.Colors.Default := clDefault; end
+       else begin btnCheck.Colors.NormalText:= clBlue; btnCheck.Colors.Default := clRed; end
+  else begin btnCheck.Colors.NormalText := clDefault; btnCheck.Colors.Default := clDefault; end;
+ finally
+  TimerBlinkBtn.Enabled:=True;
+ end;
+end;
+
+procedure TMainCashForm2.SetBlinkVIP (isRefresh : boolean);
+var lMovementId_BlinkVIP : String;
+begin
+  // если прошло > 100 сек - захардкодил
+  if ((now - time_onBlink) > 0.001) or(isRefresh = true) then
+
+  try
+      //сохранили время "последней" обработки ВСЕХ документов - с типом "Не подтвержден"
+      time_onBlink:= now;
+
+      //Получили список ВСЕХ документов - с типом "Не подтвержден"
+      spGet_BlinkVIP.Execute;
+      lMovementId_BlinkVIP:=spGet_BlinkVIP.ParamByName('outMovementId_list').Value;
+
+      // в этом случае кнопка будет мигать
+      fBlinkVIP:= lMovementId_BlinkVIP <> '';
+
+      // если сюда дошли, значит ON-line режим режим для VIP-чеков
+      Self.Caption := 'Продажа';
+
+      //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
+      if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
+      then begin
+                // Сохранили список ВСЕХ документов - с типом "Не подтвержден"
+                MovementId_BlinkVIP:= lMovementId_BlinkVIP;
+                // "не самое долгое" обновление грида
+                StartRefreshDiffThread;
+      end;
+
+  except
+        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков'
+  end;
+end;
+
+procedure TMainCashForm2.SetBlinkCheck (isRefresh : boolean);
+var lMovementId_BlinkCheck : String;
+
+begin
+  // если прошло > 50 сек - захардкодил
+
+  if ((now - time_onBlinkCheck) > 0.0005) or(isRefresh = true) then
+
+  try
+      //сохранили время "последней" обработки ВСЕХ документов - с "ошибка - расч/факт остаток"
+      time_onBlinkCheck:= now;
+
+      //Получили список ВСЕХ документов - с типом "Не подтвержден"
+      spGet_BlinkCheck.Execute;
+      lMovementId_BlinkCheck:=spGet_BlinkCheck.ParamByName('outMovementId_list').Value;
+
+      // в этом случае кнопка будет мигать
+      fBlinkCheck:= lMovementId_BlinkCheck <> '';
+
+      // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
+      if fBlinkCheck = True
+      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток'
+      else Self.Caption := 'Продажа';
+
+  except
+        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой'
+  end;
+end;
+
+
+procedure TMainCashForm2.TimerSaveAllTimer(Sender: TObject);
+begin
+ TimerSaveAll.Enabled:=False;
+ try
+  //пишем протокол что связь с базой есть + сколько чеков еще не перенеслось
+  try spUpdate_UnitForFarmacyCash.ParamByName('inAmount').Value:=FLocalDataBaseHead.RecordCount;
+      spUpdate_UnitForFarmacyCash.Execute;
+  except end;
+  //
+  if not FLocalDataBaseHead.IsEmpty then
+    SaveRealAll;
+    ShowMessage('TMainCashForm2.TimerSaveAllTimer');
+ finally
+  TimerSaveAll.Enabled:=True;
+ end;
+end;
+
+{ TSaveRealThread }
+
+procedure TSaveRealThread.Execute;
+var
+  Head: THeadRecord;
+  Body: TBodyArr;
+  Find: Boolean;
+  dsdSave: TdsdStoredProc;
+  I: Integer;
+begin
+  inherited;
+ // if gc_User.Local then exit;  //f временно отключили
+  EnterCriticalSection(csCriticalSection_Save);
+  try
+    CoInitialize(nil);
+    SetShapeState(clRed);
+    try
+      Find := False;
+      InterlockedIncrement(CountRRT);
+      InterlockedIncrement(CountSaveThread);
+      try
+        //ждем пока освободится доступ к локальной базе
+//        while LocalDataBaseisBusy <> 0 do
+//          sleep(10);
+//        //блокируем базу
+//        InterlockedIncrement(LocalDataBaseisBusy);
+         WaitForSingleObject(MutexDBF, INFINITE);
+         FLocalDataBaseHead.Active:=True;
+         FLocalDataBaseBody.Active:=True;
+        try
+          if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
+             not FLocalDataBaseHead.Deleted then
+          Begin
+            Find := True;
+            With Head, FLocalDataBaseHead do
+            Begin
+              ID       := FieldByName('ID').AsInteger;
+              UID      := FieldByName('UID').AsString;
+              DATE     := FieldByName('DATE').asCurrency;
+              CASH     := trim(FieldByName('CASH').AsString);
+              PAIDTYPE := FieldByName('PAIDTYPE').AsInteger;
+              MANAGER  := FieldByName('MANAGER').AsInteger;
+              BAYER    := trim(FieldByName('BAYER').AsString);
+              COMPL    := FieldByName('COMPL').AsBoolean;
+              NEEDCOMPL:= FieldByName('NEEDCOMPL').AsBoolean;
+              SAVE     := FieldByName('SAVE').AsBoolean;
+              FISCID   := trim(FieldByName('FISCID').AsString);
+              NOTMCS   := FieldByName('NOTMCS').AsBoolean;
+              //***20.07.16
+              DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
+              DISCOUNTN  := trim(FieldByName('DISCOUNTN').AsString);
+              DISCOUNT   := trim(FieldByName('DISCOUNT').AsString);
+              //***16.08.16
+              BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
+              CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
+              NUMORDER   := trim(FieldByName('NUMORDER').AsString);
+              CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
+
+              FNeedSaveVIP := (MANAGER <> 0);
+            end;
+            FLocalDataBaseBody.First;
+            while not FLocalDataBaseBody.Eof do
+            Begin
+              if (Trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
+                 not FLocalDataBaseBody.Deleted  then
+              Begin
+                SetLength(Body,Length(Body)+1);
+                with Body[Length(Body)-1],FLocalDataBaseBody  do
+                Begin
+                  CH_UID    := trim(FieldByName('CH_UID').AsString);
+                  GOODSID   := FieldByName('GOODSID').AsInteger;
+                  GOODSCODE := FieldByName('GOODSCODE').AsInteger;
+                  GOODSNAME := trim(FieldByName('GOODSNAME').AsString);
+                  NDS       := FieldByName('NDS').asCurrency;
+                  AMOUNT    := FieldByName('AMOUNT').asCurrency;
+                  PRICE     := FieldByName('PRICE').asCurrency;
+                  //***20.07.16
+                  PRICESALE := FieldByName('PRICESALE').asCurrency;
+                  CHPERCENT := FieldByName('CHPERCENT').asCurrency;
+                  SUMMCH    := FieldByName('SUMMCH').asCurrency;
+                  //***19.08.16
+                  AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
+                  //***10.08.16
+                  LIST_UID  := trim(FieldByName('LIST_UID').asString);
+                End;
+              End;
+              FLocalDataBaseBody.Next;
+            End;
+          End;
+        finally
+          //отпустили локальную базу
+//          InterlockedDecrement(LocalDataBaseisBusy);
+          FLocalDataBaseHead.Active:=False;
+          FLocalDataBaseBody.Active:=False;
+          ReleaseMutex(MutexDBF);
+        end;
+        if Find AND NOT HEAD.SAVE then
+        Begin
+          dsdSave := TdsdStoredProc.Create(nil);
+          try
+            try
+              //Проверить в каком состоянии документ.
+              dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+              dsdSave.OutputType := otResult;
+              dsdSave.Params.Clear;
+              dsdSave.Params.AddParam('inId',ftInteger,ptInput,Head.ID);
+              dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+              dsdSave.Execute(False,False);
+              if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+              Begin
+                Head.SAVE := True;
+                Head.NEEDCOMPL := False;
+              End
+              else
+              //Если не проведен
+              Begin
+                if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3' then //Удален
+                Begin
+                  dsdSave.StoredProcName := 'gpUnComplete_Movement_Check';
+                  dsdSave.OutputType := otResult;
+                  dsdSave.Params.Clear;
+                  dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
+                  dsdSave.Execute(False,False);
+                end;
+                //сохранил шапку
+                dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
+                dsdSave.OutputType := otResult;
+                dsdSave.Params.Clear;
+                dsdSave.Params.AddParam('ioId',ftInteger,ptInputOutput,Head.ID);
+                dsdSave.Params.AddParam('inDate',ftDateTime,ptInput,Head.DATE);
+                dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
+                dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
+                dsdSave.Params.AddParam('inManagerId',ftInteger,ptInput,Head.MANAGER);
+                dsdSave.Params.AddParam('inBayer',ftString,ptInput,Head.BAYER);
+                dsdSave.Params.AddParam('inFiscalCheckNumber',ftString,ptInput,Head.FISCID);
+                dsdSave.Params.AddParam('inNotMCS',ftBoolean,ptInput,Head.NOTMCS);
+                //***20.07.16
+                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
+                dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
+                //***16.08.16
+                dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
+                dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
+                dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
+
+                dsdSave.Execute(False,False);
+                SetShapeState(clBlack);
+                //сохранили в локальной базе полученный номер
+                if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
+                Begin
+                  Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
+                  //ждем пока освободится доступ к локальной базе
+//                  while LocalDataBaseisBusy <> 0 do
+//                    sleep(10);
+//                  //блокируем базу
+////                  InterlockedIncrement(LocalDataBaseisBusy);
+                  WaitForSingleObject(MutexDBF, INFINITE);
+                  FLocalDataBaseHead.Active:=True;
+                  try
+                    if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
+                       not FLocalDataBaseHead.Deleted then
+                    Begin
+                      FLocalDataBaseHead.Edit;
+                      FLocalDataBaseHead.FieldByname('ID').AsInteger := Head.ID;
+                      FLocalDataBaseHead.Post;
+                    End;
+                  finally
+                    //отпустили локальную базу
+//                    InterlockedDecrement(LocalDataBaseisBusy);
+                   FLocalDataBaseHead.Active:=False;
+                   ReleaseMutex(MutexDBF);
+                  end;
+                end;
+
+                //сохранил тело
+                dsdSave.StoredProcName := 'gpInsertUpdate_MovementItem_Check_ver2';
+                dsdSave.OutputType := otResult;
+                dsdSave.Params.Clear;
+                dsdSave.Params.AddParam('ioId',ftInteger,ptInputOutput,Null);
+                dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
+                dsdSave.Params.AddParam('inGoodsId',ftInteger,ptInput,Null);
+                dsdSave.Params.AddParam('inAmount',ftFloat,ptInput,Null);
+                dsdSave.Params.AddParam('inPrice',ftFloat,ptInput,Null);
+                //***20.07.16
+                dsdSave.Params.AddParam('inPriceSale',ftFloat,ptInput,Null);
+                dsdSave.Params.AddParam('inChangePercent',ftFloat,ptInput,Null);
+                dsdSave.Params.AddParam('inSummChangePercent',ftFloat,ptInput,Null);
+                //***19.08.16
+                //dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
+                //***10.08.16
+                dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
+
+                for I := 0 to Length(Body)-1 do
+                Begin
+                  dsdSave.ParamByName('ioId').Value := Body[I].ID;
+                  dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
+                  dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
+                  dsdSave.ParamByName('inPrice').Value :=  Body[I].PRICE;
+                  //***20.07.16
+                  dsdSave.ParamByName('inPriceSale').Value :=  Body[I].PRICESALE;
+                  dsdSave.ParamByName('inChangePercent').Value :=  Body[I].CHPERCENT;
+                  dsdSave.ParamByName('inSummChangePercent').Value :=  Body[I].SUMMCH;
+                  //***19.08.16
+                  //dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
+                  //***10.08.16
+                  dsdSave.ParamByName('inList_UID').Value :=  Body[I].LIST_UID;
+
+                  dsdSave.Execute(False,False);
+                  if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
+                  Begin
+                    Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
+//                    //ждем пока освободится доступ к локальной базе
+//                    while LocalDataBaseisBusy <> 0 do
+//                      sleep(10);
+//                    //блокируем базу
+//                    InterlockedIncrement(LocalDataBaseisBusy);
+                     WaitForSingleObject(MutexDBF, INFINITE);
+                     FLocalDataBaseBody.Active:=True;
+                    try
+                      FLocalDataBaseBody.First;
+                      while not FLocalDataBaseBody.eof do
+                      Begin
+                        if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID)
+                           AND
+                           not FLocalDataBaseBody.Deleted
+                           AND
+                           (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) then
+                        Begin
+                          FLocalDataBaseBody.Edit;
+                          FLocalDataBaseBody.FieldByname('ID').AsInteger := Body[I].ID;
+                          FLocalDataBaseBody.Post;
+                          break;
+                        End;
+                        FLocalDataBaseBody.Next;
+                      End;
+                    finally
+                      //отпустили локальную базу
+//                      InterlockedDecrement(LocalDataBaseisBusy);
+                     FLocalDataBaseBody.Active:=False;
+                     ReleaseMutex(MutexDBF);
+                    end;
+                  End;
+                End;
+                SetShapeState(clBlue);
+                Head.SAVE := True;
+//                //ждем пока освободится доступ к локальной базе
+//                while LocalDataBaseisBusy <> 0 do
+//                  sleep(10);
+//                //блокируем базу
+//                InterlockedIncrement(LocalDataBaseisBusy);
+                WaitForSingleObject(MutexDBF, INFINITE);
+                FLocalDataBaseHead.Active:=True;
+
+                try
+                  if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
+                     not FLocalDataBaseHead.Deleted then
+                  Begin
+                    FLocalDataBaseHead.Edit;
+                    FLocalDataBaseHead.FieldByname('SAVE').AsBoolean := True;
+                    FLocalDataBaseHead.Post;
+                  End;
+                finally
+                  //отпустили локальную базу
+//                  InterlockedDecrement(LocalDataBaseisBusy);
+                  FLocalDataBaseHead.Active:=False;
+                  ReleaseMutex(MutexDBF);
+                end;
+              End;
+            except ON E: Exception do
+              Begin
+                SendError(E.Message);
+              End;
+            end;
+          finally
+            freeAndNil(dsdSave);
+          end;
+        end;
+        //если необходимо провести чек
+        if find AND Head.SAVE AND Head.NEEDCOMPL then
+        Begin
+          dsdSave := TdsdStoredProc.Create(nil);
+          try
+            DiffCDS := TClientDataSet.Create(nil);
+            try
+              dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2';
+              dsdSave.OutputType := otDataSet;
+              dsdSave.DataSet := DiffCDS;
+              dsdSave.Params.Clear;
+              dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
+              dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
+              dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
+              dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm.FormParams.ParamByName('CashSessionId').Value);
+              try
+                dsdSave.Execute(False,False);
+                Head.COMPL := True;
+              except on E: Exception do
+                Begin
+                  SendError(E.Message);
+                End;
+              end;
+              SetShapeState(clYellow);
+              Synchronize(UpdateRemains);
+              SetShapeState(clWhite);
+            finally
+              DiffCDS.free;
+            end;
+          finally
+            freeAndNil(dsdSave);
+          end;
+          //удаляем проведенный чек
+          if Head.COMPL then
+          Begin
+//            //ждем пока освободится доступ к локальной базе
+//            while LocalDataBaseisBusy <> 0 do
+//              sleep(10);
+//            //блокируем базу
+//            InterlockedIncrement(LocalDataBaseisBusy);
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
+            FLocalDataBaseBody.Active:=True;
+            try
+              if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
+                 not FLocalDataBaseHead.Deleted then
+                FLocalDataBaseHead.DeleteRecord;
+              FLocalDataBaseBody.First;
+              while not FLocalDataBaseBody.eof do
+              Begin
+                IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
+                    not FLocalDataBaseBody.Deleted then
+                  FLocalDataBaseBody.DeleteRecord;
+                FLocalDataBaseBody.Next;
+              End;
+              FLocalDataBaseHead.Pack;
+              FLocalDataBaseBody.Pack;
+            finally
+              //отпустили локальную базу
+//              InterlockedDecrement(LocalDataBaseisBusy);
+             FLocalDataBaseHead.Active:=False;
+             FLocalDataBaseBody.Active:=False;
+             ReleaseMutex(MutexDBF);
+            end;
+          End;
+        end
+        //если проводить не нужно
+        ELSE
+        if find and Head.SAVE then
+        BEGIN
+          if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
+          Begin
+            With TRefreshDiffThread.Create(true) do
+            Begin
+              FreeOnTerminate := true;
+              Start;
+            End;
+          end;
+//          //ждем пока освободится доступ к локальной базе
+//          while LocalDataBaseisBusy <> 0 do
+//            sleep(10);
+//          //блокируем базу
+//          InterlockedIncrement(LocalDataBaseisBusy);
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
+            FLocalDataBaseBody.Active:=True;
+          try
+            if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
+               not FLocalDataBaseHead.Deleted then
+              FLocalDataBaseHead.DeleteRecord;
+            FLocalDataBaseBody.First;
+            while not FLocalDataBaseBody.eof do
+            Begin
+              IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
+                  not FLocalDataBaseBody.Deleted then
+                FLocalDataBaseBody.DeleteRecord;
+              FLocalDataBaseBody.Next;
+            End;
+            FLocalDataBaseHead.Pack;
+            FLocalDataBaseBody.Pack;
+          finally
+            //отпустили локальную базу
+//            InterlockedDecrement(LocalDataBaseisBusy);
+           FLocalDataBaseHead.Active:=False;
+           FLocalDataBaseBody.Active:=False;
+           ReleaseMutex(MutexDBF);
+          end;
+        End;
+      finally
+        InterlockedDecrement(CountRRT);
+        InterlockedDecrement(CountSaveThread);
+      end;
+    finally
+      CoUninitialize;
+    end;
+  finally
+    LeaveCriticalSection(csCriticalSection_Save);
+  end;
+end;
+
+procedure TSaveRealThread.SendError(const AErrorMessage: String);
+begin
+  FLastError := AErrorMessage;
+  Synchronize(SendErrorMineForm);
+end;
+
+procedure  TSaveRealThread.SendErrorMineForm;
+begin
+  MainCashForm.ThreadErrorMessage := FLastError;
+  PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
+end;
+
+procedure TSaveRealThread.SetShapeState(AColor: TColor);
+begin
+  FShapeColor := AColor;
+  Synchronize(SyncShapeState);
+end;
+
+procedure TSaveRealThread.SyncShapeState;
+begin
+  MainCashForm.ShapeState.Pen.Color := FShapeColor;
+end;
+
+procedure TSaveRealThread.UpdateRemains;
+
+begin
+  MainCashForm.UpdateRemainsFromDiff(DiffCDS);
+  WaitForSingleObject(MutexRemains, INFINITE);
+  SaveLocalData(MainCashForm.RemainsCDS,Remains_lcl);
+  ReleaseMutex(MutexRemains);
+  WaitForSingleObject(MutexAlternative, INFINITE);
+  SaveLocalData(MainCashForm.AlternativeCDS,Alternative_lcl);
+  ReleaseMutex(MutexAlternative);
+  if FNeedSaveVIP then
+   begin
+    MainCashForm.SaveLocalVIP;
+   end;
+end;
+
+{ TRefreshDiffThread }
+
+procedure TRefreshDiffThread.Execute;
+begin
+  inherited;
+  if gc_User.Local then exit;
+
+  CoInitialize(nil);
+  try
+    InterlockedIncrement(CountRRT);
+    try
+      EnterCriticalSection(csCriticalSection);
+      try
+        SetShapeState(clRed);
+
+        WaitForSingleObject(MutexRemains, INFINITE);
+        MainCashForm.spSelect_CashRemains_Diff.Execute(False,False,False);
+        ReleaseMutex(MutexRemains);
+
+        SetShapeState(clBlue);
+        Synchronize(UpdateRemains);
+        SetShapeState(clWhite);
+      finally
+        LeaveCriticalSection(csCriticalSection);
+      end;
+    finally
+      InterlockedDecrement(CountRRT);
+    end;
+  finally
+    CoUninitialize;
+  end;
+end;
+
+procedure TRefreshDiffThread.SetShapeState(AColor: TColor);
+begin
+  FShapeColor := AColor;
+  Synchronize(SyncShapeState);
+end;
+
+procedure TRefreshDiffThread.SyncShapeState;
+begin
+  MainCashForm.ShapeState.Pen.Color := FShapeColor;
+end;
+
+procedure TRefreshDiffThread.UpdateRemains;
+begin
+  MainCashForm.UpdateRemainsFromDiff(nil);
+end;
+
+{ TSaveRealAllThread }
+
+procedure TSaveRealAllThread.Execute;
+var
+  I: Integer;
+  UID: String;
+  T:TSaveRealThread;
+begin
+  inherited;
+//  if gc_User.Local then exit;    //f  Временно разрешим для локольного
+
+  if CountSaveThread > 0 then exit;
+
+  InterlockedIncrement(CountRRT);
+  try
+    EnterCriticalSection(csCriticalSection_All);
+    try
+      for I := 0 to 6 do
+      Begin
+
+        //ждем пока освободится доступ к локальной базе
+//        while LocalDataBaseisBusy <> 0 do
+//          sleep(10);
+        //блокируем базу
+//        InterlockedIncrement(LocalDataBaseisBusy);
+       WaitForSingleObject(MutexDBF, INFINITE);
+       FLocalDataBaseHead.Active:=True;
+       FLocalDataBaseBody.Active:=True;
+        try
+          FLocalDataBaseHead.Pack;
+          FLocalDataBaseBody.Pack;
+          FLocalDataBaseHead.First;
+          UID := '';
+          while not FLocalDataBaseHead.eof do
+          Begin
+            if not FLocalDataBaseHead.Deleted then
+            Begin
+              UID := trim(FLocalDataBaseHead.FieldByName('UID').AsString);
+              break;
+            End;
+            FLocalDataBaseHead.Next;
+          End;
+        finally
+          //отпустили локальную базу
+//          InterlockedDecrement(LocalDataBaseisBusy);
+         FLocalDataBaseBody.Active:=False;
+         FLocalDataBaseHead.Active:=False;
+         ReleaseMutex(MutexDBF);
+
+        end;
+        if UID <> '' then
+        Begin
+          T := TSaveRealThread.create(true);
+          try
+            T.FCheckUID := UID;
+            T.Execute;
+          finally
+            T.Free;
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
+            FLocalDataBaseHead.First;
+            FLocalDataBaseHead.Active:=False;
+            ReleaseMutex(MutexDBF);
+          end;
+        End;
+      End;
+    finally
+      LeaveCriticalSection(csCriticalSection_All);
+    end;
+  finally
+    InterlockedDecrement(CountRRT);
+  end;
+end;
+
+initialization
+  RegisterClass(TMainCashForm2);
+  FLocalDataBaseHead := TVKSmartDBF.Create(nil);
+  FLocalDataBaseBody := TVKSmartDBF.Create(nil);
+  FLocalDataBaseDiff := TVKSmartDBF.Create(nil);
+  InitializeCriticalSection(csCriticalSection);
+  InitializeCriticalSection(csCriticalSection_Save);
+  InitializeCriticalSection(csCriticalSection_All);
+  FM_SERVISE := RegisterWindowMessage('FarmacyCashMessage');
+finalization
+  FLocalDataBaseHead.Free;
+  FLocalDataBaseBody.Free;
+  FLocalDataBaseDiff.Free;
+  DeleteCriticalSection(csCriticalSection);
+  DeleteCriticalSection(csCriticalSection_Save);
+  DeleteCriticalSection(csCriticalSection_All);
+end.
