@@ -46,11 +46,11 @@ BEGIN
            , ObjectLink_GoodsListSale_Goods.ChildObjectId                    AS GoodsId 
            , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0)  AS GoodsKindId_max
            , COALESCE (ObjectString_GoodsKind.ValueData, '')                 AS GoodsKindId_List
-           , ObjectLink_GoodsListSale_Juridical.ChildObjectId                AS JuridicalId           
+           , ObjectLink_GoodsListSale_Juridical.ChildObjectId                AS JuridicalId
            , GoodsListSale_Contract.ChildObjectId                            AS ContractId
            , ObjectLink_GoodsListSale_Partner.ChildObjectId                  AS PartnerId
-           , ObjectFloat_GoodsListSale_Amount.ValueData                      AS Amount
-           , ObjectFloat_GoodsListSale_AmountChoice.ValueData                AS AmountChoice
+           , COALESCE (ObjectFloat_GoodsListSale_Amount.ValueData, 0)        AS Amount
+           , COALESCE (ObjectFloat_GoodsListSale_AmountChoice.ValueData, 0)  AS AmountChoice
            , Object_GoodsListSale.isErased                                   AS isErased
       FROM Object AS Object_GoodsListSale 
         LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_Amount
@@ -164,7 +164,6 @@ BEGIN
                              , ROW_NUMBER() OVER (PARTITION BY tmp.PartnerId, tmp.GoodsId ORDER BY tmp.Amount DESC) AS Ord
                         FROM
                        (SELECT _tmpMIContainer.GoodsId
-                          -- , STRING_AGG (_tmpMIContainer.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
                              , _tmpMIContainer.GoodsKindId
                              , _tmpMIContainer.PartnerId
                              , ContainerLO_Juridical.ObjectId AS Juridical

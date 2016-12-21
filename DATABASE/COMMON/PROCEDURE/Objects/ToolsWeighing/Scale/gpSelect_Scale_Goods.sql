@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, GoodsKindId_list TVarChar
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, GoodsKindId_list TVarChar, GoodsKindId_max Integer
              , MeasureId Integer, MeasureName TVarChar
              , ChangePercentAmount TFloat
              , Amount_Order TFloat
@@ -233,7 +233,8 @@ BEGIN
             , Object_GoodsKind.Id         AS GoodsKindId
             , Object_GoodsKind.ObjectCode AS GoodsKindCode
             , Object_GoodsKind.ValueData  AS GoodsKindName
-            , '' :: TVarChar              AS GoodsKindId_list
+            , Object_GoodsKind.Id :: TVarChar AS GoodsKindId_list
+            , Object_GoodsKind.Id         AS GoodsKindId_max
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
@@ -312,12 +313,13 @@ BEGIN
    ELSE
 
     -- 
-    CREATE TEMP TABLE _tmpWord_Goods (GoodsId Integer, WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Goods (GoodsId Integer, GoodsKindId_max Integer, WordList TVarChar) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
     -- 
-    INSERT INTO _tmpWord_Goods (GoodsId, WordList) 
+    INSERT INTO _tmpWord_Goods (GoodsId, GoodsKindId_max, WordList) 
                             SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                                 , ObjectLink_GoodsListSale_GoodsKind.ChildObjectId      AS GoodsKindId_max
                                  , COALESCE (ObjectString_GoodsKind.ValueData, '')       AS WordList
                             FROM Object AS Object_GoodsListSale
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
@@ -328,6 +330,9 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                                       ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                                      AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                                                      ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                                                     AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
                                  LEFT JOIN ObjectString AS ObjectString_GoodsKind
                                                         ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
                                                        AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
@@ -376,12 +381,14 @@ BEGIN
                                                                             )
                             )
       , tmpGoods_Return AS (SELECT _tmpWord_Goods.GoodsId
+                                 , _tmpWord_Goods.GoodsKindId_max
                                  , _tmpWord_Goods.WordList
                                  , STRING_AGG (Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
                             FROM _tmpWord_Goods
                                  LEFT JOIN zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId) AS zfSelect ON zfSelect.WordList = _tmpWord_Goods.WordList
                                  LEFT JOIN Object ON Object.Id = zfSelect.Word :: Integer
                             GROUP BY _tmpWord_Goods.GoodsId
+                                   , _tmpWord_Goods.GoodsKindId_max
                                    , _tmpWord_Goods.WordList
                            )
       , tmpGoods AS (SELECT Object_Goods.Id                               AS GoodsId
@@ -389,6 +396,7 @@ BEGIN
                           , Object_Goods.ValueData                        AS GoodsName
                           , tmpGoods_Return.WordList                      AS GoodsKindId_list
                           , tmpGoods_Return.GoodsKindName_list            AS GoodsKindName_list
+                          , tmpGoods_Return.GoodsKindId_max               AS GoodsKindId_max
                           , tmpInfoMoney.InfoMoneyId
                           , tmpInfoMoney.InfoMoneyDestinationId
                      FROM tmpInfoMoney
@@ -447,6 +455,7 @@ BEGIN
             , 0                           AS GoodsKindCode
             , tmpGoods.GoodsKindName_list :: TVarChar AS GoodsKindName
             , tmpGoods.GoodsKindId_list   :: TVarChar AS GoodsKindId_list
+            , tmpGoods.GoodsKindId_max    :: Integer  AS GoodsKindId_max
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() THEN 0 -- Доходы + Переработка
