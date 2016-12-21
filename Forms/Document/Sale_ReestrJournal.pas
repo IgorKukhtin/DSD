@@ -182,6 +182,14 @@ type
     OperDate_Reestr: TcxGridDBColumn;
     CarModelName_Reestr: TcxGridDBColumn;
     OperDate_Transport_reestr: TcxGridDBColumn;
+    actPrintPack: TdsdPrintAction;
+    macPrintPack: TMultiAction;
+    macPrintPacklist: TMultiAction;
+    N14: TMenuItem;
+    actPrintPack_Transport: TdsdPrintAction;
+    macPrintPack_Transport: TMultiAction;
+    macPrintPackList_Transport: TMultiAction;
+    N15: TMenuItem;
   private
     { Private declarations }
   public
