@@ -62,6 +62,7 @@ BEGIN
                         inToId := inUnitId , -- Кому
                   inContractId := inContractId , -- Кому
              inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
+                  inisDeferred := FALSE :: Boolean , -- отложен
                       inUserId := inUserId);
     END IF;
  

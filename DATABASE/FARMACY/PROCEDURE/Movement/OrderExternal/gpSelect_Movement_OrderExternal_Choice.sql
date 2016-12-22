@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar, JuridicalName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , isDeferred Boolean
               )
 
 AS
@@ -51,6 +52,7 @@ BEGIN
            , Movement_OrderExternal_View.JuridicalName
            , Movement_OrderExternal_View.ContractId
            , Movement_OrderExternal_View.ContractName
+           , Movement_OrderExternal_View.isDeferred
 
        FROM Movement_OrderExternal_View 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_OrderExternal_View.StatusId 
@@ -67,6 +69,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.12.16         * add isDeferred
  25.04.16         *
  22.04.16         *
 */

@@ -21,7 +21,8 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
            , MovementFloat_TotalSumm.ValueData                  AS TotalSum
            , Movement_Master.Id                                 AS MasterId
            , ('π '||Movement_Master.InvNumber || ' ÓÚ '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar   AS MasterInvNumber 
-           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , COALESCE(MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
            
 
        FROM Movement
@@ -39,6 +40,10 @@ CREATE OR REPLACE VIEW Movement_OrderExternal_View AS
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
                                     
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -71,6 +76,7 @@ ALTER TABLE Movement_OrderExternal_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.12.16         * add isDeferred
  10.05.16         *
  12.12.14                        * 
 */

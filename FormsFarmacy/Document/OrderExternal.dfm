@@ -194,6 +194,8 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 844
     Height = 95
     TabOrder = 3
+    ExplicitLeft = -8
+    ExplicitTop = 6
     ExplicitWidth = 844
     ExplicitHeight = 95
     inherited edInvNumber: TcxTextEdit
@@ -281,6 +283,13 @@ inherited OrderExternalForm: TOrderExternalForm
       TabOrder = 11
       Width = 190
     end
+    object edisDeferred: TcxCheckBox
+      Left = 580
+      Top = 63
+      Caption = #1054#1090#1083#1086#1078#1077#1085
+      TabOrder = 12
+      Width = 70
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 656
@@ -299,14 +308,14 @@ inherited OrderExternalForm: TOrderExternalForm
     Width = 156
   end
   object edComment: TcxTextEdit [4]
-    Left = 543
+    Left = 656
     Top = 63
     Properties.ReadOnly = False
     TabOrder = 8
-    Width = 269
+    Width = 156
   end
   object cxLabel7: TcxLabel [5]
-    Left = 543
+    Left = 656
     Top = 45
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
@@ -326,7 +335,7 @@ inherited OrderExternalForm: TOrderExternalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 137
+    Width = 174
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -963,6 +972,13 @@ inherited OrderExternalForm: TOrderExternalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = edisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1031,6 +1047,14 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = Null
+        Component = edisDeferred
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1285,7 +1309,7 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 680
+    Left = 744
     Top = 8
   end
   object spGetDocumentDataForEmail: TdsdStoredProc

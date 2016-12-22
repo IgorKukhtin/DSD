@@ -42,6 +42,15 @@ type
     colisDostavkaToday: TcxGridDBColumn;
     colOperDate_Zakaz: TcxGridDBColumn;
     colOperDate_Dostavka: TcxGridDBColumn;
+    clisDeferred: TcxGridDBColumn;
+    spUpdate_isDeferred_Yes: TdsdStoredProc;
+    spUpdate_isDeferred_No: TdsdStoredProc;
+    spUpdateisDeferredNo: TdsdExecStoredProc;
+    spUpdateisDeferredYes: TdsdExecStoredProc;
+    macUpdateisDeferredNo: TMultiAction;
+    macUpdateisODeferredYes: TMultiAction;
+    bbDeferredYes: TdxBarButton;
+    bbDeferredNo: TdxBarButton;
   private
     { Private declarations }
   public

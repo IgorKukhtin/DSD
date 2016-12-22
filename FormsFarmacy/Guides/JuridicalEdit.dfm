@@ -784,8 +784,8 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 376
-    Top = 272
+    Left = 368
+    Top = 264
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>

@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
              , Comment TVarChar
+             , isDeferred Boolean
               )
 AS
 $BODY$
@@ -43,6 +44,7 @@ BEGIN
              , CAST ('' AS TVarChar) 			        AS MasterInvNumber
              , CAST ('' AS TVarChar) 			        AS OrderKindName
              , CAST ('' AS TVarChar) 		                AS Comment
+             , FALSE                                            AS isDeferred
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -64,7 +66,8 @@ BEGIN
            , Movement_Master.Id                                 AS MasterId
            , ('π '||Movement_Master.InvNumber || ' ÓÚ '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar    AS MasterInvNumber 
            , Object_OrderKind.ValueData                         AS OrderKindName
-           , COALESCE(MovementString_Comment.ValueData,'') :: TVarChar AS Comment
+           , COALESCE (MovementString_Comment.ValueData,'')       :: TVarChar AS Comment
+           , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -72,6 +75,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -115,6 +122,7 @@ ALTER FUNCTION gpGet_Movement_OrderExternal (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.12.16         * add Deferred
  10.05.16         *
  01.07.14                                                        *
 */

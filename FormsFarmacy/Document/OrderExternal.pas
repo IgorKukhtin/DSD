@@ -70,6 +70,7 @@ type
     GuidesOrderKind: TdsdGuides;
     spUpdateMovementUserSend: TdsdStoredProc;
     actUpdateUserSend: TdsdExecStoredProc;
+    edisDeferred: TcxCheckBox;
   private
     { Private declarations }
   public
