@@ -1,8 +1,9 @@
 -- Function: gpInsertUpdate_Object_GoodsSP_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_Load (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP_From_Excel (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP_Load(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP_From_Excel(
     IN inCode                Integer   ,    -- код объекта <Товар> MainID
     IN inName                TVarChar  ,    -- Наименование
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
@@ -26,7 +27,7 @@ BEGIN
 
      -- проверка <inName>
      IF COALESCE (inCode, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Значение <Товар> должно быть установлено.';
+        RETURN;--RAISE EXCEPTION 'Ошибка.Значение <Товар> должно быть установлено.';
      END IF; 
 
      -- !!!поиск ИД главного товара!!!
@@ -41,15 +42,15 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Значение % не найдено в справочнике.', inName;
      END IF;  
    
-     PERFORM gpInsertUpdate_Object_GoodsSP (ioId              := vbId
+     PERFORM gpInsertUpdate_Object_GoodsSP (inId              := vbId
                                           , inisSP            := TRUE
                                           , inPriceSP         := inPriceSP
                                           , inGroupSP         := inGroupSP
                                           , inCountSP         := inCountSP
-                                          , inPack            := TRIM(inPack)
-                                          , inIntenalSPName   := TRIM(inIntenalSPName)
-                                          , inBrandSPName     := TRIM(inBrandSPName)
-                                          , inKindOutSPName   := TRIM(inKindOutSPName)
+                                          , inPack            := TRIM(inPack)          ::TVarChar
+                                          , inIntenalSPName   := TRIM(inIntenalSPName) ::TVarChar
+                                          , inBrandSPName     := TRIM(inBrandSPName)   ::TVarChar
+                                          , inKindOutSPName   := TRIM(inKindOutSPName) ::TVarChar
                                           , inSession         := inSession
                                           );
    
@@ -63,4 +64,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_GoodsSP_Load (324, '17', True, 4::TFloat, 5::TFloat, 0, 0, 0, '3');
+-- SELECT * FROM gpInsertUpdate_Object_GoodsSP_From_Excel (324, '17', True, 4::TFloat, 5::TFloat, 0, 0, 0, '3');
