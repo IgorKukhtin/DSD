@@ -314,6 +314,8 @@ type
     N117: TMenuItem;
     N118: TMenuItem;
     N119: TMenuItem;
+    actPartnerMedical: TdsdOpenForm;
+    N120: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
