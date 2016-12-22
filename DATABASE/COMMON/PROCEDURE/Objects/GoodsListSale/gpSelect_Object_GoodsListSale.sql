@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsListSale(
 )
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount Tfloat
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , Amount TFloat, AmountChoice TFloat
              , RetailId Integer, RetailName TVarChar
              , ContractId Integer, ContractCode Integer, InvNumber TVarChar
 
@@ -32,48 +33,41 @@ RETURNS TABLE (Id Integer
              , isPersonal Boolean
              , isUnique Boolean
 
-             , isErased boolean         
-             ) AS
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsKindId TVarChar;
    DECLARE vbIndex Integer;
-   DECLARE cur1 CURSOR FOR SELECT _tmp.GoodsKindId_list FROM _tmp;
+   DECLARE cur1 CURSOR FOR SELECT _tmpWord_Split_to.WordList FROM _tmpWord_Split_to;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_GoodsListSale());
      vbUserId:= lpGetUserBySession (inSession);
   
-    CREATE TEMP TABLE tmp_List (GoodsKindId_list TVarChar, GoodsKindId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmp (GoodsKindId_list TVarChar) ON COMMIT DROP;
 
-    INSERT INTO _tmp (GoodsKindId_list) 
-            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS GoodsKindId
+    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
+
+    INSERT INTO _tmpWord_Split_from (WordList) 
+            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS WordList
             FROM ObjectString AS ObjectString_GoodsKind
-            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind();
- 
-    
-    OPEN cur1 ;
-     LOOP
-         FETCH cur1 Into vbGoodsKindId;
-         IF NOT FOUND THEN EXIT; END IF;
-         -- парсим 
-         vbIndex := 1;
-         WHILE SPLIT_PART (vbGoodsKindId, ',', vbIndex) <> '' LOOP
-             -- добавляем то что нашли
-             INSERT INTO tmp_List (GoodsKindId_list, GoodsKindId) SELECT vbGoodsKindId, SPLIT_PART (vbGoodsKindId, ',', vbIndex) :: Integer;
-             -- теперь следуюющий
-             vbIndex := vbIndex + 1;
-         END LOOP;
-
-     END LOOP;
-    CLOSE cur1;
+            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+              AND ObjectString_GoodsKind.ValueData <> ''
+           ;
+    PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
 
   
      -- Результат
      RETURN QUERY 
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-
+       , tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName_list
+                          FROM _tmpWord_Split_to 
+                              LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
+                          GROUP BY _tmpWord_Split_to.WordList
+                         )
+          -- Результат
           SELECT 
              Object_GoodsListSale.Id          AS Id
 
@@ -81,7 +75,12 @@ BEGIN
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
 
-           , ObjectFloat_GoodsListSale_Amount.ValueData ::Tfloat AS Amount
+           , Object_GoodsKind.Id         AS GoodsKindId
+           , Object_GoodsKind.ObjectCode AS GoodsKindCode
+           , Object_GoodsKind.ValueData  AS GoodsKindName
+
+           , ObjectFloat_GoodsListSale_Amount.ValueData AS Amount
+           , ObjectFloat_GoodsListSale_AmountChoice.ValueData AS AmountChoice
 
            , Object_Retail.Id                AS RetailId
            , Object_Retail.ValueData         AS RetailName
@@ -151,6 +150,11 @@ BEGIN
                             AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsListSale_Goods.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_GoodsKind
+                             ON ObjectLink_GoodsListSale_GoodsKind.ObjectId = Object_GoodsListSale.Id
+                            AND ObjectLink_GoodsListSale_GoodsKind.DescId = zc_ObjectLink_GoodsListSale_GoodsKind()
+        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsListSale_GoodsKind.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                              ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                             AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
@@ -159,6 +163,9 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_Amount
                               ON ObjectFloat_GoodsListSale_Amount.ObjectId = Object_GoodsListSale.Id
                              AND ObjectFloat_GoodsListSale_Amount.DescId = zc_ObjectFloat_GoodsListSale_Amount()
+        LEFT JOIN ObjectFloat AS ObjectFloat_GoodsListSale_AmountChoice
+                              ON ObjectFloat_GoodsListSale_AmountChoice.ObjectId = Object_GoodsListSale.Id
+                             AND ObjectFloat_GoodsListSale_AmountChoice.DescId = zc_ObjectFloat_GoodsListSale_AmountChoice()
 
         LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
                              ON ObjectDate_Protocol_Update.ObjectId = Object_GoodsListSale.Id
@@ -195,13 +202,7 @@ BEGIN
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
-
-
-        LEFT JOIN (SELECT tmp_List.GoodsKindId_list, STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName_list
-                   FROM tmp_List 
-                       LEFT JOIN Object ON Object.Id = tmp_List.GoodsKindId
-                   GROUP BY tmp_List.GoodsKindId_list
-                   ) AS tmpGoodsKind ON tmpGoodsKind.GoodsKindId_list = ObjectString_GoodsKind.ValueData
+        LEFT JOIN tmpGoodsKind ON tmpGoodsKind.WordList = ObjectString_GoodsKind.ValueData
 
     WHERE (ObjectLink_Juridical_Retail.ChildObjectId = inRetailId OR inRetailId = 0)
        AND (ObjectLink_GoodsListSale_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)

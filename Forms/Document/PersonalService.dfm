@@ -3,7 +3,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   ClientHeight = 673
   ClientWidth = 1307
   ExplicitWidth = 1323
-  ExplicitHeight = 711
+  ExplicitHeight = 708
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -227,9 +227,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object colINN: TcxGridDBColumn [2]
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'INN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 70
           end
           object clCard: TcxGridDBColumn [3]
@@ -1273,7 +1275,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

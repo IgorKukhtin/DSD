@@ -59,13 +59,13 @@ type
     TotalSummPhone: TcxGridDBColumn;
     TotalSummTransportAddLong: TcxGridDBColumn;
     TotalSummTransportTaxi: TcxGridDBColumn;
-    spExportTXTVostok: TdsdStoredProc;
-    dsExportTXTVostok: TClientDataSet;
+    spSelectExport: TdsdStoredProc;
+    ExportCDS: TClientDataSet;
     actExportTXTVostok: TMultiAction;
     actExportTXTVostokSelect: TdsdExecStoredProc;
     FileDialogAction1: TFileDialogAction;
     ExportGrid1: TExportGrid;
-    bExportToFile: TdxBarButton;
+    bbExport: TdxBarButton;
     actExportToFile: TdsdStoredProcExportToFile;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
@@ -73,6 +73,9 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
+    actExport: TMultiAction;
+    actGet_Export_FileName: TdsdExecStoredProc;
+    spGet_Export_FileName: TdsdStoredProc;
   private
     { Private declarations }
   public

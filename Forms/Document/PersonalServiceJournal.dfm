@@ -1,27 +1,27 @@
 inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
-  ClientHeight = 438
+  ClientHeight = 404
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1237
-  ExplicitHeight = 476
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1221
-    Height = 381
+    Height = 347
     TabOrder = 3
     ExplicitWidth = 1221
     ExplicitHeight = 381
-    ClientRectBottom = 381
+    ClientRectBottom = 347
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
       ExplicitHeight = 381
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 381
+        Height = 347
         ExplicitWidth = 1221
         ExplicitHeight = 381
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -438,10 +438,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Width = 1221
     ExplicitWidth = 1221
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42370d
     end
     object cbIsServiceDate: TcxCheckBox
       Left = 405
@@ -452,12 +452,12 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 794
+    Left = 722
     Top = 6
-    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 895
+    Left = 800
     Top = 5
     Properties.Buttons = <
       item
@@ -466,7 +466,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 155
+    Width = 150
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -476,7 +476,32 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 471
+    Left = 23
+    Top = 194
+    object actExport: TMultiAction [0]
+      Category = 'Export'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_FileName
+        end
+        item
+          Action = actExportToFile
+        end>
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1074' '#1041#1072#1085#1082
+      Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1076#1083#1103' "'#1042#1054#1057#1058#1054#1050'" '#1080#1083#1080' "'#1054#1058#1055'"'
+    end
+    object actGet_Export_FileName: TdsdExecStoredProc [1]
+      Category = 'Export'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileName
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileName
+        end>
+      Caption = 'actGet_Export_Email'
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceForm'
       FormNameParam.Name = 'TPersonalServiceForm'
@@ -579,10 +604,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spExportTXTVostok
+      StoredProc = spSelectExport
       StoredProcList = <
         item
-          StoredProc = spExportTXTVostok
+          StoredProc = spSelectExport
         end>
       Caption = 'actExportTXTVostokSelect'
       QuestionBeforeExecute = #1042#1099#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1074#1099#1073#1088#1072#1085#1085#1086#1084#1091' '#1087#1091#1085#1082#1090#1091' '#1074' '#1092#1086#1088#1084#1072#1090' '#1073#1072#1085#1082#1072' '#1042#1086#1089#1090#1086#1082'?'
@@ -604,9 +629,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       OpenAfterCreate = False
     end
     object actExportToFile: TdsdStoredProcExportToFile
-      Category = 'DSDLibExport'
+      Category = 'Export'
       MoveParams = <>
-      dsdStoredProcName = spExportTXTVostok
+      dsdStoredProcName = spSelectExport
       FileExt = '.txt'
       FilenamePrefix = 'Vostok_'
     end
@@ -716,8 +741,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 163
+    Left = 120
+    Top = 131
   end
   inherited BarManager: TdxBarManager
     Left = 224
@@ -806,7 +831,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'bExportToFile'
+          ItemName = 'bbExport'
         end>
     end
     object bbTax: TdxBarButton
@@ -841,9 +866,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Visible = ivAlways
       ImageIndex = 21
     end
-    object bExportToFile: TdxBarButton
-      Action = actExportToFile
-      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1042#1086#1089#1090#1086#1082
+    object bbExport: TdxBarButton
+      Action = actExport
       Category = 0
     end
   end
@@ -867,8 +891,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 408
-    Top = 344
+    Left = 392
+    Top = 304
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_PersonalService'
@@ -901,8 +925,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 384
+    Left = 152
+    Top = 296
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_PersonalService'
@@ -915,8 +939,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 208
-    Top = 376
+    Left = 224
+    Top = 312
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -996,16 +1020,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Left = 535
     Top = 248
   end
-  object spExportTXTVostok: TdsdStoredProc
-    StoredProcName = 'gpExport_TXTBankVostokPayroll'
-    DataSet = dsExportTXTVostok
+  object spSelectExport: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalService_export'
+    DataSet = ExportCDS
     DataSets = <
       item
-        DataSet = dsExportTXTVostok
+        DataSet = ExportCDS
       end>
     Params = <
       item
-        Name = 'inPayrollID'
+        Name = 'inMovementId'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'Id'
@@ -1013,7 +1037,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNumDoc'
+        Name = 'inInvNumber'
         Value = ''
         Component = MasterCDS
         ComponentItem = 'InvNumber'
@@ -1031,7 +1055,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateDoc'
+        Name = 'inOperDate'
         Value = 'NULL'
         Component = MasterCDS
         ComponentItem = 'OperDate'
@@ -1040,14 +1064,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 685
-    Top = 5
+    Left = 141
+    Top = 181
   end
-  object dsExportTXTVostok: TClientDataSet
+  object ExportCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 688
-    Top = 56
+    Left = 88
+    Top = 192
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -1076,7 +1100,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 943
+    Left = 855
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
@@ -1101,5 +1126,38 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spGet_Export_FileName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Export_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileNamePrefix'
+        Value = Null
+        Component = actExportToFile
+        ComponentItem = 'FileNamePrefix'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileExt'
+        Value = Null
+        Component = actExportToFile
+        ComponentItem = 'FileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 514
+    Top = 154
   end
 end

@@ -155,7 +155,7 @@ BEGIN
                                                                                  , inMovementId := inMovementId
                                                                                  , inGoodsId := Saldo.ObjectId
                                                                                  , inAmount := 0
-                                                                                 , inPrice := Object_Price.Price
+                                                                                 , inPrice := COALESCE (Object_Price.Price, 0)
                                                                                  , inSumm := 0
                                                                                  , inComment := ''
                                                                                  , inUserId := inUserId

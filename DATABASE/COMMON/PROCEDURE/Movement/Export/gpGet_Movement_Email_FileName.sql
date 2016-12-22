@@ -1,4 +1,4 @@
-п»ї-- Function: gpGet_Movement_Email_FileName()
+-- Function: gpGet_Movement_Email_FileName(Integer, TVarChar)
 
 -- DROP FUNCTION IF EXISTS gpGet_Movement_XML_FileName (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Email_FileName (Integer, TVarChar);
@@ -6,21 +6,21 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Email_FileName (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_Movement_Email_FileName(
    OUT outFileName            TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
-   OUT outEncodingANSI         Boolean   ,
+   OUT outEncodingANSI        Boolean   ,
     IN inMovementId           Integer   ,
-    IN inSession              TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession              TVarChar
 )
-RETURNS RECORD
+  RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_XML_Mida());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Р РµР·СѓР»СЊС‚Р°С‚
+     -- Результат
      SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI
             INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM
@@ -33,21 +33,29 @@ BEGIN
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
                       THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
                  || '_' || Movement.InvNumber
-                 || '_' || COALESCE (Object_Retail.ValueData, 'РўРѕСЂРіРѕРІР°СЏ СЃРµС‚СЊ') || ' в„–' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
+                 || '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
                                                                                                     THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                                ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
                                                                                           END
-                 || '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Dakort39135074())
+                      THEN COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+                 || '_' || Movement.InvNumber
+                 --|| '_' || COALESCE (Object_Retail.ValueData, 'Торговая сеть') || ' №' || CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Brusn34604386()
+                 --                                                                                   THEN Object_Partner.Id :: TVarChar -- COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                 --                                                                              ELSE COALESCE (ObjectString_RoomNumber.ValueData, '0')
+                 --                                                                         END
+                 --|| '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
                  -- || '.csv'
+                 
             END AS outFileName
-          , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
+          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386())
                       THEN 'xml'
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
                       THEN 'csv'
             END AS outDefaultFileExt
-          , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
+          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386())
                       THEN FALSE
-                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Brusn34604386())
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
                       THEN TRUE
             END AS outEncodingANSI
      FROM Movement
@@ -100,18 +108,16 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
+/*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  23.03.16                                        *
  25.02.16                                        *
 */
 
--- С‚РµСЃС‚
+
+-- тест
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
-
-
-
---select * from gpGet_Movement_Email_FileName(inMovementId := 3770859 ,  inSession := '602006');

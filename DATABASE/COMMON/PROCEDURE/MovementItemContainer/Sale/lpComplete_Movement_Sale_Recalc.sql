@@ -11,14 +11,19 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbMovementId_Peresort Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
+     -- нашли дату
+     vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
+
+
      -- Временно захардкодил - !!!только для этого склада!!!
      IF inUnitId = 8459 -- Склад Реализации
      OR (inUnitId IN (8444 -- Склад ОХЛАЖДЕНКА
                     , 8445 -- Склад МИНУСОВКА
                     , 133049 -- Склад реализации мясо
                      )
-         AND '01.11.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+         AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
         )
         -- AND inUserId = 5
      THEN
@@ -111,41 +116,18 @@ BEGIN
        ;
 
 
-     IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+     IF EXISTS (SELECT 1 FROM _tmpItemPeresort_new) AND '01.10.2016' <= vbOperDate -- Дата когда стартанула схема вообще
      THEN
-         -- Распровели
-         IF vbMovementId_Peresort <> 0
-         THEN
-             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
-                                          , inUserId     := inUserId
-                                           );
-         END IF;
-
-         -- нашли MovementItemId - Master + Child
+         -- нашли MovementItemId - Master
          UPDATE _tmpItemPeresort_new SET MovementItemId_to   = tmpMI.MovementItemId_to
-                                       , MovementItemId_from = CASE WHEN _tmpItemPeresort_new.GoodsId_from = tmpMI.GoodsId_from AND _tmpItemPeresort_new.GoodsKindId_from = tmpMI.GoodsKindId_from
-                                                                         THEN tmpMI.MovementItemId_from
-                                                                    ELSE 0
-                                                               END
          FROM (SELECT MovementItem.Id                                     AS MovementItemId_to
                     , MovementItem.ObjectId                               AS GoodsId_to
                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId_to
-                    , MI_Child.Id                                         AS MovementItemId_from
-                    , MI_Child.ObjectId                                   AS GoodsId_from
-                    , COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0) AS GoodsKindId_from
                     , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) AS Ord
                FROM MovementItem
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                    LEFT JOIN MovementItem AS MI_Child
-                                           ON MI_Child.MovementId = vbMovementId_Peresort
-                                          AND MI_Child.DescId     = zc_MI_Child()
-                                          AND MI_Child.isErased   = FALSE
-                                          AND MI_Child.ParentId   = MovementItem.Id
-                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Child
-                                                     ON MILinkObject_GoodsKind_Child.MovementItemId = MI_Child.Id
-                                                    AND MILinkObject_GoodsKind_Child.DescId = zc_MILinkObject_GoodsKind()
                WHERE MovementItem.MovementId = vbMovementId_Peresort
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
@@ -155,10 +137,95 @@ BEGIN
            AND tmpMI.Ord                           = 1
         ;
 
+         -- нашли MovementItemId - Child
+         UPDATE _tmpItemPeresort_new SET MovementItemId_from   = tmpMI.MovementItemId_from
+         FROM (SELECT MI_Child.ParentId                                   AS MovementItemId_to
+                    , MI_Child.Id                                         AS MovementItemId_from
+                    , MI_Child.ObjectId                                   AS GoodsId_from
+                    , COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0) AS GoodsKindId_from
+                    , ROW_NUMBER() OVER (PARTITION BY MI_Child.ParentId, MI_Child.ObjectId, COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0)) AS Ord
+               FROM MovementItem AS MI_Child
+                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Child
+                                                     ON MILinkObject_GoodsKind_Child.MovementItemId = MI_Child.Id
+                                                    AND MILinkObject_GoodsKind_Child.DescId         = zc_MILinkObject_GoodsKind()
+               WHERE MI_Child.MovementId = vbMovementId_Peresort
+                 AND MI_Child.DescId     = zc_MI_Child()
+                 AND MI_Child.isErased   = FALSE
+              ) AS tmpMI
+         WHERE _tmpItemPeresort_new.MovementItemId_to = tmpMI.MovementItemId_to
+           AND _tmpItemPeresort_new.GoodsId_from      = tmpMI.GoodsId_from
+           AND _tmpItemPeresort_new.GoodsKindId_from  = tmpMI.GoodsKindId_from
+           AND tmpMI.Ord                              = 1
+        ;
+
+
+         -- Проверка - что б ничего не делать
+         IF vbMovementId_Peresort <> 0
+            -- если дата Документа раньше чем "незакрытый" период
+            AND DATE_TRUNC ('MONTH', vbOperDate) < DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '5 DAY')
+         THEN
+            IF -- если НЕТ элементов которые надо добавить
+               NOT EXISTS (SELECT 1 FROM _tmpItemPeresort_new WHERE MovementItemId_to = 0 OR MovementItemId_from = 0)
+               -- если НЕТ элементов Master + Child которые прийдется удалять
+           AND NOT EXISTS (SELECT 1 FROM MovementItem LEFT JOIN (SELECT MovementItemId_to   AS MovementItemId FROM _tmpItemPeresort_new UNION ALL SELECT MovementItemId_from AS MovementItemId FROM _tmpItemPeresort_new) AS tmp ON tmp.MovementItemId = MovementItem.Id
+                           WHERE MovementItem.MovementId = vbMovementId_Peresort AND MovementItem.isErased   = FALSE AND tmp.MovementItemId IS NULL)
+               -- если по элементам Master НЕТ изменений в кол-ве - обязательно взяли только там где нет составляющих
+           AND NOT EXISTS (SELECT 1 FROM MovementItem INNER JOIN (SELECT DISTINCT _tmpItemPeresort_new.MovementItemId_to, _tmpItemPeresort_new.Amount_to FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.ReceipId_to >= 0) AS tmp ON tmp.MovementItemId_to = MovementItem.Id
+                           WHERE MovementItem.MovementId = vbMovementId_Peresort AND MovementItem.Amount <> tmp.Amount_to)
+               -- если по элементам Child НЕТ изменений в кол-ве
+           AND NOT EXISTS (SELECT 1 FROM MovementItem INNER JOIN _tmpItemPeresort_new ON _tmpItemPeresort_new.MovementItemId_from = MovementItem.Id
+                                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_to ON ObjectLink_Goods_Measure_to.ObjectId = _tmpItemPeresort_new.GoodsId_to
+                                                                                                         AND ObjectLink_Goods_Measure_to.DescId = zc_ObjectLink_Goods_Measure()
+                                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_from ON ObjectLink_Goods_Measure_from.ObjectId = _tmpItemPeresort_new.GoodsId_from
+                                                                                                           AND ObjectLink_Goods_Measure_from.DescId = zc_ObjectLink_Goods_Measure()
+                                                      LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                            ON ObjectFloat_Weight.ObjectId = CASE WHEN ObjectLink_Goods_Measure_to.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectLink_Goods_Measure_from.ChildObjectId, 0) <> zc_Measure_Sh()
+                                                                                                                       THEN ObjectLink_Goods_Measure_to.ObjectId
+                                                                                                                  WHEN ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh() AND COALESCE (ObjectLink_Goods_Measure_to.ChildObjectId, 0) <> zc_Measure_Sh()
+                                                                                                                       THEN ObjectLink_Goods_Measure_from.ObjectId
+                                                                                                             END
+                                                                           AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                           WHERE MovementItem.MovementId = vbMovementId_Peresort
+                             AND MovementItem.Amount <> CASE -- если это составляющие
+                                                             WHEN _tmpItemPeresort_new.ReceipId_to < 0
+                                                                  THEN _tmpItemPeresort_new.Amount_to
+                                                             -- если это НЕ составляющие и надо перевести в Вес
+                                                             WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_to.ChildObjectId = zc_Measure_Sh()
+                                                                  THEN _tmpItemPeresort_new.Amount_to * ObjectFloat_Weight.ValueData
+                                                             -- если это НЕ составляющие и надо перевести в Шт
+                                                             WHEN ObjectFloat_Weight.ValueData <> 0 AND ObjectLink_Goods_Measure_from.ChildObjectId = zc_Measure_Sh()
+                                                                  THEN _tmpItemPeresort_new.Amount_to / ObjectFloat_Weight.ValueData
+                                                             -- иначе ... ?
+                                                             ELSE _tmpItemPeresort_new.Amount_to
+                                                        END
+                          )
+            THEN
+                -- Админу только отладка
+                if inUserId = 5 then RAISE EXCEPTION 'OK - Проверка - что б ничего не делать'; end if;
+                -- !!!Выход!!!
+                RETURN;
+            END IF;
+
+            -- Админу только отладка
+            -- if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE MovementItemId_to = 0 OR MovementItemId_from = 0); end if;
+            if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE GoodsKindId_to is null OR GoodsKindId_from is null); end if;
+
+         END IF;
+
+
+         -- Распровели
+         IF vbMovementId_Peresort <> 0
+         THEN
+             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId_Peresort
+                                          , inUserId     := inUserId
+                                           );
+         END IF;
+
+
          -- создается документ - <Производство смешивание> - Пересортица
          vbMovementId_Peresort:= lpInsertUpdate_Movement_ProductionUnion (ioId             := vbMovementId_Peresort
                                                                         , inInvNumber      := CASE WHEN vbMovementId_Peresort <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Peresort) ELSE CAST (NEXTVAL ('movement_ProductionUnion_seq') AS TVarChar) END
-                                                                        , inOperDate       := (SELECT OperDate FROM Movement WHERE Id = inMovementId)
+                                                                        , inOperDate       := vbOperDate
                                                                         , inFromId         := (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
                                                                         , inToId           := (SELECT ObjectId FROM MovementLinkObject AS MLO WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From())
                                                                         , inDocumentKindId := 0
@@ -282,7 +349,9 @@ BEGIN
 
      END IF;
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
-     
+
+     -- Админу только отладка
+     if inUserId = 5 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

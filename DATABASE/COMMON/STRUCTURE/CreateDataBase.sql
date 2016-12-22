@@ -1,2 +1,2 @@
-CREATE DATABASE project;
+-- CREATE DATABASE project;
 

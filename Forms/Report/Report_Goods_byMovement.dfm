@@ -6,7 +6,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 910
-  ExplicitHeight = 580
+  ExplicitHeight = 577
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,6 +146,9 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 800
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -1523,8 +1526,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
       ToolBox.CustomizeButton = True
       ToolBox.DiagramSelector = True
       object dgOperDate: TcxGridDBChartDataGroup
-        DataBinding.FieldName = 'OperDate'
-        DisplayText = #1044#1072#1090#1072
+        DataBinding.FieldName = 'StartDate'
+        DisplayText = #1044#1072#1090#1072' '#1085#1072#1095'.'
       end
       object serSaleAmount_11: TcxGridDBChartSeries
         DataBinding.FieldName = 'SaleAmount_11'

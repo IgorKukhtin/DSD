@@ -11,7 +11,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   Vcl.Controls, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, Vcl.Menus, cxButtonEdit, cxContainer, dsdGuides, cxLabel,
-  cxTextEdit, cxMaskEdit, Vcl.ExtCtrls;
+  cxTextEdit, cxMaskEdit, Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
   TGoodsListSaleForm = class(TAncestorGuidesForm)
@@ -36,8 +36,12 @@ type
     mactOpenReportForm: TMultiAction;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    clAmount: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     clGoodsKindName_List: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    GoodsKindCode: TcxGridDBColumn;
+    GoodsKindId_List: TcxGridDBColumn;
+    AmountChoice: TcxGridDBColumn;
   private
     { Private declarations }
   public
