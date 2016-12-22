@@ -32,7 +32,7 @@ BEGIN
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
            , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
-           , ObjectFloat_Percent.ValueData   ::TFloat  AS Percent
+           , COALESCE(ObjectFloat_Percent.ValueData,0)   ::TFloat  AS Percent
 
            , ObjectString_Comment.ValueData AS Comment
            
