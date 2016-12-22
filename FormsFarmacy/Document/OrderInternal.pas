@@ -104,6 +104,7 @@ type
     InsertRecord: TInsertRecord;
     actGoodsChoiceForm: TOpenChoiceForm;
     bb: TdxBarButton;
+    clAmountDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public
