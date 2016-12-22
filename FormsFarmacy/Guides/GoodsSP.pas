@@ -13,7 +13,7 @@ uses
   cxGrid, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
   dxSkinsdxBarPainter, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, ChoicePeriod, cxButtonEdit,
-  cxCurrencyEdit;
+  cxCurrencyEdit, ExternalLoad;
 
 type
   TGoodsSPForm = class(TParentForm)
@@ -50,13 +50,20 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     actIntenalSPChoice: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
-    bb: TdxBarButton;
+    bbProtocolOpen: TdxBarButton;
     spInsertUpdate: TdsdStoredProc;
     bbDateOut: TdxBarButton;
     actGoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
     actKindOutSPChoice: TOpenChoiceForm;
     spUpdate_Goods_isSP: TdsdStoredProc;
+    actGetImportSetting: TdsdExecStoredProc;
+    actStartLoad: TMultiAction;
+    spGetImportSettingId: TdsdStoredProc;
+    bbStartLoad: TdxBarButton;
+    actDoLoad: TExecuteImportSettingsAction;
+    FormParams: TdsdFormParams;
+    spInsertUpdateLoad: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -2,10 +2,8 @@ inherited InventoryForm: TInventoryForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 658
   ClientWidth = 898
-  ExplicitLeft = -125
-  ExplicitTop = -236
   ExplicitWidth = 914
-  ExplicitHeight = 693
+  ExplicitHeight = 696
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -525,6 +523,7 @@ inherited InventoryForm: TInventoryForm
         end
         item
         end>
+      InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel'
     end
     object actOpenInventoryPartionForm: TdsdOpenForm [12]
       Category = 'DSDLib'

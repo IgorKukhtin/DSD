@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_GoodsSP()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, TVarChar, Boolean, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsSP (Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsSP(
     IN inId                  Integer   ,    -- ключ объекта <Товар> MainID
-    IN inCountSP             TVarChar  ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
     IN inisSP                Boolean   ,    -- участвует в Соц. проекте
     IN inPriceSP             TFloat    ,    -- Референтна ціна за уп, грн (Соц. проект)
     IN inGroupSP             TFloat    ,    -- Групи відшкоду-вання – І або ІІ
+    IN inCountSP             TFloat  ,    -- Кількість одиниць лікарського засобу у споживчій упаковці (Соц. проект) 
+    IN inPack                TVarChar  ,    -- дозування
     IN inIntenalSPName       TVarChar  ,    -- Міжнародна непатентована назва (Соц. проект)
     IN inBrandSPName         TVarChar  ,    -- Торговельна назва лікарського засобу (Соц. проект)
     IN inKindOutSPName       TVarChar  ,    -- Форма випуску (Соц. проект)
@@ -40,20 +42,7 @@ BEGIN
                         WHERE ObjectLink_Child.ChildObjectId = inId                      --Object_Goods.Id
                           AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods());
    */
-     -- проверяем существует ли уже такой товар
-  /* SELECT Object_Goods.ValueData 
-     INTO vbName
-     FROM ObjectBoolean
-          LEFT JOIN Object AS Object_Goods 
-                           ON Object_Goods.Id = ObjectBoolean.ObjectId
-     WHERE ObjectBoolean.DescId = zc_ObjectBoolean_Goods_SP() 
-       AND ObjectBoolean.ObjectId = inId;
-    
-     IF COALESCE(vbName, '') <> ''
-        RAISE EXCEPTION 'Ошибка.Для товара % уже сформированы данные по Соц.проекту.',vbName;
-     END IF;
-*/
-
+  
      -- пытаемся найти "Міжнародна непатентована назва (Соц. проект)" 
      -- если не находим записывае новый элемент в справочник
      vbIntenalSPId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_IntenalSP() AND UPPER (TRIM(Object.ValueData)) LIKE UPPER (TRIM(inIntenalSPName)) );
@@ -96,12 +85,14 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_KindOutSP(), inId, vbKindOutSPId ); 
 
     -- сохранили свойство <>
-    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CountSP(), inId, inCountSP); 
+    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Pack(), inId, inPack); 
 
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_PriceSP(), inId, inPriceSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_GroupSP(), inId, inGroupSP);
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_CountSP(), inId, inCountSP);
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SP(), inId, TRUE);
 

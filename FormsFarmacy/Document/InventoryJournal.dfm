@@ -3,10 +3,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 535
   ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -46
-  ExplicitTop = -113
   ExplicitWidth = 835
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -284,6 +282,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited actComplete: TdsdChangeMovementStatus
+      InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'

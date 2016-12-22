@@ -1,27 +1,29 @@
 ﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
-  ClientHeight = 432
-  ClientWidth = 1063
+  ClientHeight = 558
+  ClientWidth = 1069
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1079
-  ExplicitHeight = 470
+  ExplicitWidth = 1085
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1063
-    Height = 406
+    Width = 1069
+    Height = 532
     ExplicitWidth = 1063
     ExplicitHeight = 406
-    ClientRectBottom = 406
-    ClientRectRight = 1063
+    ClientRectBottom = 532
+    ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1063
       ExplicitHeight = 406
       inherited cxGrid: TcxGrid
-        Width = 1063
-        Height = 406
-        ExplicitWidth = 1063
-        ExplicitHeight = 406
+        Width = 1069
+        Height = 532
+        ExplicitLeft = -56
+        ExplicitTop = 63
+        ExplicitWidth = 1069
+        ExplicitHeight = 532
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item

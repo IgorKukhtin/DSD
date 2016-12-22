@@ -17,7 +17,7 @@ RETURNS TABLE (UnitName       TVarChar
              , IntenalSPName  TVarChar
              , BrandSPName    TVarChar
              , KindOutSPName  TVarChar
-             , CountDozSP     TVarChar
+             , Pack           TVarChar
              , CountSP        TFloat
              , PriceSP        TFloat 
              , GroupSP        TFloat 
@@ -67,8 +67,8 @@ BEGIN
 
                               , ObjectFloat_Goods_PriceSP.ValueData          AS PriceSP
                               , ObjectFloat_Goods_GroupSP.ValueData          AS GroupSP
-                              , ObjectString_Goods_CountSP.ValueData         AS CountSP
-                              , 0      AS CountDozSP  --дозировка
+                              , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
+                              , ObjectString_Goods_Pack.ValueData            AS Pack  --дозировка
 
                           FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
@@ -97,9 +97,13 @@ BEGIN
                                  ON ObjectFloat_Goods_GroupSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
                                 AND ObjectFloat_Goods_GroupSP.DescId = zc_ObjectFloat_Goods_GroupSP()
 
-                               LEFT JOIN ObjectString AS ObjectString_Goods_CountSP
-                                 ON ObjectString_Goods_CountSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                AND ObjectString_Goods_CountSP.DescId = zc_ObjectString_Goods_CountSP()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_CountSP
+                                 ON ObjectFloat_Goods_CountSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
+
+                               LEFT JOIN ObjectString AS ObjectString_Goods_Pack
+                                 ON ObjectString_Goods_Pack.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
     
                           WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                             AND ObjectBoolean_Goods_SP.ValueData = TRUE
@@ -166,7 +170,7 @@ BEGIN
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
-             , tmpGoodsSP.CountDozSP  ::TVarChar
+             , tmpGoodsSP.Pack  ::TVarChar
              , tmpGoodsSP.CountSP :: TFloat 
              , tmpGoodsSP.PriceSP :: TFloat 
              , tmpGoodsSP.GroupSP :: TFloat 

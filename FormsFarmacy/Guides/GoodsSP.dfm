@@ -2,7 +2,7 @@ object GoodsSPForm: TGoodsSPForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1058#1086#1074#1072#1088#1099' '#1057#1086#1094'. '#1055#1088#1086#1077#1082#1090#1072
-  ClientHeight = 423
+  ClientHeight = 411
   ClientWidth = 841
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object GoodsSPForm: TGoodsSPForm
     Left = 0
     Top = 26
     Width = 841
-    Height = 397
+    Height = 385
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -33,7 +33,12 @@ object GoodsSPForm: TGoodsSPForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -43,6 +48,9 @@ object GoodsSPForm: TGoodsSPForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -55,7 +63,7 @@ object GoodsSPForm: TGoodsSPForm
         Width = 63
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072' ('#1085#1072#1096#1072')'
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -117,9 +125,9 @@ object GoodsSPForm: TGoodsSPForm
         Options.Editing = False
         Width = 81
       end
-      object clCountSP: TcxGridDBColumn
-        Caption = #1050#1110#1083'-'#1090#1100' '#1086#1076'. '#1091' '#1089#1087#1086#1078#1080#1074#1095#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110
-        DataBinding.FieldName = 'CountSP'
+      object clPack: TcxGridDBColumn
+        Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103
+        DataBinding.FieldName = 'Pack'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 105
@@ -132,6 +140,15 @@ object GoodsSPForm: TGoodsSPForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 74
+      end
+      object cbCountSP: TcxGridDBColumn
+        Caption = #1050#1110#1083'-'#1090#1100' '#1086#1076'. '#1091' '#1089#1087#1086#1078#1080#1074#1095#1110#1081' '#1091#1087#1072#1082#1086#1074#1094#1110
+        DataBinding.FieldName = 'CountSP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##; ; '
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 88
       end
       object cbGroupSP: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1080' '#1074#1110#1076#1096#1082#1086#1076#1091'-'#1074#1072#1085#1085#1103' '#8211' '#1030' '#1072#1073#1086' '#1030#1030
@@ -269,6 +286,14 @@ object GoodsSPForm: TGoodsSPForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -277,7 +302,7 @@ object GoodsSPForm: TGoodsSPForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbProtocolOpen'
         end>
       OneOnRow = True
       Row = 0
@@ -329,7 +354,7 @@ object GoodsSPForm: TGoodsSPForm
       Visible = ivAlways
       ImageIndex = 63
     end
-    object bb: TdxBarButton
+    object bbProtocolOpen: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
     end
@@ -340,11 +365,26 @@ object GoodsSPForm: TGoodsSPForm
       Visible = ivAlways
       ImageIndex = 58
     end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 288
     Top = 160
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -602,6 +642,40 @@ object GoodsSPForm: TGoodsSPForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1044#1072#1085#1085#1099#1093' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1044#1072#1085#1085#1099#1077' '#1087#1086' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1091
+      ImageIndex = 41
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_GoodsSp'
@@ -694,15 +768,6 @@ object GoodsSPForm: TGoodsSPForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountSP'
-        Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'CountSP'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisSP'
         Value = 'True'
         Component = ClientDataSet
@@ -726,6 +791,24 @@ object GoodsSPForm: TGoodsSPForm
         Component = ClientDataSet
         ComponentItem = 'GroupSP'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountSP'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'CountSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPack'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Pack'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -757,8 +840,8 @@ object GoodsSPForm: TGoodsSPForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 403
-    Top = 342
+    Left = 387
+    Top = 294
   end
   object spUpdate_Goods_isSP: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isSP'
@@ -801,5 +884,146 @@ object GoodsSPForm: TGoodsSPForm
     PackSize = 1
     Left = 696
     Top = 163
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TGoodsSPForm;zc_Object_ImportSetting_GoodsSP'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 248
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsUploadId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingIsSpecConditionId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 472
+    Top = 104
+  end
+  object spInsertUpdateLoad: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsSP_From_Excel'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PriceSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGroupSP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GroupSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountSP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CountSP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPack'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Pack'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIntenalSPName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IntenalSPName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBrandSPName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BrandSPName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKindOutSPName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'KindOutSPName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 467
+    Top = 286
   end
 end
