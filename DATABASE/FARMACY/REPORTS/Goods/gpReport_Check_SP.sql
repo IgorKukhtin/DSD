@@ -123,7 +123,7 @@ BEGIN
             -- выбираем продажи по товарам соц.проекта
             ,  tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId                          AS UnitId
                               , tmpUnit.JuridicalId
-                              , 0                                                         AS HospitalId
+                              , MovementLinkObject_PartnerMedical.ObjectId                AS HospitalId
                               , tmpGoods.GoodsMainId                                      AS GoodsMainId
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
                               , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
@@ -132,6 +132,11 @@ BEGIN
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+ 
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                                                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                               -- еще нужно добавить ограничение по больнице
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
@@ -164,9 +169,9 @@ BEGIN
                     )
 
         -- результат
-        SELECT Object_Unit.ValueData         AS UnitName
-             , Object_Juridical.ValueData    AS JuridicalName
-             , Object_Hospital.ValueData     AS HospitalName
+        SELECT Object_Unit.ValueData               AS UnitName
+             , Object_Juridical.ValueData          AS JuridicalName
+             , Object_PartnerMedical.ValueData     AS HospitalName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
@@ -182,7 +187,7 @@ BEGIN
           
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
-             LEFT JOIN Object AS Object_Hospital ON Object_Hospital.Id = tmpData.HospitalId
+             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId
 
         ORDER BY Object_Unit.ValueData
                , tmpGoodsSP.IntenalSPName

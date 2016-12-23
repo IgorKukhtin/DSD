@@ -7,14 +7,14 @@ inherited CheckForm: TCheckForm
   inherited PageControl: TcxPageControl
     Top = 183
     Height = 223
-    ExplicitTop = 147
-    ExplicitHeight = 259
+    ExplicitTop = 183
+    ExplicitHeight = 223
     ClientRectBottom = 223
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 235
+      ExplicitHeight = 199
       inherited cxGrid: TcxGrid
         Height = 199
-        ExplicitHeight = 235
+        ExplicitHeight = 199
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -405,7 +405,7 @@ inherited CheckForm: TCheckForm
   object cxLabel14: TcxLabel [14]
     Left = 347
     Top = 114
-    Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072' '
+    Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
   end
   object edInvNumberSP: TcxTextEdit [15]
     Left = 347

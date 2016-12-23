@@ -21,6 +21,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ConfirmedKindClientName TVarChar
              , CommentError TVarChar
              , InsertName TVarChar, InsertDate TDateTime
+             , OperDateSP TDateTime
+             , PartnerMedicalName TVarChar
+             , InvNumberSP TVarChar
+             , MedicSPName TVarChar
               )
 AS
 $BODY$
@@ -84,6 +88,11 @@ BEGIN
           , MovementString_CommentError.ValueData AS CommentError
           , Object_Insert.ValueData               AS InsertName
           , MovementDate_Insert.ValueData         AS InsertDate
+
+           , Movement_Check.OperDateSP
+           , Movement_Check.PartnerMedicalName
+           , Movement_Check.InvNumberSP
+           , Movement_Check.MedicSPName
 
         FROM Movement_Check_View AS Movement_Check 
              JOIN tmpStatus ON tmpStatus.StatusId = Movement_Check.StatusId

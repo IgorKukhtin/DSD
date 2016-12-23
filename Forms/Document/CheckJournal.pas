@@ -54,6 +54,10 @@ type
     PrintDialog: TExecuteDialog;
     macPrint: TMultiAction;
     bbPrint: TdxBarButton;
+    clPartnerMedicalName: TcxGridDBColumn;
+    clOperDateSP: TcxGridDBColumn;
+    clInvNumberSP: TcxGridDBColumn;
+    clMedicSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

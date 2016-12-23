@@ -1,28 +1,28 @@
 inherited CheckJournalForm: TCheckJournalForm
   Caption = #1050#1072#1089#1089#1086#1074#1099#1077' '#1095#1077#1082#1080
   ClientHeight = 554
-  ClientWidth = 831
+  ClientWidth = 896
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 847
+  ExplicitWidth = 912
   ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 831
+    Width = 896
     Height = 477
     TabOrder = 3
     ExplicitTop = 77
     ExplicitWidth = 831
     ExplicitHeight = 477
     ClientRectBottom = 477
-    ClientRectRight = 831
+    ClientRectRight = 896
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 831
       ExplicitHeight = 477
       inherited cxGrid: TcxGrid
-        Width = 831
+        Width = 896
         Height = 477
         ExplicitWidth = 831
         ExplicitHeight = 477
@@ -212,6 +212,38 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 200
           end
+          object clPartnerMedicalName: TcxGridDBColumn
+            Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'PartnerMedicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object clOperDateSP: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'OperDateSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInvNumberSP: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'InvNumberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object clMedicSP: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
+            DataBinding.FieldName = 'MedicSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
@@ -233,7 +265,7 @@ inherited CheckJournalForm: TCheckJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 831
+    Width = 896
     Height = 51
     ExplicitWidth = 831
     ExplicitHeight = 51
