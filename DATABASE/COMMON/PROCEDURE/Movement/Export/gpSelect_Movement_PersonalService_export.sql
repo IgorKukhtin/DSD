@@ -124,7 +124,7 @@ BEGIN
            INSERT INTO _tmpResult (RowData)
                    SELECT '<EMPLOYEE IDENTIFYCODE="' || gpSelect.inn || '"'                              -- Идентификационный код сотрудника
                                || ' CARDACCOUNTNO="' || gpSelect.card || '"'                             -- Номер карточного (или другого) счёта
-                               ||        ' AMOUNT="' || REPLACE (CAST (inAmount AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
+                               ||        ' AMOUNT="' || REPLACE (CAST (gpSelect.SummCardRecalc AS NUMERIC (16, 2)) :: TVarChar, '.', ',') || '"' -- Сумма для зачисления на счёт сотрудника в формате ГРН,КОП
                                || '/>'
                    FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId
                                                              , inShowAll    := FALSE

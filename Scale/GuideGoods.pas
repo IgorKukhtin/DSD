@@ -78,6 +78,8 @@ type
     Amount_Weighing: TcxGridDBColumn;
     Amount_diff: TcxGridDBColumn;
     isPromo: TcxGridDBColumn;
+    GoodsKindName_max: TcxGridDBColumn;
+    GoodsKindId_list: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -184,6 +186,10 @@ begin
 
   InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
   InitializePriceList(ParamsMovement);
+
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= rgGoodsKind.Items.Count > 1; // (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)or(execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindId_list').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
 
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
@@ -677,9 +683,11 @@ begin
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeExit(Sender: TObject);
+var GoodsKindId_check:Integer;
 begin
       if (fStartWrite=true)or(ActiveControl=EditGoodsCode)or(ActiveControl=EditGoodsName)
-      or(ActiveControl=cxDBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='') then exit;
+       or(ActiveControl=cxDBGrid)or(ActiveControl=rgGoodsKind)or(ActiveControl.Name='')
+      then exit;
 //Focused
       if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1)
       then begin ShowMessage('Ошибка.Не определено значение <Код вида упаковки>.');
@@ -701,6 +709,21 @@ begin
                   if CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg
                   then begin ShowMessage('Ошибка.Не определено значение <Ввод КОЛИЧЕСТВО>.');ActiveControl:=EditWeightValue;end
                   else begin ShowMessage('Ошибка.Не определено значение <Вес на Табло>.');ActiveControl:=EditGoodsCode;end;
+
+      //
+      if   (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
+       // and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+       and (CDS.FieldByName('GoodsKindName').AsString <> '')
+       and (rgGoodsKind.Items.Count > 1)
+      then begin
+                GoodsKindId_check:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id;
+                if System.Pos(',' + IntToStr(GoodsKindId_check) + ',', ',' + CDS.FieldByName('GoodsKindId_list').AsString + ',') = 0
+                then
+                begin
+                     ShowMessage('Ошибка.Значение <Вид упаковки> может быть только таким: <' + CDS.FieldByName('GoodsKindName').AsString + '>.');
+                     ActiveControl:=EditGoodsKindCode;
+                end;
+      end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeKeyPress(Sender: TObject;var Key: Char);
@@ -726,12 +749,16 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgGoodsKindClick(Sender: TObject);
 var findIndex:Integer;
+    fStartWrite_old:Boolean;
 begin
     if rgGoodsKind.Items.Count=1 then exit;
     //
     findIndex:=GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex);
+    fStartWrite_old:= fStartWrite;
+    fStartWrite:=true;
     EditGoodsKindCode.Text:=IntToStr(GoodsKind_Array[findIndex].Code);
     if ActiveControl <> cxDBGrid then ActiveControl:=EditGoodsKindCode;
+    fStartWrite:=fStartWrite_old;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
@@ -763,6 +790,16 @@ begin
                      EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode').AsString;
                      //ActiveControl:=EditTareCount;
            end;
+           //
+           if   (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
+            //and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+            and (CDS.FieldByName('GoodsKindCode_max').AsInteger <> 0)
+            and fStartWrite = false
+           then begin
+                     EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode_max').AsString;
+                     TEdit(Sender).SelectAll;
+           end;
+            //
            exit;
       end;
 

@@ -169,6 +169,22 @@ object GuideGoodsForm: TGuideGoodsForm
           VisibleForCustomization = False
           Width = 55
         end
+        object GoodsKindName_max: TcxGridDBColumn
+          Caption = #1042#1080#1076' ('#1052#1040#1050#1057')'
+          DataBinding.FieldName = 'GoodsKindName_max'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
+        object GoodsKindId_list: TcxGridDBColumn
+          Caption = #1042#1080#1076' ('#1050#1051#1070#1063#1048')'
+          DataBinding.FieldName = 'GoodsKindId_list'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 55
+        end
         object MeasureName: TcxGridDBColumn
           Caption = #1045#1076'. '#1080#1079#1084'.'
           DataBinding.FieldName = 'MeasureName'
