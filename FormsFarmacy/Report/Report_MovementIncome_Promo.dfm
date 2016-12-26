@@ -35,6 +35,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
               Kind = skCount
               Column = colName
             end>
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -124,6 +125,7 @@ inherited Report_MovementIncome_PromoForm: TReport_MovementIncome_PromoForm
             DataBinding.FieldName = 'StatusName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 73
           end
           object colMovementDesc: TcxGridDBColumn
