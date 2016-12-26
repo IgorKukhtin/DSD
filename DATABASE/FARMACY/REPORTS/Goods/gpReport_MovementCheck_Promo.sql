@@ -82,36 +82,33 @@ BEGIN
            ,   tmpMI AS (SELECT MIContainer.ContainerId
                               , Movement_Check.Id                   AS MovementId_Check
                               , MovementLinkObject_Unit.ObjectId    AS UnitId
-                              , MI_Check.ObjectId                   AS GoodsId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                              , MIContainer.ObjectId_Analyzer   AS GoodsId
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           
-                              INNER JOIN MovementItem AS MI_Check
-                                                      ON MI_Check.MovementId = Movement_Check.Id
-                                                     AND MI_Check.DescId = zc_MI_Master()
-                                                     AND MI_Check.isErased = FALSE
+
+                              INNER JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.MovementId = Movement_Check.Id
+                                                              AND MIContainer.DescId = zc_MIContainer_Count()                                                            
                               -- только товары марк.контр.
-                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
+                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
 
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                          ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
+
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                            AND COALESCE (inMakerId, 0) <> 0
-                         GROUP BY MI_Check.ObjectId
+                         GROUP BY MIContainer.ObjectId_Analyzer
                                 , Movement_Check.Id
                                 , MovementLinkObject_Unit.ObjectId
                                 , MIContainer.ContainerId
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
          -- tmpData_01/tmpData_02/tmpData_03  получаем св€зь с парти€ми
         , tmpData_01 AS (SELECT tmpMI.MovementId_Check
@@ -153,10 +150,9 @@ BEGIN
                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                   )
    
-
        -- здесь ограничиваем товарами маркетингового контракта
        , tmpData_all AS (SELECT tmp.MovementId_Check
-                              , tmp.UnitId
+                              , tmp.UnitId 
                               , tmp.MovementItemId_Income
                               , tmp.GoodsId
                               , tmp.Amount
@@ -166,8 +162,8 @@ BEGIN
                               INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = tmp.MovementId
                               -- ѕоставшик, дл€ элемента прихода от поставщика (или NULL)
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
-                                                           ON MovementLinkObject_From_Income.MovementId = tmp.MovementId
-                                                          AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                                            ON MovementLinkObject_From_Income.MovementId = tmp.MovementId
+                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                                                     
                               INNER JOIN tmpGoods_All ON tmpGoods_All.GoodsId = tmp.GoodsId
                                                      AND tmpGoods_All.StartDate_Promo <= Movement_Income.OperDate
@@ -283,4 +279,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.05.2016', inEndDate:= '08.05.2016', inSession:= '2')
---select * from gpReport_MovementCheck_Promo(inMakerId := 2336600 , inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');
+--select * from gpReport_MovementCheck_Promo(inMakerId := 2336600 , inStartDate := ('02.10.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');
