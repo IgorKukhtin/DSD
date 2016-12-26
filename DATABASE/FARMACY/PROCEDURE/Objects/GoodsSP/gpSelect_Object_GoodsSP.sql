@@ -10,9 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , IntenalSPId Integer, IntenalSPName TVarChar
              , BrandSPId Integer, BrandSPName TVarChar
              , KindOutSPId Integer, KindOutSPName TVarChar
-             , PriceSP TFloat, GroupSP TFloat
+             , PriceSP TFloat, GroupSP TFloat, CountSP TFloat
              , isSP Boolean
-             , CountSP TVarChar
+             , Pack TVarChar
              ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -40,8 +40,9 @@ BEGIN
 
            , ObjectFloat_Goods_PriceSP.ValueData          AS PriceSP
            , ObjectFloat_Goods_GroupSP.ValueData          AS GroupSP
+           , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
            , ObjectBoolean_Goods_SP.ValueData             AS isSP
-           , ObjectString_Goods_CountSP.ValueData         AS CountSP
+           , ObjectString_Goods_Pack.ValueData            AS Pack
 
        FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
 
@@ -74,10 +75,13 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_GroupSP
                                   ON ObjectFloat_Goods_GroupSP.ObjectId = Object_Goods.Id 
                                  AND ObjectFloat_Goods_GroupSP.DescId = zc_ObjectFloat_Goods_GroupSP()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Goods_CountSP
+                                  ON ObjectFloat_Goods_CountSP.ObjectId = Object_Goods.Id 
+                                 AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
 
-            LEFT JOIN ObjectString AS ObjectString_Goods_CountSP
-                                   ON ObjectString_Goods_CountSP.ObjectId = Object_Goods.Id 
-                                  AND ObjectString_Goods_CountSP.DescId = zc_ObjectString_Goods_CountSP()
+            LEFT JOIN ObjectString AS ObjectString_Goods_Pack
+                                   ON ObjectString_Goods_Pack.ObjectId = Object_Goods.Id 
+                                  AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
      
    WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP();
 

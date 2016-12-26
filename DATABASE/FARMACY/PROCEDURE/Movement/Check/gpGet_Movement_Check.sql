@@ -17,6 +17,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InvNumberOrder TVarChar
              , ConfirmedKindName TVarChar
              , ConfirmedKindClientName TVarChar
+
+             , OperDateSP TDateTime
+             , PartnerMedicalName TVarChar
+             , InvNumberSP TVarChar
+             , MedicSPName TVarChar
 )
 AS
 $BODY$
@@ -49,6 +54,12 @@ BEGIN
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
            , Movement_Check.ConfirmedKindClientName
+
+           , Movement_Check.OperDateSP
+           , Movement_Check.PartnerMedicalName
+           , Movement_Check.InvNumberSP
+           , Movement_Check.MedicSPName
+
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
                                   ON ObjectLink_DiscountExternal.ObjectId = Movement_Check.DiscountCardId

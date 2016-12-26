@@ -30,13 +30,13 @@ BEGIN
  
         
     RETURN QUERY
-   WITH
-      -- все документы ѕромо и товары , нач./ конечн. даты действи€ 
-      tmpGoods_Promo AS (SELECT ObjectLink_Child_R.ChildObjectId   AS GoodsId        -- здесь товар
-                              , MovementDate_StartPromo.ValueData  AS StartDate_Promo
+  WITH
+      -- все документы ѕромо и товары, нач./ конечн. даты действи€ 
+      tmpGoods_Promo_Main AS (SELECT /*ObjectLink_Child_R.ChildObjectId   AS GoodsId        -- здесь товар
+                               */MI_Goods.ObjectId 
+                              ,MovementDate_StartPromo.ValueData  AS StartDate_Promo
                               , MovementDate_EndPromo.ValueData    AS EndDate_Promo
                        FROM Movement
-
                               INNER JOIN MovementDate AS MovementDate_StartPromo
                                                       ON MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
                                                      AND MovementDate_StartPromo.MovementId = Movement.Id
@@ -48,9 +48,18 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
-                               -- !!!
+
+                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId = zc_Movement_Promo()
+                        ) 
+
+      -- товары сети
+      , tmpGoods_Promo AS (SELECT ObjectLink_Child_R.ChildObjectId   AS GoodsId        -- здесь товар
+                                , tmpGoods_Promo_Main.StartDate_Promo
+                                , tmpGoods_Promo_Main.EndDate_Promo
+                           FROM tmpGoods_Promo_Main
                               INNER JOIN ObjectLink AS ObjectLink_Child
-                                                    ON ObjectLink_Child.ChildObjectId = MI_Goods.ObjectId 
+                                                    ON ObjectLink_Child.ChildObjectId = tmpGoods_Promo_Main.ObjectId 
                                                    AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
                               INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                                       AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -58,62 +67,114 @@ BEGIN
                                                                         AND ObjectLink_Main_R.DescId     = zc_ObjectLink_LinkGoods_GoodsMain()
                               INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
                                                                          AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                           AND Movement.DescId = zc_Movement_Promo()
-                        ) 
+                           )
+            -- товары промо
+           , tmpGoods AS (SELECT DISTINCT tmpGoods_Promo.GoodsId FROM tmpGoods_Promo)
+
  
            -- выбираем все чеки за выбранный период
-           ,   tmpMI AS (SELECT MIContainer.ContainerId
+           ,  tmpMov AS (SELECT Movement_Check.Id
                               , date_trunc('month', Movement_Check.OperDate)::TDateTime AS PlanDate
                               , MovementLinkObject_Unit.ObjectId    AS UnitId
-                              , MI_Check.ObjectId                   AS GoodsId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM Movement AS Movement_Check
                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           
+                         WHERE Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
+                           --AND Movement_Check.OperDate >= '01.10.2016' AND Movement_Check.OperDate < '05.10.2016'
+                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
+                         )
+
+         ,   tmpMI_1 AS (SELECT MI_Check.Id AS MI_Id
+                              , Movement_Check.PlanDate
+                              , Movement_Check.UnitId
+                              , MI_Check.ObjectId            AS GoodsId
+                              , COALESCE (MI_Check.Amount,0) AS Amount
+                         FROM tmpMov AS Movement_Check
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
                                                      AND MI_Check.isErased = FALSE
+                         )
 
+         ,   tmpMI_2 AS (SELECT tmpMI_1.MI_Id
+                              , tmpMI_1.PlanDate
+                              , tmpMI_1.UnitId
+                              , tmpMI_1.GoodsId
+                              , tmpMI_1.Amount
+                              , COALESCE (MIFloat_Price.ValueData, 0) AS PriceSale
+                         FROM tmpMI_1
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                          ON MIFloat_Price.MovementItemId = tmpMI_1.MI_Id
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                         )
+
+         ,   tmpMI AS (SELECT MIContainer.ContainerId
+                              , tmpMI_2.PlanDate
+                              , tmpMI_2.UnitId
+                              , tmpMI_2.GoodsId
+                              , SUM (COALESCE (-1 * MIContainer.Amount, tmpMI_2.Amount)) AS Amount
+                              , SUM (COALESCE (-1 * MIContainer.Amount, tmpMI_2.Amount) * tmpMI_2.PriceSale) AS SummaSale
+                         FROM tmpMI_2
                               LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
-                         WHERE Movement_Check.DescId = zc_Movement_Check()
-                           AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
-                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
-                         GROUP BY MI_Check.ObjectId
-                                , MovementLinkObject_Unit.ObjectId
-                                , MIContainer.ContainerId
-                                , date_trunc('month', Movement_Check.OperDate)
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                                                              ON MIContainer.MovementItemId = tmpMI_2.MI_Id
+                                                             AND MIContainer.DescId = zc_MIContainer_Count()
+                         GROUP BY MIContainer.ContainerId
+                              , tmpMI_2.PlanDate
+                              , tmpMI_2.UnitId
+                              , tmpMI_2.GoodsId
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, tmpMI_2.Amount)) <> 0
+                         )
+
+       -- таблица всех продаж 
+       , tmpMI_All AS (SELECT tmpMI.PlanDate
+                            , tmpMI.UnitId
+                            , SUM (tmpMI.Amount)    AS  Amount
+                            , SUM (tmpMI.SummaSale) AS SummaSale
+                         FROM tmpMI
+                         GROUP BY tmpMI.PlanDate
+                                , tmpMI.UnitId
+                         )  
+
+       --попробую выбрать товары промо и только по ним делать св€зь с парти€ми
+       , tmpMI_Promo AS (SELECT tmpMI.ContainerId
+                              , tmpMI.PlanDate
+                              , tmpMI.UnitId
+                              , tmpMI.GoodsId
+                              , tmpMI.Amount
+                              , tmpMI.SummaSale
+                         FROM tmpMI
+                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                          )
          -- tmpData_01/tmpData_02/tmpData_03  получаем св€зь с парти€ми
         , tmpData_01 AS (SELECT tmpMI.PlanDate
                               , tmpMI.UnitId
                               , CLO.ObjectId AS CLO_MI_ObjectId
                               , tmpMI.GoodsId
-                              , (tmpMI.Amount)    AS Amount
-                              , (tmpMI.SummaSale) AS SummaSale
+                              , SUM (tmpMI.Amount)    AS  Amount
+                              , SUM (tmpMI.SummaSale) AS SummaSale
                          FROM ContainerlinkObject AS CLO
-                            INNER JOIN tmpMI ON CLO.Containerid = tmpMI.ContainerId
+                            INNER JOIN tmpMI_Promo AS tmpMI ON CLO.Containerid = tmpMI.ContainerId
                          WHERE CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                         GROUP BY  tmpMI.PlanDate
+                                 , tmpMI.UnitId
+                                 , CLO.ObjectId
+                                 , tmpMI.GoodsId
                  )
-  
+
         , tmpData_02 AS (SELECT tmpMI.PlanDate
                               , tmpMI.UnitId
                               , Object_PartionMovementItem.ObjectCode :: Integer  AS OPMI_ObjectCode
                               , tmpMI.GoodsId
-                              , (tmpMI.Amount)    AS Amount
-                              , (tmpMI.SummaSale) AS SummaSale
+                              , SUM (tmpMI.Amount)    AS  Amount
+                              , SUM (tmpMI.SummaSale) AS SummaSale
                          FROM tmpData_01 AS tmpMI
                               LEFT JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = tmpMI.CLO_MI_ObjectId
+                         GROUP BY tmpMI.PlanDate
+                              , tmpMI.UnitId
+                              , Object_PartionMovementItem.ObjectCode 
+                              , tmpMI.GoodsId
                          )
 
         , tmpData_03 AS (SELECT tmpMI.PlanDate
@@ -121,8 +182,8 @@ BEGIN
                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
                               , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId_Income
                               , tmpMI.GoodsId
-                              , (tmpMI.Amount)    AS Amount
-                              , (tmpMI.SummaSale) AS SummaSale
+                              , tmpMI.Amount
+                              , tmpMI.SummaSale
                          FROM tmpData_02 AS tmpMI
                               -- элемент прихода
                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpMI.OPMI_ObjectCode
@@ -135,21 +196,34 @@ BEGIN
                          )
 
        -- здесь в≥дел€ем кол-во/сумму продажи товаров маркетингового контракта
-       , tmpData AS (SELECT tmp.PlanDate
+     , tmpData_Promo AS (SELECT tmp.PlanDate
                               , tmp.UnitId
-                              , SUM (tmp.Amount)      AS TotalAmount
-                              , SUM (tmp.SummaSale)   AS TotalSumma
                               , SUM (CASE WHEN COALESCE (tmpGoods_Promo.GoodsId,0) <> 0 THEN tmp.Amount ELSE 0 END)    AS AmountPromo
                               , SUM (CASE WHEN COALESCE (tmpGoods_Promo.GoodsId,0) <> 0 THEN tmp.SummaSale ELSE 0 END) AS SummaPromo
                          FROM tmpData_03 AS tmp
                               INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = tmp.MovementId
                                                     
-                              LEFT JOIN tmpGoods_Promo ON tmpGoods_Promo.GoodsId = tmp.GoodsId
-                                                      AND tmpGoods_Promo.StartDate_Promo <= Movement_Income.OperDate
-                                                      AND tmpGoods_Promo.EndDate_Promo   >= Movement_Income.OperDate
+                              INNER JOIN tmpGoods_Promo ON tmpGoods_Promo.GoodsId = tmp.GoodsId
+                                                       AND tmpGoods_Promo.StartDate_Promo <= Movement_Income.OperDate
+                                                       AND tmpGoods_Promo.EndDate_Promo   >= Movement_Income.OperDate
                          GROUP BY tmp.PlanDate
                                 , tmp.UnitId
                          ) 
+
+           -- объедин€ем данные всех продаж с промо продажей
+           , tmpData AS (SELECT tmp.PlanDate
+                              , tmp.UnitId
+                              , SUM (tmp.Amount)                AS TotalAmount
+                              , SUM (tmp.SummaSale)             AS TotalSumma
+                              , SUM (tmpData_Promo.AmountPromo) AS AmountPromo
+                              , SUM (tmpData_Promo.SummaPromo)  AS SummaPromo
+                         FROM tmpMI_All AS tmp
+                              LEFT JOIN tmpData_Promo ON tmpData_Promo.PlanDate = tmp.PlanDate
+                                                     AND tmpData_Promo.UnitId   = tmp.UnitId
+                         GROUP BY tmp.PlanDate
+                                , tmp.UnitId
+                        )
+
          -- результат
          SELECT tmpData.PlanDate
               , Object_Unit.ValueData      AS UnitName

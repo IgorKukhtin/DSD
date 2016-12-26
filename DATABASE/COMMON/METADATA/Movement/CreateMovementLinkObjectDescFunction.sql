@@ -310,12 +310,17 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_ConfirmedKindClient() RETURNS I
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_ConfirmedKindClient', 'Статус заказа (Отправлен клиенту)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_ConfirmedKindClient');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PartnerMedical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PartnerMedical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PartnerMedical', 'Медицинское учреждение(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PartnerMedical');
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 22.12.16         * zc_MovementLinkObject_PartnerMedical
  25.08.16         * zc_MovementLinkObject_ConfirmedKindClient
  21.07.16         * zc_MovementLinkObject_discountcard
  13.06.16         * zc_MovementLinkObject_DocumentKind 

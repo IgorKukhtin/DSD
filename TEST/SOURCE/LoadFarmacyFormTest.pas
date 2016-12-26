@@ -68,6 +68,7 @@ type
     procedure LoadOverSettingsFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPaidTypeFormTest;
+    procedure LoadPartnerMedicalFormTest;
     procedure LoadPaymentFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupFormTest;
@@ -978,6 +979,14 @@ procedure TLoadFormTest.LoadPaidTypeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidTypeForm');
+end;
+
+ procedure TLoadFormTest.LoadPartnerMedicalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerMedicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerMedicalEditForm');
 end;
 
 procedure TLoadFormTest.LoadPaymentFormTest;

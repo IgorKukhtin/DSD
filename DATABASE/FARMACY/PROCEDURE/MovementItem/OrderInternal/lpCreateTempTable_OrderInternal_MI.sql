@@ -23,30 +23,31 @@ BEGIN
                 AND  MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
 
      CREATE TEMP TABLE _tmpOrderInternal_MI (Id integer
-             , MovementItemId Integer
-             , GoodsId Integer
-             , PartnerGoodsId Integer
-             , JuridicalId Integer
-             , JuridicalName TVarChar
-             , ContractId Integer
-             , ContractName TVarChar
-             , MakerName TVarChar
+             , MovementItemId   Integer
+             , GoodsId          Integer
+             , PartnerGoodsId   Integer
+             , JuridicalId      Integer
+             , JuridicalName    TVarChar
+             , ContractId       Integer
+             , ContractName     TVarChar
+             , MakerName        TVarChar
              , PartionGoodsDate TDateTime
-             , Amount TFloat
-             , MinimumLot TFloat
-             , MCS TFloat
-             , Remains TFloat
-             , Income TFloat
-             , CheckAmount TFloat
-             , SendAmount TFloat
-             , isClose Boolean
-             , isFirst Boolean
-             , isSecond Boolean
-             , isTOP Boolean
-             , isUnitTOP Boolean
-             , MCSNotRecalc Boolean
-             , MCSIsClose Boolean
-             , isErased Boolean
+             , Amount           TFloat
+             , MinimumLot       TFloat
+             , MCS              TFloat
+             , Remains          TFloat
+             , Income           TFloat
+             , CheckAmount      TFloat
+             , SendAmount       TFloat
+             , AmountDeferred   TFloat
+             , isClose          Boolean
+             , isFirst          Boolean
+             , isSecond         Boolean
+             , isTOP            Boolean
+             , isUnitTOP        Boolean
+             , MCSNotRecalc     Boolean
+             , MCSIsClose       Boolean
+             , isErased         Boolean
 
 ) ON COMMIT DROP;
 
@@ -78,6 +79,7 @@ BEGIN
             , MIFloat_Income.ValueData             AS Income
             , MIFloat_Check.ValueData              AS CheckAmount
             , MIFloat_Send.ValueData               AS SendAmount
+            , MIFloat_AmountDeferred.ValueData     AS AmountDeferred
 
             , COALESCE(MIBoolean_Close.ValueData, False)              AS isClose
             , COALESCE(MIBoolean_First.ValueData, False)              AS isFirst
@@ -109,6 +111,9 @@ BEGIN
               LEFT JOIN MovementItemFloat AS MIFloat_Send
                      ON MIFloat_Send.MovementItemId = MovementItem.Id
                     AND MIFloat_Send.DescId = zc_MIFloat_Send()
+              LEFT JOIN MovementItemFloat AS MIFloat_AmountDeferred
+                     ON MIFloat_AmountDeferred.MovementItemId = MovementItem.Id
+                    AND MIFloat_AmountDeferred.DescId = zc_MIFloat_AmountDeferred()
 
               LEFT JOIN MovementItemDate AS MIDate_PartionGoods                                           
                      ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -163,6 +168,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.12.16         * add AmountDeferred
  04.08.16         *  
 */
 

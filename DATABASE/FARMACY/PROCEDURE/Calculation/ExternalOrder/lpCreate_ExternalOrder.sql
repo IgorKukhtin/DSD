@@ -62,6 +62,7 @@ BEGIN
                         inToId := inUnitId , -- Кому
                   inContractId := inContractId , -- Кому
              inInternalOrderId := inInternalOrder, -- Сыылка на внутренний заказ
+                  inisDeferred := FALSE :: Boolean , -- отложен
                       inUserId := inUserId);
     END IF;
  
@@ -73,7 +74,7 @@ BEGIN
                                        ON MILinkObject_Goods.MovementItemId = MovementItem.Id
                                       AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                       AND ((MILinkObject_Goods.ObjectId = inGoodsId AND COALESCE(inGoodsId, 0) <> 0) OR (MILinkObject_Goods.ObjectId IS NULL AND COALESCE(inGoodsId, 0) = 0))
-                        WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DesdcId = zc_MI_Master() AND MovementItem.ObjectId = inMainGoodsId
+                        WHERE MovementItem.MovementId = vbMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.ObjectId = inMainGoodsId
                        );
     
     -- всегда - сохраним

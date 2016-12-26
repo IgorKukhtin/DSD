@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderExternal(
     IN inToId                Integer   , -- Кому
     IN inContractId          Integer   , -- Договор
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
-    IN inComment             TVarChar   , -- Примечание
+    IN inComment             TVarChar  , -- Примечание
+    IN inisDeferred          Boolean   , -- Отложен
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -25,7 +27,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderExternal());
      vbUserId := inSession;
 
-     ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inContractId, inInternalOrderId, vbUserId);
+     ioId := lpInsertUpdate_Movement_OrderExternal(ioId, inInvNumber, inOperDate, inFromId, inToId, inContractId, inInternalOrderId, inisDeferred, vbUserId);
 
      -- сохранили <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -38,6 +40,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.12.16         *
  10.05.16         *
  02.10.14                         *
  01.07.14                                                        *

@@ -140,9 +140,19 @@ CREATE OR REPLACE FUNCTION zc_MovementString_BayerPhone() RETURNS Integer AS $BO
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_BayerPhone', 'Контактный телефон (Покупателя)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_BayerPhone');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_MedicSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_MedicSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_MedicSP', 'ФИО врача (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_MedicSP');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberSP', 'Номер рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSP');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.12.16         * zc_MovementString_MedicSP
+                    zc_MovementString_InvNumberSP
  04.08.16         *
  30.07.14                         *
  19.07.14                                        * del zc_MovementString_SaleInvNumber

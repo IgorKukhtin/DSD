@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderExternal (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderExternal(
     IN inToId                Integer   , -- Кому
     IN inContractId          Integer   , -- Договор
     IN inInternalOrderId     Integer   , -- Сыылка на внутренний заказ 
+    IN inisDeferred          Boolean   , -- отложен
     IN inUserId              Integer    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -32,6 +34,9 @@ BEGIN
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
+     -- Сохранили 
+     PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), ioId, inisDeferred);
+
      -- сохранили связь с <документом заявкой>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), ioId, inInternalOrderId);
 
@@ -49,6 +54,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.12.16         * 
  02.10.14                        *
  01.07.14                                                        *
 

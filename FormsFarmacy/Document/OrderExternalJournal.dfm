@@ -259,6 +259,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 60
           end
+          object clisDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
         end
       end
     end
@@ -379,6 +387,56 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object spUpdateisDeferredNo: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+    end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+    end
+    object macUpdateisDeferredNo: TMultiAction
+      Category = 'Deferred'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisDeferredNo
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1073#1088#1072#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1054#1058#1051#1054#1046#1045#1053' '#1091' '#1042#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085'  - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdateisODeferredYes: TMultiAction
+      Category = 'Deferred'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUpdateisDeferredYes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1054#1058#1051#1054#1046#1045#1053' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'? '
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085'  - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1083#1086#1078#1077#1085'  - '#1044#1072
+      ImageIndex = 52
     end
   end
   inherited MasterDS: TDataSource
@@ -502,6 +560,18 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbDeferredYes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeferredNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -545,6 +615,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       Hint = #1057#1095#1077#1090
       Visible = ivAlways
       ImageIndex = 21
+    end
+    object bbDeferredYes: TdxBarButton
+      Action = macUpdateisODeferredYes
+      Category = 0
+    end
+    object bbDeferredNo: TdxBarButton
+      Action = macUpdateisDeferredNo
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -701,5 +779,69 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 203
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isDeferred'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 283
   end
 end

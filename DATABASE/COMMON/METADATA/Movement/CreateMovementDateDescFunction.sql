@@ -111,10 +111,15 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_EndReturn() RETURNS Integer AS $BODY$
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_EndReturn', 'Дата окончания возвратов по акционной цене' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndReturn');
   
+CREATE OR REPLACE FUNCTION zc_MovementDate_OperDateSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_OperDateSP', 'Дата рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDateSP');
   
+    
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.
+ 22.12.16         * zc_MovementDate_OperDateSP
  31.10.15                                                                         *zc_MovementDate_StartPromo, zc_MovementDate_EndPromo, zc_MovementDate_StartSale, zc_MovementDate_EndSale
  04.05.15         				 * add zc_MovementDate_Insert and zc_MovementDate_Update
  09.02.15         						*

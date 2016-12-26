@@ -158,9 +158,9 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             Options.Editing = False
             Width = 108
           end
-          object clCountDozSP: TcxGridDBColumn
+          object clPack: TcxGridDBColumn
             Caption = #1044#1086#1079#1091#1074#1072#1085#1085#1103
-            DataBinding.FieldName = 'CountDozSP'
+            DataBinding.FieldName = 'Pack'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80

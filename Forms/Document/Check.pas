@@ -53,6 +53,14 @@ type
     PrintItemsCDS: TClientDataSet;
     PrintDialog: TExecuteDialog;
     macPrint: TMultiAction;
+    cxLabel12: TcxLabel;
+    edPartnerMedical: TcxTextEdit;
+    cxLabel13: TcxLabel;
+    edOperDateSP: TcxDateEdit;
+    cxLabel14: TcxLabel;
+    edInvNumberSP: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edMedicSP: TcxTextEdit;
   private
     { Private declarations }
   public

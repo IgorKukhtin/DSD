@@ -17,7 +17,7 @@ RETURNS TABLE (UnitName       TVarChar
              , IntenalSPName  TVarChar
              , BrandSPName    TVarChar
              , KindOutSPName  TVarChar
-             , CountDozSP     TVarChar
+             , Pack           TVarChar
              , CountSP        TFloat
              , PriceSP        TFloat 
              , GroupSP        TFloat 
@@ -67,8 +67,8 @@ BEGIN
 
                               , ObjectFloat_Goods_PriceSP.ValueData          AS PriceSP
                               , ObjectFloat_Goods_GroupSP.ValueData          AS GroupSP
-                              , ObjectString_Goods_CountSP.ValueData         AS CountSP
-                              , 0      AS CountDozSP  --дозировка
+                              , ObjectFloat_Goods_CountSP.ValueData          AS CountSP
+                              , ObjectString_Goods_Pack.ValueData            AS Pack  --дозировка
 
                           FROM ObjectBoolean AS ObjectBoolean_Goods_SP 
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Object 
@@ -97,9 +97,13 @@ BEGIN
                                  ON ObjectFloat_Goods_GroupSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
                                 AND ObjectFloat_Goods_GroupSP.DescId = zc_ObjectFloat_Goods_GroupSP()
 
-                               LEFT JOIN ObjectString AS ObjectString_Goods_CountSP
-                                 ON ObjectString_Goods_CountSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
-                                AND ObjectString_Goods_CountSP.DescId = zc_ObjectString_Goods_CountSP()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_CountSP
+                                 ON ObjectFloat_Goods_CountSP.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                AND ObjectFloat_Goods_CountSP.DescId = zc_ObjectFloat_Goods_CountSP()
+
+                               LEFT JOIN ObjectString AS ObjectString_Goods_Pack
+                                 ON ObjectString_Goods_Pack.ObjectId = ObjectBoolean_Goods_SP.ObjectId
+                                AND ObjectString_Goods_Pack.DescId = zc_ObjectString_Goods_Pack()
     
                           WHERE ObjectBoolean_Goods_SP.DescId = zc_ObjectBoolean_Goods_SP()
                             AND ObjectBoolean_Goods_SP.ValueData = TRUE
@@ -119,7 +123,7 @@ BEGIN
             -- выбираем продажи по товарам соц.проекта
             ,  tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId                          AS UnitId
                               , tmpUnit.JuridicalId
-                              , 0                                                         AS HospitalId
+                              , MovementLinkObject_PartnerMedical.ObjectId                AS HospitalId
                               , tmpGoods.GoodsMainId                                      AS GoodsMainId
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
                               , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0))   AS SummChangePercent
@@ -128,6 +132,11 @@ BEGIN
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+ 
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
+                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
+                                                           AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                               -- еще нужно добавить ограничение по больнице
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
@@ -160,13 +169,13 @@ BEGIN
                     )
 
         -- результат
-        SELECT Object_Unit.ValueData         AS UnitName
-             , Object_Juridical.ValueData    AS JuridicalName
-             , Object_Hospital.ValueData     AS HospitalName
+        SELECT Object_Unit.ValueData               AS UnitName
+             , Object_Juridical.ValueData          AS JuridicalName
+             , Object_PartnerMedical.ValueData     AS HospitalName
              , tmpGoodsSP.IntenalSPName
              , tmpGoodsSP.BrandSPName
              , tmpGoodsSP.KindOutSPName
-             , tmpGoodsSP.CountDozSP  ::TVarChar
+             , tmpGoodsSP.Pack  ::TVarChar
              , tmpGoodsSP.CountSP :: TFloat 
              , tmpGoodsSP.PriceSP :: TFloat 
              , tmpGoodsSP.GroupSP :: TFloat 
@@ -178,7 +187,7 @@ BEGIN
           
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
-             LEFT JOIN Object AS Object_Hospital ON Object_Hospital.Id = tmpData.HospitalId
+             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId
 
         ORDER BY Object_Unit.ValueData
                , tmpGoodsSP.IntenalSPName

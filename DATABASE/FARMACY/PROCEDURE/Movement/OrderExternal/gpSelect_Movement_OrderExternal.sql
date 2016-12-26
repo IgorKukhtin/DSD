@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 
              , isZakazToday       Boolean
              , isDostavkaToday    Boolean
+             , isDeferred         Boolean
              , OperDate_Zakaz     TVarChar
              , OperDate_Dostavka  TVarChar
               )
@@ -179,6 +180,9 @@ BEGIN
 
            , CASE WHEN COALESCE(OrderSheduleListToday.DOW,  0) = 0 THEN False ELSE TRUE END AS isZakazToday
            , CASE WHEN COALESCE(OrderSheduleListToday.DoW_D,0) = 0 THEN False ELSE TRUE END AS isDostavkaToday
+
+           , Movement_OrderExternal_View.isDeferred
+
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar
            , OrderSheduleList.OperDate_Dostavka ::TVarChar
        FROM tmpUnit
@@ -215,6 +219,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.12.16         * isDeferred
  10.05.16         *
  15.07.14                                                        *
  01.07.14                                                        *
