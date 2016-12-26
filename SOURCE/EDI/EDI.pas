@@ -2154,6 +2154,7 @@ begin
         + FileName + #10#13 + E.Message);
     end;
   end;
+
 end;
 
 function TEDI.InsertUpdateComDoc(ЕлектроннийДокумент
@@ -2750,12 +2751,12 @@ begin
           ComSigner.SignFilesByAccountant(FileName);
           Error := ComSigner.GetLastErrorDescription;
           if Error <> okError then
-             raise Exception.Create('ComSigner.SignFilesByAccountant(FileName) ' + Error);
+             raise Exception.Create('ComSigner.SignFilesByAccountant('+FileName+') ' + Error);
 
           ComSigner.SignFilesByDigitalStamp(FileName);
           Error := ComSigner.GetLastErrorDescription;
           if Error <> okError then
-             raise Exception.Create('ComSigner.SignFilesByDigitalStamp(FileName) ' + Error);
+             raise Exception.Create('ComSigner.SignFilesByDigitalStamp('+FileName+') ' + Error);
       end;
       if SignType = stDeclar then
       begin

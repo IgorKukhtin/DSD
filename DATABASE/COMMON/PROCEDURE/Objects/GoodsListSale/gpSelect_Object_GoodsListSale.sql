@@ -62,7 +62,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-       , tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, STRING_AGG (Object.ValueData :: TVarChar, ', ')  AS GoodsKindName_list
+       , tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, STRING_AGG (Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
                           FROM _tmpWord_Split_to 
                               LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                           GROUP BY _tmpWord_Split_to.WordList

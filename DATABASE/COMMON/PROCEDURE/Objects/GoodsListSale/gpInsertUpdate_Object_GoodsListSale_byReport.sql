@@ -199,7 +199,7 @@ BEGIN
              , CAST (tmpData.Amount AS NUMERIC (16, 2))     :: TFloat AS Amount
              , CAST (tmpData_all.Amount AS NUMERIC (16, 2)) :: TFloat AS AmountChoice
         FROM (SELECT tmpData_all.GoodsId  
-                   , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ', ') AS GoodsKindId_List
+                   , STRING_AGG (tmpData_all.GoodsKindId ::TVarChar, ',') AS GoodsKindId_List
                    , tmpData_all.PartnerId
                    , tmpData_all.Juridical
                    , tmpData_all.ContractId
