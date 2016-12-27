@@ -598,21 +598,21 @@ BEGIN
     , tmpDeferred AS (SELECT MI_OrderExternal.ObjectId                AS GoodsId
                            , SUM (MI_OrderExternal.Amount) ::TFloat   AS AmountDeferred 
                       FROM Movement AS Movement_OrderExternal
-                          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                        ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
-                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
-                                                       AND MovementLinkObject_Unit.ObjectId = vbUnitId
                           INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                      ON MovementBoolean_Deferred.MovementId = Movement_OrderExternal.Id
                                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
                                                     AND MovementBoolean_Deferred.ValueData = TRUE
+                          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                        ON MovementLinkObject_Unit.MovementId = Movement_OrderExternal.Id
+                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                       AND MovementLinkObject_Unit.ObjectId = vbUnitId
                           INNER JOIN MovementItem AS MI_OrderExternal
                                                   ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                  AND MI_OrderExternal.DescId = zc_MI_Master()
                                                  AND MI_OrderExternal.isErased = FALSE
                        
-                      WHERE Movement_OrderExternal.OperDate >= vbOperDate AND Movement_OrderExternal.OperDate < vbOperDateEnd
-                        AND Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
+                      WHERE /*Movement_OrderExternal.OperDate >= vbOperDate AND Movement_OrderExternal.OperDate < vbOperDateEnd
+                        AND */Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                         AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
                       GROUP BY MI_OrderExternal.ObjectId 
                       HAVING SUM (MI_OrderExternal.Amount) <> 0 

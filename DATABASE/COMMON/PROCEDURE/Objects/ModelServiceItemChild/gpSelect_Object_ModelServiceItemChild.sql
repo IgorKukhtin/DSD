@@ -9,6 +9,12 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar                
              , ToId Integer, ToCode Integer, ToName TVarChar  
+
+             , FromGoodsKindId Integer, FromGoodsKindName TVarChar                
+             , ToGoodsKindId Integer, ToGoodsKindName TVarChar  
+             , FromGoodsKindCompleteId Integer, FromGoodsKindCompleteName TVarChar                
+             , ToGoodsKindCompleteId Integer, ToGoodsKindCompleteName TVarChar  
+
              , ModelServiceItemMasterId Integer, ModelServiceItemMasterName TVarChar                
              , isErased boolean
              ) AS
@@ -32,6 +38,16 @@ BEGIN
          , Object_To.ObjectCode AS ToCode
          , CASE WHEN Object_From.DescId = zc_Object_Goods() THEN /*'(' || Object_To.ObjectCode :: TvarChar || ') ' ||*/ Object_To.ValueData ELSE Object_To.ValueData END :: TVarChar AS ToName
 
+         , Object_FromGoodsKind.Id          AS FromGoodsKindId
+         , Object_FromGoodsKind.ValueData   AS FromGoodsKindName
+         , Object_ToGoodsKind.Id            AS ToGoodsKindId
+         , Object_ToGoodsKind.ValueData     AS ToGoodsKindName
+
+         , Object_FromGoodsKindComplete.Id          AS FromGoodsKindCompleteId
+         , Object_FromGoodsKindComplete.ValueData   AS FromGoodsKindCompleteName
+         , Object_ToGoodsKindComplete.Id            AS ToGoodsKindCompleteId
+         , Object_ToGoodsKindComplete.ValueData     AS ToGoodsKindCompleteName
+
          , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
          , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
 
@@ -47,6 +63,26 @@ BEGIN
                                ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
                               AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromGoodsKind
+                               ON ObjectLink_ModelServiceItemChild_FromGoodsKind.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_FromGoodsKind.DescId = zc_ObjectLink_ModelServiceItemChild_FromGoodsKind()
+          LEFT JOIN Object AS Object_FromGoodsKind ON Object_FromGoodsKind.Id = ObjectLink_ModelServiceItemChild_FromGoodsKind.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ToGoodsKind
+                               ON ObjectLink_ModelServiceItemChild_ToGoodsKind.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ToGoodsKind.DescId = zc_ObjectLink_ModelServiceItemChild_ToGoodsKind()
+          LEFT JOIN Object AS Object_ToGoodsKind ON Object_ToGoodsKind.Id = ObjectLink_ModelServiceItemChild_ToGoodsKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_FromGoodsKindComplete
+                               ON ObjectLink_ModelServiceItemChild_FromGoodsKindComplete.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_FromGoodsKindComplete.DescId = zc_ObjectLink_ModelServiceItemChild_FromGoodsKindComplete()
+          LEFT JOIN Object AS Object_FromGoodsKindComplete ON Object_FromGoodsKindComplete.Id = ObjectLink_ModelServiceItemChild_FromGoodsKindComplete.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ToGoodsKindComplete
+                               ON ObjectLink_ModelServiceItemChild_ToGoodsKindComplete.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ToGoodsKindComplete.DescId = zc_ObjectLink_ModelServiceItemChild_ToGoodsKindComplete()
+          LEFT JOIN Object AS Object_ToGoodsKindComplete ON Object_ToGoodsKindComplete.Id = ObjectLink_ModelServiceItemChild_ToGoodsKindComplete.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
                                ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
@@ -66,6 +102,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.12.16         *
  20.10.13         * 
 */
 
