@@ -1,12 +1,17 @@
 -- Function: gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemChild(Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemChild(
  INOUT ioId                       Integer   , -- ключ объекта <Подчиненные элементы Модели начисления>
     IN inComment                  TVarChar  , -- Примечание
     IN inFromId                   Integer   , -- Товар(От кого)
     IN inToId                     Integer   , -- Товар(Кому) 	
+    IN inFromGoodsKindId          Integer   , -- Вид товара(От кого)
+    IN inToGoodsKindId            Integer   , -- Вид товара(Кому) 	
+    IN inFromGoodsKindCompleteId  Integer   , -- Вид товара(От кого, готовая продукция)
+    IN inToGoodsKindCompleteId    Integer   , -- Вид товара(Кому, готовая продукция)	
     IN inModelServiceItemMasterId Integer   , -- главный элемент
     IN inSession                  TVarChar    -- сессия пользователя
 )
@@ -35,6 +40,15 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_From(), ioId, inFromId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_To(), ioId, inToId);
+
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_FromGoodsKind(), ioId, inFromGoodsKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_ToGoodsKind(), ioId, inToGoodsKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_FromGoodsKindComplete(), ioId, inFromGoodsKindCompleteId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_ToGoodsKindComplete(), ioId, inToGoodsKindCompleteId);
    
       -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster(), ioId, inModelServiceItemMasterId);
@@ -48,12 +62,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemChild (Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemChild (Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+27.12.16         *
 20.10.13         * 
 
 */

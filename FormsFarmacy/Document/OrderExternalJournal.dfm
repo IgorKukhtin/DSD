@@ -617,12 +617,14 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       ImageIndex = 21
     end
     object bbDeferredYes: TdxBarButton
-      Action = macUpdateisODeferredYes
+      Action = spUpdateisDeferredYes
       Category = 0
+      ImageIndex = 52
     end
     object bbDeferredNo: TdxBarButton
-      Action = macUpdateisDeferredNo
+      Action = spUpdateisDeferredNo
       Category = 0
+      ImageIndex = 58
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

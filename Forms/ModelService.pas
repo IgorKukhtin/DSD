@@ -112,6 +112,10 @@ type
     DocumentKindChoiceForm: TOpenChoiceForm;
     ToCode: TcxGridDBColumn;
     FromCode: TcxGridDBColumn;
+    FromGoodsKindChoiceForm: TOpenChoiceForm;
+    ToGoodsKindChoiceForm: TOpenChoiceForm;
+    FromGoodsKindCompleteChoiceForm: TOpenChoiceForm;
+    ToGoodsKindCompleteChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

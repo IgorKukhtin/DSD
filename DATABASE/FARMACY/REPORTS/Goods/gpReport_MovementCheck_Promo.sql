@@ -13,8 +13,6 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,Amount TFloat           --Кол-во товара в документе
               ,Code Integer            --Код товара
               ,Name TVarChar           --Наименование товара
-  --            ,PartnerGoodsName TVarChar  --Наименование поставщика
-  --            ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
@@ -84,36 +82,33 @@ BEGIN
            ,   tmpMI AS (SELECT MIContainer.ContainerId
                               , Movement_Check.Id                   AS MovementId_Check
                               , MovementLinkObject_Unit.ObjectId    AS UnitId
-                              , MI_Check.ObjectId                   AS GoodsId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                              , MIContainer.ObjectId_Analyzer   AS GoodsId
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM Movement AS Movement_Check
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                             ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                           
-                              INNER JOIN MovementItem AS MI_Check
-                                                      ON MI_Check.MovementId = Movement_Check.Id
-                                                     AND MI_Check.DescId = zc_MI_Master()
-                                                     AND MI_Check.isErased = FALSE
+
+                              INNER JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.MovementId = Movement_Check.Id
+                                                              AND MIContainer.DescId = zc_MIContainer_Count()                                                            
                               -- только товары марк.контр.
-                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MI_Check.ObjectId
+                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
 
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MI_Check.Id
+                                                          ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.MovementItemId = MI_Check.Id
-                                                             AND MIContainer.DescId = zc_MIContainer_Count() 
+
                          WHERE Movement_Check.DescId = zc_Movement_Check()
                            AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                            AND COALESCE (inMakerId, 0) <> 0
-                         GROUP BY MI_Check.ObjectId
+                         GROUP BY MIContainer.ObjectId_Analyzer
                                 , Movement_Check.Id
                                 , MovementLinkObject_Unit.ObjectId
                                 , MIContainer.ContainerId
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
          -- tmpData_01/tmpData_02/tmpData_03  получаем связь с партиями
         , tmpData_01 AS (SELECT tmpMI.MovementId_Check
@@ -154,12 +149,10 @@ BEGIN
                               -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                   )
-
-     
-
-           -- здесь ограничиваем товарами маркетингового контракта
+   
+       -- здесь ограничиваем товарами маркетингового контракта
        , tmpData_all AS (SELECT tmp.MovementId_Check
-                              , tmp.UnitId
+                              , tmp.UnitId 
                               , tmp.MovementItemId_Income
                               , tmp.GoodsId
                               , tmp.Amount
@@ -169,17 +162,12 @@ BEGIN
                               INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = tmp.MovementId
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
-                                                           ON MovementLinkObject_From_Income.MovementId = tmp.MovementId
-                                                          AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
+                                                            ON MovementLinkObject_From_Income.MovementId = tmp.MovementId
+                                                           AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
                                                     
                               INNER JOIN tmpGoods_All ON tmpGoods_All.GoodsId = tmp.GoodsId
                                                      AND tmpGoods_All.StartDate_Promo <= Movement_Income.OperDate
                                                      AND tmpGoods_All.EndDate_Promo   >= Movement_Income.OperDate
-
-                              /*INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = tmpGoods_All.MovementId_Promo
-                                                                     AND MI_Juridical.DescId = zc_MI_Child()
-                                                                     AND MI_Juridical.isErased = FALSE
-                                                                     AND MI_Juridical.ObjectId = MovementLinkObject_From_Income.ObjectId*/
                             ) 
            -- 
            , tmpData AS (SELECT tmpData_all.MovementId_Check
@@ -188,8 +176,6 @@ BEGIN
                               , tmpData_all.GoodsId
                               , MIString_PartionGoods.ValueData          AS PartionGoods
                               , MIDate_ExpirationDate.ValueData          AS ExpirationDate
-                              --, MI_Income_View.PartnerGoodsName          AS PartnerGoodsName
-                              --, MI_Income_View.MakerName                 AS MakerName
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_JuridicalPrice.ValueData, 0))  AS Summa
                               , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                               , SUM (tmpData_all.Amount)    AS Amount
@@ -211,17 +197,13 @@ BEGIN
                               LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                                          ON MIDate_ExpirationDate.MovementItemId = tmpData_all.MovementItemId_Income
                                                         AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                          
-                             -- LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = tmpData_all.MovementItemId_Income
-
+                       
                          GROUP BY tmpData_all.JuridicalId_Income
                                 , tmpData_all.MovementId_Check
                                 , tmpData_all.GoodsId
                                 , tmpData_all.UnitId
                                 , MIString_PartionGoods.ValueData
                                 , MIDate_ExpirationDate.ValueData
-                             --   , MI_Income_View.PartnerGoodsName
-                             --   , MI_Income_View.MakerName
                         )
 
       -- Результат
@@ -230,8 +212,6 @@ BEGIN
             ,tmpData.Amount               :: TFloat   AS Amount
             ,Object.ObjectCode                        AS Code
             ,Object.ValueData                         AS Name
-       --     ,tmpData.PartnerGoodsName     :: TVarChar
-       --     ,tmpData.MakerName            :: TVarChar
             ,Object_NDSKind.ValueData                 AS NDSKindName
             ,Movement.OperDate                        AS OperDate
             ,Movement.InvNumber                       AS InvNumber
@@ -299,4 +279,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_MovementCheck_Promo (inMakerId:= 2336604  , inStartDate:= '08.05.2016', inEndDate:= '08.05.2016', inSession:= '2')
---select * from gpReport_MovementCheck_Promo(inMakerId := 2336600 , inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');
+--select * from gpReport_MovementCheck_Promo(inMakerId := 2336600 , inStartDate := ('02.10.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');
