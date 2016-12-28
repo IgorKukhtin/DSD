@@ -66,9 +66,9 @@ BEGIN
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
-                              INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.Id
+                          /*    INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.Id
                                                                      AND MI_Juridical.DescId = zc_MI_Child()
-                                                                     AND MI_Juridical.isErased = FALSE
+                                                                     AND MI_Juridical.isErased = FALSE*/
                          WHERE Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId = zc_Movement_Promo()
                        )

@@ -25,9 +25,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    inStartDate := date_trunc('month', inStartDate);
-    inEndDate := date_trunc('month', inEndDate) + Interval '1 MONTH';
- 
+    --inStartDate := date_trunc('month', inStartDate);
+    --inEndDate := date_trunc('month', inEndDate) + Interval '1 MONTH';
+    inEndDate := inEndDate + interval '1  day';
         
     RETURN QUERY
       WITH
@@ -39,7 +39,6 @@ BEGIN
                                   INNER JOIN MovementDate AS MovementDate_StartPromo
                                                           ON MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
                                                          AND MovementDate_StartPromo.MovementId = Movement.Id
-                                                   
                                   INNER JOIN MovementDate AS MovementDate_EndPromo
                                                           ON MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
                                                          AND MovementDate_EndPromo.MovementId = Movement.Id
@@ -47,7 +46,6 @@ BEGIN
                                   INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                      AND MI_Goods.DescId = zc_MI_Master()
                                                                      AND MI_Goods.isErased = FALSE
-
                              WHERE Movement.StatusId = zc_Enum_Status_Complete()
                                AND Movement.DescId = zc_Movement_Promo()
                             ) 
@@ -86,24 +84,38 @@ BEGIN
                          )
 
 
-           ,   tmpMI AS (SELECT MIContainer.ContainerId
+         ,   tmpMI_1 AS (SELECT MIContainer.ContainerId
+                              , MIContainer.MovementItemId
                               , Movement_Check.PlanDate
                               , Movement_Check.UnitId
                               , MIContainer.ObjectId_Analyzer   AS GoodsId
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
                          FROM tmpMov AS Movement_Check
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementId = Movement_Check.Id
                                                              AND MIContainer.DescId = zc_MIContainer_Count()
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
                          GROUP BY MIContainer.ContainerId
+                              , MIContainer.MovementItemId
                               , Movement_Check.PlanDate
                               , Movement_Check.UnitId
                               , MIContainer.ObjectId_Analyzer 
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                        )
+
+           ,   tmpMI AS (SELECT tmpMI_1.ContainerId
+                              , tmpMI_1.PlanDate
+                              , tmpMI_1.UnitId
+                              , tmpMI_1.GoodsId
+                              , SUM (COALESCE (tmpMI_1.Amount, 0)) AS Amount
+                              , SUM (COALESCE (tmpMI_1.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                         FROM tmpMI_1 
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = tmpMI_1.MovementItemId
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                         GROUP BY tmpMI_1.ContainerId
+                                , tmpMI_1.PlanDate
+                                , tmpMI_1.UnitId
+                                , tmpMI_1.GoodsId
                         )
 
        -- таблица всех продаж 
@@ -127,9 +139,6 @@ BEGIN
                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpMI.GoodsId
                          )
 
-
---select * from tmpMI_All
- 
          -- tmpData_01/tmpData_02/tmpData_03  получаем связь с партиями
         , tmpData_01 AS (SELECT tmpMI.PlanDate
                               , tmpMI.UnitId
@@ -177,8 +186,6 @@ BEGIN
                               -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                          )
---select * from tmpData_03
-
 
        -- здесь віделяем кол-во/сумму продажи товаров маркетингового контракта
      , tmpData_Promo AS (SELECT tmp.PlanDate
@@ -236,4 +243,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_Check_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_Check_Promo (inMakerId:= 2336604  , inStartDate:= '08.05.2016', inEndDate:= '08.05.2016', inSession:= '2')
---select * from gpReport_Check_Promo( inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('02.11.2016')::TDateTime ,  inSession := '3');
+--select * from gpReport_Check_Promo( inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('02.12.2016')::TDateTime ,  inSession := '3');
