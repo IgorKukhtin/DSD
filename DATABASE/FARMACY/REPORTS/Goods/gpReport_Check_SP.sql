@@ -24,6 +24,28 @@ RETURNS TABLE (UnitName       TVarChar
              , Amount         TFloat 
              , SummaSP        TFloat 
              , NumLine        Integer
+
+           , JuridicalFullName  TVarChar
+           , JuridicalAddress   TVarChar
+           , OKPO               TVarChar
+           , AccounterName      TVarChar
+           , INN                TVarChar
+           , NumberVAT          TVarChar
+           , BankAccount        TVarChar
+           , Phone              TVarChar
+           , BankName           TVarChar
+           , MFO                TVarChar
+
+           , PartnerMedical_FullName         TVarChar
+           , PartnerMedical_JuridicalAddress TVarChar
+           , PartnerMedical_Phone            TVarChar
+           /*, PartnerMedical_OKPO             TVarChar
+           , PartnerMedical_AccounterName    TVarChar
+           , PartnerMedical_INN              TVarChar
+           , PartnerMedical_NumberVAT        TVarChar
+           , PartnerMedical_BankAccount      TVarChar
+           , PartnerMedical_BankName         TVarChar
+           , PartnerMedical_MFO              TVarChar*/
 )
 AS
 $BODY$
@@ -134,7 +156,7 @@ BEGIN
                               INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
  
                               INNER JOIN MovementLinkObject AS MovementLinkObject_PartnerMedical
-                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement.Id
+                                                            ON MovementLinkObject_PartnerMedical.MovementId = Movement_Check.Id
                                                            AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
                                                            AND (MovementLinkObject_PartnerMedical.ObjectId = inHospitalId OR inHospitalId = 0)
                               -- еще нужно добавить ограничение по больнице
@@ -157,6 +179,7 @@ BEGIN
                          GROUP BY MovementLinkObject_Unit.ObjectId
                                 , tmpUnit.JuridicalId
                                 , tmpGoods.GoodsMainId
+                                , movementlinkobject_partnermedical.objectid
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
       , tmpData AS (SELECT tmpMI.UnitId
@@ -168,6 +191,24 @@ BEGIN
                     FROM tmpMI 
                     )
 
+      , tmpBankAccount AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                , Object_BankAccount.Id
+                                , Object_BankAccount.ValueData AS BankAccount
+                                , Object_Bank.ValueData AS BankName
+                                , ObjectString_MFO.ValueData AS MFO
+                           FROM Object AS Object_BankAccount
+                              LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                   ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                   ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                  AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                              LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                              LEFT JOIN ObjectString AS ObjectString_MFO
+                                                     ON ObjectString_MFO.ObjectId = Object_Bank.Id 
+                                                    AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                           WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                           )
         -- результат
         SELECT Object_Unit.ValueData               AS UnitName
              , Object_Juridical.ValueData          AS JuridicalName
@@ -182,13 +223,48 @@ BEGIN
              , tmpData.Amount     :: TFloat 
              , tmpData.SummChangePercent :: TFloat  AS SummaSP
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_Unit.ValueData ORDER BY Object_Unit.ValueData, tmpGoodsSP.IntenalSPName ) AS Integer) AS NumLine
+
+           , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
+           , ObjectHistory_JuridicalDetails.JuridicalAddress
+           , ObjectHistory_JuridicalDetails.OKPO
+           , ObjectHistory_JuridicalDetails.AccounterName
+           , ObjectHistory_JuridicalDetails.INN
+           , ObjectHistory_JuridicalDetails.NumberVAT
+           , ObjectHistory_JuridicalDetails.BankAccount
+           , ObjectHistory_JuridicalDetails.Phone
+           , tmpBankAccount.BankName ::TVarChar
+           , tmpBankAccount.MFO      ::TVarChar
+
+           , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
+           , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
+           , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
+         /*  , ObjectHistory_PartnerMedicalDetails.OKPO              AS PartnerMedical_OKPO
+           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
+           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
+           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
+           , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
+           , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
+           , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO*/
         FROM tmpData
              LEFT JOIN tmpGoodsSP AS tmpGoodsSP ON tmpGoodsSP.GoodsMainId = tmpData.GoodsMainId
           
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
+             
              LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId
+             LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                                  ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
+                                AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
 
+             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
+             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+ 
+             LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
+                                     AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+            /* LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
+                                      ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                     AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount*/
+           
         ORDER BY Object_Unit.ValueData
                , tmpGoodsSP.IntenalSPName
 ;
