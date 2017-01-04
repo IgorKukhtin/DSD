@@ -211,6 +211,211 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
+          object JuridicalFullName: TcxGridDBColumn
+            Caption = #1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103' ('#1087#1086#1074#1085#1072' '#1085#1072#1079#1074#1072')'
+            DataBinding.FieldName = 'JuridicalFullName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object JuridicalAddress: TcxGridDBColumn
+            Caption = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1057#1043')'
+            DataBinding.FieldName = 'JuridicalAddress'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1057#1043')'
+            DataBinding.FieldName = 'OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object AccounterName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1043')'
+            DataBinding.FieldName = 'AccounterName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object INN: TcxGridDBColumn
+            Caption = #1030#1055#1053' ('#1057#1043')'
+            DataBinding.FieldName = 'INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1030#1055#1053' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object NumberVAT: TcxGridDBColumn
+            Caption = #8470' '#1089#1074#1110#1076'. ('#1057#1043')'
+            DataBinding.FieldName = 'NumberVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1089#1074#1110#1076#1086#1094#1090#1074#1072' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1088' ('#1057#1043')'
+            DataBinding.FieldName = 'BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Phone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1043')'
+            DataBinding.FieldName = 'Phone'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1057#1043')'
+            DataBinding.FieldName = 'BankName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1057#1043')'
+            DataBinding.FieldName = 'MFO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1060#1054' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_FullName: TcxGridDBColumn
+            Caption = #1047#1072#1082#1083#1072#1076' '#1086#1093#1086#1088#1086#1085#1080' '#1079#1076#1086#1088#1086#1074'`'#1103' ('#1087#1086#1074#1085#1072' '#1085#1072#1079#1074#1072')'
+            DataBinding.FieldName = 'PartnerMedical_FullName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_JuridicalAddress: TcxGridDBColumn
+            Caption = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_JuridicalAddress'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_Phone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_Phone'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_AccounterName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_AccounterName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_INN: TcxGridDBColumn
+            Caption = #1030#1055#1053' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1030#1055#1053' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_NumberVAT: TcxGridDBColumn
+            Caption = #8470' '#1089#1074#1110#1076'. ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_NumberVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1089#1074#1110#1076'. ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1088' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1088' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_BankName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_MFO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1060#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
         end
       end
     end
