@@ -5,7 +5,7 @@
 			<FrameworkType>VCL</FrameworkType>
 			<MainSource>FarmacyCash.dpr</MainSource>
 			<Base>True</Base>
-			<Config Condition="'$(Config)'==''">Release</Config>
+			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
 			<TargetedPlatforms>1</TargetedPlatforms>
 			<AppType>Application</AppType>
@@ -77,6 +77,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_RunParams>/autologin</Debugger_RunParams>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.8.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>8</VerInfo_Release>
 			<VerInfo_Build>5</VerInfo_Build>
@@ -97,7 +98,6 @@
 			<DCC_DebugInformation>false</DCC_DebugInformation>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<Debugger_RunParams>/autologin</Debugger_RunParams>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.8.24;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
@@ -224,6 +224,9 @@
 			<DCCReference Include="..\FormsFarmacy\Cash\MainCash2.pas">
 				<Form>MainCashForm2</Form>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\Cash\LoginFormInh.pas">
+				<Form>LoginForm1</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
