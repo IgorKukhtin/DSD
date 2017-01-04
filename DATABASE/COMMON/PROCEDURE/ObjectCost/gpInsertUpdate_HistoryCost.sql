@@ -71,7 +71,7 @@ BEGIN
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!ВРЕМЕННО!!!
- IF inItearationCount >= 800 THEN inItearationCount:=10; END IF;
+ IF inItearationCount >= 800 THEN inItearationCount:=100; END IF;
 -- !!!ВРЕМЕННО!!!
 
      -- !!!если не филиал, тогда начальная дата всегда 1-ое число месяца!!!
@@ -450,7 +450,7 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (142372, 147559); -- 08.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (955225, 147523  -- 09.2016
      --                                                       , 955228, 189406, 955227, 147524, 955226, 147525, 955221, 147522, 1088976, 699999, 955223, 955224, 393568, 149497);
-     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (647643, 663076, 639413, 633042, 633033); -- 11.2016
+     -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (647643, 663076, 639413, 633042, 633033); -- 11.2016
 --     DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (SELECT CLO.ContainerId FROM ContainerLinkObject as CLO WHERE CLO.DescId = zc_ContainerLinkObject_Member()
 --                                                                                                                      AND CLO.ObjectId = 12573); -- Однокопила Ірина Борисівна
 
@@ -875,7 +875,7 @@ end if;
                                                                                                              )
                                                                    )
         WHERE HistoryCost.StartDate = inStartDate
-          AND ABS (HistoryCost.Price) >  10000
+          AND ABS (HistoryCost.Price) >  800
           AND HistoryCost.ContainerId = Container.Id
        ;        
 
@@ -1118,8 +1118,8 @@ order by 3
 
 -- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inBranchId:= 0, inItearationCount:= 300, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 300, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
 /*
 select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
 from Container 

@@ -594,6 +594,18 @@ begin
                end;
      end;
 
+     // проверили параметр
+     if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+     then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
+          then
+              begin
+                   PanelMovementDesc.Font.Color:=clRed;
+                   PanelMovementDesc.Caption:='Ошибка.Значение <Вид упаковки> может быть только таким: <' + ParamsMI.ParamByName('GoodsKindName_List').AsString + '>.';
+                   ActiveControl:=EditGoodsKindCode;
+                   exit;
+              end;
+
+
      // доопределили параметр
      if (PanelGoodsKind.Visible)and(rgGoodsKind.ItemIndex>=0)
      then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
@@ -1003,7 +1015,7 @@ begin
       GoodsCode_int:= 0;
      end;
      //
-     //Схема - через справочник
+     //Схема - через справочник - для "Взвешивание п/ф факт куттера"
      if (1=1)and(fEnterKey13=TRUE)and(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight) then
      begin
           fEnterKey13:= FALSE;
@@ -1040,7 +1052,7 @@ begin
 
      end
      else
-
+     // Схема - для "Схема "нарезка сала""
      //
      //поиск товара по коду + заполняются параметры
      if DMMainScaleCehForm.gpGet_Scale_Goods(ParamsMI,IntToStr(GoodsCode_int)) = TRUE
@@ -1049,6 +1061,9 @@ begin
           WriteParamsMovement;
           if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
           then ActiveControl:=EditEnterCount;
+          //и выставим вид упаковки
+          if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
+          then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode_max').AsInteger);
      end
      else begin
           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
@@ -1089,7 +1104,19 @@ begin
                  PanelMovementDesc.Caption:='Ошибка.Не определено значение <Код вида упаковки>';
                  ActiveControl:=EditGoodsKindCode;
            end
-      else WriteParamsMovement;
+      else begin
+                if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+                then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
+                     then
+                         begin
+                              PanelMovementDesc.Font.Color:=clRed;
+                              PanelMovementDesc.Caption:='Ошибка.Значение <Вид упаковки> может быть только таким: <' + ParamsMI.ParamByName('GoodsKindName_List').AsString + '>.';
+                              ActiveControl:=EditGoodsKindCode;
+                              exit;
+                         end;
+                 //
+                 WriteParamsMovement;
+            end;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditPartionGoodsExit(Sender: TObject);

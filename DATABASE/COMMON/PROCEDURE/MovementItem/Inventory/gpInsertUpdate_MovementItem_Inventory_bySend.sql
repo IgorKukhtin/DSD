@@ -41,12 +41,11 @@ BEGIN
                 , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Send.PartionGoodsDate)            AS PartionGoodsDate
                 , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Send.Amount, 0)) :: TFloat  AS Amount
 
-           FROM (SELECT MovementItem.ObjectId                                               AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                      AS GoodsKindId
-                                   , COALESCE (MIString_PartionGoods.ValueData, '')                       AS PartionGoods
+           FROM              (SELECT MovementItem.ObjectId                                    AS GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            AS GoodsKindId
+                                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
-                                   , MovementItem.Amount                                                AS Amount
-
+                                   , SUM (MovementItem.Amount)                                AS Amount
                               FROM MovementItem 
                                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                             ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
@@ -60,6 +59,10 @@ BEGIN
                              WHERE MovementItem.MovementId = inMovementId_Send  
                                AND MovementItem.DescId     = zc_MI_Master()
                                AND MovementItem.isErased   = FALSE
+                              GROUP BY MovementItem.ObjectId
+                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                     , COALESCE (MIString_PartionGoods.ValueData, '')
+                                     , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                             ) tmpMI_Send
                     LEFT JOIN
                 (SELECT MovementItem.Id                                          AS MovementItemId

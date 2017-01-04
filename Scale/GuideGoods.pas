@@ -178,6 +178,7 @@ begin
      begin
        Self.Caption:='Параметры продукции для покупателя <('+execParamsMovement.ParamByName('FromCode').asString + ')' + execParamsMovement.ParamByName('FromName').asString + '>';
        Params.ParamByName('inMovementId').Value:= -1 * execParamsMovement.ParamByName('FromId').AsInteger;
+       Params.ParamByName('inOrderExternalId').Value:= -1 * execParamsMovement.ParamByName('ContractId').AsInteger;
        Execute;
      end
      ;
