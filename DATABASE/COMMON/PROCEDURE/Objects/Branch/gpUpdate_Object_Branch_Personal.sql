@@ -1,8 +1,6 @@
 -- Function: gpUpdate_Object_Branch_Personal()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_Personal (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_Personal (Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Branch_Personal(
     IN inId                    Integer   ,     -- ключ объекта <> 

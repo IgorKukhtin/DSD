@@ -515,6 +515,14 @@ begin
               ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').asInteger;
               ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').AsInteger;
               ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
+
+              // только для программы ScaleCeh
+              ParamByName('GoodsKindId_list').asString   := DataSet.FieldByName('GoodsKindId_list').asString;
+              ParamByName('GoodsKindName_List').asString := DataSet.FieldByName('GoodsKindName_List').asString;
+
+              ParamByName('GoodsKindId_max').AsInteger  := DataSet.FieldByName('GoodsKindId_max').asInteger;
+              ParamByName('GoodsKindCode_max').AsInteger:= DataSet.FieldByName('GoodsKindCode_max').AsInteger;
+              ParamByName('GoodsKindName_max').asString := DataSet.FieldByName('GoodsKindName_max').asString;
          end;
 
        end;

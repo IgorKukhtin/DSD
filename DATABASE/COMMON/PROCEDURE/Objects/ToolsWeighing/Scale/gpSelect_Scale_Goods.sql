@@ -8,8 +8,8 @@ DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integ
 CREATE OR REPLACE FUNCTION gpSelect_Scale_Goods(
     IN inIsGoodsComplete       Boolean  ,    -- склад ГП/производство/упаковка or обвалка
     IN inOperDate              TDateTime,
-    IN inMovementId            Integer,
-    IN inOrderExternalId       Integer,
+    IN inMovementId            Integer,      -- Документ ИЛИ Контрагент (для возврата)
+    IN inOrderExternalId       Integer,      -- Заявка ИЛИ Договор (для возврата)
     IN inPriceListId           Integer,
     IN inGoodsCode             Integer,
     IN inDayPrior_PriceReturn  Integer,
@@ -51,11 +51,11 @@ BEGIN
 
 
    -- товар которого нет как бы в заявке, но его все равно надо провести
-   IF inOrderExternalId <> 0 AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
+   IF inOrderExternalId > 0 AND inGoodsCode <> 0 THEN vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
    END IF;
 
 
-   IF inOrderExternalId <> 0
+   IF inOrderExternalId > 0
    THEN
 
         -- параметры из документа
@@ -329,6 +329,11 @@ BEGIN
                                                       AND ObjectLink_GoodsListSale_Partner.DescId        = zc_ObjectLink_GoodsListSale_Partner()
                                                       -- !!!ограничение по контрагенту!!!
                                                       AND ObjectLink_GoodsListSale_Partner.ChildObjectId = CASE WHEN inMovementId < 0 THEN -1 * inMovementId END :: Integer
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Contract
+                                                       ON ObjectLink_GoodsListSale_Contract.ObjectId      = Object_GoodsListSale.Id
+                                                      AND ObjectLink_GoodsListSale_Contract.DescId        = zc_ObjectLink_GoodsListSale_Contract()
+                                                      -- !!!ограничение по договору!!!
+                                                      AND ObjectLink_GoodsListSale_Contract.ChildObjectId = CASE WHEN inOrderExternalId < 0 THEN -1 * inOrderExternalId ELSE ObjectLink_GoodsListSale_Contract.ChildObjectId END :: Integer
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                                       ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                                      AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
@@ -343,7 +348,7 @@ BEGIN
                            ;
     -- 
     INSERT INTO _tmpWord_Split_from (WordList) 
-       SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods;
+       SELECT DISTINCT _tmpWord_Goods.WordList FROM _tmpWord_Goods WHERE inOrderExternalId < 0;
 
 
     -- 
@@ -382,7 +387,12 @@ BEGIN
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные + Прочие материалы
                                                                             )
                             )
-      , tmpGoods_Return AS (SELECT _tmpWord_Goods.GoodsId
+      , tmpGoods_Return AS (SELECT tmp.GoodsId
+                                 , MAX (tmp.GoodsKindId_max) AS GoodsKindId_max
+                                 , MAX (tmp.WordList) AS WordList
+                                 , MAX (tmp.GoodsKindName_list) AS GoodsKindName_list
+                            FROM
+                           (SELECT _tmpWord_Goods.GoodsId
                                  , _tmpWord_Goods.GoodsKindId_max
                                  , _tmpWord_Goods.WordList
                                  , STRING_AGG (Object.ValueData :: TVarChar, ',')  AS GoodsKindName_list
@@ -392,11 +402,13 @@ BEGIN
                             GROUP BY _tmpWord_Goods.GoodsId
                                    , _tmpWord_Goods.GoodsKindId_max
                                    , _tmpWord_Goods.WordList
+                           ) AS tmp
+                            GROUP BY tmp.GoodsId
                            )
     , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                                                 AS GoodsId
                                  , STRING_AGG (COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) :: TVarChar, ',') AS GoodsKindId_List
                                  , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')                          AS GoodsKindName_List
-                                 , MAX (COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0))                         AS GoodsKindId_max
+                                 , ABS (MIN (COALESCE (CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0))) AS GoodsKindId_max
                             FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                  INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -535,4 +547,4 @@ ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.12.2016', inMovementId:= -17345, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 4444, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Scale_Goods (inIsGoodsComplete:= TRUE, inOperDate:= '01.12.2016', inMovementId:= -79137, inOrderExternalId:= 0, inPriceListId:=0, inGoodsCode:= 0, inDayPrior_PriceReturn:= 10, inSession:=zfCalc_UserAdmin()) WHERE GoodsCode = 901

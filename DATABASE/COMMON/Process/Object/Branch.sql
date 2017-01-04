@@ -29,7 +29,8 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Branch_
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Branch())||'> - сохранение данных.'
-                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Branch_TTN');
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Branch_Personal');
+
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Branch_TTN()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 5

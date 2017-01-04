@@ -1,6 +1,5 @@
 -- Function: gpUpdate_Object_Branch_TTN()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_TTN (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Object_Branch_TTN (Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Branch_TTN(

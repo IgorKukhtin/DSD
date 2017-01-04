@@ -275,6 +275,14 @@ begin
      ParamAdd(Params,'GoodsKindId',ftInteger);       // Виды товаров
      ParamAdd(Params,'GoodsKindCode',ftInteger);     // Виды товаров
      ParamAdd(Params,'GoodsKindName',ftString);      // Виды товаров
+
+     ParamAdd(Params,'GoodsKindId_list',ftString);   // Виды товаров
+     ParamAdd(Params,'GoodsKindName_List',ftString); // Виды товаров
+
+     ParamAdd(Params,'GoodsKindId_max',ftInteger);   // Виды товаров
+     ParamAdd(Params,'GoodsKindCode_max',ftInteger); // Виды товаров
+     ParamAdd(Params,'GoodsKindName_max',ftString);  // Виды товаров
+
      ParamAdd(Params,'MeasureId',ftInteger);         // Единица измерения
      ParamAdd(Params,'MeasureCode',ftInteger);       // Единица измерения
      ParamAdd(Params,'MeasureName',ftString);        // Единица измерения
