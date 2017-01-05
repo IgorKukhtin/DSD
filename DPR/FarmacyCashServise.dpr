@@ -66,16 +66,11 @@ uses
   RecadvXML in '..\SOURCE\EDI\RecadvXML.pas',
   LocalWorkUnit in '..\SOURCE\LocalWorkUnit.pas',
   Splash in '..\FormsFarmacy\Cash\Splash.pas' {frmSplash}
-//  , MainCash in '..\FormsFarmacy\Cash\MainCash.pas' {MainCashForm: TParentForm}
   ;
 
 {$R *.res}
 
 begin
-//  Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
-//  Application.CreateForm(TMainCashForm, MainCashForm);
-//  Application.Run;
 
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
@@ -85,38 +80,26 @@ begin
 
   with TLoginForm.Create(Application) do
   Begin
+   // Заполняем авторизационные поля
+   edUserName.Text:=ParamStr(1);
+   edPassword.Text:=ParamStr(2);
     //Если все хорошо создаем главную форму Application.CreateForm();
     AllowLocalConnect := False; //True;
 
-    if FindCmdLineSwitch('autologin', true)
-    then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
-     //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-     gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
-    end
-    else if ShowModal <> mrOk then exit;
+    if ShowModal <> mrOk then exit;
 
-//    gc_User := TUser.Create(ParamStr(1));
-//    gc_User := TUser.Create('{5850E3FE-7EF9-4A55-96BD-98E3BEA4E60E}');
-//     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
+    if not gc_User.Local then
+    Begin
+      TUpdater.AutomaticUpdateProgram;
+      TUpdater.AutomaticCheckConnect;
+    End
+    else
+      gc_isSetDefault := True;
+    //
+   Application.CreateForm(TdmMain, dmMain);
+   Application.CreateForm(TMainCashForm2, MainCashForm2);
 
-    begin
-          if not gc_User.Local then
-          Begin
-            TUpdater.AutomaticUpdateProgram;
-            TUpdater.AutomaticCheckConnect;
-          End
-          else
-            gc_isSetDefault := True;
-          //
-  Application.CreateForm(TdmMain, dmMain);
-
-  Application.CreateForm(TMainCashForm2, MainCashForm2);
-
-  end;
   End;
   Application.Run;
-
-
 
 end.

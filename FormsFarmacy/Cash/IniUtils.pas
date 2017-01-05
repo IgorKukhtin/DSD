@@ -27,6 +27,8 @@ function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
 
+var login, pass: string;
+
 implementation
 
 uses
@@ -36,6 +38,8 @@ const
   LocalDBNameHead: String = 'FarmacyCashHead.dbf';
   LocalDBNameBody: String = 'FarmacyCashBody.dbf';
   LocalDBNameDiff: String = 'FarmacyCashDiff.dbf';
+
+
 
 function GetIniFile(out AIniFileName: String):boolean;
 var

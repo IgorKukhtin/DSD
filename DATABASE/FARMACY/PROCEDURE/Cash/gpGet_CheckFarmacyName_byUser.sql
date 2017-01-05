@@ -1,27 +1,30 @@
 -- Function: gpGet_CheckFarmacyName_byUser()
 
-DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (BOOLEAN, TVarChar, TVarChar);
 
 
 
 CREATE OR REPLACE FUNCTION gpGet_CheckFarmacyName_byUser(
-    INOUT AFarmacyName       TVarChar, -- Имя Аптеки
-    IN inSession             TVarChar  -- Сессия пользователя
+    OUT    Enter              BOOLEAN,  -- Разрешение на вход true - да, false - нет 
+    IN     AFarmacyName       TVarChar, -- Имя Аптеки под которой входит пользователь
+    IN     inSession          TVarChar  -- Сессия пользователя
 )
-RETURNS tvarchar
+RETURNS BOOLEAN
 LANGUAGE plpgsql
 $BODY$
 BEGIN
-    if AFarmacyName='Аптека 18' THEN
-      AFarmacyName :='ok';
-     END IF;
+ Enter := FALSE;
+
+ if AFarmacyName = 'Аптека 18' THEN
+  Enter := TRUE;
+ END IF;
 END;
 $BODY$
  
 /*
 Это тестовая функция для проверки 
 
- AFarmacyName должен возврящать 'ok'  or 'no'
+ AFarmacyName = 'Аптека 18' то доступ разрешен для других заперщен
 
                                                         
 */
