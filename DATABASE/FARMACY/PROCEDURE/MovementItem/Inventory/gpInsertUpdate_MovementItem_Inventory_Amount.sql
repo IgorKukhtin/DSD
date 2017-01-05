@@ -71,6 +71,20 @@ BEGIN
                                                  AND Object_Price.UnitId = vbUnitId
                                                               
            ) AS tmp;
+   
+        -- записываем чайлд
+        PERFORM lpInsertUpdate_MI_Inventory_Child(inId                 := 0
+                                                , inMovementId         := inMovementId
+                                                , inParentId           := MovementItem.Id
+                                                , inAmountUser         := MovementItem.Amount
+                                                , inUserId             := vbUserId
+                                                  )
+        FROM MovementItem
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.isErased = FALSE;
+
+       
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
 
@@ -81,8 +95,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.01.17         *
  26.04.15                                        * all
- 24.04.15          *
+ 24.04.15         *
 */
 
 -- тест

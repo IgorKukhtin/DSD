@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ Инвентаризации>
     IN inGoodsId             Integer   , -- Товары
- INOUT ioAmount              TFloat    , -- Количество
+   OUT outAmount             TFloat    , -- Количество Итого
+    IN inAmountUser          TFloat    , -- Количество тек.пользователя
     IN inPrice               TFloat    , -- Цена
     IN inComment             TVarChar  , -- Комментарий
    OUT outSumm               TFloat    , -- Сумма
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
    OUT outProficitSumm       TFloat    , -- сумма излишка
    OUT outDiff               TFloat    , -- разница
    OUT outDiffSumm           TFloat    , -- сумма разницы
+   OUT outCountUser          TFloat    , -- кол-во пользователей сформ. остаток
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -70,27 +72,48 @@ BEGIN
                                   ) AS DD
                              ), 0);
         
+    -- Нужно определить итого кол-во (последнее кол-во по всем пользователям + текущее)
+    -- и кол-во пользователей, сформировавших остаток
+    SELECT SUM (tmp.Amount) AS  Amount
+         , (Count (tmp.Num) + 1) :: TFloat AS CountUser
+    INTO outAmount, outCountUser
+    FROM (SELECT MovementItem.Amount        AS Amount
+               , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
+          FROM MovementItem
+               LEFT JOIN MovementItemDate AS MIDate_Insert
+                                          ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                         AND MIDate_Insert.DescId = zc_MIDate_Insert()
+          WHERE MovementItem.ParentId = ioId
+            AND MovementItem.DescId     = zc_MI_Child()
+            AND MovementItem.isErased  = FALSE 
+            AND MovementItem.ObjectId  <> vbUserId
+           ) AS tmp
+    WHERE tmp.Num = 1;
+
+    outAmount := COALESCE (inAmountUser,0) + COALESCE (outAmount, 0);
+
+
     -- Расчитываем сумму по строке
-    outSumm := (ioAmount * inPrice)::TFloat;
+    outSumm := (outAmount * inPrice)::TFloat;
     
-    IF COALESCE(outRemains,0) > COALESCE(ioAmount,0)
+    IF COALESCE(outRemains,0) > COALESCE(outAmount,0)
     THEN
-        outDeficit := COALESCE(outRemains,0) - COALESCE(ioAmount,0); -- недостача
-        outDeficitSumm := (COALESCE(outRemains,0) - COALESCE(ioAmount,0))*inPrice::TFloat;
+        outDeficit := COALESCE(outRemains,0) - COALESCE(outAmount,0); -- недостача
+        outDeficitSumm := (COALESCE(outRemains,0) - COALESCE(outAmount,0))*inPrice::TFloat;
     END IF;
-    IF COALESCE(outRemains,0) < COALESCE(ioAmount,0)
+    IF COALESCE(outRemains,0) < COALESCE(outAmount,0)
     THEN
-        outProficit := COALESCE(ioAmount,0) - COALESCE(outRemains,0); -- Излишек
-        outProficitSumm := ((COALESCE(ioAmount,0) - COALESCE(outRemains,0))*inPrice)::TFloat;
+        outProficit := COALESCE(outAmount,0) - COALESCE(outRemains,0); -- Излишек
+        outProficitSumm := ((COALESCE(outAmount,0) - COALESCE(outRemains,0))*inPrice)::TFloat;
     END IF;
-    outDiff := COALESCE(ioAmount,0) - COALESCE(outRemains,0); --разница
-    outDiffSumm := ((COALESCE(ioAmount,0) - COALESCE(outRemains,0))*inPrice)::TFloat;    -- сумма разницы
+    outDiff := COALESCE(outAmount,0) - COALESCE(outRemains,0); --разница
+    outDiffSumm := ((COALESCE(outAmount,0) - COALESCE(outRemains,0))*inPrice)::TFloat;    -- сумма разницы
     
     -- сохранили
     ioId:= lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE(ioId,0)
                                                 , inMovementId         := inMovementId
                                                 , inGoodsId            := inGoodsId
-                                                , inAmount             := ioAmount
+                                                , inAmount             := outAmount
                                                 , inPrice              := inPrice
                                                 , inSumm               := outSumm
                                                 , inComment            := inComment
@@ -98,6 +121,18 @@ BEGIN
     -- пересчитали Итоговые суммы по накладной
     -- PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
 
+    -- Записываем подчиненный элемент
+    IF COALESCE(ioId,0) <> 0 
+    THEN 
+        PERFORM lpInsertUpdate_MI_Inventory_Child(inId                 := 0
+                                                , inMovementId         := inMovementId
+                                                , inParentId           := ioId
+                                                , inAmountUser         := inAmountUser
+                                                , inUserId             := vbUserId
+                                                  );
+    END IF;
+
+    --
 
 END;
 $BODY$
@@ -106,9 +141,10 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
-  11.07.15                                                                    *
+ 05.01.17         *
+ 11.07.15                                                                     *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId:= 0, inMovementId:= 0, inGoodsId:= 1, ioAmount:= 0, inSession:= '2')
--- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId := 58062345 , inMovementId := 3497252 , inGoodsId := 337 , ioAmount := 1 , inPrice := 0 , inComment := '' ,  inSession := '3');
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId:= 0, inMovementId:= 0, inGoodsId:= 1, outAmount:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId := 58062345 , inMovementId := 3497252 , inGoodsId := 337 , outAmount := 1 , inPrice := 0 , inComment := '' ,  inSession := '3');

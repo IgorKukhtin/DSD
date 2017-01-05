@@ -76,6 +76,11 @@ type
     DiffSumm_calc: TcxGridDBColumn;
     Diff_diff: TcxGridDBColumn;
     DiffSumm_diff: TcxGridDBColumn;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    spSelect_MI_Child: TdsdStoredProc;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    colCountUser: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, Price TFloat, Summ TFloat
+             , Amount TFloat, AmountUser TFloat, CountUser TFloat
+             , Price TFloat, Summ TFloat
              , isErased Boolean
              , Remains_Amount TFloat, Remains_Summ TFloat
              , Deficit TFloat, DeficitSumm TFloat
@@ -114,6 +115,7 @@ BEGIN
                                  AND MIContainer.DescId     = zc_MIContainer_Count()
                                GROUP BY MIContainer.MovementItemId
                               )
+
                  -- строчная часть
                , tmpMI AS (SELECT MovementItem.Id            AS Id
                                 , MovementItem.ObjectId      AS ObjectId
@@ -143,12 +145,32 @@ BEGIN
                                                                ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                                               AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
                                  LEFT JOIN tmpMI_calc ON tmpMI_calc.MovementItemId = MovementItem.Id
+
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND (MovementItem.isErased  = FALSE
                                 OR inIsErased             = TRUE
                                   )
                            )
+         -- строчная часть чайлд
+         , tmpMI_Child AS (SELECT tmp.ParentId
+                                , COUNT (tmp.Num)       AS CountUser
+                                , SUM (tmp.AmountUser)  AS AmountUser
+                           FROM (SELECT MovementItem.ParentId      AS ParentId
+                                      , CASE WHEN MovementItem.ObjectId = vbUserId THEN MovementItem.Amount ELSE 0 END   AS AmountUser
+                                      , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased  = FALSE
+                                 ) AS tmp
+                           WHERE tmp.Num = 1
+                           GROUP BY tmp.ParentId
+                           )
+
             -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -156,6 +178,8 @@ BEGIN
               , Object_Goods.ObjectCode                                             AS GoodsCode
               , (CASE WHEN MovementItem.ObjectId > 0 THEN '' ELSE '***' END || Object_Goods.ValueData) :: TVarChar AS GoodsName
               , MovementItem.Amount                                                 AS Amount
+              , COALESCE (tmpMI_Child.AmountUser,0) :: TFloat                       AS AmountUser
+              , COALESCE (tmpMI_Child.CountUser, 0) :: TFloat                       AS CountUser
 
               , CASE WHEN MovementItem.ObjectId > 0 THEN MovementItem.Price ELSE tmpPrice.Price END :: TFloat AS Price
               -- , MovementItem.Summ                                                                          AS Summ
@@ -208,6 +232,8 @@ BEGIN
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (MovementItem.ObjectId, REMAINS.ObjectId)
 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MovementItem.ObjectId, REMAINS.ObjectId)
+
+                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id 
             ;
 
     ELSEIF inShowAll = FALSE 
@@ -271,6 +297,26 @@ BEGIN
                                  AND MIContainer.DescId = zc_MIContainer_Count()
                                GROUP BY MIContainer.MovementItemId
                               )
+
+         -- строчная часть чайлд
+         , tmpMI_Child AS (SELECT tmp.ParentId
+                                , COUNT (tmp.Num)       AS CountUser
+                                , SUM (tmp.AmountUser)  AS AmountUser
+                           FROM (SELECT MovementItem.ParentId      AS ParentId
+                                      , CASE WHEN MovementItem.ObjectId = vbUserId THEN MovementItem.Amount ELSE 0 END   AS AmountUser
+                                      , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased  = FALSE
+                                 ) AS tmp
+                           WHERE tmp.Num = 1
+                           GROUP BY tmp.ParentId
+                           )
+
             -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -278,6 +324,8 @@ BEGIN
               , Object_Goods.ObjectCode                                             AS GoodsCode
               , Object_Goods.ValueData                                              AS GoodsName
               , MovementItem.Amount                                                 AS Amount
+              , COALESCE (tmpMI_Child.AmountUser,0) :: TFloat                       AS AmountUser
+              , COALESCE (tmpMI_Child.CountUser, 0) :: TFloat                       AS CountUser
 
               , CASE WHEN MovementItem.ObjectId > 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat AS Price
               -- , MovementItem.Summ                                                                          AS Summ
@@ -342,6 +390,8 @@ BEGIN
                 LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                               ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                              AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+
+                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId     = zc_MI_Master()
@@ -409,6 +459,26 @@ BEGIN
                                  AND MIContainer.DescId = zc_MIContainer_Count()
                                GROUP BY MIContainer.MovementItemId
                               )
+
+         -- строчная часть чайлд
+         , tmpMI_Child AS (SELECT tmp.ParentId
+                                , COUNT (tmp.Num)       AS CountUser
+                                , SUM (tmp.AmountUser)  AS AmountUser
+                           FROM (SELECT MovementItem.ParentId      AS ParentId
+                                      , CASE WHEN MovementItem.ObjectId = vbUserId THEN MovementItem.Amount ELSE 0 END   AS AmountUser
+                                      , CAST (ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS Num
+                                 FROM MovementItem
+                                      LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                                 ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                                AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased  = FALSE
+                                 ) AS tmp
+                           WHERE tmp.Num = 1
+                           GROUP BY tmp.ParentId
+                           )
+
             -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -416,6 +486,8 @@ BEGIN
               , Object_Goods.GoodsCodeInt                                           AS GoodsCode
               , Object_Goods.GoodsName                                              AS GoodsName
               , MovementItem.Amount                                                 AS Amount
+              , COALESCE (tmpMI_Child.AmountUser, 0) :: TFloat                      AS AmountUser
+              , COALESCE (tmpMI_Child.CountUser, 0) :: TFloat                       AS CountUser
 
               , CASE WHEN MovementItem.ObjectId > 0 THEN MIFloat_Price.ValueData ELSE tmpPrice.Price END :: TFloat AS Price
               -- , MIFloat_Summ.ValueData                                                                          AS Summ
@@ -488,6 +560,8 @@ BEGIN
                                               ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                              AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
+                LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+
             WHERE Object_Goods.ObjectId  = vbObjectId
               AND (Object_Goods.IsErased = FALSE
                 OR MovementItem.Id       > 0
@@ -503,6 +577,7 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.   Воробкало А.А.
+ 05.01.17         *
  29.06.16         *
  11.07.15                                                                        *
 */
