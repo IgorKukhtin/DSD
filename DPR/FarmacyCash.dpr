@@ -81,6 +81,7 @@ uses
 
 {$R *.res}
 
+
 begin
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
@@ -98,7 +99,7 @@ begin
     then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
      //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-//     if ShowModal <> mrOk then exit;   // для тестирования // НС закоменчено
+     if ShowModal <> mrOk then exit;   // для тестирования // НС закоменчено
      gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
     else
@@ -116,9 +117,9 @@ begin
       //
       Application.CreateForm(TdmMain, dmMain);
 
-  if False then
+      if false then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCashForm)
-      else
+      else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCashForm);
 
       Application.CreateForm(TfrmSplash, frmSplash);

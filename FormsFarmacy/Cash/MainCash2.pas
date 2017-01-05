@@ -15,7 +15,18 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX,  Math, ShellApi,
-  VKDBFDataSet, FormStorage, CommonData, ParentForm;
+  VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter;
 
 type
   THeadRecord = record
@@ -981,7 +992,8 @@ begin
       fMask := SEE_MASK_NOCLOSEPROCESS;
       Wnd := Application.Handle;
       lpFile := PChar(ExecuteFile);
-      //ParamString:='/autologin';
+      ParamString:='"'+IniUtils.login+'" "'+iniutils.pass+'"'; // Кавычки обязательно
+
       // ParamString:= gc_User.Session;
       {ParamString can contain theapplication parameters.}
        lpParameters := PChar(ParamString);
@@ -1324,7 +1336,6 @@ end;
 procedure TMainCashForm2.Button1Click(Sender: TObject);
 begin
 actServiseRun.Execute;
-
 end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);

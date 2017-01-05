@@ -66,7 +66,13 @@ inherited LoginForm1: TLoginForm1
         Name = 'AFarmacyName'
         Value = Null
         DataType = ftString
-        ParamType = ptInputOutput
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Enter'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -3,7 +3,8 @@ unit LoginFormInh;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, LoginForm, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, Vcl.StdCtrls, cxButtons, cxTextEdit, cxMaskEdit,
@@ -27,26 +28,32 @@ var
 
 implementation
 
-uses  Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit, IniUtils;
+uses Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit,
+  IniUtils;
 
 {$R *.dfm}
 
 procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
- inherited;
- if ModalResult <> mrOk then exit;
- spChekFarmacyName.ParamByName('AFarmacyName').Value:= iniLocalFarmacyName(edFarmacyName.Text);
- spChekFarmacyName.Execute;
- if  spChekFarmacyName.ParamByName('AFarmacyName').Value = 'no' then
-    ModalResult:=mrCancel;
+  inherited;
+  // сохраняем авторизационные данные для запуска сервиса
+  IniUtils.login:=edUserName.Text;
+  IniUtils.pass:=edPassword.Text;
+
+  if ModalResult <> mrOk then exit;
+
+  spChekFarmacyName.ParamByName('AFarmacyName').Value := iniLocalFarmacyName(edFarmacyName.Text);
+  spChekFarmacyName.Execute;
+  if not spChekFarmacyName.ParamByName('Enter').Value then
+    ModalResult := mrCancel;
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);
 begin
   inherited;
- edFarmacyName.Text:= iniLocalFarmacyName('');
-if edFarmacyName.Text<>'' then
-edFarmacyName.Enabled:=False;
+  edFarmacyName.Text := iniLocalFarmacyName('');
+  if edFarmacyName.Text <> '' then
+    edFarmacyName.Enabled := False; // Поле заполняется один раз
 end;
 
 end.
