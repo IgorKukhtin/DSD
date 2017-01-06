@@ -94,7 +94,15 @@ inherited TaxForm: TTaxForm
             Options.Editing = False
             Width = 58
           end
-          object colName: TcxGridDBColumn [3]
+          object colCodeUKTZED: TcxGridDBColumn [3]
+            Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+            DataBinding.FieldName = 'CodeUKTZED'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object colName: TcxGridDBColumn [4]
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
@@ -102,7 +110,7 @@ inherited TaxForm: TTaxForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [4]
+          object colGoodsKindName: TcxGridDBColumn [5]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -117,7 +125,7 @@ inherited TaxForm: TTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object clMeasureName: TcxGridDBColumn [5]
+          object clMeasureName: TcxGridDBColumn [6]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -125,7 +133,7 @@ inherited TaxForm: TTaxForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [6]
+          object colAmount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -135,7 +143,7 @@ inherited TaxForm: TTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPrice: TcxGridDBColumn [7]
+          object colPrice: TcxGridDBColumn [8]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -145,14 +153,14 @@ inherited TaxForm: TTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn [8]
+          object colCountForPrice: TcxGridDBColumn [9]
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
-          object colAmountSumm: TcxGridDBColumn [9]
+          object colAmountSumm: TcxGridDBColumn [10]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1458,8 +1466,7 @@ inherited TaxForm: TTaxForm
       item
         Control = ceComment
       end>
-    Left = 232
-    Top = 193
+    Top = 241
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1907,7 +1914,7 @@ inherited TaxForm: TTaxForm
       end>
     GetStoredProc = spGet
     Left = 280
-    Top = 177
+    Top = 257
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_Params'

@@ -981,7 +981,8 @@ begin
       fMask := SEE_MASK_NOCLOSEPROCESS;
       Wnd := Application.Handle;
       lpFile := PChar(ExecuteFile);
-      //ParamString:='/autologin';
+      ParamString:='"'+IniUtils.login+'" "'+iniutils.pass+'"'; // Кавычки обязательно
+
       // ParamString:= gc_User.Session;
       {ParamString can contain theapplication parameters.}
        lpParameters := PChar(ParamString);
@@ -1324,7 +1325,6 @@ end;
 procedure TMainCashForm2.Button1Click(Sender: TObject);
 begin
 actServiseRun.Execute;
-
 end;
 
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);

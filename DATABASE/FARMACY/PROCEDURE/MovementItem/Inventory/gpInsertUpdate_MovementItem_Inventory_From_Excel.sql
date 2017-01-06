@@ -39,8 +39,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Цена <%> не может быть меньше нуля.', inPrice;
     END IF;
     SELECT Id INTO vbId from MovementItem Where MovementId = COALESCE(inMovementId,0) AND ObjectId = vbGoodsId;
+
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE(vbId,0)
+    vbId:=  lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE(vbId,0)
                                                  , inMovementId         := inMovementId
                                                  , inGoodsId            := vbGoodsId
                                                  , inAmount             := inAmount
@@ -48,6 +49,15 @@ BEGIN
                                                  , inSumm               := (inAmount * inPrice)::TFloat
                                                  , inComment            := NULL::TVarChar
                                                  , inUserId             := vbUserId);
+
+    -- записываем чайлд
+    PERFORM lpInsertUpdate_MI_Inventory_Child(inId                 := 0
+                                            , inMovementId         := inMovementId
+                                            , inParentId           := vbId
+                                            , inAmountUser         := inAmount
+                                            , inUserId             := vbUserId
+                                              );
+
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
 END;
@@ -57,6 +67,7 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Inventory_From_Excel (Integer, Intege
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+  05.01.17        *
   28.07.15                                                                    *
 */
 

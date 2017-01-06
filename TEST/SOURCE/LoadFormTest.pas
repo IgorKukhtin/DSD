@@ -453,6 +453,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsExternalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_UKTZEDForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_UKTZEDForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;

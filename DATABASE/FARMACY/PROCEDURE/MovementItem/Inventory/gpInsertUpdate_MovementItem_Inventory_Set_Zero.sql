@@ -13,7 +13,20 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
 	 
-     -- Обнулили все позиции
+    -- записываем чайлд
+    PERFORM lpInsertUpdate_MI_Inventory_Child(inId                 := 0
+                                            , inMovementId         := inMovementId
+                                            , inParentId           := MovementItem.Id
+                                            , inAmountUser         := 0::TFloat
+                                            , inUserId             := vbUserId
+                                              )
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId = zc_MI_Master()
+       AND MovementItem.Amount <> 0
+       AND MovementItem.isErased = FALSE;
+
+    -- Обнулили все позиции
     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := MovementItem.Id
                                                  , inMovementId         := MovementItem.MovementId
                                                  , inGoodsId            := MovementItem.ObjectId
@@ -32,7 +45,7 @@ BEGIN
         MovementItem.DescId = zc_MI_Master()
         AND
         MovementItem.Amount <> 0;
-        
+
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);
 
@@ -44,6 +57,7 @@ ALTER FUNCTION gpInsertUpdate_MovementItem_Inventory_Set_Zero (Integer, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+  05.01.17        *
   03.08.15                                                                    *
 */
 

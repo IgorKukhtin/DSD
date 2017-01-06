@@ -20,10 +20,14 @@ function iniPortSpeed:String;
 function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 function iniLocalDataBaseDiff: String;
+//Возвращает имя Аптеки
+function iniLocalFarmacyName(AFarmacyName: string): string;
 
 function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
+
+var login, pass: string;
 
 implementation
 
@@ -34,6 +38,8 @@ const
   LocalDBNameHead: String = 'FarmacyCashHead.dbf';
   LocalDBNameBody: String = 'FarmacyCashBody.dbf';
   LocalDBNameDiff: String = 'FarmacyCashDiff.dbf';
+
+
 
 function GetIniFile(out AIniFileName: String):boolean;
 var
@@ -163,6 +169,23 @@ begin
     f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
     try
       f.WriteString('Common','LocalDatBaseDiff',Result);
+    finally
+      f.Free;
+    end;
+  End;
+end;
+
+function iniLocalFarmacyName(AFarmacyName: string): string;
+var
+  f: TIniFile;
+begin
+  Result := GetValue('Common','FarmacyName', '');
+  if Result = '' then
+  Begin
+    Result := AFarmacyName;
+    f := TIniFile.Create(ExtractFilePath(Application.ExeName)+'ini\'+FileName);
+    try
+      f.WriteString('Common','FarmacyName',Result);
     finally
       f.Free;
     end;
