@@ -21,6 +21,7 @@ inherited InventoryForm: TInventoryForm
       inherited cxGrid: TcxGrid
         Width = 898
         Height = 557
+        ExplicitLeft = 3
         ExplicitWidth = 898
         ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -275,12 +276,14 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082', '#1082#1086#1090#1086#1088#1099#1081' '#1074#1074#1077#1083' "'#1090#1077#1082#1091#1097#1080#1081'" '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            Width = 67
+            Width = 91
           end
           object colCountUser: TcxGridDBColumn [8]
             AlternateCaption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079'.'
             DataBinding.FieldName = 'CountUser'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1083#1100#1079'. '#1082#1086#1090#1086#1088#1099#1077' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1083#1080' '#1086#1089#1090#1072#1090#1086#1082
