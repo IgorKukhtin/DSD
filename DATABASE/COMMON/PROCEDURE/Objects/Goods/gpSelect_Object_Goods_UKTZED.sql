@@ -38,7 +38,7 @@ BEGIN
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
-            , CALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
+            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
 
             , Object_GoodsGroup.Id        AS GoodsGroupId
             , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -77,6 +77,7 @@ BEGIN
              FROM Object AS Object_Goods 
 	         INNER JOIN tmpIsErased on tmpIsErased.isErased= Object_Goods.isErased
              WHERE Object_Goods.DescId = zc_Object_Goods()
+            
             ) AS Object_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -143,7 +144,6 @@ BEGIN
                                  AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
 
-
              LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
@@ -160,23 +160,6 @@ ALTER FUNCTION gpSelect_Object_Goods_UKTZED (Boolean, TVarChar) OWNER TO postgre
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  06.01.17         * add CodeUKTZED
- 15.04.15         * add GoodsPlatform
- 23.02.15         * add inShowAll 
- 24.11.14         * add GoodsGroupAnalyst
- 13.09.14                                        * add zc_ObjectLink_Goods_GoodsTag()
- 04.09.14         * add zc_ObjectLink_Goods_GoodsGroupStat()
- 13.01.14                                        * add GoodsGroupNameFull
- 14.12.13                                        * add inAccessKeyId
- 07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
- 09.11.13                                        * add tmpUserTransport
- 29.10.13                                        * add Object_InfoMoney_View
- 02.10.13                                        * add GoodsGroupId
- 29.09.13                                        * add zc_ObjectLink_Goods_Fuel
- 01.09.13                                        * add zc_ObjectLink_Goods_Business
- 12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...
- 04.07.13          * + TradeMark             
- 21.06.13          *              
- 11.06.13          *
 */
 
 -- òåñò

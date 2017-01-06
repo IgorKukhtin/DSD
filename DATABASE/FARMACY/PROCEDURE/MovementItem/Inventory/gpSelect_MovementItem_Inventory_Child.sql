@@ -13,6 +13,8 @@ RETURNS TABLE (Id Integer, ParentId Integer
              , Amount TFloat
              , Date_Insert TDateTime
              , isErased Boolean
+             , isLast Boolean
+             , Num Integer
              )
 AS
 $BODY$
@@ -48,6 +50,8 @@ BEGIN
                                 , MovementItem.Amount        AS Amount
                                 , MIDate_Insert.ValueData    AS Date_Insert
                                 , MovementItem.isErased 
+                                , CAST (ROW_NUMBER() OVER (PARTITION BY  MovementItem.ObjectId ORDER BY MovementItem.ObjectId, MovementItem.Id) AS Integer) AS Num
+                                , CAST (ROW_NUMBER() OVER (PARTITION BY  MovementItem.ParentId,MovementItem.ObjectId ORDER BY MovementItem.ParentId, MovementItem.ObjectId, MIDate_Insert.ValueData DESC) AS Integer) AS NumLast
                             FROM MovementItem
                                  LEFT JOIN MovementItemDate AS MIDate_Insert
                                                             ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -68,6 +72,8 @@ BEGIN
               , tmpMI_Child.Amount                                  AS Amount
               , tmpMI_Child.Date_Insert                             AS Date_Insert
               , COALESCE (tmpMI.isErased, FALSE)       :: Boolean   AS isErased
+              , CASE WHEN tmpMI_Child.NumLast = 1 THEN TRUE ELSE FALSE END isLast
+              , tmpMI_Child.Num
              
             FROM tmpMI
                 INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id

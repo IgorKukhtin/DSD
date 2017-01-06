@@ -83,6 +83,8 @@ type
     colCountUser: TcxGridDBColumn;
     actRefreshChild: TdsdDataSetRefresh;
     bb: TdxBarButton;
+    chNum: TcxGridDBColumn;
+    chisLast: TcxGridDBColumn;
   private
     { Private declarations }
   public
