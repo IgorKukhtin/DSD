@@ -491,6 +491,11 @@ inherited InventoryForm: TInventoryForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = chGoodsName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -631,7 +636,24 @@ inherited InventoryForm: TInventoryForm
   inherited ActionList: TActionList
     Left = 55
     Top = 303
+    object actRefreshChild: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetChild
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelect_MI_Child
+      StoredProcList = <
+        item
+          StoredProc = spSelect_MI_Child
+        end>
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1080#1103' '#1086#1089#1090#1072#1090#1082#1086#1074
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
+      TabSheet = tsMain
       StoredProcList = <
         item
           StoredProc = spGet
@@ -691,7 +713,7 @@ inherited InventoryForm: TInventoryForm
         end>
       InfoAfterExecute = #1053#1077' '#1079#1072#1073#1091#1076#1100#1090#1077' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1074' Exel'
     end
-    object actOpenInventoryPartionForm: TdsdOpenForm [12]
+    object actOpenInventoryPartionForm: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1072#1088#1090#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -720,7 +742,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
-    object actStorageChoice: TOpenChoiceForm [14]
+    object actStorageChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -747,7 +769,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actAssetChoice: TOpenChoiceForm [15]
+    object actAssetChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -774,7 +796,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actInsertUpdateMIAmount: TdsdExecStoredProc [16]
+    object actInsertUpdateMIAmount: TdsdExecStoredProc [17]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -794,7 +816,7 @@ inherited InventoryForm: TInventoryForm
         #1085#1072' '#1076#1072#1090#1091'?'
       InfoAfterExecute = '<'#1050#1086#1083'-'#1074#1086'> '#1087#1086' '#1088#1072#1089#1095#1077#1090#1085#1086#1084#1091' '#1086#1089#1090#1072#1090#1082#1091' '#1085#1072' '#1076#1072#1090#1091' '#1079#1072#1087#1086#1083#1085#1077#1085#1086' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
-    object actUnitChoice: TOpenChoiceForm [17]
+    object actUnitChoice: TOpenChoiceForm [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -821,7 +843,7 @@ inherited InventoryForm: TInventoryForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [18]
+    object actGoodsKindChoice: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1034,6 +1056,10 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1111,6 +1137,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbInventoryPartion: TdxBarButton
       Action = actOpenInventoryPartionForm
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actRefreshChild
       Category = 0
     end
   end

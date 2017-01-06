@@ -35,10 +35,11 @@ BEGIN
                  -- строчная часть мастер
                  tmpMI AS (SELECT MovementItem.Id            AS Id
                                 , MovementItem.ObjectId      AS GoodsId
+                                , MovementItem.isErased
                             FROM MovementItem
                              WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
-                              AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
+                          --    AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
                            )
          -- строчная часть чайлд
          , tmpMI_Child AS (SELECT MovementItem.Id            AS Id
@@ -53,7 +54,6 @@ BEGIN
                                                            AND MIDate_Insert.DescId = zc_MIDate_Insert()
                             WHERE MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
-                              AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE)
                            )
 
             -- Результат
@@ -67,10 +67,10 @@ BEGIN
               , Object_User.ValueData                  :: TVarChar  AS UserName
               , tmpMI_Child.Amount                                  AS Amount
               , tmpMI_Child.Date_Insert                             AS Date_Insert
-              , COALESCE (tmpMI_Child.isErased, FALSE) :: Boolean   AS isErased
+              , COALESCE (tmpMI.isErased, FALSE)       :: Boolean   AS isErased
              
-            FROM tmpMI_Child
-                LEFT JOIN tmpMI ON tmpMI.Id = tmpMI_Child.ParentId
+            FROM tmpMI
+                INNER JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_User ON Object_User.Id = tmpMI_Child.UserId
             ORDER BY GoodsName

@@ -81,6 +81,8 @@ type
     spSelect_MI_Child: TdsdStoredProc;
     dsdDBViewAddOnChild: TdsdDBViewAddOn;
     colCountUser: TcxGridDBColumn;
+    actRefreshChild: TdsdDataSetRefresh;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
