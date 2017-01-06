@@ -95,6 +95,8 @@ type
     SavePathBaDM: String;
     FileNameOptima: String;
     SavePathOptima: String;
+    LeterCount: Integer;
+    LeterInterval: Integer;  // в минутах
 
     glSubject: String;
 
@@ -307,7 +309,12 @@ begin
 end;
 
 procedure TForm1.btnOptimaAllClick(Sender: TObject);
+var AListFile: TStringList;
+  I: Integer;
+  iCount: Integer;
 begin
+ AListFile:=TStringList.Create;
+ try
   try
     qryUnit.First;
     while not qryUnit.Eof do
@@ -316,13 +323,33 @@ begin
       Application.ProcessMessages;
       btnOptimaExportClick(nil);
       Application.ProcessMessages;
-      btnOptimaSendMailClick(nil);
+      AListFile.Add(FileNameOptima);
       Application.ProcessMessages;
       qryUnit.Next;
     End;
+
+    iCount:=0;
+    for I := 0 to AListFile.Count-1 do
+    begin
+     if iCount=LeterCount then
+      begin
+        iCount:=0;
+        Sleep(LeterInterval*60000);
+      end;
+
+     FileNameOptima:=AListFile[i];
+     btnOptimaSendMailClick(nil);
+     Application.ProcessMessages;
+     Inc(iCount);
+    end;
+
+
   except ON E: Exception DO
     Add_Log(E.Message);
   end;
+ finally
+   AListFile.Free;
+ end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -355,6 +382,12 @@ Begin
 
     OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
     ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
+
+    LeterCount := ini.ReadInteger('Options','LeterCount',3);
+    ini.WriteInteger('Options','LeterCount',LeterCount);
+
+    LeterInterval := ini.ReadInteger('Options','LeterInterval',5);
+    ini.WriteInteger('Options','LeterInterval',LeterInterval);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
