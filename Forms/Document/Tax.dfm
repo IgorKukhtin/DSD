@@ -94,9 +94,9 @@ inherited TaxForm: TTaxForm
             Options.Editing = False
             Width = 58
           end
-          object colCodeUKTZED: TcxGridDBColumn [3]
+          object colGoodsCodeUKTZED: TcxGridDBColumn [3]
             Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
-            DataBinding.FieldName = 'CodeUKTZED'
+            DataBinding.FieldName = 'GoodsCodeUKTZED'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
