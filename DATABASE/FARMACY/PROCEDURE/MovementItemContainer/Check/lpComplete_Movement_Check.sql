@@ -223,7 +223,7 @@ BEGIN
 
                 -- курсор2. - остатки МИНУС сколько уже распределили для vbGoodsId
                 OPEN curRemains FOR
-                   SELECT _tmpItem_remains.ContainerId, _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0)
+                   SELECT _tmpItem_remains.ContainerId, _tmpItem_remains.GoodsId, _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0)
                    FROM _tmpItem_remains
                         LEFT JOIN (SELECT ContainerId, SUM (_tmpMIContainer_insert.Amount) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId
                                   ) AS tmp ON tmp.ContainerId = _tmpItem_remains.ContainerId
@@ -234,7 +234,7 @@ BEGIN
                 -- начало цикла по курсору2. - остатки
                 LOOP
                     -- данные по остаткам
-                    FETCH curRemains INTO vbContainerId, vbAmount_remains;
+                    FETCH curRemains INTO vbContainerId, vbGoodsId, vbAmount_remains;
                     -- если данные закончились, или все кол-во найдено тогда выход
                     IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
@@ -242,12 +242,12 @@ BEGIN
                     IF vbAmount_remains > vbAmount
                     THEN
                         -- получилось в остатках больше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
-                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate)
                            SELECT zc_Container_Count()
                                 , zc_Movement_Check()
                                 , inMovementId
                                 , vbMovementItemId
-                                , vbContainerId
+                                , vbContainerId, vbGoodsId
                                 , vbAccountId
                                 , -1 * vbAmount
                                 , vbOperDate;
@@ -255,12 +255,12 @@ BEGIN
                         vbAmount:= 0;
                     ELSE
                         -- получилось в остатках меньше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
-                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate)
                            SELECT zc_Container_Count()
                                 , zc_Movement_Check()
                                 , inMovementId
                                 , vbMovementItemId
-                                , vbContainerId
+                                , vbContainerId, vbGoodsId
                                 , vbAccountId
                                 , -1 * vbAmount_remains
                                 , vbOperDate;
@@ -276,7 +276,7 @@ BEGIN
 
     ELSE
         -- !!!Сразу!!! - Результат - проводки кол-во
-        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate)
+        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate)
            WITH tmpContainer AS (SELECT MI_Sale.MovementItemId
                                       , MI_Sale.ObjectId        AS GoodsId
                                       , MI_Sale.OperSumm        AS SaleAmount
@@ -292,17 +292,19 @@ BEGIN
                 , inMovementId
                 , tmpItem.MovementItemId
                 , tmpItem.ContainerId
+                , tmpItem.GoodsId
                 , vbAccountId
                 , -1 * Amount
                 , vbOperDate
-              FROM (SELECT ContainerId
-                         , MovementItemId
-                         , CASE WHEN SaleAmount - ContainerAmountSUM > 0 AND DOrd <> 1
-                                     THEN ContainerAmount
-                                ELSE SaleAmount - ContainerAmountSUM + ContainerAmount
+              FROM (SELECT DD.ContainerId
+                         , DD.GoodsId
+                         , DD.MovementItemId
+                         , CASE WHEN DD.SaleAmount - DD.ContainerAmountSUM > 0 AND DD.DOrd <> 1
+                                     THEN DD.ContainerAmount
+                                ELSE DD.SaleAmount - DD.ContainerAmountSUM + DD.ContainerAmount
                            END AS Amount
                     FROM (SELECT * FROM tmpContainer) AS DD
-                    WHERE SaleAmount - (ContainerAmountSUM - ContainerAmount) > 0
+                    WHERE DD.SaleAmount - (DD.ContainerAmountSUM - DD.ContainerAmount) > 0
                    ) AS tmpItem;
 
     END IF;

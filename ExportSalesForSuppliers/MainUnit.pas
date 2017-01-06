@@ -95,6 +95,8 @@ type
     SavePathBaDM: String;
     FileNameOptima: String;
     SavePathOptima: String;
+    IntervalCount: Integer;
+    IntervalMin: Integer;  // в минутах
 
     glSubject: String;
 
@@ -307,22 +309,39 @@ begin
 end;
 
 procedure TForm1.btnOptimaAllClick(Sender: TObject);
+var lCount: Integer;
 begin
   try
     qryUnit.First;
+    lCount:=0;
     while not qryUnit.Eof do
     Begin
+      // если уже IntervalCount аптек отправлено
+      if (lCount > 0) and ((lCount mod IntervalCount) = 0) then
+      begin
+        // будем ждать
+        Application.ProcessMessages;
+        Sleep(IntervalMin * 60000);
+        Application.ProcessMessages;
+      end;
+
       btnOptimaExecuteClick(nil);
       Application.ProcessMessages;
       btnOptimaExportClick(nil);
       Application.ProcessMessages;
       btnOptimaSendMailClick(nil);
       Application.ProcessMessages;
+      // будет следующий
       qryUnit.Next;
+      lCount:= lCount + 1;
+
     End;
   except ON E: Exception DO
     Add_Log(E.Message);
   end;
+
+
+
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -355,6 +374,12 @@ Begin
 
     OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
     ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
+
+    IntervalCount := ini.ReadInteger('Options','IntervalCount',15);
+    ini.WriteInteger('Options','IntervalCount',IntervalCount);
+
+    IntervalMin := ini.ReadInteger('Options','IntervalMin',60);
+    ini.WriteInteger('Options','IntervalMin',IntervalMin);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);

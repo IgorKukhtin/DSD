@@ -189,6 +189,10 @@ object Form1: TForm1
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
@@ -206,6 +210,8 @@ object Form1: TForm1
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -394,6 +400,7 @@ object Form1: TForm1
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
     Port = 5432
     Protocol = 'postgresql-9'
     Left = 120

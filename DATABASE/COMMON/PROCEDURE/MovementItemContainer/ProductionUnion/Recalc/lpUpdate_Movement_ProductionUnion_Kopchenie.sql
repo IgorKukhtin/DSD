@@ -16,6 +16,40 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
+     IF inStartDate <> inEndDate
+     THEN
+         RAISE EXCEPTION 'Ошибка. Период должен быть за 1 день. <%>  <%>', inStartDate, inEndDate;
+
+     ELSEIF DATE_TRUNC ('MONTH', inEndDate) = DATE_TRUNC ('MONTH', inEndDate + INTERVAL '1 DAY')
+     THEN
+         -- !!!Удаляем ВСЁ!!!
+         PERFORM lpSetErased_Movement (inMovementId:= tmp.MovementId
+                                     , inUserId    := inUserId)
+         FROM (WITH -- существующие "пересортицы" для isAuto = TRUE
+                    tmpMI_all AS (SELECT DISTINCT MIContainer.MovementId
+                                  FROM MovementItemContainer AS MIContainer
+                                       INNER JOIN MovementBoolean AS MovementBoolean_isAuto ON MovementBoolean_isAuto.MovementId = MIContainer.MovementId
+                                                                                           AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
+                                                                                           AND MovementBoolean_isAuto.ValueData  = TRUE
+                                  WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                    AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                                    AND MIContainer.AnalyzerId             = inUnitId
+                                    AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                                 )
+               -- результат
+               SELECT tmpMI_all.MovementId FROM tmpMI_all
+              ) AS tmp;
+
+         -- !!!Выход!!!
+         RETURN;
+     ELSE
+         -- !!!Меняем период - на 1 месяц!!!
+         inStartDate:= DATE_TRUNC ('MONTH', inEndDate);
+     END IF;
+
+
+
      -- таблица - 
      CREATE TEMP TABLE _tmpResult (MovementId Integer, MovementItemId_child Integer, MovementItemId_master Integer, ContainerId Integer, OperCount_child TFloat, OperCount_master TFloat, isDelete Boolean) ON COMMIT DROP;
 
@@ -44,7 +78,7 @@ BEGIN
                             WHERE tmpMI.OperCount_master <> 0
                             GROUP BY tmpMI.ContainerId, Container.Amount
                            )
-            , tmpMI_all AS (-- существующие "пересортицы" для isAuto = TRUE
+            , tmpMI_all AS (-- существующие "пересортицы" для isAuto = TRUE - !!!за 1 День!!!
                             SELECT MIContainer.MovementId
                                  , MIContainer.ContainerId
                                  , MIContainer.MovementItemId
@@ -54,7 +88,8 @@ BEGIN
                                  INNER JOIN MovementBoolean AS MovementBoolean_isAuto ON MovementBoolean_isAuto.MovementId = MIContainer.MovementId
                                                                                      AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                                                      AND MovementBoolean_isAuto.ValueData  = TRUE
-                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                            -- WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                            WHERE MIContainer.OperDate               = inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
                               AND MIContainer.AnalyzerId             = inUnitId
