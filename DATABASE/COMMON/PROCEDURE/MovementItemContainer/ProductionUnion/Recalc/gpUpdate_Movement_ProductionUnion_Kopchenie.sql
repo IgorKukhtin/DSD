@@ -27,9 +27,9 @@ BEGIN
 
 
     -- !!!Удалили, временно пока Пересчет Send здесь!!!
-    DROP TABLE _tmpResult ;
-    DROP TABLE _tmpItem_pr;
-    DROP TABLE _tmpItemSumm_pr;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))      THEN DROP TABLE _tmpResult; END IF;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_pr'))     THEN DROP TABLE _tmpItem_pr; END IF;
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemSumm_pr')) THEN DROP TABLE _tmpItemSumm_pr; END IF;
 
     -- Пересчет, !!!Временно здесь, потом надо будет независимо!!!
     PERFORM lpUpdate_Movement_Send_DocumentKind (inIsUpdate  := TRUE

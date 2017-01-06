@@ -66,6 +66,12 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 /*
+    IF inStartDate + (INTERVAL '3 MONTH') <= inEndDate
+    THEN
+        RAISE EXCEPTION 'Ошибка.Повторите действие после 13:00.', ;
+    END IF;
+*/
+/*
     -- !!!т.к. нельзя когда много данных в гриде!!!
     IF inStartDate + (INTERVAL '62 DAY') <= inEndDate AND inIsPartner = TRUE AND inIsGoods = TRUE
     THEN
