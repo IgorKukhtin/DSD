@@ -894,7 +894,8 @@ uses
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm: TParentForm},
   DataDialog in '..\..\Forms\Document\DataDialog.pas' {DataDialogForm: TParentForm},
   GoodsByGoodsKind_ScaleCeh in '..\..\Forms\Guides\GoodsByGoodsKind_ScaleCeh.pas' {GoodsByGoodsKind_ScaleCehForm: TParentForm},
-  Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm};
+  Report_Goods_byMovement in '..\..\Forms\Report\Report_Goods_byMovement.pas' {Report_Goods_byMovementForm: TParentForm},
+  Goods_UKTZED in '..\..\Forms\Guides\Goods_UKTZED.pas' {Goods_UKTZEDForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
