@@ -95,8 +95,8 @@ type
     SavePathBaDM: String;
     FileNameOptima: String;
     SavePathOptima: String;
-    LeterCount: Integer;
-    LeterInterval: Integer;  // в минутах
+    IntervalCount: Integer;
+    IntervalMin: Integer;  // в минутах
 
     glSubject: String;
 
@@ -309,47 +309,39 @@ begin
 end;
 
 procedure TForm1.btnOptimaAllClick(Sender: TObject);
-var AListFile: TStringList;
-  I: Integer;
-  iCount: Integer;
+var lCount: Integer;
 begin
- AListFile:=TStringList.Create;
- try
   try
     qryUnit.First;
+    lCount:=0;
     while not qryUnit.Eof do
     Begin
+      // если уже IntervalCount аптек отправлено
+      if (lCount > 0) and ((lCount mod IntervalCount) = 0) then
+      begin
+        // будем ждать
+        Application.ProcessMessages;
+        Sleep(IntervalMin * 60000);
+        Application.ProcessMessages;
+      end;
+
       btnOptimaExecuteClick(nil);
       Application.ProcessMessages;
       btnOptimaExportClick(nil);
       Application.ProcessMessages;
-      AListFile.Add(FileNameOptima);
+      btnOptimaSendMailClick(nil);
       Application.ProcessMessages;
+      // будет следующий
       qryUnit.Next;
+      lCount:= lCount + 1;
+
     End;
-
-    iCount:=0;
-    for I := 0 to AListFile.Count-1 do
-    begin
-     if iCount=LeterCount then
-      begin
-        iCount:=0;
-        Sleep(LeterInterval*60000);
-      end;
-
-     FileNameOptima:=AListFile[i];
-     btnOptimaSendMailClick(nil);
-     Application.ProcessMessages;
-     Inc(iCount);
-    end;
-
-
   except ON E: Exception DO
     Add_Log(E.Message);
   end;
- finally
-   AListFile.Free;
- end;
+
+
+
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -383,11 +375,11 @@ Begin
     OptimaID.Value := ini.ReadInteger('Options','Optima_ID',59611);
     ini.WriteInteger('Options','Optima_ID',OptimaID.Value);
 
-    LeterCount := ini.ReadInteger('Options','LeterCount',3);
-    ini.WriteInteger('Options','LeterCount',LeterCount);
+    IntervalCount := ini.ReadInteger('Options','IntervalCount',15);
+    ini.WriteInteger('Options','IntervalCount',IntervalCount);
 
-    LeterInterval := ini.ReadInteger('Options','LeterInterval',5);
-    ini.WriteInteger('Options','LeterInterval',LeterInterval);
+    IntervalMin := ini.ReadInteger('Options','IntervalMin',60);
+    ini.WriteInteger('Options','IntervalMin',IntervalMin);
 
     ZConnection1.Database := ini.ReadString('Connect','DataBase','farmacy');
     ini.WriteString('Connect','DataBase',ZConnection1.Database);
