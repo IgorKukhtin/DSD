@@ -48,6 +48,7 @@ BEGIN
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , COALESCE (MIFloat_Price.ValueData        , 0) AS Price
                           , CASE WHEN MIBoolean_isAuto.ValueData = FALSE THEN COALESCE (MIFloat_NPP.ValueData, 0) ELSE 0 END AS LineNumTax
+                          , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto
                      FROM MovementItem
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -65,7 +66,7 @@ BEGIN
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
                     )
-         -- Строчная часть корерктировки
+         -- Строчная часть коррерктировки
        , tmpResult AS
                     (SELECT tmpMICorrective.GoodsId
                           , tmpMICorrective.GoodsKindId
@@ -79,7 +80,12 @@ BEGIN
 
                                  WHEN COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0)) <> 0
                                   AND tmpMICorrective.LineNumTax <> 0
+                                  AND isAuto = TRUE AND tmpMICorrective.LineNumTax = COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))
                                       THEN tmpMICorrective.LineNumTax
+
+                                 -- т.е. будет ОШИБКА
+                                 WHEN isAuto = TRUE
+                                      THEN 0
 
                                  ELSE COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))
 
