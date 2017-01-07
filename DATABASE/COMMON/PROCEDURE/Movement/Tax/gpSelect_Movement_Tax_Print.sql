@@ -523,6 +523,7 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
+           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                         THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ'
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
@@ -613,6 +614,10 @@ BEGIN
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -739,6 +744,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.01.17         * GoodsCodeUKTZED
  29.01.16         *
  21.04.15                        * add MovementDate_COMDOC
  14.01.15                                                       *
