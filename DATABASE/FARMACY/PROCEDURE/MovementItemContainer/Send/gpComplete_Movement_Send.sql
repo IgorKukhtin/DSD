@@ -10,13 +10,14 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId    Integer;
-  DECLARE vbGoodsName TVarChar;
-  DECLARE vbAmount    TFloat;
-  DECLARE vbSaldo     TFloat;
-  DECLARE vbUnit_From Integer;
-  DECLARE vbUnit_To   Integer;
-  DECLARE vbOperDate  TDateTime;
+  DECLARE vbUserId        Integer;
+  DECLARE vbGoodsName     TVarChar;
+  DECLARE vbAmount        TFloat;
+  DECLARE vbAmountManual  TFloat;
+  DECLARE vbSaldo         TFloat;
+  DECLARE vbUnit_From     Integer;
+  DECLARE vbUnit_To       Integer;
+  DECLARE vbOperDate      TDateTime;
 
   DECLARE vbTotalSummMVAT TFloat;
   DECLARE vbTotalSummPVAT TFloat;
@@ -55,7 +56,7 @@ BEGIN
 
     -- Проверка на то что бы не списали больше чем есть на остатке
     SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountRemains
-           INTO vbGoodsName, vbAmount, vbSaldo 
+           INTO vbGoodsName, vbAmount, vbSaldo
     FROM (WITH tmpMI AS (SELECT MovementItem.ObjectId     AS GoodsId
                               , SUM (MovementItem.Amount) AS Amount
                          FROM MovementItem
@@ -76,7 +77,8 @@ BEGIN
                                                             AND CLO_From.DescId      = zc_ContainerLinkObject_Unit()
                          GROUP BY Container.ObjectId
                         )
-          SELECT tmpMI.GoodsId, tmpMI.Amount, COALESCE (tmpContainer.Amount, 0) AS AmountRemains
+          SELECT tmpMI.GoodsId, tmpMI.Amount
+               , COALESCE (tmpContainer.Amount, 0) AS AmountRemains
           FROM tmpMI
                LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
           WHERE tmpMI.Amount > COALESCE (tmpContainer.Amount, 0)
@@ -88,6 +90,33 @@ BEGIN
     IF (COALESCE(vbGoodsName,'') <> '') 
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во перемещения <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+    END IF;
+
+
+    -- Проверка: Не проводить накладные перемещения - у которых колонка - "Кол-во получателя" отличается от кол-ки "Факт кол-во". 
+    vbGoodsName := '';
+    SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountManual
+           INTO vbGoodsName, vbAmount, vbAmountManual
+    FROM (SELECT MovementItem.ObjectId     AS GoodsId
+               , SUM (MovementItem.Amount) AS Amount
+               , SUM (COALESCE(MIFloat_AmountManual.ValueData,0)) AS AmountManual
+          FROM MovementItem
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                           ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+          WHERE MovementItem.MovementId = inMovementId
+            AND MovementItem.DescId = zc_MI_Master()
+            AND MovementItem.isErased = FALSE
+          GROUP BY MovementItem.ObjectId
+         ) AS tmp
+         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+    WHERE tmp.Amount <> tmp.AmountManual
+    LIMIT 1
+   ;
+
+    IF (COALESCE(vbGoodsName,'') <> '') 
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва <%>.', vbGoodsName, vbAmount, vbAmountManual;
     END IF;
 
     -- Проверить, что бы не было переучета позже даты документа

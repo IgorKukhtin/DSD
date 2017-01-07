@@ -34,6 +34,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,InvNumberBranch TVarChar--№ накладной в аптеке
               ,BranchDate TDateTime    --Дата накладной в аптеке
               ,InsertDate TDateTime    --Дата (созд.)
+              ,InsertName TVarChar     --Пользователь(созд.)
               )
 
 
@@ -100,7 +101,7 @@ BEGIN
             ,MovementDate_Branch.ValueData            AS BranchDate
 
             ,MovementDate_Insert.ValueData        AS InsertDate
-            
+            ,Object_Insert.ValueData              AS InsertName
       FROM Movement 
         JOIN Object AS Status 
                     ON Status.Id = Movement.StatusId 
@@ -108,6 +109,10 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementLinkObject AS MLO_Insert
+                                     ON MLO_Insert.MovementId = Movement.Id
+                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId 
 
         JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                          AND MovementItem.isErased = FALSE
@@ -200,6 +205,7 @@ ALTER FUNCTION gpReport_OrderGoodsSearch (Integer, TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.17         *
  05.09.16         *
  18.07.16         * add zc_Movement_Check
  06.10.15                                                                      *MIFloat_AmountManual

@@ -2,7 +2,6 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
   Caption = #1055#1086#1080#1089#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1079#1072#1082#1072#1079#1072' '#1076#1086' '#1087#1088#1086#1076#1072#1078#1080
   ClientWidth = 806
   ExplicitWidth = 822
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -281,6 +280,14 @@ inherited ReportOrderGoodsForm: TReportOrderGoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 78
+          end
+          object colInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
         end
       end
