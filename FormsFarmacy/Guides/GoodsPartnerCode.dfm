@@ -1,28 +1,26 @@
 ﻿inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
   ClientHeight = 558
-  ClientWidth = 1069
+  ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1085
+  ExplicitWidth = 1016
   ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1069
+    Width = 1000
     Height = 532
-    ExplicitWidth = 1063
-    ExplicitHeight = 406
+    ExplicitWidth = 1000
+    ExplicitHeight = 532
     ClientRectBottom = 532
-    ClientRectRight = 1069
+    ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1063
-      ExplicitHeight = 406
+      ExplicitWidth = 1000
+      ExplicitHeight = 532
       inherited cxGrid: TcxGrid
-        Width = 1069
+        Width = 1000
         Height = 532
-        ExplicitLeft = -56
-        ExplicitTop = 63
-        ExplicitWidth = 1069
+        ExplicitWidth = 1000
         ExplicitHeight = 532
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -91,6 +89,20 @@
             DataBinding.FieldName = 'MakerName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 110
+          end
+          object clConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ConditionsKeepChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
             Width = 110
           end
           object clMinimumLot: TcxGridDBColumn
@@ -166,10 +178,83 @@
         Top = 40
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082':'
       end
+      object cbUpdate: TcxCheckBox
+        Left = 273
+        Top = 40
+        Caption = #1044#1072'/'#1053#1077#1090
+        Properties.ReadOnly = False
+        TabOrder = 3
+        Width = 64
+      end
     end
   end
   inherited ActionList: TActionList
-    object actStartLoadIsSpecCondition: TMultiAction [0]
+    object actStartLoadConditionsKeep: TMultiAction [0]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' ConditionsKeep'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_Goods_ConditionsKeep
+        end
+        item
+          Action = actDoLoadConditionsKeep
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+      ImageIndex = 74
+    end
+    object actGetImportSetting_Goods_ConditionsKeep: TdsdExecStoredProc [1]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' ConditionsKeep'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_ConditionsKeep
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_ConditionsKeep
+        end>
+      Caption = 'actGetImportSetting_Goods_ConditionsKeep'
+    end
+    object actDoLoadConditionsKeep: TExecuteImportSettingsAction [3]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' ConditionsKeep'
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingConditionsKeepId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inObjectId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisUpdate'
+          Value = Null
+          Component = cbUpdate
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting_Goods_IsSpecCondition: TdsdExecStoredProc [4]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting_Goods_IsSpecCondition
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting_Goods_IsSpecCondition
+        end>
+      Caption = 'actGetImportSetting_Goods_SpecCondition'
+    end
+    object actStartLoadIsSpecCondition: TMultiAction [5]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
       MoveParams = <>
       ActionList = <
@@ -190,18 +275,7 @@
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1058#1086#1074#1072#1088' '#1087#1086#1076' '#1089#1087#1077#1094'.'#1091#1089#1083#1086#1074#1080#1103'>'
       ImageIndex = 74
     end
-    object actGetImportSetting_Goods_IsSpecCondition: TdsdExecStoredProc [2]
-      Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSetting_Goods_IsSpecCondition
-      StoredProcList = <
-        item
-          StoredProc = spGetImportSetting_Goods_IsSpecCondition
-        end>
-      Caption = 'actGetImportSetting_Goods_SpecCondition'
-    end
-    object actDelete_ObjectFloat_Goods_IsSpecCondition: TdsdExecStoredProc [4]
+    object actDelete_ObjectFloat_Goods_IsSpecCondition: TdsdExecStoredProc [7]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -218,7 +292,7 @@
       FormNameParam.Value = 'TGoodsMainEditForm'
       DataSource = nil
     end
-    object actDoLoadIsSpecCondition: TExecuteImportSettingsAction [6]
+    object actDoLoadIsSpecCondition: TExecuteImportSettingsAction [9]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072' isSpecCondition'
       MoveParams = <>
       ImportSettingsId.Value = Null
@@ -235,7 +309,7 @@
           MultiSelectSeparator = ','
         end>
     end
-    object actShowErased: TBooleanStoredProcAction [7]
+    object actShowErased: TBooleanStoredProcAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -368,6 +442,33 @@
       Caption = '&Edit'
       Hint = 'Edit'
       ImageIndex = 74
+    end
+    object ConditionsKeepChoiceForm: TOpenChoiceForm
+      Category = 'Insert'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ConditionsKeepChoiceForm'
+      FormName = 'TConditionsKeepForm'
+      FormNameParam.Value = 'TConditionsKeepForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ConditionsKeepId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ConditionsKeepName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object OpenChoiceForm: TOpenChoiceForm
       Category = 'Insert'
@@ -690,6 +791,18 @@
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbisUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadConditionsKeep'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           UserDefine = [udPaintStyle]
           UserPaintStyle = psCaptionGlyph
           Visible = True
@@ -714,7 +827,15 @@
           UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'bbSpecCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = '    '
+      Hint = '    '
     end
     inherited bbInsert: TdxBarButton
       Visible = ivNever
@@ -743,14 +864,26 @@
       Visible = ivAlways
       Control = edPartnerCode
     end
+    object bbisUpdate: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbUpdate
+    end
     object dxBarButton1: TdxBarButton
       Action = actStartLoad
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085'-'#1086#1077' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1077
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1084#1080#1085'-'#1086#1077' '#1086#1082#1088#1091#1075#1083'.'
       Category = 0
     end
     object dxBarButton2: TdxBarButton
       Action = actStartLoadIsUpload
       Category = 0
+    end
+    object bbStartLoadConditionsKeep: TdxBarButton
+      Action = actStartLoadConditionsKeep
+      Category = 0
+      ImageIndex = 60
     end
     object bbSpecCondition: TdxBarButton
       Action = actStartLoadIsSpecCondition
@@ -1021,6 +1154,18 @@
         Name = 'ImportSettingIsSpecConditionId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingConditionsKeepId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUpdate'
+        Value = Null
+        Component = cbUpdate
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 472
     Top = 104
@@ -1235,5 +1380,83 @@
     PackSize = 1
     Left = 40
     Top = 136
+  end
+  object spUpdate_Goods_ConditionsKeep: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_ConditionsKeep'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUpdate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isUpdate'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inConditionsKeepName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ConditionsKeepName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 496
+    Top = 432
+  end
+  object spGetImportSetting_Goods_ConditionsKeep: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TGoodsPartnerCodeForm;zc_Object_ImportSetting_Goods_ConditionsKe' +
+          'ep'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingConditionsKeepId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 400
   end
 end

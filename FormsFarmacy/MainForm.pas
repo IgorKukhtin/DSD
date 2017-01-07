@@ -316,6 +316,8 @@ type
     N119: TMenuItem;
     actPartnerMedical: TdsdOpenForm;
     N120: TMenuItem;
+    actConditionsKeep: TdsdOpenForm;
+    N121: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

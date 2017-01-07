@@ -79,6 +79,15 @@ type
     bbShowErased: TdxBarButton;
     colisErased: TcxGridDBColumn;
     colCommonCode: TcxGridDBColumn;
+    ConditionsKeepChoiceForm: TOpenChoiceForm;
+    actDoLoadConditionsKeep: TExecuteImportSettingsAction;
+    actGetImportSetting_Goods_ConditionsKeep: TdsdExecStoredProc;
+    actStartLoadConditionsKeep: TMultiAction;
+    spUpdate_Goods_ConditionsKeep: TdsdStoredProc;
+    spGetImportSetting_Goods_ConditionsKeep: TdsdStoredProc;
+    bbStartLoadConditionsKeep: TdxBarButton;
+    bbisUpdate: TdxBarControlContainerItem;
+    cbUpdate: TcxCheckBox;
   private
     { Private declarations }
   public

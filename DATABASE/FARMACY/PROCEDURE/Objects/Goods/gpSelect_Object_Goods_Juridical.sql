@@ -11,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Juridical(
 RETURNS TABLE (Id Integer, CommonCode Integer
              , GoodsMainId Integer, GoodsMainCode Integer, GoodsMainName TVarChar
              , GoodsId Integer, GoodsCodeInt Integer, GoodsCode TVarChar, GoodsName TVarChar
-             , MakerName TVarChar, MinimumLot TFloat
+             , MakerName TVarChar
+             , ConditionsKeepId Integer, ConditionsKeepName TVarChar
+             , MinimumLot TFloat
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
@@ -36,6 +38,10 @@ BEGIN
          , ObjectString.ValueData                  AS GoodsCode
          , Object_Goods.ValueData                  AS GoodsName
          , ObjectString_Goods_Maker.ValueData      AS MakerName
+
+         , Object_ConditionsKeep.Id                AS ConditionsKeepId
+         , Object_ConditionsKeep.ValueData         AS ConditionsKeepName
+
          , ObjectFloat_Goods_MinimumLot.ValueData  AS MinimumLot
          , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload
          , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)  AS IsPromo
@@ -71,6 +77,11 @@ BEGIN
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
                                  AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                               ON ObjectLink_Goods_ConditionsKeep.ObjectId = ObjectLink_Goods_Object.ObjectId
+                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
                               AND ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
@@ -79,7 +90,7 @@ BEGIN
                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
                               AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
      
-          LEFT JOIN OBJECT AS MainGoods ON MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+          LEFT JOIN Object AS MainGoods ON MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
 
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
                                ON ObjectDate_Protocol_Update.ObjectId = Object_Goods.Id
@@ -106,6 +117,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.01.17         * add ConditionsKeep
  15.09.16         * 
  10.02.16         * Û¯ÎË ÓÚ ‚¸˛ıË
                     + ¿ÍˆËˇ

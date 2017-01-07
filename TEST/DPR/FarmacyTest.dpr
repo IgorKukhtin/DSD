@@ -473,7 +473,9 @@ uses
   Report_CheckSP in '..\..\FormsFarmacy\Report\Report_CheckSP.pas' {Report_CheckSPForm: TParentForm},
   Report_CheckSPDialog in '..\..\FormsFarmacy\Report\Report_CheckSPDialog.pas' {Report_CheckSPDialogForm: TParentForm},
   PartnerMedical in '..\..\FormsFarmacy\Guides\PartnerMedical.pas' {PartnerMedicalForm: TParentForm},
-  PartnerMedicalEdit in '..\..\FormsFarmacy\Guides\PartnerMedicalEdit.pas' {PartnerMedicalEditForm: TParentForm};
+  PartnerMedicalEdit in '..\..\FormsFarmacy\Guides\PartnerMedicalEdit.pas' {PartnerMedicalEditForm: TParentForm},
+  ConditionsKeepEdit in '..\..\FormsFarmacy\Guides\ConditionsKeepEdit.pas' {ConditionsKeepEditForm: TParentForm},
+  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

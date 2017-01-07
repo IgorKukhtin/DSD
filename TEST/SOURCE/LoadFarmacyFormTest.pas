@@ -32,6 +32,7 @@ type
     procedure LoadCheckFormTest;
     procedure LoadCheckDeferredFormTest;
     procedure LoadCheckVIPFormTest;
+    procedure LoadConditionsKeepFormTest;
     procedure LoadContactPersonFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
@@ -252,6 +253,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
+end;
+
+procedure TLoadFormTest.LoadConditionsKeepFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConditionsKeepForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConditionsKeepForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConditionsKeepEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConditionsKeepEditForm');
 end;
 
 procedure TLoadFormTest.LoadContactPersonFormTest;
