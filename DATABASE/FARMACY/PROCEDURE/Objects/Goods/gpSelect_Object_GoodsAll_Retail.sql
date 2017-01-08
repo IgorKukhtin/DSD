@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescId Integer, ObjectDescName TVarChar, ObjectName TVarChar,
-               MakerName TVarChar, MakerLinkName TVarChar
+               MakerName TVarChar, MakerLinkName TVarChar,
+               ConditionsKeepName TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -69,6 +70,7 @@ BEGIN
 
            , ObjectString_Goods_Maker.ValueData AS MakerName
            , Object_Maker.ValueData             AS MakerLinkName
+           , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
 
     FROM Object AS Object_Goods
 
@@ -168,6 +170,11 @@ BEGIN
                                  AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
                                  AND ObjectBoolean_Goods_isMain.ValueData = TRUE
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                               ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
     WHERE Object_Goods.DescId = zc_Object_Goods()
       AND ObjectBoolean_Goods_isMain.ObjectId IS NULL
       -- AND COALESCE (Object_GoodsObject.DescId, 0) NOT IN (zc_Object_Juridical(), zc_Object_GlobalConst(), zc_object_User(), zc_Object_Contract())
@@ -182,6 +189,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.01.17         *
  25.03.16                                        *
  25.02.16         *
 */

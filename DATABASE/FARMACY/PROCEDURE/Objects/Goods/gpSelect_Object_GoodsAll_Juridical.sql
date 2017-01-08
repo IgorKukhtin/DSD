@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, CodeStr TVarChar, Name TVarChar, isEras
                PercentMarkup TFloat, Price TFloat,
                ReferCode TFloat, ReferPrice TFloat,
                ObjectDescName TVarChar, ObjectName TVarChar,
-               MakerName TVarChar, MakerLinkName TVarChar
+               MakerName TVarChar, MakerLinkName TVarChar,
+               ConditionsKeepName TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -67,6 +68,7 @@ BEGIN
 
            , ObjectString_Goods_Maker.ValueData AS MakerName
            , Object_Maker.ValueData             AS MakerLinkName
+           , Object_ConditionsKeep.ValueData    AS ConditionsKeepName
 
     FROM Object AS Object_Goods
 
@@ -166,6 +168,10 @@ BEGIN
                                   ON ObjectBoolean_Goods_isMain.ObjectId = Object_Goods.Id
                                  AND ObjectBoolean_Goods_isMain.DescId = zc_ObjectBoolean_Goods_isMain()
                                  AND ObjectBoolean_Goods_isMain.ValueData = TRUE
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                               ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
     WHERE Object_Goods.DescId = zc_Object_Goods()
       AND ObjectBoolean_Goods_isMain.ObjectId IS NULL

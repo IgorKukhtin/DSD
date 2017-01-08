@@ -5,7 +5,7 @@ inherited GoodsAllForm: TGoodsAllForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1095
-  ExplicitHeight = 527
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -412,6 +412,15 @@ inherited GoodsAllForm: TGoodsAllForm
             Options.Editing = False
             Width = 80
           end
+          object ConditionsKeepName_2: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
           object GoodsGroupName_2: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -687,6 +696,15 @@ inherited GoodsAllForm: TGoodsAllForm
             Options.Editing = False
             Width = 80
           end
+          object ConditionsKeepName_3: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
           object GoodsGroupName_3: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -920,6 +938,7 @@ inherited GoodsAllForm: TGoodsAllForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsMainId'
           ParamType = ptInput
@@ -927,6 +946,7 @@ inherited GoodsAllForm: TGoodsAllForm
         end
         item
           Name = 'TextValue'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString

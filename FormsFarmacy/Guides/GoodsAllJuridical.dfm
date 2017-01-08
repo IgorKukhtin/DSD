@@ -5,7 +5,7 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1095
-  ExplicitHeight = 527
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -148,6 +148,15 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object GoodsGroupName_1: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -672,6 +681,15 @@ inherited GoodsAllJuridicalForm: TGoodsAllJuridicalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object ConditionsKeepName_3: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
           end
           object GoodsGroupName_3: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
