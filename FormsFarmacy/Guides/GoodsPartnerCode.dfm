@@ -796,6 +796,8 @@
           ItemName = 'bbisUpdate'
         end
         item
+          UserDefine = [udPaintStyle]
+          UserPaintStyle = psCaptionGlyph
           Visible = True
           ItemName = 'bbStartLoadConditionsKeep'
         end

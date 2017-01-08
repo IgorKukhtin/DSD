@@ -88,8 +88,6 @@ type
     bbStartLoadConditionsKeep: TdxBarButton;
     bbisUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
-    cxStyleRepository1: TcxStyleRepository;
-    cxStyle1: TcxStyle;
   private
     { Private declarations }
   public
