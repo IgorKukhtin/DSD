@@ -318,6 +318,8 @@ type
     N120: TMenuItem;
     actConditionsKeep: TdsdOpenForm;
     N121: TMenuItem;
+    actReportPromoParams: TdsdOpenForm;
+    N122: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

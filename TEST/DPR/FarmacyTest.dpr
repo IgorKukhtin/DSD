@@ -475,7 +475,8 @@ uses
   PartnerMedical in '..\..\FormsFarmacy\Guides\PartnerMedical.pas' {PartnerMedicalForm: TParentForm},
   PartnerMedicalEdit in '..\..\FormsFarmacy\Guides\PartnerMedicalEdit.pas' {PartnerMedicalEditForm: TParentForm},
   ConditionsKeepEdit in '..\..\FormsFarmacy\Guides\ConditionsKeepEdit.pas' {ConditionsKeepEditForm: TParentForm},
-  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm};
+  ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm},
+  ReportPromoParams in '..\..\FormsFarmacy\Object\ReportPromoParams.pas' {ReportPromoParamsForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

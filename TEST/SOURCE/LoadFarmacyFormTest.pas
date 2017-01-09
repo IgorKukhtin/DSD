@@ -81,6 +81,7 @@ type
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPromoFormTest;
     procedure LoadReasonDifferencesFormTest;
+    procedure LoadReportPromoParamsFormTest;
     procedure LoadReportSoldParamsFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportForSiteTest;
@@ -603,6 +604,12 @@ procedure TLoadFormTest.LoadReportSoldParamsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportSoldParamsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReportSoldParamsForm');
+end;
+
+procedure TLoadFormTest.LoadReportPromoParamsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReportPromoParamsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReportPromoParamsForm');
 end;
 
 procedure TLoadFormTest.LoadReportUploadFormTest;
