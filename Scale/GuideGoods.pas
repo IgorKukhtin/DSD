@@ -795,7 +795,8 @@ begin
            if   (ParamsMovement.ParamByName('OrderExternalId').AsInteger = 0)
             //and (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
             and (CDS.FieldByName('GoodsKindCode_max').AsInteger <> 0)
-            and fStartWrite = false
+            and (fStartWrite = false)
+            and (rgGoodsKind.ItemIndex = -1)
            then begin
                      EditGoodsKindCode.Text:=CDS.FieldByName('GoodsKindCode_max').AsString;
                      TEdit(Sender).SelectAll;
