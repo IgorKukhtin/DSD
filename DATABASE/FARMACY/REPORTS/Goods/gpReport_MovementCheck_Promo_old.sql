@@ -39,50 +39,136 @@ BEGIN
  
     RETURN QUERY
       WITH
-          -- Id строк Маркетинговых контрактов inMakerId
-          tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id AS MI_Id
+        -- все документы Промо и товары , нач./ конечн. даты действия 
+          -- Товары из Маркетинговых контрактов
+          tmpGoodsPromo AS (SELECT DISTINCT
+                                   MI_Goods.ObjectId  AS GoodsId        -- здесь товар
+                                 , MovementDate_StartPromo.ValueData  AS StartDate_Promo
+                                 , MovementDate_EndPromo.ValueData    AS EndDate_Promo 
                             FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
                                                            AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId 
+                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId
+                              INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                              INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
                               INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
                                                                  AND MI_Goods.DescId = zc_MI_Master()
                                                                  AND MI_Goods.isErased = FALSE
                             WHERE Movement.StatusId = zc_Enum_Status_Complete()
                               AND Movement.DescId = zc_Movement_Promo()
-                             )
+                       )
+        -- товары промо
+   ,  tmpGoods_All AS (SELECT ObjectLink_Child_R.ChildObjectId  AS GoodsId        -- здесь товар
+                            , tmpGoodsPromo.StartDate_Promo
+                            , tmpGoodsPromo.EndDate_Promo 
+                       FROM tmpGoodsPromo
+                               -- !!!
+                              INNER JOIN ObjectLink AS ObjectLink_Child
+                                                    ON ObjectLink_Child.ChildObjectId = tmpGoodsPromo.GoodsId 
+                                                   AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                              INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                        AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
+                                                                         AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                        WHERE  ObjectLink_Child_R.ChildObjectId<>0
+                      ) 
+    ,   tmpGoods AS (SELECT DISTINCT tmpGoods_All.GoodsId FROM tmpGoods_All)
 
-     -- выбираем все чеки с товарами маркетингового контракта
-   ,   tmpMIContainer AS (SELECT MIContainer.MovementId  AS MovementId_Check
-                              , COALESCE (MIContainer.AnalyzerId,0)  AS MovementItemId_Income
-                              , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
-                              , MIContainer.ObjectId_analyzer AS GoodsId
+            -- выбираем все чеки с товарами маркетингового контракта
+         ,   tmpMI_1 AS (SELECT MIContainer.ContainerId
+                              , MIContainer.MovementItemId
+                              , Movement_Check.Id                   AS MovementId_Check
+                              , MovementLinkObject_Unit.ObjectId    AS UnitId
+                              , MIContainer.ObjectId_Analyzer   AS GoodsId
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0)) AS Amount
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
-                         FROM MovementItemContainer AS MIContainer
-                            INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
-                            /*  INNER JOIN MovementItem AS MI_Promo ON MI_Promo.Id = MIContainer.ObjectIntId_analyzer
-                                                                 AND MI_Promo.DescId = zc_MI_Master()
-                                                                 AND MI_Promo.isErased = FALSE
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
-                                                            ON MovementLinkObject_Maker.MovementId = MI_Promo.MovementId
-                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId*/
-                         WHERE MIContainer.DescId = zc_MIContainer_Count()
-                           AND MIContainer.MovementDescId = zc_Movement_Check()
-                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-                          -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
-                           AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 
+                             -- , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                         FROM Movement AS Movement_Check
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement_Check.Id
+                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                              INNER JOIN MovementItemContainer AS MIContainer
+                                                               ON MIContainer.MovementId = Movement_Check.Id
+                                                              AND MIContainer.DescId = zc_MIContainer_Count()                                                            
+                              -- только товары марк.контр.
+                              INNER JOIN tmpGoods ON tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
+
+                         WHERE Movement_Check.DescId = zc_Movement_Check()
+                           AND Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY'
+                         --  AND Movement_Check.OperDate >= '01.10.2016' AND Movement_Check.OperDate < '01.11.2016'
+                           AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                            AND COALESCE (inMakerId, 0) <> 0
-                         GROUP BY MIContainer.MovementId
-                                , COALESCE (MIContainer.WhereObjectId_analyzer,0)
-                                , COALESCE (MIContainer.AnalyzerId,0)
-                                , MIContainer.ObjectId_analyzer 
+                         GROUP BY MIContainer.ObjectId_Analyzer
+                                , Movement_Check.Id
+                                , MovementLinkObject_Unit.ObjectId
+                                , MIContainer.ContainerId, MIContainer.MovementItemId
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                          )
+
+           ,   tmpMI AS (SELECT tmpMI_1.ContainerId
+                              , tmpMI_1.MovementId_Check
+                              , tmpMI_1.UnitId
+                              , tmpMI_1.GoodsId
+                              , SUM (COALESCE (tmpMI_1.Amount, 0)) AS Amount
+                              , SUM (COALESCE (tmpMI_1.Amount, 0) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
+                         FROM tmpMI_1
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                          ON MIFloat_Price.MovementItemId = tmpMI_1.MovementItemId
+                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                         GROUP BY tmpMI_1.ContainerId
+                                , tmpMI_1.MovementId_Check
+                                , tmpMI_1.UnitId
+                                , tmpMI_1.GoodsId
+                         )
+
+         -- tmpData_01/tmpData_02/tmpData_03  получаем связь с партиями
+        , tmpData_01 AS (SELECT tmpMI.MovementId_Check
+                              , tmpMI.UnitId
+                              , CLO.ObjectId AS CLO_MI_ObjectId
+                              , tmpMI.GoodsId
+                              , (tmpMI.Amount)    AS Amount
+                              , (tmpMI.SummaSale) AS SummaSale
+                         FROM ContainerlinkObject AS CLO
+                            INNER JOIN tmpMI ON CLO.Containerid = tmpMI.ContainerId
+                        WHERE CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                 )
   
-       -- находим поставщика
+         , tmpData_02 AS (SELECT tmpMI.MovementId_Check
+                              , tmpMI.UnitId
+                              , Object_PartionMovementItem.ObjectCode :: Integer  AS OPMI_ObjectCode
+                              , tmpMI.GoodsId
+                              , (tmpMI.Amount)    AS Amount
+                              , (tmpMI.SummaSale) AS SummaSale
+                         FROM tmpData_01 AS tmpMI
+                              LEFT JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = tmpMI.CLO_MI_ObjectId
+                         )
+
+         , tmpData_03 AS (SELECT tmpMI.MovementId_Check
+                              , tmpMI.UnitId
+                              , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+                              , COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId_Income
+                              , tmpMI.GoodsId
+                              , (tmpMI.Amount)    AS Amount
+                              , (tmpMI.SummaSale) AS SummaSale
+                         FROM tmpData_02 AS tmpMI
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpMI.OPMI_ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                  )
+   
+       -- здесь ограничиваем товарами маркетингового контракта
        , tmpData_all AS (SELECT tmp.MovementId_Check
                               , tmp.UnitId 
                               , tmp.MovementItemId_Income
@@ -90,14 +176,17 @@ BEGIN
                               , tmp.Amount
                               , tmp.SummaSale
                               , MovementLinkObject_From_Income.ObjectId AS JuridicalId_Income
-                         FROM tmpMIContainer AS tmp
-                              INNER JOIN MovementItem AS MI_Income ON MI_Income.Id = tmp.MovementItemId_Income
-                              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = MI_Income.MovementId
+                         FROM tmpData_03 AS tmp
+                              INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = tmp.MovementId
                               -- Поставшик, для элемента прихода от поставщика (или NULL)
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From_Income
-                                                            ON MovementLinkObject_From_Income.MovementId = Movement_Income.Id 
+                                                            ON MovementLinkObject_From_Income.MovementId = tmp.MovementId
                                                            AND MovementLinkObject_From_Income.DescId     = zc_MovementLinkObject_From()
-                         ) 
+                                                    
+                              INNER JOIN tmpGoods_All ON tmpGoods_All.GoodsId = tmp.GoodsId
+                                                     AND tmpGoods_All.StartDate_Promo <= Movement_Income.OperDate
+                                                     AND tmpGoods_All.EndDate_Promo   >= Movement_Income.OperDate
+                            ) 
            -- 
            , tmpData AS (SELECT tmpData_all.MovementId_Check
                               , tmpData_all.UnitId
@@ -201,7 +290,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
- 09.01.17         * на проводках
  23.11.16         *
  08.11.16         *
 */
