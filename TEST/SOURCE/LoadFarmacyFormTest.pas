@@ -463,10 +463,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckPromoForm');
-
+    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PeriodDialogForm');
 

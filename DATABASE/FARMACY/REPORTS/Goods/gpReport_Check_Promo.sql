@@ -16,11 +16,14 @@ RETURNS TABLE (
     SummaPromo        TFloat,     --продажа Промо грн
     Amount            TFloat,     --продажа Промо шт
     Summa             TFloat,     --продажа Промо грн
-    PercentPromo      TFloat     --% ПРомо от всех продаж
+    PercentPromo      TFloat,     --% ПРомо от всех продаж
+    PlanAmount        TFloat,     --план по маркетингу грн
+    DiffAmount        TFloat      --Разница (Факт промо - План) 
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbTmpDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
@@ -28,6 +31,17 @@ BEGIN
     --inStartDate := date_trunc('month', inStartDate);
     --inEndDate := date_trunc('month', inEndDate) + Interval '1 MONTH';
     inEndDate := inEndDate + interval '1  day';
+        
+    CREATE TEMP TABLE _tmpDate(PlanDate TDateTime) ON COMMIT DROP;
+    --Заполняем днями пусографку
+    vbTmpDate := inStartDate;
+    WHILE vbTmpDate < inEndDate
+    LOOP
+        INSERT INTO _tmpDate(PlanDate)
+        VALUES(Date_trunc('month', vbTmpDate)::TDateTime);
+        vbTmpDate := vbTmpDate + INTERVAL '1 DAY';
+    END LOOP;
+
         
     RETURN QUERY
       WITH
@@ -48,6 +62,14 @@ BEGIN
                                 , COALESCE (MIContainer.WhereObjectId_analyzer,0)
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                         )
+   -- выбираем планы по маркетингу
+   , tmpPlanPromo AS (SELECT Object_ReportPromoParams.UnitId     AS UnitId
+                           , Object_ReportPromoParams.PlanDate   AS PlanDate
+                           , Object_ReportPromoParams.PlanAmount AS PlanAmount
+                      FROM (SELECT DISTINCT _tmpDate.PlanDate FROM _tmpDate) AS _tmpDate
+                           INNER JOIN Object_ReportPromoParams_View AS Object_ReportPromoParams
+                                                                    ON Object_ReportPromoParams.PlanDate = _tmpDate.PlanDate
+                      )
 
          -- результат
          SELECT tmpData.OperDate           AS PlanDate      
@@ -59,7 +81,11 @@ BEGIN
               , (tmpData.TotalAmount - tmpData.AmountPromo)     :: TFloat AS Amount
               , (tmpData.TotalSumma - tmpData.SummaPromo)       :: TFloat AS SummaSale
               , CASE WHEN tmpData.TotalSumma <> 0 THEN (tmpData.SummaPromo * 100 / tmpData.TotalSumma) ELSE 0 END :: TFloat AS PercentPromo
+              , COALESCE (tmpPlanPromo.PlanAmount,0)            :: TFloat AS PlanAmount
+              , (COALESCE (tmpData.SummaPromo,0) - COALESCE (tmpPlanPromo.PlanAmount,0))                          :: TFloat AS DiffAmount
           FROM tmpData
+               LEFT JOIN tmpPlanPromo ON tmpPlanPromo.UnitId = tmpData.UnitId 
+                                     AND tmpPlanPromo.PlanDate = tmpData.OperDate 
                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId 
      ;
 
@@ -77,4 +103,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_Check_Promo (inMakerId:= 2336604  , inStartDate:= '08.11.2016', inEndDate:= '08.11.2016', inSession:= '2')
 --SELECT * FROM gpReport_Check_Promo (inMakerId:= 2336604  , inStartDate:= '08.05.2016', inEndDate:= '08.05.2016', inSession:= '2')
---select * from gpReport_Check_Promo( inStartDate := ('02.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime ,  inSession := '3');
+--select * from gpReport_Check_Promo( inStartDate := ('02.11.2016')::TDateTime , inEndDate := ('03.11.2016')::TDateTime ,  inSession := '3');

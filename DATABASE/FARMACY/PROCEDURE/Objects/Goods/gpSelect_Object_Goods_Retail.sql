@@ -89,7 +89,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
-           , Object_ConditionsKeep.ValueData                           AS ConditionsKeepName
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
@@ -179,6 +179,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
@@ -199,6 +200,12 @@ BEGIN
                               ON ObjectLink_Update.ObjectId = Object_Goods_View.Id
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
+
+        -- условия хранения
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         -- получается GoodsMainId
         LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
@@ -232,3 +239,4 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Goods_Retail (zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Goods_Retail( inSession := '59591')

@@ -21,12 +21,14 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
       inherited cxGrid: TcxGrid
         Width = 841
         Height = 272
+        ExplicitLeft = 112
+        ExplicitTop = 3
         ExplicitWidth = 841
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00'
+              Format = ',0.####'
               Kind = skSum
               Position = spFooter
               Column = colPlanAmount
@@ -70,6 +72,12 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
               Kind = skSum
               Position = spFooter
               Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Position = spFooter
+              Column = colDiffAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -101,6 +109,16 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
               Format = ',0.####'
               Kind = skSum
               Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colDiffAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colPlanAmount
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -191,15 +209,24 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             Width = 70
           end
           object colPlanAmount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085
+            Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1072#1088#1082#1077#1090'.'
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
+            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            Options.Editing = False
             Width = 70
+          end
+          object colDiffAmount: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1057#1091#1084#1084#1072' '#1084#1072#1088#1082#1077#1090'. - '#1055#1083#1072#1085')'
+            DataBinding.FieldName = 'DiffAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object colPlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
