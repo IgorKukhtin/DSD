@@ -35,7 +35,9 @@ RETURNS TABLE (
     PartionInvNumber TVarChar,  --№ документа партии
     PartionOperDate  TDateTime, --Дата документа партии
     PartionDescName  TVarChar,  --вид документа партии
-    PartionPrice     TFloat     --цена партии
+    PartionPrice     TFloat,    --цена партии
+    InsertName       TVarChar,  --Пользователь(созд.) 
+    InsertDate       TDateTime  --Дата(созд.)
   )
 AS
 $BODY$
@@ -160,7 +162,9 @@ BEGIN
                 (SUM(MovementItemContainer.Amount)OVER(ORDER BY MovementItemContainer.OperDate, 
                                                                 CASE WHEN MovementDesc.Id = zc_Movement_Inventory() THEN 1 else 0 end, 
                                                                 CASE WHEN MovementItemContainer.Amount > 0 THEN 0 ELSE 0 END,
-                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID)) + _tmpRem.RemainsStart AS Saldo
+                                                                MovementItemContainer.MovementId,MovementItemContainer.MovementItemId,CLO_Party.ObjectID)) + _tmpRem.RemainsStart AS Saldo,
+                Object_Insert.ValueData              AS InsertName,
+                MovementDate_Insert.ValueData        AS InsertDate
             FROM (-- !!!временно захардкодил, будут все сети!!!!
                   SELECT ObjectLink_Child_ALL.ChildObjectId AS GoodsId
                   FROM ObjectLink AS ObjectLink_Child
@@ -229,32 +233,44 @@ BEGIN
                 LEFT JOIN MovementString AS MovementString_Bayer
                                          ON MovementString_Bayer.MovementId = Movement.Id
                                         AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                -- Пользователь(созд.) + Дата(созд.)  
+                LEFT JOIN MovementDate AS MovementDate_Insert
+                                       ON MovementDate_Insert.MovementId = Movement.Id
+                                      AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+                LEFT JOIN MovementLinkObject AS MLO_Insert
+                                             ON MLO_Insert.MovementId = Movement.Id
+                                            AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
             WHERE (CLO_Party.ObjectID = inPartyId 
                 OR inPartyId = 0
                   )
             UNION ALL
             SELECT
                 _tmpRem.ContainerId        AS ContainerId,
-                NULL                       AS MovementId,   --ИД накдалдной
-                inStartDate                AS OperDate, --Дата документа
-                NULL                       AS InvNumber,  --№ документа
-                NULL                       AS MovementDescId,   --Тип накладной
+                NULL                       AS MovementId,    --ИД накдалдной
+                inStartDate                AS OperDate,      --Дата документа
+                NULL                       AS InvNumber,     --№ документа
+                NULL                       AS MovementDescId,    --Тип накладной
                 'Остаток на начало'        AS MovementDescName,  --Название типа накладной
-                NULL                       AS FromId,   --От кого
-                NULL                       AS FromName,  --От кого (Название)
-                NULL                       AS ToId,   -- Кому
-                NULL                       AS ToName,  -- Кому (Название)
-                NULL::TFloat               AS Price,    --Цена в документе
-                NULL::TFloat               AS Summa, --Сума в документе
-                NULL                       AS AmountIn,    --Кол-во приход
-                NULL                       AS AmountOut,    --Кол-во расход
-                NULL                       AS AmountInvent,    --Кол-во переучет
-                Object_Price_View.MCSValue AS MCSValue,     --НТЗ
-                NULL                       AS CheckMember,  --Менеджер
-                NULL                       AS Bayer,        --Покупатель
-                CLO_Party.ObjectID         AS PartyId,      --# партии
+                NULL                       AS FromId,        --От кого
+                NULL                       AS FromName,      --От кого (Название)
+                NULL                       AS ToId,          -- Кому
+                NULL                       AS ToName,        -- Кому (Название)
+                NULL::TFloat               AS Price,         --Цена в документе
+                NULL::TFloat               AS Summa,         --Сума в документе
+                NULL                       AS AmountIn,      --Кол-во приход
+                NULL                       AS AmountOut,     --Кол-во расход
+                NULL                       AS AmountInvent,  --Кол-во переучет
+                Object_Price_View.MCSValue AS MCSValue,      --НТЗ
+                NULL                       AS CheckMember,   --Менеджер
+                NULL                       AS Bayer,         --Покупатель
+                CLO_Party.ObjectID         AS PartyId,       --# партии
                 0                          AS OrdNum,
-                _tmpRem.RemainsStart       AS Saldo
+                _tmpRem.RemainsStart       AS Saldo,
+                NULL                       AS InsertName,
+                NULL                       AS InsertDate
             FROM _tmpRem
                 LEFT JOIN Container ON Container.Id = _tmpRem.ContainerId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (Container.ObjectId, inGoodsId)
@@ -267,25 +283,27 @@ BEGIN
             SELECT
                 _tmpRem.ContainerId        AS ContainerId,
                 NULL                       AS MovementId,   --ИД накдалдной
-                inEndDate                  AS OperDate, --Дата документа
-                NULL                       AS InvNumber,  --№ документа
-                NULL                       AS MovementDescId,   --Тип накладной
+                inEndDate                  AS OperDate,     --Дата документа
+                NULL                       AS InvNumber,    --№ документа
+                NULL                       AS MovementDescId,    --Тип накладной
                 'Остаток на конец'         AS MovementDescName,  --Название типа накладной
-                NULL                       AS FromId,   --От кого
-                NULL                       AS FromName,  --От кого (Название)
-                NULL                       AS ToId,   -- Кому
-                NULL                       AS ToName,  -- Кому (Название)
-                NULL::TFloat               AS Price,    --Цена в документе
-                NULL::TFloat               AS Summa, --Сума в документе
-                NULL                       AS AmountIn,    --Кол-во приход
+                NULL                       AS FromId,       --От кого
+                NULL                       AS FromName,     --От кого (Название)
+                NULL                       AS ToId,         -- Кому
+                NULL                       AS ToName,       -- Кому (Название)
+                NULL::TFloat               AS Price,        --Цена в документе
+                NULL::TFloat               AS Summa,        --Сума в документе
+                NULL                       AS AmountIn,     --Кол-во приход
                 NULL                       AS AmountOut,    --Кол-во расход
-                NULL                       AS AmountInvent,    --Кол-во переучет
+                NULL                       AS AmountInvent, --Кол-во переучет
                 Object_Price_View.MCSValue AS MCSValue,     --НТЗ
                 NULL                       AS CheckMember,  --Менеджер
                 NULL                       AS Bayer,        --Покупатель
                 CLO_Party.ObjectID         AS PartyId,      --# партии
                 999999999                  AS OrdNum,
-                _tmpRem.RemainsEnd               AS Saldo 
+                _tmpRem.RemainsEnd         AS Saldo,
+                NULL                       AS InsertName,
+                NULL                       AS InsertDate 
             FROM _tmpRem
                 LEFT JOIN Container ON Container.Id = _tmpRem.ContainerId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (Container.ObjectId, inGoodsId)
@@ -298,29 +316,31 @@ BEGIN
 
         SELECT
             Res.ContainerId,
-            Res.MovementId::Integer,   --ИД накдалдной
-            Res.OperDate::TDateTime, --Дата документа
-            Res.InvNumber::TVarChar,  --№ документа
-            Res.MovementDescId::Integer,   --Тип накладной
-            Res.MovementDescName::TVarChar,  --Название типа накладной
-            Res.FromId::Integer,   --От кого
-            Res.FromName::TVarChar,  --От кого (Название)
-            Res.ToId::Integer,   -- Кому
-            Res.ToName::TVarChar,  -- Кому (Название)
-            Res.Price::TFloat,    --Цена в документе
-            Res.Summa::TFloat,    --Сумма в документе
-            NULLIF(Res.AmountIn,0)::TFloat,    --Кол-во приход
+            Res.MovementId::Integer,            --ИД накдалдной
+            Res.OperDate::TDateTime,            --Дата документа
+            Res.InvNumber::TVarChar,            --№ документа
+            Res.MovementDescId::Integer,        --Тип накладной
+            Res.MovementDescName::TVarChar,     --Название типа накладной
+            Res.FromId::Integer,                --От кого
+            Res.FromName::TVarChar,             --От кого (Название)
+            Res.ToId::Integer,                  -- Кому
+            Res.ToName::TVarChar,               -- Кому (Название)
+            Res.Price::TFloat,                  --Цена в документе
+            Res.Summa::TFloat,                  --Сумма в документе
+            NULLIF(Res.AmountIn,0)::TFloat,     --Кол-во приход
             NULLIF(Res.AmountOut,0)::TFloat,    --Кол-во расход
-            NULLIF(Res.AmountInvent,0)::TFloat,    --Кол-во переучет
-            Res.Saldo::TFloat, --Остаток после операции
-            Res.MCSValue::TFloat,     --НТЗ
-            Res.CheckMember::TVarChar,  --Менеджер
-            Res.Bayer::TVarChar,        --Покупатель
-            Res.PartyId ,                --# партии
+            NULLIF(Res.AmountInvent,0)::TFloat, --Кол-во переучет
+            Res.Saldo::TFloat,                  --Остаток после операции
+            Res.MCSValue::TFloat,               --НТЗ
+            Res.CheckMember::TVarChar,          --Менеджер
+            Res.Bayer::TVarChar,                --Покупатель
+            Res.PartyId ,                       --# партии
             COALESCE(Movement_Party.InvNumber, NULL) ::TVarChar  AS PartionInvNumber,  -- № док.партии
-            COALESCE(Movement_Party.OperDate, NULL)  ::TDateTime AS PartionOperDate,  -- Дата док.партии
+            COALESCE(Movement_Party.OperDate, NULL)  ::TDateTime AS PartionOperDate,   -- Дата док.партии
             COALESCE(MovementDesc.ItemName, NULL)    ::TVarChar  AS PartionDescName,
-            COALESCE(MIFloat_Price.ValueData, NULL)  ::TFloat    AS PartionPrice
+            COALESCE(MIFloat_Price.ValueData, NULL)  ::TFloat    AS PartionPrice,
+            Res.InsertName  ::TVarChar,         --Пользователь(созд.) 
+            Res.InsertDate  ::TDateTime         --Дата(созд.)
         FROM Res 
            LEFT JOIN OBJECT AS Object_PartionMovementItem 
                             ON Object_PartionMovementItem.Id = Res.PartyId --CLI_MI.ObjectId
@@ -344,6 +364,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.01.17         *
  01.07.16         * add inIsPartion
  26.08.15                                                                       *
 */

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isEr
              , isPromo boolean
              , InsertName TVarChar, InsertDate TDateTime 
              , UpdateName TVarChar, UpdateDate TDateTime
+             , ConditionsKeepName TVarChar
               ) AS
 $BODY$ 
   DECLARE vbUserId Integer;
@@ -88,6 +89,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
+           , Object_ConditionsKeep.ValueData                           AS ConditionsKeepName
 
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
@@ -114,6 +116,11 @@ BEGIN
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+        -- условия хранения
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
     WHERE Object_Retail.DescId = zc_Object_Retail();
 

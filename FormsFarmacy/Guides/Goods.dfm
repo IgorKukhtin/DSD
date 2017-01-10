@@ -80,6 +80,15 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 59
           end
+          object clConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -626,6 +635,11 @@ inherited GoodsForm: TGoodsForm
       end
       item
         ColorColumn = RetailName
+        BackGroundValueColumn = clColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = clConditionsKeepName
         BackGroundValueColumn = clColor_calc
         ColorValueList = <>
       end>
