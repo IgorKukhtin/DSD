@@ -353,7 +353,19 @@ BEGIN
 
            , MovementItem.Id                                                AS Id
            , Object_Goods.ObjectCode                                        AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar  AS GoodsCodeUKTZED
+           , CASE WHEN Movement.OperDate < '01.01.2017'
+                       THEN ''
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN ObjectString_Goods_UKTZED.ValueData
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101()
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE ''
+              END :: TVarChar AS GoodsCodeUKTZED
+
            , (CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'опеднокюрю гю йнка.хгдекхъ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END END) :: TVarChar AS GoodsName
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'опеднокюрю гю йнка.хгдекхъ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData                             AS GoodsKindName
@@ -474,6 +486,10 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                                   -- AND tmpObject_GoodsPropertyValue.Name <> ''
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
 -- MOVEMENT
             LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId

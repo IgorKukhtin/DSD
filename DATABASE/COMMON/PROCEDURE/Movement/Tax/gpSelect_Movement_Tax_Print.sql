@@ -523,7 +523,18 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar     AS GoodsCodeUKTZED
+           , CASE WHEN Movement.OperDate < '01.01.2017'
+                       THEN ''
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN ObjectString_Goods_UKTZED.ValueData
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101()
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE ''
+              END :: TVarChar AS GoodsCodeUKTZED
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                         THEN 'опеднокюрю гю йнка.хгдекхъ'
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
@@ -635,6 +646,12 @@ BEGIN
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+            LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
        WHERE MovementItem.MovementId = vbMovementId_Tax
          AND MovementItem.DescId     = zc_MI_Master()

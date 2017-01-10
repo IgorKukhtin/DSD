@@ -578,6 +578,19 @@ begin
   HeaderDataSet.First;
   while not HeaderDataSet.Eof do
   begin
+    with DECLAR.DECLARBODY.RXXXXG4.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := HeaderDataSet.FieldByName('GoodsCodeUKTZED').asString;
+    end;
+    inc(i);
+    HeaderDataSet.Next;
+  end;
+
+  i := 1;
+  HeaderDataSet.First;
+  while not HeaderDataSet.Eof do
+  begin
     with DECLAR.DECLARBODY.RXXXXG4S.Add do
     begin
       ROWNUM := IntToStr(i);
@@ -925,6 +938,19 @@ begin
   HeaderDataSet.First;
   while not HeaderDataSet.Eof do
   begin
+    with DECLAR.DECLARBODY.RXXXXG4.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := HeaderDataSet.FieldByName('GoodsCodeUKTZED').asString;
+    end;
+    inc(i);
+    HeaderDataSet.Next;
+  end;
+
+  i := 1;
+  HeaderDataSet.First;
+  while not HeaderDataSet.Eof do
+  begin
     with DECLAR.DECLARBODY.RXXXXG4S.Add do
     begin
       ROWNUM := IntToStr(i);
@@ -1245,6 +1271,20 @@ begin
   ItemsDataSet.First;
   while not ItemsDataSet.Eof do
   begin
+    with DECLAR.DECLARBODY.RXXXXG4.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
     with DECLAR.DECLARBODY.RXXXXG4S.Add do
     begin
       ROWNUM := IntToStr(i);
@@ -1524,6 +1564,19 @@ begin
       NodeValue := ItemsDataSet.FieldByName('GoodsName').asString + ';GTIN:' +
         ItemsDataSet.FieldByName('BarCodeGLN_Juridical').asString + ';IDBY:' +
         ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+    end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do
+  begin
+    with DECLAR.DECLARBODY.RXXXXG4.Add do
+    begin
+      ROWNUM := IntToStr(i);
+      NodeValue := ItemsDataSet.FieldByName('GoodsCodeUKTZED').asString;
     end;
     inc(i);
     ItemsDataSet.Next;

@@ -147,6 +147,7 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+       WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
       ;
   
 END;

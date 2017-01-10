@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -5770,8 +5770,9 @@ inherited MainForm: TMainForm
         object miGoods: TMenuItem
           Action = actGoods
         end
-        object N145: TMenuItem
+        object miGoodsUKTZED: TMenuItem
           Action = actGoodsUKTZED
+          Caption = #1058#1086#1074#1072#1088#1099' ('#1082#1086#1076#1099' '#1059#1050#1058' '#1047#1045#1044')'
         end
         object miMeasure: TMenuItem
           Action = actMeasure
