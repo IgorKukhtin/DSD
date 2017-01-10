@@ -45,51 +45,8 @@ BEGIN
 
     RETURN QUERY
    WITH 
-          -- “овары из ћаркетинговых контрактов
-          tmpGoodsPromo AS (SELECT DISTINCT
-                                 MI_Goods.ObjectId  AS GoodsId        -- здесь товар
-                            -- , MI_Goods.ObjectId     AS GoodsId                  -- здесь товар "сети"
-                            -- , MI_Juridical.ObjectId AS JuridicalId                -- ѕоставщик
-                       FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
-                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
-                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
-                                                           AND (MovementLinkObject_Maker.ObjectId = inMakerId)
-                              INNER JOIN MovementDate AS MovementDate_StartPromo
-                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
-                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-                                                     AND MovementDate_StartPromo.ValueData < inEndDate
-                              INNER JOIN MovementDate AS MovementDate_EndPromo
-                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
-                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                                                     AND MovementDate_EndPromo.ValueData >= inStartDate
-                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
-                                                                 AND MI_Goods.DescId = zc_MI_Master()
-                                                                 AND MI_Goods.isErased = FALSE
-                          /*    INNER JOIN MovementItem AS MI_Juridical ON MI_Juridical.MovementId = Movement.Id
-                                                                     AND MI_Juridical.DescId = zc_MI_Child()
-                                                                     AND MI_Juridical.isErased = FALSE*/
-                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                           AND Movement.DescId = zc_Movement_Promo()
-                       )
-
-        ,  tmpGoods AS (SELECT DISTINCT
-                              ObjectLink_Child_R.ChildObjectId AS GoodsId        -- здесь товар
-                       FROM tmpGoodsPromo
-                               -- !!!
-                              INNER JOIN ObjectLink AS ObjectLink_Child
-                                                    ON ObjectLink_Child.ChildObjectId = tmpGoodsPromo.GoodsId 
-                                                   AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                              INNER JOIN ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                      AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                              INNER JOIN ObjectLink AS ObjectLink_Main_R ON ObjectLink_Main_R.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                        AND ObjectLink_Main_R.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                              INNER JOIN ObjectLink AS ObjectLink_Child_R ON ObjectLink_Child_R.ObjectId = ObjectLink_Main_R.ObjectId
-                                                                         AND ObjectLink_Child_R.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                        WHERE  ObjectLink_Child_R.ChildObjectId<>0
-                      )
-    -- выбираем все строки документов прихода с маркет. товарами
-    , tmpMovMI AS (SELECT Movement.Id                     AS MovementId
+      -- выбираем все строки документов прихода с маркет. товарами
+      tmpMovMI AS (SELECT Movement.Id                     AS MovementId
                         , MovementDesc.ItemName        :: TVarChar AS ItemName
                         , Status.ValueData                         AS STatusName
                         , Movement.OperDate                        AS OperDate
@@ -100,16 +57,18 @@ BEGIN
                         , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
                         , COALESCE(MIFloat_AmountManual.ValueData,MovementItem.Amount)  AS Amount
                   FROM Movement 
-                    JOIN Object AS Status 
-                                ON Status.Id = Movement.StatusId 
-                               AND Status.Id <> zc_Enum_Status_Erased()
+                    INNER JOIN Object AS Status 
+                                      ON Status.Id = Movement.StatusId 
+                                     AND Status.Id = zc_Enum_Status_Complete()
                     JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
                     JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                      AND MovementItem.isErased = FALSE
-   
-                    INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                                       -- AND tmpGoods.JuridicalId = MovementLinkObject_From.ObjectId
+    
+                    INNER JOIN MovementItemContainer AS MIContainer 
+                                                     ON MIContainer.DescId = zc_MIContainer_Count()
+                                                    AND MIContainer.MovementItemId = MovementItem.Id
+                                                    AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
 
                     LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                 ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
@@ -123,7 +82,7 @@ BEGIN
                                                 ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
                  WHERE Movement.DescId = zc_Movement_Income()
-                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate   
+                   AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate   
                  )
    -- получаем свойства ƒокументов
    , tmpMov AS (SELECT  tmpMovMI.MovementId           
@@ -241,18 +200,6 @@ BEGIN
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
 
-  /*      LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                    ON MIFloat_AmountManual.MovementItemId = tmpMovMI.MovementItemId
-                                   AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
-
-        LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                    ON MIFloat_Price.MovementItemId = tmpMovMI.MovementItemId
-                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-        LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                    ON MIFloat_PriceSale.MovementItemId = tmpMovMI.MovementItemId
-                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-*/
         LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
                                     ON MIDate_ExpirationDate.MovementItemId = tmpMovMI.MovementItemId
                                    AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
