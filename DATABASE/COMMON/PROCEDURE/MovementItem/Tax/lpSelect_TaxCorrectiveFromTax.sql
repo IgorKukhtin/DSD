@@ -80,11 +80,11 @@ BEGIN
 
                                  WHEN COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0)) <> 0
                                   AND tmpMICorrective.LineNumTax <> 0
-                                  AND isAuto = TRUE AND tmpMICorrective.LineNumTax = COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))
+                                  AND isAuto = FALSE AND tmpMICorrective.LineNumTax = COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))
                                       THEN tmpMICorrective.LineNumTax
 
                                  -- Ú.Â. ·Û‰ÂÚ Œÿ»¡ ¿
-                                 WHEN isAuto = TRUE
+                                 WHEN isAuto = FALSE
                                       THEN 0
 
                                  ELSE COALESCE (tmpMITax1.LineNum, COALESCE (tmpMITax2.LineNum, 0))

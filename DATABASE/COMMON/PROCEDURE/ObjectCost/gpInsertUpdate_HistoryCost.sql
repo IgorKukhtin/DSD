@@ -1207,7 +1207,7 @@ end if;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
      INSERT INTO _tmpMaster (ContainerId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
@@ -1263,8 +1263,19 @@ LANGUAGE PLPGSQL VOLATILE;
        UNION ALL
         SELECT 1 AS MasterContainerId, 2 AS ContainerId, 30 AS OperCount
        ;
-
 */
+
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8462, 8462 /*8459*/); -- Склад Брак -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8461 /*8459*/); -- Склад Возвратов -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 256716, 256716 /*8459*/); -- Склад УТИЛЬ -> Склад Реализации 
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428365, 428365 ); -- Склад возвратов ф.Киев
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 309599, 301309); -- Склад возвратов ф.Запорожье -> Склад гп ф.Запорожье
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428366 , 428366 ); -- Склад возвратов ф.Кривой Рог
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428364 , 428364 ); -- Склад возвратов ф.Николаев (Херсон)
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 409007 , 409007 ); -- Склад возвратов ф.Харьков
+-- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428363 ,428363 ); -- Склад возвратов ф.Черкассы (Кировоград)
+
+-- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -1278,50 +1289,8 @@ LANGUAGE PLPGSQL VOLATILE;
  10.07.13                                        *
 */
 
-/*
-SELECT DATE_TRUNC ('MONTH',  StartDate), DATE_TRUNC ('MONTH',  EndDate), min(HistoryCost.Id), max(HistoryCost.Id), Object.ObjectCode, Object.ValueData
-FROM HistoryCost 
-    join Container  on Container.Id = HistoryCost.ContainerId
-    left join ContainerLinkObject on ContainerLinkObject.ContainerId = Container.Id 
-                                 and ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit()
+-- SELECT * FROM HistoryCost where ContainerId in ( 976442, 976754) ORDER BY 1 DESC
 
-    left join Object on Object.Id = ContainerLinkObject.ObjectId
-where HistoryCost.StartDate >= '01.06.2016'  
-group by DATE_TRUNC ('MONTH',  StartDate), DATE_TRUNC ('MONTH',  EndDate), Object.ValueData, Object.ObjectCode
-order by 3
-*/
--- DELETE FROM HistoryCost WHERE ('01.06.2014' BETWEEN StartDate AND EndDate) OR ('30.06.2014' BETWEEN StartDate AND EndDate);
--- DELETE FROM HistoryCost WHERE ('01.01.2015' BETWEEN StartDate AND EndDate) OR ('31.01.2015' BETWEEN StartDate AND EndDate);
-
-/*
-SELECT Object1.*, Object2.*
-FROM ObjectLink 
-     join Object as Object1 on Object1.Id = ObjectId
-     join Object as Object2 on Object2.Id = ChildObjectId
-where ObjectLink.DescId =  zc_ObjectLink_Unit_HistoryCost()
-order by 3
-*/
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8462, 8462 /*8459*/); -- Склад Брак -> Склад Реализации 
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 8461, 8461 /*8459*/); -- Склад Возвратов -> Склад Реализации 
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 256716, 256716 /*8459*/); -- Склад УТИЛЬ -> Склад Реализации 
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428365, 428365 ); -- Склад возвратов ф.Киев
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 309599, 301309); -- Склад возвратов ф.Запорожье -> Склад гп ф.Запорожье
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428366 , 428366 ); -- Склад возвратов ф.Кривой Рог
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428364 , 428364 ); -- Склад возвратов ф.Николаев (Херсон)
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 409007 , 409007 ); -- Склад возвратов ф.Харьков
--- select lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_HistoryCost(), 428363 ,428363 ); -- Склад возвратов ф.Черкассы (Кировоград)
-
--- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
--- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;
--- SELECT StartDate, EndDate, Count(*) FROM HistoryCost GROUP BY StartDate, EndDate ORDER BY 1;
-
--- филиал Киев
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
-
--- UPDATE HistoryCost SET Price = 100 WHERE Price > 100 AND StartDate = '01.06.2014' AND EndDate = '30.06.2014'
--- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
 /*
 select distinct Object.ObjectCode, Object.ValueData, Object2.ObjectCode, Object2.ValueData, Object3.ObjectCode, Object3.ValueData, Object4.ValueData
 from Container 
@@ -1331,11 +1300,13 @@ from Container
      left join ContainerLinkObject as clo4 on clo4.ContainerId = Container.Id and clo4.DescId = zc_ContainerLinkObject_PartionGoods()               left join Object as Object4 on Object4.Id = clo4.ObjectId
 where  Container.Id in (SELECT HistoryCost.ContainerId FROM HistoryCost WHERE ('01.12.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 and CalcSumm > 1000)
 order by 3, 5
-SELECT * 
-FROM HistoryCost WHERE ('01.11.2016' BETWEEN StartDate AND EndDate)
-and abs (Price) = 1.1234
-and CalcSumm > 1000000
-order by Price desc
+
+SELECT * FROM HistoryCost WHERE ('01.12.2016' BETWEEN StartDate AND EndDate) and abs (Price) = 1.1234 order by Price desc -- and CalcSumm > 1000000
 */
--- SELECT * FROM HistoryCost where ContainerId in ( 976442, 976754) ORDER BY 1
--- SELECT * FROM HistoryCost where ContainerId in ( 10705, 295520) ORDER BY 1
+
+-- филиал Киев
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext

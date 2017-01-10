@@ -1,7 +1,7 @@
 object Goods_UKTZEDForm: TGoods_UKTZEDForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'> ( '#1080#1079#1084#1077#1085#1077#1085#1080#1077' '#1082#1086#1076#1072' '#1059#1050#1058' '#1047#1045#1044')'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'> ('#1082#1086#1076#1099' '#1059#1050#1058' '#1047#1045#1044')'
   ClientHeight = 404
   ClientWidth = 982
   Color = clBtnFace
@@ -47,6 +47,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       object clGoodsPlatformName: TcxGridDBColumn
         Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
         DataBinding.FieldName = 'GoodsPlatformName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -55,26 +56,11 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       object clTradeMarkName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
-      end
-      object clGoodsGroupAnalystName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
-        DataBinding.FieldName = 'GoodsGroupAnalystName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 77
-      end
-      object clGoodsTagName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsTagName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 62
       end
       object clGroupStatName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
@@ -92,15 +78,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 117
-      end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 172
       end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -140,15 +117,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 31
-      end
-      object clFuelName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
       end
       object clBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
@@ -192,22 +160,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 76
-      end
-      object clIsPartionCount: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'isPartionCount'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object clIsPartionSumm: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072
-        DataBinding.FieldName = 'isPartionSumm'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 42
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -288,23 +240,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -357,22 +292,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel1
       Category = 0
@@ -395,20 +314,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbisPartionCount: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
-      Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
-      Visible = ivAlways
-      ImageIndex = 58
-    end
-    object bbisPartionSumm: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
-      Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
-      Visible = ivAlways
-      ImageIndex = 52
-    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -427,37 +332,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -571,53 +445,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         end>
       isShowModal = False
     end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = 'TGoodsEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = 'TGoodsEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actUpdateDataSource: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -680,7 +507,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -688,7 +514,6 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     OnlyEditingCellOnEnter = False
