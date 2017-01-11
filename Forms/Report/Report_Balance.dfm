@@ -287,10 +287,10 @@ object Report_BalanceForm: TReport_BalanceForm
   object cbTotal: TcxCheckBox
     Left = 134
     Top = 179
-    Caption = #1080#1090#1086#1075#1080
+    Caption = #1089#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
     TabOrder = 6
-    Width = 52
+    Width = 99
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
