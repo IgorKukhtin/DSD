@@ -25,6 +25,7 @@ type
     cxLabel7: TcxLabel;
     cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public

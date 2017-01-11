@@ -26,18 +26,14 @@ type
     grChartLevel1: TcxGridLevel;
     grChart: TcxGrid;
     grChartDBChartView1: TcxGridDBChartView;
-    serTotalSumma: TcxGridDBChartSeries;
-    serSummaPromo: TcxGridDBChartSeries;
-    serSumma: TcxGridDBChartSeries;
-    serPercentPromo: TcxGridDBChartSeries;
-    dgDate: TcxGridDBChartDataGroup;
-    dgUnit: TcxGridDBChartDataGroup;
+    serPrice: TcxGridDBChartSeries;
+    dgOperDate: TcxGridDBChartDataGroup;
     cxSplitter1: TcxSplitter;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     cxLabel4: TcxLabel;
     edGoods: TcxButtonEdit;
-    GoodsGuide: TdsdGuides;
+    GoodsGuides: TdsdGuides;
     actContractOpenForm: TdsdOpenForm;
     bb: TdxBarButton;
   private

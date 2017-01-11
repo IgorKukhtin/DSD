@@ -1,5 +1,5 @@
 inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
-  Caption = #1054#1090#1095#1077#1090' <'#1043#1088#1072#1092#1080#1082' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1094#1077#1085#1099'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1043#1088#1072#1092#1080#1082' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1087#1088#1077#1087#1072#1088#1072#1090#1072'>'
   ClientHeight = 556
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -31,24 +31,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
               Position = spFooter
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-              Position = spFooter
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Position = spFooter
-              Column = isOne
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
+              Format = ',0.'
               Kind = skSum
               Column = CountPriceList
             end
@@ -74,17 +57,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = isOne
-            end
-            item
-              Format = ',0.####'
+              Format = ',0.'
               Kind = skSum
               Column = CountPriceList
             end
@@ -107,6 +80,11 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colJuridicalName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -119,7 +97,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
           Styles.Header = nil
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'PlanDate'
+            DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
@@ -129,7 +107,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 168
+            Width = 165
           end
           object ContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -151,7 +129,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             DataBinding.FieldName = 'CountPriceList'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 132
@@ -177,29 +155,13 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
           DiagramLine.Active = True
           ToolBox.CustomizeButton = True
           ToolBox.DiagramSelector = True
-          object dgDate: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'plandate'
-            DisplayText = #1052#1077#1089#1103#1094
+          object dgOperDate: TcxGridDBChartDataGroup
+            DataBinding.FieldName = 'OperDate'
+            DisplayText = #1044#1072#1090#1072
           end
-          object dgUnit: TcxGridDBChartDataGroup
-            DataBinding.FieldName = 'unitname'
-            DisplayText = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-          end
-          object serTotalSumma: TcxGridDBChartSeries
-            DataBinding.FieldName = 'TotalSumma'
-            DisplayText = #1048#1090#1086#1075#1086', '#1075#1088#1085
-          end
-          object serSummaPromo: TcxGridDBChartSeries
-            DataBinding.FieldName = 'SummaPromo'
-            DisplayText = #1057#1091#1084#1084#1072' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075'.)'
-          end
-          object serSumma: TcxGridDBChartSeries
-            DataBinding.FieldName = 'Summa'
-            DisplayText = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1095#1077#1077')'
-          end
-          object serPercentPromo: TcxGridDBChartSeries
-            DataBinding.FieldName = 'PercentPromo'
-            DisplayText = '% '#1074#1099#1087'.'
+          object serPrice: TcxGridDBChartSeries
+            DataBinding.FieldName = 'Price'
+            DisplayText = #1062#1077#1085#1072
           end
         end
         object grChartLevel1: TcxGridLevel
@@ -246,6 +208,25 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
       Width = 271
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -271,6 +252,23 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
           Value = 42735d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -322,7 +320,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = GoodsGuide
+        Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -391,10 +389,17 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
     Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GoodsGuides
+      end>
     Left = 408
     Top = 56
   end
-  object GoodsGuide: TdsdGuides
+  object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
     FormNameParam.Value = 'TGoodsMainForm'
@@ -406,7 +411,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGuide
+        Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -414,7 +419,7 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGuide
+        Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
