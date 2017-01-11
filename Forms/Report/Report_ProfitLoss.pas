@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod;
+  cxDBPivotGrid, cxLabel, dxBarExtItems, ChoicePeriod, cxCheckBox;
 
 type
   TReport_ProfitLossForm = class(TParentForm)
@@ -72,6 +72,8 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    cbTotal: TcxCheckBox;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
   private
   public
   end;

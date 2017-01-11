@@ -1,18 +1,22 @@
 -- View: Object_ProfitLoss_View
+--DROP VIEW IF EXISTS Object_ProfitLoss_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_ProfitLoss_View
 AS
       SELECT Object_ProfitLossGroup.Id            AS ProfitLossGroupId
            , Object_ProfitLossGroup.ObjectCode    AS ProfitLossGroupCode
            , CAST ((CASE WHEN Object_ProfitLossGroup.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLossGroup.ObjectCode || ' ' || Object_ProfitLossGroup.ValueData) AS TVarChar) AS ProfitLossGroupName
+           , Object_ProfitLossGroup.ValueData     AS ProfitLossGroupName_original
           
            , Object_ProfitLossDirection.Id           AS ProfitLossDirectionId
            , Object_ProfitLossDirection.ObjectCode   AS ProfitLossDirectionCode
            , CAST ((CASE WHEN Object_ProfitLossDirection.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLossDirection.ObjectCode || ' ' || Object_ProfitLossDirection.ValueData) AS TVarChar) AS ProfitLossDirectionName
+           , Object_ProfitLossDirection.ValueData    AS ProfitLossDirectionName_original
 
            , Object_ProfitLoss.Id           AS ProfitLossId
            , Object_ProfitLoss.ObjectCode   AS ProfitLossCode
            , CAST ((CASE WHEN Object_ProfitLoss.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLoss.ObjectCode || ' ' || Object_ProfitLoss.ValueData) AS TVarChar) AS ProfitLossName
+           , Object_ProfitLoss.ValueData    AS ProfitLossName_original
           
            , ObjectBoolean_onComplete.ValueData AS onComplete
 
@@ -55,6 +59,7 @@ ALTER TABLE Object_ProfitLoss_View OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 12.01.17         *
  21.10.13                        *
 */
 

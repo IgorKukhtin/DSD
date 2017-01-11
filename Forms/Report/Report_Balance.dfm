@@ -62,7 +62,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    TabOrder = 5
+    TabOrder = 4
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -287,10 +287,10 @@ object Report_BalanceForm: TReport_BalanceForm
   object cbTotal: TcxCheckBox
     Left = 134
     Top = 179
-    Caption = #1089#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
+    Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
     Properties.ReadOnly = False
     TabOrder = 6
-    Width = 99
+    Width = 101
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

@@ -199,6 +199,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1057#1091#1084#1084#1072
     end
   end
+  object cbTotal: TcxCheckBox
+    Left = 134
+    Top = 163
+    Caption = 'C'#1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 101
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -301,6 +309,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -335,6 +351,13 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbTotal
     end
   end
   object ActionList: TActionList
@@ -642,6 +665,13 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
           Name = 'maintext'
           Value = #1088'/'#1089#1095#1077#1090#1091
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTotal'
+          Value = Null
+          Component = cbTotal
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1054#1055#1080#1059
