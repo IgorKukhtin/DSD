@@ -3,6 +3,7 @@ inherited ContractForm: TContractForm
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 814
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -86,6 +87,15 @@ inherited ContractForm: TContractForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
+          object colisReport: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
+            DataBinding.FieldName = 'isReport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' "'#1075#1088#1072#1092#1080#1082' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1087#1086' '#1087#1088#1077#1087#1072#1088#1072#1090#1091'"'
+            Options.Editing = False
+            Width = 90
+          end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -110,6 +120,19 @@ inherited ContractForm: TContractForm
       FormName = 'TContractEditForm'
       FormNameParam.Value = 'TContractEditForm'
     end
+    object actUpdateisReport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Contract_isReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Contract_isReport
+        end>
+      Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Top = 96
@@ -131,6 +154,67 @@ inherited ContractForm: TContractForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateisReport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
+        end>
+    end
+    object bbUpdateisReport: TdxBarButton
+      Action = actUpdateisReport
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -140,5 +224,43 @@ inherited ContractForm: TContractForm
       item
         Action = actUpdate
       end>
+  end
+  object spUpdate_Contract_isReport: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Contract_isReport'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisReport'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isReport'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 99
   end
 end

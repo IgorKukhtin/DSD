@@ -21,6 +21,10 @@ type
     clJuridicalName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
     colDeferment: TcxGridDBColumn;
+    colisReport: TcxGridDBColumn;
+    spUpdate_Contract_isReport: TdsdStoredProc;
+    actUpdateisReport: TdsdExecStoredProc;
+    bbUpdateisReport: TdxBarButton;
   private
     { Private declarations }
   public
