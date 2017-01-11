@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid, cxLabel, ChoicePeriod;
+  cxDBPivotGrid, cxLabel, ChoicePeriod, dxBarExtItems, cxCheckBox;
 
 type
   TReport_BalanceForm = class(TParentForm)
@@ -82,6 +82,8 @@ type
     bbPrint: TdxBarButton;
     actPrint2: TdsdPrintAction;
     bbPrint2: TdxBarButton;
+    cbTotal: TcxCheckBox;
+    bb: TdxBarControlContainerItem;
   private
   public
   end;

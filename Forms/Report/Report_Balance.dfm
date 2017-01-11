@@ -284,6 +284,14 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1055#1072#1089#1089#1080#1074#1099' '#1085#1072' '#1082#1086#1085#1077#1094
     end
   end
+  object cbTotal: TcxCheckBox
+    Left = 134
+    Top = 179
+    Caption = #1080#1090#1086#1075#1080
+    Properties.ReadOnly = False
+    TabOrder = 6
+    Width = 52
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 120
@@ -395,6 +403,14 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaticText'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -432,6 +448,13 @@ object Report_BalanceForm: TReport_BalanceForm
       Action = actPrint2
       Category = 0
       ImageIndex = 16
+    end
+    object bb: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbTotal
     end
   end
   object ActionList: TActionList
@@ -676,6 +699,13 @@ object Report_BalanceForm: TReport_BalanceForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTotal'
+          Value = Null
+          Component = cbTotal
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089' ('#1044#1077#1073#1077#1090' '#1050#1088#1077#1076#1080#1090')'
@@ -743,6 +773,13 @@ object Report_BalanceForm: TReport_BalanceForm
           Value = 42370d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTotal'
+          Value = Null
+          Component = cbTotal
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1059#1055' '#1041#1072#1083#1072#1085#1089
