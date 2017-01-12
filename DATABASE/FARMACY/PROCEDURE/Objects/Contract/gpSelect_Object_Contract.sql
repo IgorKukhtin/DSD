@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Deferment Integer, Percent TFloat, 
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
-               isErased boolean) AS
+               isReport Boolean,
+               isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -38,7 +39,7 @@ BEGIN
 
            , ObjectDate_Start.ValueData   AS StartDate 
            , ObjectDate_End.ValueData     AS EndDate   
-           
+           , COALESCE (ObjectBoolean_Report.ValueData, FALSE)  AS isReport
            , Object_Contract_View.isErased
        FROM Object_Contract_View
             LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -51,6 +52,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Percent
                                  ON ObjectFloat_Percent.ObjectId = Object_Contract_View.JuridicalId
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Juridical_Percent()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Report
+                                   ON ObjectBoolean_Report.ObjectId = Object_Contract_View.Id
+                                  AND ObjectBoolean_Report.DescId = zc_ObjectBoolean_Contract_Report()
 ;
   
 END;
@@ -63,6 +68,7 @@ ALTER FUNCTION gpSelect_Object_Contract(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.01.17         * add isReport
  08.12.16         * add Percent
  01.07.14         *
 
