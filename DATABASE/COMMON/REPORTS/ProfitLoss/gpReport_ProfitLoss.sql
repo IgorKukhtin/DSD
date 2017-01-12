@@ -7,8 +7,9 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar
-             , ProfitLossName  TVarChar, OnComplete Boolean
+RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName  TVarChar
+             , PL_GroupName_original TVarChar, PL_DirectionName_original TVarChar, PL_Name_original  TVarChar
+             , OnComplete Boolean
              , BusinessName TVarChar, JuridicalName_Basis TVarChar, BranchName_ProfitLoss TVarChar, UnitName_ProfitLoss TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , InfoMoneyGroupCode_Detail Integer, InfoMoneyDestinationCode_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar
@@ -201,6 +202,11 @@ BEGIN
              View_ProfitLoss.ProfitLossGroupName
            , View_ProfitLoss.ProfitLossDirectionName
            , View_ProfitLoss.ProfitLossName
+           --для печатной формы без кода
+           , View_ProfitLoss.ProfitLossGroupName_original
+           , View_ProfitLoss.ProfitLossDirectionName_original
+           , View_ProfitLoss.ProfitLossName_original
+
            , View_ProfitLoss.onComplete
 
            , Object_Business.ValueData          AS BusinessName
@@ -259,6 +265,7 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.01.17         *
  03.11.13                                        * all
  21.10.13                         *
  01.09.13                                        *
@@ -266,4 +273,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+--SELECT * FROM gpReport_ProfitLoss (inStartDate:= '31.07.2016', inEndDate:= '31.07.2016', inSession:= '2') WHERE Amount <> 0 ORDER BY 5

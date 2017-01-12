@@ -320,6 +320,9 @@ type
     N121: TMenuItem;
     actReportPromoParams: TdsdOpenForm;
     N122: TMenuItem;
+    actReport_MinPrice_onGoods: TdsdOpenForm;
+    N123: TMenuItem;
+    N124: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

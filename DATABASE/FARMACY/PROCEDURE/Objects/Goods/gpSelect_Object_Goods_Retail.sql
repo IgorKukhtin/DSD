@@ -89,7 +89,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
-           , Object_ConditionsKeep.ValueData                           AS ConditionsKeepName
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
@@ -179,7 +179,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
-           , Object_ConditionsKeep.ValueData                           AS ConditionsKeepName
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
@@ -239,3 +239,4 @@ ALTER FUNCTION gpSelect_Object_Goods_Retail(TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Goods_Retail (zfCalc_UserAdmin())
+-- select * from gpSelect_Object_Goods_Retail( inSession := '59591')
