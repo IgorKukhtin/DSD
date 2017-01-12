@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriodEnd TFloat, MCSDayEnd TFloat, StartDateEnd TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
@@ -65,6 +66,7 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::TVarChar                   AS ConditionsKeepName
                ,NULL::Boolean                    AS Goods_isTop
                ,NULL::TFloat                     AS Goods_PercentMarkup
                ,NULL::TDateTime                  AS DateChange
@@ -135,6 +137,7 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                , Object_Price_View.DateChange                    AS DateChange
@@ -227,6 +230,11 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDayEnd
                                              ON ObjectHistoryFloat_MCSDayEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                             AND ObjectHistoryFloat_MCSDayEnd.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
+                -- условия хранения
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
             WHERE (inisShowDel = True
                     OR
@@ -271,6 +279,7 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
                , Object_Price_View.DateChange              AS DateChange
@@ -357,7 +366,13 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDayEnd
                                              ON ObjectHistoryFloat_MCSDayEnd.ObjectHistoryId = ObjectHistory_PriceEnd.Id
                                             AND ObjectHistoryFloat_MCSDayEnd.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-                                                            
+                                               
+                -- условия хранения
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.id
+                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+             
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
             ORDER BY GoodsGroupName, GoodsName;
@@ -370,6 +385,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 12.11.17         *
  04.07.16         *
  30.06.16         *
  13.03.16         *

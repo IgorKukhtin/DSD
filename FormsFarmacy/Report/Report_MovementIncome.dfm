@@ -9,7 +9,7 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   inherited Panel: TPanel [0]
     Width = 1065
     Height = 32
-    ExplicitWidth = 1142
+    ExplicitWidth = 1065
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -70,17 +70,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
     Height = 250
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 1142
+    ExplicitWidth = 1065
     ExplicitHeight = 250
     ClientRectBottom = 250
     ClientRectRight = 1065
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1142
+      ExplicitWidth = 1065
       ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 1065
         Height = 250
-        ExplicitWidth = 1142
+        ExplicitWidth = 1065
         ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -436,6 +436,15 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object clConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
         end
       end

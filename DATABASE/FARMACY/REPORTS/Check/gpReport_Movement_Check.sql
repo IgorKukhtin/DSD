@@ -22,6 +22,7 @@ RETURNS TABLE (
   GoodsName      TVarChar,
   GoodsGroupName TVarChar, 
   NDSKindName    TVarChar,
+  ConditionsKeepName    TVarChar,
   Amount                TFloat,
   Price                 TFloat,
  -- Price_original        TFloat,
@@ -41,8 +42,10 @@ RETURNS TABLE (
   PartionPriceInvNumber TVarChar,
   PartionPriceOperDate  TDateTime,
 
+
   UnitName              TVarChar,
   OurJuridicalName      TVarChar
+
 )
 AS
 $BODY$
@@ -174,6 +177,7 @@ BEGIN
            ,Object_Goods_View.GoodsGroupName                                    AS GoodsGroupName
            -- ,Object_Goods_View.NDSKindName                                       AS NDSKindName
            ,Object_NDSKind_Income.ValueData                                     AS NDSKindName
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar           AS ConditionsKeepName           
 
            , tmpData.Amount :: TFloat AS Amount
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
@@ -212,6 +216,11 @@ BEGIN
 
              LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
              LEFT JOIN MovementDesc AS MovementDesc_Price ON MovementDesc_Price.Id = Movement_Price.DescId
+             -- условия хранения
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         ORDER BY
             GoodsGroupName, GoodsName;
@@ -222,6 +231,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 12.01.17         *
  14.03.16                                        * ALL
  28.01.16         * 
  11.08.15                                                                       *

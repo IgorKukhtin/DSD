@@ -281,6 +281,8 @@ BEGIN
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar AS OperDate_Zakaz
            , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
 
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+
        FROM  _tmpOrderInternal_MI AS tmpMI
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -322,7 +324,12 @@ BEGIN
             LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
 
             LEFT JOIN OrderSheduleList ON OrderSheduleList.ContractId = tmpMI.ContractId
-            LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId           
+            LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId  
+            -- условия хранения
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId         
            ;
 
      RETURN NEXT Cursor1;
@@ -392,6 +399,8 @@ BEGIN
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
               , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
+              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+
         FROM _tmpOrderInternal_MI AS tmpMI
              INNER JOIN MovementItem AS MI_Child 
                                      ON MI_Child.ParentId = tmpMI.MovementItemId
@@ -442,6 +451,11 @@ BEGIN
              LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = Object_Juridical.Id
                                  AND GoodsPromo.GoodsId = tmpMI.GoodsId
              LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+             -- условия хранения
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
             ;
 
      RETURN NEXT Cursor2;
@@ -715,6 +729,8 @@ BEGIN
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar AS OperDate_Zakaz
            , OrderSheduleList.OperDate_Dostavka ::TVarChar AS OperDate_Dostavka
 
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+
 --, (select count (*) from OrderSheduleList) ::TVarChar AS OperDate_Dostavka
            
        FROM (SELECT Object_Goods.Id                              AS GoodsId
@@ -886,6 +902,12 @@ BEGIN
 
             LEFT JOIN OrderSheduleList ON OrderSheduleList.ContractId = tmpMI.ContractId
             LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.ContractId = tmpMI.ContractId
+
+            -- условия хранения
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = COALESCE(tmpMI.GoodsId, tmpGoods.GoodsId)
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
            ;
      RETURN NEXT Cursor1;
 
@@ -923,6 +945,8 @@ BEGIN
               , COALESCE(MovementPromo.OperDate, Null)  :: TDateTime   AS OperDatePromo
               , COALESCE(MovementPromo.InvNumber, '') ::  TVarChar     AS InvNumberPromo -- ***
               , COALESCE(GoodsPromo.ChangePercent, 0) ::  TFLoat       AS ChangePercentPromo
+   
+              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
         FROM _tmpMI
              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
@@ -935,6 +959,11 @@ BEGIN
              LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = _tmpMI.JuridicalId
                                  AND GoodsPromo.GoodsId = MovementItem.ObjectId 
              LEFT JOIN Movement AS MovementPromo ON MovementPromo.Id = GoodsPromo.MovementId
+             -- условия хранения
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = _tmpMI.GoodsId 
+                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 ;
    RETURN NEXT Cursor2;
 
@@ -948,6 +977,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderInternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.11.17         * 
  09.09.16         *
  31.08.16         *
  04.08.16         *

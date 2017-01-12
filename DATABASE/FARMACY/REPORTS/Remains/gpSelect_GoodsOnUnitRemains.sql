@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContainerId Integer, Id Integer, GoodsCode Integer, GoodsName TVarChar, GoodsGroupName TVarChar, NDSKindName TVarChar
+             , ConditionsKeepName TVarChar
              , Amount TFloat, Price TFloat, PriceWithVAT TFloat, PriceWithOutVAT TFloat, PriceSale  TFloat
              
              , Summa TFloat, SummaWithVAT TFloat, SummaWithOutVAT TFloat, SummaSale TFloat
@@ -170,6 +171,7 @@ BEGIN
              , Object_Goods.ValueData                  AS GoodsName
              , Object_GoodsGroup.ValueData             AS GoodsGroupName
              , Object_NDSKind_Income.ValueData         AS NDSKindName
+             , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
              
            , tmpData.Amount :: TFloat AS Amount
            , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
@@ -250,9 +252,14 @@ BEGIN
                                          ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                         AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
                                                         
-          LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = tmpData.GoodsId
-          LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
-          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
+            LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.GoodsId = tmpData.GoodsId
+            LEFT JOIN SelectMinPrice_AllGoods_onDate ON SelectMinPrice_AllGoods_onDate.GoodsId = tmpData.GoodsId
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = SelectMinPrice_AllGoods_onDate.ContractId
+            -- условия хранения
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
          ;
 
 END;
@@ -263,6 +270,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.01.17         *
  05.10.16         * add inisJuridical
  04.05.16         *
  27.03.16         *

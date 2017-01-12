@@ -34,6 +34,7 @@ BEGIN
             
             , MovementItem.isErased             AS isErased
             , CASE WHEN MovementItem.Amount > MIFloat_Remains.ValueData THEN TRUE ELSE FALSE END ::Boolean AS isError
+            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -64,6 +65,12 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_MinExpirationDate
                                         ON MIDate_MinExpirationDate.MovementItemId =  MovementItem.Id
                                        AND MIDate_MinExpirationDate.DescId = zc_MIDate_MinExpirationDate()
+             -- условия хранения
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
            ;
 
     RETURN NEXT Cursor1;
@@ -123,6 +130,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.11.17         * 
  20.10.16         * add AmountSend
  05.07.16         * 
 */

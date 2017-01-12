@@ -2,7 +2,6 @@ inherited OrderInternalForm: TOrderInternalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1103#1074#1082#1072' '#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103'>'
   ClientHeight = 532
   ClientWidth = 1229
-  ExplicitLeft = -394
   ExplicitWidth = 1245
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -426,6 +425,15 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 60
           end
+          object clConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -436,6 +444,8 @@ inherited OrderInternalForm: TOrderInternalForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 208
+        ExplicitTop = 240
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -582,6 +592,15 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 86
+          end
+          object colConditionsKeepName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'ConditionsKeepName'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
         end
         object cxGridLevel1: TcxGridLevel
