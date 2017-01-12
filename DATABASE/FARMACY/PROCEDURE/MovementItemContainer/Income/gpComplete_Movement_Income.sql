@@ -44,7 +44,6 @@ BEGIN
                                       ON Movement_Unit.MovementId = Movement.Id
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
     WHERE Movement.Id = inMovementId;
-
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
                   INNER JOIN MovementItem AS MI_Inventory
@@ -73,35 +72,75 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. По одному или более товарам есть документ переучета позже даты текущего прихода. Проведение документа запрещено!';
     END IF;*/
 
-     SELECT ObjectId INTO vbJuridicalId
-       FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From();
 
-     -- Тут устанавливаем связь между товарами покупателей и главным товаром
+    -- Определить
+    vbJuridicalId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From());
 
-      
-     PERFORM gpInsertUpdate_Object_LinkGoods(0                                 -- ключ объекта <Условия договора>
-                                           , DD.GoodsMainId
-                                           , DD.PartnerGoodsId
-                                           , inSession
+
+    -- Тут устанавливаем связь между товарами покупателей и главным товаром
+    PERFORM gpInsertUpdate_Object_LinkGoods(0                                 -- ключ объекта <Условия договора>
+                                          , DD.GoodsMainId
+                                          , DD.PartnerGoodsId
+                                          , inSession
                                             )
-     FROM (SELECT DISTINCT Object_LinkGoods_View.GoodsMainId -- Главный товар
-                         , MovementItem.PartnerGoodsId       -- товар из группы
-           FROM MovementItem_Income_View AS MovementItem
-                LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = MovementItem.GoodsId
-                                               AND Object_LinkGoods_View.ObjectId = vbObjectId
-
-                LEFT JOIN Object_LinkGoods_View AS LinkGoods_Juridical
-                                                ON LinkGoods_Juridical.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-                                               AND LinkGoods_Juridical.GoodsId = MovementItem.PartnerGoodsId
-                                               AND LinkGoods_Juridical.ObjectId = vbJuridicalId
-           WHERE MovementItem.MovementId = inMovementId
-             AND LinkGoods_Juridical.Id IS NULL
-             AND MovementItem.PartnerGoodsId > 0
+    FROM (WITH tmpMI AS (SELECT DISTINCT
+                                MovementItem.ObjectId       AS GoodsId
+                              , MILinkObject_Goods.ObjectId AS PartnerGoodsId
+                         FROM MovementItem
+                              INNER JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                                ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Goods.DescId         = zc_MILinkObject_Goods()
+                                                               AND MILinkObject_Goods.ObjectId       > 0
+                         WHERE MovementItem.MovementId = inMovementId
+                           AND MovementItem.DescId     = zc_MI_Master()
+                           AND MovementItem.IsErased   = FALSE
+                        )
+      , tmpGoodsMain AS (SELECT DISTINCT
+                                tmpMI.GoodsId
+                              , tmpMI.PartnerGoodsId
+                              , ObjectLink_LinkGoods_GoodsMain.ChildObjectId  AS GoodsMainId
+                         FROM tmpMI
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                    ON ObjectLink_LinkGoods_Goods.ChildObjectId = tmpMI.GoodsId
+                                                   AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                    ON ObjectLink_LinkGoods_GoodsMain.ObjectId  = ObjectLink_LinkGoods_Goods.ObjectId
+                                                   AND ObjectLink_LinkGoods_GoodsMain.DescId    = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                    ON ObjectLink_Goods_Object.ObjectId      = tmpMI.GoodsId
+                                                   AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                                   AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
+                        )
+ , tmpGoodsJuridical AS (SELECT DISTINCT
+                                tmpGoodsMain.GoodsId
+                              , ObjectLink_LinkGoods_GoodsMain.ObjectId  AS Id
+                         FROM tmpGoodsMain
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                    ON ObjectLink_LinkGoods_GoodsMain.ChildObjectId  = tmpGoodsMain.GoodsMainId
+                                                   AND ObjectLink_LinkGoods_GoodsMain.DescId         = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                    ON ObjectLink_LinkGoods_Goods.ObjectId      = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                                                   AND ObjectLink_LinkGoods_Goods.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                                   AND ObjectLink_LinkGoods_Goods.ChildObjectId = tmpGoodsMain.PartnerGoodsId
+                              INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                    ON ObjectLink_Goods_Object.ObjectId      = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                                   AND ObjectLink_Goods_Object.DescId        = zc_ObjectLink_Goods_Object()
+                                                   AND ObjectLink_Goods_Object.ChildObjectId = vbJuridicalId
+                        )
+         -- резульат
+         SELECT DISTINCT tmpGoodsMain.GoodsMainId -- Главный товар
+                       , tmpMI.PartnerGoodsId     -- товар из группы
+         FROM tmpMI
+              LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpMI.GoodsId
+              LEFT JOIN tmpGoodsJuridical ON tmpGoodsJuridical.GoodsId = tmpMI.GoodsId
+           WHERE tmpGoodsJuridical.Id IS NULL
           ) AS DD;
+
 
       -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSale (inMovementId);
+
 
      -- собственно проводки
      PERFORM lpComplete_Movement_Income(inMovementId, -- ключ Документа

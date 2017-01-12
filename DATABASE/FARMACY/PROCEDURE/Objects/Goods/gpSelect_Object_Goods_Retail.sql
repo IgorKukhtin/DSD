@@ -201,17 +201,17 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
 
-        -- условия хранения
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
-                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
-                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
         -- получается GoodsMainId
         LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Object_Goods_View.Id --Object_Goods.Id
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+        -- условия хранения
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 

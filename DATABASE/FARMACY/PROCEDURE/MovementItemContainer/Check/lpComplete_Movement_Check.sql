@@ -45,12 +45,11 @@ BEGIN
     vbOperDate:= (SELECT OperDate FROM Movement WHERE Id = inMovementId);
 
     -- Определить
-    vbAccountId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                             , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+    vbAccountId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000()         -- Запасы
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад 
                                              , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                              , inInfoMoneyId            := NULL
                                              , inUserId                 := inUserId);
-
     -- Определить
     vbUnitId:= (SELECT MovementLinkObject.ObjectId
                 FROM MovementLinkObject 
@@ -61,15 +60,18 @@ BEGIN
     -- данные почти все
     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_remains'))
     THEN
-        DELETE FROM _tmpItem_remains;
+        -- DELETE FROM _tmpItem_remains;
+        DROP TABLE _tmpItem_remains;
+        -- таблица - данные почти все
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
     ELSE
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpItem_remains (GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime);
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
     END IF;
 
     -- предварительно сохранили продажи
     INSERT INTO _tmpItem (MovementItemId, ObjectId, OperSumm, Price)
-       SELECT MovementItem.Id, MovementItem.ObjectId, MovementItem.Amount, COALESCE (MIFloat_Price.ValueData, 0)
+       SELECT MI.Id, MI.ObjectId, MI.Amount, COALESCE (MIFloat_Price.ValueData, 0)
        FROM MovementItem AS MI
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MI.Id
@@ -119,7 +121,7 @@ BEGIN
                          || '';
 
            -- Сохранили ошибку
-           PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, outMessageText);
+           PERFORM lpInsertUpdate_MovementString (zc_MovementString_CommentError(), inMovementId, outMessageText :: TVarChar);
 
            -- Ошибка расч/факт остаток :
            outMessageText:= 'Ошибка.Товара нет в наличии: ' || outMessageText;
@@ -167,19 +169,20 @@ BEGIN
                     IF vbAmount_remains > vbAmount
                     THEN
                         -- получилось в остатках больше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
-                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate
-                                                          , WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
+                                                          , ObjectId_analyzer, WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
                                                            )
-                           SELECT zc_Container_Count()
+                           SELECT zc_MIContainer_Count()
                                 , zc_Movement_Check()
                                 , inMovementId
                                 , vbMovementItemId
-                                , vbContainerId, vbGoodsId
+                                , vbContainerId
                                 , vbAccountId
                                 , -1 * vbAmount
                                 , vbOperDate
-                                , vbUnitId
-                                , vbMovementItemId_partion
+                                , vbGoodsId                AS ObjectId_analyzer
+                                , vbUnitId                 AS WhereObjectId_analyzer
+                                , vbMovementItemId_partion AS AnalyzerId
                                 , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
                                 , (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId) AS Price
                                  ;
@@ -187,19 +190,20 @@ BEGIN
                         vbAmount:= 0;
                     ELSE
                         -- получилось в остатках меньше чем искали, !!!сохраняем в табл-результат - проводки кол-во!!!
-                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate
-                                                          , WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
+                        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
+                                                          , ObjectId_analyzer, WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
                                                            )
-                           SELECT zc_Container_Count()
+                           SELECT zc_MIContainer_Count()
                                 , zc_Movement_Check()
                                 , inMovementId
                                 , vbMovementItemId
-                                , vbContainerId, vbGoodsId
+                                , vbContainerId
                                 , vbAccountId
                                 , -1 * vbAmount_remains
                                 , vbOperDate
-                                , vbUnitId
-                                , vbMovementItemId_partion
+                                , vbGoodsId                AS ObjectId_analyzer
+                                , vbUnitId                 AS WhereObjectId_analyzer
+                                , vbMovementItemId_partion AS AnalyzerId
                                 , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = vbMovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
                                 , (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId) AS Price
                                  ;
@@ -215,8 +219,8 @@ BEGIN
 
     ELSE
         -- !!!Сразу!!! - Результат - проводки кол-во
-        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, ObjectId_analyzer, AccountId, Amount, OperDate
-                                          , WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
+        INSERT INTO _tmpMIContainer_insert (DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate
+                                          , ObjectId_analyzer, WhereObjectId_analyzer, AnalyzerId, ObjectIntId_analyzer, Price
                                            )
            WITH tmpContainer AS (SELECT MI_Sale.MovementItemId
                                       , MI_Sale.ObjectId        AS GoodsId
@@ -230,17 +234,18 @@ BEGIN
                                  FROM _tmpItem AS MI_Sale
                                       INNER JOIN _tmpItem_remains AS Container ON Container.GoodsId = MI_Sale.ObjectId
                                 )
-           SELECT zc_Container_Count()
+           -- Результат
+           SELECT zc_MIContainer_Count()
                 , zc_Movement_Check()
                 , inMovementId
                 , tmpItem.MovementItemId
                 , tmpItem.ContainerId
-                , tmpItem.GoodsId
                 , vbAccountId
                 , -1 * Amount
                 , vbOperDate
-                , vbUnitId
-                , tmpItem.MovementItemId_partion
+                , tmpItem.GoodsId                AS ObjectId_analyzer
+                , vbUnitId                       AS WhereObjectId_analyzer
+                , tmpItem.MovementItemId_partion AS AnalyzerId
                 , (SELECT MIContainer.ObjectIntId_analyzer FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementItemId = tmpItem.MovementItemId_partion AND MIContainer.DescId = zc_MIContainer_Count()) AS ObjectIntId_analyzer
                 , tmpItem.Price
               FROM (SELECT DD.ContainerId

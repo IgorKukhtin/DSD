@@ -3,7 +3,7 @@ inherited InventoryForm: TInventoryForm
   ClientHeight = 658
   ClientWidth = 898
   ExplicitWidth = 914
-  ExplicitHeight = 696
+  ExplicitHeight = 693
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -465,6 +465,11 @@ inherited InventoryForm: TInventoryForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -496,6 +501,11 @@ inherited InventoryForm: TInventoryForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = chGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -513,6 +523,14 @@ inherited InventoryForm: TInventoryForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chisLast: TcxGridDBColumn
+            Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
+            DataBinding.FieldName = 'isLast'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
+          end
           object chNum: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
             DataBinding.FieldName = 'Num'
@@ -537,6 +555,17 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 209
           end
+          object chAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 180
+          end
           object chUserName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UserName'
@@ -545,14 +574,6 @@ inherited InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 272
           end
-          object chAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 180
-          end
           object chDate_Insert: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
             DataBinding.FieldName = 'Date_Insert'
@@ -560,14 +581,6 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 139
-          end
-          object chisLast: TcxGridDBColumn
-            Caption = #1055#1086#1089#1083#1077#1076#1085#1080#1081
-            DataBinding.FieldName = 'isLast'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 85
           end
         end
         object cxGridChildLevel: TcxGridLevel
