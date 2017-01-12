@@ -1502,7 +1502,7 @@ constructor TExportGrid.Create(AOwner: TComponent);
 begin
   inherited;
   PostDataSetBeforeExecute := true;
-  ExportType := cxegExportToExcel;
+  ExportType := cxegExportToXlsx; // было cxegExportToExcel;
   HideHeader := False;
   EncodingANSI := False;
   FOpenAfterCreate := true;
