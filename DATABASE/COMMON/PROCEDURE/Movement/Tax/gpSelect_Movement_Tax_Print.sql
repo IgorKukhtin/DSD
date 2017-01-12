@@ -527,13 +527,13 @@ BEGIN
                        THEN ''
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
                        THEN ObjectString_Goods_UKTZED.ValueData
-                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30101()
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
                        THEN '1601'
-                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30102()
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
                        THEN '1602'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
                        THEN '1905'
-                  ELSE ''
+                  ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                         THEN 'опеднокюрю гю йнка.хгдекхъ'

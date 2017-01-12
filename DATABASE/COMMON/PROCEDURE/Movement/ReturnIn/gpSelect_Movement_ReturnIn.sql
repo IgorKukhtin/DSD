@@ -381,9 +381,9 @@ END $$;
 
 union all
               SELECT 2 -- , sum (MovementFloat_TotalSumm.ValueData)
---  , SUM (coalesce (MIFloat_AmountPartner.ValueData, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
+--  , (coalesce (MIFloat_AmountPartner.ValueData, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
  , SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2
-/ *, Movement.Id, MovementItem.ObjectId as GoodsId, MIFloat_Price.ValueData AS Price, Movement.InvNumber, Movement.OperDate
+/ *, Movement.Id, MovementItem.ObjectId as GoodsId, MIFloat_Price.ValueData AS Price, Movement.InvNumber, MovementString.ValueData, Movement.OperDate
 , MIFloat_AmountPartner.ValueData AS AmountPartner
 , MIFloat_Price.ValueData AS Price_add
 , SUM (coalesce (MovementItem_Child.Amount, 0) * coalesce (MIFloat_Price.ValueData, 0)) * 1.2 AS summ * /
@@ -399,6 +399,8 @@ union all
                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate_OperDatePartner.MovementId
                                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
                                                 -- AND MovementLinkObject.ObjectId = vbPartnerId
+                   LEFT JOIN MovementString ON MovementString.MovementId = MovementDate_OperDatePartner.MovementId
+                                           AND MovementString.DescId = zc_MovementString_InvNumberPartner()
 
                    INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject.ObjectId
@@ -433,7 +435,7 @@ union all
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 / *group by  Movement.Id, MovementItem.ObjectId, MIFloat_Price.ValueData
 , MIFloat_AmountPartner.ValueData
-, Movement.InvNumber, Movement.OperDate
+, Movement.InvNumber, MovementString.ValueData, Movement.OperDate
 , MIFloat_Price.ValueData
 having  MIFloat_AmountPartner.ValueData <>  SUM (coalesce (MovementItem_Child.Amount, 0))
 * /

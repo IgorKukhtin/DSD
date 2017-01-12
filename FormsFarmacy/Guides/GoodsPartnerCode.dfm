@@ -4,7 +4,7 @@
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1016
-  ExplicitHeight = 596
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -181,10 +181,10 @@
       object cbUpdate: TcxCheckBox
         Left = 273
         Top = 40
-        Caption = #1044#1072'/'#1053#1077#1090
+        Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100' '#1076#1083#1103' '#1042#1057#1045#1061
         Properties.ReadOnly = False
         TabOrder = 3
-        Width = 64
+        Width = 133
       end
     end
   end

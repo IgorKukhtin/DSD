@@ -508,7 +508,6 @@ object OrderSheduleForm: TOrderSheduleForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ShortCut = 16429
       ImageIndex = 54
       FormName = 'TOrderSheduleEditForm'
       FormNameParam.Value = 'TOrderSheduleEditForm'
@@ -570,7 +569,6 @@ object OrderSheduleForm: TOrderSheduleForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -585,7 +583,6 @@ object OrderSheduleForm: TOrderSheduleForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
@@ -646,6 +643,7 @@ object OrderSheduleForm: TOrderSheduleForm
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6

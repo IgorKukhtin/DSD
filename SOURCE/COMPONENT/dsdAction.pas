@@ -1502,7 +1502,7 @@ constructor TExportGrid.Create(AOwner: TComponent);
 begin
   inherited;
   PostDataSetBeforeExecute := true;
-  ExportType := cxegExportToExcel;
+  ExportType := cxegExportToXlsx;
   HideHeader := False;
   EncodingANSI := False;
   FOpenAfterCreate := true;
@@ -1688,7 +1688,7 @@ begin
   Caption := 'Выгрузка в Excel';
   Hint := 'Выгрузка в Excel';
   ShortCut := TextToShortCut('Ctrl+X');
-  ExportType := cxegExportToExcel;
+  ExportType := cxegExportToXlsx;
 end;
 
 { TdsdPrintAction }
