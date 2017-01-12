@@ -8,36 +8,46 @@ CREATE OR REPLACE FUNCTION lpCheckComplete_Movement_Income(
 RETURNS VOID
 AS
 $BODY$
-  DECLARE vbUserId Integer;
   DECLARE vbGoodsId Integer;
   DECLARE vbNDSKindId Integer;
-  DECLARE vbGoodsName TVarChar;
 BEGIN
-  -- Проверяем все ли товары состыкованы. 
-  IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
-     RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
-  END IF;
 
-  -- Проверяем у всех ли товаров совпадает НДС. 
-  SELECT ObjectId INTO vbNDSKindId 
-    FROM MovementLinkObject AS MovementLinkObject_NDSKind
+   -- Проверяем все ли товары состыкованы. 
+   IF EXISTS (SELECT * FROM MovementItem WHERE MovementId = inMovementId AND ObjectId IS NULL) THEN
+      RAISE EXCEPTION 'В документе прихода не все товары состыкованы';
+   END IF;
+
+
+   -- находим НДС. 
+   SELECT ObjectId INTO vbNDSKindId
+   FROM MovementLinkObject AS MovementLinkObject_NDSKind
    WHERE MovementLinkObject_NDSKind.MovementId = inMovementId
      AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind();
 
-  SELECT MIN(GoodsId) INTO vbGoodsId
-    FROM MovementItem_Income_View 
-    JOIN Object_Goods_View ON MovementItem_Income_View.GoodsId = Object_Goods_View.Id
-   WHERE MovementId = inMovementId AND MovementItem_Income_View.isErased = False AND Object_Goods_View.NDSKindId <> vbNDSKindId;
+   -- Проверяем у всех ли товаров совпадает НДС. 
+   vbGoodsId:= (SELECT MovementItem.ObjectId
+                FROM MovementItem
+                    JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                    ON ObjectLink_Goods_NDSKind.ObjectId = MovementItem.ObjectId
+                                   AND ObjectLink_Goods_NDSKind.ChildObjectId <> vbNDSKindId
+                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.IsErased   = FALSE
+                LIMIT 1);
+   IF vbGoodsId <> 0
+   THEN 
+       RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', lfGet_Object_ValueData (vbGoodsId);
+   END IF;
 
-  IF COALESCE(vbGoodsId, 0) <> 0 THEN 
-     SELECT ValueData INTO vbGoodsName FROM Object WHERE Id = vbGoodsId;
-     RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', vbGoodsName;
-  END IF;
 
-  --проверяем, выставили ли дату прихода на аптеке
-  IF EXISTS(SELECT 1 FROM Movement_Income_View WHERE Id = inMovementId AND BranchDate is null) THEN
+  -- проверяем, выставили ли дату прихода на аптеке
+  IF EXISTS (SELECT 1 FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MovementDate_Branch() AND MD.ValueData IS NULL)
+  THEN
       RAISE EXCEPTION 'У документа не установлена дата прихода на аптеке';
   END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -47,10 +57,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  26.01.15                         *
  26.12.14                         *
-
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 579, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 579, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 579, inSession:= '2')
+-- SELECT * FROM lpCheckComplete_Movement_Income (inMovementId:= 3946325)

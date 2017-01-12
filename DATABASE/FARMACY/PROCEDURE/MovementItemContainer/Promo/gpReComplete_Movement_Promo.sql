@@ -14,7 +14,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Promo());
     vbUserId := inSession;
-    
+
+
+    IF inSession = '3'
+    THEN
+       -- Пересчет по партиям....
+       PERFORM lpReComplete_Movement_Promo_All (vbUserId);
+    ELSE
+
     -- только если документ проведен
     IF EXISTS(
                 SELECT 1
@@ -34,6 +41,8 @@ BEGIN
                                      inStatusCode := zc_Enum_StatusCode_Complete(),
                                      inSession    := inSession);
     END IF;
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -19,7 +19,7 @@ BEGIN
 
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
-                                  , inUserId    := vbUserId);
+                                 , inUserId    := vbUserId);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -179,6 +179,7 @@ BEGIN
            , COALESCE(ObjectDate_Insert.ValueData, Null)   ::TDateTime AS InsertDate
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
+           , Object_ConditionsKeep.ValueData                           AS ConditionsKeepName
 
     FROM Object_Goods_View
          LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
@@ -205,6 +206,12 @@ BEGIN
                                                  AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
         LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
                                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+        -- условия хранения
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
     WHERE Object_Goods_View.ObjectId = vbObjectId;
 

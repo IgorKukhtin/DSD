@@ -281,7 +281,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerProtocol_isProcessTimer(Sender: TObject);
   private
-    oldGoodsId:Integer;
+    oldGoodsId, oldGoodsCode : Integer;
     fEnterKey13:Boolean;
 
     Scale_BI: TCasBI;
@@ -322,8 +322,9 @@ uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPri
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_all;
 begin
-     oldGoodsId:=0;
-     EditPartionGoods.Text:='';
+     oldGoodsId:= 0;
+     oldGoodsCode:= 0;
+     EditPartionGoods.Text:= '';
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.Initialize_afterSave_MI;
@@ -939,7 +940,8 @@ begin
                WriteParamsMovement;
                RefreshDataSet;
                CDS.First;
-               oldGoodsId:=0;
+               oldGoodsId:= 0;
+               oldGoodsCode:= 0;
           end;
      myActiveControl;
 end;
@@ -1062,8 +1064,13 @@ begin
           if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg
           then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
-          if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
+          if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
+             and (oldGoodsCode <> GoodsCode_int)
           then rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode_max').AsInteger);
+
+          //сохраним что был ГЕТ
+          oldGoodsCode:= GoodsCode_int;
+
      end
      else begin
           if (ActiveControl.ClassName = 'TcxGridSite') or (ActiveControl.ClassName = 'TcxGrid') or (ActiveControl.ClassName = 'TcxDateEdit')
