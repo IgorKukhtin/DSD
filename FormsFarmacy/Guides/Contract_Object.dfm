@@ -1,4 +1,4 @@
-inherited ContractForm: TContractForm
+inherited Contract_ObjectForm: TContract_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientWidth = 798
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -19,7 +19,6 @@ inherited ContractForm: TContractForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -29,6 +28,7 @@ inherited ContractForm: TContractForm
             Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 123
           end
           object clJuridicalBasisName: TcxGridDBColumn
@@ -36,12 +36,14 @@ inherited ContractForm: TContractForm
             DataBinding.FieldName = 'JuridicalBasisName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 145
           end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 212
           end
           object colPercent: TcxGridDBColumn
@@ -52,6 +54,7 @@ inherited ContractForm: TContractForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colPercent_Juridical: TcxGridDBColumn
@@ -85,6 +88,7 @@ inherited ContractForm: TContractForm
             Caption = #1054#1090#1089#1088#1086#1095#1082#1072
             DataBinding.FieldName = 'Deferment'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 98
           end
           object colisReport: TcxGridDBColumn
@@ -93,18 +97,19 @@ inherited ContractForm: TContractForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' "'#1075#1088#1072#1092#1080#1082' '#1076#1074#1080#1078#1077#1085#1080#1103' '#1094#1077#1085#1099' '#1087#1086' '#1087#1088#1077#1087#1072#1088#1072#1090#1091'"'
-            Options.Editing = False
             Width = 90
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 268
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
+            Options.Editing = False
             Width = 88
           end
         end
@@ -133,9 +138,22 @@ inherited ContractForm: TContractForm
       Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 52
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Contract_isReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Contract_isReport
+        end>
+      Caption = 'dsdUpdatePrice'
+      DataSource = MasterDS
+    end
   end
   inherited MasterDS: TDataSource
-    Top = 96
+    Left = 40
+    Top = 152
   end
   inherited MasterCDS: TClientDataSet
     FilterOptions = []
@@ -154,63 +172,6 @@ inherited ContractForm: TContractForm
       0
       26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateisReport'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
-        end>
-    end
     object bbUpdateisReport: TdxBarButton
       Action = actUpdateisReport
       Category = 0
@@ -244,7 +205,7 @@ inherited ContractForm: TContractForm
       end
       item
         Name = 'inisReport'
-        Value = 'FALSE'
+        Value = 'False'
         Component = MasterCDS
         ComponentItem = 'isReport'
         DataType = ftBoolean
@@ -261,7 +222,7 @@ inherited ContractForm: TContractForm
       end
       item
         Name = 'isNotParam'
-        Value = 'TRUE'
+        Value = 'FALSE'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

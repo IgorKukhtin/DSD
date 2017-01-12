@@ -478,7 +478,8 @@ uses
   ConditionsKeep in '..\..\FormsFarmacy\Guides\ConditionsKeep.pas' {ConditionsKeepForm: TParentForm},
   ReportPromoParams in '..\..\FormsFarmacy\Object\ReportPromoParams.pas' {ReportPromoParamsForm: TParentForm},
   Report_MinPrice_onGoods in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoods.pas' {Report_MinPrice_onGoodsForm: TParentForm},
-  Report_MinPrice_onGoodsDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoodsDialog.pas' {Report_MinPrice_onGoodsDialogForm: TParentForm};
+  Report_MinPrice_onGoodsDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoodsDialog.pas' {Report_MinPrice_onGoodsDialogForm: TParentForm},
+  Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

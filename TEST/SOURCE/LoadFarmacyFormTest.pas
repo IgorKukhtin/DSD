@@ -284,6 +284,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContract_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContract_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadCreateOrderFromMCSFormTest;

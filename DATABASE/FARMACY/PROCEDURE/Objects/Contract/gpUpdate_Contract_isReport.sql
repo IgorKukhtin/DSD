@@ -1,11 +1,13 @@
--- Function: gpUpdate_Object_Goods_IsUpload()
+-- Function: gpUpdate_Contract_isReport()
 
 DROP FUNCTION IF EXISTS gpUpdate_Contract_isReport(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Contract_isReport(Integer, Boolean,Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Contract_isReport(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
-    IN inisReport              Boolean   ,    -- Участвует в Автоперемещении
-   OUT outisReport             Boolean   ,
+    IN inisReport             Boolean   ,    -- Участвует в Автоперемещении
+   OUT outisReport            Boolean   ,
+    IN isNotParam             Boolean  ,
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Boolean AS
@@ -20,7 +22,12 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
    -- определили признак
-   outisReport:= NOT inisReport;
+      IF isNotParam = True
+      THEN
+          outisReport:= NOT inisReport;
+      ELSE
+          outisReport:= inisReport;
+      END IF;
 
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Report(), inId, outisReport);
 
