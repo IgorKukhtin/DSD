@@ -25,7 +25,8 @@ BEGIN
      SELECT 
            Object_GoodsGroup.Id                AS Id 
          , Object_GoodsGroup.ObjectCode        AS Code
-         , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
+         , lfGet_Object_GoodsGroup_CodeUKTZED (Object_GoodsGroup.Id) AS CodeUKTZED
+         -- , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
          , Object_GoodsGroup.ValueData         AS Name
          , Object_GoodsGroup.isErased          AS isErased
          
@@ -88,9 +89,9 @@ BEGIN
                                AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
 
-           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED
+           /*LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED
                                   ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
-                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()
+                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()*/
 
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
      ;

@@ -139,4 +139,4 @@ ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsGroup('2')
+-- SELECT * FROM gpGet_Object_GoodsGroup (1, '2')
