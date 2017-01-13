@@ -65,6 +65,7 @@ type
     spUpdateCodeUKTZED: TdsdStoredProc;
     clCodeUKTZED: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
+    CodeUKTZED_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
