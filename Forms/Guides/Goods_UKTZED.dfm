@@ -94,6 +94,14 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
+      object CodeUKTZED_calc: TcxGridDBColumn
+        Caption = #1056#1072#1089#1095#1077#1090' '#1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+        DataBinding.FieldName = 'CodeUKTZED_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'

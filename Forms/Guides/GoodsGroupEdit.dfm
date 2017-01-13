@@ -178,18 +178,16 @@
     TabOrder = 19
     Width = 273
   end
-  object ceCodeUKTZED: TcxCurrencyEdit
-    Left = 144
-    Top = 28
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 20
-    Width = 137
-  end
   object cxLabel9: TcxLabel
     Left = 144
     Top = 7
     Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+  end
+  object ceCodeUKTZED: TcxTextEdit
+    Left = 144
+    Top = 28
+    TabOrder = 21
+    Width = 137
   end
   object ActionList: TActionList
     Left = 112
