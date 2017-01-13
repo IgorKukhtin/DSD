@@ -1096,6 +1096,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_ContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_ContainerForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalUKTZEDForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalUKTZEDForm');
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin

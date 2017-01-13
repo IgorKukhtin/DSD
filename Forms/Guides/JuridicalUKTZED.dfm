@@ -1,8 +1,8 @@
-object JuridicalForm: TJuridicalForm
+object JuridicalUKTZEDForm: TJuridicalUKTZEDForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 405
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1076#1083#1080#1085#1072' '#1082#1086#1076#1072' UKTZED)>'
+  ClientHeight = 456
   ClientWidth = 953
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,13 +21,13 @@ object JuridicalForm: TJuridicalForm
     Left = 0
     Top = 26
     Width = 8
-    Height = 379
+    Height = 430
   end
   object cxGrid: TcxGrid
     Left = 8
     Top = 26
     Width = 945
-    Height = 379
+    Height = 430
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -41,8 +41,10 @@ object JuridicalForm: TJuridicalForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -60,7 +62,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 99
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -68,54 +70,23 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 50
       end
-      object clInvNumberBranch: TcxGridDBColumn
-        Caption = #8470' '#1092#1080#1083#1080#1072#1083#1072
-        DataBinding.FieldName = 'InvNumberBranch'
+      object isLongUKTZED: TcxGridDBColumn
+        Caption = '10-'#1090#1080' '#1079#1085#1072#1095#1085#1099#1081' '#1082#1086#1076' '#1059#1050#1058' '#1047#1045#1044
+        DataBinding.FieldName = 'isLongUKTZED'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
-      end
-      object clGLNCode: TcxGridDBColumn
-        Caption = 'GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
-        DataBinding.FieldName = 'GLNCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
+        Width = 40
       end
       object clRetailName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
         DataBinding.FieldName = 'RetailName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceRetailForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clRetailReportName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100' ('#1087#1088#1086#1089#1088#1086#1095#1082#1072')'
-        DataBinding.FieldName = 'RetailReportName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceRetailReportForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
+        Options.Editing = False
+        Width = 60
       end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
@@ -131,6 +102,7 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
@@ -172,6 +144,7 @@ object JuridicalForm: TJuridicalForm
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -183,7 +156,7 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 70
       end
       object InfoMoneyName_all: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
@@ -202,151 +175,6 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
-      end
-      object clisTaxSummary: TcxGridDBColumn
-        Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
-        DataBinding.FieldName = 'isTaxSummary'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
-      object DayTaxSummary: TcxGridDBColumn
-        Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
-        DataBinding.FieldName = 'DayTaxSummary'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 85
-      end
-      object clPriceListName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-        DataBinding.FieldName = 'PriceListName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceListForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object clPriceListPromoName: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1072#1082#1094#1080#1086#1085#1085#1099#1081')'
-        DataBinding.FieldName = 'PriceListPromoName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceListPromoForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 100
-      end
-      object clStartPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'StartPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object clEndPromo: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1079#1072#1074'. '#1072#1082#1094#1080#1080
-        DataBinding.FieldName = 'EndPromo'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 65
-      end
-      object PriceListName_Prior: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1074#1086#1079#1074#1088#1072#1090#1099' '#1087#1086' '#1089#1090#1072#1088'. '#1094#1077#1085#1072#1084')'
-        DataBinding.FieldName = 'PriceListName_Prior'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_Prior
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PriceListName_30103: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1061#1083#1077#1073')'
-        DataBinding.FieldName = 'PriceListName_30103'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_30103
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object PriceListName_30201: TcxGridDBColumn
-        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1052#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
-        DataBinding.FieldName = 'PriceListName_30201'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoicePriceList_30201
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object clGoodsPropertyName: TcxGridDBColumn
-        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsPropertyName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object clisDiscountPrice: TcxGridDBColumn
-        Caption = #1055#1077#1095'. '#1094#1077#1085#1091' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-        DataBinding.FieldName = 'isDiscountPrice'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 73
-      end
-      object isLongUKTZED: TcxGridDBColumn
-        Caption = '10-'#1090#1080' '#1079#1085#1072#1095#1085#1099#1081' '#1082#1086#1076' '#1059#1050#1058' '#1047#1045#1044
-        DataBinding.FieldName = 'isLongUKTZED'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 101
       end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -416,22 +244,13 @@ object JuridicalForm: TJuridicalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbUpdateislongUKTZED'
         end
         item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -446,14 +265,6 @@ object JuridicalForm: TJuridicalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -486,12 +297,18 @@ object JuridicalForm: TJuridicalForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
@@ -523,6 +340,10 @@ object JuridicalForm: TJuridicalForm
       Action = actShowAll
       Category = 0
     end
+    object bbUpdateislongUKTZED: TdxBarButton
+      Action = actUpdateislongUKTZED
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -531,63 +352,19 @@ object JuridicalForm: TJuridicalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
         item
+          StoredProc = spSelect
         end
         item
-          StoredProc = GridStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TJuridicalEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSource = GridDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TJuridicalEditForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      ActionType = acUpdate
-      DataSource = GridDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -603,7 +380,6 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
-          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -649,114 +425,6 @@ object JuridicalForm: TJuridicalForm
       isSetErased = False
       DataSource = GridDS
     end
-    object actChoiceRetailForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'RetailChoiceForm'
-      FormName = 'TRetailForm'
-      FormNameParam.Value = 'TRetailForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'RetailId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'RetailName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoiceRetailReportForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'RetailChoiceForm'
-      FormName = 'TRetailReportForm'
-      FormNameParam.Value = 'TRetailReportForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'RetailReportId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'RetailReportName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoicePriceListPromoForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PriceListPromoChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListPromoId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListPromoName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoicePriceListForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
@@ -796,18 +464,6 @@ object JuridicalForm: TJuridicalForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = GridDS
-    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
@@ -844,13 +500,13 @@ object JuridicalForm: TJuridicalForm
         end>
       isShowModal = True
     end
-    object actChoicePriceList_Prior: TOpenChoiceForm
+    object actChoiceGoodsProperty: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
+      Caption = 'actChoiceGoodsProperty'
+      FormName = 'TGoodsPropertyForm'
+      FormNameParam.Value = 'TGoodsPropertyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -858,68 +514,14 @@ object JuridicalForm: TJuridicalForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PriceListId_Prior'
+          ComponentItem = 'GoodsPropertyId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PriceListName_Prior'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoicePriceList_30103: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListId_30103'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListName_30103'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actChoicePriceList_30201: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListId_30103'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'PriceListName_30103'
+          ComponentItem = 'GoodsPropertyName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -928,10 +530,10 @@ object JuridicalForm: TJuridicalForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = GridStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = GridStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -944,10 +546,23 @@ object JuridicalForm: TJuridicalForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actUpdateislongUKTZED: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = '10-'#1090#1080' '#1079#1085#1072#1095#1085#1099#1081' '#1082#1086#1076' '#1059#1050#1058' '#1047#1045#1044' '#1044#1072'/'#1053#1077#1090
+      Hint = '10-'#1090#1080' '#1079#1085#1072#1095#1085#1099#1081' '#1082#1086#1076' '#1059#1050#1058' '#1047#1045#1044' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 52
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 272
-    Top = 184
+    Left = 296
+    Top = 192
   end
   object GridDS: TDataSource
     DataSet = MasterCDS
@@ -961,7 +576,7 @@ object JuridicalForm: TJuridicalForm
     Left = 272
     Top = 136
   end
-  object GridStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
     DataSet = MasterCDS
     DataSets = <
@@ -978,7 +593,7 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
+    Left = 128
     Top = 136
   end
   object spErasedUnErased: TdsdStoredProc
@@ -995,8 +610,8 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 184
+    Left = 88
+    Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1006,7 +621,6 @@ object JuridicalForm: TJuridicalForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -1014,7 +628,6 @@ object JuridicalForm: TJuridicalForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -1027,7 +640,7 @@ object JuridicalForm: TJuridicalForm
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Juridical_Params'
+    StoredProcName = 'gpUpdate_Juridical_isLongUKTZED'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1040,27 +653,20 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inJuridicalGroupId'
+        Name = 'inisLongUKTZED'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'JuridicalGroupId'
+        ComponentItem = 'isLongUKTZED'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRetailId'
+        Name = 'outisLongUKTZED'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'RetailId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRetailReportId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'RetailReportId'
-        ParamType = ptInput
+        ComponentItem = 'isLongUKTZED'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
