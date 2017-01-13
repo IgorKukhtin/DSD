@@ -57,6 +57,13 @@ CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer (Parent
 CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer, AnalyzerId);
 -- ???18.05.2016???
 -- CREATE INDEX idx_MovementItemContainer_ObjectId_Analyzer_OperDate_AnalyzerId ON MovementItemContainer (ObjectId_Analyzer_OperDate, AnalyzerId);
+-- 
+-- !!!FARMACY!!!!
+-- CREATE INDEX idx_MovementItemContainer_ObjectIntId_analyzer ON MovementItemContainer (ObjectIntId_analyzer);
+-- !!!FARMACY!!!!
+-- CREATE INDEX idx_MovementItemContainer_AnalyzerId ON MovementItemContainer (AnalyzerId);
+-- 
+
                                                                          
 DO $$ 
     BEGIN

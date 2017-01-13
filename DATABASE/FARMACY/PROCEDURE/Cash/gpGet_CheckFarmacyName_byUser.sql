@@ -10,16 +10,21 @@ CREATE OR REPLACE FUNCTION gpGet_CheckFarmacyName_byUser(
     IN     inSession          TVarChar  -- Сессия пользователя
 )
 RETURNS BOOLEAN
-LANGUAGE plpgsql
+AS
 $BODY$
 BEGIN
  Enter := FALSE;
 
- if AFarmacyName = 'Аптека 18' THEN
-  Enter := TRUE;
+ if AFarmacyName = 'Аптека 18'
+ THEN
+      Enter := TRUE;
+ ELSE
+      Enter := TRUE;
  END IF;
+
 END;
 $BODY$
+  LANGUAGE PLPGSQL VOLATILE;
  
 /*
 Это тестовая функция для проверки 

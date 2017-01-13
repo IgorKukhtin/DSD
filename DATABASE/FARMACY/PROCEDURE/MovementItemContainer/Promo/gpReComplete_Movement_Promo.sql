@@ -19,7 +19,7 @@ BEGIN
     IF inSession = '3'
     THEN
        -- ѕересчет по парти€м....
-       PERFORM lpReComplete_Movement_Promo_All (vbUserId);
+       PERFORM lpReComplete_Movement_Promo_All (inMovementId, vbUserId);
     ELSE
 
     -- только если документ проведен

@@ -148,6 +148,10 @@ BEGIN
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
        WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
+          OR Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101()
+                                                 , zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102()
+                                                 , zc_Enum_InfoMoney_30103()
+                                                  )
       ;
   
 END;

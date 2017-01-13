@@ -78,7 +78,7 @@ BEGIN
                            , tmpMovReturn.PaidKindId
                            , MI_Master.Id                               AS MI_Id
                            , MI_Master.ObjectId                         AS GoodsId
-                           , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                           , CASE WHEN MI_Master.isErased = TRUE THEN 0 ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0) END AS AmountPartner
                       FROM tmpMovReturn
                            INNER JOIN MovementItem AS MI_Master 
                                                    ON MI_Master.MovementId = tmpMovReturn.Id
@@ -98,7 +98,8 @@ BEGIN
                         GROUP BY MI_Child.ParentId
                      )
 
-   , tmpData AS (SELECT tmpMI_Master.MovementId
+   , tmpData AS (SELECT tmpMI_Master.MI_Id AS MovementItemId
+                      , tmpMI_Master.MovementId
                       , tmpMI_Master.MovementDescId
                       , tmpMI_Master.GoodsId
                       , tmpMI_Master.AmountPartner  AS Amount
@@ -120,7 +121,30 @@ BEGIN
                                                ON MIFloat_Price.MovementItemId = tmpMI_Master.MI_Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
                  )
-
+   , tmpMaster_check AS (SELECT 
+                        tmp.MovementId
+                      , tmp.GoodsId
+                      , SUM (tmp.Amount)  AS Amount
+                 FROM (SELECT DISTINCT tmpData.MovementItemId, tmpData.MovementId, tmpData.GoodsId, tmpData.Amount FROM tmpData) AS tmp
+                      GROUP BY 
+                        tmp.MovementId
+                      , tmp.GoodsId
+                 )
+   , tmpChild_check AS (SELECT 
+                       tmp.MovementId
+                      , tmp.GoodsId
+                      , SUM (tmp.AmountChild)  AS AmountChild
+                 FROM tmpData AS tmp
+                      GROUP BY 
+                        tmp.MovementId
+                      , tmp.GoodsId
+                 )
+   , tmp_check AS (SELECT tmpMaster_check.MovementId, tmpMaster_check.GoodsId
+                  FROM tmpMaster_check JOIN tmpChild_check ON tmpChild_check.MovementId = tmpMaster_check.MovementId
+                                                         AND tmpChild_check.GoodsId     = tmpMaster_check.GoodsId
+                                                         AND tmpChild_check.AmountChild <> tmpMaster_check.Amount
+                 )
+             -- результат
              SELECT Movement_Return.Id          AS Movement_ReturnId
                   , MovementDesc.ItemName       AS MovementDescName
                   , Object_Status.ObjectCode    AS StatusCode
@@ -141,6 +165,8 @@ BEGIN
                   , tmpData.SummaChild  :: Tfloat 
                   , (tmpData.Summa - tmpData.SummaChild) :: Tfloat AS SummDiff
               FROM tmpData
+                INNER JOIN tmp_check ON tmp_check.MovementId = tmpData.MovementId AND tmp_check.GoodsId = tmpData.GoodsId
+
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
@@ -165,4 +191,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpReport_Check_ReturnInToLink (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inJuridicalId:= 0, inPartnerId:=0,  inPaidKindId:=0, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_Check_ReturnInToLink (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inJuridicalId:= 0, inPartnerId:=0,  inPaidKindId:=0, inSession:= zfCalc_UserAdmin()) 
