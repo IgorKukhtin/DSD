@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_UKTZED(
     IN inShowAll     Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar, CodeUKTZED_group TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
@@ -34,58 +34,14 @@ BEGIN
      -- Результат
      RETURN QUERY 
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-
-      , tmpCalcUKTZED AS (
-             SELECT *
-             FROM (               
-                   SELECT  ObjectLink.ObjectId AS GoodsId
-                    /*, ObjectString_Goods_UKTZED.ValueData AS CodeUKTZED 
-                    , ObjectString_GoodsGroup_UKTZED0.ValueData AS CodeUKTZED0
-                    , ObjectString_GoodsGroup_UKTZED1.ValueData AS CodeUKTZED1
-                    , ObjectString_GoodsGroup_UKTZED2.ValueData AS CodeUKTZED2
-                    , ObjectString_GoodsGroup_UKTZED3.ValueData AS CodeUKTZED3*/
-                    , COALESCE (ObjectString_Goods_UKTZED.ValueData , COALESCE (ObjectString_GoodsGroup_UKTZED0.ValueData , COALESCE (ObjectString_GoodsGroup_UKTZED1.ValueData ,COALESCE (ObjectString_GoodsGroup_UKTZED2.ValueData , ObjectString_GoodsGroup_UKTZED2.ValueData) ))) AS CodeUKTZED_calc
-                   FROM ObjectLink
-                        --  св-ва товара
-                        LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
-                                    ON ObjectString_Goods_UKTZED.ObjectId = ObjectLink.ObjectId
-                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
-                        --  св-ва Группы товаров - 0
-                        LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED0
-                                    ON ObjectString_GoodsGroup_UKTZED0.ObjectId = ObjectLink.ChildObjectId
-                                   AND ObjectString_GoodsGroup_UKTZED0.DescId = zc_ObjectString_GoodsGroup_UKTZED()
-                        --  св-ва Группы товаров - 1
-                        LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup1
-                             ON ObjectLink_GoodsGroup1.ObjectId = ObjectLink.ChildObjectId
-                            AND ObjectLink_GoodsGroup1.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                        --  LEFT JOIN Object AS Object_1 ON Object_1.id = ObjectLink_GoodsGroup1.ObjectId
-                        LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED1
-                                    ON ObjectString_GoodsGroup_UKTZED1.ObjectId = ObjectLink_GoodsGroup1.ChildObjectId
-                                   AND ObjectString_GoodsGroup_UKTZED1.DescId = zc_ObjectString_GoodsGroup_UKTZED()
-                        --  св-ва Группы товаров - 2
-                        LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup2
-                             ON ObjectLink_GoodsGroup2.ObjectId = ObjectLink_GoodsGroup1.ChildObjectId
-                            AND ObjectLink_GoodsGroup2.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                        LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED2
-                                    ON ObjectString_GoodsGroup_UKTZED2.ObjectId = ObjectLink_GoodsGroup2.ChildObjectId
-                                   AND ObjectString_GoodsGroup_UKTZED2.DescId = zc_ObjectString_GoodsGroup_UKTZED()
-                        --  св-ва Группы товаров - 3
-                        LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup3
-                             ON ObjectLink_GoodsGroup3.ObjectId = ObjectLink_GoodsGroup2.ChildObjectId
-                            AND ObjectLink_GoodsGroup3.DescId = zc_ObjectLink_GoodsGroup_Parent()
-                        LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED3
-                                    ON ObjectString_GoodsGroup_UKTZED3.ObjectId = ObjectLink_GoodsGroup3.ChildObjectId
-                                   AND ObjectString_GoodsGroup_UKTZED3.DescId = zc_ObjectString_GoodsGroup_UKTZED()
-                   WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroup()
-                  ) AS tmp
-                WHERE COALESCE (tmp.CodeUKTZED_calc,'') <> ''
-                )
-
+          , tmpUKTZED AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (Object.Id) AS CodeUKTZED FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+       -- результат
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
-            , COALESCE (ObjectString_Goods_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
-            , tmpCalcUKTZED.CodeUKTZED_calc    :: TVarChar
+            , ObjectString_Goods_UKTZED.ValueData AS CodeUKTZED
+            , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> '' THEN ObjectString_Goods_UKTZED.ValueData ELSE tmpUKTZED.CodeUKTZED END :: TVarChar AS CodeUKTZED_Calc
+            , tmpUKTZED.CodeUKTZED        AS CodeUKTZED_group
 
             , Object_GoodsGroup.Id        AS GoodsGroupId
             , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -194,7 +150,8 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
-             LEFT JOIN tmpCalcUKTZED ON tmpCalcUKTZED.GoodsId = Object_Goods.Id
+             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
        WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
           OR Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101()
                                                  , zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102()

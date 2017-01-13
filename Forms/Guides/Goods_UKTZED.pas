@@ -66,6 +66,7 @@ type
     clCodeUKTZED: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
     CodeUKTZED_calc: TcxGridDBColumn;
+    CodeUKTZED_group: TcxGridDBColumn;
   private
     { Private declarations }
   public

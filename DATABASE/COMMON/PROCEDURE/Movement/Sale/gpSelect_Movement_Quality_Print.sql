@@ -12,6 +12,7 @@ $BODY$
     DECLARE vbUserId Integer;
 
     DECLARE vbOperDate  TDateTime;
+    DECLARE vbIsLongUKTZED Boolean;
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
@@ -23,6 +24,10 @@ BEGIN
 
      -- параметр из документа - !!!временно!!!
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
+     -- параметр из документа
+     vbIsLongUKTZED:= TRUE;
+
 /*
      -- !!!временно!!!
      IF NOT EXISTS (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child()) -- 1=1 OR vbUserId = 5
@@ -64,6 +69,7 @@ BEGIN
        WITH tmpMI AS
             (SELECT MovementItem.*
                   , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+                  , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                   INNER JOIN MovementItemFloat AS MIFloat_Price
@@ -73,6 +79,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                       ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              WHERE MovementItem.MovementId =  inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
@@ -81,6 +90,7 @@ BEGIN
                    )
             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
+          , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
           , tmpGoodsQuality AS
             (SELECT tmpMIGoods.GoodsId          AS GoodsId
                   , Object_Quality.Id           AS QualityId
@@ -271,7 +281,22 @@ BEGIN
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
            , Object_Goods.ObjectCode                                                  AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'')            :: TVarChar AS CodeUKTZED
+
+           , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE '0'
+              END :: TVarChar AS CodeUKTZED
+
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END)                                  :: TVarChar AS GoodsKindName
 
@@ -320,9 +345,13 @@ BEGIN
             INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
             LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
 
-             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
-                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
-                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId
@@ -388,6 +417,7 @@ BEGIN
        WITH tmpMI AS
             (SELECT MovementItem.*
                   , CASE WHEN Movement.DescId = zc_Movement_SendOnPrice() THEN MovementItem.Amount ELSE MIFloat_AmountPartner.ValueData END AS AmountPartner
+                  , ObjectLink_GoodsGroup.ChildObjectId AS GoodsGroupId
              FROM MovementItem
                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                   INNER JOIN MovementItemFloat AS MIFloat_Price
@@ -397,6 +427,9 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                       ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
              WHERE MovementItem.MovementId =  inMovementId
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
@@ -405,6 +438,7 @@ BEGIN
                    )
             )
           , tmpMIGoods AS (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI)
+          , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
           , tmpGoodsQuality AS
             (SELECT tmpMIGoods.GoodsId          AS GoodsId
                   , Object_Quality.Id           AS QualityId
@@ -597,7 +631,22 @@ BEGIN
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
            , Object_Goods.ObjectCode                                                  AS GoodsCode
-           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'')            :: TVarChar AS CodeUKTZED
+
+           , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE '0'
+              END :: TVarChar AS CodeUKTZED
+
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END)                                  :: TVarChar AS GoodsKindName
 
@@ -651,6 +700,14 @@ BEGIN
             INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
             LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
 
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = tmpMI.ObjectId
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -659,10 +716,6 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
-                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.ObjectId

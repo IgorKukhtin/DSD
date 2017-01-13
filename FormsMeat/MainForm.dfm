@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -467,8 +467,8 @@ inherited MainForm: TMainForm
     object actJuridicalUKTZED: TdsdOpenForm [23]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1076#1083#1080#1085#1072' '#1082#1086#1076#1072' UKTZED)'
-      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1076#1083#1080#1085#1072' '#1082#1086#1076#1072' UKTZED)'
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' (UKTZED)'
+      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' (UKTZED)'
       FormName = 'TJuridicalUKTZEDForm'
       FormNameParam.Value = 'TJuridicalUKTZEDForm'
       FormNameParam.DataType = ftString

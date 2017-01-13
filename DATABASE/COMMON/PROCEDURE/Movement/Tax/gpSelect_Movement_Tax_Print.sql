@@ -23,6 +23,7 @@ $BODY$
     DECLARE vbMovementId_Tax Integer;
     DECLARE vbStatusId_Tax Integer;
     DECLARE vbDocumentTaxKindId Integer;
+    DECLARE vbIsLongUKTZED Boolean;
 
     DECLARE vbCurrencyPartnerId Integer;
 
@@ -75,9 +76,10 @@ BEGIN
           -- , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId    AS GoodsPropertyId_basis
 
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_Tax.OperDate END AS OperDate_begin
+          , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
           
             INTO vbMovementId_Tax, vbStatusId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbCurrencyPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis
-               , vbOperDate_begin
+               , vbOperDate_begin, vbIsLongUKTZED
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -115,6 +117,10 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = tmpMovement.MovementId_Tax
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId 
+                                 AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = MovementLinkObject_To.ObjectId
@@ -453,7 +459,37 @@ BEGIN
 
      -- ƒ‡ÌÌ˚Â ÔÓ ÒÚÓ˜ÌÓÈ ˜‡ÒÚË Ì‡ÎÓ„Ó‚ÓÈ
      OPEN Cursor2 FOR
-     WITH tmpObject_GoodsPropertyValue AS
+     WITH tmpMI AS
+       (SELECT MovementItem.Id                        AS Id
+             , MovementItem.MovementId                AS MovementId
+             , MovementItem.ObjectId                  AS GoodsId
+             , MovementItem.Amount                    AS Amount
+             , MIFloat_Price.ValueData                AS Price
+             , MIFloat_CountForPrice.ValueData        AS CountForPrice
+             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+             , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
+        FROM MovementItem
+             INNER JOIN MovementItemFloat AS MIFloat_Price
+                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                         -- AND MIFloat_Price.ValueData <> 0
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                  ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+        WHERE MovementItem.MovementId = vbMovementId_Tax
+          AND MovementItem.DescId     = zc_MI_Master()
+          AND MovementItem.isErased   = FALSE
+          AND MovementItem.Amount     <> 0
+       )
+    , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+    , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -487,9 +523,11 @@ BEGIN
                                     ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                    AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             INNER JOIN tmpGoods ON tmpGoods.GoodsId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
@@ -513,20 +551,29 @@ BEGIN
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
              INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                            AND Object_GoodsPropertyValue.ValueData <> ''
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
-                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId   = zc_ObjectLink_GoodsPropertyValue_Goods()
+             INNER JOIN tmpGoods ON tmpGoods.GoodsId = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
-
+       -- ÂÁÛÎ¸Ú‡Ú
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
+
            , CASE WHEN Movement.OperDate < '01.01.2017'
                        THEN ''
+
                   WHEN ObjectString_Goods_UKTZED.ValueData <> ''
-                       THEN ObjectString_Goods_UKTZED.ValueData
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
+
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
+
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
                        THEN '1601'
                   WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
@@ -535,6 +582,7 @@ BEGIN
                        THEN '1905'
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
+
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                         THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
@@ -559,10 +607,10 @@ BEGIN
              ELSE ''     END                        AS MeasureCode
 
 
-           , MovementItem.Amount                    AS Amount
-           , MovementItem.Amount                    AS AmountPartner
-           , MIFloat_Price.ValueData                AS Price
-           , MIFloat_CountForPrice.ValueData        AS CountForPrice
+           , tmpMI.Amount                    AS Amount
+           , tmpMI.Amount                    AS AmountPartner
+           , tmpMI.Price
+           , tmpMI.CountForPrice
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '')) AS Article_Juridical
@@ -571,60 +619,54 @@ BEGIN
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST (MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+           , CAST (CASE WHEN tmpMI.CountForPrice > 0
+                           THEN CAST (tmpMI.Amount * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                        ELSE CAST (tmpMI.Amount * tmpMI.Price AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
            , CASE WHEN vbPriceWithVAT = TRUE
-                  THEN CAST (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
-                  ELSE MIFloat_Price.ValueData
-             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                  THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)) AS NUMERIC (16, 4))
+                  ELSE tmpMI.Price
+             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceNoVAT
 
            , CASE WHEN vbPriceWithVAT = FALSE
-                  THEN CAST (MIFloat_Price.ValueData + MIFloat_Price.ValueData * (vbVATPercent / 100) AS NUMERIC (16, 4))
-                  ELSE MIFloat_Price.ValueData
-             END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                  THEN CAST (tmpMI.Price + tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
+                  ELSE tmpMI.Price
+             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
 
            , CAST (CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis()
-                             THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
-                                                                  ELSE MIFloat_Price.ValueData
-                                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                             THEN tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                                  THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                                  ELSE tmpMI.Price
+                                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                              ELSE 0
                    END AS NUMERIC (16, 2)) AS AmountSummNoVAT
            , CAST (CASE WHEN vbCurrencyPartnerId <> zc_Enum_Currency_Basis()
-                             THEN MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                                                  THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
-                                                                  ELSE MIFloat_Price.ValueData
-                                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                             THEN tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                                                  THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                                                  ELSE tmpMI.Price
+                                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                              ELSE 0
                    END AS NUMERIC (16, 2)) AS AmountSummNoVAT_11
 
-           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT = FALSE
-                                              THEN MIFloat_Price.ValueData + MIFloat_Price.ValueData * (vbVATPercent / 100)
-                                              ELSE MIFloat_Price.ValueData
-                                         END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = FALSE
+                                              THEN tmpMI.Price + tmpMI.Price * (vbVATPercent / 100)
+                                              ELSE tmpMI.Price
+                                         END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
-           , CAST (MovementItem.Amount * CASE WHEN vbPriceWithVAT = TRUE
-                                              THEN (MIFloat_Price.ValueData - MIFloat_Price.ValueData * (vbVATPercent / (vbVATPercent + 100)))
-                                              ELSE MIFloat_Price.ValueData
-                                          END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+           , CAST (tmpMI.Amount * CASE WHEN vbPriceWithVAT = TRUE
+                                              THEN (tmpMI.Price - tmpMI.Price * (vbVATPercent / (vbVATPercent + 100)))
+                                              ELSE tmpMI.Price
+                                          END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
                    AS NUMERIC (16, 2)) AS AmountSummNoVAT_12
 
-       FROM MovementItem
-            INNER JOIN MovementItemFloat AS MIFloat_Price
-                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                        -- AND MIFloat_Price.ValueData <> 0
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+       FROM tmpMI
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
@@ -635,31 +677,24 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
-            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
-                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = tmpMI.GoodsId
                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
-            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
-                                                        AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = tmpMI.GoodsId
+                                                        AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = tmpMI.GoodsKindId
 
-            LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+            LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             -- LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-       WHERE MovementItem.MovementId = vbMovementId_Tax
-         AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = FALSE
-         AND MovementItem.Amount <> 0
        ORDER BY Object_Goods.ValueData
               , Object_GoodsKind.ValueData
-              , MovementItem.Id
+              , tmpMI.Id
       ;
      RETURN NEXT Cursor2;
 

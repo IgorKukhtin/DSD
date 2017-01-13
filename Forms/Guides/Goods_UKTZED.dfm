@@ -95,8 +95,16 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Width = 62
       end
       object CodeUKTZED_calc: TcxGridDBColumn
-        Caption = #1056#1072#1089#1095#1077#1090' '#1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1088#1072#1089#1095#1077#1090')'
         DataBinding.FieldName = 'CodeUKTZED_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object CodeUKTZED_group: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'CodeUKTZED_group'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

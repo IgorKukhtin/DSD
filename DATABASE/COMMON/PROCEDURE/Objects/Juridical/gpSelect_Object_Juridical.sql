@@ -95,7 +95,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary
        , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice
-       , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, False::Boolean)     AS isLongUKTZED
+       , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE::Boolean)     AS isLongUKTZED
 
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
