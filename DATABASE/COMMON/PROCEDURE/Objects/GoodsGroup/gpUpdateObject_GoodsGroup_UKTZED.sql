@@ -20,7 +20,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED(), inId, inUKTZED);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
   
 END;
 $BODY$
