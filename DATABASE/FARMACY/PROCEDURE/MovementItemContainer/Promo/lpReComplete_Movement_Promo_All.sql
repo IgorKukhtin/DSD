@@ -1,8 +1,9 @@
--- Function: lpReComplete_Movement_Promo_All (Integer, Integer)
+-- Function: lpReComplete_Movement_Promo_All (Integer)
 
 DROP FUNCTION IF EXISTS lpReComplete_Movement_Promo_All (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpReComplete_Movement_Promo_All(
+    IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
 RETURNS VOID
@@ -74,21 +75,19 @@ BEGIN
     FROM _tmpItem_income
     WHERE MovementItemContainer.MovementId     = _tmpItem_income.MovementId_income
       AND MovementItemContainer.MovementItemId = _tmpItem_income.MovementItemId_income
-      AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
+      -- AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
       AND MovementItemContainer.DescId IN (zc_MIContainer_Count(), zc_MIContainer_Summ())
      ;
 
 
     -- 2. Для Партий - нашли все проводки - Чеки, и поставим ObjectIntId_analyzer = Promo, для zc_MIContainer_Count()
+    UPDATE MovementItemContainer SET ObjectIntId_analyzer = _tmpItem_income.MovementItemId_promo
+    FROM _tmpItem_income
+    WHERE MovementItemContainer.AnalyzerId = _tmpItem_income.MovementItemId_income
+      -- AND COALESCE (MovementItemContainer.ObjectIntId_analyzer, 0)   <>  _tmpItem_income.MovementItemId_promo
+      AND MovementItemContainer.MovementDescId IN (zc_Movement_Check())
+     ;
     
-    -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-    PERFORM lpComplete_Movement (inMovementId := inMovementId
-                               , inDescId     := zc_Movement_Promo()
-                               , inUserId     := inUserId
-                                );
-
-    -- пересчитали суммы по документу (для суммы закупки, которая считается после проведения документа)
-    PERFORM lpInsertUpdate_MovementFloat_TotalSumm(inMovementId);
     
 END;
 $BODY$
@@ -97,5 +96,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
- 25.04.16         * 
+ 11.01.17         * 
 */
