@@ -42,7 +42,6 @@ object GoodsGroupForm: TGoodsGroupForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
-    ExplicitWidth = 600
     object Name: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
@@ -62,10 +61,19 @@ object GoodsGroupForm: TGoodsGroupForm
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
+    object CodeUKTZED: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
+      DataBinding.FieldName = 'CodeUKTZED'
+      Position.ColIndex = 2
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
     object TradeMarkName: TcxDBTreeListColumn
       Caption.Text = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       DataBinding.FieldName = 'TradeMarkName'
-      Position.ColIndex = 2
+      Position.ColIndex = 3
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -74,7 +82,7 @@ object GoodsGroupForm: TGoodsGroupForm
     object GoodsTagName: TcxDBTreeListColumn
       Caption.Text = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsTagName'
-      Position.ColIndex = 3
+      Position.ColIndex = 4
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -83,7 +91,7 @@ object GoodsGroupForm: TGoodsGroupForm
     object GoodsGroupAnalystName: TcxDBTreeListColumn
       Caption.Text = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074' ('#1072#1085#1072#1083#1080#1090#1080#1082#1072')'
       DataBinding.FieldName = 'GoodsGroupAnalystName'
-      Position.ColIndex = 4
+      Position.ColIndex = 5
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -93,7 +101,7 @@ object GoodsGroupForm: TGoodsGroupForm
       Caption.Text = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
       DataBinding.FieldName = 'GoodsPlatformName'
       Width = 150
-      Position.ColIndex = 5
+      Position.ColIndex = 6
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -103,7 +111,7 @@ object GoodsGroupForm: TGoodsGroupForm
       Caption.Text = #1059#1055' '#1089#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName'
       Width = 150
-      Position.ColIndex = 6
+      Position.ColIndex = 7
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -114,7 +122,7 @@ object GoodsGroupForm: TGoodsGroupForm
       Caption.Text = #1059#1076#1072#1083#1077#1085
       DataBinding.FieldName = 'isErased'
       Width = 60
-      Position.ColIndex = 7
+      Position.ColIndex = 8
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -130,7 +138,7 @@ object GoodsGroupForm: TGoodsGroupForm
     Aggregates = <>
     Params = <>
     Left = 96
-    Top = 144
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -276,8 +284,8 @@ object GoodsGroupForm: TGoodsGroupForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 224
+    Top = 168
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -299,10 +307,12 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TGoodsGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -317,6 +327,7 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TGoodsGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -324,6 +335,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -369,6 +381,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -376,6 +389,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -391,6 +405,7 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -398,6 +413,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -406,8 +422,21 @@ object GoodsGroupForm: TGoodsGroupForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateDataSource: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateCodeUKTZED
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCodeUKTZED
+        end>
+      Caption = 'actUpdateDataSource'
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -419,8 +448,8 @@ object GoodsGroupForm: TGoodsGroupForm
       end>
     Params = <>
     PackSize = 1
-    Left = 160
-    Top = 192
+    Left = 192
+    Top = 272
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -433,10 +462,11 @@ object GoodsGroupForm: TGoodsGroupForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 288
-    Top = 208
+    Left = 376
+    Top = 200
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
     ErasedFieldName = 'isErased'
@@ -458,11 +488,37 @@ object GoodsGroupForm: TGoodsGroupForm
       end>
     SortImages = dmMain.SortImageList
     DBTreeList = cxDBTreeList
-    Left = 48
-    Top = 160
+    Left = 56
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
+    Left = 408
     Top = 112
+  end
+  object spUpdateCodeUKTZED: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_GoodsGroup_UKTZED'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUKTZED'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CodeUKTZED'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 107
   end
 end

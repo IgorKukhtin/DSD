@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inId          Integer,       -- Группа товаров 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -28,6 +28,7 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_GoodsGroup()) AS Code
+           , CAST ('' as TVarChar)  AS CodeUKTZED
            , CAST ('' as TVarChar)  AS Name
            , CAST (0 as Integer)    AS ParentId
            , CAST ('' as TVarChar)  AS ParentName
@@ -52,6 +53,7 @@ BEGIN
        SELECT 
              Object_GoodsGroup.Id            AS Id
            , Object_GoodsGroup.ObjectCode    AS Code
+           , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
            , Object_GoodsGroup.ValueData     AS Name
            , GoodsGroup.Id            AS ParentId
            , GoodsGroup.ValueData     AS ParentName
@@ -108,6 +110,11 @@ BEGIN
                                 ON ObjectLink_GoodsGroup_InfoMoney.ObjectId = Object_GoodsGroup.Id 
                                AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
+
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED
+                                  ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
+                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()
+
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;

@@ -52,6 +52,8 @@ type
     cxLabel8: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
+    ceCodeUKTZED: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

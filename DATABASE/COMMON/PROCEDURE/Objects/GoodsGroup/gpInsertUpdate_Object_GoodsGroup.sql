@@ -5,10 +5,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
     IN inCode                Integer   ,    -- Код объекта <Группа товаров>
+    IN inCodeUKTZED          TVarChar  ,    -- Код товару згідно з УКТ ЗЕД
     IN inName                TVarChar  ,    -- Название объекта <Группа товаров>
     IN inParentId            Integer   ,    -- ссылка на группу товаров
     IN inGroupStatId         Integer   ,    -- ссылка на группу товаров (статистика)
@@ -70,6 +72,8 @@ BEGIN
    -- сохранили связь с <УП статья назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsGroup_InfoMoney(), ioId, inInfoMoneyId);
 
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED(), ioId, inCodeUKTZED);
 
    -- Список
    CREATE TEMP TABLE _tmpList ON COMMIT DROP AS

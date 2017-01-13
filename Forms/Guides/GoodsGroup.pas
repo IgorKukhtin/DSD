@@ -50,6 +50,9 @@ type
     GoodsGroupAnalystName: TcxDBTreeListColumn;
     GoodsPlatformName: TcxDBTreeListColumn;
     InfoMoneyName: TcxDBTreeListColumn;
+    CodeUKTZED: TcxDBTreeListColumn;
+    spUpdateCodeUKTZED: TdsdStoredProc;
+    actUpdateDataSource: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

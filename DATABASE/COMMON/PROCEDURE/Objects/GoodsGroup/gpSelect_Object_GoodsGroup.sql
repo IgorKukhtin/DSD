@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsGroup(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
+RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
+             , isErased boolean
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -24,6 +25,7 @@ BEGIN
      SELECT 
            Object_GoodsGroup.Id                AS Id 
          , Object_GoodsGroup.ObjectCode        AS Code
+         , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
          , Object_GoodsGroup.ValueData         AS Name
          , Object_GoodsGroup.isErased          AS isErased
          
@@ -85,7 +87,11 @@ BEGIN
                                 ON ObjectLink_GoodsGroup_InfoMoney.ObjectId = Object_GoodsGroup.Id 
                                AND ObjectLink_GoodsGroup_InfoMoney.DescId = zc_ObjectLink_GoodsGroup_InfoMoney()
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_GoodsGroup_InfoMoney.ChildObjectId
-       
+
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_UKTZED
+                                  ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
+                                 AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()
+
     WHERE Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
      ;
          
