@@ -271,6 +271,7 @@ BEGIN
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
            , Object_Goods.ObjectCode                                                  AS GoodsCode
+           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'')            :: TVarChar AS CodeUKTZED
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END)                                  :: TVarChar AS GoodsKindName
 
@@ -318,6 +319,10 @@ BEGIN
 
             INNER JOIN tmpGoodsQuality ON tmpGoodsQuality.GoodsId = tmpMI.ObjectId
             LEFT JOIN tmpMovement_QualityParams ON tmpMovement_QualityParams.QualityId = tmpGoodsQuality.QualityId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.ObjectId
@@ -592,6 +597,7 @@ BEGIN
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
            , Object_Measure.ValueData                                                 AS MeasureName
            , Object_Goods.ObjectCode                                                  AS GoodsCode
+           , COALESCE (ObjectString_Goods_UKTZED.ValueData,'')            :: TVarChar AS CodeUKTZED
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , (CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE Object_GoodsKind.ValueData END)                                  :: TVarChar AS GoodsKindName
 
@@ -654,6 +660,10 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpMI.ObjectId
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -711,6 +721,7 @@ ALTER FUNCTION gpSelect_Movement_Quality_Print (Integer, TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.01.17         * add CodeUKTZED
  31.03.15                                        * all
  11.02.15                                                       *
 */

@@ -787,6 +787,8 @@ type
     miGoodsUKTZED: TMenuItem;
     actReport_Check_ReturnInToLink: TdsdOpenForm;
     N145: TMenuItem;
+    actJuridicalUKTZED: TdsdOpenForm;
+    UKTZED1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

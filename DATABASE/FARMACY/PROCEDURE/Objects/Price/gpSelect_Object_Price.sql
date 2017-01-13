@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Price TFloat, MCSValue TFloat
              , MCSPeriod TFloat, MCSDay TFloat, StartDate TDateTime
              , GoodsId Integer, GoodsCode Integer,/* IdBarCode TVarChar,*/ GoodsName TVarChar
              , GoodsGroupName TVarChar, NDSKindName TVarChar
+             , ConditionsKeepName TVarChar
              , Goods_isTop Boolean, Goods_PercentMarkup TFloat
              , DateChange TDateTime, MCSDateChange TDateTime
              , MCSIsClose Boolean, MCSIsCloseDateChange TDateTime
@@ -72,6 +73,7 @@ BEGIN
                ,NULL::TVarChar                   AS GoodsName
                ,NULL::TVarChar                   AS GoodsGroupName
                ,NULL::TVarChar                   AS NDSKindName
+               ,NULL::TVarChar                   AS ConditionsKeepName
                ,NULL::Boolean                    AS Goods_isTop
                ,NULL::TFloat                     AS Goods_PercentMarkup
                ,NULL::TDateTime                  AS DateChange
@@ -170,6 +172,7 @@ BEGIN
                , Object_Goods_View.GoodsName                     AS GoodsName
                , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
                , Object_Goods_View.NDSKindName                   AS NDSKindName
+               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                         AS Goods_isTop
                , Object_Goods_View.PercentMarkup                 AS Goods_PercentMarkup
                , Object_Price_View.DateChange                    AS DateChange
@@ -229,7 +232,12 @@ BEGIN
                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_MCSDay
                                              ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
-                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id                             
+                LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id     
+                -- условия хранения
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId                        
             WHERE (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
             ORDER BY GoodsGroupName, GoodsName;
@@ -304,6 +312,7 @@ BEGIN
                , Object_Goods_View.GoodsName               AS GoodsName
                , Object_Goods_View.GoodsGroupName          AS GoodsGroupName
                , Object_Goods_View.NDSKindName             AS NDSKindName
+               , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
                , Object_Goods_View.isTop                   AS Goods_isTop
                , Object_Goods_View.PercentMarkup           AS Goods_PercentMarkup
                , Object_Price_View.DateChange              AS DateChange
@@ -358,6 +367,11 @@ BEGIN
                                              ON ObjectHistoryFloat_MCSDay.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_MCSDay.DescId = zc_ObjectHistoryFloat_Price_MCSDay() 
                 LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
+                -- условия хранения
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
             WHERE Object_Price_View.unitid = inUnitId
               AND (inisShowDel = True OR Object_Goods_View.isErased = False)
               AND (Object_Goods_View.Id = inGoodsId OR inGoodsId = 0)
@@ -371,6 +385,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А. 
+ 12.01.17         *
  06.09.16         *
  11.07.16         *
  04.07.16         *

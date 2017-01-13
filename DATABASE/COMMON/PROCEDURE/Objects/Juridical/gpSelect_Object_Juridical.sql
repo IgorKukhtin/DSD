@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                DayTaxSummary TFloat,
                GLNCode TVarChar, isCorporate Boolean, isTaxSummary Boolean, isDiscountPrice Boolean,
+               isLongUKTZED Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -94,6 +95,7 @@ BEGIN
 
        , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary
        , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice
+       , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, False::Boolean)     AS isLongUKTZED
 
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
@@ -159,6 +161,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                                 ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
+                                ON ObjectBoolean_isLongUKTZED.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary 
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
@@ -238,6 +243,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.01.17         * isLongUKTZED
  17.12.15         * add isDiscountPrice
  05.10.15         * add inShowAll
  21.05.15         * add isTaxSummary

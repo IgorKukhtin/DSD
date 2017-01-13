@@ -125,6 +125,15 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
+          object MidPrice: TcxGridDBColumn
+            Caption = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
+            DataBinding.FieldName = 'MidPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
           object CountPriceList: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1072#1081#1089#1086#1074
             DataBinding.FieldName = 'CountPriceList'
@@ -162,6 +171,10 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
           object serPrice: TcxGridDBChartSeries
             DataBinding.FieldName = 'Price'
             DisplayText = #1062#1077#1085#1072
+          end
+          object serMidPrice: TcxGridDBChartSeries
+            DataBinding.FieldName = 'MidPrice'
+            DisplayText = #1057#1088#1077#1076#1085#1103#1103' '#1094#1077#1085#1072
           end
         end
         object grChartLevel1: TcxGridLevel
@@ -283,8 +296,8 @@ inherited Report_MinPrice_onGoodsForm: TReport_MinPrice_onGoodsForm
       Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
       Hint = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
       ImageIndex = 43
-      FormName = 'TContractForm'
-      FormNameParam.Value = 'TContractForm'
+      FormName = 'TContract_ObjectForm'
+      FormNameParam.Value = 'TContract_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

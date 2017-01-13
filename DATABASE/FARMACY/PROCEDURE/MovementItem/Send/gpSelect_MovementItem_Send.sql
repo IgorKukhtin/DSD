@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
              , AmountManual TFloat, AmountDiff TFloat
              , ReasonDifferencesId Integer, ReasonDifferencesName TVarChar
+             , ConditionsKeepName TVarChar
              , isErased Boolean
               )
 AS
@@ -137,8 +138,9 @@ BEGIN
               , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
               , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
               , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
-
+              , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
               , COALESCE(MovementItem_Send.IsErased,FALSE)        AS isErased
+
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
                 LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
@@ -149,13 +151,13 @@ BEGIN
                                                   ON Object_Price_To.GoodsId = COALESCE(MovementItem_Send.ObjectId,tmpRemains.GoodsId)
                                                  AND Object_Price_To.UnitId = vbUnitToId
 
-               -- цена подразделений записанная при автоматическом распределении 
-               LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                                 ON MIFloat_PriceFrom.MovementItemId = MovementItem_Send.ID
-                                                AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
-               LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
-                                                 ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
-                                                AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+                -- цена подразделений записанная при автоматическом распределении 
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                                  ON MIFloat_PriceFrom.MovementItemId = MovementItem_Send.ID
+                                                 AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+                LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
+                                                  ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
+                                                 AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
 
                 LEFT OUTER JOIN MovementItemContainer AS MIContainer_Count
                                                       ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
@@ -190,6 +192,11 @@ BEGIN
                                            AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
                 LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
+                -- условия хранения
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                     ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null
@@ -207,7 +214,8 @@ BEGIN
               , MovementItem_Send.IsErased
               , COALESCE(MIFloat_AmountManual.ValueData,0) 
               , MILinkObject_ReasonDifferences.ObjectId 
-              , Object_ReasonDifferences.ValueData ;
+              , Object_ReasonDifferences.ValueData
+              , COALESCE(Object_ConditionsKeep.ValueData, '');
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -287,8 +295,9 @@ BEGIN
            , (COALESCE(MIFloat_AmountManual.ValueData,0) - COALESCE(MovementItem_Send.Amount,0))::TFloat as AmountDiff
            , MILinkObject_ReasonDifferences.ObjectId AS ReasonDifferencesId
            , Object_ReasonDifferences.ValueData      AS ReasonDifferencesName
-
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            , MovementItem_Send.IsErased              AS isErased
+
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -338,6 +347,11 @@ BEGIN
                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
             LEFT JOIN tmpCheck ON tmpCheck.GoodsId = Object_Goods.Id
+            -- условия хранения
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
        GROUP BY
              MovementItem_Send.Id
@@ -353,7 +367,8 @@ BEGIN
            , MovementItem_Send.IsErased
            , COALESCE(MIFloat_AmountManual.ValueData,0)
            , MILinkObject_ReasonDifferences.ObjectId 
-           , Object_ReasonDifferences.ValueData       ;
+           , Object_ReasonDifferences.ValueData 
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ;
 
      END IF;
 
@@ -366,6 +381,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.17         * 
  27.10.16         *
  20.06.16         *
  10.05.16         *

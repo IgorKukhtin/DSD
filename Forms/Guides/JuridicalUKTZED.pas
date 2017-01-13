@@ -1,4 +1,4 @@
-unit Juridical;
+unit JuridicalUKTZED;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   cxGrid, cxSplitter, cxButtonEdit;
 
 type
-  TJuridicalForm = class(TParentForm)
+  TJuridicalUKTZEDForm = class(TParentForm)
     cxSplitter: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
@@ -45,8 +45,6 @@ type
     dxBarStatic: TdxBarStatic;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdChoiceGuides: TdsdChoiceGuides;
@@ -54,7 +52,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     MasterCDS: TClientDataSet;
-    GridStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clInfoMoneyGroupCode: TcxGridDBColumn;
@@ -63,39 +61,21 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
-    clGLNCode: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
     clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    clPriceListName: TcxGridDBColumn;
-    actChoicePriceListForm: TOpenChoiceForm;
-    actChoicePriceListPromoForm: TOpenChoiceForm;
-    clPriceListPromoName: TcxGridDBColumn;
-    clStartPromo: TcxGridDBColumn;
-    clEndPromo: TcxGridDBColumn;
-    clGoodsPropertyName: TcxGridDBColumn;
-    clRetailReportName: TcxGridDBColumn;
-    actChoiceRetailReportForm: TOpenChoiceForm;
     actChoiceJuridicalGroup: TOpenChoiceForm;
     clRetailName: TcxGridDBColumn;
-    actChoiceRetailForm: TOpenChoiceForm;
     InfoMoneyName_all: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
-    clisTaxSummary: TcxGridDBColumn;
-    PriceListName_Prior: TcxGridDBColumn;
-    PriceListName_30103: TcxGridDBColumn;
-    PriceListName_30201: TcxGridDBColumn;
-    actChoicePriceList_Prior: TOpenChoiceForm;
-    actChoicePriceList_30103: TOpenChoiceForm;
-    actChoicePriceList_30201: TOpenChoiceForm;
-    DayTaxSummary: TcxGridDBColumn;
+    actChoiceGoodsProperty: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clisDiscountPrice: TcxGridDBColumn;
     isLongUKTZED: TcxGridDBColumn;
+    actUpdateislongUKTZED: TdsdExecStoredProc;
+    bbUpdateislongUKTZED: TdxBarButton;
   private
     { Private declarations }
   public
@@ -107,5 +87,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TJuridicalForm);
+  RegisterClass(TJuridicalUKTZEDForm);
 end.

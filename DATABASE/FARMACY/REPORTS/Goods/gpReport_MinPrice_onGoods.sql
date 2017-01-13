@@ -14,6 +14,7 @@ RETURNS TABLE (
     JuridicalName      TVarChar,  -- поставщик
     ContractName       TVarChar,  -- договор
     Price              TFloat,    -- мин цена
+    MidPrice           TFloat,    -- средняя цена
     CountPriceList     TFloat,    --количество прайс-листов
     isOne              Boolean    --один прайс-лист       
 )
@@ -54,7 +55,8 @@ BEGIN
    , MI_PriceList AS ( SELECT tmp.OperDate
                             , tmp.JuridicalId
                             , tmp.ContractId
-                            , tmp.Price    AS Price
+                            , tmp.Price  
+                            , tmp.MidPrice
                             , tmp.OrdCount AS CountPriceList
                        FROM (SELECT Movement_PriceList.OperDate
                                   , Movement_PriceList.JuridicalId
@@ -62,6 +64,7 @@ BEGIN
                                   , MovementItem.Amount              AS Price
                                   , ROW_NUMBER() OVER (PARTITION BY Movement_PriceList.OperDate ORDER BY Movement_PriceList.OperDate, MovementItem.Amount) AS Ord
                                   , COUNT(Movement_PriceList.MovementId) OVER (PARTITION BY Movement_PriceList.OperDate) AS OrdCount
+                                  , AVG(MovementItem.Amount) OVER (PARTITION BY Movement_PriceList.OperDate) AS MidPrice
                              FROM Movement_PriceList
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement_PriceList.MovementId
                                          AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
@@ -74,6 +77,7 @@ BEGIN
          , Object_Juridical.ValueData  AS JuridicalName
          , Object_Contract.ValueData   AS ContractName
          , MI_PriceList.Price          :: TFloat
+         , MI_PriceList.MidPrice       :: TFloat
          , MI_PriceList.CountPriceList :: TFloat AS isTop
          , CASE WHEN MI_PriceList.CountPriceList > 1 THEN FALSE ELSE TRUE END ::Boolean AS isOne
     FROM MI_PriceList

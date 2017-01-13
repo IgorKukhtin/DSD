@@ -19,6 +19,7 @@ RETURNS TABLE (
   NDSKindName    TVarChar,
   ExpirationDate TDateTime,
   PartionGoods   TVarChar,
+  ConditionsKeepName TVarChar,
 
   FromName       TVarChar,
   ToName         TVarChar,
@@ -192,6 +193,7 @@ BEGIN
            , Object_Goods_View.NDSKindName                  AS NDSKindName
            , tmpData.ExpirationDate    :: TDateTime         AS ExpirationDate
            , tmpData.PartionGoods      :: TVarChar          AS PartionGoods
+           , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar   AS ConditionsKeepName
 
            , Object_From.ValueData                          AS FromName
            , Object_To.ValueData                            AS ToName
@@ -228,6 +230,12 @@ BEGIN
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId
             LEFT JOIN Object AS Object_OurJuridical ON Object_OurJuridical.Id = tmpData.OurJuridicalId
+            -- условия хранения
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
         ORDER BY
             GoodsGroupName, GoodsName;
 ----
@@ -240,6 +248,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 12.01.17         *
  31.03.16         *
  03.02.16         * 
 
