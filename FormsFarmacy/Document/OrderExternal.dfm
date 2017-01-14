@@ -7,20 +7,20 @@ inherited OrderExternalForm: TOrderExternalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 121
+    Top = 151
     Width = 844
-    Height = 547
+    Height = 517
     ExplicitTop = 121
     ExplicitWidth = 844
     ExplicitHeight = 547
-    ClientRectBottom = 547
+    ClientRectBottom = 517
     ClientRectRight = 844
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 844
       ExplicitHeight = 523
       inherited cxGrid: TcxGrid
         Width = 844
-        Height = 523
+        Height = 493
         ExplicitWidth = 844
         ExplicitHeight = 523
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -192,12 +192,10 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited DataPanel: TPanel
     Width = 844
-    Height = 95
+    Height = 125
     TabOrder = 3
-    ExplicitLeft = -8
-    ExplicitTop = 6
     ExplicitWidth = 844
-    ExplicitHeight = 95
+    ExplicitHeight = 125
     inherited edInvNumber: TcxTextEdit
       Left = 12
       ExplicitLeft = 12
@@ -226,20 +224,20 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     inherited ceStatus: TcxButtonEdit
       Left = 12
-      Top = 63
+      Top = 60
       ExplicitLeft = 12
-      ExplicitTop = 63
+      ExplicitTop = 60
       ExplicitWidth = 181
       ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
-      Left = 206
+      Left = 202
       Top = 5
       Caption = #1070#1088' '#1083#1080#1094#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082
     end
     object edFrom: TcxButtonEdit
-      Left = 206
+      Left = 202
       Top = 23
       Properties.Buttons = <
         item
@@ -266,13 +264,13 @@ inherited OrderExternalForm: TOrderExternalForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object cxLabel6: TcxLabel
-      Left = 206
+      Left = 202
       Top = 45
       Caption = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1079#1072#1082#1072#1079
     end
     object edOrderInternal: TcxButtonEdit
-      Left = 206
-      Top = 63
+      Left = 202
+      Top = 60
       Properties.Buttons = <
         item
           Default = True
@@ -285,7 +283,7 @@ inherited OrderExternalForm: TOrderExternalForm
     end
     object edisDeferred: TcxCheckBox
       Left = 580
-      Top = 63
+      Top = 60
       Caption = #1054#1090#1083#1086#1078#1077#1085
       TabOrder = 12
       Width = 70
@@ -309,7 +307,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   object edComment: TcxTextEdit [4]
     Left = 656
-    Top = 63
+    Top = 60
     Properties.ReadOnly = False
     TabOrder = 8
     Width = 156
@@ -326,7 +324,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   object edOrderKind: TcxButtonEdit [7]
     Left = 400
-    Top = 63
+    Top = 60
     Properties.Buttons = <
       item
         Default = True
@@ -336,6 +334,54 @@ inherited OrderExternalForm: TOrderExternalForm
     Properties.ReadOnly = True
     TabOrder = 11
     Width = 174
+  end
+  object cxLabel9: TcxLabel [8]
+    Left = 12
+    Top = 85
+    Caption = #1044#1085#1080' '#1079#1072#1082#1072#1079#1072
+  end
+  object edZakaz_Text: TcxTextEdit [9]
+    Left = 12
+    Top = 101
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 181
+  end
+  object cxLabel10: TcxLabel [10]
+    Left = 202
+    Top = 85
+    Caption = #1044#1085#1080' '#1087#1086#1089#1090#1072#1074#1082#1080
+  end
+  object edDostavka_Text: TcxTextEdit [11]
+    Left = 202
+    Top = 101
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 190
+  end
+  object cxLabel11: TcxLabel [12]
+    Left = 400
+    Top = 85
+    Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072' '#1076#1083#1103' '#1079#1072#1082#1072#1079#1072
+  end
+  object edOrderSumm: TcxTextEdit [13]
+    Left = 400
+    Top = 101
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 198
+  end
+  object cxLabel12: TcxLabel [14]
+    Left = 610
+    Top = 85
+    Caption = #1052#1072#1082#1089'. '#1074#1088#1077#1084#1103' '#1086#1090#1087#1088#1072#1074#1082#1080
+  end
+  object edOrderTime: TcxTextEdit [15]
+    Left = 610
+    Top = 101
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 202
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -978,6 +1024,34 @@ inherited OrderExternalForm: TOrderExternalForm
         Value = Null
         Component = edisDeferred
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Dostavka_Text'
+        Value = Null
+        Component = edDostavka_Text
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Zakaz_Text'
+        Value = Null
+        Component = edZakaz_Text
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderSumm'
+        Value = Null
+        Component = edOrderSumm
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OrderTime'
+        Value = Null
+        Component = edOrderTime
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216

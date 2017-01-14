@@ -259,6 +259,24 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Options.Editing = False
             Width = 60
           end
+          object colZakaz_Text: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1079#1072#1082#1072#1079#1072' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            DataBinding.FieldName = 'Zakaz_Text'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+            Options.Editing = False
+            Width = 120
+          end
+          object colDostavka_Text: TcxGridDBColumn
+            Caption = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+            DataBinding.FieldName = 'Dostavka_Text'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1077#1085#1100' '#1076#1086#1089#1090#1072#1074#1082#1080' - '#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086
+            Options.Editing = False
+            Width = 120
+          end
           object clisDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085
             DataBinding.FieldName = 'isDeferred'

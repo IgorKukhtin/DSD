@@ -22,6 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred         Boolean
              , OperDate_Zakaz     TVarChar
              , OperDate_Dostavka  TVarChar
+             , Zakaz_Text          TVarChar
+             , Dostavka_Text          TVarChar
               )
 
 AS
@@ -61,6 +63,7 @@ BEGIN
                                  , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat AS Value6
                                  , zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat AS Value7
                                  , Object_OrderShedule.ValueData AS Value8
+
                             FROM Object AS Object_OrderShedule
                                  LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
                                         ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
@@ -71,6 +74,25 @@ BEGIN
                             WHERE Object_OrderShedule.DescId = zc_Object_OrderShedule()
                               AND Object_OrderShedule.isErased = FALSE
                            )
+ , tmpOrderSheduleText AS (SELECT tmpOrderShedule.UnitId
+                                , tmpOrderShedule.ContractId
+                                , (CASE WHEN tmpOrderShedule.Value1 in (1,3) THEN 'Понедельник,' ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value2 in (1,3) THEN 'Вторник,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value3 in (1,3) THEN 'Среда,'       ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value4 in (1,3) THEN 'Четверг,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value5 in (1,3) THEN 'Пятница,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value6 in (1,3) THEN 'Суббота,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value7 in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Zakaz_Text   --День заказа (информативно)
+                                , (CASE WHEN tmpOrderShedule.Value1 in (2,3) THEN 'Понедельник,' ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value2 in (2,3) THEN 'Вторник,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value3 in (2,3) THEN 'Среда,'       ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value4 in (2,3) THEN 'Четверг,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value5 in (2,3) THEN 'Пятница,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value6 in (2,3) THEN 'Суббота,'     ELSE '' END ||
+                                   CASE WHEN tmpOrderShedule.Value7 in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar          AS Dostavka_Text   --День доставки (информативно)
+                           FROM tmpOrderShedule
+                           )
+
 , tmpOrderSheduleList AS (SELECT tmp.*
                           FROM (
                                 select tmpOrderShedule.UnitId, tmpOrderShedule.ContractId, CASE WHEN Value1 in (1,3) THEN 1 ELSE 0 END AS DoW, CASE WHEN Value1 in (2,3) THEN 1 ELSE 0 END AS DoW_D from tmpOrderShedule
@@ -185,7 +207,10 @@ BEGIN
 
            , OrderSheduleList.OperDate_Zakaz    ::TVarChar
            , OrderSheduleList.OperDate_Dostavka ::TVarChar
-       FROM tmpUnit
+
+           , tmpOrderSheduleText.Zakaz_Text
+           , tmpOrderSheduleText.Dostavka_Text
+     FROM tmpUnit
           LEFT JOIN Movement_OrderExternal_View ON Movement_OrderExternal_View.ToId = tmpUnit.UnitId
                                                AND Movement_OrderExternal_View.OperDate BETWEEN inStartDate AND inEndDate
 
@@ -208,6 +233,8 @@ BEGIN
                                     AND OrderSheduleList.ContractId = Movement_OrderExternal_View.ContractId
           LEFT JOIN OrderSheduleListToday ON OrderSheduleListToday.UnitId    = Movement_OrderExternal_View.ToId
                                          AND OrderSheduleListToday.ContractId = Movement_OrderExternal_View.ContractId
+          LEFT JOIN tmpOrderSheduleText ON tmpOrderSheduleText.UnitId     = Movement_OrderExternal_View.ToId
+                                       AND tmpOrderSheduleText.ContractId = Movement_OrderExternal_View.ContractId
     ;
 
 END;
@@ -227,3 +254,5 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inSession:= '2')
+
+--select * from gpSelect_Movement_OrderExternal(instartdate := ('27.12.2016')::TDateTime , inenddate := ('27.12.2016')::TDateTime , inIsErased := 'False' ,  inSession := '3');

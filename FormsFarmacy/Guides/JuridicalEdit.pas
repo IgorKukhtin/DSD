@@ -86,6 +86,12 @@ type
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
     cePayOrder: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
+    ceOrderSumm: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    ceOrderSummComment: TcxTextEdit;
+    ceOrderTime: TcxTextEdit;
+    cxLabel14: TcxLabel;
   private
     { Private declarations }
   public
