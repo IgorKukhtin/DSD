@@ -61,214 +61,259 @@ BEGIN
                                                 AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbObjectId = 0)
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                         )
-        , Movement_Income AS (
-                               SELECT
-                                     Movement_Income_View.Id
-                                   , Movement_Income_View.InvNumber
-                                   , Movement_Income_View.OperDate
-                                   , Movement_Income_View.StatusCode
-                                   , Movement_Income_View.StatusName
-                                   , Movement_Income_View.TotalCount
-                                   , Movement_Income_View.TotalSummMVAT
-                                   , Movement_Income_View.TotalSumm
-                                   , Movement_Income_View.PriceWithVAT
-                                   , Movement_Income_View.FromId
-                                   , Movement_Income_View.FromName 
-                                   , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS FromOKPO
-                                   , Movement_Income_View.ToId
-                                   , Movement_Income_View.ToName
-                                   , Movement_Income_View.JuridicalName
-                                   , Movement_Income_View.NDSKindId
-                                   , Movement_Income_View.NDSKindName
-                                   , Movement_Income_View.ContractId
-                                   , Movement_Income_View.ContractName
-                                   , CASE WHEN Movement_Income_View.PaySumm > 0.01
-                                            OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete()
-                                          THEN Movement_Income_View.PaymentDate 
-                                     END::TDateTime AS PaymentDate
-                                   , Movement_Income_View.PaySumm
-                                   , Movement_Income_View.SaleSumm
-                                   , Movement_Income_View.InvNumberBranch
-                                   , Movement_Income_View.BranchDate
-                                   , Movement_Income_View.Checked
-                                   , Movement_Income_View.isDocument
-                                   , Movement_Income_View.isRegistered
-                                   , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
-                                   , Movement_Income_View.PaymentContainerId
-                                   , MLM_Order.MovementChildId          AS Movement_OrderId
-                               FROM tmpUnit
-                                     LEFT JOIN Movement_Income_View ON Movement_Income_View.ToId = tmpUnit.UnitId
-                                                                   AND Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
-                                     JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+        , Movement_Income AS ( SELECT Movement_Income.Id
+                                    , Movement_Income.InvNumber
+                                    , Movement_Income.OperDate
+                                    , Movement_Income.StatusId
+                                    , MovementLinkObject_To.ObjectId        AS ToId
+                                    , MovementLinkObject_From.ObjectId      AS FromId
+                                    , MovementLinkObject_Juridical.ObjectId AS JuridicalId
+                                    , Container.Id                   AS PaymentContainerId
+                                    , Container.Amount               AS PaySumm
+                                    , CASE WHEN Container.Amount <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
+                                    , CASE WHEN Container.Amount > 0.01
+                                             OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
+                                           THEN MovementDate_Payment.ValueData
+                                      END::TDateTime AS PaymentDate
+                               FROM tmpStatus
+                                    LEFT JOIN Movement AS Movement_Income ON Movement_Income.StatusId = tmpStatus.StatusId
+                                                                         AND Movement_Income.OperDate >= inStartDate AND Movement_Income.OperDate <inEndDate + interval '1 day'
+                                                                         AND Movement_Income.DescId = zc_Movement_Income()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                 ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                    INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_To.ObjectId
 
-                                     LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
-                                                                   ON ObjectHistory_Juridical.ObjectId = Movement_Income_View.FromId
-                                                                  AND ObjectHistory_Juridical.DescId = zc_ObjectHistory_JuridicalDetails()
-                                                                  AND Movement_Income_View.OperDate >= ObjectHistory_Juridical.StartDate AND Movement_Income_View.OperDate < ObjectHistory_Juridical.EndDate
-                                     LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-                                                                   ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
-                                                                  AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                                 ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
 
-                                     LEFT JOIN MovementLinkMovement AS MLM_Order
-                                                                    ON MLM_Order.MovementId = Movement_Income_View.Id
-                                                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-                              UNION ALL
-                               SELECT
-                                     Movement_Income_View.Id
-                                   , Movement_Income_View.InvNumber
-                                   , Movement_Income_View.OperDate
-                                   , Movement_Income_View.StatusCode
-                                   , Movement_Income_View.StatusName
-                                   , Movement_Income_View.TotalCount
-                                   , Movement_Income_View.TotalSummMVAT
-                                   , Movement_Income_View.TotalSumm
-                                   , Movement_Income_View.PriceWithVAT
-                                   , Movement_Income_View.FromId
-                                   , Movement_Income_View.FromName 
-                                   , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS FromOKPO
-                                   , Movement_Income_View.ToId
-                                   , '' :: TVarChar AS ToName -- Movement_Income_View.ToName
-                                   , Movement_Income_View.JuridicalName
-                                   , Movement_Income_View.NDSKindId
-                                   , Movement_Income_View.NDSKindName
-                                   , Movement_Income_View.ContractId
-                                   , Movement_Income_View.ContractName
-                                   , CASE WHEN Movement_Income_View.PaySumm > 0.01
-                                            OR Movement_Income_View.StatusId <> zc_Enum_Status_Complete()
-                                          THEN Movement_Income_View.PaymentDate 
-                                     END::TDateTime AS PaymentDate
-                                   , Movement_Income_View.PaySumm
-                                   , Movement_Income_View.SaleSumm
-                                   , Movement_Income_View.InvNumberBranch
-                                   , Movement_Income_View.BranchDate
-                                   , Movement_Income_View.Checked
-                                   , Movement_Income_View.isDocument
-                                   , Movement_Income_View.isRegistered
-                                   , CASE WHEN Movement_Income_View.PaySumm <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
-                                   , Movement_Income_View.PaymentContainerId
-                                   , MLM_Order.MovementChildId          AS Movement_OrderId
-                               FROM Movement_Income_View
-                                     LEFT OUTER JOIN Object ON Object.Id = Movement_Income_View.ToId AND Object.DescId = zc_Object_Unit()
-                                     JOIN tmpStatus ON tmpStatus.StatusId = Movement_Income_View.StatusId 
+                                    LEFT JOIN MovementDate AS MovementDate_Payment
+                                                           ON MovementDate_Payment.MovementId =  Movement_Income.Id
+                                                          AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+                                    -- Партия накладной
+                                    LEFT JOIN Object AS Object_Movement
+                                                     ON Object_Movement.ObjectCode = Movement_Income.Id 
+                                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
+                                    LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                                       AND Container.ObjectId = Object_Movement.Id
+                                                       AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
+                                    
+                            UNION ALL
+                               SELECT Movement_Income.Id
+                                    , Movement_Income.InvNumber
+                                    , Movement_Income.OperDate
+                                    , Movement_Income.StatusId
+                                    , MovementLinkObject_To.ObjectId        AS ToId
+                                    , MovementLinkObject_From.ObjectId      AS FromId
+                                    , MovementLinkObject_Juridical.ObjectId AS JuridicalId
+                                    , Container.Id                          AS PaymentContainerId
+                                    , Container.Amount                      AS PaySumm
+                                    , CASE WHEN Container.Amount <= 0.01 THEN zc_Color_Goods_Additional() END::Integer AS PayColor
+                                    , CASE WHEN Container.Amount > 0.01
+                                             OR Movement_Income.StatusId <> zc_Enum_Status_Complete()
+                                           THEN MovementDate_Payment.ValueData
+                                      END::TDateTime AS PaymentDate
+                               FROM tmpStatus
+                                    LEFT JOIN Movement AS Movement_Income ON Movement_Income.StatusId = tmpStatus.StatusId
+                                                                         AND Movement_Income.OperDate >= inStartDate AND Movement_Income.OperDate <inEndDate + interval '1 day'
+                                                                         AND Movement_Income.DescId = zc_Movement_Income()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                 ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                    LEFT JOIN Object ON Object.Id = MovementLinkObject_To.ObjectId AND Object.DescId = zc_Object_Unit()
+           
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                                 ON MovementLinkObject_Juridical.MovementId = Movement_Income.Id
+                                                                AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                                    -- Партия накладной
 
-                                     LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
-                                                                   ON ObjectHistory_Juridical.ObjectId = Movement_Income_View.FromId
-                                                                  AND ObjectHistory_Juridical.DescId = zc_ObjectHistory_JuridicalDetails()
-                                                                  AND Movement_Income_View.OperDate >= ObjectHistory_Juridical.StartDate AND Movement_Income_View.OperDate < ObjectHistory_Juridical.EndDate
-                                     LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-                                                                   ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
-                                                                  AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+                                    LEFT JOIN MovementDate AS MovementDate_Payment
+                                                           ON MovementDate_Payment.MovementId = Movement_Income.Id
+                                                          AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
 
-                                     LEFT JOIN MovementLinkMovement AS MLM_Order
-                                                                    ON MLM_Order.MovementId = Movement_Income_View.Id
-                                                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+                                    LEFT JOIN Object AS Object_Movement
+                                                     ON Object_Movement.ObjectCode = Movement_Income.Id 
+                                                    AND Object_Movement.DescId = zc_Object_PartionMovement()
+                                    LEFT JOIN Container ON Container.DescId = zc_Container_SummIncomeMovementPayment()
+                                                       AND Container.ObjectId = Object_Movement.Id
+                                                       AND Container.KeyValue like '%,'||MovementLinkObject_Juridical.ObjectId||';%'
                                WHERE Object.Id IS NULL
-                                 AND Movement_Income_View.OperDate BETWEEN inStartDate AND inEndDate
                               )
+       
+        SELECT Movement_Income.Id
+             , Movement_Income.InvNumber
+             , Movement_Income.OperDate
+             , Object_Status.ObjectCode                   AS StatusCode
+             , Object_Status.ValueData                    AS StatusName
+             , MovementFloat_TotalCount.ValueData         AS TotalCount
+             , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+             , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+             , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+             , Object_From.Id                             AS FromId
+             , Object_From.ValueData                      AS FromName
+             , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS FromOKPO
+             , Object_To.Id                               AS ToId      
+             , Object_To.Name                             AS ToName
+             , Object_Juridical.ValueData                 AS JuridicalName
+             , MovementLinkObject_NDSKind.ObjectId        AS NDSKindId
+             , Object_NDSKind.ValueData                   AS NDSKindName
+             , MovementLinkObject_Contract.ObjectId       AS ContractId
+             , Object_Contract.ValueData                  AS ContractName
+             , Movement_Income.PaymentDate 
+             , Movement_Income.PaySumm
+             , MovementFloat_TotalSummSale.ValueData      AS SaleSumm
+             , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+             , MovementDate_Branch.ValueData              AS BranchDate
+             , COALESCE(MovementBoolean_Checked.ValueData, false)     AS Checked
+             , COALESCE(MovementBoolean_Document.ValueData, false)    AS isDocument
+             , MovementBoolean_Registered.ValueData                   AS isRegistered -- !!!иногда будем возвращать NULL!!!
+             , Movement_Income.PayColor
+             , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
+             , Movement_Order.Id                    AS Movement_OrderId
+             , Movement_Order.InvNumber             AS Movement_OrderInvNumber
+             , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
 
-        SELECT 
-            Movement_Income.Id
-          , Movement_Income.InvNumber
-          , Movement_Income.OperDate
-          , Movement_Income.StatusCode
-          , Movement_Income.StatusName
-          , Movement_Income.TotalCount
-          , Movement_Income.TotalSummMVAT
-          , Movement_Income.TotalSumm
-          , Movement_Income.PriceWithVAT
-          , Movement_Income.FromId
-          , Movement_Income.FromName
-          , Movement_Income.FromOKPO
-          , Movement_Income.ToId
-          , Movement_Income.ToName
-          , Movement_Income.JuridicalName
-          , Movement_Income.NDSKindId
-          , Movement_Income.NDSKindName
-          , Movement_Income.ContractId
-          , Movement_Income.ContractName
-          , Movement_Income.PaymentDate
-          , Movement_Income.PaySumm
-          , Movement_Income.SaleSumm
-          , Movement_Income.InvNumberBranch
-          , Movement_Income.BranchDate
-          , Movement_Income.Checked
-          , Movement_Income.isDocument
-          , Movement_Income.isRegistered
-          , Movement_Income.PayColor
-          , MAX(MovementItemContainer.OperDate)::TDateTime AS LastDatePay
+             , Object_Insert.ValueData              AS InsertName
+             , MovementDate_Insert.ValueData        AS InsertDate
+             , Object_Update.ValueData              AS UpdateName
+             , MovementDate_Update.ValueData        AS UpdateDate
 
-          , Movement_Order.Id                    AS Movement_OrderId
-          , Movement_Order.InvNumber             AS Movement_OrderInvNumber
-          , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
+             , (Movement_Income.PaymentDate::Date - Movement_Income.OperDate::Date) ::TFloat AS PaymentDays 
+        FROM Movement_Income
 
-          , Object_Insert.ValueData              AS InsertName
-          , MovementDate_Insert.ValueData        AS InsertDate
-          , Object_Update.ValueData              AS UpdateName
-          , MovementDate_Update.ValueData        AS UpdateDate
+        LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
+        LEFT JOIN Object_Unit_View AS Object_To ON Object_To.Id = Movement_Income.ToId
+        LEFT JOIN Object AS Object_From ON Object_From.Id = Movement_Income.FromId
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Movement_Income.JuridicalId
 
-         -- , date_part('day', Movement_Income.PaymentDate - Movement_Income.OperDate) ::TFloat AS PaymentDays 
-          , (Movement_Income.PaymentDate::Date - Movement_Income.OperDate::Date) ::TFloat AS PaymentDays 
-    
-        FROM
-            Movement_Income
-            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
+        LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                ON MovementFloat_TotalCount.MovementId = Movement_Income.Id
+                               AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
-                                                 AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                ON MovementFloat_TotalSumm.MovementId = Movement_Income.Id
+                               AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementDate AS MovementDate_Insert
-                                   ON MovementDate_Insert.MovementId = Movement_Income.Id
-                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                ON MovementFloat_TotalSummSale.MovementId = Movement_Income.Id
+                               AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
 
-            LEFT JOIN MovementLinkObject AS MLO_Insert
-                                         ON MLO_Insert.MovementId = Movement_Income.Id
-                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                ON MovementFloat_TotalSummMVAT.MovementId = Movement_Income.Id
+                               AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+        
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                     ON MovementLinkObject_NDSKind.MovementId = Movement_Income.Id
+                                    AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+        LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = MovementLinkObject_NDSKind.ObjectId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                     ON MovementLinkObject_Contract.MovementId = Movement_Income.Id
+                                    AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementDate AS MovementDate_Update
-                                   ON MovementDate_Update.MovementId = Movement_Income.Id
-                                  AND MovementDate_Update.DescId = zc_MovementDate_Update()
-            LEFT JOIN MovementLinkObject AS MLO_Update
-                                         ON MLO_Update.MovementId = Movement_Income.Id
-                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+        LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                  ON MovementBoolean_PriceWithVAT.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
-        GROUP BY
-            Movement_Income.Id
-          , Movement_Income.InvNumber
-          , Movement_Income.OperDate
-          , Movement_Income.StatusCode
-          , Movement_Income.StatusName
-          , Movement_Income.TotalCount
-          , Movement_Income.TotalSummMVAT
-          , Movement_Income.TotalSumm
-          , Movement_Income.PriceWithVAT
-          , Movement_Income.FromId
-          , Movement_Income.FromName
-          , Movement_Income.FromOKPO
-          , Movement_Income.ToId
-          , Movement_Income.ToName
-          , Movement_Income.JuridicalName
-          , Movement_Income.NDSKindId
-          , Movement_Income.NDSKindName
-          , Movement_Income.ContractId
-          , Movement_Income.ContractName
-          , Movement_Income.PaymentDate
-          , Movement_Income.PaySumm
-          , Movement_Income.SaleSumm
-          , Movement_Income.InvNumberBranch
-          , Movement_Income.BranchDate
-          , Movement_Income.Checked
-          , Movement_Income.isDocument
-          , Movement_Income.isRegistered
-          , Movement_Income.PayColor
-          , Movement_Order.InvNumber
-          , Movement_Order.Id 
-          , Object_Insert.ValueData
-          , MovementDate_Insert.ValueData
-          , Object_Update.ValueData
-          , MovementDate_Update.ValueData
+        LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                  ON MovementBoolean_Checked.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Registered
+                                  ON MovementBoolean_Registered.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_Registered.DescId = zc_MovementBoolean_Registered()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Document
+                                  ON MovementBoolean_Document.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+        LEFT JOIN MovementDate    AS MovementDate_Payment
+                                  ON MovementDate_Payment.MovementId = Movement_Income.Id
+                                 AND MovementDate_Payment.DescId = zc_MovementDate_Payment()
+
+        LEFT JOIN MovementDate    AS MovementDate_Branch
+                                  ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                 AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
+
+        LEFT JOIN MovementString  AS MovementString_InvNumberBranch
+                                  ON MovementString_InvNumberBranch.MovementId = Movement_Income.Id
+                                 AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+
+        LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
+                                       AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+
+        LEFT JOIN MovementDate AS MovementDate_Insert
+                               ON MovementDate_Insert.MovementId = Movement_Income.Id
+                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+        LEFT JOIN MovementLinkObject AS MLO_Insert
+                                     ON MLO_Insert.MovementId = Movement_Income.Id
+                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
+
+        LEFT JOIN MovementDate AS MovementDate_Update
+                               ON MovementDate_Update.MovementId = Movement_Income.Id
+                              AND MovementDate_Update.DescId = zc_MovementDate_Update()
+        LEFT JOIN MovementLinkObject AS MLO_Update
+                                     ON MLO_Update.MovementId = Movement_Income.Id
+                                    AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
+        LEFT OUTER JOIN ObjectHistory AS ObjectHistory_Juridical
+                                      ON ObjectHistory_Juridical.ObjectId = Object_From.Id
+                                     AND ObjectHistory_Juridical.DescId = zc_ObjectHistory_JuridicalDetails()
+                                     AND Movement_Income.OperDate >= ObjectHistory_Juridical.StartDate AND Movement_Income.OperDate < ObjectHistory_Juridical.EndDate
+        LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+                                      ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory_Juridical.Id
+                                     AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+
+        LEFT JOIN MovementLinkMovement AS MLM_Order
+                                       ON MLM_Order.MovementId = Movement_Income.Id
+                                      AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+        LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MLM_Order.MovementChildId
+
+        GROUP BY Movement_Income.Id
+               , Movement_Income.InvNumber
+               , Movement_Income.OperDate
+               , Object_Status.ObjectCode              
+               , Object_Status.ValueData               
+               , MovementFloat_TotalCount.ValueData    
+               , MovementFloat_TotalSummMVAT.ValueData 
+               , MovementFloat_TotalSumm.ValueData     
+               , MovementBoolean_PriceWithVAT.ValueData
+               , Object_From.Id      
+               , Object_From.ValueData                  
+               , ObjectHistoryString_JuridicalDetails_OKPO.ValueData 
+               , Object_To.Id                             
+               , Object_To.Name                           
+               , Object_Juridical.ValueData               
+               , MovementLinkObject_NDSKind.ObjectId      
+               , Object_NDSKind.ValueData                 
+               , MovementLinkObject_Contract.ObjectId 
+               , Object_Contract.ValueData    
+               , Movement_Income.PaymentDate 
+               , Movement_Income.PaySumm
+               , MovementFloat_TotalSummSale.ValueData     
+               , MovementString_InvNumberBranch.ValueData  
+               , MovementDate_Branch.ValueData             
+               , COALESCE(MovementBoolean_Checked.ValueData, false) 
+               , COALESCE(MovementBoolean_Document.ValueData, false)
+               , MovementBoolean_Registered.ValueData 
+               , Movement_Income.PayColor
+               , Movement_Order.Id              
+               , Movement_Order.InvNumber       
+               , Object_Insert.ValueData        
+               , MovementDate_Insert.ValueData  
+               , Object_Update.ValueData        
+               , MovementDate_Update.ValueData  
 ;
 END;
 $BODY$
@@ -279,6 +324,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 15.01.17         * без вьюх
  18.10.16         * add isRegistered
  04.08.16         *
  04.05.16         *

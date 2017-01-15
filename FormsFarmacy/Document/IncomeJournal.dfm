@@ -128,6 +128,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = colSaleSumm
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colToName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
