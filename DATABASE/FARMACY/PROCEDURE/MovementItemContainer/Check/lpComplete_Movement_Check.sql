@@ -152,7 +152,7 @@ BEGIN
                 OPEN curRemains FOR
                    SELECT _tmpItem_remains.ContainerId, _tmpItem_remains.MovementItemId_partion, _tmpItem_remains.GoodsId, _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0)
                    FROM _tmpItem_remains
-                        LEFT JOIN (SELECT ContainerId, SUM (_tmpMIContainer_insert.Amount) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId
+                        LEFT JOIN (SELECT ContainerId, -1 * SUM (_tmpMIContainer_insert.Amount) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId
                                   ) AS tmp ON tmp.ContainerId = _tmpItem_remains.ContainerId
                    WHERE _tmpItem_remains.GoodsId = vbGoodsId
                      AND _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0) > 0

@@ -1092,6 +1092,8 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', FieldByName('KindName').AsString);
            //Номенклатура поставки товарів
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+           //Код товару згідно з УКТ ЗЕД
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A31', FieldByName('GoodsCodeUKTZED').AsString);
            //Одиниця виміру товару
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
            //Код одиниці виміру товару
@@ -1243,6 +1245,8 @@ begin
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A2', FieldByName('KindName').AsString);
            //Номенклатура поставки товарів
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A3', FieldByName('GoodsName').AsString);
+           //Код товару згідно з УКТ ЗЕД
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A31', FieldByName('GoodsCodeUKTZED').AsString);
            //Одиниця виміру товару
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A4', FieldByName('MeasureName').AsString);
            //Код одиниці виміру товару
