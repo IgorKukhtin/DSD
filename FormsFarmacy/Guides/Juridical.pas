@@ -23,6 +23,8 @@ type
     colPayOrder: TcxGridDBColumn;
     colPercent: TcxGridDBColumn;
     colOKPO: TcxGridDBColumn;
+    colOrderSumm: TcxGridDBColumn;
+    colOrderTime: TcxGridDBColumn;
   private
     { Private declarations }
   public

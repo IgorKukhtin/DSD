@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -12,6 +13,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inRetailId                Integer   ,    -- ссылка на подразделение
     IN inPercent                 TFloat    ,    
     IN inPayOrder                TFloat    ,    -- Очередь платежа
+    IN inOrderSumm               TFloat    ,    -- минимальная сумма для заказа
+    IN inOrderSummComment        TVarChar  ,    -- Примечание к минимальной сумме для заказа
+    IN inOrderTime               TVarChar  ,    -- информативно - максимальное время отправки
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -47,18 +51,26 @@ BEGIN
    -- сохранили свойство <Очередь платежа>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_PayOrder(), ioId, inPayOrder);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_OrderSumm(), ioId, inOrderSumm);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_OrderSumm(), ioId, inOrderSummComment);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Juridical_OrderTime(), ioId, inOrderTime);
+
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 14.01.17         *
  02.12.15                                                         * PayOrder
  10.04.15                        * 
  01.07.14         * 
@@ -66,4 +78,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Bool
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_Juridical(ioId := 0 , inCode := 1 , inName := 'sdggsd' , inRetailId := 0 , inisCorporate := 'False' ,  inSession := '8');                        
+-- select * from gpInsertUpdate_Object_Juridical(ioId := 0 , inCode := 1 , inName := 'sdggsd' , inRetailId := 0 , inisCorporate := 'False' ,  inSession := '8');

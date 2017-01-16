@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer, Code Integer,
                isErased boolean,
                Inf_Text1 TVarChar, Inf_Text2 TVarChar,
                Color_Calc1 Integer, Color_Calc2 Integer, Color_Calc3 Integer, Color_Calc4 Integer,
-               Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer
+               Color_Calc5 Integer, Color_Calc6 Integer, Color_Calc7 Integer,
+               OrderSumm TVarChar, OrderTime TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -91,6 +92,11 @@ BEGIN
            , CASE WHEN Object_OrderShedule.Value6 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value6 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value6 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc6
            , CASE WHEN Object_OrderShedule.Value7 = 1 THEN zc_Color_Yelow() WHEN Object_OrderShedule.Value7 = 2 THEN zc_Color_Aqua() WHEN Object_OrderShedule.Value7 = 3 THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_Calc7
 
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+             END                                            ::TVarChar AS OrderSumm
+           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
        FROM tmpObject AS Object_OrderShedule
            LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
                                 ON ObjectLink_OrderShedule_Contract.ObjectId = Object_OrderShedule.Id
@@ -112,8 +118,18 @@ BEGIN
                                  ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                                 AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
-           LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId   
-;
+           LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId  
+           --
+           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+                                 ON ObjectFloat_OrderSumm.ObjectId = Object_Contract_Juridical.Id
+                                AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderSumm
+                                  ON ObjectString_OrderSumm.ObjectId = Object_Contract_Juridical.Id
+                                 AND ObjectString_OrderSumm.DescId = zc_ObjectString_Juridical_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderTime
+                                  ON ObjectString_OrderTime.ObjectId = Object_Contract_Juridical.Id
+                                 AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+ ;
   
 END;
 $BODY$
@@ -124,10 +140,11 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.17         *
  05.10.16         * parce
  20.09.14         *
 
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_OrderShedule ('2')
+--select * from  gpSelect_Object_OrderShedule(inUnitId := 0 , inJuridicalId := 0 , inisShowAll := 'True'::Boolean ,  inSession := '3'::TVarChar);

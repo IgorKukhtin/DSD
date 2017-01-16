@@ -71,6 +71,14 @@ type
     spUpdateMovementUserSend: TdsdStoredProc;
     actUpdateUserSend: TdsdExecStoredProc;
     edisDeferred: TcxCheckBox;
+    cxLabel9: TcxLabel;
+    edZakaz_Text: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    edDostavka_Text: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    edOrderSumm: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edOrderTime: TcxTextEdit;
   private
     { Private declarations }
   public

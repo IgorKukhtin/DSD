@@ -14,6 +14,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , MasterId Integer, MasterInvNumber TVarChar, OrderKindName TVarChar
              , Comment TVarChar
+             , Zakaz_Text TVarChar
+             , Dostavka_Text TVarChar
+             , OrderSumm TVarChar, OrderTime TVarChar
              , isDeferred Boolean
               )
 AS
@@ -44,6 +47,10 @@ BEGIN
              , CAST ('' AS TVarChar) 			        AS MasterInvNumber
              , CAST ('' AS TVarChar) 			        AS OrderKindName
              , CAST ('' AS TVarChar) 		                AS Comment
+             , CAST ('' AS TVarChar) 		                AS Zakaz_Text
+             , CAST ('' AS TVarChar) 		                AS Dostavka_Text
+             , CAST ('' AS TVarChar) 		                AS OrderSumm
+             , CAST ('' AS TVarChar) 		                AS OrderTime
              , FALSE                                            AS isDeferred
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -67,6 +74,27 @@ BEGIN
            , ('№ '||Movement_Master.InvNumber || ' от '|| TO_CHAR(Movement_Master.Operdate , 'DD.MM.YYYY')) :: TVarChar    AS MasterInvNumber 
            , Object_OrderKind.ValueData                         AS OrderKindName
            , COALESCE (MovementString_Comment.ValueData,'')       :: TVarChar AS Comment
+
+          , (CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat in (1,3) THEN 'Понедельник,' ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat in (1,3) THEN 'Вторник,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat in (1,3) THEN 'Среда,'       ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat in (1,3) THEN 'Четверг,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat in (1,3) THEN 'Пятница,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat in (1,3) THEN 'Суббота,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat in (1,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Zakaz_Text   --День заказа (информативно)
+          , (CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 1) ::TFloat in (2,3) THEN 'Понедельник,' ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 2) ::TFloat in (2,3) THEN 'Вторник,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 3) ::TFloat in (2,3) THEN 'Среда,'       ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 4) ::TFloat in (2,3) THEN 'Четверг,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 5) ::TFloat in (2,3) THEN 'Пятница,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 6) ::TFloat in (2,3) THEN 'Суббота,'     ELSE '' END ||
+             CASE WHEN zfCalc_Word_Split (inValue:= Object_OrderShedule.ValueData, inSep:= ';', inIndex:= 7) ::TFloat in (2,3) THEN 'Воскресенье'  ELSE '' END) ::TVarChar   AS Dostavka_Text   --День доставки (информативно)
+
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+             END                                            ::TVarChar AS OrderSumm
+           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
        FROM Movement
@@ -107,9 +135,32 @@ BEGIN
                                          ON MovementLinkObject_OrderKind.MovementId = Movement_Master.Id
                                         AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
             LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
+            --
+            LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+                                  ON ObjectFloat_OrderSumm.ObjectId = Object_From.Id
+                                 AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
+            LEFT JOIN ObjectString AS ObjectString_OrderSumm
+                                   ON ObjectString_OrderSumm.ObjectId = Object_From.Id
+                                  AND ObjectString_OrderSumm.DescId = zc_ObjectString_Juridical_OrderSumm()
+            LEFT JOIN ObjectString AS ObjectString_OrderTime
+                                  ON ObjectString_OrderTime.ObjectId = Object_From.Id
+                                 AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+
+            -- График заказа/доставки
+            LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Contract
+                                 ON ObjectLink_OrderShedule_Contract.DescId = zc_ObjectLink_OrderShedule_Contract()
+                                AND ObjectLink_OrderShedule_Contract.ChildObjectId = Object_Contract.Id
+            LEFT JOIN ObjectLink AS ObjectLink_OrderShedule_Unit
+                                 ON ObjectLink_OrderShedule_Unit.DescId = zc_ObjectLink_OrderShedule_Unit()
+                                AND ObjectLink_OrderShedule_Unit.ObjectId = ObjectLink_OrderShedule_Contract.ObjectId
+            LEFT JOIN Object AS Object_OrderShedule 
+                             ON Object_OrderShedule.Id = ObjectLink_OrderShedule_Contract.ObjectId 
+                            AND Object_OrderShedule.DescId = zc_Object_OrderShedule()
+                            AND Object_OrderShedule.isErased = FALSE
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_OrderExternal();
+         AND Movement.DescId = zc_Movement_OrderExternal()
+AND ObjectLink_OrderShedule_Unit.ChildObjectId = Object_To.Id;
 
        END IF;
 

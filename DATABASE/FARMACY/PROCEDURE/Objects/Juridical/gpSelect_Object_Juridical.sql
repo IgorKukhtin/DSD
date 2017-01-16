@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, OKPO TVarChar,
                RetailId Integer, RetailName TVarChar,
                isCorporate boolean,
                Percent TFloat, PayOrder TFloat,
+               OrderSumm TVarChar, OrderTime TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +31,11 @@ BEGIN
            , ObjectFloat_Percent.ValueData       AS Percent
            , ObjectFloat_PayOrder.ValueData      AS PayOrder
            
+           , CASE WHEN COALESCE (ObjectFloat_OrderSumm.ValueData,0) = 0 THEN COALESCE (ObjectString_OrderSumm.ValueData,'') 
+                  ELSE CAST (ObjectFloat_OrderSumm.ValueData AS NUMERIC (16, 2)) ||' ' || COALESCE (ObjectString_OrderSumm.ValueData,'')
+             END                                            ::TVarChar AS OrderSumm
+           , COALESCE (ObjectString_OrderTime.ValueData,'') ::TVarChar AS OrderTime
+
            , Object_Juridical.isErased           AS isErased
            
        FROM Object AS Object_Juridical
@@ -50,6 +56,17 @@ BEGIN
                                    ON ObjectFloat_PayOrder.ObjectId = Object_Juridical.Id
                                   AND ObjectFloat_PayOrder.DescId = zc_ObjectFloat_Juridical_PayOrder()
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_OrderSumm
+                                 ON ObjectFloat_OrderSumm.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_OrderSumm.DescId = zc_ObjectFloat_Juridical_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderSumm
+                                  ON ObjectString_OrderSumm.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_OrderSumm.DescId = zc_ObjectString_Juridical_OrderSumm()
+           LEFT JOIN ObjectString AS ObjectString_OrderTime
+                                  ON ObjectString_OrderTime.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_OrderTime.DescId = zc_ObjectString_Juridical_OrderTime()
+
        WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;
@@ -62,6 +79,7 @@ ALTER FUNCTION gpSelect_Object_Juridical(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ¬ÓÓ·Í‡ÎÓ ¿.¿.
+ 14.01.17         * 
  02.12.15                                                         * PayOrder
  01.07.14         *
 
