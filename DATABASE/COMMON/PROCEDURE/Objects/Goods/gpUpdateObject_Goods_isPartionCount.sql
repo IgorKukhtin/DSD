@@ -23,7 +23,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_PartionCount(), inId, inisPartionCount);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     PERFORM lpInsert_ObjectProtocol (inId, vbUserId, FALSE);
   
 END;
 $BODY$

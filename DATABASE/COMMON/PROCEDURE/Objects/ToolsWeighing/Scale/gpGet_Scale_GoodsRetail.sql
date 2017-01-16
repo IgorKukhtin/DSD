@@ -69,7 +69,7 @@ BEGIN
                                  FROM (SELECT Object_GoodsProperty.Id            AS GoodsPropertyId
                                             , CASE WHEN inGoodsPropertyId = 83955 -- Алан
                                                     AND SUBSTRING (inBarCode FROM 1 FOR 3) = '220'
-                                                        THEN ObjectFloat_StartPosInt.ValueData + 1
+                                                        THEN ObjectFloat_StartPosInt.ValueData + 1 - 1 --***
                                                    ELSE ObjectFloat_StartPosInt.ValueData
                                               END AS StartPosInt
                                             , ObjectFloat_EndPosInt.ValueData    AS EndPosInt
@@ -83,7 +83,7 @@ BEGIN
                                                         THEN ObjectFloat_EndPosIdent.ValueData
                                                    ELSE CASE WHEN inGoodsPropertyId = 83955 -- Алан
                                                               AND SUBSTRING (inBarCode FROM 1 FOR 3) = '220'
-                                                                  THEN ObjectFloat_StartPosInt.ValueData + 0
+                                                                  THEN ObjectFloat_StartPosInt.ValueData + 0 - 1 --***
                                                              ELSE ObjectFloat_StartPosInt.ValueData - 1
                                                         END
                                               END AS EndPosIdent

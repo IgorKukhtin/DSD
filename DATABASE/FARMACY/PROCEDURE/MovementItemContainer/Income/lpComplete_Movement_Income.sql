@@ -215,7 +215,7 @@ BEGIN
            , tmpPromo.MovementItemId AS ObjectIntId_analyzer
        FROM tmpMI
             -- LEFT JOIN tmpPromoGoods ON tmpPromoGoods.GoodsId = tmpMI.GoodsId
-            LEFT JOIN tmpPromo ON tmpPromo.GoodsId = tmpMI.GoodsId
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId = tmpMI.GoodsId AND tmpPromo.Ord = 1
       ;
 
     -- Результат - проводки по кол-во "Остатки"
@@ -391,6 +391,15 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_NDS
                                 ON ObjectFloat_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                                AND ObjectFloat_NDS.DescId = zc_ObjectFloat_NDSKind_NDS();
+
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpMIContainer_insert GROUP BY DescId, MovementItemId HAVING COUNT(*) > 1)
+     THEN
+         RAISE EXCEPTION 'Ошибка при формировании проводок, <%> <%>', lfGet_Object_ValueData ((SELECT ObjectId_analyzer FROM _tmpMIContainer_insert WHERE MovementItemId IN ((SELECT MovementItemId FROM _tmpMIContainer_insert GROUP BY DescId, MovementItemId HAVING COUNT(*) > 1 ORDER BY MovementItemId LIMIT 1))  ORDER BY MovementItemId LIMIT 1))
+                                                                    , (SELECT MovementItemId FROM _tmpMIContainer_insert GROUP BY DescId, MovementItemId HAVING COUNT(*) > 1 ORDER BY MovementItemId LIMIT 1)
+                                                                     ;
+     END IF;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
