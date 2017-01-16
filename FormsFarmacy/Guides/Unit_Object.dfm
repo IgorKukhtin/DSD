@@ -39,28 +39,28 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             DataBinding.FieldName = 'ParentName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object ceCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 35
           end
           object ceName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 133
           end
           object ceJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 87
           end
           object colTaxService: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080
@@ -69,6 +69,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 57
           end
           object colTaxServiceNigth: TcxGridDBColumn
             Caption = '% '#1086#1090' '#1074#1099#1088#1091#1095#1082#1080' '#1085#1086#1095#1100
@@ -77,6 +78,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 56
           end
           object colisRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
@@ -85,7 +87,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1072#1074#1090#1086#1087#1077#1088#1077#1086#1094#1077#1085#1082#1077
             Options.Editing = False
-            Width = 80
+            Width = 70
           end
           object colisOver: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -94,7 +96,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080
             Options.Editing = False
-            Width = 100
+            Width = 88
           end
           object ceIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -111,6 +113,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Visible = False
             VisibleForCustomization = False
             Width = 30
+          end
+          object colisUploadBadm: TcxGridDBColumn
+            Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052
+            DataBinding.FieldName = 'isUploadBadm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
+            Options.Editing = False
+            Width = 89
           end
         end
       end
@@ -186,6 +197,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateisUploadBadm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isUploadBadm
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isUploadBadm
+        end>
+      Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1041#1040#1044#1052
+      Hint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 76
     end
     object actUpdateisOver: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -313,6 +337,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisUploadBadm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -346,6 +378,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdateisOverNoList: TdxBarButton
       Action = macUpdateisOverNo
+      Category = 0
+    end
+    object bbUpdateisUploadBadm: TdxBarButton
+      Action = actUpdateisUploadBadm
       Category = 0
     end
   end
@@ -450,5 +486,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 496
     Top = 219
+  end
+  object spUpdate_Unit_isUploadBadm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isUploadBadm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUploadBadm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadBadm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUploadBadm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadBadm'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 131
   end
 end

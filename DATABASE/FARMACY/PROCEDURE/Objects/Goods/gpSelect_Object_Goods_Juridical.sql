@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , MakerName TVarChar
              , ConditionsKeepId Integer, ConditionsKeepName TVarChar
              , MinimumLot TFloat
-             , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean
+             , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
              , isErased boolean
@@ -46,6 +46,7 @@ BEGIN
          , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE) AS IsUpload
          , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)  AS IsPromo
          , COALESCE(ObjectBoolean_Goods_SpecCondition.ValueData,FALSE)  AS IsSpecCondition
+         , COALESCE(ObjectBoolean_Goods_UploadBadm.ValueData,FALSE)     AS IsUploadBadm
 
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate
@@ -76,6 +77,9 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SpecCondition
                                   ON ObjectBoolean_Goods_SpecCondition.ObjectId = ObjectLink_Goods_Object.ObjectId
                                  AND ObjectBoolean_Goods_SpecCondition.DescId = zc_ObjectBoolean_Goods_SpecCondition()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_UploadBadm
+                                  ON ObjectBoolean_Goods_UploadBadm.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                 AND ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = ObjectLink_Goods_Object.ObjectId
@@ -129,4 +133,4 @@ $BODY$
 */
 
 -- тест
- --SELECT * FROM gpSelect_Object_Goods('2')
+ --select * from gpSelect_Object_Goods_Juridical(inObjectId := 59614 , inIsErased := 'False' ,  inSession := '3');

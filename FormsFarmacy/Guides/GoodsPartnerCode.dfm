@@ -4,7 +4,7 @@
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1016
-  ExplicitHeight = 593
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -136,6 +136,15 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1058#1086#1074#1072#1088' '#1087#1086#1076' '#1089#1087#1077#1094'.'#1091#1089#1083#1086#1074#1080#1103
             Width = 55
+          end
+          object colisUploadBadm: TcxGridDBColumn
+            Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052
+            DataBinding.FieldName = 'isUploadBadm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
+            Options.Editing = False
+            Width = 89
           end
           object colUpdateDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'

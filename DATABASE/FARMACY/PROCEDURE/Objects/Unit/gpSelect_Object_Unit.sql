@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, Parent
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , isRepriceAuto Boolean
              , isOver Boolean
+             , isUploadBadm Boolean
 ) AS
 $BODY$
 BEGIN
@@ -47,6 +48,7 @@ BEGIN
 
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
+      , COALESCE(ObjectBoolean_UploadBadm.ValueData, False)  AS isUploadBadm
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -82,6 +84,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Over
                                 ON ObjectBoolean_Over.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_UploadBadm
+                                ON ObjectBoolean_UploadBadm.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
@@ -104,6 +109,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.01.17         * add isUploadBadm
  13.10.16         * add isOver
  08.04.16         *
  24.02.16         * add RepriceAuto
