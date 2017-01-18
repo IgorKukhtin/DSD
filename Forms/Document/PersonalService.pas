@@ -102,6 +102,7 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting: TdsdExecStoredProc;
     actStartLoad: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

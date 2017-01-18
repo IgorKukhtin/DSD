@@ -1233,7 +1233,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
-      ImportSettingsId.Value = '0'
+      ImportSettingsId.Value = Null
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
@@ -1243,7 +1243,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Value = '0'
           Component = FormParams
           ComponentItem = 'Id'
-          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
     end
@@ -1271,10 +1270,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1087#1088#1080#1079#1085#1072#1082#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>?'
-      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'> '#1079#1072#1074#1077#1088#1096#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 41
     end
   end
@@ -1390,6 +1389,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1417,6 +1424,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbUpdateIsMain: TdxBarButton
       Action = actUpdateIsMain
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -1479,6 +1490,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
       end
       item
         Name = 'MaskId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
         Value = Null
         MultiSelectSeparator = ','
       end>
