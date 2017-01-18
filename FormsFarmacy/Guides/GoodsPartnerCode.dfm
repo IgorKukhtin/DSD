@@ -143,7 +143,6 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
-            Options.Editing = False
             Width = 89
           end
           object colUpdateDate: TcxGridDBColumn
@@ -544,6 +543,9 @@
         end
         item
           StoredProc = spUpdate_Goods_IsSpecCondition
+        end
+        item
+          StoredProc = spUpdate_Goods_isUploadBadm
         end>
       Caption = 'dsdUpdateDataSet'
       DataSource = MasterDS
@@ -1470,5 +1472,39 @@
     PackSize = 1
     Left = 616
     Top = 400
+  end
+  object spUpdate_Goods_isUploadBadm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_isUploadBadm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUploadBadm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadBadm'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisUploadBadm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isUploadBadm'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 616
+    Top = 91
   end
 end

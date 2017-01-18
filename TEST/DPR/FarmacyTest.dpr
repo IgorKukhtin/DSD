@@ -418,7 +418,6 @@ uses
   Promo in '..\..\FormsFarmacy\Document\Promo.pas' {PromoForm: TParentForm},
   PromoJournal in '..\..\FormsFarmacy\Document\PromoJournal.pas' {PromoJournalForm: TParentForm},
   ReportMovementCheckMiddle in '..\..\FormsFarmacy\Report\ReportMovementCheckMiddle.pas' {ReportMovementCheckMiddleForm: TParentForm},
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   Report_RemainsOverGoodsDialog in '..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas' {Report_RemainsOverGoodsDialogForm: TParentForm},
   MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
   UnitForFarmacyCash in '..\..\FormsFarmacy\Guides\UnitForFarmacyCash.pas' {UnitForFarmacyCashForm: TParentForm},
@@ -479,7 +478,10 @@ uses
   ReportPromoParams in '..\..\FormsFarmacy\Object\ReportPromoParams.pas' {ReportPromoParamsForm: TParentForm},
   Report_MinPrice_onGoods in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoods.pas' {Report_MinPrice_onGoodsForm: TParentForm},
   Report_MinPrice_onGoodsDialog in '..\..\FormsFarmacy\Report\Report_MinPrice_onGoodsDialog.pas' {Report_MinPrice_onGoodsDialogForm: TParentForm},
-  Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm};
+  Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm},
+  Report_Badm in '..\..\FormsFarmacy\Report\Report_Badm.pas' {Report_BadmForm: TParentForm},
+  Unit_byReportBadm in '..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas' {Unit_byReportBadmForm: TParentForm},
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

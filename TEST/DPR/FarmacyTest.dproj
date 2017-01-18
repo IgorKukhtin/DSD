@@ -1309,10 +1309,6 @@
 				<Form>ReportMovementCheckMiddleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
-				<Form>Unit_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoodsDialog.pas">
 				<Form>Report_RemainsOverGoodsDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1555,6 +1551,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract_Object.pas">
 				<Form>Contract_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Badm.pas">
+				<Form>Report_BadmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas">
+				<Form>Unit_byReportBadmForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

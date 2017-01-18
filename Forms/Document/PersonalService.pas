@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, cxSplitter,
+  ExternalLoad;
 
 type
   TPersonalServiceForm = class(TAncestorDocumentForm)
@@ -97,6 +98,10 @@ type
     DBViewAddOnChild: TdsdDBViewAddOn;
     spSelectChild: TdsdStoredProc;
     edIsAuto: TcxCheckBox;
+    spGetImportSetting: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    actStartLoad: TMultiAction;
   private
     { Private declarations }
   public
