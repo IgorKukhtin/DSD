@@ -496,7 +496,55 @@ inherited CheckForm: TCheckForm
         end>
       isShowModal = True
     end
-    inherited actPrint: TdsdPrintAction [19]
+    object PrintDialog: TExecuteDialog [19]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'actCheckPrintDialog'
+      ImageIndex = 3
+      FormName = 'TCheckPrintDialogForm'
+      FormNameParam.Value = 'TCheckPrintDialogForm'
+      FormNameParam.DataType = ftDateTime
+      FormNameParam.ParamType = ptInputOutput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inFiscalCheckNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inFiscalCheckNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBayer'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBayer'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inFiscalCheckNumber'
+          Value = Null
+          Component = edFiscalCheckNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBayer'
+          Value = Null
+          Component = edBayer
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    inherited actPrint: TdsdPrintAction [20]
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -618,53 +666,59 @@ inherited CheckForm: TCheckForm
       Hint = #1055#1088#1086#1087#1080#1089#1072#1090#1100' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1080' '#1090#1080#1087' '#1086#1087#1083#1072#1090#1099
       ImageIndex = 43
     end
-    object PrintDialog: TExecuteDialog
+    object actUpdateOperDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdateMovement_OperDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_OperDate
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 24
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogUpdateOperDate: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = 'actCheckPrintDialog'
-      ImageIndex = 3
-      FormName = 'TCheckPrintDialogForm'
-      FormNameParam.Value = 'TCheckPrintDialogForm'
-      FormNameParam.DataType = ftDateTime
-      FormNameParam.ParamType = ptInputOutput
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 24
+      FormName = 'TDataTimeDialogForm'
+      FormNameParam.Value = 'TDataTimeDialogForm'
+      FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inFiscalCheckNumber'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inBayer'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inFiscalCheckNumber'
-          Value = Null
-          Component = edFiscalCheckNumber
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inBayer'
-          Value = Null
-          Component = edBayer
-          DataType = ftString
+          Name = 'inOperDate'
+          Value = '0'
+          Component = edOperDate
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object macUpdateOperDate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUpdateOperDate
+        end
+        item
+          Action = actUpdateOperDate
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1095#1077#1082#1072
+      ImageIndex = 67
     end
   end
   inherited MasterDS: TDataSource
@@ -741,11 +795,19 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateOperDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
-          ItemName = 'bbStatic'
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -756,6 +818,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton1: TdxBarButton
       Action = actEditDocument
+      Category = 0
+    end
+    object bbUpdateOperDate: TdxBarButton
+      Action = macUpdateOperDate
       Category = 0
     end
   end
@@ -1032,6 +1098,8 @@ inherited CheckForm: TCheckForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 186
+    Top = 272
   end
   inherited GuidesFiller: TGuidesFiller
     Top = 221
@@ -1126,5 +1194,38 @@ inherited CheckForm: TCheckForm
     Params = <>
     Left = 740
     Top = 286
+  end
+  object spUpdateMovement_OperDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_OperDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = 'edInvNumber'
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 482
+    Top = 336
   end
 end

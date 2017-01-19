@@ -254,6 +254,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckPrintDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckPrintDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
 end;
 
 procedure TLoadFormTest.LoadConditionsKeepFormTest;
