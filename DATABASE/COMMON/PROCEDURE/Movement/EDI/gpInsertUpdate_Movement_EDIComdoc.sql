@@ -35,6 +35,9 @@ BEGIN
 
 
      -- Меняем параметр
+     -- inGLNPlace:= TRIM (inGLNPlace);
+
+     -- Меняем параметр
      inDesc:= COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')
                        , COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_ReturnIn() AND inDesc = 'Return')
                                  , (SELECT MovementDesc.Code FROM MovementDesc WHERE Id IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) AND MovementDesc.Code = inDesc))

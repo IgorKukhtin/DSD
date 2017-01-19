@@ -48,7 +48,7 @@ BEGIN
                                                   , tmpGoodsProperty.StartPosIdent
                                                   , CASE WHEN tmpGoodsProperty.GoodsPropertyId = 83955 -- Алан
                                                           AND SUBSTRING (ObjectString_BarCode.ValueData FROM 1 FOR 3) = '220'
-                                                              THEN 1 + tmpGoodsProperty.EndPosIdent
+                                                              THEN 1 + tmpGoodsProperty.EndPosIdent - 1 --***
                                                          ELSE tmpGoodsProperty.EndPosIdent
                                                     END AS EndPosIdent
 

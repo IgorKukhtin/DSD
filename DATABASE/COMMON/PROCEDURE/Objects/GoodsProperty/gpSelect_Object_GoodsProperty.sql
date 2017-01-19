@@ -55,8 +55,24 @@ $BODY$BEGIN
                               ON ObjectFloat_EndPosIdent.ObjectId = Object_GoodsProperty.Id 
                              AND ObjectFloat_EndPosIdent.DescId = zc_ObjectFloat_GoodsProperty_EndPosIdent()
 
-   WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty();
-  
+   WHERE Object_GoodsProperty.DescId = zc_Object_GoodsProperty()
+
+    UNION ALL
+      SELECT 0               AS Id
+           , NULL :: Integer AS Code
+           , '”ƒ¿À»“‹ «Ì‡˜ÂÌËÂ' :: TVarChar AS Name
+           , NULL :: TFloat AS StartPosInt
+           , NULL :: TFloat AS EndPosInt
+           , NULL :: TFloat AS StartPosFrac
+           , NULL :: TFloat EndPosFrac
+
+           , NULL :: TFloat AS StartPosIdent
+           , NULL :: TFloat AS EndPosIdent
+
+           , FALSE AS isErased
+     ;
+
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_GoodsProperty(TVarChar) OWNER TO postgres;

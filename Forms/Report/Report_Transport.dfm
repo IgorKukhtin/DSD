@@ -27,6 +27,7 @@ object Report_TransportForm: TReport_TransportForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -808,6 +809,7 @@ object Report_TransportForm: TReport_TransportForm
       FormName = 'TReport_TransportDialogForm'
       FormNameParam.Value = 'TReport_TransportDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -815,6 +817,7 @@ object Report_TransportForm: TReport_TransportForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -822,6 +825,7 @@ object Report_TransportForm: TReport_TransportForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -829,6 +833,7 @@ object Report_TransportForm: TReport_TransportForm
           Component = BranchGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -837,6 +842,7 @@ object Report_TransportForm: TReport_TransportForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -857,6 +863,7 @@ object Report_TransportForm: TReport_TransportForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -864,11 +871,13 @@ object Report_TransportForm: TReport_TransportForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -876,6 +885,7 @@ object Report_TransportForm: TReport_TransportForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 152
@@ -907,6 +917,7 @@ object Report_TransportForm: TReport_TransportForm
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
@@ -923,6 +934,7 @@ object Report_TransportForm: TReport_TransportForm
     LookupControl = edBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -933,6 +945,7 @@ object Report_TransportForm: TReport_TransportForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -941,6 +954,7 @@ object Report_TransportForm: TReport_TransportForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 520
     Top = 27

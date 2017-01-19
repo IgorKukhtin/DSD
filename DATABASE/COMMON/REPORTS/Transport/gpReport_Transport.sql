@@ -262,11 +262,188 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                              -- AND Movement.Id = 4902267 
+                              AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
+                                OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
+                                  )
+                           UNION ALL
+                            SELECT Movement.Id AS MovementId
+                                 , Movement.InvNumber
+                                 , Movement.OperDate
+                                 , MovementLinkObject_Car.ObjectId AS CarId
+                                 , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
+                                 -- , MovementItem.Id AS MovementItemId
+                                 -- , MovementItem.Amount AS DistanceFuelMaster
+
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) AS Ord
+
+                                 , 0 AS DistanceFuel
+
+                                 , MovementItem.ObjectId AS RouteId
+                                 , MILinkObject_RouteKind.ObjectId AS RouteKindId
+
+                                 , 0 AS Weight
+                                 , 0 AS WeightTransport
+
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_RateSumma.ValueData, 0) ELSE 0 END AS SumTransportAdd
+
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/ ELSE 0 END AS SumTransportAddLong
+                                 , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
+                                                      ORDER BY CASE WHEN MIBoolean_MasterFuel.ValueData = TRUE AND MIContainer.Amount <> 0
+                                                                         THEN 1
+                                                                    WHEN MIContainer.Amount <> 0
+                                                                         THEN 2
+                                                                    WHEN MIBoolean_MasterFuel.ValueData = TRUE
+                                                                         THEN 3
+                                                                    ELSE 4
+                                                               END
+                                                     ) = 1
+                                             THEN COALESCE (MIFloat_Taxi.ValueData, 0) ELSE 0 END AS SumTransportTaxi
+
+                                 , 0 AS StartOdometre
+                                 , 0 AS EndOdometre
+
+                                 , MILinkObject_RateFuelKind.ObjectId AS RateFuelKindId
+                                 , COALESCE (MIContainer.ObjectId_Analyzer, MI.ObjectId) AS FuelId
+
+                                 , COALESCE (MIFloat_RateFuelKindTax.ValueData, 0)  AS RateFuelKindTax
+
+                                 , 0 AS AmountFuel_Start
+                                 , 0 AS AmountFuel_Out
+
+                                 , 0 AS ColdHour
+                                 , 0 AS ColdDistance
+
+                                 , 0 AS AmountFuel
+                                 , 0 AS AmountColdHour
+                                 , 0 AS AmountColdDistance
+
+                                 , 0 AS Amount_Distance_calc
+                                 , 0 AS Amount_ColdHour_calc
+                                 , 0 AS Amount_ColdDistance_calc
+
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                              ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                 INNER MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                                         AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriverMore()
+                                                         AND MovementLinkObject_PersonalDriver.ObjectId   > 0
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
+                                                             ON MIFloat_StartOdometre.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
+                                                             ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateSumma
+                                                             ON MIFloat_RateSumma.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RateSumma.DescId = zc_MIFloat_RateSumma()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
+                                                             ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Taxi
+                                                             ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                                                  ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Weight
+                                                             ON MIFloat_Weight.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
+                                                             ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                                             ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+
+                                 LEFT JOIN MovementItem AS MI ON MI.ParentId = MovementItem.Id
+                                                             AND MI.DescId   = zc_MI_Child()
+                                                             AND MI.isErased   = FALSE
+                                 LEFT JOIN MovementItemContainer AS MIContainer
+                                                                 ON MIContainer.MovementId = MI.MovementId
+                                                                AND MIContainer.MovementItemId = MI.Id
+                                                                AND MIContainer.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer.MovementDescId = zc_Movement_Transport()
+
+                                 LEFT JOIN MovementItemBoolean AS MIBoolean_MasterFuel
+                                                               ON MIBoolean_MasterFuel.MovementItemId = MI.Id
+                                                              AND MIBoolean_MasterFuel.DescId = zc_MIBoolean_MasterFuel()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_StartAmountFuel
+                                                             ON MIFloat_StartAmountFuel.MovementItemId = MI.Id
+                                                            AND MIFloat_StartAmountFuel.DescId = zc_MIFloat_StartAmountFuel()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ColdHour
+                                                             ON MIFloat_ColdHour.MovementItemId = MI.Id
+                                                            AND MIFloat_ColdHour.DescId = zc_MIFloat_ColdHour()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ColdDistance
+                                                             ON MIFloat_ColdDistance.MovementItemId = MI.Id
+                                                            AND MIFloat_ColdDistance.DescId = zc_MIFloat_ColdDistance()
+
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountColdHour
+                                                             ON MIFloat_AmountColdHour.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountColdHour.DescId = zc_MIFloat_AmountColdHour()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountColdDistance
+                                                             ON MIFloat_AmountColdDistance.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountColdDistance.DescId = zc_MIFloat_AmountColdDistance()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountFuel
+                                                             ON MIFloat_AmountFuel.MovementItemId = MI.Id
+                                                            AND MIFloat_AmountFuel.DescId = zc_MIFloat_AmountFuel()
+
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_RateFuelKind
+                                                                  ON MILinkObject_RateFuelKind.MovementItemId = MI.Id
+                                                                 AND MILinkObject_RateFuelKind.DescId = zc_MILinkObject_RateFuelKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_RateFuelKindTax
+                                                             ON MIFloat_RateFuelKindTax.MovementItemId = MI.Id
+                                                            AND MIFloat_RateFuelKindTax.DescId = zc_MIFloat_RateFuelKindTax()
+
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.DescId = zc_Movement_Transport()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              -- AND Movement.Id = 4902267 
                               AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
                                 OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
                                   )
                            )
-
+        -- результат
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
              , tmpFuel.OperDate
              , ViewObject_Unit.BranchName

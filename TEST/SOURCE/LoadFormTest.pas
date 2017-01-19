@@ -942,12 +942,6 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
-  //Отчет Проверка кол-ва в привязке возврата
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkDialogForm');
-  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
@@ -1408,23 +1402,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementDialogForm');
- {
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInDialogForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInUnitForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInUnitForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInUnitNewForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInUnitNewForm');
-
-
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
@@ -1449,11 +1427,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
+
   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_byMovementDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_byMovementDialogForm');
+
+
+ TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
@@ -1656,6 +1642,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalDialogForm');
 
+  //Отчет Проверка кол-ва в привязке возврата
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToLinkDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToLinkDialogForm');
 end;
 
 procedure TLoadFormTest.LoadReportAssetFormTest;

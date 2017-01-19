@@ -81,7 +81,7 @@ BEGIN
 
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
-           , CAST (NULL AS Boolean) AS isPartionDate
+           , CAST (FALSE AS Boolean) AS isPartionDate
            , CAST ('' as TVarChar)  AS Address
 ;
    ELSE

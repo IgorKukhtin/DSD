@@ -207,7 +207,7 @@ BEGIN
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!бпелеммн!!!
- IF inStartDate = '01.01.2017' THEN inItearationCount:= 10; END IF;
+ IF inStartDate = '01.01.2017' THEN inItearationCount:= 100; END IF;
 -- IF inItearationCount >= 800 THEN inItearationCount:= 400; END IF;
 -- !!!бпелеммн!!!
 

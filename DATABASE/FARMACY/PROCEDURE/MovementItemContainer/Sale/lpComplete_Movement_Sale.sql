@@ -83,22 +83,23 @@ BEGIN
         tmpItem AS ( -- контейнеры и кол-во(Сумма), которое с них будет списано (с подразделения)
                         SELECT 
                             DD.Id             AS Container_AmountId
-                          , Container_Summ.Id AS Container_SummId  
-			              , DD.MovementItemId
+                          -- , Container_Summ.Id AS Container_SummId  
+                          , DD.MovementItemId
                           , DD.ObjectId
 			              , CASE 
                               WHEN DD.Amount - DD.SUM > 0 THEN DD.ContainerAmount 
                               ELSE DD.Amount - DD.SUM + DD.ContainerAmount
                             END AS Amount
-                          , CASE 
+                          , /*CASE 
                               WHEN DD.Amount - DD.SUM > 0 THEN Container_Summ.Amount
                               ELSE (DD.Amount - DD.SUM + DD.ContainerAmount) * (Container_Summ.Amount / DD.ContainerAmount)
-                            END AS Summ
+                            END*/ 0 AS Summ
                           , TRUE AS IsActive
                         FROM DD
-                            LEFT OUTER JOIN Container AS Container_Summ
+                            -- !!!отключил т.к. ошибка с задвоением!!!
+                            /*LEFT OUTER JOIN Container AS Container_Summ
                                                       ON Container_Summ.ParentId = DD.Id
-                                                     AND Container_Summ.DescId = zc_Container_Summ() 
+                                                     AND Container_Summ.DescId = zc_Container_Summ()*/
                         WHERE (DD.Amount - (DD.SUM - DD.ContainerAmount) > 0)
                     )
     
@@ -114,7 +115,7 @@ BEGIN
       , vbSaleDate
       , tmpItem.IsActive
     FROM tmpItem
-    UNION ALL
+    /*UNION ALL
     SELECT --Контейнеры по сумме
         zc_Container_Summ()
       , zc_Movement_Sale()  
@@ -125,7 +126,8 @@ BEGIN
       , -tmpItem.Summ
       , vbSaleDate
       , tmpItem.IsActive
-    FROM tmpItem;
+    FROM tmpItem*/
+    ;
     
     PERFORM lpInsertUpdate_MovementItemContainer_byTable();
     

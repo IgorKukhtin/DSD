@@ -43,12 +43,12 @@ BEGIN
          -- проверка
          IF 1=1 AND inIsCheck = TRUE AND COALESCE (vbGLNPlace, '') = ''
          THEN
-             RAISE EXCEPTION 'Ошибка.Не установлен <GLN точки доставки> в документе EDI № <%> от <%> .', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+             RAISE EXCEPTION 'Ошибка.Не установлен <GLN точки доставки> в документе EDI № <%> от <%> (%).', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), inMovementId;
          END IF;
          -- проверка
          IF inPartnerOperDate IS NULL
          THEN
-             RAISE EXCEPTION 'Ошибка.Не установлена <Дата документа (EDI)> в документе EDI № <%> от <%> .', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+             RAISE EXCEPTION 'Ошибка.Не установлена <Дата документа (EDI)> в документе EDI № <%> от <%> (%).', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), inMovementId;
          END IF;
 
          -- временно заливаем, для предыдущих документов
@@ -102,7 +102,7 @@ BEGIN
              -- проверка
              IF COALESCE (vbPartnerId, 0) = 0 AND vbGLNPlace <> ''
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в документе EDI № <%> от <%> .', vbGLNPlace, (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+                 RAISE EXCEPTION 'Ошибка.Не найден Контрагент со значением <GLN точки доставки> = <%> в документе EDI № <%> от <%> (%) (%).', vbGLNPlace, (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId)), vbPartnerId, inMovementId;
              END IF;
          END IF;
 
