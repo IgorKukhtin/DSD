@@ -88,6 +88,7 @@ type
     bbStartLoadConditionsKeep: TdxBarButton;
     bbisUpdate: TdxBarControlContainerItem;
     cbUpdate: TcxCheckBox;
+    spUpdate_Goods_isUploadBadm: TdsdStoredProc;
   private
     { Private declarations }
   public

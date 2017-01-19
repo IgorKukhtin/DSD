@@ -31,6 +31,10 @@ type
     spUpdateisOverNo: TdsdExecStoredProc;
     macUpdateisOverNo: TMultiAction;
     bbUpdateisOverNoList: TdxBarButton;
+    colisUploadBadm: TcxGridDBColumn;
+    spUpdate_Unit_isUploadBadm: TdsdStoredProc;
+    actUpdateisUploadBadm: TdsdExecStoredProc;
+    bbUpdateisUploadBadm: TdxBarButton;
   private
     { Private declarations }
   public

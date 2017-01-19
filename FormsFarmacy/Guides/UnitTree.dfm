@@ -168,6 +168,16 @@ object UnitTreeForm: TUnitTreeForm
         Options.Editing = False
         Width = 80
       end
+      object colisUploadBadm: TcxGridDBColumn
+        Caption = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090'. '#1041#1040#1044#1052
+        DataBinding.FieldName = 'isUploadBadm'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
+        Options.Editing = False
+        Width = 89
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

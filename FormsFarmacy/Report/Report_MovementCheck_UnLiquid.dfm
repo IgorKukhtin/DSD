@@ -653,7 +653,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateStart'
+        Name = 'inStartDate'
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
@@ -661,7 +661,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDateFinal'
+        Name = 'inEndDate'
         Value = 41395d
         Component = deEnd
         DataType = ftDateTime

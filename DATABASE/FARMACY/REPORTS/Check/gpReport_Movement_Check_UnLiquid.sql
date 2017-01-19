@@ -38,6 +38,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbStartDate1 TDateTime;
+   DECLARE vbStartDate3 TDateTime;
+   DECLARE vbStartDate6 TDateTime;
+--DECLARE vbStartDate1 TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -50,7 +54,9 @@ BEGIN
     inStartDate:= DATE_TRUNC ('DAY', inStartDate);
     inEndDate  := DATE_TRUNC ('DAY', inEndDate);
 
-
+    vbStartDate1 := inStartDate - INTERVAL '1 Month'; 
+    vbStartDate3 := inStartDate - INTERVAL '3 Month';
+    vbStartDate6 := inStartDate - INTERVAL '6 Month';
     -- Результат
     RETURN QUERY
       WITH 
@@ -125,8 +131,41 @@ BEGIN
                               GROUP BY tmp.GoodsId
                              )
 
+           -- находим последние приходы товаров за выбранный период
+           , tmpIncomeLast AS ( SELECT tmp.GoodsId
+                                     , tmp.MaxOperDate      
+                                     , tmp.MinExpirationDate
+                                     , tmp.Amount
+                                FROM (
+                                      SELECT MI_Income.ObjectId       AS GoodsId
+                                           , Movement_Income.OperDate       AS MaxOperDate
+                                           , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) AS MinExpirationDate
+                                           , MI_Income.Amount
+                                           , ROW_NUMBER() OVER (PARTITION BY MI_Income.ObjectId ORDER BY Movement_Income.OperDate desc, COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart())) AS ord
+                                      FROM Movement AS Movement_Income
+                                           -- куда был приход
+                                           INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                         ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                        AND MovementLinkObject_To.ObjectId = inUnitId
+                                           INNER JOIN MovementItem AS MI_Income 
+                                                                   ON MI_Income.MovementId = Movement_Income.Id
+                                                                  AND MI_Income.isErased   = False
+                                           INNER JOIN tmpRemains ON tmpRemains.GoodsId = MI_Income.ObjectId
+                                           LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = MI_Income.Id
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()  
+
+                                      WHERE Movement_Income.DescId = zc_Movement_Income()
+                                        AND Movement_Income.StatusId = zc_Enum_Status_Complete() 
+                                        AND Movement_Income.OperDate >= inStartDate AND Movement_Income.OperDate < inEndDate + interval '1 day'
+                                      --AND Movement_Income.OperDate >= '01.01.2016' AND Movement_Income.OperDate< '01.02.2016'
+                                      ) AS tmp
+                                WHERE tmp.ord = 1
+                              )
+
      -- чеки, определение периода прожажи 
-     , tmpCheck_ALL AS ( SELECT MI_Check.ObjectId AS GoodsId
+    /* , tmpCheck_ALL AS ( SELECT MI_Check.ObjectId AS GoodsId
                               -- , MIContainer.ContainerId
 
                               , SUM (CASE WHEN Movement_Check.OperDate >= inStartDate AND Movement_Check.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (MI_Check.Amount, 0) ELSE 0 END) AS Amount_Sale
@@ -159,26 +198,29 @@ BEGIN
                            AND Movement_Check.OperDate >= inStartDate - INTERVAL '6 Month' AND Movement_Check.OperDate < inEndDate + INTERVAL '1 Day'
                            AND Movement_Check.StatusId = zc_Enum_Status_Complete()
                          GROUP BY MI_Check.ObjectId
-                        )
-         -- группируем таб. продаж
-         , tmpCheck AS ( SELECT tmp.* 
-                         FROM (SELECT tmpCheck_ALL.GoodsId
-                                    , SUM (tmpCheck_ALL.Amount_Sale) AS Amount_Sale
-                                    , SUM (tmpCheck_ALL.Summa_Sale) AS Summa_Sale
-      
-                                    , SUM (tmpCheck_ALL.Amount_Sale1) AS Amount_Sale1
-                                    , SUM (tmpCheck_ALL.Summa_Sale1) AS Summa_Sale1
-      
-                                    , SUM (tmpCheck_ALL.Amount_Sale3) AS Amount_Sale3
-                                    , SUM (tmpCheck_ALL.Summa_Sale3) AS Summa_Sale3
+                        )*/
+     -- чеки, определение периода прожажи  --  ,  tmpCheck_ALL 
+          , tmpCheck AS (SELECT MIContainer.ObjectId_analyzer AS GoodsId
+                              , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale
+                              , SUM (CASE WHEN MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY' THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale
 
-                                    , SUM (tmpCheck_ALL.Amount_Sale6) AS Amount_Sale6
-                                    , SUM (tmpCheck_ALL.Summa_Sale6) AS Summa_Sale6
+                              , SUM (CASE WHEN MIContainer.OperDate >= vbStartDate1 AND MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale1
+                              , SUM (CASE WHEN MIContainer.OperDate >= vbStartDate1 AND MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale1
 
-                               FROM tmpCheck_ALL
-                               GROUP BY tmpCheck_ALL.GoodsId
-                               ) AS tmp
-                         )
+                              , SUM (CASE WHEN MIContainer.OperDate >= vbStartDate3 AND MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale3
+                              , SUM (CASE WHEN MIContainer.OperDate >= vbStartDate3 AND MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale3
+
+                              , SUM (CASE WHEN MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) AS Amount_Sale6
+                              , SUM (CASE WHEN MIContainer.OperDate < inStartDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summa_Sale6
+                          FROM MovementItemContainer AS MIContainer
+                          WHERE MIContainer.DescId = zc_MIContainer_Count()
+                            AND MIContainer.MovementDescId = zc_Movement_Check()
+                            AND MIContainer.WhereObjectId_analyzer = inUnitId  
+                            AND MIContainer.OperDate >= vbStartDate6 AND MIContainer.OperDate < inEndDate + INTERVAL '1 Day'
+                           -- AND MIContainer.OperDate >= '03.06.2016' AND MIContainer.OperDate < '01.12.2016'
+                          GROUP BY MIContainer.ObjectId_analyzer
+                          HAVING sum(COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+                        ) 
 
 -- для остатка получаем значение цены
 , tmpPriceRemains AS ( SELECT tmpRemains.GoodsId
@@ -211,8 +253,8 @@ BEGIN
            , Object_Goods_View.GoodsName                     AS GoodsName
            , Object_Goods_View.GoodsGroupName                AS GoodsGroupName
            , Object_Goods_View.NDSKindName
-           , tmpRemains.MinExpirationDate         :: TDateTime 
-           , tmpRemains.MaxOperDateIncome         :: TDateTime     AS OperDate_LastIncome
+           , COALESCE (tmpIncomeLast.MinExpirationDate ,tmpRemains.MinExpirationDate) :: TDateTime  AS MinExpirationDate
+           , COALESCE (tmpIncomeLast.MaxOperDate, tmpRemains.MaxOperDateIncome)       :: TDateTime  AS OperDate_LastIncome
            , tmpRemains.Amount_Income             :: TFloat        AS Amount_LastIncome
            , tmpPriceRemains.Price_Remains        :: TFloat
            , tmpPriceRemains.Price_RemainsEnd     :: TFloat
@@ -238,6 +280,7 @@ BEGIN
              LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpRemains.GoodsId
              LEFT JOIN tmpPriceRemains ON tmpPriceRemains.GoodsId = tmpRemains.GoodsId
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = tmpRemains.GoodsId
+             LEFT JOIN tmpIncomeLast ON tmpIncomeLast.GoodsId = tmpRemains.GoodsId
 
         WHERE COALESCE (tmpCheck.Amount_Sale1, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale3, 0) = 0 OR COALESCE (tmpCheck.Amount_Sale6, 0) =0
         ORDER BY GoodsGroupName, GoodsName;
@@ -249,6 +292,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 16.01.17         *
  06.10.16         * parce
  05.09.16         *
 */
@@ -256,3 +300,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_Movement_Check_UnLiquid(inUnitId := 183292 , inStartDate := ('01.02.2016')::TDateTime , inEndDate := ('02.02.2016')::TDateTime , inSession := '3');
 -- SELECT * FROM gpReport_Movement_Check_UnLiquid (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime,inSession:= '3' ::TVarChar)
+--select * from gpReport_Movement_Check_UnLiquid(inUnitId := 183292 , inStartDate := ('31.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime ,  inSession := '3' ::TVarChar);
