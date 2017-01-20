@@ -766,16 +766,20 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TColorForm'));
   TdsdFormStorageFactory.GetStorage.Load('TColorForm');
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TActionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
   //exit;

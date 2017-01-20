@@ -1,15 +1,18 @@
 -- Function: gpReport_RemainsOverGoods()
 
 DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOverGoods (Integer, TDateTime, TFloat, TFloat, TFloat, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOverGoods(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата остатка
     IN inPeriod           TFloat,     -- Кол-во дней для анализа НТЗ
     IN inDay              TFloat,     -- Страховой запас НТЗ для Х дней
+    IN inAssortment       TFloat,     -- кол-во для ассортимента
     IN inisMCS            Boolean,    -- для аптеки-отправителя изпользовать НТЗ из справочника
     IN inisInMCS          Boolean,    -- для аптек-получателей изпользовать НТЗ из справочника
     IN inisRecal          Boolean,    -- Да / нет - "Временно исправлются ошибки с датами в ценах"
+    IN inisAssortment     Boolean,    -- оставить кол-во для ассортимента Да / нет
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS  SETOF refcursor

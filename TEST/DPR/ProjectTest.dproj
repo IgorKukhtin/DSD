@@ -2951,6 +2951,10 @@
 				<Form>JuridicalUKTZEDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\UserSettings.pas">
+				<Form>UserSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

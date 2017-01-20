@@ -8,18 +8,18 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 76
+    Top = 81
     Width = 1066
-    Height = 481
+    Height = 476
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
     Properties.ActivateFocusedTab = False
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
-    ExplicitTop = 76
+    ExplicitTop = 81
     ExplicitWidth = 1066
-    ExplicitHeight = 481
-    ClientRectBottom = 481
+    ExplicitHeight = 476
+    ClientRectBottom = 476
     ClientRectRight = 1066
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -27,12 +27,12 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1066
-      ExplicitHeight = 457
+      ExplicitHeight = 452
       inherited cxGrid: TcxGrid
         Width = 1066
-        Height = 220
+        Height = 215
         ExplicitWidth = 1066
-        ExplicitHeight = 220
+        ExplicitHeight = 215
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -617,7 +617,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 225
+        Top = 220
         Width = 1066
         Height = 232
         Align = alBottom
@@ -1002,7 +1002,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 220
+        Top = 215
         Width = 1066
         Height = 5
         AlignSplitter = salBottom
@@ -1016,7 +1016,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Left = 0
         Top = 0
         Width = 1066
-        Height = 457
+        Height = 452
         Align = alClient
         TabOrder = 0
         object cxGridTotalDBTableView: TcxGridDBTableView
@@ -1416,9 +1416,9 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   end
   inherited Panel: TPanel
     Width = 1066
-    Height = 50
+    Height = 55
     ExplicitWidth = 1066
-    ExplicitHeight = 50
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 99
       Top = 4
@@ -1484,6 +1484,21 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
       Top = 30
       Caption = #1048#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
     end
+    object cxLabel7: TcxLabel
+      Left = 6
+      Top = 30
+      Caption = #1054#1089#1090#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072':'
+    end
+    object edAssortment: TcxCurrencyEdit
+      Left = 228
+      Top = 29
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.MinValue = 1.000000000000000000
+      TabOrder = 10
+      Width = 35
+    end
   end
   object cxLabel5: TcxLabel [2]
     Left = 731
@@ -1521,6 +1536,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Top = 4
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
     TabOrder = 10
+    Width = 22
+  end
+  object cbAssortment: TcxCheckBox [7]
+    Left = 199
+    Top = 29
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 11
     Width = 22
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1986,7 +2008,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisMSC'
+        Name = 'inAssortment'
+        Value = Null
+        Component = edAssortment
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMCS'
         Value = Null
         Component = cbMCS
         DataType = ftBoolean
@@ -2005,6 +2035,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Name = 'inisRecal'
         Value = Null
         Component = cbisRecal
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAssortment'
+        Value = Null
+        Component = cbAssortment
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
