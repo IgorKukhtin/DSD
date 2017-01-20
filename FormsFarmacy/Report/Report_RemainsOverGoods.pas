@@ -98,6 +98,9 @@ type
     cbMCS: TcxCheckBox;
     cxLabel6: TcxLabel;
     cbisRecal: TcxCheckBox;
+    cxLabel7: TcxLabel;
+    cbAssortment: TcxCheckBox;
+    edAssortment: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -898,7 +898,8 @@ uses
   Goods_UKTZED in '..\..\Forms\Guides\Goods_UKTZED.pas' {Goods_UKTZEDForm: TParentForm},
   Report_Check_ReturnInToLink in '..\..\Forms\Report\Report_Check_ReturnInToLink.pas' {Report_Check_ReturnInToLinkForm: TParentForm},
   Report_Check_ReturnInToLinkDialog in '..\..\Forms\Report\Report_Check_ReturnInToLinkDialog.pas' {Report_Check_ReturnInToLinkDialogForm: TParentForm},
-  JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm};
+  JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm},
+  UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -481,7 +481,8 @@ uses
   Contract_Object in '..\..\FormsFarmacy\Guides\Contract_Object.pas' {Contract_ObjectForm: TParentForm},
   Report_Badm in '..\..\FormsFarmacy\Report\Report_Badm.pas' {Report_BadmForm: TParentForm},
   Unit_byReportBadm in '..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas' {Unit_byReportBadmForm: TParentForm},
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

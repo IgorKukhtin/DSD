@@ -61,6 +61,11 @@ type
     edInvNumberSP: TcxTextEdit;
     cxLabel16: TcxLabel;
     edMedicSP: TcxTextEdit;
+    ExecuteDialogUpdateOperDate: TExecuteDialog;
+    actUpdateOperDate: TdsdDataSetRefresh;
+    spUpdateMovement_OperDate: TdsdStoredProc;
+    macUpdateOperDate: TMultiAction;
+    bbUpdateOperDate: TdxBarButton;
   private
     { Private declarations }
   public
