@@ -173,7 +173,6 @@ BEGIN
                                    LEFT JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = Container.Id
                                                                   AND MIContainer.OperDate >= inStartDate
-
                               --WHERE Container.DescId = zc_Container_Count()
                               GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
                               HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
@@ -219,6 +218,7 @@ BEGIN
                               , tmp.UnitId
                               , SUM (tmp.RemainsStart) AS RemainsStart
                               , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                              --, zc_DateEnd()    ::TDateTime AS MinExpirationDate -- Срок годности
                           FROM tmpRemains_1 AS tmp 
                                   -- находим партию
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
@@ -243,7 +243,13 @@ BEGIN
                          -- Результат
                          SELECT tmp.GoodsId
                               , tmp.UnitId
-                              , tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
+                              --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
+                              , CASE WHEN inisAssortment = TRUE 
+                                     THEN CASE WHEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) > inAssortment THEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) - inAssortment
+                                               ELSE 0
+                                          END
+                                     ELSE (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0))
+                                END                                             AS RemainsStart
                               , tmp.RemainsStart                                AS RemainsStart_save
                               , tmp.MinExpirationDate
                          FROM tmp
@@ -251,7 +257,12 @@ BEGIN
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
-                              , COALESCE (tmpSend.Amount, 0) AS RemainsStart
+                              , CASE WHEN inisAssortment = TRUE 
+                                     THEN CASE WHEN COALESCE (tmpSend.Amount, 0) > inAssortment THEN COALESCE (tmpSend.Amount, 0) - inAssortment 
+                                               ELSE 0
+                                          END
+                                     ELSE  COALESCE (tmpSend.Amount, 0)
+                                END                          AS RemainsStart
                               , 0                            AS RemainsStart_save
                               , NULL                         AS MinExpirationDate
                          FROM tmpSend
@@ -290,17 +301,17 @@ BEGIN
 
        -- Goods_list
        INSERT INTO tmpGoods_list (GoodsId, UnitId, PriceId, MCSValue)
-         SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-         FROM tmpRemains
-        UNION 
-         SELECT Object_Price_View.GoodsId, Object_Price_View.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-         FROM tmpUnit_list
-            LEFT JOIN Object_Price_View ON Object_Price_View.UnitId = tmpUnit_list.UnitId
-         WHERE Object_Price_View.MCSValue <> 0 AND inisInMCS = TRUE
-        UNION
-         SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
-         FROM tmpMCS
-         WHERE inisInMCS = FALSE
+               SELECT tmpRemains.GoodsId, tmpRemains.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+               FROM tmpRemains
+              UNION 
+               SELECT Object_Price_View.GoodsId, Object_Price_View.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+               FROM tmpUnit_list
+                  LEFT JOIN Object_Price_View ON Object_Price_View.UnitId = tmpUnit_list.UnitId
+               WHERE Object_Price_View.MCSValue <> 0 AND inisInMCS = TRUE
+              UNION
+               SELECT tmpMCS.GoodsId, tmpMCS.UnitId, 0 AS PriceId, 0 :: TFloat AS MCSValue 
+               FROM tmpMCS
+               WHERE inisInMCS = FALSE
         ;
   
        -- Goods_list - PriceId
@@ -329,6 +340,7 @@ BEGIN
        WHERE tmp.PriceId = tmpGoods_list.PriceId
          AND tmp.UnitId  = tmpGoods_list.UnitId
          AND tmp.GoodsId = tmpGoods_list.GoodsId;
+
 
 
         -- Result
@@ -733,6 +745,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.01.17         *
  01.11.16         * add inisRecal, rename inisOutMCS -> inisInMCS
  30.10.16         *
  19.10.16         *
@@ -742,4 +755,10 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.07.2016', inPeriod:= 30, inDay:= 28, inSession:= '3');  -- Аптека_1 пр_Правды_6
+--SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.01.2017' ::TDateTime, inPeriod:= 30::tfloat, inDay:= 28::tfloat,inAssortment:=1::tfloat, inisAssortment:=False, inSession:= '3'::TVarChar);  -- Аптека_1 пр_Правды_6
+/*select * from gpReport_RemainsOverGoods
+(inUnitId := 183292 , inStartDate := ('18.11.2016')::TDateTime ,
+ inPeriod := 30 ::tfloat, inDay := 12 ::tfloat, inAssortment := 1 ::tfloat, 
+ inisMCS := 'False' ::boolean, inisInMCS := 'False'::boolean , inisRecal := 'False'::boolean , inisAssortment := 'False' ::boolean,
+ inSession := '3'::TVarChar);
+*/

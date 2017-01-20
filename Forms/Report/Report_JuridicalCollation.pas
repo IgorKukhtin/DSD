@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
   dxSkinsCore, cxImageComboBox, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TReport_JuridicalCollationForm = class(TAncestorReportForm)
@@ -91,6 +91,11 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     MovementComment: TcxGridDBColumn;
+    macPrint: TMultiAction;
+    actSPSaveObject: TdsdExecStoredProc;
+    spSavePrintObject: TdsdStoredProc;
+    cbisInsert: TcxCheckBox;
+    bbisInsert: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

@@ -1362,6 +1362,31 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Position_SheetWorkTime() RETURNS Intege
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Position_SheetWorkTime', 'Связь Должности с Режим работы (Шаблон табеля р.вр.)', zc_Object_Personal(), zc_Object_SheetWorkTime() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Position_SheetWorkTime');
 
+---
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Juridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportCollation_Juridical', 'Юр.лицо', zc_Object_ReportCollation(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Partner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Partner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportCollation_Partner', 'Контрагенты', zc_Object_ReportCollation(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Partner');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportCollation_Contract', 'Договор', zc_Object_ReportCollation(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Contract');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReportCollation_PaidKind', 'Связь с формой оплаты', zc_Object_ReportCollation(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_PaidKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Insert() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Insert'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReportCollation_Insert', 'Пользователь (создание)', zc_Object_ReportCollation(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Insert');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReportCollation_Buh() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Buh'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReportCollation_Buh', 'Пользователь (сдали в бухгалтерию)', zc_Object_ReportCollation(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReportCollation_Buh');
+
 
 --!!! АПТЕКА
 

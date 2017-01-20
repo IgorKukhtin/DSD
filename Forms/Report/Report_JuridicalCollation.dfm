@@ -1,28 +1,28 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 410
-  ClientWidth = 1020
+  ClientWidth = 1015
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -230
-  ExplicitWidth = 1036
-  ExplicitHeight = 445
+  ExplicitLeft = -9
+  ExplicitWidth = 1031
+  ExplicitHeight = 448
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1020
+    Width = 1015
     Height = 330
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1020
     ExplicitHeight = 330
     ClientRectBottom = 330
-    ClientRectRight = 1020
+    ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1015
         Height = 330
         ExplicitWidth = 1020
         ExplicitHeight = 330
@@ -495,10 +495,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           end
         end
       end
+      object cbisInsert: TcxCheckBox
+        Left = 85
+        Top = 13
+        Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1086#1073#1098#1077#1082#1090
+        Caption = #1047#1072#1087#1080#1089#1072#1090#1100
+        TabOrder = 1
+        Width = 73
+      end
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1015
     Height = 54
     ExplicitWidth = 1020
     ExplicitHeight = 54
@@ -736,6 +744,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -743,6 +752,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
@@ -751,11 +761,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inChangePercentAmount'
           Value = '0'
           DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -808,6 +820,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -815,6 +828,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -823,6 +837,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -831,6 +846,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalance'
@@ -839,6 +855,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalance'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalanceCurrency'
@@ -847,6 +864,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalanceCurrency'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -855,6 +873,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName'
@@ -863,6 +882,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -871,6 +891,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -879,6 +900,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionMovementName'
@@ -886,6 +908,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'PartionMovementName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName'
@@ -894,6 +917,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContracNumber'
@@ -902,6 +926,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContracNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -910,6 +935,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractSigningDate'
@@ -918,6 +944,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName_Basis'
@@ -926,6 +953,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName_Basis'
@@ -934,6 +962,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName_Basis'
@@ -942,6 +971,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -950,10 +980,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintOfficial: TdsdPrintAction
       Category = 'DSDLib'
@@ -980,6 +1012,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -987,6 +1020,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -995,6 +1029,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1003,6 +1038,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalance'
@@ -1011,6 +1047,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalance'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalanceCurrency'
@@ -1019,6 +1056,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalanceCurrency'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1027,6 +1065,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName'
@@ -1035,6 +1074,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1043,6 +1083,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -1051,6 +1092,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionMovementName'
@@ -1058,6 +1100,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'PartionMovementName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName'
@@ -1066,6 +1109,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContracNumber'
@@ -1074,6 +1118,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContracNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -1082,6 +1127,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractSigningDate'
@@ -1090,6 +1136,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName_Basis'
@@ -1098,6 +1145,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName_Basis'
@@ -1106,6 +1154,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName_Basis'
@@ -1114,10 +1163,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintCurrency: TdsdPrintAction
       Category = 'DSDLib'
@@ -1143,6 +1194,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1150,6 +1202,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1158,6 +1211,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1166,6 +1220,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalance'
@@ -1174,6 +1229,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalance'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalanceCurrency'
@@ -1182,6 +1238,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalanceCurrency'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1190,6 +1247,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName'
@@ -1198,6 +1256,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1206,6 +1265,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -1214,6 +1274,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionMovementName'
@@ -1221,6 +1282,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'PartionMovementName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InternalCurrencyName'
@@ -1229,6 +1291,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'InternalCurrencyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName'
@@ -1237,6 +1300,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContracNumber'
@@ -1245,6 +1309,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContracNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -1253,6 +1318,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractSigningDate'
@@ -1261,6 +1327,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName_Basis'
@@ -1269,6 +1336,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName_Basis'
@@ -1277,6 +1345,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName_Basis'
@@ -1285,10 +1354,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrintTurnover: TdsdPrintAction
       Category = 'DSDLib'
@@ -1309,6 +1380,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1316,6 +1388,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1324,6 +1397,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1332,6 +1406,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalance'
@@ -1340,6 +1415,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalance'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'StartBalanceCurrency'
@@ -1348,6 +1424,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'StartBalanceCurrency'
           DataType = ftFloat
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1356,6 +1433,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName'
@@ -1364,6 +1442,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1372,6 +1451,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'CurrencyName'
@@ -1380,6 +1460,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'CurrencyName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartionMovementName'
@@ -1387,6 +1468,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = FormParams
           ComponentItem = 'PartionMovementName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName'
@@ -1395,6 +1477,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContracNumber'
@@ -1403,6 +1486,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContracNumber'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractTagName'
@@ -1411,6 +1495,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractSigningDate'
@@ -1419,6 +1504,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName_Basis'
@@ -1427,6 +1513,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalShortName_Basis'
@@ -1435,6 +1522,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'JuridicalShortName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccounterName_Basis'
@@ -1443,10 +1531,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName_Basis'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1457,6 +1547,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       FormName = 'TReport_JuridicalCollationDialogForm'
       FormNameParam.Value = 'TReport_JuridicalCollationDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1464,6 +1555,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1471,6 +1563,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -1479,6 +1572,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1487,6 +1581,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -1494,6 +1589,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1502,6 +1598,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
@@ -1509,6 +1606,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1517,6 +1615,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
@@ -1524,6 +1623,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = PartnerGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1532,6 +1632,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
@@ -1539,6 +1640,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = PaidKindGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1546,6 +1648,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = PaidKindGuides
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
@@ -1553,6 +1656,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = ContractGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractName'
@@ -1561,10 +1665,48 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object macPrint: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPSaveObject
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      ImageIndex = 3
+    end
+    object actSPSaveObject: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSavePrintObject
+      StoredProcList = <
+        item
+          StoredProc = spSavePrintObject
+        end>
+      Caption = 'actSPSavePrintState'
     end
   end
   inherited MasterDS: TDataSource
@@ -1583,6 +1725,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1590,6 +1733,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1597,6 +1741,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -1604,6 +1749,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1611,6 +1757,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1618,6 +1765,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1625,6 +1773,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1632,6 +1781,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -1639,6 +1789,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Partion'
@@ -1646,6 +1797,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = SaleChoiceGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 196
@@ -1683,6 +1835,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Visible = True
           ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisInsert'
         end
         item
           Visible = True
@@ -1753,6 +1913,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bbisInsert: TdxBarControlContainerItem
+      Category = 0
+      Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1086#1073#1098#1077#1082#1090
+      Visible = ivAlways
+      Control = cbisInsert
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -1806,6 +1972,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1815,6 +1982,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1823,6 +1991,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractId'
@@ -1830,6 +1999,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractName'
@@ -1838,6 +2008,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
@@ -1845,6 +2016,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -1853,6 +2025,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 392
   end
@@ -1867,6 +2040,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = MasterCDS
         ComponentItem = 'MovementId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FormName'
@@ -1874,6 +2048,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -1885,12 +2060,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'FormName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractSigningDate'
         Value = 42005d
         DataType = ftDateTime
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 144
@@ -1906,6 +2083,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -1913,6 +2091,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
@@ -1920,6 +2099,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -1927,6 +2107,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1934,6 +2115,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -1941,6 +2123,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1948,6 +2131,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -1955,6 +2139,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outStartBalance'
@@ -1962,6 +2147,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'StartBalance'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outStartBalanceCurrency'
@@ -1969,6 +2155,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'StartBalanceCurrency'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outJuridicalName'
@@ -1976,6 +2163,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'JuridicalName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outJuridicalShortName'
@@ -1983,6 +2171,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'JuridicalShortName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outPartnerName'
@@ -1990,6 +2179,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'PartnerName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outCurrencyName'
@@ -1997,6 +2187,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'CurrencyName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outInternalCurrencyName'
@@ -2004,6 +2195,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'InternalCurrencyName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAccounterName'
@@ -2011,6 +2203,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'AccounterName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContracNumber'
@@ -2018,6 +2211,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'ContracNumber'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractTagName'
@@ -2025,6 +2219,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'ContractTagName'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outContractSigningDate'
@@ -2032,6 +2227,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'ContractSigningDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outJuridicalName_Basis'
@@ -2039,6 +2235,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'JuridicalName_Basis'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outJuridicalShortName_Basis'
@@ -2046,6 +2243,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'JuridicalShortName_Basis'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outAccounterName_Basis'
@@ -2053,6 +2251,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'AccounterName_Basis'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -2063,6 +2262,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = edPartner
     FormNameParam.Value = 'TPartner_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2072,6 +2272,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PartnerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2080,6 +2281,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -2087,6 +2289,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -2095,12 +2298,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
@@ -2108,6 +2313,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 440
     Top = 24
@@ -2117,6 +2323,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2126,6 +2333,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -2134,6 +2342,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 720
     Top = 65528
@@ -2143,6 +2352,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = ceContract
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2152,6 +2362,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2160,6 +2371,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
@@ -2167,6 +2379,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -2175,6 +2388,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -2182,6 +2396,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -2190,6 +2405,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
@@ -2197,6 +2413,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -2204,18 +2421,21 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end>
     Left = 944
     Top = 65534
@@ -2225,6 +2445,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2235,6 +2456,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2243,6 +2465,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 952
     Top = 40
@@ -2252,6 +2475,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2260,6 +2484,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2267,6 +2492,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 720
     Top = 29
@@ -2276,6 +2502,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrency_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2286,6 +2513,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2294,6 +2522,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 1120
     Top = 48
@@ -2304,6 +2533,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Key = '0'
     FormNameParam.Value = 'TSaleJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TSaleJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2314,6 +2544,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Full'
@@ -2322,12 +2553,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = ''
         Component = PartnerGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -2335,7 +2568,81 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 1172
+  end
+  object spSavePrintObject: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_ReportCollation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'True'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = PartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInsert'
+        Value = Null
+        Component = cbisInsert
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBarCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 200
   end
 end
