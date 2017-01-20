@@ -199,6 +199,12 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId_mi, vbUserId, FALSE);
 
+    IF inSession = '5'
+    THEN
+        RAISE EXCEPTION 'Запретили Админу :)';
+    END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

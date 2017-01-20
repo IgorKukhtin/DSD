@@ -355,10 +355,10 @@ BEGIN
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                               ON MovementLinkObject_Car.MovementId = Movement.Id
                                                              AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                                 INNER MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                                         AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriverMore()
-                                                         AND MovementLinkObject_PersonalDriver.ObjectId   > 0
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                               ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                                              AND MovementLinkObject_PersonalDriver.DescId     = zc_MovementLinkObject_PersonalDriverMore()
+                                                              AND MovementLinkObject_PersonalDriver.ObjectId   > 0
                                  LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE

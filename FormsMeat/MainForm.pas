@@ -790,7 +790,7 @@ type
     actJuridicalUKTZED: TdsdOpenForm;
     UKTZED1: TMenuItem;
     actUserSettings: TdsdOpenForm;
-    N146: TMenuItem;
+    miUserSettings: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

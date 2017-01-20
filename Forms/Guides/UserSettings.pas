@@ -55,7 +55,6 @@ type
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
     bbProtocolRole: TdxBarButton;
-    actUpdate: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
