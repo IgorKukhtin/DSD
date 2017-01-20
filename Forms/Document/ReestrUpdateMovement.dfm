@@ -6,7 +6,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1017
-  ExplicitHeight = 443
+  ExplicitHeight = 440
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,19 +15,19 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
     Height = 322
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 988
+    ExplicitWidth = 1001
     ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 988
+      ExplicitWidth = 1001
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 1001
         Height = 239
         ExplicitTop = 83
-        ExplicitWidth = 988
+        ExplicitWidth = 1001
         ExplicitHeight = 239
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -524,7 +524,6 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 988
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -657,16 +656,13 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 988
       end
     end
   end
   inherited Panel: TPanel
     Width = 1001
     Height = 57
-    ExplicitLeft = -56
-    ExplicitTop = -14
-    ExplicitWidth = 988
+    ExplicitWidth = 1001
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 593
@@ -938,7 +934,7 @@ inherited ReestrUpdateMovementForm: TReestrUpdateMovementForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsName'
+          ComponentItem = 'BarCode_Sale'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
