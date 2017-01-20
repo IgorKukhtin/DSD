@@ -26,7 +26,6 @@ object UserSettingsForm: TUserSettingsForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 747
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -421,10 +420,10 @@ object UserSettingsForm: TUserSettingsForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateUser
+      StoredProc = spUpdateUser
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateUser
+          StoredProc = spUpdateUser
         end>
       Caption = 'UpdateDataSetUser'
       DataSource = DataSource
@@ -519,42 +518,16 @@ object UserSettingsForm: TUserSettingsForm
     Left = 192
     Top = 208
   end
-  object spInsertUpdateUser: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_User'
+  object spUpdateUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_User'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioid'
+        Name = 'inid'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCode'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Code'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPassword'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'User_'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -582,14 +555,6 @@ object UserSettingsForm: TUserSettingsForm
         Component = ClientDataSet
         ComponentItem = 'UserKey'
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMemberId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'MemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -50,7 +50,7 @@ type
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
     User_: TcxGridDBColumn;
-    spInsertUpdateUser: TdsdStoredProc;
+    spUpdateUser: TdsdStoredProc;
     UpdateDataSetUser: TdsdUpdateDataSet;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpen: TdxBarButton;
