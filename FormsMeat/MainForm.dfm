@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -6119,7 +6119,7 @@ inherited MainForm: TMainForm
       object miUser: TMenuItem [1]
         Action = actUser
       end
-      object N146: TMenuItem [2]
+      object miUserSettings: TMenuItem [2]
         Action = actUserSettings
       end
       object miRole: TMenuItem [3]
