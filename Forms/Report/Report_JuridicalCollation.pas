@@ -96,6 +96,8 @@ type
     spSavePrintObject: TdsdStoredProc;
     cbisInsert: TcxCheckBox;
     bbisInsert: TdxBarControlContainerItem;
+    macPrintOfficial: TMultiAction;
+    macPrintCurrency: TMultiAction;
   private
     { Private declarations }
   public

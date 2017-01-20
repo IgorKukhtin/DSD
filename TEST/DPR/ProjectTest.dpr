@@ -899,7 +899,8 @@ uses
   Report_Check_ReturnInToLink in '..\..\Forms\Report\Report_Check_ReturnInToLink.pas' {Report_Check_ReturnInToLinkForm: TParentForm},
   Report_Check_ReturnInToLinkDialog in '..\..\Forms\Report\Report_Check_ReturnInToLinkDialog.pas' {Report_Check_ReturnInToLinkDialogForm: TParentForm},
   JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm},
-  UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm};
+  UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm},
+  ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

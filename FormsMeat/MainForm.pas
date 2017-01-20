@@ -791,6 +791,8 @@ type
     UKTZED1: TMenuItem;
     actUserSettings: TdsdOpenForm;
     miUserSettings: TMenuItem;
+    actReportCollation_Object: TdsdOpenForm;
+    N146: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
