@@ -150,10 +150,18 @@ BEGIN
                           UNION
                            SELECT ObjectBoolean_Over.ObjectId  AS UnitId
                            FROM ObjectBoolean AS ObjectBoolean_Over
+
+                                   INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                         ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Over.ObjectId --Container.WhereObjectId
+                                                        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                                   INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                         ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                        AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                        AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+
                            WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                              AND ObjectBoolean_Over.ValueData = TRUE;
                            
-
        -- Remains
        INSERT INTO tmpRemains_1 (GoodsId, UnitId, RemainsStart, ContainerId)
                               SELECT Container.Objectid      AS GoodsId
@@ -163,6 +171,19 @@ BEGIN
                               FROM tmpUnit_list
                                    INNER JOIN Container ON Container.WhereObjectId = tmpUnit_list.UnitId
                                                        AND Container.DescId = zc_Container_Count()
+                                   LEFT JOIN MovementItemContainer AS MIContainer
+                                                                   ON MIContainer.ContainerId = Container.Id
+                                                                  AND MIContainer.OperDate >= inStartDate
+                              GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
+                              HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                             /*
+                              SELECT Container.Objectid      AS GoodsId
+                                   , Container.WhereObjectId AS UnitId
+                                   , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
+                                   , Container.Id  AS ContainerId
+                              FROM  Container 
+                                   INNER JOIN tmpUnit_list ON Container.WhereObjectId = tmpUnit_list.UnitId
+                                                      
                                    INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                          ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
                                                         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
@@ -170,12 +191,14 @@ BEGIN
                                                          ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                         AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                   
                                    LEFT JOIN MovementItemContainer AS MIContainer
                                                                    ON MIContainer.ContainerId = Container.Id
                                                                   AND MIContainer.OperDate >= inStartDate
-                              --WHERE Container.DescId = zc_Container_Count()
+                              WHERE Container.DescId = zc_Container_Count()
                               GROUP BY Container.Id, Container.Objectid, Container.WhereObjectId, Container.Amount
                               HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                              */
                               ;
 
          -- автоперемещения приход / расход
@@ -217,10 +240,11 @@ BEGIN
                         (SELECT tmp.GoodsId
                               , tmp.UnitId
                               , SUM (tmp.RemainsStart) AS RemainsStart
-                              , MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
-                              --, zc_DateEnd()    ::TDateTime AS MinExpirationDate -- Срок годности
+                              --, MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+                              , Null    ::TDateTime AS MinExpirationDate -- Срок годности
                           FROM tmpRemains_1 AS tmp 
-                                  -- находим партию
+                          --переносим при сохранении документа "излишки" - делать расчет Срока годности
+                          /*        -- находим партию
                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                             ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
                                                            AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -237,13 +261,16 @@ BEGIN
                               LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                 ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+*/
                           GROUP BY tmp.GoodsId, tmp.UnitId
                           HAVING  SUM (tmp.RemainsStart) <> 0
                          )
-                         -- Результат
+                         -- Результат        --
+                         -- если признак оставить для ассортимента Да, тогда снимаем с остатка это кол-во 
                          SELECT tmp.GoodsId
                               , tmp.UnitId
                               --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
+                              
                               , CASE WHEN inisAssortment = TRUE 
                                      THEN CASE WHEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) > inAssortment THEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) - inAssortment
                                                ELSE 0
@@ -270,7 +297,6 @@ BEGIN
                          WHERE tmpSend.UnitId <> inUnitId
                            AND tmp.GoodsId IS NULL
                         ;
-
 
        -- MCS
        IF (inisMCS = FALSE AND inisInMCS = FALSE) OR (inisMCS = TRUE AND inisInMCS = FALSE)
@@ -325,9 +351,7 @@ BEGIN
 
        -- Goods_list - MCSValue
        UPDATE tmpGoods_list
-              SET MCSValue = CASE /*WHEN (inisMCS = FALSE AND tmpGoods_list.UnitId = inUnitId) THEN tmpMCS.MCSValue 
-                                  WHEN (inisInMCS = FALSE AND tmpGoods_list.UnitId <> inUnitId) THEN tmpMCS.MCSValue 
-                                  */WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (Object_Price_View.MCSValue, 0)
+              SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (Object_Price_View.MCSValue, 0)
                                   WHEN (inisInMCS = TRUE AND tmpGoods_list.UnitId <> inUnitId) THEN COALESCE (Object_Price_View.MCSValue, 0)
                                   ELSE COALESCE (tmpMCS.MCSValue, 0)
                              END
@@ -654,9 +678,6 @@ BEGIN
                               AND tmpMIChild.UnitId = tmpData.UnitId
      WHERE tmpData.UnitId <> inUnitId
        AND tmpDataTo.RemainsMCS_result > 0
-       -- AND (tmpDataTo.RemainsMCS_result > 0 OR tmpDataFrom.RemainsMCS_to > 0)
-       -- AND 1=0
-       -- LIMIT 50000
     ;
      
      RETURN NEXT Cursor2;
@@ -756,7 +777,9 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.01.2017' ::TDateTime, inPeriod:= 30::tfloat, inDay:= 28::tfloat,inAssortment:=1::tfloat, inisAssortment:=False, inSession:= '3'::TVarChar);  -- Аптека_1 пр_Правды_6
-/*select * from gpReport_RemainsOverGoods
+
+/*
+select * from gpReport_RemainsOverGoods
 (inUnitId := 183292 , inStartDate := ('18.11.2016')::TDateTime ,
  inPeriod := 30 ::tfloat, inDay := 12 ::tfloat, inAssortment := 1 ::tfloat, 
  inisMCS := 'False' ::boolean, inisInMCS := 'False'::boolean , inisRecal := 'False'::boolean , inisAssortment := 'False' ::boolean,

@@ -61,6 +61,44 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Дублируется "главный" товар = <%> партия = <%> кол-во = <%>  остаток = <%> цена = <%>', lfGet_Object_ValueData (inGoodsId), DATE (inMinExpirationDate), zfConvert_FloatToString (inAmount), zfConvert_FloatToString (inRemains), zfConvert_FloatToString (inPrice);
        END IF;
 
+
+      -- определяем срок годности остатка
+      SELECT MIN(COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
+   INTO inMinExpirationDate
+      FROM (
+            SELECT Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
+                 , Container.Id  AS ContainerId
+            FROM Container 
+                 LEFT JOIN MovementItemContainer AS MIContainer
+                                                 ON MIContainer.ContainerId = Container.Id
+                                                AND MIContainer.OperDate >= inOperDate
+            WHERE Container.DescId = zc_Container_Count()
+              AND Container.WhereObjectId = inUnitId --3457773
+              AND Container.Objectid = inGoodsId --19996
+            GROUP BY Container.Id, Container.Amount
+            HAVING  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+           ) AS tmp
+           -- находим партию
+           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                         ON ContainerLinkObject_MovementItem.Containerid =  tmp.ContainerId
+                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+           -- элемент прихода
+           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+                      
+           LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+      HAVING  SUM (tmp.RemainsStart) <> 0;
+
+
+
        -- сохранили строку документа
        vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 -- COALESCE (vbMovementItemId, 0)
                                                            , inMovementId         := vbMovementId
