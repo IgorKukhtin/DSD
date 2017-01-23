@@ -399,6 +399,10 @@ BEGIN
                                   ON Object_Send.GoodsId = tmpGoods_list.GoodsId
                                  AND Object_Send.UnitId  = tmpGoods_list.UnitId
 
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Close
+                                        ON ObjectBoolean_Goods_Close.ObjectId = tmpGoods_list.GoodsId
+                                       AND ObjectBoolean_Goods_Close.DescId = zc_ObjectBoolean_Goods_Close() 
+
                 -- получаем значения цены и НТЗ из истории значений на начало дня                                                          
                 LEFT JOIN ObjectHistory AS ObjectHistory_Price
                                         ON ObjectHistory_Price.ObjectId = tmpGoods_list.PriceId
