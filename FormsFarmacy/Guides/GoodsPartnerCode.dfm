@@ -3,6 +3,7 @@
   ClientHeight = 558
   ClientWidth = 1000
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
   ExplicitHeight = 596
   PixelsPerInch = 96
@@ -1149,9 +1150,17 @@
     Params = <
       item
         Name = 'ObjectId'
-        Value = Null
+        Value = '0'
         Component = PartnerCodeGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectName'
+        Value = Null
+        Component = PartnerCodeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

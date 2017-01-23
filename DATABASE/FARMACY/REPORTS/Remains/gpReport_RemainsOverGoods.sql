@@ -91,7 +91,7 @@ BEGIN
                              , RemainsMCS_from TFloat, SummaRemainsMCS_from TFloat
                              , RemainsMCS_to TFloat, SummaRemainsMCS_to TFloat
                              , AmountSend TFloat
-                             , isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
+                             --, isClose Boolean, isTOP Boolean, isFirst Boolean, isSecond Boolean
                              , PRIMARY KEY (UnitId, GoodsId)
                               ) ON COMMIT DROP;
     -- Таблица - Результат
@@ -374,7 +374,7 @@ BEGIN
                             , RemainsMCS_from, SummaRemainsMCS_from
                             , RemainsMCS_to, SummaRemainsMCS_to
                             , AmountSend
-                            , isClose, isTOP, isFirst, isSecond
+                           -- , isClose, isTOP, isFirst, isSecond
                              )
              WITH tmpOverSettings AS (SELECT *
                                       FROM gpSelect_Object_OverSettings (inSession) AS tmp
@@ -435,11 +435,11 @@ BEGIN
                , Object_Send.Amount   AS AmountSend
 --               , Object_Send.Amount_To     AS AmountSend_To
 
-               , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
+            /*   , COALESCE (ObjectBoolean_Goods_Close.ValueData, FALSE)   AS isClose
                , COALESCE (ObjectBoolean_Price_Top.ValueData, COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE)) AS isTOP
                , COALESCE (ObjectBoolean_First.ValueData, FALSE)         AS isFirst
                , COALESCE (ObjectBoolean_Second.ValueData, FALSE)        AS isSecond
-
+            */
             FROM tmpGoods_list
                 LEFT JOIN tmpRemains AS Object_Remains
                                      ON Object_Remains.GoodsId = tmpGoods_list.GoodsId
@@ -460,7 +460,7 @@ BEGIN
                                              ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                             AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
 
-                LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_Top
+              /*  LEFT JOIN ObjectBoolean AS ObjectBoolean_Price_Top
                                         ON ObjectBoolean_Price_Top.ObjectId = tmpGoods_list.PriceId
                                        AND ObjectBoolean_Price_Top.DescId = zc_ObjectBoolean_Price_Top()
                                        AND ObjectBoolean_Price_Top.ValueData = TRUE
@@ -477,6 +477,7 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Second
                                         ON ObjectBoolean_Second.ObjectId = tmpGoods_list.GoodsId
                                        AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()
+*/
                 LEFT JOIN tmpOverSettings ON tmpOverSettings.UnitId = tmpGoods_list.UnitId
                                          AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) >= tmpOverSettings.MinPrice
                                          AND COALESCE (ObjectHistoryFloat_Price.ValueData, 0) < tmpOverSettings.MinPriceEnd
@@ -589,15 +590,16 @@ BEGIN
                , tmpData.AmountSend            :: TFloat  AS AmountSend
  
                , tmpData.GoodsId
-               , tmpData.isClose
+             /*  , tmpData.isClose
                , tmpData.isTOP
                , tmpData.isFirst
                , tmpData.isSecond
+*/
                , Object_Goods.ObjectCode                      AS GoodsCode
                , Object_Goods.ValueData                       AS GoodsName
                , Object_Goods.isErased                        AS isErased
-               , Object_GoodsGroup.ValueData                  AS GoodsGroupName
-               , Object_NDSKind.ValueData                     AS NDSKindName
+             --  , Object_GoodsGroup.ValueData                  AS GoodsGroupName
+             --  , Object_NDSKind.ValueData                     AS NDSKindName
                , Object_Measure.ValueData                     AS MeasureName
                , tmpData.MinExpirationDate
 
@@ -612,7 +614,7 @@ BEGIN
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+           /*     LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                      ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
                                     AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                 LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId 
@@ -621,7 +623,7 @@ BEGIN
                                      ON ObjectLink_Goods_NDSKind.ObjectId = tmpData.GoodsId
                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
                 LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId     
-
+*/
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()

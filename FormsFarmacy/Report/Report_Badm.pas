@@ -27,7 +27,7 @@ type
     bbPrint: TdxBarButton;
     actOpenFormUnit: TdsdOpenForm;
     bbOpenFormUnit: TdxBarButton;
-    actOpenFormUnitBadm: TdsdOpenForm;
+    actOpenFormGoodsPartner: TdsdOpenForm;
     bbOpenFormUnitBadm: TdxBarButton;
   private
     { Private declarations }

@@ -62,6 +62,8 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     spInsertUpdateMIChild: TdsdStoredProc;
     clAmountSend: TcxGridDBColumn;
+    actUpdateAmount: TdsdExecStoredProc;
+    spUpdate_MI_Over_Amount: TdsdStoredProc;
   private
     { Private declarations }
   public

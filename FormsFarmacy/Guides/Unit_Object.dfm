@@ -123,6 +123,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 89
           end
+          object Num_byReportBadm: TcxGridDBColumn
+            Caption = #8470' '#1087'.'#1087'. ('#1041#1072#1044#1052')'
+            DataBinding.FieldName = 'Num_byReportBadm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
         end
       end
     end

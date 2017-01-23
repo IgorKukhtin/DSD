@@ -272,7 +272,43 @@ inherited OverForm: TOverForm
             Options.Editing = False
             Width = 63
           end
-          object colComment: TcxGridDBColumn [11]
+          object clIsTop: TcxGridDBColumn [11]
+            Caption = #1058#1054#1055
+            DataBinding.FieldName = 'IsTop'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 37
+          end
+          object clIsClose: TcxGridDBColumn [12]
+            Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
+            DataBinding.FieldName = 'IsClose'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object clisFirst: TcxGridDBColumn [13]
+            Caption = '1-'#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isFirst'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object clisSecond: TcxGridDBColumn [14]
+            Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
+            DataBinding.FieldName = 'isSecond'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colComment: TcxGridDBColumn [15]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
@@ -745,6 +781,24 @@ inherited OverForm: TOverForm
     object actShowMessage: TShowMessageAction
       Category = 'DSDLib'
       MoveParams = <>
+    end
+    object actUpdateAmount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProcList = <
+        item
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      ImageIndex = 39
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')" '#1086#1073#1085#1091#1083#1077#1085#1086' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
     end
   end
   inherited MasterDS: TDataSource
@@ -1497,5 +1551,109 @@ inherited OverForm: TOverForm
     PackSize = 1
     Left = 376
     Top = 392
+  end
+  object spUpdate_MI_Over_Amount: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Over_Master'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSumma'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Summa'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemains'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountSend'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountSend'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCS'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMinExpirationDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'MinExpirationDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 160
   end
 end
