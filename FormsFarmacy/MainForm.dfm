@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 229
+  ExplicitHeight = 226
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -110,8 +110,8 @@ inherited MainForm: TMainForm
     object actReport_Badm: TdsdOpenForm [8]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1041#1072#1044#1052')'
-      Hint = #1054#1090#1095#1077#1090' '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' ('#1041#1072#1044#1052')'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084' ('#1041#1072#1044#1052')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084' ('#1041#1072#1044#1052')'
       FormName = 'TReport_BadmForm'
       FormNameParam.Value = 'TReport_BadmForm'
       FormNameParam.DataType = ftString
@@ -2068,11 +2068,11 @@ inherited MainForm: TMainForm
       object miReport_UploadBaDMForm: TMenuItem
         Action = actReport_UploadBaDMForm
       end
-      object N126: TMenuItem
-        Action = actReport_Badm
-      end
       object miReport_UploadOptimaForm: TMenuItem
         Action = actReport_UploadOptimaForm
+      end
+      object N126: TMenuItem
+        Action = actReport_Badm
       end
     end
     object N40: TMenuItem [6]
