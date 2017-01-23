@@ -78,13 +78,13 @@ BEGIN
                                      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                      AND ObjectLink_Goods_Object.ChildObjectId = 59610--inObjectId
 
-                              LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                     ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                    AND ObjectLink_LinkGoods_Goods.ChildObjectId =  ObjectLink_Goods_Object.ObjectId  --
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                      ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                     AND ObjectLink_LinkGoods_Goods.ChildObjectId =  ObjectLink_Goods_Object.ObjectId  --
 
-                              LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
-                                     ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
-                                    AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                                      ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
+                                     AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
                           WHERE ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
                             AND ObjectBoolean_Goods_UploadBadm.ValueData = TRUE
                           GROUP BY ObjectLink_LinkGoods_GoodsMain.ChildObjectId    
@@ -94,12 +94,12 @@ BEGIN
                           , tmpGoods_Jur.GoodsId_Jur
                      FROM tmpGoods_Jur
                           -- связь с товарами сети
-                          LEFT JOIN ObjectLink AS ObjectLink_Main 
-                                 ON ObjectLink_Main.ChildObjectId = tmpGoods_Jur.GoodsMainId
-                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                          LEFT JOIN ObjectLink AS ObjectLink_Child 
-                                 ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
-                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                          INNER JOIN ObjectLink AS ObjectLink_Main 
+                                  ON ObjectLink_Main.ChildObjectId = tmpGoods_Jur.GoodsMainId
+                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          INNER JOIN ObjectLink AS ObjectLink_Child 
+                                  ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
+                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
 
                           -- связь с Торговая сеть или ...
                           INNER JOIN ObjectLink AS ObjectLink_Goods_Retail
