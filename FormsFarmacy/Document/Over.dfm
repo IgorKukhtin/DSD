@@ -235,7 +235,7 @@ inherited OverForm: TOverForm
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -503,7 +503,7 @@ inherited OverForm: TOverForm
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -778,27 +778,56 @@ inherited OverForm: TOverForm
         item
         end>
     end
-    object actShowMessage: TShowMessageAction
+    inherited actAddMask: TdsdExecStoredProc [18]
+    end
+    object actShowMessage: TShowMessageAction [19]
       Category = 'DSDLib'
       MoveParams = <>
     end
+    inherited actNewDocument: TdsdInsertUpdateAction [20]
+    end
+    inherited actFormClose: TdsdFormClose [21]
+    end
+    object macUpdateAmountSingl: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateAmount
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      ImageIndex = 39
+    end
     object actUpdateAmount: TdsdExecStoredProc
       Category = 'DSDLib'
-      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
+      StoredProc = spUpdate_MI_Over_Amount
       StoredProcList = <
         item
+          StoredProc = spUpdate_MI_Over_Amount
+        end>
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      ImageIndex = 39
+    end
+    object macUpdateAmount: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateAmountSingl
         end
         item
-          StoredProc = spSelect
+          Action = actRefresh
         end>
-      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
-      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"?'
+      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')" '#1086#1073#1085#1091#1083#1077#1085#1086
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
+      Hint = #1054#1073#1085#1091#1083#1080#1090#1100' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"'
       ImageIndex = 39
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1073#1085#1091#1083#1080#1090#1100' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')"?'
-      InfoAfterExecute = #1047#1085#1072#1095#1077#1085#1080#1077' "'#1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1088#1072#1089#1093#1086#1076')" '#1086#1073#1085#1091#1083#1077#1085#1086' '#1087#1086' '#1074#1089#1077#1084#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
     end
   end
   inherited MasterDS: TDataSource
@@ -880,6 +909,14 @@ inherited OverForm: TOverForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAmount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -941,6 +978,10 @@ inherited OverForm: TOverForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1089#1074#1103#1079#1100
       Visible = ivAlways
       ImageIndex = 72
+    end
+    object bbUpdateAmount: TdxBarButton
+      Action = macUpdateAmount
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1553,16 +1594,16 @@ inherited OverForm: TOverForm
     Top = 392
   end
   object spUpdate_MI_Over_Amount: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Over_Master'
+    StoredProcName = 'gpUpdate_MI_Over_Amount'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -1582,12 +1623,12 @@ inherited OverForm: TOverForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioAmount'
-        Value = Null
+        Name = 'outAmount'
+        Value = '0'
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInputOutput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1596,64 +1637,11 @@ inherited OverForm: TOverForm
         Component = MasterCDS
         ComponentItem = 'Summa'
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inRemains'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Remains'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountSend'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountSend'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMCS'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MCS'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMinExpirationDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'MinExpirationDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
-    Top = 160
+    Left = 664
+    Top = 168
   end
 end
