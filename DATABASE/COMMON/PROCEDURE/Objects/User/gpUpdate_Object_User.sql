@@ -18,7 +18,8 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
+   vbUserId := inSession;
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Sign(), inId, inSign);
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Seal(), inId, inSeal);

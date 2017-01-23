@@ -351,7 +351,7 @@ BEGIN
                                  );
 
      -- !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
-     vbTmp:= (WITH tmpMIContainer AS
+     vbTmp:= (WITH tmpMIContainer_find AS
                      (SELECT MIContainer.MovementItemId
                            , Container.ObjectId AS GoodsId
                       FROM MovementItemContainer AS MIContainer
@@ -364,13 +364,32 @@ BEGIN
                       WHERE MIContainer.MovementId = inMovementId
                         AND MIContainer.DescId = zc_MIContainer_Count()
                      )
+                 , tmpMIContainer AS
+                     (SELECT tmpMIContainer_find.MovementItemId
+                           , ObjectLink_Child_NB.ChildObjectId AS GoodsId
+                      FROM tmpMIContainer_find
+                                    -- !!!временно захардкодил, будет всегда товар ВСЕХ сетей!!!!
+                                    INNER JOIN ObjectLink AS ObjectLink_Child
+                                                          ON ObjectLink_Child.ChildObjectId = tmpMIContainer_find.GoodsID
+                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
+                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                     )
                  , tmpIncome AS
                      (SELECT *
                       FROM
                         (SELECT MI.Id AS MovementItemId_find
                               , tmpMIContainer.MovementItemId
                               , tmpMIContainer.GoodsId
-                              , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer.MovementItemId, tmpMIContainer.GoodsId ORDER BY CASE WHEN Movement.OperDate >= vbInventoryDate THEN Movement.OperDate - vbInventoryDate ELSE vbInventoryDate - Movement.OperDate END, Movement.OperDate) AS myRow
+                              , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer.MovementItemId, tmpMIContainer.GoodsId
+                                                   ORDER BY CASE WHEN ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId THEN 0 ELSE 1 END
+                                                          , CASE WHEN Movement.OperDate >= vbInventoryDate THEN Movement.OperDate - vbInventoryDate ELSE vbInventoryDate - Movement.OperDate END
+                                                          , Movement.OperDate
+                                                  ) AS myRow
                          FROM tmpMIContainer
                               INNER JOIN Movement ON Movement.DescId = zc_Movement_Income() AND Movement.StatusId = zc_Enum_Status_Complete()
                               INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -379,7 +398,7 @@ BEGIN
                               INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                                     ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                                   AND ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId
+                                                   -- AND ObjectLink_Unit_Juridical.ChildObjectId = vbJuridicalId - !!!убрал!!!
                               INNER JOIN MovementItem AS MI
                                                       ON MI.MovementId = Movement.Id
                                                      AND MI.DescId = zc_MI_Master()

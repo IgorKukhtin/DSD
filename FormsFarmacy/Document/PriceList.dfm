@@ -3,7 +3,7 @@ inherited PriceListForm: TPriceListForm
   ClientHeight = 668
   ClientWidth = 820
   ExplicitWidth = 836
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,19 +11,17 @@ inherited PriceListForm: TPriceListForm
     Width = 820
     Height = 585
     ExplicitTop = 83
-    ExplicitWidth = 753
+    ExplicitWidth = 820
     ExplicitHeight = 585
     ClientRectBottom = 585
     ClientRectRight = 820
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 753
+      ExplicitWidth = 820
       ExplicitHeight = 561
       inherited cxGrid: TcxGrid
         Width = 820
         Height = 561
-        ExplicitLeft = 3
-        ExplicitTop = -3
-        ExplicitWidth = 753
+        ExplicitWidth = 820
         ExplicitHeight = 561
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -157,8 +155,7 @@ inherited PriceListForm: TPriceListForm
     Width = 820
     Height = 57
     TabOrder = 3
-    ExplicitLeft = -1
-    ExplicitWidth = 753
+    ExplicitWidth = 820
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -369,7 +366,7 @@ inherited PriceListForm: TPriceListForm
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1072'>'
-      ShortCut = 13
+      ShortCut = 8205
       ImageIndex = 28
       FormName = 'TPriceListItemsLoadForm'
       FormNameParam.Value = 'TPriceListItemsLoadForm'
