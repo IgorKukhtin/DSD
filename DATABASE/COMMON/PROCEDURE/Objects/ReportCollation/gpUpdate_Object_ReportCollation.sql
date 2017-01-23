@@ -38,7 +38,7 @@ BEGIN
      END IF;
 
      -- по штрих коду Акт сверки
-     vbId:= (SELECT Movement.Id
+     vbId:= (SELECT Object.Id
              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS Id) AS tmp
                  INNER JOIN Object ON Object.Id = tmp.Id
                                   AND Object.DescId = zc_Object_ReportCollation()
@@ -72,3 +72,4 @@ END;$BODY$
  23.01.17         *
 
 */
+--select * from gpUpdate_Object_ReportCollation(inBarCode := '201000923136' ,  inSession := '5');

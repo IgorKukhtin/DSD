@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, idBarCode TVarChar
              , BuhName TVarChar
              , BuhDate TDateTime
              , isBuh Boolean
-             , isErased Boolean 
+            
               )
 AS
 $BODY$
@@ -57,14 +57,14 @@ BEGIN
                         INNER JOIN ObjectLink AS ObjectLink_Buh
                                 ON ObjectLink_Buh.ObjectId = ObjectDate_Buh.ObjectId
                                AND ObjectLink_Buh.DescId = zc_ObjectLink_ReportCollation_Buh()
-                               AND ObjectLink_Buh.ChildObjectId = vbMemberId_user 
+                               AND (ObjectLink_Buh.ChildObjectId = vbMemberId_user  OR vbUserId = 5)
                    WHERE ObjectDate_Buh.DescId = zc_ObjectDate_ReportCollation_Buh()
                      AND ObjectDate_Buh.ValueData >= inStartDate AND ObjectDate_Buh.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
 
    SELECT
          tmpReport.Id
-       , zfFormat_BarCode (zc_BarCodePref_Object(), Object_ReportCollation.Id) ::TVarChar AS idBarCode
+       , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
        , ObjectDate_Start.ValueData      AS StartDate
        , ObjectDate_End.ValueData        AS EndDate
        , Object_Juridical.ValueData      AS JuridicalName
@@ -79,7 +79,6 @@ BEGIN
        , tmpReport.BuhDate
 
        , COALESCE (ObjectBoolean_Buh.ValueData, False) ::Boolean  AS isBuh
-       , Object_ReportCollation.isErased
        
    FROM tmpReport
       LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -140,3 +139,6 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
+
+
+--select * from gpSelect_ReportCollation_byUser(instartdate := ('23.01.2017')::TDateTime , inenddate := ('24.01.2017')::TDateTime ,  inSession := '5');

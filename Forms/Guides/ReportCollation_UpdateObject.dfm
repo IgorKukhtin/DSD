@@ -436,36 +436,37 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
   inherited Panel: TPanel
     Width = 1001
     Height = 57
+    ExplicitTop = 8
     ExplicitWidth = 1001
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 593
+      Left = 271
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 593
+      ExplicitLeft = 271
       ExplicitTop = 22
       ExplicitWidth = 91
       Width = 91
     end
     inherited deEnd: TcxDateEdit
-      Left = 698
+      Left = 376
       Top = 22
       EditValue = 42667d
-      ExplicitLeft = 698
+      ExplicitLeft = 376
       ExplicitTop = 22
-      ExplicitWidth = 91
-      Width = 91
+      ExplicitWidth = 94
+      Width = 94
     end
     inherited cxLabel1: TcxLabel
-      Left = 593
+      Left = 271
       Top = 4
-      ExplicitLeft = 593
+      ExplicitLeft = 271
       ExplicitTop = 4
     end
     inherited cxLabel2: TcxLabel
-      Left = 698
+      Left = 376
       Top = 4
-      ExplicitLeft = 698
+      ExplicitLeft = 376
       ExplicitTop = 4
     end
   end
@@ -496,12 +497,12 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Width = 225
   end
   object edIsShowAll: TcxCheckBox [4]
-    Left = 812
+    Left = 499
     Top = 22
     Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103#1084
     State = cbsChecked
     TabOrder = 8
-    Width = 185
+    Width = 186
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 83
@@ -988,14 +989,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbExternalDialog'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1003,6 +996,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrintPeriod'
         end
@@ -1037,6 +1031,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Visible = ivNever
       ImageIndex = 3
     end
     object bbExternalDialog: TdxBarButton
@@ -1046,6 +1041,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object bbPrintPeriod: TdxBarButton
       Action = actPrintPeriod
       Category = 0
+      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1141,7 +1137,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Top = 426
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Reestr_ReestrKindErased'
     Params = <
       item
         Name = 'inid'
