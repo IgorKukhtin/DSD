@@ -253,9 +253,11 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 100
           end
           object clGoodsCode: TcxGridDBColumn
@@ -289,42 +291,51 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object clIsClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
             DataBinding.FieldName = 'IsClose'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 67
           end
           object clIsTop: TcxGridDBColumn
             Caption = #1058#1054#1055
             DataBinding.FieldName = 'IsTop'
             PropertiesClassName = 'TcxCheckBoxProperties'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 37
           end
           object clisFirst: TcxGridDBColumn
             Caption = '1-'#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isFirst'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 45
           end
           object clisSecond: TcxGridDBColumn
             Caption = #1053#1077#1087#1088#1080#1086#1088#1080#1090#1077#1090'. '#1074#1099#1073#1086#1088
             DataBinding.FieldName = 'isSecond'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object clPrice: TcxGridDBColumn

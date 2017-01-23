@@ -20,6 +20,11 @@ BEGIN
             , Object_Goods.GoodsCodeInt         AS GoodsCode
             , Object_Goods.GoodsName            AS GoodsName
             , Object_Goods.GoodsGroupName
+ 
+            , Object_Goods.isClose
+            , Object_Goods.isTOP
+            , Object_Goods.isFirst
+            , Object_Goods.isSecond
 
             , MovementItem.Amount               AS Amount
             , (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData,0)) :: TFloat AS Summa
@@ -130,6 +135,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.01.17         * 
  12.11.17         * 
  20.10.16         * add AmountSend
  05.07.16         * 

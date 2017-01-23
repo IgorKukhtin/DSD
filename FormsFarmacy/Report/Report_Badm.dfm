@@ -1425,19 +1425,32 @@ inherited Report_BadmForm: TReport_BadmForm
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
-    object actOpenFormUnitBadm: TdsdOpenForm
+    object actOpenFormGoodsPartner: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081'> ('#1041#1072#1044#1052')'
-      Hint = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081'> ('#1041#1072#1044#1052')'
+      Caption = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1086#1074' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'>'
+      Hint = #1089#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1086#1074' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074'>'
       ImageIndex = 26
-      FormName = 'TUnit_byReportBadmForm'
-      FormNameParam.Value = 'TUnit_byReportBadmForm'
+      FormName = 'TGoodsPartnerCodeForm'
+      FormNameParam.Value = 'TGoodsPartnerCodeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'ObjectId'
+          Value = 59610
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ObjectName'
+          Value = #1041#1072#1044#1052
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
       isShowModal = False
     end
     object actOpenFormUnit: TdsdOpenForm
@@ -1544,7 +1557,7 @@ inherited Report_BadmForm: TReport_BadmForm
       Category = 0
     end
     object bbOpenFormUnitBadm: TdxBarButton
-      Action = actOpenFormUnitBadm
+      Action = actOpenFormGoodsPartner
       Category = 0
     end
   end

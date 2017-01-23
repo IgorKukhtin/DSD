@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, Parent
              , isRepriceAuto Boolean
              , isOver Boolean
              , isUploadBadm Boolean
+             , Num_byReportBadm Integer
 ) AS
 $BODY$
 BEGIN
@@ -22,6 +23,13 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
 
    RETURN QUERY 
+    WITH 
+    tmpByBadm AS (SELECT ObjectBoolean_UploadBadm.ObjectId    AS UnitId
+                       , ROW_NUMBER() OVER (ORDER BY ObjectBoolean_UploadBadm.ObjectId )  ::integer  AS Num_byReportBadm
+                  FROM ObjectBoolean AS ObjectBoolean_UploadBadm
+                  WHERE ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
+                    AND ObjectBoolean_UploadBadm.ValueData = TRUE)
+
     SELECT 
         Object_Unit.Id                                     AS Id
       , Object_Unit.ObjectCode                             AS Code
@@ -49,6 +57,7 @@ BEGIN
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
       , COALESCE(ObjectBoolean_UploadBadm.ValueData, False)  AS isUploadBadm
+      , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer AS Num_byReportBadm
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -96,6 +105,7 @@ BEGIN
                              ON ObjectDate_EndServiceNigth.ObjectId = Object_Unit.Id
                             AND ObjectDate_EndServiceNigth.DescId = zc_ObjectDate_Unit_EndServiceNigth()
 
+        LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
     WHERE Object_Unit.DescId = zc_Object_Unit();
   
