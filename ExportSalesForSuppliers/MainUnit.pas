@@ -16,7 +16,7 @@ uses
   IdMessage, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
-  IdFTP;
+  IdFTP, cxCurrencyEdit;
 
 type
   TForm1 = class(TForm)
@@ -80,6 +80,11 @@ type
     qryMailParam: TZQuery;
     btnBaDMSendFTP: TButton;
     IdFTP1: TIdFTP;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    qryReport_Upload_BaDM_byUnit: TZQuery;
+    dsReport_Upload_BaDM_byUnit: TDataSource;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -91,6 +96,7 @@ type
     procedure btnBaDMSendFTPClick(Sender: TObject);
   private
     { Private declarations }
+    FileNameBaDM_byUnit: String;
     FileNameBaDM: String;
     SavePathBaDM: String;
     FileNameOptima: String;
@@ -157,6 +163,7 @@ begin
     end;
   end;
   FileNameBaDM := 'BaDM_'+FormatDateTime('DD_MM_YYYY',BaDMDate.Date)+'.csv';
+  FileNameBaDM_byUnit := 'BaDMRep_'+FormatDateTime('DD_MM_YYYY',BaDMDate.Date)+'.csv';
 end;
 
 procedure TForm1.btnBaDMExportClick(Sender: TObject);
