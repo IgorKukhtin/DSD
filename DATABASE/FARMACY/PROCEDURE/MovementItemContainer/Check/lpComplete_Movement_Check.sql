@@ -80,7 +80,7 @@ BEGIN
 
     -- предварительно сохранили остаток
     INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, Amount, OperDate)
-       SELECT CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS MovementItemId_partion
+       SELECT CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0 THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS MovementItemId_partion
             , Container.ObjectId AS GoodsId
             , Container.Id       AS ContainerId
             , Container.Amount
