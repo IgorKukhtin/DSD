@@ -69,29 +69,46 @@ BEGIN
                     AND ObjectBoolean_Unit_UploadBadm.ValueData = TRUE
                   )
       -- Товары для отчета
-      , tmpGoods_Jur AS (SELECT ObjectBoolean_Goods_UploadBadm.ObjectId  AS GoodsId_Jur
-                         FROM ObjectBoolean AS ObjectBoolean_Goods_UploadBadm
-                         WHERE ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
-                           AND ObjectBoolean_Goods_UploadBadm.ValueData = TRUE
+      , tmpGoods_Jur AS ( SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId               AS GoodsMainId
+                               , MAX (ObjectLink_Goods_Object.ObjectId) AS GoodsId_Jur
+                          FROM ObjectBoolean AS ObjectBoolean_Goods_UploadBadm
+                          -- поставщик БаДМ
+                              INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                      ON ObjectLink_Goods_Object.ObjectId = ObjectBoolean_Goods_UploadBadm.Objectid
+                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                     AND ObjectLink_Goods_Object.ChildObjectId = 59610--inObjectId
+
+                              LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                     ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                    AND ObjectLink_LinkGoods_Goods.ChildObjectId =  ObjectLink_Goods_Object.ObjectId  --
+
+                              LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                                     ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
+                                    AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          WHERE ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
+                            AND ObjectBoolean_Goods_UploadBadm.ValueData = TRUE
+                          GROUP BY ObjectLink_LinkGoods_GoodsMain.ChildObjectId    
                          )
        -- товары сети
-      , tmpGoods AS (SELECT tmpGoods_Jur.GoodsId_Jur
-                          , ObjectLink_Child1.ChildObjectId  as GoodsId --товар сети
+      , tmpGoods AS (SELECT ObjectLink_Child.ChildObjectId AS GoodsId
+                          , tmpGoods_Jur.GoodsId_Jur
                      FROM tmpGoods_Jur
-                          INNER JOIN ObjectLink AS ObjectLink_Child
-                                                ON ObjectLink_Child.ChildObjectId = tmpGoods_Jur.GoodsId_Jur
-                                               AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                          INNER JOIN ObjectLink AS ObjectLink_Main 
-                                                ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                               AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                          INNER JOIN  ObjectLink AS ObjectLink_Main1
-                                                 ON ObjectLink_Main1.ChildObjectId = ObjectLink_Main.ChildObjectId  
-                                                AND ObjectLink_Main1.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                          INNER JOIN  ObjectLink AS ObjectLink_Child1 
-                                                 ON ObjectLink_Child1.ObjectId = ObjectLink_Main1.ObjectId  
-                                                AND ObjectLink_Child1.DescId = zc_ObjectLink_LinkGoods_Goods()
-                                                AND COALESCE (ObjectLink_Child1.ChildObjectId,0)<>0
-                       )
+                          -- связь с товарами сети
+                          LEFT JOIN ObjectLink AS ObjectLink_Main 
+                                 ON ObjectLink_Main.ChildObjectId = tmpGoods_Jur.GoodsMainId
+                                AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          LEFT JOIN ObjectLink AS ObjectLink_Child 
+                                 ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
+                                AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+
+                          -- связь с Торговая сеть или ...
+                          INNER JOIN ObjectLink AS ObjectLink_Goods_Retail
+                                  ON ObjectLink_Goods_Retail.ObjectId = ObjectLink_Child.ChildObjectId
+                                 AND ObjectLink_Goods_Retail.DescId = zc_ObjectLink_Goods_Object()
+                          INNER JOIN Object AS Object_GoodsObject
+                                  ON Object_GoodsObject.Id = ObjectLink_Goods_Retail.ChildObjectId
+                                 AND COALESCE (Object_GoodsObject.DescId, 0) = zc_Object_Retail()
+                      )
 
        -- таблица остатков
       , tmpRemains AS (SELECT tmp.UnitId
