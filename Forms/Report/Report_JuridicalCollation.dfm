@@ -3,7 +3,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientHeight = 410
   ClientWidth = 1015
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -9
   ExplicitWidth = 1031
   ExplicitHeight = 448
   PixelsPerInch = 96
@@ -14,17 +13,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 330
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1015
     ExplicitHeight = 330
     ClientRectBottom = 330
     ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1015
       ExplicitHeight = 330
       inherited cxGrid: TcxGrid
         Width = 1015
         Height = 330
-        ExplicitWidth = 1020
+        ExplicitWidth = 1015
         ExplicitHeight = 330
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -508,7 +507,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 1015
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1015
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -981,11 +980,34 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BarCodeId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BarCodeId'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object macPrint: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPSaveObject
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      ImageIndex = 3
     end
     object actPrintOfficial: TdsdPrintAction
       Category = 'DSDLib'
@@ -1164,11 +1186,34 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BarCodeId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BarCodeId'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintOfficial: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPSaveObject
+        end
+        item
+          Action = actPrintOfficial
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
+      ImageIndex = 17
     end
     object actPrintCurrency: TdsdPrintAction
       Category = 'DSDLib'
@@ -1355,11 +1400,34 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BarCodeId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BarCodeId'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+    end
+    object macPrintCurrency: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPSaveObject
+        end
+        item
+          Action = actPrintCurrency
+        end>
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+      ImageIndex = 21
     end
     object actPrintTurnover: TdsdPrintAction
       Category = 'DSDLib'
@@ -1671,32 +1739,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object macPrint: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = '0'
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actSPSaveObject
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
-      ImageIndex = 3
-    end
     object actSPSaveObject: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1894,11 +1936,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Category = 0
     end
     object bbPrintOfficial: TdxBarButton
-      Action = actPrintOfficial
+      Action = macPrintOfficial
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = macPrint
       Category = 0
     end
     object bbPrintTurnover: TdxBarButton
@@ -1906,7 +1948,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Category = 0
     end
     object bbPrintCurrency: TdxBarButton
-      Action = actPrintCurrency
+      Action = macPrintCurrency
       Category = 0
     end
     object bbExecuteDialog: TdxBarButton
@@ -2637,7 +2679,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'outBarCode'
         Value = Null
         Component = FormParams
-        ComponentItem = 'BarCode'
+        ComponentItem = 'BarCodeId'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
