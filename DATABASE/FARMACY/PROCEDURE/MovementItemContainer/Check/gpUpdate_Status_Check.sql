@@ -16,7 +16,7 @@ $BODY$
 BEGIN
      CASE ioStatusCode
          WHEN zc_Enum_StatusCode_UnComplete()
-              THEN PERFORM gpUnComplete_Movement_Check (inMovementId, inSession);
+              THEN PERFORM gpUnComplete_Movement_Check (inMovementId, inSession, inSession);
 
          WHEN zc_Enum_StatusCode_Complete()
               THEN BEGIN

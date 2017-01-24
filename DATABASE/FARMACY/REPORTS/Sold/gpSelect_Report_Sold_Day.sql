@@ -358,7 +358,7 @@ select * from Container where Id = 1186828 -- select sum (amount) from MovementI
 select * from MovementItemContainer where ContainerId = 1186828 order by OperDate Desc
 
 SELECT  gpReComplete_Movement_Check (2278536, '3');
-SELECT  gpUnComplete_Movement_Check (2278536, '3');
+SELECT  gpUnComplete_Movement_Check (2278536, '3', '3');
 SELECT  gpUpdate_Status_Check (2278536, zc_Enum_StatusCode_Complete(), '3');
 */
 
