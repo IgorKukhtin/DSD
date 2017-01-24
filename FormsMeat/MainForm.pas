@@ -793,6 +793,8 @@ type
     miUserSettings: TMenuItem;
     actReportCollation_Object: TdsdOpenForm;
     N146: TMenuItem;
+    actReportCollation_UpdateObject: TdsdOpenForm;
+    N147: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
