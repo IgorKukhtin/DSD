@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean,
                MinExpirationDate TDateTime,
-               Color_ExpirationDate Integer
+               Color_ExpirationDate Integer,
+               ConditionsKeepName TVarChar
                )
 AS
 $BODY$
@@ -161,7 +162,8 @@ BEGIN
             CASE WHEN COALESCE(ObjectBoolean_Second.ValueData, False) = TRUE THEN 16440317 WHEN COALESCE(ObjectBoolean_First.ValueData, False) = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc,
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
             CashSessionSnapShot.MinExpirationDate, 
-            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate                --vbAVGDateEnd
+            CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate,                --vbAVGDateEnd
+            COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
  
          FROM
             CashSessionSnapShot
@@ -183,6 +185,13 @@ BEGIN
                                    AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()  
 
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id  
+
+            -- óñëîâèÿ õðàíåíèÿ
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
+                                 ON ObjectLink_Goods_ConditionsKeep.ObjectId = Goods.Id
+                                AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+            LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+
          
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -196,6 +205,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.   Âîðîáêàëî À.À.
+ 24.01.17         * add ConditionsKeepName
  06.09.16         *
  12.04.16         *
  02.11.15                                                                       *NDS

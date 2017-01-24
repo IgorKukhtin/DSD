@@ -11,7 +11,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 828
-  ExplicitHeight = 450
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -535,6 +535,14 @@ inherited MainCashForm: TMainCashForm
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
           Width = 100
+        end
+        object MainConditionsKeepName: TcxGridDBColumn
+          Caption = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+          DataBinding.FieldName = 'ConditionsKeepName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1059#1089#1083#1086#1074#1080#1103' '#1093#1088#1072#1085#1077#1085#1080#1103
+          Width = 120
         end
         object MainColor_ExpirationDate: TcxGridDBColumn
           DataBinding.FieldName = 'Color_ExpirationDate'
@@ -1446,13 +1454,19 @@ inherited MainCashForm: TMainCashForm
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = MainConditionsKeepName
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 672
-    Top = 72
+    Left = 640
+    Top = 136
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
@@ -1481,8 +1495,8 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 152
-    Top = 24
+    Left = 104
+    Top = 64
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
@@ -1929,8 +1943,8 @@ inherited MainCashForm: TMainCashForm
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 232
-    Top = 72
+    Left = 280
+    Top = 96
   end
   object spSelect_CashRemains_Diff: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_Diff_ver2'
@@ -1959,8 +1973,8 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 152
-    Top = 72
+    Left = 184
+    Top = 88
   end
   object TimerSaveAll: TTimer
     Enabled = False
