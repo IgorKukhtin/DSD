@@ -1,56 +1,49 @@
--- Function: gpSelect_Object_Contract()
+-- Function: gpSelect_Movement_Reestr()
 
-DROP FUNCTION IF EXISTS gpSelect_ReportCollation_byUser (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation_Print (TDateTime, TDateTime, Boolean, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpSelect_ReportCollation_byUser(
-    IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-
-    IN inSession        TVarChar       -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation_Print(
+    IN inStartDate           TDateTime ,  
+    IN inEndDate             TDateTime ,
+    IN inisShowAll           Boolean   ,
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, idBarCode TVarChar
-             , StartDate  TDateTime
-             , EndDate    TDateTime
-             , JuridicalName TVarChar
-             , PartnerName TVarChar
-             , ContractName TVarChar
-             , PaidKindName TVarChar
-             , InsertName TVarChar
-             , InsertDate TDateTime
-             , BuhName TVarChar
-             , BuhDate TDateTime
-             , isBuh Boolean
-            
-              )
+RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMemberId_user  Integer;
+   DECLARE vbMemberId_User  Integer;
+
+   DECLARE Cursor1 refcursor;
+   DECLARE Cursor2 refcursor;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
-   vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
-     vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
+     vbMemberId_User:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
                        (SELECT ObjectLink_User_Member.ChildObjectId
                         FROM ObjectLink AS ObjectLink_User_Member
                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                           AND ObjectLink_User_Member.ObjectId = vbUserId)
                        END
                       ;
-     -- Проверка
-     IF COALESCE (vbMemberId_user, 0) = 0
-     THEN 
-          RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
-     END IF;
 
+     -- Результат
+     OPEN Cursor1 FOR
+    
+       SELECT inStartDate AS StartDate
+            , inEndDate   AS EndDate
+            , 'Сдали в бухгалтерию'    AS ReestrKindName
+            , Object_User.ValueData    AS UserName
+       FROM Object AS Object_User
+       WHERE Object_User.Id = vbUserId;
 
-   -- Результат
-   RETURN QUERY 
-   WITH
-     -- выбираем за период для Одного пользователя
+    RETURN NEXT Cursor1;
+
+     OPEN Cursor2 FOR
+     WITH 
+     -- выбираем строки Актов сверки по пользователю (или всем пользователям)
      tmpReport AS (SELECT ObjectDate_Buh.ObjectId      AS Id
                         , ObjectLink_Buh.ChildObjectId AS BuhId
                         , ObjectDate_Buh.ValueData     AS BuhDate
@@ -58,12 +51,13 @@ BEGIN
                         INNER JOIN ObjectLink AS ObjectLink_Buh
                                 ON ObjectLink_Buh.ObjectId = ObjectDate_Buh.ObjectId
                                AND ObjectLink_Buh.DescId = zc_ObjectLink_ReportCollation_Buh()
-                               AND (ObjectLink_Buh.ChildObjectId = vbMemberId_user)
+                               AND (ObjectLink_Buh.ChildObjectId = vbMemberId_user OR inisShowAll = True)
                    WHERE ObjectDate_Buh.DescId = zc_ObjectDate_ReportCollation_Buh()
                      AND ObjectDate_Buh.ValueData >= inStartDate AND ObjectDate_Buh.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
 
-   SELECT
+
+     SELECT
          tmpReport.Id
        , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
        , ObjectDate_Start.ValueData      AS StartDate
@@ -124,24 +118,26 @@ BEGIN
 
       LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = tmpReport.BuhId
 
- -- WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
-   ;
-  
+         ORDER BY Object_Juridical.ValueData  
+                , Object_Partner.ValueData  
+                , Object_Contract.ValueData 
+                , Object_PaidKind.ValueData 
+                , ObjectDate_Start.ValueData 
+                , ObjectDate_End.ValueData
+;
+
+    RETURN NEXT Cursor2;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 23.01.17         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.01.17         *
 */
 
 -- тест
---SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
-
-
---select * from gpSelect_ReportCollation_byUser(instartdate := ('23.01.2017')::TDateTime , inenddate := ('24.01.2017')::TDateTime ,  inSession := '5');
-
---select * from gpSelect_ReportCollation_byUser(instartdate := ('24.01.2017')::TDateTime , inenddate := ('24.01.2017')::TDateTime ,  inSession := '9459');
+-- select * from gpSelect_Object_ReportCollation_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640042 ,  inSession := '5');
+--select * from gpSelect_Object_ReportCollation_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640043 , inIsShowAll := 'True' ,  inSession := '5');

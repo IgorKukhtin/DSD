@@ -55,7 +55,7 @@ BEGIN
      -- сохранили свойство <Дата Сдали в бухгалтерию>
      PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReportCollation_Buh(), vbId, CURRENT_TIMESTAMP);
      -- сохранили свойство <Пользователь (Сдали в бухгалтерию)>
-     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Buh(), vbId, vbUserId);
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReportCollation_Buh(), vbId, vbMemberId_user);
      -- сохранили свойство <Сдали в бухгалтерию>
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), vbId, True);
     

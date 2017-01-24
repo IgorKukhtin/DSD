@@ -135,8 +135,11 @@ begin
   LoadReportFromFile('Обороты по учредителям', ReportPath + '\Отчеты (финансы)\Обороты по учредителям.fr3');
   LoadReportFromFile('Обороты по учредителям - детальный', ReportPath + '\Отчеты (финансы)\Обороты по учредителям - детальный.fr3');
   LoadReportFromFile('Отчет по счетам', ReportPath + '\Отчеты (финансы)\Отчет по счетам.fr3');
-  //  Финансовый учет
   }
+  LoadReportFromFile('gpSelect_Object_ReportCollation_Print', ReportPath + '\Отчеты (финансы)\gpSelect_Object_ReportCollation_Print.fr3');
+  exit;
+  //  Финансовый учет
+
   LoadReportFromFile('Платежка Банк', ReportPath + '\Финансовый Учет\Платежка Банк.fr3');
     exit;
   LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\Финансовый Учет\PrintMovement_Invoice.fr3');

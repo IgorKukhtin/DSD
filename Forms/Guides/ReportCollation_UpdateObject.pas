@@ -52,7 +52,6 @@ type
     spGet_Period: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     macMISetErased: TMultiAction;
@@ -64,6 +63,7 @@ type
     actDialog_Print: TExecuteDialog;
     macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
+    spSetErased: TdsdStoredProc;
   private
     { Private declarations }
   public
