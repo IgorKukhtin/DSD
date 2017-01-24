@@ -80,11 +80,12 @@ type
     qryMailParam: TZQuery;
     btnBaDMSendFTP: TButton;
     IdFTP1: TIdFTP;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    cxGridLevel1: TcxGridLevel;
+    grBaDM_byU: TcxGrid;
+    grtvBaDM_byU: TcxGridDBTableView;
+    grlBaDM_byU: TcxGridLevel;
     qryReport_Upload_BaDM_byUnit: TZQuery;
     dsReport_Upload_BaDM_byUnit: TDataSource;
+    qryBadm_byUnit: TZQuery;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -150,12 +151,20 @@ end;
 
 procedure TForm1.btnBaDMExecuteClick(Sender: TObject);
 begin
-  Add_Log('Начало Формирования отчета БаДМ');
+  Add_Log('Начало Формирования 2-х отчетов БаДМ');
   qryReport_Upload_BaDM.Close;
   qryReport_Upload_BaDM.Params.ParamByName('inDate').Value := BaDMDate.Date;
   qryReport_Upload_BaDM.Params.ParamByName('inObjectId').Value := BaDMID.Value;
+  //
+  qryBadm_byUnit.Close;
+  //
+  qryReport_Upload_BaDM_byUnit.Close;;
+  qryReport_Upload_BaDM_byUnit.Params.ParamByName('inDate').Value := BaDMDate.Date;
   try
     qryReport_Upload_BaDM.Open;
+    //
+    qryBadm_byUnit.Open;
+    qryReport_Upload_BaDM_byUnit.Open;
   except ON E:Exception DO
     Begin
       Add_Log(E.Message);
@@ -168,7 +177,8 @@ end;
 
 procedure TForm1.btnBaDMExportClick(Sender: TObject);
 var
-  sl : TStringList;
+  sl,sll : TStringList;
+  i : Integer;
 begin
   Add_Log('Начало выгрузки отчета БаДМ');
   if not ForceDirectories(SavePathBaDM) then
@@ -176,6 +186,8 @@ begin
     Add_Log('Не могу создать директорию выгрузки');
     exit;
   end;
+  //
+  // обычный отчет
   grtvBaDM.OptionsView.Header := False;
   try
     try
@@ -195,6 +207,48 @@ begin
     end;
   finally
     grtvBaDM.OptionsView.Header := True;
+  end;
+  //
+  // отчет по "всем" аптекам
+  grtvBaDM_byU.OptionsView.Header := True;
+  //
+  //но снача построим колонки
+  qryBadm_byUnit.First;
+  for i := 1 to 30 do
+  begin
+       if qryBadm_byUnit.FieldByName('Num_byReportBadm').AsInteger = i
+       then begin
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('Amount_Sale'+IntToStr(i)).Index].Visible       :=TRUE;
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('RemainsEnd' +IntToStr(i)).Index].Visible       :=TRUE;
+           //
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('Amount_Sale'+IntToStr(i)).Index].Caption       := qryBadm_byUnit.FieldByName('Name').AsString + ' Реализация (тип 4), шт';
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('RemainsEnd' +IntToStr(i)).Index].Caption       := qryBadm_byUnit.FieldByName('Name').AsString + ' Конечный остаток, шт';
+       end
+       else begin
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('Amount_Sale'+IntToStr(i)).Index].Visible       :=FALSE;
+           grtvBaDM_byU.Columns[grtvBaDM_byU.GetColumnByFieldName('RemainsEnd' +IntToStr(i)).Index].Visible       :=FALSE;
+       end;
+       if not qryBadm_byUnit.EOF then qryBadm_byUnit.Next;
+  end;
+  //
+  try
+    try
+      ExportGridToText(SavePathBaDM+FileNameBaDM_byUnit,grBaDM_byU,true,true,';','','','csv');
+      sll := TStringList.Create;
+      try
+        sll.LoadFromFile(SavePathBaDM+FileNameBaDM_byUnit);
+        sll.SaveToFile(SavePathBaDM+FileNameBaDM_byUnit,TEncoding.ANSI);
+      finally
+        sll.Free;
+      end;
+    except ON E: Exception DO
+      Begin
+        Add_Log(E.Message);
+        exit;
+      End;
+    end;
+  finally
+    grtvBaDM_byU.OptionsView.Header := True;
   end;
 end;
 
@@ -225,6 +279,10 @@ begin
       idFTP1.Put(SavePathBaDM+FileNameBaDM,
                  FileNameBaDM);
       DeleteFile(SavePathBaDM+FileNameBaDM);
+
+      idFTP1.Put(SavePathBaDM+FileNameBaDM_byUnit,
+                 FileNameBaDM_byUnit);
+      DeleteFile(SavePathBaDM+FileNameBaDM_byUnit);
     except ON E: Exception DO
       Begin
         Add_Log(E.Message);

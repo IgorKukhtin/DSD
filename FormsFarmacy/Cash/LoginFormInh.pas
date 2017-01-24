@@ -8,7 +8,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, LoginForm, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.Menus,
   cxPropertiesStore, Vcl.StdCtrls, cxButtons, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxLabel, dsdDB;
+  cxDropDownEdit, cxLabel, dsdDB, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TLoginForm1 = class(TLoginForm)
@@ -29,31 +29,43 @@ var
 implementation
 
 uses Storage, Authentication, CommonData, MessagesUnit, StrUtils, LocalWorkUnit,
-  IniUtils;
+  IniUtils, MainCash;
 
 {$R *.dfm}
 
 procedure TLoginForm1.btnOkClick(Sender: TObject);
 begin
   inherited;
-  // сохраняем авторизационные данные для запуска сервиса
-  IniUtils.login:=edUserName.Text;
-  IniUtils.pass:=edPassword.Text;
+  // сохраняем авторизационные данные для запуска сервиса + для вывода в MainForm
+  IniUtils.gUnitName  := edFarmacyName.Text;
+  IniUtils.gUserName  := edUserName.Text;
+  IniUtils.gPassValue := edPassword.Text;
 
   if ModalResult <> mrOk then exit;
 
-  spChekFarmacyName.ParamByName('AFarmacyName').Value := iniLocalFarmacyName(edFarmacyName.Text);
-  spChekFarmacyName.Execute;
-  if not spChekFarmacyName.ParamByName('Enter').Value then
-    ModalResult := mrCancel;
+  spChekFarmacyName.ParamByName('inUnitName').Value := edFarmacyName.Text;
+  try spChekFarmacyName.Execute;
+    if spChekFarmacyName.ParamByName('outIsEnter').Value = FALSE
+    then ModalResult := mrCancel
+    else if edFarmacyName.Enabled then iniLocalUnitNameSave(edFarmacyName.Text);
+  except ON E: Exception do
+      Begin
+         Application.OnException(Application.MainForm,E);
+         ModalResult := mrNone;
+      End;
+  end;
 end;
 
 procedure TLoginForm1.FormShow(Sender: TObject);
 begin
   inherited;
-  edFarmacyName.Text := iniLocalFarmacyName('');
+  ActiveControl:=edUserName;
+  //
+  edFarmacyName.Text := iniLocalUnitNameGet;
   if edFarmacyName.Text <> '' then
-    edFarmacyName.Enabled := False; // Поле заполняется один раз
+    edFarmacyName.Enabled := False // Поле заполняется один раз
+  else
+    ActiveControl:=edFarmacyName;
 end;
 
 end.

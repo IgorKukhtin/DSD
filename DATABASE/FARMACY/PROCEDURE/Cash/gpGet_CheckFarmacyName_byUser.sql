@@ -1,35 +1,106 @@
 -- Function: gpGet_CheckFarmacyName_byUser()
 
-DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (BOOLEAN, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_CheckFarmacyName_byUser (TVarChar, TVarChar);
 
 
 
 CREATE OR REPLACE FUNCTION gpGet_CheckFarmacyName_byUser(
-    OUT    Enter              BOOLEAN,  -- Разрешение на вход true - да, false - нет 
-    IN     AFarmacyName       TVarChar, -- Имя Аптеки под которой входит пользователь
+    OUT    outIsEnter         Boolean , -- Разрешение на вход true - да, false - нет 
+    IN     inUnitName         TVarChar, -- Имя Аптеки под которой входит пользователь
     IN     inSession          TVarChar  -- Сессия пользователя
 )
 RETURNS BOOLEAN
 AS
 $BODY$
-BEGIN
- Enter := FALSE;
+   DECLARE vbUserId Integer;
 
- if AFarmacyName = 'Аптека 18'
- THEN
-      Enter := TRUE;
- ELSE
-      Enter := TRUE;
- END IF;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
+   DECLARE vbUnitId_find Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := lpGetUserBySession (inSession);
+
+
+    -- Начали что есть ошибка
+    outIsEnter := FALSE;
+ 
+    -- Проверка ошибки
+    IF COALESCE (inUnitName, '') = ''
+    THEN
+        RAISE EXCEPTION 'Ошибка.Название аптеки не может быть пустым.';
+    END IF;
+
+    --                              р
+    IF 1 < (SELECT COUNT(*) FROM Object WHERE DescId = zc_Object_Unit() AND LOWER (ValueData) = LOWER (inUnitName) AND isErased = FALSE)
+    THEN
+         RAISE EXCEPTION 'Ошибка.Название <%> определено у нескольких аптек.', inUnitName;
+    ELSE
+         -- Нашли по названию
+         vbUnitId_find:= (SELECT Id FROM Object WHERE DescId = zc_Object_Unit() AND LOWER (ValueData) = LOWER (inUnitName) AND isErased = FALSE);
+         -- Проверка ошибки
+         IF COALESCE (vbUnitId_find, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Название аптеки <%> не найдено.', inUnitName;
+         ELSE
+             -- получили "текущее" значение из дефолтов
+             vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+             IF vbUnitKey = '' THEN vbUnitKey := '0'; END IF;   
+             vbUnitId := vbUnitKey :: Integer;
+             -- Проверка
+             IF COALESCE(vbUnitId, 0) = 0 THEN
+               RAISE EXCEPTION 'Ошибка.Для пользователя <%> не установлено значение <Подразделение>.', lfGet_Object_ValueData (vbUserId);
+             END IF;
+
+             -- Проверка - !!!Сеть не должна измениться!!!
+             IF zfGet_Unit_Retail(vbUnitId) <> zfGet_Unit_Retail(vbUnitId_find) OR lpGet_DefaultValue ('zc_Object_Retail', vbUserId) <> zfGet_Unit_Retail(vbUnitId_find) :: TVarChar
+             THEN
+               RAISE EXCEPTION 'Ошибка.Пользователь <%> зарегистрирован в сети <%> и не может работать в аптеках сети <%>.', lfGet_Object_ValueData (vbUserId), lfGet_Object_ValueData (zfGet_Unit_Retail(vbUnitId)), lfGet_Object_ValueData (zfGet_Unit_Retail(vbUnitId_find));
+             END IF;
+         
+
+             -- На всякий случай проверили что заменим 1 запись
+             IF 1 <> (SELECT COUNT (*)
+                      FROM DefaultKeys
+                           LEFT JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
+                                                 AND DefaultValue.UserKeyId     = vbUserId
+                      WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit'))
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найден один дефолт у пользователя <%> с ключом <zc_Object_Unit>.Кол-во найденных = <%>.'
+                               , lfGet_Object_ValueData (vbUserId)
+                               , (SELECT COUNT (*)
+                                  FROM DefaultKeys
+                                       LEFT JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
+                                                             AND DefaultValue.UserKeyId    = vbUserId
+                                  WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit'));
+             END IF;
+             
+             -- Заменили пользователю - АПТЕКУ
+             PERFORM gpInsertUpdate_DefaultValue (ioId           := DefaultValue.Id
+                                                , inDefaultKeyId := DefaultKeys.Id
+                                                , inUserKey      := vbUserId
+                                                , inDefaultValue := vbUnitId_find :: TVarChar
+                                                , inSession      := '3'
+                                                 )
+             FROM DefaultKeys
+                  LEFT JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
+                                        AND DefaultValue.UserKeyId    = vbUserId
+             WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit')
+               AND vbUnitId_find <> vbUnitId;
+             
+          
+             -- Вернули что нет ошибки
+             outIsEnter := TRUE;
+         END IF;
+    END IF;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
  
 /*
-Это тестовая функция для проверки 
-
- AFarmacyName = 'Аптека 18' то доступ разрешен для других заперщен
-
-                                                        
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.  Воробкало А.А.
+ 10.01.17                                                         *
 */
+

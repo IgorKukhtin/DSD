@@ -1,7 +1,7 @@
 inherited LoginForm1: TLoginForm1
   OnShow = FormShow
   ExplicitWidth = 407
-  ExplicitHeight = 194
+  ExplicitHeight = 190
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxLabel1: TcxLabel
@@ -58,21 +58,21 @@ inherited LoginForm1: TLoginForm1
     Top = 8
   end
   object spChekFarmacyName: TdsdStoredProc
-    StoredProcName = 'gpget_checkfarmacyname_byuser'
+    StoredProcName = 'gpGet_CheckFarmacyName_byUser'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'AFarmacyName'
+        Name = 'outIsEnter'
         Value = Null
-        DataType = ftString
-        ParamType = ptInput
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Enter'
+        Name = 'inUnitName'
         Value = Null
-        DataType = ftBoolean
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

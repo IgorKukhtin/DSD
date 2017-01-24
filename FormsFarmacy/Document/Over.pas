@@ -64,6 +64,9 @@ type
     clAmountSend: TcxGridDBColumn;
     actUpdateAmount: TdsdExecStoredProc;
     spUpdate_MI_Over_Amount: TdsdStoredProc;
+    macUpdateAmount: TMultiAction;
+    bbUpdateAmount: TdxBarButton;
+    macUpdateAmountSingl: TMultiAction;
   private
     { Private declarations }
   public

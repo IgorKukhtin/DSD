@@ -44,9 +44,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitCount Integer;
-   DECLARE vbStartDate1 TDateTime;
-   DECLARE vbStartDate3 TDateTime;
-   DECLARE vbStartDate6 TDateTime;
+  -- DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
@@ -71,11 +69,47 @@ BEGIN
                     AND ObjectBoolean_Unit_UploadBadm.ValueData = TRUE
                   )
       -- Товары для отчета
-      , tmpGoods AS (SELECT ObjectBoolean_Goods_UploadBadm.ObjectId  AS GoodsId
-                     FROM ObjectBoolean AS ObjectBoolean_Goods_UploadBadm
-                     WHERE ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
-                         AND ObjectBoolean_Goods_UploadBadm.ValueData = TRUE
-                     )
+      , tmpGoods_Jur AS ( SELECT ObjectLink_LinkGoods_GoodsMain.ChildObjectId               AS GoodsMainId
+                               , MAX (ObjectLink_Goods_Object.ObjectId) AS GoodsId_Jur
+                          FROM ObjectBoolean AS ObjectBoolean_Goods_UploadBadm
+                          -- поставщик БаДМ
+                              INNER JOIN ObjectLink AS ObjectLink_Goods_Object
+                                      ON ObjectLink_Goods_Object.ObjectId = ObjectBoolean_Goods_UploadBadm.Objectid
+                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                                     AND ObjectLink_Goods_Object.ChildObjectId = 59610--inObjectId
+
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                      ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                     AND ObjectLink_LinkGoods_Goods.ChildObjectId =  ObjectLink_Goods_Object.ObjectId  --
+
+                              INNER JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
+                                      ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
+                                     AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          WHERE ObjectBoolean_Goods_UploadBadm.DescId = zc_ObjectBoolean_Goods_UploadBadm()
+                            AND ObjectBoolean_Goods_UploadBadm.ValueData = TRUE
+                          GROUP BY ObjectLink_LinkGoods_GoodsMain.ChildObjectId    
+                         )
+       -- товары сети
+      , tmpGoods AS (SELECT ObjectLink_Child.ChildObjectId AS GoodsId
+                          , tmpGoods_Jur.GoodsId_Jur
+                     FROM tmpGoods_Jur
+                          -- связь с товарами сети
+                          INNER JOIN ObjectLink AS ObjectLink_Main 
+                                  ON ObjectLink_Main.ChildObjectId = tmpGoods_Jur.GoodsMainId
+                                 AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                          INNER JOIN ObjectLink AS ObjectLink_Child 
+                                  ON ObjectLink_Child.ObjectId = ObjectLink_Main.ObjectId
+                                 AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+
+                          -- связь с Торговая сеть или ...
+                          INNER JOIN ObjectLink AS ObjectLink_Goods_Retail
+                                  ON ObjectLink_Goods_Retail.ObjectId = ObjectLink_Child.ChildObjectId
+                                 AND ObjectLink_Goods_Retail.DescId = zc_ObjectLink_Goods_Object()
+                          INNER JOIN Object AS Object_GoodsObject
+                                  ON Object_GoodsObject.Id = ObjectLink_Goods_Retail.ChildObjectId
+                                 AND COALESCE (Object_GoodsObject.DescId, 0) = zc_Object_Retail()
+                      )
+
        -- таблица остатков
       , tmpRemains AS (SELECT tmp.UnitId
                             , tmp.GoodsId
@@ -133,7 +167,7 @@ BEGIN
                       ) 
 
         --результат
-  SELECT Object_Goods.ObjectCode           AS GoodsCo2e
+  SELECT Object_Goods.ObjectCode           AS GoodsCode
        , Object_Goods.ValueData            AS GoodsName
        , Sum(tmp.RemainsEnd1)      ::TFloat
        , Sum(tmp.Amount_Sale1)     ::TFloat
@@ -197,6 +231,7 @@ BEGIN
        , Sum(tmp.Amount_Sale30)     ::TFloat
   FROM (
         SELECT tmpGoods.GoodsId
+             , tmpGoods.GoodsId_Jur
              , CASE WHEN tmpUnit.Num = 1 THEN tmpRemains.RemainsEnd ELSE 0 END  AS RemainsEnd1
              , CASE WHEN tmpUnit.Num = 1 THEN tmpCheck.Amount_Sale ELSE 0 END     AS Amount_Sale1
              , CASE WHEN tmpUnit.Num = 2 THEN tmpRemains.RemainsEnd ELSE 0 END    AS RemainsEnd2
@@ -264,8 +299,9 @@ BEGIN
                                  AND tmpRemains.GoodsId = tmpGoods.GoodsId
              LEFT JOIN tmpCheck ON tmpCheck.UnitId  = tmpUnit.UnitId
                                AND tmpCheck.GoodsId = tmpGoods.GoodsId
+        
         ) AS tmp
-       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId_Jur
   GROUP BY Object_Goods.ObjectCode
          , Object_Goods.ValueData 
              
