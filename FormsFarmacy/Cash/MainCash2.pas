@@ -15,7 +15,8 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX,  Math, ShellApi,
-  VKDBFDataSet, FormStorage, CommonData, ParentForm;
+  VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   THeadRecord = record
@@ -981,7 +982,7 @@ begin
       fMask := SEE_MASK_NOCLOSEPROCESS;
       Wnd := Application.Handle;
       lpFile := PChar(ExecuteFile);
-      ParamString:='"'+IniUtils.login+'" "'+iniutils.pass+'"'; // Кавычки обязательно
+      ParamString:='"'+IniUtils.gUserName+'" "'+iniutils.gPassValue+'"'; // Кавычки обязательно
 
       // ParamString:= gc_User.Session;
       {ParamString can contain theapplication parameters.}

@@ -213,6 +213,8 @@ object Form1: TForm1
             Height = 275
             Align = alClient
             TabOrder = 0
+            ExplicitLeft = -3
+            ExplicitTop = 16
             object grtvBaDM: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = dsReport_Upload_BaDM
@@ -327,14 +329,14 @@ object Form1: TForm1
               GridView = grtvBaDM
             end
           end
-          object cxGrid1: TcxGrid
+          object grBaDM_byU: TcxGrid
             Left = 0
             Top = 275
             Width = 901
             Height = 209
             Align = alBottom
             TabOrder = 1
-            object cxGridDBTableView1: TcxGridDBTableView
+            object grtvBaDM_byU: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = dsReport_Upload_BaDM_byUnit
               DataController.Filter.Options = [fcoCaseInsensitive]
@@ -972,8 +974,8 @@ object Form1: TForm1
                 Width = 85
               end
             end
-            object cxGridLevel1: TcxGridLevel
-              GridView = cxGridDBTableView1
+            object grlBaDM_byU: TcxGridLevel
+              GridView = grtvBaDM_byU
             end
           end
         end
@@ -1212,11 +1214,11 @@ object Form1: TForm1
   object qryReport_Upload_BaDM_byUnit: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      'Select * from gpReport_Badm (:inOperDate,:inOperDate,'#39'3'#39');')
+      'Select * from gpReport_Badm (:inDate,:inDate,'#39'3'#39');')
     Params = <
       item
         DataType = ftDateTime
-        Name = 'inOperDate'
+        Name = 'inDate'
         ParamType = ptInput
         Value = '01.12.2015'
       end>
@@ -1225,7 +1227,7 @@ object Form1: TForm1
     ParamData = <
       item
         DataType = ftDateTime
-        Name = 'inOperDate'
+        Name = 'inDate'
         ParamType = ptInput
         Value = '01.12.2015'
       end>
@@ -1234,5 +1236,15 @@ object Form1: TForm1
     DataSet = qryReport_Upload_BaDM_byUnit
     Left = 496
     Top = 136
+  end
+  object qryBadm_byUnit: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'SELECT Name, Num_byReportBadm FROM gpSelect_Object_Unit ('#39'3'#39') AS' +
+        ' tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byReportBadm')
+    Params = <>
+    Left = 408
+    Top = 248
   end
 end

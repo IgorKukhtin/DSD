@@ -21,13 +21,14 @@ function iniLocalDataBaseHead: String;
 function iniLocalDataBaseBody: String;
 function iniLocalDataBaseDiff: String;
 //Возвращает имя Аптеки
-function iniLocalFarmacyName(AFarmacyName: string): string;
+function iniLocalUnitNameGet: string;
+function iniLocalUnitNameSave(AFarmacyName: string): string;
 
 function iniCashSerialNumber: String;
 //возвращает номер налоговой группы для FP320
 function iniTaxGroup7:Integer;
 
-var login, pass: string;
+var gUnitName, gUserName, gPassValue: string;
 
 implementation
 
@@ -175,7 +176,12 @@ begin
   End;
 end;
 
-function iniLocalFarmacyName(AFarmacyName: string): string;
+function iniLocalUnitNameGet: string;
+begin
+  Result := GetValue('Common','FarmacyName', '');
+end;
+
+function iniLocalUnitNameSave(AFarmacyName: string): string;
 var
   f: TIniFile;
 begin
@@ -191,6 +197,7 @@ begin
     end;
   End;
 end;
+
 
 function iniCashSerialNumber: String;
 begin

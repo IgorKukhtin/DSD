@@ -15,7 +15,8 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox, Vcl.Menus, cxCheckBox, Vcl.StdCtrls,
   cxButtons, cxNavigator, CashInterface, IniFIles, cxImageComboBox, dxmdaset,
   ActiveX,  Math,
-  VKDBFDataSet, FormStorage, CommonData, ParentForm;
+  VKDBFDataSet, FormStorage, CommonData, ParentForm, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   THeadRecord = record
@@ -2621,7 +2622,7 @@ begin
       fBlinkVIP:= lMovementId_BlinkVIP <> '';
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
-      Self.Caption := 'Продажа';
+      Self.Caption := 'Продажа' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
       //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
@@ -2633,7 +2634,7 @@ begin
       end;
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков'
+        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -2656,11 +2657,11 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
       if fBlinkCheck = True
-      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток'
-      else Self.Caption := 'Продажа';
+      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+      else Self.Caption := 'Продажа' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой'
+        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
