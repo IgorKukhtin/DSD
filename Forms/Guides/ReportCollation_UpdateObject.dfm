@@ -436,7 +436,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
   inherited Panel: TPanel
     Width = 1001
     Height = 57
-    ExplicitTop = 8
     ExplicitWidth = 1001
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
@@ -602,9 +601,10 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         end>
     end
     inherited spErased: TdsdExecStoredProc
+      StoredProc = spSetErased
       StoredProcList = <
         item
-          StoredProc = spMovementSetErased
+          StoredProc = spSetErased
         end
         item
           StoredProc = spSelect
@@ -738,13 +738,15 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object actPrintPeriod: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
+      EnabledTimer = True
+      Timer = actPrintPeriod.Timer
       StoredProc = spSelectPrintPeriod
       StoredProcList = <
         item
           StoredProc = spSelectPrintPeriod
         end>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      Caption = #1040#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      Hint = #1040#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
       ImageIndex = 16
       DataSets = <
         item
@@ -786,9 +788,9 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrPeriod'
+      ReportName = 'PrintObject_ReportCollation'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrPeriod'
+      ReportNameParam.Value = 'PrintObject_ReportCollation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -796,10 +798,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object actPrint: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
-      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
         end>
       Caption = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       Hint = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
@@ -969,10 +969,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -988,15 +984,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbPrintPeriod'
         end
@@ -1041,7 +1028,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object bbPrintPeriod: TdxBarButton
       Action = actPrintPeriod
       Category = 0
-      Visible = ivNever
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1137,20 +1123,13 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Top = 426
   end
   inherited spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
     Params = <
       item
         Name = 'inid'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReestrKindId'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1369,32 +1348,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Left = 708
     Top = 217
   end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Reestr_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 607
-    Top = 240
-  end
   object spSelectPrintPeriod: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrPeriod_Print'
+    StoredProcName = 'gpSelect_Object_ReportCollation_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1422,14 +1377,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inReestrKindId'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsShowAll'
         Value = 'True'
         Component = edIsShowAll
@@ -1438,7 +1385,24 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 519
-    Top = 272
+    Left = 583
+    Top = 304
+  end
+  object spSetErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 315
   end
 end
