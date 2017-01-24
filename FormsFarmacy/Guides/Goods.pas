@@ -10,8 +10,7 @@ uses
   dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
   Vcl.Controls, cxGrid, AncestorGuides, cxPCdxBarPopupMenu, Vcl.Menus, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, Vcl.DBActns, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  Vcl.DBActns;
 
 type
   TGoodsForm = class(TAncestorGuidesForm)
