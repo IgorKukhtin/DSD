@@ -64,35 +64,6 @@ type
   end;
   TBodyArr = Array of TBodyRecord;
 
-  TSaveRealThread = class(TThread)
-    DiffCDS : TClientDataSet;
-    FCheckUID: String;
-    FShapeColor: TColor;
-    FNeedSaveVIP: Boolean;
-    FLastError: String;
-    procedure SetShapeState(AColor: TColor);
-    procedure SyncShapeState;
-    procedure UpdateRemains;
-    procedure SendError(const AErrorMessage: String);
-  private
-    procedure SendErrorMineForm;
-  protected
-    procedure Execute; override;
-  end;
-  TSaveRealAllThread = class(TThread)
-  protected
-    procedure Execute; override;
-  end;
-
-  TRefreshDiffThread = class(TThread)
-    FShapeColor: TColor;
-    procedure SetShapeState(AColor: TColor);
-    procedure SyncShapeState;
-    procedure UpdateRemains;
-  protected
-    procedure Execute; override;
-  end;
-
   TMainCashForm2 = class(TAncestorBaseForm)
     MainGridDBTableView: TcxGridDBTableView;
     MainGridLevel: TcxGridLevel;
@@ -819,6 +790,7 @@ end;
 procedure TMainCashForm2.actRefreshAllExecute(Sender: TObject);
 var
   AfterScr: TDataSetNotifyEvent;
+  lMsg: String;
 begin
   startSplash('Начало обновления данных с сервера');
   try
@@ -862,6 +834,20 @@ begin
       AfterScr := RemainsCDS.AfterScroll;
       RemainsCDS.AfterScroll := nil;
       try
+        ChangeStatus('Загрузка приходных накладных от дистрибьютора в медреестр Pfizer МДМ');
+        lMsg:= '';
+        if not DiscountServiceForm.fPfizer_Send(lMsg) then
+        begin
+             ChangeStatus('Ошибка в медреестре Pfizer МДМ :' + lMsg);
+             sleep(10000);
+        end
+        else
+        begin
+             ChangeStatus('Накладные зарегистрированы в медреестре Pfizer МДМ успешно :' + lMsg);
+             sleep(2000);
+        end;
+
+
         ChangeStatus('Получение остатков');
         actRefresh.Execute;
 
@@ -1268,7 +1254,7 @@ var
   ConfirmedKindName_calc: String;
   UID: String;
 begin
-  ShowMessage('actSetVIPExecute');
+ // ShowMessage('actSetVIPExecute');
   if not VIPDialogExecute(ManagerID,ManagerName,BayerName) then exit;
   //
   FormParams.ParamByName('ManagerId').Value   := ManagerId;
@@ -1387,7 +1373,7 @@ begin
   LastErr := GetLastError;
   MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
-
+  DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
 
   //сгенерили гуид для определения сессии
@@ -2832,40 +2818,17 @@ end;
 
 procedure TMainCashForm2.SaveReal(AUID: String; ANeedComplete: boolean = False);
 Begin
- {
-  With TSaveRealThread.Create(true) do
-  Begin
-    FreeOnTerminate := true;
-    FCheckUID := AUID;
-    Start;
-  End;
- //}
-  //f Отключили для кассы
+
 End;
 
 procedure TMainCashForm2.SaveRealAll;
 begin
-  { TODO -oufo : В програме отключить }
-//
-{
-  With TSaveRealAllThread.Create(true) do
-  Begin
-    FreeOnTerminate := true;
-    Start;
-  End;
-//  }
-  //f Отключили для кассы
+
 end;
 
 procedure TMainCashForm2.StartRefreshDiffThread;
 Begin
-  {
-  With TRefreshDiffThread.Create(true) do
-  Begin
-    FreeOnTerminate := true;
-    Start;
-  End;
-  //}
+
 End;
 
 procedure TMainCashForm2.SetSoldRegim(const Value: boolean);
@@ -2976,7 +2939,7 @@ begin
       fBlinkVIP:= lMovementId_BlinkVIP <> '';
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
-      Self.Caption := 'Продажа';
+      Self.Caption := 'Продажа' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
       //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
@@ -2988,7 +2951,7 @@ begin
       end;
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков'
+        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -3013,11 +2976,11 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
       if fBlinkCheck = True
-      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток'
-      else Self.Caption := 'Продажа';
+      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+      else Self.Caption := 'Продажа' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой'
+        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -3039,563 +3002,7 @@ begin
  end;
 end;
 
-{ TSaveRealThread }
 
-procedure TSaveRealThread.Execute;
-var
-  Head: THeadRecord;
-  Body: TBodyArr;
-  Find: Boolean;
-  dsdSave: TdsdStoredProc;
-  I: Integer;
-begin
-  inherited;
- // if gc_User.Local then exit;  //f временно отключили
-  EnterCriticalSection(csCriticalSection_Save);
-  try
-    CoInitialize(nil);
-    SetShapeState(clRed);
-    try
-      Find := False;
-      InterlockedIncrement(CountRRT);
-      InterlockedIncrement(CountSaveThread);
-      try
-        //ждем пока освободится доступ к локальной базе
-//        while LocalDataBaseisBusy <> 0 do
-//          sleep(10);
-//        //блокируем базу
-//        InterlockedIncrement(LocalDataBaseisBusy);
-         WaitForSingleObject(MutexDBF, INFINITE);
-         FLocalDataBaseHead.Active:=True;
-         FLocalDataBaseBody.Active:=True;
-        try
-          if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
-             not FLocalDataBaseHead.Deleted then
-          Begin
-            Find := True;
-            With Head, FLocalDataBaseHead do
-            Begin
-              ID       := FieldByName('ID').AsInteger;
-              UID      := FieldByName('UID').AsString;
-              DATE     := FieldByName('DATE').asCurrency;
-              CASH     := trim(FieldByName('CASH').AsString);
-              PAIDTYPE := FieldByName('PAIDTYPE').AsInteger;
-              MANAGER  := FieldByName('MANAGER').AsInteger;
-              BAYER    := trim(FieldByName('BAYER').AsString);
-              COMPL    := FieldByName('COMPL').AsBoolean;
-              NEEDCOMPL:= FieldByName('NEEDCOMPL').AsBoolean;
-              SAVE     := FieldByName('SAVE').AsBoolean;
-              FISCID   := trim(FieldByName('FISCID').AsString);
-              NOTMCS   := FieldByName('NOTMCS').AsBoolean;
-              //***20.07.16
-              DISCOUNTID := FieldByName('DISCOUNTID').AsInteger;
-              DISCOUNTN  := trim(FieldByName('DISCOUNTN').AsString);
-              DISCOUNT   := trim(FieldByName('DISCOUNT').AsString);
-              //***16.08.16
-              BAYERPHONE := trim(FieldByName('BAYERPHONE').AsString);
-              CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
-              NUMORDER   := trim(FieldByName('NUMORDER').AsString);
-              CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
-
-              FNeedSaveVIP := (MANAGER <> 0);
-            end;
-            FLocalDataBaseBody.First;
-            while not FLocalDataBaseBody.Eof do
-            Begin
-              if (Trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
-                 not FLocalDataBaseBody.Deleted  then
-              Begin
-                SetLength(Body,Length(Body)+1);
-                with Body[Length(Body)-1],FLocalDataBaseBody  do
-                Begin
-                  CH_UID    := trim(FieldByName('CH_UID').AsString);
-                  GOODSID   := FieldByName('GOODSID').AsInteger;
-                  GOODSCODE := FieldByName('GOODSCODE').AsInteger;
-                  GOODSNAME := trim(FieldByName('GOODSNAME').AsString);
-                  NDS       := FieldByName('NDS').asCurrency;
-                  AMOUNT    := FieldByName('AMOUNT').asCurrency;
-                  PRICE     := FieldByName('PRICE').asCurrency;
-                  //***20.07.16
-                  PRICESALE := FieldByName('PRICESALE').asCurrency;
-                  CHPERCENT := FieldByName('CHPERCENT').asCurrency;
-                  SUMMCH    := FieldByName('SUMMCH').asCurrency;
-                  //***19.08.16
-                  AMOUNTORD := FieldByName('AMOUNTORD').asCurrency;
-                  //***10.08.16
-                  LIST_UID  := trim(FieldByName('LIST_UID').asString);
-                End;
-              End;
-              FLocalDataBaseBody.Next;
-            End;
-          End;
-        finally
-          //отпустили локальную базу
-//          InterlockedDecrement(LocalDataBaseisBusy);
-          FLocalDataBaseHead.Active:=False;
-          FLocalDataBaseBody.Active:=False;
-          ReleaseMutex(MutexDBF);
-        end;
-        if Find AND NOT HEAD.SAVE then
-        Begin
-          dsdSave := TdsdStoredProc.Create(nil);
-          try
-            try
-              //Проверить в каком состоянии документ.
-              dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
-              dsdSave.OutputType := otResult;
-              dsdSave.Params.Clear;
-              dsdSave.Params.AddParam('inId',ftInteger,ptInput,Head.ID);
-              dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
-              dsdSave.Execute(False,False);
-              if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
-              Begin
-                Head.SAVE := True;
-                Head.NEEDCOMPL := False;
-              End
-              else
-              //Если не проведен
-              Begin
-                if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '3' then //Удален
-                Begin
-                  dsdSave.StoredProcName := 'gpUnComplete_Movement_Check';
-                  dsdSave.OutputType := otResult;
-                  dsdSave.Params.Clear;
-                  dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
-                  dsdSave.Execute(False,False);
-                end;
-                //сохранил шапку
-                dsdSave.StoredProcName := 'gpInsertUpdate_Movement_Check_ver2';
-                dsdSave.OutputType := otResult;
-                dsdSave.Params.Clear;
-                dsdSave.Params.AddParam('ioId',ftInteger,ptInputOutput,Head.ID);
-                dsdSave.Params.AddParam('inDate',ftDateTime,ptInput,Head.DATE);
-                dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
-                dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
-                dsdSave.Params.AddParam('inManagerId',ftInteger,ptInput,Head.MANAGER);
-                dsdSave.Params.AddParam('inBayer',ftString,ptInput,Head.BAYER);
-                dsdSave.Params.AddParam('inFiscalCheckNumber',ftString,ptInput,Head.FISCID);
-                dsdSave.Params.AddParam('inNotMCS',ftBoolean,ptInput,Head.NOTMCS);
-                //***20.07.16
-                dsdSave.Params.AddParam('inDiscountExternalId',ftInteger,ptInputOutput,Head.DISCOUNTID);
-                dsdSave.Params.AddParam('inDiscountCardNumber',ftString,ptInput,Head.DISCOUNT);
-                //***16.08.16
-                dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
-                dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
-                dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
-
-                dsdSave.Execute(False,False);
-                SetShapeState(clBlack);
-                //сохранили в локальной базе полученный номер
-                if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
-                Begin
-                  Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
-                  //ждем пока освободится доступ к локальной базе
-//                  while LocalDataBaseisBusy <> 0 do
-//                    sleep(10);
-//                  //блокируем базу
-////                  InterlockedIncrement(LocalDataBaseisBusy);
-                  WaitForSingleObject(MutexDBF, INFINITE);
-                  FLocalDataBaseHead.Active:=True;
-                  try
-                    if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
-                       not FLocalDataBaseHead.Deleted then
-                    Begin
-                      FLocalDataBaseHead.Edit;
-                      FLocalDataBaseHead.FieldByname('ID').AsInteger := Head.ID;
-                      FLocalDataBaseHead.Post;
-                    End;
-                  finally
-                    //отпустили локальную базу
-//                    InterlockedDecrement(LocalDataBaseisBusy);
-                   FLocalDataBaseHead.Active:=False;
-                   ReleaseMutex(MutexDBF);
-                  end;
-                end;
-
-                //сохранил тело
-                dsdSave.StoredProcName := 'gpInsertUpdate_MovementItem_Check_ver2';
-                dsdSave.OutputType := otResult;
-                dsdSave.Params.Clear;
-                dsdSave.Params.AddParam('ioId',ftInteger,ptInputOutput,Null);
-                dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
-                dsdSave.Params.AddParam('inGoodsId',ftInteger,ptInput,Null);
-                dsdSave.Params.AddParam('inAmount',ftFloat,ptInput,Null);
-                dsdSave.Params.AddParam('inPrice',ftFloat,ptInput,Null);
-                //***20.07.16
-                dsdSave.Params.AddParam('inPriceSale',ftFloat,ptInput,Null);
-                dsdSave.Params.AddParam('inChangePercent',ftFloat,ptInput,Null);
-                dsdSave.Params.AddParam('inSummChangePercent',ftFloat,ptInput,Null);
-                //***19.08.16
-                //dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
-                //***10.08.16
-                dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
-
-                for I := 0 to Length(Body)-1 do
-                Begin
-                  dsdSave.ParamByName('ioId').Value := Body[I].ID;
-                  dsdSave.ParamByName('inGoodsId').Value := Body[I].GOODSID;
-                  dsdSave.ParamByName('inAmount').Value := Body[I].AMOUNT;
-                  dsdSave.ParamByName('inPrice').Value :=  Body[I].PRICE;
-                  //***20.07.16
-                  dsdSave.ParamByName('inPriceSale').Value :=  Body[I].PRICESALE;
-                  dsdSave.ParamByName('inChangePercent').Value :=  Body[I].CHPERCENT;
-                  dsdSave.ParamByName('inSummChangePercent').Value :=  Body[I].SUMMCH;
-                  //***19.08.16
-                  //dsdSave.ParamByName('inAmountOrder').Value :=  Body[I].AMOUNTORD;
-                  //***10.08.16
-                  dsdSave.ParamByName('inList_UID').Value :=  Body[I].LIST_UID;
-
-                  dsdSave.Execute(False,False);
-                  if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
-                  Begin
-                    Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
-//                    //ждем пока освободится доступ к локальной базе
-//                    while LocalDataBaseisBusy <> 0 do
-//                      sleep(10);
-//                    //блокируем базу
-//                    InterlockedIncrement(LocalDataBaseisBusy);
-                     WaitForSingleObject(MutexDBF, INFINITE);
-                     FLocalDataBaseBody.Active:=True;
-                    try
-                      FLocalDataBaseBody.First;
-                      while not FLocalDataBaseBody.eof do
-                      Begin
-                        if (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID)
-                           AND
-                           not FLocalDataBaseBody.Deleted
-                           AND
-                           (FLocalDataBaseBody.FieldByName('GOODSID').AsInteger = Body[I].GOODSID) then
-                        Begin
-                          FLocalDataBaseBody.Edit;
-                          FLocalDataBaseBody.FieldByname('ID').AsInteger := Body[I].ID;
-                          FLocalDataBaseBody.Post;
-                          break;
-                        End;
-                        FLocalDataBaseBody.Next;
-                      End;
-                    finally
-                      //отпустили локальную базу
-//                      InterlockedDecrement(LocalDataBaseisBusy);
-                     FLocalDataBaseBody.Active:=False;
-                     ReleaseMutex(MutexDBF);
-                    end;
-                  End;
-                End;
-                SetShapeState(clBlue);
-                Head.SAVE := True;
-//                //ждем пока освободится доступ к локальной базе
-//                while LocalDataBaseisBusy <> 0 do
-//                  sleep(10);
-//                //блокируем базу
-//                InterlockedIncrement(LocalDataBaseisBusy);
-                WaitForSingleObject(MutexDBF, INFINITE);
-                FLocalDataBaseHead.Active:=True;
-
-                try
-                  if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
-                     not FLocalDataBaseHead.Deleted then
-                  Begin
-                    FLocalDataBaseHead.Edit;
-                    FLocalDataBaseHead.FieldByname('SAVE').AsBoolean := True;
-                    FLocalDataBaseHead.Post;
-                  End;
-                finally
-                  //отпустили локальную базу
-//                  InterlockedDecrement(LocalDataBaseisBusy);
-                  FLocalDataBaseHead.Active:=False;
-                  ReleaseMutex(MutexDBF);
-                end;
-              End;
-            except ON E: Exception do
-              Begin
-                SendError(E.Message);
-              End;
-            end;
-          finally
-            freeAndNil(dsdSave);
-          end;
-        end;
-        //если необходимо провести чек
-        if find AND Head.SAVE AND Head.NEEDCOMPL then
-        Begin
-          dsdSave := TdsdStoredProc.Create(nil);
-          try
-            DiffCDS := TClientDataSet.Create(nil);
-            try
-              dsdSave.StoredProcName := 'gpComplete_Movement_Check_ver2';
-              dsdSave.OutputType := otDataSet;
-              dsdSave.DataSet := DiffCDS;
-              dsdSave.Params.Clear;
-              dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
-              dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
-              dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
-              dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm.FormParams.ParamByName('CashSessionId').Value);
-              try
-                dsdSave.Execute(False,False);
-                Head.COMPL := True;
-              except on E: Exception do
-                Begin
-                  SendError(E.Message);
-                End;
-              end;
-              SetShapeState(clYellow);
-              Synchronize(UpdateRemains);
-              SetShapeState(clWhite);
-            finally
-              DiffCDS.free;
-            end;
-          finally
-            freeAndNil(dsdSave);
-          end;
-          //удаляем проведенный чек
-          if Head.COMPL then
-          Begin
-//            //ждем пока освободится доступ к локальной базе
-//            while LocalDataBaseisBusy <> 0 do
-//              sleep(10);
-//            //блокируем базу
-//            InterlockedIncrement(LocalDataBaseisBusy);
-            WaitForSingleObject(MutexDBF, INFINITE);
-            FLocalDataBaseHead.Active:=True;
-            FLocalDataBaseBody.Active:=True;
-            try
-              if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
-                 not FLocalDataBaseHead.Deleted then
-                FLocalDataBaseHead.DeleteRecord;
-              FLocalDataBaseBody.First;
-              while not FLocalDataBaseBody.eof do
-              Begin
-                IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
-                    not FLocalDataBaseBody.Deleted then
-                  FLocalDataBaseBody.DeleteRecord;
-                FLocalDataBaseBody.Next;
-              End;
-              FLocalDataBaseHead.Pack;
-              FLocalDataBaseBody.Pack;
-            finally
-              //отпустили локальную базу
-//              InterlockedDecrement(LocalDataBaseisBusy);
-             FLocalDataBaseHead.Active:=False;
-             FLocalDataBaseBody.Active:=False;
-             ReleaseMutex(MutexDBF);
-            end;
-          End;
-        end
-        //если проводить не нужно
-        ELSE
-        if find and Head.SAVE then
-        BEGIN
-          if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
-          Begin
-            With TRefreshDiffThread.Create(true) do
-            Begin
-              FreeOnTerminate := true;
-              Start;
-            End;
-          end;
-//          //ждем пока освободится доступ к локальной базе
-//          while LocalDataBaseisBusy <> 0 do
-//            sleep(10);
-//          //блокируем базу
-//          InterlockedIncrement(LocalDataBaseisBusy);
-            WaitForSingleObject(MutexDBF, INFINITE);
-            FLocalDataBaseHead.Active:=True;
-            FLocalDataBaseBody.Active:=True;
-          try
-            if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
-               not FLocalDataBaseHead.Deleted then
-              FLocalDataBaseHead.DeleteRecord;
-            FLocalDataBaseBody.First;
-            while not FLocalDataBaseBody.eof do
-            Begin
-              IF (trim(FLocalDataBaseBody.FieldByName('CH_UID').AsString) = FCheckUID) AND
-                  not FLocalDataBaseBody.Deleted then
-                FLocalDataBaseBody.DeleteRecord;
-              FLocalDataBaseBody.Next;
-            End;
-            FLocalDataBaseHead.Pack;
-            FLocalDataBaseBody.Pack;
-          finally
-            //отпустили локальную базу
-//            InterlockedDecrement(LocalDataBaseisBusy);
-           FLocalDataBaseHead.Active:=False;
-           FLocalDataBaseBody.Active:=False;
-           ReleaseMutex(MutexDBF);
-          end;
-        End;
-      finally
-        InterlockedDecrement(CountRRT);
-        InterlockedDecrement(CountSaveThread);
-      end;
-    finally
-      CoUninitialize;
-    end;
-  finally
-    LeaveCriticalSection(csCriticalSection_Save);
-  end;
-end;
-
-procedure TSaveRealThread.SendError(const AErrorMessage: String);
-begin
-  FLastError := AErrorMessage;
-  Synchronize(SendErrorMineForm);
-end;
-
-procedure  TSaveRealThread.SendErrorMineForm;
-begin
-  MainCashForm.ThreadErrorMessage := FLastError;
-  PostMessage(MainCashForm.Handle,UM_THREAD_EXCEPTION,0,0);
-end;
-
-procedure TSaveRealThread.SetShapeState(AColor: TColor);
-begin
-  FShapeColor := AColor;
-  Synchronize(SyncShapeState);
-end;
-
-procedure TSaveRealThread.SyncShapeState;
-begin
-  MainCashForm.ShapeState.Pen.Color := FShapeColor;
-end;
-
-procedure TSaveRealThread.UpdateRemains;
-
-begin
-  MainCashForm.UpdateRemainsFromDiff(DiffCDS);
-  WaitForSingleObject(MutexRemains, INFINITE);
-  SaveLocalData(MainCashForm.RemainsCDS,Remains_lcl);
-  ReleaseMutex(MutexRemains);
-  WaitForSingleObject(MutexAlternative, INFINITE);
-  SaveLocalData(MainCashForm.AlternativeCDS,Alternative_lcl);
-  ReleaseMutex(MutexAlternative);
-  if FNeedSaveVIP then
-   begin
-    MainCashForm.SaveLocalVIP;
-   end;
-end;
-
-{ TRefreshDiffThread }
-
-procedure TRefreshDiffThread.Execute;
-begin
-  inherited;
-  if gc_User.Local then exit;
-
-  CoInitialize(nil);
-  try
-    InterlockedIncrement(CountRRT);
-    try
-      EnterCriticalSection(csCriticalSection);
-      try
-        SetShapeState(clRed);
-
-        WaitForSingleObject(MutexRemains, INFINITE);
-        MainCashForm.spSelect_CashRemains_Diff.Execute(False,False,False);
-        ReleaseMutex(MutexRemains);
-
-        SetShapeState(clBlue);
-        Synchronize(UpdateRemains);
-        SetShapeState(clWhite);
-      finally
-        LeaveCriticalSection(csCriticalSection);
-      end;
-    finally
-      InterlockedDecrement(CountRRT);
-    end;
-  finally
-    CoUninitialize;
-  end;
-end;
-
-procedure TRefreshDiffThread.SetShapeState(AColor: TColor);
-begin
-  FShapeColor := AColor;
-  Synchronize(SyncShapeState);
-end;
-
-procedure TRefreshDiffThread.SyncShapeState;
-begin
-  MainCashForm.ShapeState.Pen.Color := FShapeColor;
-end;
-
-procedure TRefreshDiffThread.UpdateRemains;
-begin
-  MainCashForm.UpdateRemainsFromDiff(nil);
-end;
-
-{ TSaveRealAllThread }
-
-procedure TSaveRealAllThread.Execute;
-var
-  I: Integer;
-  UID: String;
-  T:TSaveRealThread;
-begin
-  inherited;
-//  if gc_User.Local then exit;    //f  Временно разрешим для локольного
-
-  if CountSaveThread > 0 then exit;
-
-  InterlockedIncrement(CountRRT);
-  try
-    EnterCriticalSection(csCriticalSection_All);
-    try
-      for I := 0 to 6 do
-      Begin
-
-        //ждем пока освободится доступ к локальной базе
-//        while LocalDataBaseisBusy <> 0 do
-//          sleep(10);
-        //блокируем базу
-//        InterlockedIncrement(LocalDataBaseisBusy);
-       WaitForSingleObject(MutexDBF, INFINITE);
-       FLocalDataBaseHead.Active:=True;
-       FLocalDataBaseBody.Active:=True;
-        try
-          FLocalDataBaseHead.Pack;
-          FLocalDataBaseBody.Pack;
-          FLocalDataBaseHead.First;
-          UID := '';
-          while not FLocalDataBaseHead.eof do
-          Begin
-            if not FLocalDataBaseHead.Deleted then
-            Begin
-              UID := trim(FLocalDataBaseHead.FieldByName('UID').AsString);
-              break;
-            End;
-            FLocalDataBaseHead.Next;
-          End;
-        finally
-          //отпустили локальную базу
-//          InterlockedDecrement(LocalDataBaseisBusy);
-         FLocalDataBaseBody.Active:=False;
-         FLocalDataBaseHead.Active:=False;
-         ReleaseMutex(MutexDBF);
-
-        end;
-        if UID <> '' then
-        Begin
-          T := TSaveRealThread.create(true);
-          try
-            T.FCheckUID := UID;
-            T.Execute;
-          finally
-            T.Free;
-            WaitForSingleObject(MutexDBF, INFINITE);
-            FLocalDataBaseHead.Active:=True;
-            FLocalDataBaseHead.First;
-            FLocalDataBaseHead.Active:=False;
-            ReleaseMutex(MutexDBF);
-          end;
-        End;
-      End;
-    finally
-      LeaveCriticalSection(csCriticalSection_All);
-    end;
-  finally
-    InterlockedDecrement(CountRRT);
-  end;
-end;
 
 initialization
   RegisterClass(TMainCashForm2);

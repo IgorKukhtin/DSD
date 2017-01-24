@@ -6,12 +6,13 @@ inherited MainCashForm: TMainCashForm
   PopupMenu = PopupMenu
   OnCloseQuery = ParentFormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = ParentFormDestroy
   OnKeyDown = ParentFormKeyDown
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 828
-  ExplicitHeight = 450
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -1655,6 +1656,12 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Usersesion'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 32
     Top = 72
@@ -1953,6 +1960,13 @@ inherited MainCashForm: TMainCashForm
         Value = Null
         Component = FormParams
         ComponentItem = 'CashSessionId'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserSesion'
+        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

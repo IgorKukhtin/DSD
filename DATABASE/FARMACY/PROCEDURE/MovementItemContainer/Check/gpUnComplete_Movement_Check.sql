@@ -2,9 +2,10 @@
 
 --DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Check(
     IN inMovementId        Integer               , -- ключ Документа
-    in usersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
+    in inUsersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
 RETURNS VOID
@@ -14,8 +15,8 @@ $BODY$
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
 BEGIN
-    if coalesce(userSession, '') <> '' then 
-     inSession := userSession;
+    if coalesce(inUserSession, '') <> '' then 
+     inSession := inUserSession;
     end if;
     -- проверка прав пользователя на вызов процедуры
     IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()

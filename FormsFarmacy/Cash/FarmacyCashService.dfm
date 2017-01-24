@@ -385,7 +385,7 @@ object MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
-        Name = 'userSesion'
+        Name = 'inUserSesion'
         Value = Null
         DataType = ftString
         ParamType = ptInput

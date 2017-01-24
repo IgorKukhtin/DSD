@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inList_UID            TVarChar  , -- UID строки
     -- IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
-    in userSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
+    in inUserSession	     TVarChar  , -- сессия пользователя (подменяем реальную)
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -27,8 +27,8 @@ $BODY$
    DECLARE vbRemains TFloat;
    DECLARE vbIsInsert Boolean;
 BEGIN
-    if coalesce(userSession, '') <> '' then 
-     inSession := userSession;
+    if coalesce(inUserSession, '') <> '' then 
+     inSession := inUserSession;
     end if;
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());

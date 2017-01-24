@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Check_ver2(
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
     IN inCashRegister      TVarChar             , --№ кассового аппарата
     IN inCashSessionId     TVarChar             , --Сессия программы
-    in userSession	   TVarChar             , -- сессия пользователя (подменяем реальную)
+    in inUserSession	   TVarChar             , -- сессия пользователя под которой проводился чек в программе
     IN inSession           TVarChar DEFAULT ''    -- сессия пользователя
 )
 RETURNS TABLE (
@@ -32,8 +32,8 @@ $BODY$
   DECLARE vbCashRegisterId Integer;
   DECLARE vbMessageText Text;
 BEGIN
-    if coalesce(userSession, '') <> '' then 
-     inSession := userSession;
+    if coalesce(inUserSession, '') <> '' then 
+     inSession := inUserSession;
     end if;
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Check());

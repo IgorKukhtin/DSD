@@ -41,7 +41,8 @@ type
     CONFIRMED   : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKind
     NUMORDER    : String[50];  //Номер заказа (с сайта) - InvNumberOrder
     CONFIRMEDC  : String[50];  //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-
+    // Для сервиса передает рельную сесию при которой была продажа
+    USERSESION: string[50]; // Номер индификационной сесии
   end;
   TBodyRecord = record
     ID: Integer;            //ид записи
@@ -83,7 +84,8 @@ type
     procedure Execute; override;
   end;
 
-  TRefreshDiffThread = class(TThread)
+   TRefreshDiffThread = class(TThread)
+    FUserSesion: string; // Подмененная сесия
     FShapeColor: TColor;
     procedure SetShapeState(AColor: TColor);
     procedure SyncShapeState;
@@ -281,7 +283,8 @@ type
     procedure TimerBlinkBtnTimer(Sender: TObject);
     procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
-    procedure btnCheckClick(Sender: TObject); //***10.08.16
+    procedure btnCheckClick(Sender: TObject);
+    procedure ParentFormDestroy(Sender: TObject); //***10.08.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -357,6 +360,9 @@ var
   csCriticalSection,
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
+
+  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative: THandle;
+  LastErr: Integer;
 
   function GetSumm(Amount,Price:currency): currency;
   function GenerateGUID: String;
@@ -511,8 +517,10 @@ begin
   End;
   if gc_User.Local then
   Begin
+    WaitForSingleObject(MutexVip, INFINITE);
     LoadLocalData(vipCDS, Vip_lcl);
     LoadLocalData(vipListCDS, VipList_lcl);
+    ReleaseMutex(MutexVip);
   End;
   if actLoadVIP.Execute then
   Begin
@@ -560,8 +568,10 @@ begin
   End;
   if not gc_User.Local then
   Begin
+    WaitForSingleObject(MutexVip, INFINITE);
     SaveLocalData(VIPCDS,vip_lcl);
     SaveLocalData(VIPListCDS,vipList_lcl);
+    ReleaseMutex(MutexVip);
   End;
 end;
 
@@ -749,8 +759,12 @@ begin
           ShowMessage('Нет локального хранилища. Дальнейшая работа невозможна!');
           Close;
         End;
+        WaitForSingleObject(MutexRemains, INFINITE);
         LoadLocalData(RemainsCDS, Remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
         LoadLocalData(AlternativeCDS, Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
       finally
         RemainsCDS.EnableControls;
         AlternativeCDS.EnableControls;
@@ -788,8 +802,12 @@ begin
         actRefresh.Execute;
 
         ChangeStatus('Сохранение остатков в локальной базе');
+        WaitForSingleObject(MutexRemains, INFINITE);
         SaveLocalData(RemainsCDS,Remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
         SaveLocalData(AlternativeCDS,Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
 
         ChangeStatus('Получение ВИП чеков');
 
@@ -822,8 +840,10 @@ begin
   vip := TClientDataSet.Create(Nil);
   vipList := TClientDataSet.Create(nil);
   try
+    WaitForSingleObject(MutexVip, INFINITE);
     LoadLocalData(vip,vip_lcl);
     LoadLocalData(vipList,vipList_lcl);
+    ReleaseMutex(MutexVip);
     if VIP.Locate('Id',FormParams.ParamByName('CheckId').Value,[]) then
     Begin
       vipList.Filter := 'MovementId = '+FormParams.ParamByName('CheckId').AsString;
@@ -1130,6 +1150,17 @@ begin
   inherited;
 
   //для
+  // создаем мутексы если не созданы
+  MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
+  LastErr := GetLastError;
+  MutexDBFDiff := CreateMutex(nil, false, 'farmacycashMutexDBFDiff');
+  LastErr := GetLastError;
+  MutexVip := CreateMutex(nil, false, 'farmacycashMutexVip');
+  LastErr := GetLastError;
+  MutexRemains := CreateMutex(nil, false, 'farmacycashMutexRemains');
+  LastErr := GetLastError;
+  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+  LastErr := GetLastError;
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
   //сгенерили гуид для определения сессии
@@ -1190,7 +1221,7 @@ begin
 end;
 
 function TMainCashForm.InitLocalStorage: Boolean;
-var fields11, fields12, fields13, fields14, fields15, fields16, fields17: TVKDBFFieldDefs;
+var fields11, fields12, fields13, fields14, fields15, fields16, fields17, fields18: TVKDBFFieldDefs;
     fields21, fields22, fields23, fields24, fields25: TVKDBFFieldDefs;
   procedure InitTable(DS: TVKSmartDBF; AFileName: String);
   Begin
@@ -1200,6 +1231,8 @@ var fields11, fields12, fields13, fields14, fields15, fields16, fields17: TVKDBF
   End;
 begin
   result := False;
+  WaitForSingleObject(MutexDBF, INFINITE);
+
   InitTable(FLocalDataBaseHead, iniLocalDataBaseHead);
   InitTable(FLocalDataBaseBody, iniLocalDataBaseBody);
 
@@ -1227,6 +1260,8 @@ begin
     AddStrField(FLocalDataBaseHead,'NUMORDER',50);   //Номер заказа (с сайта) - InvNumberOrder
     AddStrField(FLocalDataBaseHead,'CONFIRMEDC',50); //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
 
+      // Для сервиса передает рельную сесию при которой была продажа // Номер индификационной сесии
+    AddStrField(FLocalDataBaseHead,'USERSESION',50);
     try
       FLocalDataBaseHead.CreateTable;
     except ON E: Exception do
@@ -1236,6 +1271,7 @@ begin
         Exit;
       End;
     end;
+     FLocalDataBaseHead.Close;
   end
   // !!!добавляем НОВЫЕ поля
   else begin
@@ -1325,6 +1361,19 @@ begin
                FLocalDataBaseHead.AddFields(fields17,1000);
            end;
            //
+              if FLocalDataBaseHead.FindField('USERSESION') = nil then
+          begin
+               fields18:=TVKDBFFieldDefs.Create(self);
+               with fields18.Add as TVKDBFFieldDef do
+               begin
+                    Name := 'USERSESION';
+                    field_type := 'C';
+                    len := 50;
+               end;
+               FLocalDataBaseHead.AddFields(fields18,1000);
+           end;
+
+
            FLocalDataBaseHead.Close;
   end;// !!!добавляем НОВЫЕ поля
 
@@ -1459,7 +1508,9 @@ begin
      (FLocalDataBaseHead.FindField('BAYERPHONE') = nil) or
      (FLocalDataBaseHead.FindField('CONFIRMED') = nil) or
      (FLocalDataBaseHead.FindField('NUMORDER') = nil) or
-     (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil)
+     (FLocalDataBaseHead.FindField('CONFIRMEDC') = nil) or
+     (FLocalDataBaseHead.FindField('USERSESION') = nil)
+
   then begin
     ShowMessage('Неверная структура файла локального хранилища ('+FLocalDataBaseHead.DBFFileName+')');
     Exit;
@@ -1489,7 +1540,12 @@ begin
   LocalDataBaseisBusy := 0;
   Result := FLocalDataBaseHead.Active AND FLocalDataBaseBody.Active;
   if Result then
+  begin
+    FLocalDataBaseHead.Active:=False;
+    FLocalDataBaseBody.Active:=False;
     SaveRealAll;
+  end;
+ ReleaseMutex(MutexDBF);
 end;
 
 procedure TMainCashForm.InsertUpdateBillCheckItems;
@@ -1842,6 +1898,8 @@ begin
   FormParams.ParamByName('ConfirmedKindName').Value := '';
   FormParams.ParamByName('InvNumberOrder').Value    := '';
   FormParams.ParamByName('ConfirmedKindClientName').Value := '';
+  FormParams.ParamByName('USERSESION').Value:=gc_User.Session;
+
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -1898,12 +1956,28 @@ begin
       End
       else
       begin
+        WaitForSingleObject(MutexRemains, INFINITE);
         SaveLocalData(RemainsCDS,remains_lcl);
+        ReleaseMutex(MutexRemains);
+        WaitForSingleObject(MutexAlternative, INFINITE);
         SaveLocalData(AlternativeCDS,Alternative_lcl);
+        ReleaseMutex(MutexAlternative);
       end;
     Except
     end;
   End;
+end;
+
+
+
+procedure TMainCashForm.ParentFormDestroy(Sender: TObject);
+begin
+  inherited;
+ CloseHandle(MutexDBF);
+ CloseHandle(MutexDBFDiff);
+ CloseHandle(MutexVip);
+ CloseHandle(MutexRemains);
+ CloseHandle(MutexAlternative);
 end;
 
 procedure TMainCashForm.ParentFormKeyDown(Sender: TObject; var Key: Word;
@@ -2219,9 +2293,11 @@ begin
     myVIPCDS := TClientDataSet.Create(nil);
     myVIPListCDS := TClientDataSet.Create(nil);
     AUID := GenerateGUID;
+    WaitForSingleObject(MutexVip, INFINITE);
     LoadLocalData(MyVipCDS, Vip_lcl);
 
     LoadLocalData(MyVipListCDS, VipList_lcl);
+    ReleaseMutex(MutexVip);
     if not MyVipCDS.Locate('Id',FormParams.ParamByName('CheckId').Value,[]) then
     Begin
       MyVipCDS.IndexFieldNames := 'Id';
@@ -2299,26 +2375,25 @@ begin
       ADS.Filtered := true;
       ADS.EnableControls;
     end;
-
+    WaitForSingleObject(MutexVip, INFINITE);
     SaveLocalData(MyVipCDS, vip_lcl);
     MyVipListCDS.Filtered := False;
     SaveLocalData(MyVipListCDS, vipList_lcl);
     MyVipCDS.Free;
     MyVIPListCDS.Free;
-  End;
-  //сохраняем в дбф
+    ReleaseMutex(MutexVip);
+  End;  //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
 
-  //ожидаем пока отпустят базу
-  while LocalDataBaseisBusy<>0 do
-    application.ProcessMessages;
-  //блокируем работу с базой
-  InterlockedIncrement(LocalDataBaseisBusy);
+  //сохраняем в дбф
+  WaitForSingleObject(MutexDBF, INFINITE);
+  FLocalDataBaseHead.Active:=True;
+  FLocalDataBaseBody.Active:=True;
   try
     //сгенерили гуид для чека
     if AUID = '' then
       AUID := GenerateGUID;
     Result := True;
-    //сохранили шапку
+    //сохраняем шапку
     try
       if (FormParams.ParamByName('CheckId').Value = 0) or
          not FLocalDataBaseHead.Locate('ID',FormParams.ParamByName('CheckId').Value,[]) then
@@ -2343,7 +2418,8 @@ begin
                                          ABayerPhone,                             //Контактный телефон (Покупателя) - BayerPhone
                                          AConfirmedKindName,                      //Статус заказа (Состояние VIP-чека) - ConfirmedKind
                                          AInvNumberOrder,                         //Номер заказа (с сайта) - InvNumberOrder
-                                         AConfirmedKindClientName                 //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+                                         AConfirmedKindClientName,                 //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
+                                         gc_User.Session
                                         ]);
       End
       else
@@ -2368,7 +2444,7 @@ begin
         FLocalDataBaseHead.FieldByName('CONFIRMED').Value  := AConfirmedKindName;       //Статус заказа (Состояние VIP-чека) - ConfirmedKind
         FLocalDataBaseHead.FieldByName('NUMORDER').Value   := AInvNumberOrder;          //Номер заказа (с сайта) - InvNumberOrder
         FLocalDataBaseHead.FieldByName('CONFIRMEDC').Value := AConfirmedKindClientName; //Статус заказа (Состояние VIP-чека) - ConfirmedKindClient
-
+        FLocalDataBaseHead.FieldByName('USERSESION').Value := gc_User.Session;
         FLocalDataBaseHead.post;
       End;
     except ON E:Exception do
@@ -2378,8 +2454,9 @@ begin
         result := False;
         exit;
       End;
-    end;
-    //сохранили тело
+    end; //сохранили шапку
+
+    //сохраняем тело
     ADS.DisableControls;
     try
       try
@@ -2430,12 +2507,16 @@ begin
       FLocalDataBaseBody.Filtered := True;
     end;
   finally
-    InterlockedDecrement(LocalDataBaseisBusy);
+    FLocalDataBaseBody.Active:=False;
+    FLocalDataBaseHead.Active:=False;
+    ReleaseMutex(MutexDBF);
+   
   end;
   // update VIP
   if ((AManagerId <> 0) or (ABayerName <> '')) and
      (gc_User.Local) and NeedComplete then
   Begin
+    WaitForSingleObject(MutexVip, INFINITE);
     LoadLocalData(VipCDS, Vip_lcl);
     if (FormParams.ParamByName('CheckId').AsString <> '') and
        (StrToInt(FormParams.ParamByName('CheckId').AsString) <> 0) then
@@ -2447,6 +2528,7 @@ begin
     if VipCDS.Locate('InvNumber', AUID, []) then
       VipCDS.Delete;
     SaveLocalData(VipCDS,vip_lcl);
+    ReleaseMutex(MutexVip);
   End;
 end;
 
@@ -2472,12 +2554,16 @@ begin
       sp.Params.Clear;
       sp.Params.AddParam('inIsErased',ftBoolean,ptInput,False);
       sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE);
       SaveLocalData(ds,Vip_lcl);
+      ReleaseMutex(MutexVip);
 
       sp.StoredProcName := 'gpSelect_MovementItem_CheckDeferred';
       sp.Params.Clear;
       sp.Execute(False,False);
+      WaitForSingleObject(MutexVip, INFINITE);
       SaveLocalData(ds,VipList_lcl);
+      ReleaseMutex(MutexVip);
     finally
       ds.free;
     end;
@@ -2691,6 +2777,7 @@ var
   Find: Boolean;
   dsdSave: TdsdStoredProc;
   I: Integer;
+  Trd:  TRefreshDiffThread;
 begin
   inherited;
   if gc_User.Local then exit;
@@ -2703,11 +2790,11 @@ begin
       InterlockedIncrement(CountRRT);
       InterlockedIncrement(CountSaveThread);
       try
-        //ждем пока освободится доступ к локальной базе
-        while LocalDataBaseisBusy <> 0 do
-          sleep(10);
-        //блокируем базу
-        InterlockedIncrement(LocalDataBaseisBusy);
+       
+         WaitForSingleObject(MutexDBF, INFINITE);
+       
+         FLocalDataBaseHead.Active:=True;
+         FLocalDataBaseBody.Active:=True;
         try
           if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
              not FLocalDataBaseHead.Deleted then
@@ -2736,7 +2823,7 @@ begin
               CONFIRMED  := trim(FieldByName('CONFIRMED').AsString);
               NUMORDER   := trim(FieldByName('NUMORDER').AsString);
               CONFIRMEDC := trim(FieldByName('CONFIRMEDC').AsString);
-
+              USERSESION := trim(FieldByName('USERSESION').AsString);
               FNeedSaveVIP := (MANAGER <> 0);
             end;
             FLocalDataBaseBody.First;
@@ -2769,9 +2856,12 @@ begin
             End;
           End;
         finally
-          //отпустили локальную базу
-          InterlockedDecrement(LocalDataBaseisBusy);
-        end;
+          FLocalDataBaseHead.Active:=False;
+          FLocalDataBaseBody.Active:=False;
+          ReleaseMutex(MutexDBF);
+        
+        end; // Загрузили чек в head and body
+
         if Find AND NOT HEAD.SAVE then
         Begin
           dsdSave := TdsdStoredProc.Create(nil);
@@ -2819,18 +2909,17 @@ begin
                 dsdSave.Params.AddParam('inBayerPhone',       ftString,ptInput,Head.BAYERPHONE);
                 dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
                 dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
-
+                //
+                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
                 dsdSave.Execute(False,False);
                 SetShapeState(clBlack);
                 //сохранили в локальной базе полученный номер
                 if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
                 Begin
                   Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
-                  //ждем пока освободится доступ к локальной базе
-                  while LocalDataBaseisBusy <> 0 do
-                    sleep(10);
-                  //блокируем базу
-                  InterlockedIncrement(LocalDataBaseisBusy);
+                  WaitForSingleObject(MutexDBF, INFINITE);
+                  SetShapeState(clRed);
+                  FLocalDataBaseHead.Active:=True;
                   try
                     if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
                        not FLocalDataBaseHead.Deleted then
@@ -2840,8 +2929,9 @@ begin
                       FLocalDataBaseHead.Post;
                     End;
                   finally
-                    //отпустили локальную базу
-                    InterlockedDecrement(LocalDataBaseisBusy);
+                   FLocalDataBaseHead.Active:=False;
+                   ReleaseMutex(MutexDBF);
+
                   end;
                 end;
 
@@ -2862,6 +2952,8 @@ begin
                 //dsdSave.Params.AddParam('inAmountOrder',ftFloat,ptInput,Null);
                 //***10.08.16
                 dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
+                //
+                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
 
                 for I := 0 to Length(Body)-1 do
                 Begin
@@ -2882,11 +2974,9 @@ begin
                   if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
                   Begin
                     Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
-                    //ждем пока освободится доступ к локальной базе
-                    while LocalDataBaseisBusy <> 0 do
-                      sleep(10);
-                    //блокируем базу
-                    InterlockedIncrement(LocalDataBaseisBusy);
+                     WaitForSingleObject(MutexDBF, INFINITE);
+
+                     FLocalDataBaseBody.Active:=True;
                     try
                       FLocalDataBaseBody.First;
                       while not FLocalDataBaseBody.eof do
@@ -2905,18 +2995,17 @@ begin
                         FLocalDataBaseBody.Next;
                       End;
                     finally
-                      //отпустили локальную базу
-                      InterlockedDecrement(LocalDataBaseisBusy);
+                     FLocalDataBaseBody.Active:=False;
+                     ReleaseMutex(MutexDBF);
+
                     end;
                   End;
                 End;
                 SetShapeState(clBlue);
                 Head.SAVE := True;
-                //ждем пока освободится доступ к локальной базе
-                while LocalDataBaseisBusy <> 0 do
-                  sleep(10);
-                //блокируем базу
-                InterlockedIncrement(LocalDataBaseisBusy);
+                WaitForSingleObject(MutexDBF, INFINITE);
+
+                FLocalDataBaseHead.Active:=True;
                 try
                   if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
                      not FLocalDataBaseHead.Deleted then
@@ -2926,8 +3015,9 @@ begin
                     FLocalDataBaseHead.Post;
                   End;
                 finally
-                  //отпустили локальную базу
-                  InterlockedDecrement(LocalDataBaseisBusy);
+                  FLocalDataBaseHead.Active:=False;
+                  ReleaseMutex(MutexDBF);
+
                 end;
               End;
             except ON E: Exception do
@@ -2954,6 +3044,7 @@ begin
               dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
               dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
               dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm.FormParams.ParamByName('CashSessionId').Value);
+              dsdSave.Params.AddParam('inUserSesion', ftString,ptInput, Head.USERSESION);
               try
                 dsdSave.Execute(False,False);
                 Head.COMPL := True;
@@ -2974,11 +3065,9 @@ begin
           //удаляем проведенный чек
           if Head.COMPL then
           Begin
-            //ждем пока освободится доступ к локальной базе
-            while LocalDataBaseisBusy <> 0 do
-              sleep(10);
-            //блокируем базу
-            InterlockedIncrement(LocalDataBaseisBusy);
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
+            FLocalDataBaseBody.Active:=True;
             try
               if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
                  not FLocalDataBaseHead.Deleted then
@@ -2994,8 +3083,9 @@ begin
               FLocalDataBaseHead.Pack;
               FLocalDataBaseBody.Pack;
             finally
-              //отпустили локальную базу
-              InterlockedDecrement(LocalDataBaseisBusy);
+             FLocalDataBaseHead.Active:=False;
+             FLocalDataBaseBody.Active:=False;
+             ReleaseMutex(MutexDBF);
             end;
           End;
         end
@@ -3005,17 +3095,27 @@ begin
         BEGIN
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin
-            With TRefreshDiffThread.Create(true) do
-            Begin
-              FreeOnTerminate := true;
-              Start;
-            End;
+           //было
+//            With TRefreshDiffThread.Create(true) do
+//            Begin
+//              { TODO -oufomaster : Возможно сюда нужно передать head.usersesion через поле потока а не через обращение к записи из потока }
+//              FreeOnTerminate := true;
+//              Start;
+//            End;
+
+            //стало
+            trd:= TRefreshDiffThread.Create(true);
+            try
+            Trd.FUserSesion := Head.USERSESION;
+            Trd.Execute;
+            finally
+            Trd.Free;
+            end;
+
           end;
-          //ждем пока освободится доступ к локальной базе
-          while LocalDataBaseisBusy <> 0 do
-            sleep(10);
-          //блокируем базу
-          InterlockedIncrement(LocalDataBaseisBusy);
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
+            FLocalDataBaseBody.Active:=True;
           try
             if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
                not FLocalDataBaseHead.Deleted then
@@ -3031,8 +3131,9 @@ begin
             FLocalDataBaseHead.Pack;
             FLocalDataBaseBody.Pack;
           finally
-            //отпустили локальную базу
-            InterlockedDecrement(LocalDataBaseisBusy);
+           FLocalDataBaseHead.Active:=False;
+           FLocalDataBaseBody.Active:=False;
+           ReleaseMutex(MutexDBF);
           end;
         End;
       finally
@@ -3046,6 +3147,8 @@ begin
     LeaveCriticalSection(csCriticalSection_Save);
   end;
 end;
+
+
 
 procedure TSaveRealThread.SendError(const AErrorMessage: String);
 begin
@@ -3144,11 +3247,9 @@ begin
     try
       for I := 0 to 6 do
       Begin
-        //ждем пока освободится доступ к локальной базе
-        while LocalDataBaseisBusy <> 0 do
-          sleep(10);
-        //блокируем базу
-        InterlockedIncrement(LocalDataBaseisBusy);
+       WaitForSingleObject(MutexDBF, INFINITE);
+       FLocalDataBaseHead.Active:=True;
+       FLocalDataBaseBody.Active:=True;
         try
           FLocalDataBaseHead.Pack;
           FLocalDataBaseBody.Pack;
@@ -3164,8 +3265,10 @@ begin
             FLocalDataBaseHead.Next;
           End;
         finally
-          //отпустили локальную базу
-          InterlockedDecrement(LocalDataBaseisBusy);
+         FLocalDataBaseBody.Active:=False;
+         FLocalDataBaseHead.Active:=False;
+         ReleaseMutex(MutexDBF);
+
         end;
         if UID <> '' then
         Begin
@@ -3175,7 +3278,12 @@ begin
             T.Execute;
           finally
             T.Free;
+            
+            WaitForSingleObject(MutexDBF, INFINITE);
+            FLocalDataBaseHead.Active:=True;
             FLocalDataBaseHead.First;
+            FLocalDataBaseHead.Active:=False;
+            ReleaseMutex(MutexDBF);
           end;
         End;
       End;

@@ -233,6 +233,8 @@ implementation
 
 {$R *.dfm}
 
+
+
 procedure TMainCashForm2.AppMsgHandler(var Msg: TMsg; var Handled: Boolean);
 var msgStr: String;
 begin
@@ -274,7 +276,7 @@ begin
       try
         SetShapeState(clRed);
         WaitForSingleObject(MutexRemains, INFINITE);
-        MainCashForm2.spSelect_CashRemains_Diff.ParamByName('userSesion').Value:= FUserSesion;
+        MainCashForm2.spSelect_CashRemains_Diff.ParamByName('inUserSesion').Value:= FUserSesion;
         MainCashForm2.spSelect_CashRemains_Diff.Execute(False,False,False);
         ReleaseMutex(MutexRemains);
         SetShapeState(clBlue);
@@ -1027,7 +1029,7 @@ procedure TMainCashForm2.SaveLocalVIP;
 var
   sp : TdsdStoredProc;
   ds : TClientDataSet;
-begin  //+
+begin  
   sp := TdsdStoredProc.Create(nil);
   try
     ds := TClientDataSet.Create(nil);
@@ -1102,11 +1104,6 @@ begin
   Synchronize(SendErrorMineForm);
 end;
 
-procedure  TSaveRealThread.SendErrorMineForm;
-begin
-  MainCashForm2.ThreadErrorMessage := FLastError;
-  PostMessage(MainCashForm2.Handle,UM_THREAD_EXCEPTION,0,0);
-end;
 
 procedure TSaveRealThread.Execute;
 var
@@ -1211,8 +1208,6 @@ begin
               dsdSave.Params.Clear;
               dsdSave.Params.AddParam('inId',ftInteger,ptInput,Head.ID);
               dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
-              //
-              dsdSave.Params.AddParam('usersesion', ftString, ptInput, Head.USERSESION);
               dsdSave.Execute(False,False);
               if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
               Begin
@@ -1228,8 +1223,8 @@ begin
                   dsdSave.OutputType := otResult;
                   dsdSave.Params.Clear;
                   dsdSave.Params.AddParam('inMovementId',ftInteger,ptInput,Head.ID);
-                  //
-                  dsdSave.Params.AddParam('usersesion', ftString, ptInput, Head.USERSESION);
+           
+           
                   dsdSave.Execute(False,False);
                 end;
                 //сохранил шапку
@@ -1252,7 +1247,7 @@ begin
                 dsdSave.Params.AddParam('inConfirmedKindName',ftString,ptInput,Head.CONFIRMED);
                 dsdSave.Params.AddParam('inInvNumberOrder',   ftString,ptInput,Head.NUMORDER);
                 //
-                dsdSave.Params.AddParam('usersesion', ftString, ptInput, Head.USERSESION);
+                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
                 dsdSave.Execute(False,False);
                 SetShapeState(clBlack);
                 //сохранили в локальной базе полученный номер
@@ -1296,7 +1291,7 @@ begin
                 //***10.08.16
                 dsdSave.Params.AddParam('inList_UID',ftString,ptInput,Null);
                 //
-                dsdSave.Params.AddParam('usersesion', ftString, ptInput, Head.USERSESION);
+                dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
 
                 for I := 0 to Length(Body)-1 do
                 Begin
@@ -1390,7 +1385,7 @@ begin
               dsdSave.Params.AddParam('inPaidType',ftInteger,ptInput,Head.PAIDTYPE);
               dsdSave.Params.AddParam('inCashRegister',ftString,ptInput,Head.CASH);
               dsdSave.Params.AddParam('inCashSessionId',ftString,ptInput,MainCashForm2.FormParams.ParamByName('CashSessionId').Value);
-              dsdSave.Params.AddParam('usersesion', ftString,ptInput, Head.USERSESION);
+              dsdSave.Params.AddParam('inUserSesion', ftString,ptInput, Head.USERSESION);
               try
                 dsdSave.Execute(False,False);
                 Head.COMPL := True;
@@ -1518,6 +1513,13 @@ begin
   finally
     LeaveCriticalSection(csCriticalSection_Save);
   end;
+end;
+
+
+procedure  TSaveRealThread.SendErrorMineForm;
+begin
+  MainCashForm2.ThreadErrorMessage := FLastError;
+  PostMessage(MainCashForm2.Handle,UM_THREAD_EXCEPTION,0,0);
 end;
 
 
