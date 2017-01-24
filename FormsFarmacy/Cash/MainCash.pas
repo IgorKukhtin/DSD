@@ -375,7 +375,7 @@ implementation
 {$R *.dfm}
 
 uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, CashWork, MessagesUnit,
-     LocalWorkUnit, Splash, DiscountService, MainCash2;
+     LocalWorkUnit, Splash, DiscountService, MainCash2, UnilWin;
 
 const
   StatusUnCompleteCode = 1;
@@ -2105,19 +2105,19 @@ begin
                   if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
                   try
                   str_log_xml:= str_log_xml
-                              + '<Items="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>' + FieldByName('GoodsCode').asString + '</GoodsCode>'
-                              + '<GoodsName>' + AnsiUpperCase(FieldByName('GoodsName').Text) + '</GoodsName>'
-                              + '<Amount>' + FloatToStr(FieldByName('Amount').asCurrency) + '</Amount>'
-                              + '<Price>' + FloatToStr(FieldByName('Price').asCurrency) + '</Price>'
-                              + '<List_UID>' + FieldByName('List_UID').AsString + '</List_UID>'
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"' + AnsiUpperCase(FieldByName('GoodsName').Text) + '"</GoodsName>'
+                              + '<Amount>"' + FloatToStr(FieldByName('Amount').asCurrency) + '"</Amount>'
+                              + '<Price>"' + FloatToStr(FieldByName('Price').asCurrency) + '"</Price>'
+                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
                               + '</Items>';
                   except
                   str_log_xml:= str_log_xml
                               + '<Items="' +IntToStr(i)+ '">'
-                              + '<GoodsCode>' + FieldByName('GoodsCode').asString + '</GoodsCode>'
-                              + '<GoodsName>???</GoodsName>'
-                              + '<List_UID>' + FieldByName('List_UID').AsString + '</List_UID>'
+                              + '<GoodsCode>"' + FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"???"</GoodsName>'
+                              + '<List_UID>"' + FieldByName('List_UID').AsString + '"</List_UID>'
                               + '</Items>';
                   end;
               end;
@@ -2138,9 +2138,9 @@ begin
   //
   // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
   Add_Log_XML('<Head now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
-     +#10+#13+'<CheckNumber>'  + ACheckNumber  + '</CheckNumber>'
-             +'<FiscalNumber>' + AFiscalNumber + '</FiscalNumber>'
-             +'<Summa>' + FloatToStr(SalerCash) + '</Summa>'
+     +#10+#13+'<CheckNumber>"'  + ACheckNumber  + '"</CheckNumber>'
+             +'<FiscalNumber>"' + AFiscalNumber + '"</FiscalNumber>'
+             +'<Summa>"' + FloatToStr(SalerCash) + '"</Summa>'
      +#10+#13+str_log_xml
      +#10+#13+'</Head>'
              );
@@ -2345,6 +2345,8 @@ function TMainCashForm.SaveLocal(ADS: TClientDataSet; AManagerId: integer; AMana
 var
   NextVIPId: integer;
   myVIPCDS, myVIPListCDS: TClientDataSet;
+  str_log_xml : String;
+  i : Integer;
 begin
   //Если чек виповский и ещё не проведен - то сохраняем в таблицу випов
   if gc_User.Local And not NeedComplete AND ((AManagerId <> 0) or (ABayerName <> '')) then
@@ -2508,6 +2510,9 @@ begin
       End;
     except ON E:Exception do
       Begin
+        // что б отловить ошибки - запишим в лог
+        Add_Log_XML('<Head err="'+E.Message+'">');
+
         Application.OnException(Application.MainForm,E);
 //        ShowMessage('Ошибка локального сохранения чека: '+E.Message);
         result := False;
@@ -2529,6 +2534,7 @@ begin
           FLocalDataBaseBody.Next;
         End;
         FLocalDataBaseBody.Pack;
+        str_log_xml:=''; i:=0;
         while not ADS.Eof do
         Begin
           FLocalDataBaseBody.AppendRecord([ADS.FieldByName('Id').AsInteger,         //id записи
@@ -2548,11 +2554,34 @@ begin
                                            //***10.08.16
                                            ADS.FieldByName('List_UID').AsString // UID строки продажи
                                            ]);
+                  //сохранили строку в лог
+                  i:= i + 1;
+                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                  try
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"' + AnsiUpperCase(ADS.FieldByName('GoodsName').Text) + '"</GoodsName>'
+                              + '<Amount>"' + FloatToStr(ADS.FieldByName('Amount').asCurrency) + '"</Amount>'
+                              + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  except
+                  str_log_xml:= str_log_xml
+                              + '<Items num="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>"' + ADS.FieldByName('GoodsCode').asString + '"</GoodsCode>'
+                              + '<GoodsName>"???"</GoodsName>'
+                              + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
+                              + '</Items>';
+                  end;
         ADS.Next;
         End;
 
       Except ON E:Exception do
         Begin
+        // что б отловить ошибки - запишим в лог
+        Add_Log_XML('<Body err="'+E.Message+'">');
+
         Application.OnException(Application.MainForm,E);
 //          ShowMessage('Ошибка локального сохранения содержимого чека: '+E.Message);
           result := False;
@@ -2569,8 +2598,18 @@ begin
     FLocalDataBaseBody.Active:=False;
     FLocalDataBaseHead.Active:=False;
     ReleaseMutex(MutexDBF);
-   
+
   end;
+
+  // что б отловить ошибки - запишим в лог чек - во время СОХРАНЕНИЯ чека, т.е. ПОСЛЕ пробития через ЭККА
+  Add_Log_XML('<Save now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
+     +#10+#13+'<AUID>"'  + AUID  + '"</AUID>'
+             +'<CheckNumber>"'  + FiscalCheckNumber  + '"</CheckNumber>'
+             +'<FiscalNumber>"' + FiscalNumber + '"</FiscalNumber>'
+     +#10+#13+str_log_xml
+     +#10+#13+'</Save>'
+             );
+
   // update VIP
   if ((AManagerId <> 0) or (ABayerName <> '')) and
      (gc_User.Local) and NeedComplete then
@@ -2767,7 +2806,7 @@ begin
       fBlinkVIP:= lMovementId_BlinkVIP <> '';
 
       // если сюда дошли, значит ON-line режим режим для VIP-чеков
-      Self.Caption := 'Продажа' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+      Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+')' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
       //если список изменился ИЛИ надо "по любому обновить" - запустим "не самое долгое" обновление грида
       if (lMovementId_BlinkVIP <> MovementId_BlinkVIP) or(isRefresh = true)
@@ -2779,7 +2818,7 @@ begin
       end;
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+        Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') - OFF-line режим для VIP-чеков' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 
@@ -2802,11 +2841,11 @@ begin
 
       // если сюда дошли, значит ON-line режим режим для проверки "ошибка - расч/факт остаток"
       if fBlinkCheck = True
-      then Self.Caption := 'Продажа : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
-      else Self.Caption := 'Продажа' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
+      then Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') : есть ошибки - расч/факт остаток' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+      else Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+')' + ' <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>';
 
   except
-        Self.Caption := 'Продажа - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
+        Self.Caption := 'Продажа ('+GetFileVersionString(ParamStr(0))+') - OFF-line режим для чеков с ошибкой' + ' - <' + IniUtils.gUnitName + '>' + ' - <' + IniUtils.gUserName + '>'
   end;
 end;
 

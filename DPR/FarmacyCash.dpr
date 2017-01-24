@@ -99,7 +99,7 @@ begin
     then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1111', gc_User);
      //TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ1234', gc_User);
-     if ShowModal <> mrOk then exit;   // для тестирования // НС закоменчено
+     //if ShowModal <> mrOk then exit;   // для тестирования // НЕ закомменчено
      gc_User.Local:=TRUE;// !!!НЕ ЗАГРУЖАЕТСЯ БАЗА!!!
     end
     else

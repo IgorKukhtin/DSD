@@ -1,10 +1,10 @@
 -- Function: gpComplete_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Check_ver2 (Integer,Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Check_ver2(
@@ -12,8 +12,9 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Check_ver2(
     IN inPaidType          Integer              , --Тип оплаты 0-деньги, 1-карта
     IN inCashRegister      TVarChar             , --№ кассового аппарата
     IN inCashSessionId     TVarChar             , --Сессия программы
-    in inUserSession	   TVarChar             , -- сессия пользователя под которой проводился чек в программе
-    IN inSession           TVarChar DEFAULT ''    -- сессия пользователя
+    IN inUserSession	   TVarChar             , -- сессия пользователя под которой проводился чек в программе
+--    IN inSession         TVarChar DEFAULT ''    -- сессия пользователя
+    IN inSession           TVarChar               -- сессия пользователя
 )
 RETURNS TABLE (
     Id Integer,
