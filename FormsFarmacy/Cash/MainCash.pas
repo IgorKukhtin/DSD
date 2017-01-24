@@ -322,6 +322,8 @@ type
 
     // Обновляет сумму по чеку
     procedure CalcTotalSumm;
+    // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+    procedure Add_Log_XML(AMessage: String);
     // Пробивает чек через ЭККА
     function PutCheckToCash(SalerCash: Currency; PaidType: TPaidType;
       out AFiscalNumber, ACheckNumber: String): boolean;
@@ -2035,8 +2037,31 @@ begin
   End;
 end;
 
+// что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+procedure TMainCashForm.Add_Log_XML(AMessage: String);
+var F: TextFile;
+begin
+  try
+    AssignFile(F,ChangeFileExt(Application.ExeName,'_log.xml'));
+    if not fileExists(ChangeFileExt(Application.ExeName,'_log.xml')) then
+    begin
+      Rewrite(F);
+      Writeln(F,'<?xml version="1.0" encoding="Windows-1251"?>');
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F,AMessage);
+    finally CloseFile(F);
+    end;
+  except
+  end;
+end;
+
 function TMainCashForm.PutCheckToCash(SalerCash: Currency;
   PaidType: TPaidType; out AFiscalNumber, ACheckNumber: String): boolean;
+var str_log_xml : String;
+    i : Integer;
 {------------------------------------------------------------------------------}
   function PutOneRecordToCash: boolean; //Продажа одного наименования
   begin
@@ -2062,6 +2087,7 @@ begin
       AFiscalNumber := Cash.FiscalNumber
     else
       AFiscalNumber := '';
+    str_log_xml:=''; i:=0;
     result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt;
     with CheckCDS do
     begin
@@ -2071,7 +2097,30 @@ begin
         if result then
            begin
              if CheckCDS.FieldByName('Amount').asCurrency >= 0.001 then
-                result := PutOneRecordToCash;//послали строку в кассу
+              begin
+                  //послали строку в кассу
+                  result := PutOneRecordToCash;
+                  //сохранили строку в лог
+                  i:= i + 1;
+                  if str_log_xml<>'' then str_log_xml:=str_log_xml + #10 + #13;
+                  try
+                  str_log_xml:= str_log_xml
+                              + '<Items="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>' + FieldByName('GoodsCode').asString + '</GoodsCode>'
+                              + '<GoodsName>' + AnsiUpperCase(FieldByName('GoodsName').Text) + '</GoodsName>'
+                              + '<Amount>' + FloatToStr(FieldByName('Amount').asCurrency) + '</Amount>'
+                              + '<Price>' + FloatToStr(FieldByName('Price').asCurrency) + '</Price>'
+                              + '<List_UID>' + FieldByName('List_UID').AsString + '</List_UID>'
+                              + '</Items>';
+                  except
+                  str_log_xml:= str_log_xml
+                              + '<Items="' +IntToStr(i)+ '">'
+                              + '<GoodsCode>' + FieldByName('GoodsCode').asString + '</GoodsCode>'
+                              + '<GoodsName>???</GoodsName>'
+                              + '<List_UID>' + FieldByName('List_UID').AsString + '</List_UID>'
+                              + '</Items>';
+                  end;
+              end;
            end;
         Next;
       end;
@@ -2086,6 +2135,15 @@ begin
     result := false;
     raise;
   end;
+  //
+  // что б отловить ошибки - запишим в лог чек - во время пробития чека через ЭККА
+  Add_Log_XML('<Head now="'+FormatDateTime('YYYY.MM.DD hh:mm:ss',now)+'">'
+     +#10+#13+'<CheckNumber>'  + ACheckNumber  + '</CheckNumber>'
+             +'<FiscalNumber>' + AFiscalNumber + '</FiscalNumber>'
+             +'<Summa>' + FloatToStr(SalerCash) + '</Summa>'
+     +#10+#13+str_log_xml
+     +#10+#13+'</Head>'
+             );
 end;
 
 procedure TMainCashForm.RemainsCDSAfterScroll(DataSet: TDataSet);
