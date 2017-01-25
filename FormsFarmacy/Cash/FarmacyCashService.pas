@@ -276,7 +276,7 @@ begin
       try
         SetShapeState(clRed);
         WaitForSingleObject(MutexRemains, INFINITE);
-        MainCashForm2.spSelect_CashRemains_Diff.ParamByName('inUserSesion').Value:= FUserSesion;
+//        MainCashForm2.spSelect_CashRemains_Diff.ParamByName('inUserSesion').Value:= FUserSesion;
         MainCashForm2.spSelect_CashRemains_Diff.Execute(False,False,False);
         ReleaseMutex(MutexRemains);
         SetShapeState(clBlue);
