@@ -738,16 +738,14 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     object actPrintPeriod: TdsdPrintAction
       Category = 'Print'
       MoveParams = <>
-      EnabledTimer = True
-      Timer = actPrintPeriod.Timer
       StoredProc = spSelectPrintPeriod
       StoredProcList = <
         item
           StoredProc = spSelectPrintPeriod
         end>
-      Caption = #1040#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      Hint = #1040#1082#1090#1099' '#1089#1074#1077#1088#1082#1080' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      ImageIndex = 16
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
+      ImageIndex = 17
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -760,167 +758,31 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = 42667d
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = 42667d
           Component = deEnd
           DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ReestrKindName'
-          Value = Null
-          Component = ReestrKindGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'IsShowAllPrint'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'IsShowAllPrint'
+          Value = False
+          Component = edIsShowAll
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintObject_ReportCollation'
-      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ReportNameParam.Name = 'PrintObject_ReportCollation'
       ReportNameParam.Value = 'PrintObject_ReportCollation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-      Hint = #1056#1077#1077#1089#1090#1088' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintMovement_Reestr'
-      ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
-      ReportNameParam.Value = 'PrintMovement_Reestr'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-    end
-    object actExternalDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
-      ImageIndex = 43
-      FormName = 'TReestrUpdateDialogForm'
-      FormNameParam.Value = 'TReestrUpdateDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'DriverId'
-          Value = 0
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DriverName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actDialog_Print: TExecuteDialog
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = 'actDialog_Print'
-      ImageIndex = 16
-      FormName = 'TReestrPrintDialogForm'
-      FormNameParam.Value = 'TReestrPrintDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'IsShowAll'
-          Value = False
-          Component = FormParams
-          ComponentItem = 'IsShowAllPrint'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ReestrKindId'
-          Value = 640042
-          Component = ReestrKindGuides
-          ComponentItem = 'Key'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ReestrKindName'
-          Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
-          Component = ReestrKindGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'StartDate'
-          Value = 'NULL'
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object macPrintPeriod: TMultiAction
-      Category = 'Print'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actDialog_Print
-        end
-        item
-          Action = actPrintPeriod
-        end>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      ImageIndex = 16
     end
   end
   inherited MasterDS: TDataSource
@@ -1016,14 +878,15 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Action = actPrintPeriod
       Category = 0
-      Visible = ivNever
-      ImageIndex = 3
     end
     object bbExternalDialog: TdxBarButton
-      Action = actExternalDialog
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object bbPrintPeriod: TdxBarButton
       Action = actPrintPeriod
@@ -1110,14 +973,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrinted'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isPrinted'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
       end>
     Left = 568
     Top = 426
@@ -1146,30 +1001,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       end
       item
         Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReestrKindId'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inReestrKindName'
-        Value = Null
-        Component = ReestrKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameTransport'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1340,7 +1171,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Aggregates = <>
     Params = <>
     Left = 708
-    Top = 270
+    Top = 286
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
