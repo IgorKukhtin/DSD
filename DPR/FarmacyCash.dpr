@@ -117,7 +117,7 @@ begin
       //
       Application.CreateForm(TdmMain, dmMain);
 
-      if false then  // выбираем главную форму
+      if true then  // выбираем главную форму
        Application.CreateForm(TMainCashForm, MainCash.MainCashForm) // имя модуля обязательно
       else  // Форма работате в связке с FarmacyCashServise.exe
        Application.CreateForm(TMainCashForm2, MainCash2.MainCashForm); // имя модуля обязательно

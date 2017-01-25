@@ -7,14 +7,15 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
     IN inCashSessionId TVarChar,   -- Сессия кассового места
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsName TVarChar, GoodsCode Integer,
+RETURNS TABLE (Id Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
                isPromo boolean,
                MinExpirationDate TDateTime,
                Color_ExpirationDate Integer,
-               ConditionsKeepName TVarChar
+               ConditionsKeepName TVarChar,
+               AmountIncome TFloat, PriceSaleIncome TFloat
                )
 AS
 $BODY$
@@ -147,8 +148,33 @@ BEGIN
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = vbObjectId
                        )
+                -- товар в пути - непроведенные приходы сегодня
+                , tmpIncome AS (SELECT MI_Income.ObjectId                      AS GoodsId
+                                     , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome  
+                                     , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale    
+                                FROM Movement AS Movement_Income
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                   ON MovementLinkObject_To.MovementId = Movement_Income.Id
+                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                              --    AND MovementLinkObject_To.ObjectId = vbUnitId
+
+                                     LEFT JOIN MovementItem AS MI_Income 
+                                                            ON MI_Income.MovementId = Movement_Income.Id
+                                                           AND MI_Income.isErased   = False
+
+                                     LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                                 ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                
+                                 WHERE Movement_Income.DescId = zc_Movement_Income()
+                                   AND Movement_Income.StatusId = zc_Enum_Status_UnComplete() 
+                                   AND date_trunc('day', Movement_Income.OperDate) = CURRENT_DATE
+                                 GROUP BY MI_Income.ObjectId
+                                        , MovementLinkObject_To.ObjectId 
+                              )   
         SELECT 
             Goods.Id,
+            Object_GoodsGroup.ValueData  AS GoodsGroupName,
             Goods.ValueData,
             Goods.ObjectCode,
             CashSessionSnapShot.Remains,
@@ -163,8 +189,10 @@ BEGIN
             CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo,
             CashSessionSnapShot.MinExpirationDate, 
             CASE WHEN CashSessionSnapShot.MinExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_ExpirationDate,                --vbAVGDateEnd
-            COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
- 
+            COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName,
+
+            COALESCE(tmpIncome.AmountIncome,0)            :: TFloat   AS AmountIncome,
+            CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE(tmpIncome.SummSale,0) / COALESCE(tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
          FROM
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
@@ -185,14 +213,19 @@ BEGIN
                                    AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_Goods_Second()  
 
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id  
+            LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Goods.Id 
 
             -- условия хранения
             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Goods.Id
                                 AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
             LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
-         
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+              
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
         ORDER BY
@@ -205,6 +238,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (Integer, TVarChar, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 25.01.16         *
  24.01.17         * add ConditionsKeepName
  06.09.16         *
  12.04.16         *
