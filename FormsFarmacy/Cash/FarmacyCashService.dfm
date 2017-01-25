@@ -383,13 +383,6 @@ object MainCashForm2: TMainCashForm2
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUserSesion'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
