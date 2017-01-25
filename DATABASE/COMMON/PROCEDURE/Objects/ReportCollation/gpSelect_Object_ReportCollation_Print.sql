@@ -26,15 +26,14 @@ BEGIN
                         FROM ObjectLink AS ObjectLink_User_Member
                         WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                           AND ObjectLink_User_Member.ObjectId = vbUserId)
-                       END
-                      ;
-
+                       END ;
+   
      -- Результат
      OPEN Cursor1 FOR
     
        SELECT inStartDate AS StartDate
             , inEndDate   AS EndDate
-            , 'Сдали в бухгалтерию'    AS ReestrKindName
+            , 'Сдали в бухгалтерию'  ::TVarChar   AS ReestrName
             , Object_User.ValueData    AS UserName
        FROM Object AS Object_User
        WHERE Object_User.Id = vbUserId;
@@ -42,6 +41,7 @@ BEGIN
     RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
+
      WITH 
      -- выбираем строки Актов сверки по пользователю (или всем пользователям)
      tmpReport AS (SELECT ObjectDate_Buh.ObjectId      AS Id
