@@ -45,44 +45,59 @@ BEGIN
 
     RETURN QUERY
    WITH 
-      -- выбираем все строки документов прихода с маркет. товарами
-      tmpMovMI AS (SELECT Movement.Id                     AS MovementId
+          -- Id строк Маркетинговых контрактов inMakerId
+          tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id AS MI_Id
+                            FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
+                                                            ON MovementLinkObject_Maker.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Maker.DescId = zc_MovementLinkObject_Maker()
+                                                           AND MovementLinkObject_Maker.ObjectId = inMakerId 
+                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                                 AND MI_Goods.isErased = FALSE
+                            WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                              AND Movement.DescId = zc_Movement_Promo()
+                             )
+
+     -- выбираем все строки документов прихода с маркет. товарами
+    , tmpMovMI AS (SELECT Movement.Id                     AS MovementId
                         , MovementDesc.ItemName        :: TVarChar AS ItemName
                         , Status.ValueData                         AS STatusName
                         , Movement.OperDate                        AS OperDate
                         , Movement.InvNumber                       AS InvNumber
-                        , MovementItem.Id AS MovementItemId
-                        , MovementItem.ObjectId AS GoodsId
+                        , MIContainer.MovementItemId AS MovementItemId
+                        , MIContainer.ObjectId_analyzer   AS GoodsId
                         , MIFloat_Price.ValueData                 ::TFloat  AS Price  
                         , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
-                        , COALESCE(MIFloat_AmountManual.ValueData,MovementItem.Amount)  AS Amount
-                  FROM Movement 
-                    INNER JOIN Object AS Status 
-                                      ON Status.Id = Movement.StatusId 
-                                     AND Status.Id = zc_Enum_Status_Complete()
-                    JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                        , COALESCE(MIFloat_AmountManual.ValueData,MIContainer.Amount)  AS Amount
 
-                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                     AND MovementItem.isErased = FALSE
-    
-                    INNER JOIN MovementItemContainer AS MIContainer 
-                                                     ON MIContainer.DescId = zc_MIContainer_Count()
-                                                    AND MIContainer.MovementItemId = MovementItem.Id
-                                                    AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
 
-                    LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
-                                                ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
-                                               AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                   FROM MovementItemContainer AS MIContainer 
+                      INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+                      LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId 
+                      INNER JOIN Object AS Status 
+                                        ON Status.Id = Movement.StatusId 
+                                       AND Status.Id = zc_Enum_Status_Complete()
+                      LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                                  ON MIFloat_AmountManual.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
           
-                    LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                      LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
-                    LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                               AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-                 WHERE Movement.DescId = zc_Movement_Income()
-                   AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate   
+                      LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                                  ON MIFloat_PriceSale.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+
+                   WHERE MIContainer.DescId = zc_MIContainer_Count()
+                     AND MIContainer.MovementDescId = zc_Movement_Income()
+                  -- AND MIContainer.OperDate >= '01.12.2016' AND MIContainer.OperDate < '04.12.2016'
+                     AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate   
+                     AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
+                     AND COALESCE (inMakerId,0) <> 0
                  )
    -- получаем свойства Документов
    , tmpMov AS (SELECT  tmpMovMI.MovementId           
@@ -221,4 +236,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_MovementIncome_Promo (inMakerId:= 2336655, inStartDate:= '21.11.2016', inEndDate:= '25.11.2016', inSession:= '2')
---SELECT * FROM gpReport_MovementIncome_Promo (inMakerId:= 2336655, inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inSession:= '2')
+--SELECT * FROM gpReport_MovementIncome_Promo (inMakerId:= 2336655, inStartDate:= '01.12.2016', inEndDate:= '03.12.2016', inSession:= '2')
