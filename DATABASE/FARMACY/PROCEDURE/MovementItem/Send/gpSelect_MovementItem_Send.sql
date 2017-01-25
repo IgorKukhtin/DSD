@@ -55,7 +55,8 @@ BEGIN
     vbOperDateEnd := vbOperDate + INTERVAL '1 DAY';
 
     -- Результат
-    IF inShowAll THEN
+    IF inShowAll = TRUE
+    THEN
 
         -- Результат такой
         RETURN QUERY
@@ -98,7 +99,7 @@ BEGIN
                                                        ON MI_Check.MovementId = Movement_Check.Id
                                                       AND MI_Check.DescId = zc_MI_Master()
                                                       AND MI_Check.isErased = FALSE
-                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                         WHERE Movement_Check.OperDate >= vbOperDate - INTERVAL '90 DAY' AND Movement_Check.OperDate < vbOperDateEnd
                           AND Movement_Check.DescId = zc_Movement_Check()
                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY MI_Check.ObjectId 
@@ -275,7 +276,7 @@ BEGIN
                                                        ON MI_Check.MovementId = Movement_Check.Id
                                                       AND MI_Check.DescId = zc_MI_Master()
                                                       AND MI_Check.isErased = FALSE
-                         WHERE Movement_Check.OperDate >= vbOperDate AND Movement_Check.OperDate < vbOperDateEnd
+                         WHERE Movement_Check.OperDate >= vbOperDate - INTERVAL '90 DAY' AND Movement_Check.OperDate < vbOperDateEnd
                           AND Movement_Check.DescId = zc_Movement_Check()
                           AND Movement_Check.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY MI_Check.ObjectId 

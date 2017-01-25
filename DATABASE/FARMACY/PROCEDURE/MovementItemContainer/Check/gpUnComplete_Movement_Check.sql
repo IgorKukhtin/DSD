@@ -1,12 +1,13 @@
--- Function: gpUnComplete_Movement_Income (Integer, TVarChar)
+-- Function: gpUnComplete_Movement_Income (Integer, TVarChar, TVarChar)
 
---DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
---DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_Check (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Check(
     IN inMovementId        Integer               , -- ключ Документа
-    in inUsersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inUsersession	   TVarChar              , -- сессия пользователя (подменяем реальную)
+--    IN inSession         TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
 AS
