@@ -578,6 +578,13 @@ inherited MainCashForm: TMainCashForm
           HeaderHint = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
           Width = 80
         end
+        object MainNDS: TcxGridDBColumn
+          Caption = #1053#1044#1057
+          DataBinding.FieldName = 'NDS'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -1503,6 +1510,12 @@ inherited MainCashForm: TMainCashForm
       end
       item
         ColorColumn = MainGoodsGroupName
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainNDS
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>

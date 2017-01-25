@@ -156,7 +156,7 @@ BEGIN
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement_Income.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                              --    AND MovementLinkObject_To.ObjectId = vbUnitId
+                                                                  AND MovementLinkObject_To.ObjectId = vbUnitId
 
                                      LEFT JOIN MovementItem AS MI_Income 
                                                             ON MI_Income.MovementId = Movement_Income.Id

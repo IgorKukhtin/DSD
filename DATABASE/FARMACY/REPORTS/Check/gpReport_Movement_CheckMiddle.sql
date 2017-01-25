@@ -62,16 +62,19 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIndex Integer;
+   DECLARE vbObjectId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- определяется <Торговая сеть>
+    vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
     -- таблица
     CREATE TEMP TABLE _tmpUnit_List (UnitId Integer) ON COMMIT DROP;
+
     -- парсим подразделения
-    
     vbIndex := 1;
     WHILE SPLIT_PART (inUnitId, ',', vbIndex) <> '' LOOP
         -- добавляем то что нашли
@@ -80,11 +83,21 @@ BEGIN
         vbIndex := vbIndex + 1;
     END LOOP;
 
-
+    -- 
 
     -- Результат
     RETURN QUERY
-          WITH tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
+          WITH
+          -- все подразделения торговой сети
+          tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
+                        FROM ObjectLink AS ObjectLink_Unit_Juridical
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId =  vbObjectId
+                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                       )
+             , tmpMI AS (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
                               , Movement_Check.Id
                               , CASE WHEN inisDAy = True THEN date_trunc('day', Movement_Check.OperDate) ELSE NULL END ::TDateTime  AS OperDate
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount) * COALESCE (MIFloat_Price.ValueData, 0)) AS SummaSale
@@ -94,6 +107,11 @@ BEGIN
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                            --AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId=0)
                               INNER JOIN _tmpUnit_List ON (_tmpUnit_List.UnitId = MovementLinkObject_Unit.ObjectId OR COALESCE(inUnitId,'0') = '0')
+                              -- если пользователь выбрал подразделения другой торг.сети
+                              -- или inUnitId=0,
+                              -- делаем доп.ограничение подразделениями текущей торг.сети
+                              INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                              -- 
                               INNER JOIN MovementItem AS MI_Check
                                                       ON MI_Check.MovementId = Movement_Check.Id
                                                      AND MI_Check.DescId = zc_MI_Master()
@@ -113,14 +131,6 @@ BEGIN
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Check.Amount)) <> 0
                         )
 
-          /*, tmpData AS (select tmpMI.Unitid
-                             , tmpMI.OperDate 
-                             , count(*)  AS Amount        ---колво документов за день
-                             , sum (tmpMI.SummaSale)  AS SummaSale -- сумма чеков
-                        FROM  tmpMI
-                        group by tmpMI.Unitid, tmpMI.OperDate
-                        )
-*/
           , tmpPeriod AS (select tmpMI.Unitid
                                , count(*)  AS AmountPeriod    -- колво документов за весь период
                                , sum (tmpMI.SummaSale)  AS SummaSalePeriod-- сумма чеков за весь период
@@ -222,6 +232,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 25.04.17         * 
  21.04.16         *
 */
 
