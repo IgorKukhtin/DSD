@@ -4,7 +4,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   ClientWidth = 1015
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1031
-  ExplicitHeight = 448
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -497,10 +497,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       object cbisInsert: TcxCheckBox
         Left = 85
         Top = 13
-        Hint = #1047#1072#1087#1080#1089#1072#1090#1100' '#1086#1073#1098#1077#1082#1090
-        Caption = #1047#1072#1087#1080#1089#1072#1090#1100
+        Hint = #1055#1077#1095#1072#1090#1072#1077#1084' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
+        Caption = #1055#1077#1095#1072#1090#1072#1077#1084' '#1076#1083#1103' '#1074#1080#1079#1099' "'#1057#1076#1072#1083#1080' '#1074' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1080#1102'"'
         TabOrder = 1
-        Width = 73
+        Width = 260
       end
     end
   end
