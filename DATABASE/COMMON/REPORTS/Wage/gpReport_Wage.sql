@@ -46,6 +46,10 @@ RETURNS TABLE(
     ,MovementDescName               TVarChar
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToName   TVarChar
+    ,GoodsKind_FromName             TVarChar
+    ,GoodsKindComplete_FromName     TVarChar
+    ,GoodsKind_ToName               TVarChar
+    ,GoodsKindComplete_ToName       TVarChar
     ,OperDate                       TDateTime
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
@@ -104,12 +108,20 @@ BEGIN
         , SelectKindId                   Integer
         , SelectKindName                 TVarChar
         , Ratio                          TFloat
-        , ModelServiceItemChild_FromId   Integer
+        , ModelServiceItemChild_FromId       Integer
         , ModelServiceItemChild_FromDescId   Integer
-        , ModelServiceItemChild_FromName TVarChar
-        , ModelServiceItemChild_ToId     Integer
+        , ModelServiceItemChild_FromName     TVarChar
+        , ModelServiceItemChild_ToId         Integer
         , ModelServiceItemChild_ToDescId     Integer
-        , ModelServiceItemChild_ToName   TVarChar
+        , ModelServiceItemChild_ToName       TVarChar
+        , GoodsKind_FromId                   Integer
+        , GoodsKind_FromName                 TVarChar
+        , GoodsKindComplete_FromId           Integer
+        , GoodsKindComplete_FromName         TVarChar
+        , GoodsKind_ToId                     Integer
+        , GoodsKind_ToName                   TVarChar
+        , GoodsKindComplete_ToId             Integer
+        , GoodsKindComplete_ToName           TVarChar
         , OperDate                       TDateTime
         , Count_Day                      Integer
         , Count_MemberInDay              Integer

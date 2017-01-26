@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_ReportCollation (TDateTime, TDateTime, T
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ReportCollation(
     IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
+    IN inEndDate        TDateTime , --dfsdfsdfsdfsdf
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, idBarCode TVarChar
@@ -117,4 +117,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ReportCollation (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReportCollation (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
