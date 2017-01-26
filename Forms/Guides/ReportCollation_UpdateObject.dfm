@@ -735,17 +735,28 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074#1080#1079#1091
       ImageIndex = 2
     end
-    object actPrintPeriod: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <>
-      StoredProc = spSelectPrintPeriod
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintPeriod
+          StoredProc = spSelectPrint
         end>
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1086#1081' '#1074#1080#1079#1086#1081
-      ImageIndex = 17
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -755,30 +766,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
         end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42667d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42667d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'IsShowAllPrint'
-          Value = False
-          Component = edIsShowAll
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
+      Params = <>
       ReportName = 'PrintObject_ReportCollation'
-      ReportNameParam.Name = 'PrintObject_ReportCollation'
       ReportNameParam.Value = 'PrintObject_ReportCollation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
@@ -847,7 +836,7 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintPeriod'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -877,10 +866,6 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Action = macMISetErased
       Category = 0
     end
-    object bbPrint: TdxBarButton
-      Action = actPrintPeriod
-      Category = 0
-    end
     object bbExternalDialog: TdxBarButton
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1042#1086#1076#1080#1090#1077#1083#1103'/'#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088#1072'/'#1040#1074#1090#1086
       Category = 0
@@ -888,8 +873,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
       Visible = ivAlways
       ImageIndex = 43
     end
-    object bbPrintPeriod: TdxBarButton
-      Action = actPrintPeriod
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -1141,8 +1126,8 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         Column = BarCode
       end>
     SummaryItemList = <>
-    Left = 440
-    Top = 104
+    Left = 448
+    Top = 88
   end
   object spGet_Period: TdsdStoredProc
     StoredProcName = 'gpGet_Period'
@@ -1167,19 +1152,36 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
     Left = 184
     Top = 323
   end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 708
-    Top = 286
+  object spSetErased: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inid'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 315
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 708
-    Top = 217
+    Left = 668
+    Top = 249
   end
-  object spSelectPrintPeriod: TdsdStoredProc
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 668
+    Top = 302
+  end
+  object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReportCollation_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -1208,32 +1210,15 @@ inherited ReportCollation_UpdateObjectForm: TReportCollation_UpdateObjectForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsShowAll'
-        Value = 'True'
+        Name = 'inisShowAll'
+        Value = Null
         Component = edIsShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 583
+    Left = 584
     Top = 304
-  end
-  object spSetErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_ReportCollationErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inid'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 448
-    Top = 315
   end
 end

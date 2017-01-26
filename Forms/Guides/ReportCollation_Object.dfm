@@ -65,7 +65,7 @@ object ReportCollation_ObjectForm: TReportCollation_ObjectForm
         Width = 61
       end
       object EndDate: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'EndDate'
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
