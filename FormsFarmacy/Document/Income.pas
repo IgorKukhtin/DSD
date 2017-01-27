@@ -117,6 +117,10 @@ type
     actPrintStickerOld: TdsdPrintAction;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
+    colPrintCount: TcxGridDBColumn;
+    colisPrint: TcxGridDBColumn;
+    actPrintSticker_notPrice: TdsdPrintAction;
+    bbPrintSticker_notPrice: TdxBarButton;
   private
     { Private declarations }
   public
