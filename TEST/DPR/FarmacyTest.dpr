@@ -482,7 +482,9 @@ uses
   Report_Badm in '..\..\FormsFarmacy\Report\Report_Badm.pas' {Report_BadmForm: TParentForm},
   Unit_byReportBadm in '..\..\FormsFarmacy\Guides\Unit_byReportBadm.pas' {Unit_byReportBadmForm: TParentForm},
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
-  DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm};
+  DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
+  MarginCategory_Cross in '..\..\FormsFarmacy\Object\MarginCategory_Cross.pas' {MarginCategory_CrossForm: TParentForm},
+  MarginCategory_Total in '..\..\FormsFarmacy\Object\MarginCategory_Total.pas' {MarginCategory_TotalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

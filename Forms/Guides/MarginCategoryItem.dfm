@@ -2,6 +2,7 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 341
   ClientWidth = 800
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 816
   ExplicitHeight = 379
   PixelsPerInch = 96
@@ -426,5 +427,25 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
     PackSize = 1
     Left = 624
     Top = 120
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MarginCategoryId'
+        Value = '0'
+        Component = MarginCategoryGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MarginCategoryName'
+        Value = ''
+        Component = MarginCategoryGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 472
+    Top = 104
   end
 end

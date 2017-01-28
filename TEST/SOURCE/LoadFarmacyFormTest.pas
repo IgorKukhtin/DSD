@@ -386,6 +386,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryLinkForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_CrossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_CrossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_TotalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_TotalForm');
+
 end;
 
 procedure TLoadFormTest.LoadMarginReport;
