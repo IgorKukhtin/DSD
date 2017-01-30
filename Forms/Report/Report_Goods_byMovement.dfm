@@ -6,7 +6,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 910
-  ExplicitHeight = 577
+  ExplicitHeight = 580
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -146,9 +146,6 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     object tsPivot: TcxTabSheet
       Caption = #1058#1091#1096#1077#1085#1082#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 800
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -574,6 +571,46 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdOrderAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdMoreAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdUnderAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdDiffAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdOrderAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdMoreAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdUnderAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdDiffAmount_21
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -775,6 +812,46 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
               Format = ',0.#'
               Kind = skSum
               Column = cdReturnAmount_2_Nashi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdOrderAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdMoreAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdUnderAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdDiffAmount_11
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdOrderAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdMoreAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdUnderAmount_21
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = cdDiffAmount_21
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -938,6 +1015,50 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
           object cdReturnAmount_11: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
             DataBinding.FieldName = 'ReturnAmount_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdOrderAmount_11: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'OrderAmount_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdMoreAmount_11: TcxGridDBColumn
+            Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'MoreAmount_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdUnderAmount_11: TcxGridDBColumn
+            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'UnderAmount_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdDiffAmount_11: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+            DataBinding.FieldName = 'DiffAmount_11'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.#;-,0.#; ;'
@@ -1340,6 +1461,50 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object cdOrderAmount_21: TcxGridDBColumn
+            Caption = #1047#1072#1103#1074#1072' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'OrderAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdMoreAmount_21: TcxGridDBColumn
+            Caption = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'MoreAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdUnderAmount_21: TcxGridDBColumn
+            Caption = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'UnderAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object cdDiffAmount_21: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1087#1088#1086#1076#1072#1078#1080' '#1086#1090' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'DiffAmount_21'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object cdSaleAmount_2_Alan: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072', '#1090#1084' '#1040#1083#1072#1085')'
             DataBinding.FieldName = 'SaleAmount_2_Alan'
@@ -1518,6 +1683,8 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Height = 206
     Align = alBottom
     TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = 334
     object grChartDBChartView1: TcxGridDBChartView
       DataController.DataSource = DSDetail
       DiagramArea.Values.LineWidth = 2
@@ -1537,6 +1704,18 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         DataBinding.FieldName = 'ReturnAmount_11'
         DisplayText = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
         Visible = False
+      end
+      object serOrderAmount_11: TcxGridDBChartSeries
+        DataBinding.FieldName = 'OrderAmount_11'
+        DisplayText = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+      end
+      object serMoreAmount_11: TcxGridDBChartSeries
+        DataBinding.FieldName = 'MoreAmount_11'
+        DisplayText = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
+      end
+      object serUnderAmount_11: TcxGridDBChartSeries
+        DataBinding.FieldName = 'UnderAmount_11'
+        DisplayText = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054', '#1082#1075' ('#1082#1086#1083#1073#1072#1089#1072')'
       end
       object serSaleAmount_12: TcxGridDBChartSeries
         DataBinding.FieldName = 'SaleAmount_12'
@@ -1707,6 +1886,18 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         DataBinding.FieldName = 'ReturnAmount_21'
         DisplayText = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054', '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
         Visible = False
+      end
+      object serOrderAmount_21: TcxGridDBChartSeries
+        DataBinding.FieldName = 'OrderAmount_21'
+        DisplayText = #1047#1072#1103#1074#1082#1072' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serMoreAmount_21: TcxGridDBChartSeries
+        DataBinding.FieldName = 'MoreAmount_21'
+        DisplayText = #1041#1086#1083#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
+      end
+      object serUnderAmount_1: TcxGridDBChartSeries
+        DataBinding.FieldName = 'UnderAmount_21'
+        DisplayText = #1052#1077#1085#1100#1096#1077' '#1079#1072#1103#1074#1082#1080' '#1048#1058#1054#1043#1054',  '#1077#1076' ('#1090#1091#1096#1077#1085#1082#1072')'
       end
       object serSaleAmount_2_Alan: TcxGridDBChartSeries
         DataBinding.FieldName = 'SaleAmount_2_Alan'
@@ -2027,7 +2218,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
         MultiSelectSeparator = ','
       end>
     Left = 256
-    Top = 280
+    Top = 232
   end
   inherited BarManager: TdxBarManager
     Left = 160
