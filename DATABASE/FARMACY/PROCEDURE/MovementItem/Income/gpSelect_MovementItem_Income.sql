@@ -53,6 +53,10 @@ RETURNS TABLE (Id Integer, /*IdBarCode TVarChar,*/ GoodsId Integer, GoodsCode In
              , Goods_PercentMarkup  TFloat
              , Goods_Price TFloat
              , Color_ExpirationDate  Integer
+
+             , PrintCount TFloat
+             , isPrint  Boolean
+
              )
 AS
 $BODY$
@@ -221,6 +225,9 @@ BEGIN
               , CASE WHEN (Object_Price_View.isTop = TRUE OR tmpGoods.Goods_isTop = TRUE) THEN 15993821 -- розовый 16440317 
                      ELSE zc_Color_Black()
                 END        AS Color_ExpirationDate               --zc_Color_Blue 
+
+              , NULL::TFloat               AS PrintCount
+              , FALSE                      AS isPrint
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN Object_Price_View ON Object_Price_View.GoodsId = tmpGoods.GoodsId
@@ -287,7 +294,6 @@ BEGIN
                          CASE WHEN COALESCE (tmpOrderMI.Price,0) <> CAST (MovementItem.Price - MovementItem.Price * (vbVAT / (vbVAT + 100)) AS NUMERIC (16, 2)) THEN TRUE ELSE FALSE END
                 END  AS isSummDiff
 
-
               , COALESCE (Object_Price_View.isTop,FALSE)          ::Boolean AS isTop 
               , Object_Price_View.PercentMarkup  ::TFloat  AS PercentMarkup
               , CASE WHEN COALESCE(Object_Price_View.Fix,False) = TRUE THEN COALESCE(Object_Price_View.Price,0) ELSE 0 END  ::TFloat  AS Fix_Price
@@ -304,6 +310,10 @@ BEGIN
                      WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      ELSE zc_Color_Black()
                 END      AS Color_ExpirationDate
+
+              , COALESCE (MIFloat_PrintCount.ValueData, 0)   ::TFloat      AS PrintCount
+              , COALESCE (MIBoolean_Print.ValueData, TRUE) ::Boolean     AS isPrint
+
             FROM tmpIsErased
                 JOIN MovementItem_Income_View AS MovementItem 
                                               ON MovementItem.MovementId = inMovementId
@@ -315,6 +325,14 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
                                             ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
                                            AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_PrintCount
+                                            ON MIFloat_PrintCount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_PrintCount.DescId = zc_MIFloat_PrintCount()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_Print
+                                              ON MIBoolean_Print.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_Print.DescId = zc_MIBoolean_Print()
 
                 LEFT JOIN DublePrice ON MovementItem.GoodsId = DublePrice.GoodsId
                 LEFT JOIN AVGIncome ON AVGIncome.ObjectId = MovementItem.GoodsId
@@ -330,8 +348,8 @@ BEGIN
                                      AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                       ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
-                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()   
-               ;
+                                     AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price() 
+              ;
     ELSE
        RETURN QUERY
        WITH 
@@ -339,13 +357,71 @@ BEGIN
                         UNION ALL 
                        SELECT inIsErased AS isErased WHERE inIsErased = TRUE
                       )
-   , DublePrice AS         (SELECT MovementItem_Income_View.GoodsId
+   ,  tmpMI AS (SELECT MovementItem.Id
+                     , MovementItem.ObjectId              AS GoodsId
+                     , Object_Goods.ObjectCode            AS GoodsCode
+                     , Object_Goods.ValueData             AS GoodsName
+                     , ObjectString_Code.ValueData        AS PartnerGoodsCode
+                     , Object_PartnerGoods.ValueData      AS PartnerGoodsName
+                     , MovementItem.Amount                AS Amount
+                     , MIFloat_Price.ValueData            AS Price
+                     , CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN  MIFloat_Price.ValueData
+                            ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData/100))::TFloat
+                       END AS PriceWithVAT
+
+                     , COALESCE(MIFloat_PriceSale.ValueData,0)::TFloat        AS PriceSale
+                     , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData)::NUMERIC (16, 2))::TFloat AS AmountSumm
+                     , (((COALESCE (MovementItem.Amount, 0)) * MIFloat_PriceSale.ValueData)::NUMERIC (16, 2))::TFloat AS SummSale
+
+                     , MovementItem.isErased
+                     , ObjectString_Goods_Maker.ValueData               AS MakerName
+                     , MIFloat_AmountManual.ValueData      AS AmountManual
+
+                FROM tmpIsErased
+                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                    AND MovementItem.isErased   = tmpIsErased.isErased
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                               ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                                    ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+
+                   LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = MILinkObject_Goods.ObjectId 
+                   LEFT JOIN ObjectString AS ObjectString_Code
+                                          ON ObjectString_Code.ObjectId = Object_PartnerGoods.Id
+                                         AND ObjectString_Code.DescId = zc_ObjectString_Goods_Code()
+                   LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+                                          ON ObjectString_Goods_Maker.ObjectId = Object_PartnerGoods.Id
+                                         AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+
+                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
+                                               ON MIFloat_AmountManual.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+
+                   LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                             ON MovementBoolean_PriceWithVAT.MovementId = MovementItem.MovementId
+                                            AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                ON MovementLinkObject_NDSKind.MovementId = MovementItem.MovementId
+                                               AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                   LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                         ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                        AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
+                 )
+
+   , DublePrice AS         (SELECT tmpMI.GoodsId
                                  , zc_Color_Yelow() AS DublePriceColour --zc_Color_Goods_Additional() AS DublePriceColour 
-                            FROM MovementItem_Income_View
-                            WHERE MovementItem_Income_View.MovementId = inMovementId 
-                              AND MovementItem_Income_View.isErased   = FALSE
-                            GROUP BY MovementItem_Income_View.GoodsId
-                            HAVING COUNT(DISTINCT MovementItem_Income_View.Price) > 1
+                            FROM tmpMI
+                            WHERE tmpMI.isErased   = FALSE
+                            GROUP BY tmpMI.GoodsId
+                            HAVING COUNT(DISTINCT tmpMI.Price) > 1
                            )  
    , AVGIncome AS     (  SELECT MI_Income.ObjectId,
                                 AVG(CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE 
@@ -393,7 +469,6 @@ BEGIN
                                           
             SELECT
                 MovementItem.Id
-             -- , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Price_View.Id) AS IdBarCode
               , MovementItem.GoodsId
               , MovementItem.GoodsCode
               , MovementItem.GoodsName
@@ -409,15 +484,15 @@ BEGIN
               , COALESCE(MIFloat_JuridicalPrice.ValueData,0) ::TFloat AS JuridicalPrice
               , COALESCE(MIFloat_JuridicalPriceWithVAT.ValueData,0) ::TFloat AS JuridicalPriceWithVAT
               , MovementItem.isErased
-              , MovementItem.ExpirationDate
-              , MovementItem.PartionGoods
-              , MovementItem.MakerName
-              , MovementItem.FEA
-              , MovementItem.Measure
+                     , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) :: TDateTime AS ExpirationDate
+                     , COALESCE(MIString_PartionGoods.ValueData, '')              :: TVarChar  AS PartionGoods
+                     ,MovementItem.MakerName
+                     , MIString_FEA.ValueData             AS FEA
+                     , MIString_Measure.ValueData         AS Measure
               , DublePrice.DublePriceColour
-              , MovementItem.SertificatNumber
-              , MovementItem.SertificatStart
-              , MovementItem.SertificatEnd
+                     , MIString_SertificatNumber.ValueData AS SertificatNumber
+                     , MIDate_SertificatStart.ValueData    AS SertificatStart
+                     , MIDate_SertificatEnd.ValueData      AS SertificatEnd
               , CASE 
                     WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()
                     WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()
@@ -430,8 +505,8 @@ BEGIN
                 END AS AVGIncomePriceWarning
               , MovementItem.AmountManual
               , (COALESCE(MovementItem.AmountManual,0) - COALESCE(MovementItem.Amount,0))::TFloat as AmountDiff
-              , MovementItem.ReasonDifferencesId
-              , MovementItem.ReasonDifferencesName      
+              , MILinkObject_ReasonDifferences.ObjectId    AS ReasonDifferencesId
+              , Object_ReasonDifferences.ValueData         AS ReasonDifferencesName    
               , COALESCE (tmpOrderMI.Amount,0)  ::TFloat   AS OrderAmount
               , COALESCE (tmpOrderMI.Price,0)   ::TFloat   AS OrderPrice
               , COALESCE (tmpOrderMI.Summ,0)    ::TFloat   AS OrderSumm
@@ -459,15 +534,39 @@ BEGIN
               , ObjectFloat_Goods_PercentMarkup.ValueData          ::TFloat  AS Goods_PercentMarkup  
               , ObjectFloat_Goods_Price.ValueData                  ::TFloat  AS Goods_Price   
               , CASE WHEN (Object_Price_View.isTop = TRUE OR ObjectBoolean_Goods_TOP.ValueData = TRUE) THEN 15993821 -- розовый 16440317
-                     WHEN MovementItem.ExpirationDate < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
+                     WHEN COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) < CURRENT_DATE + zc_Interval_ExpirationDate() THEN zc_Color_Blue() 
                      WHEN MovementItem.GoodsId Is Null THEN zc_Color_Warning_Red()                -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      WHEN MovementItem.PartnerGoodsCode IS NULL THEN zc_Color_Warning_Navy()      -- перенесла результат WarningColor , т.к. две колонки с цветом фона быть не может
                      ELSE zc_Color_Black()
                 END      AS Color_ExpirationDate                --vbAVGDateEnd
-            FROM tmpIsErased
-                JOIN MovementItem_Income_View AS MovementItem 
-                                              ON MovementItem.MovementId = inMovementId
-                                             AND MovementItem.isErased   = tmpIsErased.isErased
+
+              , COALESCE (MIFloat_PrintCount.ValueData, 0)   ::TFloat      AS PrintCount
+              , COALESCE (MIBoolean_Print.ValueData, TRUE) ::Boolean     AS isPrint
+
+            FROM tmpMI AS MovementItem 
+                                      
+                   LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                               ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                              AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
+                   LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()  
+                   LEFT JOIN MovementItemString AS MIString_Measure
+                                                ON MIString_Measure.MovementItemId = MovementItem.Id
+                                               AND MIString_Measure.DescId = zc_MIString_Measure()                                         
+                   LEFT JOIN MovementItemString AS MIString_FEA
+                                                ON MIString_FEA.MovementItemId = MovementItem.Id
+                                               AND MIString_FEA.DescId = zc_MIString_FEA() 
+
+                   LEFT JOIN MovementItemString AS MIString_SertificatNumber
+                                                ON MIString_SertificatNumber.MovementItemId = MovementItem.Id
+                                               AND MIString_SertificatNumber.DescId = zc_MIString_SertificatNumber()                                         
+                   LEFT JOIN MovementItemDate  AS MIDate_SertificatStart
+                                               ON MIDate_SertificatStart.MovementItemId = MovementItem.Id
+                                              AND MIDate_SertificatStart.DescId = zc_MIDate_SertificatStart()                                         
+                   LEFT JOIN MovementItemDate  AS MIDate_SertificatEnd
+                                               ON MIDate_SertificatEnd.MovementItemId = MovementItem.Id
+                                              AND MIDate_SertificatEnd.DescId = zc_MIDate_SertificatEnd()  
 
                 LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPrice
                                             ON MIFloat_JuridicalPrice.MovementItemId = MovementItem.Id
@@ -475,6 +574,19 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_JuridicalPriceWithVAT
                                             ON MIFloat_JuridicalPriceWithVAT.MovementItemId = MovementItem.Id
                                            AND MIFloat_JuridicalPriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_PrintCount
+                                            ON MIFloat_PrintCount.MovementItemId = MovementItem.Id
+                                           AND MIFloat_PrintCount.DescId = zc_MIFloat_PrintCount()
+
+                LEFT JOIN MovementItemBoolean AS MIBoolean_Print
+                                              ON MIBoolean_Print.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_Print.DescId = zc_MIBoolean_Print()
+
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
+                                                 ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
+                LEFT JOIN Object AS Object_ReasonDifferences ON Object_ReasonDifferences.Id = MILinkObject_ReasonDifferences.ObjectId
 
                 LEFT JOIN DublePrice ON MovementItem.GoodsId = DublePrice.GoodsId
                 LEFT JOIN AVGIncome ON AVGIncome.ObjectId = MovementItem.GoodsId
@@ -491,7 +603,6 @@ BEGIN
                 LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
                                       ON ObjectFloat_Goods_Price.ObjectId = MovementItem.GoodsId
                                      AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()     
-
                 ;
     END IF;
 END;
@@ -503,6 +614,7 @@ ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 27.01.17         *
  12.12.16         * add IdBarCode
  14.09.16         *
  27.04.16         *

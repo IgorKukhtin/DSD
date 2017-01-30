@@ -69,25 +69,27 @@ BEGIN
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        )
  -- данные из проводок
- , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0) :: Integer AS MovementItemId
-                              , MIContainer.ObjectId_analyzer                  AS GoodsId
-                              , MIContainer.WhereObjectId_analyzer             AS UnitId
-                              , SUM (COALESCE (-1 * MIContainer.Amount, 0))    AS Amount
+ , tmpData_Container AS (SELECT COALESCE (MIContainer.AnalyzerId,0) :: Integer  AS MovementItemId
+                              , COALESCE (MIContainer.WhereObjectId_analyzer,0) AS UnitId
+                              , MIContainer.ObjectId_analyzer                   AS GoodsId
+                              , SUM (COALESCE (-1 * MIContainer.Amount, 0))     AS Amount
                               , SUM (COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
                          FROM MovementItemContainer AS MIContainer
                               INNER JOIN tmpUnit ON  tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                        WHERE MIContainer.DescId = zc_MIContainer_Count()
-                          AND MIContainer.MovementDescId = zc_Movement_Check()
-                          AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
-
-                        GROUP BY COALESCE (MIContainer.AnalyzerId,0)
-                               , MIContainer.ObjectId_analyzer
-                               , MIContainer.WhereObjectId_analyzer
-                         HAVING SUM (COALESCE (-1 * MIContainer.Amount,0)) <> 0
+                         WHERE MIContainer.DescId = zc_MIContainer_Count()
+                           AND MIContainer.MovementDescId = zc_Movement_Check()
+                           AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate + INTERVAL '1 DAY'
+                        -- AND MIContainer.OperDate >= '03.10.2016' AND MIContainer.OperDate < '01.12.2016'
+                         GROUP BY COALESCE (MIContainer.WhereObjectId_analyzer,0)
+                                , MIContainer.ObjectId_analyzer    
+                                , COALESCE (MIContainer.AnalyzerId,0)
+                         HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
                         )
+
        -- находим ИД док.прихода
-       , tmpData_all AS (SELECT tmpData_Container.MovementItemId
-                              , COALESCE (MI_Income.MovementId,0)   :: Integer AS MovementId
+       , tmpData_all AS (SELECT COALESCE (MI_Income_find.Id,         MI_Income.Id)         :: Integer AS MovementItemId
+                              , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) :: Integer AS MovementId
+ 
                               , tmpData_Container.GoodsId
                               , tmpData_Container.UnitId
                               , SUM (COALESCE (tmpData_Container.Amount, 0))    AS Amount
@@ -95,8 +97,16 @@ BEGIN
                          FROM tmpData_Container
                                -- элемент прихода
                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = tmpData_Container.MovementItemId
-                        GROUP BY tmpData_Container.MovementItemId
-                               , COALESCE (MI_Income.MovementId,0)  
+
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+                        GROUP BY COALESCE (MI_Income_find.Id,         MI_Income.Id)
+                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)  
                                , tmpData_Container.GoodsId
                                , tmpData_Container.UnitId
                         )

@@ -88,6 +88,8 @@ type
     GuidesJuridical: TdsdGuides;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
+    actPrintSticker_notPrice: TdsdPrintAction;
+    bbPrintSticker_notPrice: TdxBarButton;
   private
     { Private declarations }
   public

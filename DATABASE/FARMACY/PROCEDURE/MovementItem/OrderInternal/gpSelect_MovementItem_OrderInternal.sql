@@ -601,7 +601,7 @@ BEGIN
                                                                      ON MIContainer.MovementItemId = MI_Send.Id
                                                                     AND MIContainer.DescId = zc_MIContainer_Count() 
                                                                     AND MIContainer.isActive = True*/
-                        WHERE Movement_Send.OperDate >= vbOperDate AND Movement_Send.OperDate < vbOperDateEnd
+                        WHERE Movement_Send.OperDate >= vbOperDate - interval '30 day' AND Movement_Send.OperDate < vbOperDateEnd
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
                         GROUP BY MI_Send.ObjectId 
