@@ -91,8 +91,10 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####;;'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         MinWidth = 40
-        Width = 40
+        Width = 50
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
