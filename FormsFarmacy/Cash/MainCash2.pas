@@ -220,8 +220,9 @@ type
     actAddDiffMemdata: TAction;
     actSetRimainsFromMemdata: TAction;
     actSaveCashSesionIdToFile: TAction;
-    Button1: TButton;
     actServiseRun: TAction;
+    actSetMemdataFromDBF: TAction;
+    actSetUpdateFromMemdata: TAction;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -272,8 +273,9 @@ type
     procedure actAddDiffMemdataExecute(Sender: TObject);
     procedure actSetRimainsFromMemdataExecute(Sender: TObject);
     procedure actSaveCashSesionIdToFileExecute(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
-    procedure actServiseRunExecute(Sender: TObject); //***10.08.16
+    procedure actServiseRunExecute(Sender: TObject);
+    procedure actSetMemdataFromDBFExecute(Sender: TObject);
+    procedure actSetUpdateFromMemdataExecute(Sender: TObject); //***10.08.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -285,7 +287,7 @@ type
     ASalerCash{,ASdacha}: Currency;
     PaidType: TPaidType;
     FiscalNumber: String;
-
+    difUpdate: Boolean;
     VipCDS, VIPListCDS: TClientDataSet;
     VIPForm: TParentForm;
     // для мигания кнопки
@@ -349,13 +351,12 @@ var
   FLocalDataBaseHead : TVKSmartDBF;
   FLocalDataBaseBody : TVKSmartDBF;
   FLocalDataBaseDiff : TVKSmartDBF;
-
   LocalDataBaseisBusy: Integer = 0;
   csCriticalSection,
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
 
-  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative: THandle;
+  MutexDBF, MutexDBFDiff, MutexVip, MutexRemains, MutexAlternative, MutexAllowedConduct : THandle;
   LastErr: Integer;
   FM_SERVISE: Integer;  // для передачи сообщений между приложение и сервисом
   function GetSumm(Amount,Price:currency): currency;
@@ -382,15 +383,21 @@ begin
     case Msg.lParam of
      1: // получино сообщение на обновление diff разницы из дбф
         begin
+         if difUpdate then
+         begin
+          difUpdate:=false;
 //         ShowMessage('получино сообщение на обновление diff разницы из дбф');
          actAddDiffMemdata.Execute;   // вычитывает дбф в мемдату
          actSetRimainsFromMemdata.Execute; // обновляем остатки в товарах и чеках с учетом пришедших остатков в мемдате
+
+         end;
         end;
      2:  // получен запрос на сохранение CashSessionId в  CashSessionId.ini
         begin
 //         ShowMessage('получен запрос на сохранение CashSessionId в  CashSessionId.ini');
          actSaveCashSesionIdToFile.Execute;
         end;
+
 
     end;
 end;
@@ -433,6 +440,7 @@ end;
 
 procedure TMainCashForm2.actAddDiffMemdataExecute(Sender: TObject);
 begin
+//  ShowMessage('memdat-begin');
   WaitForSingleObject(MutexDBFDiff, INFINITE);
   FLocalDataBaseDiff.Open;
   if not MemData.Active then
@@ -460,6 +468,8 @@ begin
   FLocalDataBaseDiff.Close;
   MemData.EnableControls;
   ReleaseMutex(MutexDBFDiff);
+// ShowMessage('memdat-end');
+// ShowMessage(inttostr(MemData.RecordCount));
 end;
 
 procedure TMainCashForm2.actCalcTotalSummExecute(Sender: TObject);
@@ -794,7 +804,7 @@ var
 begin
   startSplash('Начало обновления данных с сервера');
   try
-    if gc_User.Local AND RemainsCDS.IsEmpty then
+    if  gc_User.Local AND RemainsCDS.IsEmpty then
     begin
 //      ShowMessage('Загрузка из Remains');
       MainGridDBTableView.BeginUpdate;
@@ -824,8 +834,26 @@ begin
       end;
     end
     else
-    if not gc_User.Local then
+    if   not gc_User.Local then
     Begin
+        MutexAllowedConduct := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+        LastErr := GetLastError;
+//        ShowMessage(inttostr(LastErr));
+        if LastErr = 183 then
+         begin
+          WaitForSingleObject(MutexAllowedConduct, INFINITE);
+
+
+         end
+          else
+          begin
+            // отправка сообщения о прикращении работы проведения чеков
+            PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 10);
+            WaitForSingleObject(MutexAllowedConduct, INFINITE);  // ожидаем разлочки в сервисе
+
+          end;
+      //
+
       if Sender <> nil then
         InterlockedIncrement(ActualRemainSession); //Фиксируем сессию остатков
       MainGridDBTableView.BeginUpdate;
@@ -871,6 +899,18 @@ begin
         RemainsCDS.AfterScroll := AfterScr;
         RemainsCDS.AfterScroll(RemainsCDS);
       end;
+
+      // начало   проходим по дбф и изменяем остатки в гриде
+
+      actSetMemdataFromDBF.Execute;
+
+      actSetUpdateFromMemdata.Execute;
+
+
+      ReleaseMutex(MutexAllowedConduct);
+      // конец    проходим по дбф и изменяем остатки в гриде
+
+
     End;
   finally
     EndSplash;
@@ -995,6 +1035,64 @@ begin
   ActiveControl := lcName;
 end;
 
+procedure TMainCashForm2.actSetMemdataFromDBFExecute(Sender: TObject);
+begin
+//  ShowMessage('actSetMemdataFromDBFExecute-begin');
+  WaitForSingleObject(MutexDBF, INFINITE);
+  FLocalDataBaseBody.Open;
+  FLocalDataBaseHead.Open;
+  if not MemData.Active then
+  MemData.Open;
+  MemData.DisableControls;
+  FLocalDataBaseHead.First;
+  while not  FLocalDataBaseHead.Eof do
+    begin
+        FLocalDataBaseBody.First;
+          while not FLocalDataBaseBody.Eof  do
+           begin
+             if FLocalDataBaseHead.FieldByName('UID').AsString = FLocalDataBaseBody.FieldByName('CH_UID').AsString then
+             begin
+
+                MemData.Append;
+                MemData.FieldByName('ID').AsInteger:=FLocalDataBaseBody.FieldByName('GOODSID').AsInteger;
+                MemData.FieldByName('GOODSCODE').AsInteger:=FLocalDataBaseBody.FieldByName('GOODSCODE').AsInteger;
+                MemData.FieldByName('GOODSNAME').AsString:=FLocalDataBaseBody.FieldByName('GOODSNAME').AsString;
+                MemData.FieldByName('PRICE').AsFloat:=FLocalDataBaseBody.FieldByName('PRICE').AsFloat;
+
+
+                if (FLocalDataBaseHead.FieldByName('MANAGER').AsInteger<> 0) or (Trim(FLocalDataBaseHead.FieldByName('BAYER').AsString)<>'')   then
+                 begin
+                  MemData.FieldByName('REMAINS').asCurrency:=0;
+                  MemData.FieldByName('RESERVED').asCurrency:=FLocalDataBaseBody.FieldByName('AMOUNT').asCurrency;
+
+                 end
+                else
+                 begin
+                  MemData.FieldByName('REMAINS').asCurrency:=FLocalDataBaseBody.FieldByName('AMOUNT').asCurrency;
+                  MemData.FieldByName('RESERVED').asCurrency:=0;
+                 end;
+
+
+                MemData.FieldByName('NEWROW').AsBoolean:=False;
+                MemData.Post;
+
+             end;
+            FLocalDataBaseBody.Next;
+           end;
+
+
+     FLocalDataBaseHead.Next;
+    end;
+
+  FLocalDataBaseBody.Close;
+  FLocalDataBaseHead.Close;
+  MemData.EnableControls;
+  ReleaseMutex(MutexDBF);
+//  ShowMessage('actSetMemdataFromDBFExecute-end');
+//  ShowMessage('MemData.RecordCount - ' +  inttostr(MemData.RecordCount));
+
+end;
+
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);
 var
   GoodsId: Integer;
@@ -1002,6 +1100,7 @@ var
   oldFilter:String;
   oldFiltered:Boolean;
 begin
+//  ShowMessage('actSetRimainsFromMemdataExecute - begin');
   AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
@@ -1092,7 +1191,113 @@ begin
     CheckCDS.EnableControls;
     CheckCDS.Filter := oldFilter;
     CheckCDS.Filtered:= oldFiltered;
+    difUpdate:=true;
   end;
+
+//  ShowMessage('actSetRimainsFromMemdataExecute - end');
+
+end;
+
+procedure TMainCashForm2.actSetUpdateFromMemdataExecute(Sender: TObject);
+var
+  GoodsId: Integer;
+  Amount_find: Currency;
+  oldFilter:String;
+  oldFiltered:Boolean;
+begin
+//  ShowMessage('actSetUpdateFromMemdataExecute - begin');
+  AlternativeCDS.DisableControls;
+  RemainsCDS.AfterScroll := Nil;
+  RemainsCDS.DisableControls;
+  GoodsId := RemainsCDS.FieldByName('Id').asInteger;
+  RemainsCDS.Filtered := False;
+  AlternativeCDS.Filtered := False;
+  CheckCDS.DisableControls;
+  oldFilter:= CheckCDS.Filter;
+  oldFiltered:= CheckCDS.Filtered;
+  try
+    MemData.First;
+    while not MemData.eof do
+    begin
+          // сначала найдем кол-во в чеках
+          CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger);
+          CheckCDS.Filtered:=true;
+          CheckCDS.First;
+          Amount_find:=0;
+          while not CheckCDS.EOF do begin
+              Amount_find:= Amount_find + CheckCDS.FieldByName('Amount').asCurrency;
+              CheckCDS.Next;
+          end;
+          CheckCDS.Filter := oldFilter;
+          CheckCDS.Filtered:= oldFiltered;
+
+      if not RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) and  MemData.FieldByName('NewRow').AsBoolean then
+      Begin
+        RemainsCDS.Append;
+        RemainsCDS.FieldByName('Id').AsInteger := MemData.FieldByName('Id').AsInteger;
+        RemainsCDS.FieldByName('GoodsCode').AsInteger := MemData.FieldByName('GoodsCode').AsInteger;
+        RemainsCDS.FieldByName('GoodsName').AsString := MemData.FieldByName('GoodsName').AsString;
+        RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
+        RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency - MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.FieldByName('Reserved').asCurrency :=  RemainsCDS.FieldByName('Reserved').asCurrency + MemData.FieldByName('Reserved').asCurrency;
+        RemainsCDS.Post;
+      End
+      else
+      Begin
+        if RemainsCDS.Locate('Id',MemData.FieldByName('Id').AsInteger,[]) then
+        Begin
+          RemainsCDS.Edit;
+          RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency -  MemData.FieldByName('Reserved').asCurrency;
+          RemainsCDS.FieldByName('Reserved').asCurrency := RemainsCDS.FieldByName('Reserved').asCurrency + MemData.FieldByName('Reserved').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
+                                                        - Amount_find;
+          RemainsCDS.Post;
+        End;
+      End;
+      MemData.Next;
+    end;
+
+    AlternativeCDS.First;
+    while Not AlternativeCDS.eof do
+    Begin
+      if MemData.locate('Id',AlternativeCDS.fieldByName('Id').AsInteger,[]) then
+      Begin
+        if AlternativeCDS.FieldByName('Remains').asCurrency <> MemData.FieldByName('Remains').asCurrency then
+        Begin
+          AlternativeCDS.Edit;
+          AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency - MemData.FieldByName('Remains').asCurrency -  MemData.FieldByName('Reserved').asCurrency;
+          {12.10.2016 - сделал по другому, т.к. в CheckCDS теперь могут повторяться GoodsId
+          if CheckCDS.Locate('GoodsId',ADIffCDS.FieldByName('Id').AsInteger,[]) then
+            AlternativeCDS.FieldByName('Remains').asCurrency := AlternativeCDS.FieldByName('Remains').asCurrency
+              - CheckCDS.FieldByName('Amount').asCurrency;}
+          AlternativeCDS.FieldByName('Remains').asCurrency :=  AlternativeCDS.FieldByName('Remains').asCurrency
+                                                            - Amount_find;
+          AlternativeCDS.Post;
+        End;
+      End;
+      AlternativeCDS.Next;
+    End;
+    MemData.Close;
+  finally
+    RemainsCDS.Filtered := True;
+    RemainsCDS.Locate('Id',GoodsId,[]);
+    RemainsCDS.EnableControls;
+    RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+    AlternativeCDS.Filtered := true;
+    RemainsCDSAfterScroll(RemainsCDS);
+    AlternativeCDS.EnableControls;
+    CheckCDS.EnableControls;
+    CheckCDS.Filter := oldFilter;
+    CheckCDS.Filtered:= oldFiltered;
+    difUpdate:=true;
+  end;
+
+//  ShowMessage('actSetUpdateFromMemdataExecute - end');
 
 
 end;
@@ -1309,11 +1514,6 @@ begin
   else actCheck.Execute;
 end;
 
-procedure TMainCashForm2.Button1Click(Sender: TObject);
-begin
-actServiseRun.Execute;
-end;
-
 procedure TMainCashForm2.ceAmountExit(Sender: TObject);
 begin
   ceAmount.Enabled := false;
@@ -1373,6 +1573,10 @@ begin
   LastErr := GetLastError;
   MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   LastErr := GetLastError;
+  MutexAlternative := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+  LastErr := GetLastError;
+
+
   DiscountServiceForm:= TDiscountServiceForm.Create(Self);
 
 
@@ -1435,6 +1639,8 @@ begin
   SetBlinkVIP (true);
   SetBlinkCheck (true);
   TimerBlinkBtn.Enabled := true;
+
+  actServiseRun.Execute; // запуск сервиса
 end;
 
 function TMainCashForm2.InitLocalStorage: Boolean;
@@ -2162,17 +2368,18 @@ begin
   if Assigned(MainCashForm.Cash) AND MainCashForm.Cash.AlwaysSold then
     MainCashForm.Cash.AlwaysSold := False;
 
-  if Self.Visible then       { TODO -oUfomaster -cИзменить : Добавить механизм обновления из local }
-  Begin
+  if Self.Visible then
+   Begin
 //     ShowMessage('При работе');
     if ANeedRemainsRefresh then
       StartRefreshDiffThread;
-  End
+   End
   else
-  Begin
+   Begin
 //    ShowMessage('При старте');
     actRefreshAllExecute(nil);
-  End;
+
+   End;
   CalcTotalSumm;
   ceAmount.Value := 0;
   ActiveControl := lcName;

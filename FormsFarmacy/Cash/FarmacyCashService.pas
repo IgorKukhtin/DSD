@@ -12,7 +12,8 @@ uses
   cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit,  cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid,  cxSplitter, cxContainer,  cxTextEdit, cxCurrencyEdit, cxLabel, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
-  cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn
+  cxDBLookupEdit, cxDBLookupComboBox,  cxCheckBox, cxNavigator, CashInterface,  cxImageComboBox , dsdAddOn,
+  Vcl.ImgList
   ;
 
 type
@@ -127,11 +128,14 @@ type
     MemDataRESERVED: TFloatField;
     MemDataNEWROW: TBooleanField;
     actSetCashSessionId: TAction;
-    PopupMenu1: TPopupMenu;
+    pmServise: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     Timer1: TTimer;
+    tiServise: TTrayIcon;
+    N4: TMenuItem;
+    ilIcons: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -142,6 +146,7 @@ type
     procedure N2Click(Sender: TObject);
     procedure N3Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure N4Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -223,8 +228,8 @@ var
   csCriticalSection,
   csCriticalSection_Save,
   csCriticalSection_All: TRTLCriticalSection;
-
-  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh: THandle;
+  AllowedConduct : Integer = 0;
+  MutexDBF, MutexDBFDiff,  MutexVip, MutexRemains, MutexAlternative, MutexRefresh, MutexAllowedConduct: THandle;
   LastErr: Integer;
 
   FM_SERVISE: Integer;
@@ -242,11 +247,25 @@ begin
   if Handled and (Msg.wParam = 2) then
     case Msg.lParam of
       2: actSetCashSessionId.Execute;    // обновление кеш сесии
-      3: SaveRealAll;    // попросили провести чеки
+      3: begin
+
+          SaveRealAll;    // попросили провести чеки
+
+         end;
       9: begin
 //           ShowMessage('запрос на выключение');
            MainCashForm2.Close;    // закрыть сервис
          end;
+      10: begin    // остановить проведение чеков
+            if AllowedConduct=0 then
+              InterlockedIncrement(AllowedConduct);
+          end;
+
+      20: begin  // разрешить проведение чеков
+            if AllowedConduct<>0 then
+             InterlockedDecrement(AllowedConduct);
+           end;
+
     end;
 
 end;
@@ -261,6 +280,11 @@ end;
 procedure TSaveRealThread.SyncShapeState;
 begin
   MainCashForm2.ShapeState.Pen.Color := FShapeColor;
+  if (FShapeColor=clBlack) or (FShapeColor=clGreen) or (FShapeColor=clWhite) then
+  MainCashForm2.tiServise.IconIndex:=1
+  else   MainCashForm2.tiServise.IconIndex:=0;
+//  clWhite   clBlue clBlack
+
 end;
 
 procedure TRefreshDiffThread.Execute;
@@ -537,6 +561,11 @@ end;
 procedure TMainCashForm2.N3Click(Sender: TObject);
 begin
 SaveRealAll;
+end;
+
+procedure TMainCashForm2.N4Click(Sender: TObject);
+begin
+ MainCashForm2.Close;
 end;
 
 procedure TMainCashForm2.NewCheck(ANeedRemainsRefresh: Boolean = True);
@@ -943,10 +972,13 @@ begin
   if ADIffCDS.IsEmpty then
     exit;
   //отключаем реакции
+  if not RemainsCDS.Active then
+    exit;
 
   AlternativeCDS.DisableControls;
   RemainsCDS.AfterScroll := Nil;
   RemainsCDS.DisableControls;
+  if RemainsCDS.RecordCount>0 then
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   RemainsCDS.Filtered := False;
   AlternativeCDS.Filtered := False;
@@ -1462,15 +1494,7 @@ begin
         BEGIN
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin
-           //было
-//            With TRefreshDiffThread.Create(true) do
-//            Begin
-//              { TODO -oufomaster : Возможно сюда нужно передать head.usersesion через поле потока а не через обращение к записи из потока }
-//              FreeOnTerminate := true;
-//              Start;
-//            End;
 
-            //стало
             trd:= TRefreshDiffThread.Create(true);
             try
             Trd.FUserSesion := Head.USERSESION;
@@ -1530,8 +1554,16 @@ var
   T:TSaveRealThread;
 begin
   inherited;
+  MutexAllowedConduct := CreateMutex(nil, false, 'farmacycashMutexAlternative');
+  WaitForSingleObject(MutexAllowedConduct, INFINITE);
 
   if CountSaveThread > 0 then exit;
+  if AllowedConduct > 0 then
+   begin
+     ReleaseMutex(MutexAlternative);
+     exit;
+   end;
+
 
   InterlockedIncrement(CountRRT);
   try
@@ -1539,6 +1571,10 @@ begin
     try
       for I := 0 to 6 do
       Begin
+        if AllowedConduct > 0 then
+         begin
+           break;
+         end;
        WaitForSingleObject(MutexDBF, INFINITE);
        FLocalDataBaseHead.Active:=True;
        FLocalDataBaseBody.Active:=True;
@@ -1581,6 +1617,7 @@ begin
       End;
     finally
       LeaveCriticalSection(csCriticalSection_All);
+      ReleaseMutex(MutexAlternative);
     end;
   finally
     InterlockedDecrement(CountRRT);

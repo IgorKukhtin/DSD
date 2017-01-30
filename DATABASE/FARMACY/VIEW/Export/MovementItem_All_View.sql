@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW MovementItem_All_Operate AS
        ,Container.ObjectId                            AS GoodsId
        ,(MIC_Count.Amount*MIFloat_Price.ValueData)::TFloat AS Summ
        ,MIC_Count.OperDate                                 AS OperDate
+       ,Movement.OperDate                                  AS OperDateMov
        ,Movement.InvNumber                                 AS InvNumber
        ,MLO_From.ObjectId                                  AS From_ID
        ,MLO_To.ObjectId                                    AS To_ID
@@ -44,11 +45,15 @@ ALTER TABLE MovementItem_All_Operate
   OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
+
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   Р’РѕСЂРѕР±РєР°Р»Рѕ Рђ.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Полятыкин А.А.
+ 26.01.17                                                                           *
  03.09.15                                                         *
 */
 
--- С‚РµСЃС‚
+
+-- тест
 -- SELECT * FROM MovementItem_All_Operate
+
