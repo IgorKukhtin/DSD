@@ -65,8 +65,6 @@ BEGIN
                                                     , inUserId             := vbUserId
                                                       );
 
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -78,4 +76,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_MovementItem_MobileBills(ioId := 0 , inMovementId := 4353249 , inMobileEmployeeId := 670584 , ioAmount := 0 , ioCurrMonthly := 0 , inCurrNavigator := 0 , inPrevNavigator := 0 , inLimit := 100 , inPrevLimit := 0 , inDutyLimit := 0 , inOverlimit := 0 , inPrevMonthly := 0 , inRegionId := 0 , inEmployeeId := 617411 , inPrevEmployeeId := 0 , inMobileTariffId := 669910 , inPrevMobileTariffId := 0 ,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_MovementItem_MobileBills(ioId := 0 , inMovementId := 4353249 , inMobileEmployeeId := 670584 , ioAmount := 0 , ioCurrMonthly := 0 , inCurrNavigator := 0 , inPrevNavigator := 0 , inLimit := 100 , inPrevLimit := 0 , inDutyLimit := 0 , inOverlimit := 0 , inPrevMonthly := 0 , inRegionId := 0 , inEmployeeId := 617411 , inPrevEmployeeId := 0 , inMobileTariffId := 669910 , inPrevMobileTariffId := 0 ,  inSession := '5');

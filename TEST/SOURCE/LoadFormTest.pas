@@ -282,7 +282,6 @@ end;
 
 procedure TLoadFormTest.LoadCashFormTest;
 begin
-//exit;
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
  // TdsdFormStorageFactory.GetStorage.Load('TCashForm');
  // TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
@@ -294,7 +293,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashJournalUserForm');
- TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashOperationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashOperationForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_PersonalForm'));
@@ -2240,25 +2239,26 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEditForm');
   // форма справочника Мобильные телефоны сотрудников
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeForm');
   // форма правки данных справочника Тарифы мобильных операторов
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeEditForm');
+
+  // форма - OLD
   // форма отчета Отчет Затраты мобильной связи по сотрудникам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MobileKSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MobileKSForm');
 
-  // форма 2
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariff2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariff2Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileTariffEdit2Form'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileTariffEdit2Form');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployee2Form'));
-  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployee2Form');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployeeEdit2Form'));
-  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployeeEdit2Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployee2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployee2Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileNumbersEmployeeEdit2Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileNumbersEmployeeEdit2Form');
 end;
 
 procedure TLoadFormTest.LoadMobileBillsFormTest;

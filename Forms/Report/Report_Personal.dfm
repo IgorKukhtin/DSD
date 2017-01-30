@@ -4,6 +4,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitLeft = -255
+  ExplicitTop = -133
   ExplicitWidth = 1044
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -102,6 +103,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummPhone
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummNalog
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -178,6 +184,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
               Format = ',0.00##'
               Kind = skSum
               Column = SummPhone
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SummNalog
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -369,7 +380,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Width = 80
           end
           object colIncomeSumm: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1077' '#1043#1057#1052
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
             DataBinding.FieldName = 'IncomeSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -377,6 +388,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 80
+          end
+          object SummNalog: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1053#1072#1083#1086#1075#1080
+            DataBinding.FieldName = 'SummNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object SummTransportAdd: TcxGridDBColumn
@@ -731,16 +752,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -761,16 +785,19 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1047#1055' - '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -779,54 +806,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -834,6 +870,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'IncomeDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -841,6 +878,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -848,6 +886,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -855,6 +894,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -862,6 +902,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -869,6 +910,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -876,6 +918,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -886,54 +929,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -941,6 +993,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'ReturnOutDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -948,6 +1001,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -955,6 +1009,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -962,6 +1017,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -969,6 +1025,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -976,6 +1033,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -983,6 +1041,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -992,54 +1051,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1047,6 +1115,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'SaleDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1054,6 +1123,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1061,6 +1131,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1068,6 +1139,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1075,6 +1147,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1082,6 +1155,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1089,6 +1163,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1099,54 +1174,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1154,6 +1238,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'ReturnInDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1161,6 +1246,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1168,6 +1254,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1175,6 +1262,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1182,6 +1270,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1189,6 +1278,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1196,6 +1286,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1206,54 +1297,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1261,6 +1361,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'MoneyDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1268,6 +1369,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1275,6 +1377,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1282,6 +1385,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1289,6 +1393,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1296,6 +1401,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1303,6 +1409,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1313,54 +1420,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1368,6 +1484,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'ServiceDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1375,6 +1492,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1382,6 +1500,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1389,6 +1508,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1396,6 +1516,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1403,6 +1524,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1410,6 +1532,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1420,54 +1543,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1475,6 +1607,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'SendDebtDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1482,6 +1615,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1489,6 +1623,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1496,6 +1631,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1503,6 +1639,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1510,6 +1647,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1517,6 +1655,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1527,54 +1666,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1582,6 +1730,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'OtherDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1589,6 +1738,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1596,6 +1746,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1603,6 +1754,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1610,6 +1762,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1617,6 +1770,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1624,6 +1778,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1634,54 +1789,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1689,6 +1853,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'SaleRealDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1696,6 +1861,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1703,6 +1869,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1710,6 +1877,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1717,6 +1885,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1724,6 +1893,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1731,6 +1901,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1741,54 +1912,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1796,6 +1976,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'ReturnInRealDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1803,6 +1984,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1810,6 +1992,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1817,6 +2000,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1824,6 +2008,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1831,6 +2016,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1838,6 +2024,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1850,6 +2037,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TReport_PersonalDialogForm'
       FormNameParam.Value = 'TReport_PersonalDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1857,6 +2045,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1864,6 +2053,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -1872,6 +2062,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1880,6 +2071,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupId'
@@ -1887,6 +2079,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = GuidesInfoMoneyGroup
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupName'
@@ -1895,6 +2088,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationId'
@@ -1902,6 +2096,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = GuidesInfoMoneyDestination
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationName'
@@ -1910,6 +2105,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -1917,6 +2113,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = GuidesInfoMoney
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1925,6 +2122,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchId'
@@ -1932,6 +2130,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = GuidesBranch
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'BranchName'
@@ -1940,6 +2139,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isServiceDate'
@@ -1947,6 +2147,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = cbServiceDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inDateService'
@@ -1954,6 +2155,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = deServiceDate
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1966,54 +2168,63 @@ inherited Report_PersonalForm: TReport_PersonalForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -2021,6 +2232,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = FormParams
           ComponentItem = 'TransferDebtDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -2028,6 +2240,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -2035,6 +2248,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -2042,6 +2256,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -2049,6 +2264,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -2056,6 +2272,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -2063,6 +2280,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -2083,6 +2301,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -2090,6 +2309,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateService'
@@ -2097,6 +2317,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = deServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisServiceDate'
@@ -2104,6 +2325,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = cbServiceDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -2111,6 +2333,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -2118,6 +2341,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -2125,6 +2349,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyGroupId'
@@ -2132,6 +2357,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyDestinationId'
@@ -2139,6 +2365,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184
@@ -2268,6 +2495,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     LookupControl = ceInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2278,6 +2506,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2286,11 +2515,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 648
     Top = 29
@@ -2300,6 +2531,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestination_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2310,6 +2542,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2318,11 +2551,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 776
     Top = 29
@@ -2332,6 +2567,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2340,6 +2576,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2347,11 +2584,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 920
     Top = 29
@@ -2361,6 +2600,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2370,6 +2610,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -2378,11 +2619,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Member'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 496
     Top = 24
@@ -2398,6 +2641,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -2405,6 +2649,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -2412,6 +2657,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -2419,6 +2665,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -2426,6 +2673,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -2433,6 +2681,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -2440,6 +2689,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -2447,6 +2697,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -2454,6 +2705,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -2461,6 +2713,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -2468,6 +2721,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -2479,56 +2733,67 @@ inherited Report_PersonalForm: TReport_PersonalForm
         Name = 'IncomeDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 232
@@ -2538,6 +2803,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2548,6 +2814,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2556,6 +2823,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 21

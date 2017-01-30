@@ -2,7 +2,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1072#1089#1089#1072', '#1074#1099#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1077#1076#1086#1084#1086#1089#1090#1080'>'
   ClientHeight = 402
   ClientWidth = 982
-  ExplicitLeft = -192
   ExplicitWidth = 998
   ExplicitHeight = 437
   PixelsPerInch = 96
@@ -120,6 +119,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummHoliday
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummNalog
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -216,6 +220,11 @@ inherited Cash_PersonalForm: TCash_PersonalForm
               Format = ',0.00'
               Kind = skSum
               Column = SummHoliday
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummNalog
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -337,7 +346,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummToPay_cash: TcxGridDBColumn [11]
+          object SummNalog: TcxGridDBColumn [11]
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'SummNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SummToPay_cash: TcxGridDBColumn [12]
             Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099')'
             DataBinding.FieldName = 'SummToPay_cash'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -348,7 +367,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object Amount_avance: TcxGridDBColumn [12]
+          object Amount_avance: TcxGridDBColumn [13]
             Caption = #1040#1074#1072#1085#1089' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
             DataBinding.FieldName = 'Amount_avance'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -359,7 +378,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object Amount_service: TcxGridDBColumn [13]
+          object Amount_service: TcxGridDBColumn [14]
             Caption = #1044#1088#1091#1075#1080#1077' ('#1074#1099#1087#1083#1072#1095#1077#1085#1086')'
             DataBinding.FieldName = 'Amount_service'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -370,7 +389,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object Amount: TcxGridDBColumn [14]
+          object Amount: TcxGridDBColumn [15]
             Caption = #1042#1099#1087#1083#1072#1090#1072' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -380,7 +399,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object SummRemains: TcxGridDBColumn [15]
+          object SummRemains: TcxGridDBColumn [16]
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1074#1099#1087#1083#1072#1090#1077
             DataBinding.FieldName = 'SummRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -391,7 +410,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummMinus: TcxGridDBColumn [16]
+          object SummMinus: TcxGridDBColumn [17]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
             DataBinding.FieldName = 'SummMinus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -401,7 +420,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummAdd: TcxGridDBColumn [17]
+          object SummAdd: TcxGridDBColumn [18]
             Caption = #1055#1088#1077#1084#1080#1103
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -411,7 +430,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummHoliday: TcxGridDBColumn [18]
+          object SummHoliday: TcxGridDBColumn [19]
             Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
             DataBinding.FieldName = 'SummHoliday'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -421,7 +440,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummTransport: TcxGridDBColumn [19]
+          object SummTransport: TcxGridDBColumn [20]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1043#1057#1052
             DataBinding.FieldName = 'SummTransport'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -431,7 +450,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummPhone: TcxGridDBColumn [20]
+          object SummPhone: TcxGridDBColumn [21]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1052#1086#1073'.'#1089#1074#1103#1079#1100
             DataBinding.FieldName = 'SummPhone'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -441,7 +460,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummTransportAdd: TcxGridDBColumn [21]
+          object SummTransportAdd: TcxGridDBColumn [22]
             Caption = #1050#1086#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -452,7 +471,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 75
           end
-          object SummTransportAddLong: TcxGridDBColumn [22]
+          object SummTransportAddLong: TcxGridDBColumn [23]
             Caption = #1044#1072#1083#1100#1085#1086#1073#1086#1081#1085#1099#1077' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportAddLong'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -461,7 +480,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object SummTransportTaxi: TcxGridDBColumn [23]
+          object SummTransportTaxi: TcxGridDBColumn [24]
             Caption = #1058#1072#1082#1089#1080' ('#1076#1086#1087#1083#1072#1090#1072', '#1090#1088#1072#1085#1089#1087')'
             DataBinding.FieldName = 'SummTransportTaxi'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -470,7 +489,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
-          object SummSocialIn: TcxGridDBColumn [24]
+          object SummSocialIn: TcxGridDBColumn [25]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1080#1079' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -480,7 +499,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummSocialAdd: TcxGridDBColumn [25]
+          object SummSocialAdd: TcxGridDBColumn [26]
             Caption = #1057#1086#1094'.'#1074#1099#1087#1083'. ('#1076#1086#1087'. '#1082' '#1079#1087')'
             DataBinding.FieldName = 'SummSocialAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -490,7 +509,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object SummChild: TcxGridDBColumn [26]
+          object SummChild: TcxGridDBColumn [27]
             Caption = #1040#1083#1080#1084#1077#1085#1090#1099
             DataBinding.FieldName = 'SummChild'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -500,14 +519,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 70
           end
-          object Comment: TcxGridDBColumn [27]
+          object Comment: TcxGridDBColumn [28]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object InfoMoneyCode: TcxGridDBColumn [28]
+          object InfoMoneyCode: TcxGridDBColumn [29]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -516,7 +535,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 55
           end
-          object InfoMoneyName: TcxGridDBColumn [29]
+          object InfoMoneyName: TcxGridDBColumn [30]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -525,7 +544,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
             Options.Editing = False
             Width = 80
           end
-          object InfoMoneyName_all: TcxGridDBColumn [30]
+          object InfoMoneyName_all: TcxGridDBColumn [31]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -751,11 +770,30 @@ inherited Cash_PersonalForm: TCash_PersonalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_PersonalService'
       ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     inherited actAddMask: TdsdExecStoredProc
       Enabled = False
@@ -871,6 +909,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -878,11 +917,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementItemId'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -891,6 +932,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -898,6 +940,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 256
@@ -975,12 +1018,23 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbAddMask: TdxBarButton
       Visible = ivNever
@@ -999,6 +1053,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
       item
         Param.Value = Null
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
     Left = 830
@@ -1020,12 +1075,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -1033,6 +1090,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId_top'
@@ -1040,6 +1098,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName_top'
@@ -1048,6 +1107,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 512
@@ -1070,11 +1130,13 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1083,6 +1145,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -1090,12 +1153,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'CashId_top'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
@@ -1103,6 +1168,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -1110,12 +1176,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentId'
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentName'
@@ -1123,24 +1191,28 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
         Value = 41640d
         Component = edServiceDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashId'
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CashName'
@@ -1148,12 +1220,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
         Value = Null
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -1161,12 +1235,14 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId'
         Value = ''
         Component = GuidesMember
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
@@ -1174,6 +1250,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 264
@@ -1187,6 +1264,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1194,6 +1272,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -1201,6 +1280,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -1208,6 +1288,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCashId'
@@ -1215,6 +1296,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesCash
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1222,6 +1304,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -1229,6 +1312,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -1298,6 +1382,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -1305,6 +1390,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Parent'
@@ -1312,6 +1398,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
@@ -1319,6 +1406,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'PersonalId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -1327,6 +1415,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSummRemains'
@@ -1334,6 +1423,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'SummRemains'
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1342,6 +1432,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1349,6 +1440,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -1356,6 +1448,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'UnitId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPositionId'
@@ -1363,6 +1456,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'PositionId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 368
@@ -1379,6 +1473,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefreshMaster
     ComponentList = <
       item
@@ -1417,6 +1512,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 319
@@ -1428,6 +1524,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     isShowModal = True
     FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1436,6 +1533,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1443,6 +1541,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
@@ -1450,6 +1549,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -1458,6 +1558,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
@@ -1465,14 +1566,17 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListName'
         Value = ''
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 5
@@ -1483,6 +1587,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     Key = '0'
     FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1491,6 +1596,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = 'NULL'
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1498,6 +1604,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListId'
@@ -1505,6 +1612,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalServiceListName'
@@ -1512,6 +1620,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDate'
@@ -1519,24 +1628,28 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = edServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListId'
         Value = 0
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListName'
         Value = ''
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 448
-    Top = 64
+    Top = 16
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCash
     FormNameParam.Value = 'TCash_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1545,6 +1658,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = ''
         Component = GuidesCash
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1552,6 +1666,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesCash
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 528
     Top = 65533
@@ -1561,6 +1676,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
     LookupControl = edMember
     FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1569,6 +1685,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Value = ''
         Component = GuidesMember
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1576,6 +1693,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesMember
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 736
     Top = 65533
@@ -1591,6 +1709,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Parent'
@@ -1598,6 +1717,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = GuidesPersonalServiceJournal
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 290
@@ -1614,6 +1734,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioAmount'
@@ -1622,6 +1743,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ioSummRemains'
@@ -1630,6 +1752,7 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         ComponentItem = 'SummRemains'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 282

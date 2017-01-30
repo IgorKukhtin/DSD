@@ -514,6 +514,7 @@ object JuridicalForm: TJuridicalForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbProtocolOpen: TdxBarButton
       Action = ProtocolOpenForm

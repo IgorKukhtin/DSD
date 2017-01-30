@@ -5,7 +5,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -182,10 +182,10 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     Width = 1073
     ExplicitWidth = 1073
     inherited deStart: TcxDateEdit
-      EditValue = 42614d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42614d
+      EditValue = 42736d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -345,6 +345,20 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object mactLoadXML: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actLoadXMLKS
+        end
+        item
+          Action = actRefresh
+        end>
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1093' '#1080#1079' XML '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' XML'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1044#1072#1085#1085#1099#1093' '#1080#1079' XML'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -445,7 +459,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbLoadXMLKS'
+          ItemName = 'bbLoadXML'
         end
         item
           Visible = True
@@ -476,14 +490,16 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
     end
-    object bbLoadXMLKS: TdxBarButton
-      Action = actLoadXMLKS
+    object bbLoadXML: TdxBarButton
+      Action = mactLoadXML
       Category = 0
-      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

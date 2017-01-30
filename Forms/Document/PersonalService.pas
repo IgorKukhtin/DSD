@@ -101,8 +101,11 @@ type
     spGetImportSetting: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actGetImportSetting: TdsdExecStoredProc;
-    actStartLoad: TMultiAction;
-    bb: TdxBarButton;
+    actLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
+    SummNalog: TcxGridDBColumn;
+    SummNalogRecalc: TcxGridDBColumn;
+    spUpdate_SetNULL: TdsdStoredProc;
   private
     { Private declarations }
   public

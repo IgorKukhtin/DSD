@@ -11,14 +11,14 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxSpinEdit,
-  Vcl.Menus;
+  Vcl.Menus, dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit;
 
 type
   TMobileTariffForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colInetCost: TcxGridDBColumn;
-    colSMSCost: TcxGridDBColumn;
+    colCostInet: TcxGridDBColumn;
+    colCostSMS: TcxGridDBColumn;
     colMonthly: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
@@ -44,8 +44,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colMinuteCost: TcxGridDBColumn;
-    colID: TcxGridDBColumn;
+    colCostMinutes: TcxGridDBColumn;
     colPocketInet: TcxGridDBColumn;
     colPocketSMS: TcxGridDBColumn;
     colPocketMinutes: TcxGridDBColumn;
@@ -54,16 +53,18 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     colTariffName: TcxGridDBColumn;
-    actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
     colErased: TcxGridDBColumn;
-    colComms: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
     pmGrid: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
     N5: TMenuItem;
+    colCode: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    actInsert: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

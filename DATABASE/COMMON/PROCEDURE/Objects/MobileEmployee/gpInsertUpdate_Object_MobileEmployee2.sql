@@ -25,7 +25,6 @@ BEGIN
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object_MobileEmployee2(ioId             :=  ioId
@@ -53,4 +52,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_MobileEmployee2(ioId := 0 , inCode := 1 , inName := 'Белов' , inLimit := '4444' , DutyLimit := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inPersonalId := 0 , inMobileEmployeeKindId := 153272 ,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Object_MobileEmployee2(ioId := 0 , inCode := 1 , inName := 'Белов' , inLimit := '4444' , DutyLimit := 'выа@kjjkj' , Comment := '' , inPartnerId := 258441 , inJuridicalId := 0 , inPersonalId := 0 , inMobileEmployeeKindId := 153272 ,  inSession := '5');

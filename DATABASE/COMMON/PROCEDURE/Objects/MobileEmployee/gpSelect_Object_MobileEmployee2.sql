@@ -11,11 +11,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DutyLimit TFloat
              , Navigator TFloat
              , Comment TVarChar
-             , PersonalId Integer, PersonalName TVarChar
+             , PersonalId Integer, PersonalName TVarChar, isDateOut Boolean
              , PositionCode Integer, PositionName TVarChar
-             , UnitCode Integer, UnitName TVarChar
+             , BranchCode Integer, BranchName TVarChar, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
-             , isErased boolean
+             , isErased Boolean
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -40,11 +40,13 @@ BEGIN
          
            , Object_Personal.Id                AS PersonalId
            , Object_Personal.ValueData         AS PersonalName 
-           
+           , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END :: Boolean AS isDateOut
 
            , Object_Position.ObjectCode        AS PositionCode
            , Object_Position.ValueData         AS PositionName
 
+           , Object_Branch.ObjectCode          AS BranchCode
+           , Object_Branch.ValueData           AS BranchName
            , Object_Unit.ObjectCode            AS UnitCode
            , Object_Unit.ValueData             AS UnitName
 
@@ -73,6 +75,9 @@ BEGIN
                                  ON ObjectLink_MobileEmployee_Personal.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_Personal.DescId = zc_ObjectLink_MobileEmployee_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_MobileEmployee_Personal.ChildObjectId                               
+            LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                 ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                                AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
 
             LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_MobileTariff
                                  ON ObjectLink_MobileEmployee_MobileTariff.ObjectId = Object_MobileEmployee.Id 
@@ -89,6 +94,10 @@ BEGIN
                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id   = ObjectLink_Unit_Branch.ChildObjectId
 
      WHERE Object_MobileEmployee.DescId = zc_Object_MobileEmployee()
        AND (Object_MobileEmployee.isErased = inShowAll OR inShowAll = True)
@@ -106,4 +115,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_MobileEmployee2 (TRUE,zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_MobileEmployee2 (TRUE,zfCalc_UserAdmin())

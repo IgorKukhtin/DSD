@@ -35,7 +35,7 @@ BEGIN
 
 
      -- Меняем параметр
-     -- inGLNPlace:= TRIM (inGLNPlace);
+     inGLNPlace:= TRIM (inGLNPlace);
 
      -- Меняем параметр
      inDesc:= COALESCE ((SELECT MovementDesc.Code FROM MovementDesc WHERE Id = zc_Movement_Sale() AND inDesc = 'Sale')

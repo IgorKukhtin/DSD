@@ -1,19 +1,19 @@
-п»ї-- Function: lpinsertupdate_objectFloat()
+-- Function: lpinsertupdate_objectFloat()
 
 -- DROP FUNCTION lpinsertupdate_objectFloat();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectFloat(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°  */
- inObjectId                  Integer           ,  /* РєР»СЋС‡ РѕР±СЉРµРєС‚Р°         */
- inValueData                 TFloat               /* РґР°РЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°      */
+ inDescId                    Integer           ,  /* код класса свойства  */
+ inObjectId                  Integer           ,  /* ключ объекта         */
+ inValueData                 TFloat               /* данные свойства      */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> Рё <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectFloat SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> */
+       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
        INSERT INTO ObjectFloat (DescId, ObjectId, ValueData)
            VALUES (inDescId, inObjectId, inValueData);
     END IF;             

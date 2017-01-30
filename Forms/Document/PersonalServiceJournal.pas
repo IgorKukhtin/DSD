@@ -76,6 +76,8 @@ type
     actExport: TMultiAction;
     actGet_Export_FileName: TdsdExecStoredProc;
     spGet_Export_FileName: TdsdStoredProc;
+    TotalSummNalog: TcxGridDBColumn;
+    TotalSummNalogRecalc: TcxGridDBColumn;
   private
     { Private declarations }
   public

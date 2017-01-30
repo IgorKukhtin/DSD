@@ -14,7 +14,7 @@ BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
      -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummNalogRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
 
 
      -- Проверка - других быть не должно
@@ -72,7 +72,7 @@ BEGIN
      END IF;
 
 
-     -- распределение !!!если это БН!!! - <Сумма на карточку (БН) для распределения>
+     -- распределение !!!если это БН!!! - <Сумма на карточку (БН) для распределения> + <Сумма налогов - удержания с сотрудника для распределения> 
      IF EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
                      INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
@@ -102,6 +102,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , AnalyzerId
                          , IsActive, IsMaster
                           )
         -- 1.1. долг сотруднику по ЗП
@@ -149,6 +150,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
+             , 0 AS AnalyzerId -- не надо, т.к. это обычная ЗП
+
              -- , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsActive -- всегда такая
              , TRUE AS IsMaster
@@ -177,10 +180,11 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummNalog()
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_PersonalService()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-          AND MovementItem.Amount <> 0
+          AND (MovementItem.Amount <> 0 OR MIF.ValueData <> 0)
        ;
 
 
@@ -205,9 +209,10 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , AnalyzerId
                          , IsActive, IsMaster
                           )
-         -- 1.2.1. ОПиУ по ЗП
+        -- 1.2.1. ОПиУ по ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , 0 AS ObjectId
@@ -238,7 +243,7 @@ BEGIN
                -- Главное Юр.лицо: из какой кассы будет выплачено
              , _tmpItem.JuridicalId_Basis
 
-             , 0 AS UnitId                -- не используется
+             , _tmpItem.UnitId            -- используется, для аналитики WhereObjectId_Analyzer
              , 0 AS PositionId            -- не используется
              , 0 AS PersonalServiceListId -- не используется
 
@@ -253,6 +258,7 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
+             , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -306,6 +312,7 @@ BEGIN
              , ObjectLink_Unit_Contract.ChildObjectId     AS ContractId
              , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
 
+             , 0 AS AnalyzerId -- не надо, т.к. это Перевыставление
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -319,6 +326,114 @@ BEGIN
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
         WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
+
+       UNION ALL
+        -- 1.3.1. ОПиУ по налогам - удержания с ЗП - !!!доход!!!
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , 0 AS ObjectId
+             , 0 AS ObjectDescId
+             , -1 * MIF.ValueData AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+
+               -- Группы ОПиУ
+             , 0 AS ProfitLossGroupId     -- сформируем позже
+               -- Аналитики ОПиУ - направления
+             , 0 AS ProfitLossDirectionId -- сформируем позже
+
+               -- Управленческие группы назначения
+             , View_InfoMoney.InfoMoneyGroupId
+               -- Управленческие назначения
+             , View_InfoMoney.InfoMoneyDestinationId
+               -- Управленческие статьи назначения - Налоговые платежи по ЗП - Отчисления
+             , View_InfoMoney.InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , _tmpItem.JuridicalId_Basis
+
+             , _tmpItem.UnitId            -- используется, для аналитики WhereObjectId_Analyzer
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению
+             , _tmpItem.BranchId_Balance AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
+
+             , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
+        FROM _tmpItem
+             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_50101() -- Налоговые платежи по ЗП - Отчисления
+        WHERE MIF.ValueData <> 0
+       UNION
+        -- 1.3.2. долг сотруднику по ЗП - удержания с ЗП
+        SELECT _tmpItem.MovementDescId
+             , _tmpItem.OperDate
+             , _tmpItem.ObjectId
+             , _tmpItem.ObjectDescId
+             , 1 * MIF.ValueData AS OperSumm
+             , _tmpItem.MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , _tmpItem.InfoMoneyGroupId
+               -- Управленческие назначения
+             , _tmpItem.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , _tmpItem.InfoMoneyId
+
+               -- Бизнес Баланс: из какой кассы будет выплачено
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , _tmpItem.JuridicalId_Basis
+
+             , _tmpItem.UnitId
+             , _tmpItem.PositionId
+             , _tmpItem.PersonalServiceListId
+
+               -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
+             , _tmpItem.BranchId_Balance
+               -- Филиал ОПиУ: не используется !!!в кассе и р/счете - делать аналогично!!!
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: есть
+             , _tmpItem.ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , zc_Enum_AnalyzerId_PersonalService_Nalog() AS AnalyzerId -- надо, т.к. это удержания с ЗП
+
+             , _tmpItem.IsActive -- всегда такая
+             , FALSE AS IsMaster
+        FROM _tmpItem
+             INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId AND MIF.DescId = zc_MIFloat_SummNalog()
+        WHERE MIF.ValueData <> 0
        ;
 
 /*
@@ -395,7 +510,7 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
-     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты)
+     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - НЕ надо "минус" <Сумма налогов - удержания с ЗП>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
                                                                                                  - tmpMovement.SummTransport

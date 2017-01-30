@@ -287,9 +287,19 @@ BEGIN
                                  , MovementItem.Amount AS Amount
                                  , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
                                              -- в "налоговом документе" всегда будут без НДС
-                                             THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                             THEN CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
+                                                                  THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                             WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 AND vbMovementDescId <> zc_Movement_ReturnIn()
+                                                                  THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                                        END
                                                       / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
-                                        ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                        ELSE CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbMovementDescId = zc_Movement_ReturnIn()
+                                                       THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                  WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 AND vbMovementDescId <> zc_Movement_ReturnIn()
+                                                       THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                                                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                             END
                                    END AS OperPrice
                                  , MIFloat_CountForPrice.ValueData AS CountForPrice
                             FROM MovementItem AS MI_Master
@@ -311,10 +321,13 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MI_Master.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = MI_Master.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
                                  LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
-                                                                 ON MovementLinkMovement_Tax.MovementId     = MIFloat_MovementId.ValueData :: Integer
-                                                                AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Master()
+                                                                ON MovementLinkMovement_Tax.MovementId     = MIFloat_MovementId.ValueData :: Integer
+                                                               AND MovementLinkMovement_Tax.DescId         = zc_MovementLinkMovement_Master()
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                   ON MILinkObject_GoodsKind.MovementItemId = MIFloat_MovementItemId.ValueData :: Integer
                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()

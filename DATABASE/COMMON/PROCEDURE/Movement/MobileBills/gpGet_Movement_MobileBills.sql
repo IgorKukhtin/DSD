@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_MobileBills (Integer, TDateTime, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_MobileBills(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- дата Документа

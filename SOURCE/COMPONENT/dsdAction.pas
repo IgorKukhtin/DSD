@@ -699,7 +699,6 @@ type
     FXMLFilenameDev: Boolean; // признак указано при разработке - не открывать odOpenXML
     FInsertProcedureName: string;
     odOpenXML: TOpenDialog;
-    spInsertProcedure: TdsdStoredProc;
     // обработка свойства XMLFilename
     //procedure SetXMLFilename(Value: String);
     //function GetXMLFilename: String;
@@ -2947,6 +2946,7 @@ end;
 function TdsdLoadXMLKS.Execute: Boolean;
 var
   XMLFileStream: TStringStream;
+  spInsertProcedure: TdsdStoredProc;
 
   function UnXML(inXML: Variant): Variant;
   begin
@@ -2972,12 +2972,21 @@ begin
   spInsertProcedure.StoredProcName := FInsertProcedureName; ///'gpInsertUpdate_logBillsKS'; // FInsertProcedureName;
   spInsertProcedure.Params.AddParam('inXMLFile', ftBlob, ptInput, null);
   spInsertProcedure.ParamByName('inXMLFile').Value := UnXML(XMLFileStream.DataString);
-  try
+
+  try spInsertProcedure.Execute();
+  finally
+    spInsertProcedure.Free;
+    XMLFileStream.Free;
+    XMLFilename := ''; // т.к. данный экшн автоматом создается и переменная запоминается - нужно обнулять
+  end;
+
+{  try
     try
       spInsertProcedure.Execute();
     except
       on E:Exception do
       begin
+         raise Exception.Create(e.Message);
         //ShowMessage(e.Message);
       end;
     end;
@@ -2986,6 +2995,7 @@ begin
     XMLFileStream.Free;
   end;
   XMLFilename := ''; // т.к. данный экшн автоматом создается и переменная запоминается - нужно обнулять
+ }
 
   //inherited;
 end;

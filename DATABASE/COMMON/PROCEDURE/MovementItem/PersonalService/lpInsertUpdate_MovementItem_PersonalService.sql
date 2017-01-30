@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -20,6 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
    OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
     IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
+    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
 
@@ -67,6 +68,27 @@ BEGIN
      IF COALESCE (inPositionId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не заполнено значение <Должность>.';
+     END IF;
+
+     -- проверка - распределение !!!если это БН!!!
+     IF NOT EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
+                FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                  AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+               )
+     THEN
+         IF inSummCardRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Карточка БН (ввод)> заполняется только для Ведомости БН.';
+         END IF;
+         IF inSummNalogRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Налоги - удержания с ЗП (ввод)> заполняется только для Ведомости БН.';
+         END IF;
      END IF;
 
 
@@ -135,9 +157,16 @@ BEGIN
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummHoliday, 0)
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
+                      -- "минус" <Сумма налогов - удержания с ЗП>
+                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummNalog()), 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
-     outAmountCash:= outAmountToPay - COALESCE (inSummChild, 0); -- - COALESCE (inSummCard, 0) 
+     outAmountCash:= outAmountToPay
+                     -- "минус" <Сумма алименты>
+                   - COALESCE (inSummChild, 0)
+                     -- "минус" <Сумма на карточку (БН)>
+                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCard()), 0)
+                    ;
 
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -151,6 +180,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalogRecalc(), ioId, inSummNalogRecalc);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
      -- сохранили свойство <>

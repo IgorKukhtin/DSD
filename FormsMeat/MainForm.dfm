@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 260
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -535,7 +535,7 @@ inherited MainForm: TMainForm
       isShowModal = False
     end
     object actMobileBills: TdsdOpenForm [29]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100' (2)'
       FormName = 'TMobileBillsJournalForm'
@@ -1367,7 +1367,18 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_OrderExternal_Sale: TdsdOpenForm [82]
+    object actMobileTariff: TdsdOpenForm [82]
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
+      MoveParams = <>
+      Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
+      FormName = 'TMobileTariffForm'
+      FormNameParam.Value = 'TMobileTariffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_OrderExternal_Sale: TdsdOpenForm [83]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' / '#1054#1090#1075#1088#1091#1079#1082#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
@@ -1390,7 +1401,7 @@ inherited MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actPartnerTag: TdsdOpenForm [83]
+    object actPartnerTag: TdsdOpenForm [84]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1088#1075#1086#1074#1086#1081' '#1090#1086#1095#1082#1080
@@ -1402,7 +1413,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Tara: TdsdOpenForm [84]
+    object actReport_Tara: TdsdOpenForm [85]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1072#1088#1077
@@ -1414,7 +1425,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Promo: TdsdOpenForm [85]
+    object actReport_Promo: TdsdOpenForm [86]
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1072#1082#1094#1080#1103#1084
@@ -1426,7 +1437,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReceiptCost: TdsdOpenForm [86]
+    object actReceiptCost: TdsdOpenForm [87]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1074' '#1088#1077#1094#1077#1087#1090#1091#1088#1072#1093
@@ -1438,7 +1449,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actQuality: TdsdOpenForm [87]
+    object actQuality: TdsdOpenForm [88]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
       Caption = #1042#1080#1076#1099' '#1082#1072#1095#1077#1089#1090#1074#1077#1085#1085#1099#1093' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1081
@@ -1450,24 +1461,13 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actGoodsPlatform: TdsdOpenForm [88]
+    object actGoodsPlatform: TdsdOpenForm [89]
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
       Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
       FormName = 'TGoodsPlatformForm'
       FormNameParam.Value = 'TGoodsPlatformForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actMobileTariff2: TdsdOpenForm [89]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      MoveParams = <>
-      Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074' (2)'
-      FormName = 'TMobileTariff2Form'
-      FormNameParam.Value = 'TMobileTariff2Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1485,12 +1485,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileEmployee2: TdsdOpenForm [91]
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+    object actMobileEmployee: TdsdOpenForm [91]
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
-      Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' (2)'
-      FormName = 'TMobileEmployee2Form'
-      FormNameParam.Value = 'TMobileEmployee2Form'
+      Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+      FormName = 'TMobileEmployeeForm'
+      FormNameParam.Value = 'TMobileEmployeeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4874,30 +4874,30 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1084#1086#1097#1100
       ShortCut = 112
     end
-    object actMobileTariff: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+    object actMobileTariff_old: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074'>'
-      FormName = 'TMobileTariffForm'
-      FormNameParam.Value = 'TMobileTariffForm'
+      FormName = 'TMobileTariff2Form'
+      FormNameParam.Value = 'TMobileTariff2Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actMobileNumbersEmployee: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+    object actMobileNumbersEmployee_old: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
-      FormName = 'TMobileNumbersEmployeeForm'
-      FormNameParam.Value = 'TMobileNumbersEmployeeForm'
+      FormName = 'TMobileNumbersEmployee2Form'
+      FormNameParam.Value = 'TMobileNumbersEmployee2Form'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_MobileKS: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+    object actReport_MobileKS_old: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077'\'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
       MoveParams = <>
       Caption = #1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       FormName = 'TReport_MobileKSForm'
@@ -5213,6 +5213,22 @@ inherited MainForm: TMainForm
       end
       object miCurrencyMovement: TMenuItem
         Action = actCurrencyMovement
+      end
+      object N118: TMenuItem
+        Caption = '-'
+      end
+      object miMobile: TMenuItem
+        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
+        object miMobileBills: TMenuItem
+          Action = actMobileBills
+          Caption = #1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100
+        end
+        object miMobileTariff: TMenuItem
+          Action = actMobileTariff
+        end
+        object miMobileEmployee: TMenuItem
+          Action = actMobileEmployee
+        end
       end
     end
     object miTaxDocuments: TMenuItem [3]
@@ -5928,38 +5944,6 @@ inherited MainForm: TMainForm
           Action = actProfitLoss
         end
       end
-      object N118: TMenuItem
-        Caption = '-'
-      end
-      object miSubMobile: TMenuItem
-        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099
-        object miMobileTariff: TMenuItem
-          Action = actMobileTariff
-          Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
-          Hint = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
-        end
-        object miMobileNumbersEmployeeForm: TMenuItem
-          Action = actMobileNumbersEmployee
-        end
-        object N135: TMenuItem
-          Caption = '-'
-        end
-        object N210: TMenuItem
-          Action = actMobileTariff2
-        end
-        object N211: TMenuItem
-          Action = actMobileEmployee2
-        end
-        object N107: TMenuItem
-          Caption = '-'
-        end
-        object miReport_MobileKS: TMenuItem
-          Action = actReport_MobileKS
-        end
-        object N212: TMenuItem
-          Action = actMobileBills
-        end
-      end
     end
     object miJuridicalGuides: TMenuItem [14]
       Caption = #1050#1083#1080#1077#1085#1090#1099
@@ -6137,10 +6121,24 @@ inherited MainForm: TMainForm
         object N137: TMenuItem [16]
           Action = actGoodsListSale
         end
-        object N132: TMenuItem [17]
+        object miSubMobile: TMenuItem [17]
+          Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' ('#1087#1077#1088#1074#1072#1103' '#1074#1077#1088#1089#1080#1103')'
+          object miMobileTariff_old: TMenuItem
+            Action = actMobileTariff_old
+            Caption = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
+            Hint = #1058#1072#1088#1080#1092#1099' '#1084#1086#1073#1080#1083#1100#1085#1099#1093' '#1086#1087#1077#1088#1072#1090#1086#1088#1086#1074
+          end
+          object miMobileNumbersEmployee_old: TMenuItem
+            Action = actMobileNumbersEmployee_old
+          end
+          object miReport_MobileKS: TMenuItem
+            Action = actReport_MobileKS_old
+          end
+        end
+        object N132: TMenuItem [18]
           Caption = '-'
         end
-        object N40: TMenuItem [18]
+        object N40: TMenuItem [19]
           Action = actGlobalConst
         end
       end

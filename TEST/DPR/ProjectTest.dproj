@@ -2630,20 +2630,20 @@
 				<Form>Report_Goods_SalebyReturnIn_ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileTariff.pas">
-				<Form>MobileTariffForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariff2.pas">
+				<Form>MobileTariff2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit.pas">
-				<Form>MobileTariffEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit2.pas">
+				<Form>MobileTariffEdit2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployee.pas">
-				<Form>MobileNumbersEmployeeForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployee2.pas">
+				<Form>MobileNumbersEmployee2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployeeEdit.pas">
-				<Form>MobileNumbersEmployeeEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileNumbersEmployeeEdit2.pas">
+				<Form>MobileNumbersEmployeeEdit2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MobileKS.pas">
@@ -2774,20 +2774,20 @@
 				<Form>Report_MotionGoodsAssetForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileTariff_2.pas">
-				<Form>MobileTariff2Form</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariff.pas">
+				<Form>MobileTariffForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit_2.pas">
-				<Form>MobileTariffEdit2Form</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileTariffEdit.pas">
+				<Form>MobileTariffEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileEmployee2.pas">
-				<Form>MobileEmployee2Form</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileEmployee.pas">
+				<Form>MobileEmployeeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MobileEmployeeEdit2.pas">
-				<Form>MobileEmployeeEdit2Form</Form>
+			<DCCReference Include="..\..\Forms\Guides\MobileEmployeeEdit.pas">
+				<Form>MobileEmployeeEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\MobileBillsJournal.pas">

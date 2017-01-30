@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberId Integer, MemberName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummNalog TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
@@ -157,17 +157,19 @@ BEGIN
             , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
             
             , tmpAll.Amount :: TFloat          AS Amount
-            , MIFloat_SummToPay.ValueData      AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
-            , MIFloat_SummService.ValueData    AS SummService
-            , MIFloat_SummCard.ValueData       AS SummCard
-            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
-            , MIFloat_SummMinus.ValueData      AS SummMinus
-            , MIFloat_SummAdd.ValueData        AS SummAdd
-            , MIFloat_SummHoliday.ValueData    AS SummHoliday
-            , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
-            , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
-            , MIFloat_SummChild.ValueData      AS SummChild
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0)) :: TFloat AS AmountToPay
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
+            , MIFloat_SummService.ValueData     AS SummService
+            , MIFloat_SummCard.ValueData        AS SummCard
+            , MIFloat_SummCardRecalc.ValueData  AS SummCardRecalc
+            , MIFloat_SummNalog.ValueData       AS SummNalog
+            , MIFloat_SummNalogRecalc.ValueData AS SummNalogRecalc
+            , MIFloat_SummMinus.ValueData       AS SummMinus
+            , MIFloat_SummAdd.ValueData         AS SummAdd
+            , MIFloat_SummHoliday.ValueData     AS SummHoliday
+            , MIFloat_SummSocialIn.ValueData    AS SummSocialIn
+            , MIFloat_SummSocialAdd.ValueData   AS SummSocialAdd
+            , MIFloat_SummChild.ValueData       AS SummChild
 
             , MIFloat_SummTransport.ValueData        AS SummTransport
             , MIFloat_SummTransportAdd.ValueData     AS SummTransportAdd
@@ -193,14 +195,21 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummService
                                         ON MIFloat_SummService.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
+
             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                         ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
-
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                         ON MIFloat_SummCardRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
                                                                               
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+                                        ON MIFloat_SummNalog.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                        ON MIFloat_SummNalogRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
+
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
