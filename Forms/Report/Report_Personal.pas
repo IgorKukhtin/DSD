@@ -84,6 +84,7 @@ type
     SummTransportAddLong: TcxGridDBColumn;
     SummTransportTaxi: TcxGridDBColumn;
     SummPhone: TcxGridDBColumn;
+    SummNalog: TcxGridDBColumn;
   private
     { Private declarations }
   public

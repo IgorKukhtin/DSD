@@ -31,12 +31,14 @@ $BODY$
   DECLARE vbTotalSummToPay   TFloat;
   DECLARE vbTotalSummService TFloat;
   DECLARE vbTotalSummCard    TFloat;
+  DECLARE vbTotalSummNalog   TFloat;
   DECLARE vbTotalSummMinus   TFloat;
   DECLARE vbTotalSummAdd     TFloat;
-  DECLARE vbTotalSummCardRecalc TFloat;
-  DECLARE vbTotalSummSocialIn   TFloat;
-  DECLARE vbTotalSummSocialAdd  TFloat;
-  DECLARE vbTotalSummChild      TFloat;
+  DECLARE vbTotalSummCardRecalc  TFloat;
+  DECLARE vbTotalSummNalogRecalc TFloat;
+  DECLARE vbTotalSummSocialIn    TFloat;
+  DECLARE vbTotalSummSocialAdd   TFloat;
+  DECLARE vbTotalSummChild       TFloat;
   DECLARE vbTotalSummTransport        TFloat;
   DECLARE vbTotalSummTransportAdd     TFloat;
   DECLARE vbTotalSummTransportAddLong TFloat;
@@ -216,9 +218,11 @@ BEGIN
           , OperSumm_ToPay
           , OperSumm_Service
           , OperSumm_Card
+          , OperSumm_Nalog
           , OperSumm_Minus
           , OperSumm_Add
           , OperSumm_CardRecalc
+          , OperSumm_NalogRecalc
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
@@ -231,7 +235,7 @@ BEGIN
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperCount_ShFrom, vbOperCount_KgFrom
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild, vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummCardRecalc, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild, vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
      FROM 
      -- Расчет Итоговых суммы
     (SELECT 
@@ -378,9 +382,11 @@ BEGIN
           , OperSumm_ToPay
           , OperSumm_Service
           , OperSumm_Card
+          , OperSumm_Nalog
           , OperSumm_Minus
           , OperSumm_Add
           , OperSumm_CardRecalc
+          , OperSumm_NalogRecalc
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
@@ -441,15 +447,17 @@ BEGIN
                  , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
 
                   -- сумма начисления зп
-                 , SUM (tmpMI.OperSumm_ToPay)      AS OperSumm_ToPay
-                 , SUM (tmpMI.OperSumm_Service)    AS OperSumm_Service
-                 , SUM (tmpMI.OperSumm_Card)       AS OperSumm_Card
-                 , SUM (tmpMI.OperSumm_Minus)      AS OperSumm_Minus
-                 , SUM (tmpMI.OperSumm_Add)        AS OperSumm_Add
-                 , SUM (tmpMI.OperSumm_CardRecalc) AS OperSumm_CardRecalc
-                 , SUM (tmpMI.OperSumm_SocialIn)   AS OperSumm_SocialIn
-                 , SUM (tmpMI.OperSumm_SocialAdd)  AS OperSumm_SocialAdd
-                 , SUM (tmpMI.OperSumm_Child)      AS OperSumm_Child
+                 , SUM (tmpMI.OperSumm_ToPay)       AS OperSumm_ToPay
+                 , SUM (tmpMI.OperSumm_Service)     AS OperSumm_Service
+                 , SUM (tmpMI.OperSumm_Card)        AS OperSumm_Card
+                 , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
+                 , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
+                 , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
+                 , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
+                 , SUM (tmpMI.OperSumm_NalogRecalc) AS OperSumm_NalogRecalc
+                 , SUM (tmpMI.OperSumm_SocialIn)    AS OperSumm_SocialIn
+                 , SUM (tmpMI.OperSumm_SocialAdd)   AS OperSumm_SocialAdd
+                 , SUM (tmpMI.OperSumm_Child)       AS OperSumm_Child
                  , SUM (tmpMI.OperSumm_Transport)        AS OperSumm_Transport
                  , SUM (tmpMI.OperSumm_TransportAdd)     AS OperSumm_TransportAdd
                  , SUM (tmpMI.OperSumm_TransportAddLong) AS OperSumm_TransportAddLong
@@ -540,9 +548,11 @@ BEGIN
                       , tmpMI.OperSumm_ToPay
                       , tmpMI.OperSumm_Service
                       , tmpMI.OperSumm_Card
+                      , tmpMI.OperSumm_Nalog
                       , tmpMI.OperSumm_Minus
                       , tmpMI.OperSumm_Add
                       , tmpMI.OperSumm_CardRecalc
+                      , tmpMI.OperSumm_NalogRecalc
                       , tmpMI.OperSumm_SocialIn
                       , tmpMI.OperSumm_SocialAdd
                       , tmpMI.OperSumm_Child
@@ -593,10 +603,12 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))   AS OperSumm_ToPay
                              , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS OperSumm_Service
                              , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))    AS OperSumm_Card
+                             , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))   AS OperSumm_Nalog
                              , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))   AS OperSumm_Minus
                              , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))     AS OperSumm_Add
 
                              , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))   AS OperSumm_CardRecalc
+                             , SUM (COALESCE (MIFloat_SummNalogRecalc.ValueData, 0))  AS OperSumm_NalogRecalc
                              , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS OperSumm_SocialIn
                              , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS OperSumm_SocialAdd
                              , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS OperSumm_Child
@@ -655,6 +667,10 @@ BEGIN
                                                          ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+                                                         ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
                              LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                                          ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -666,6 +682,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                          ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                                                        AND Movement.DescId = zc_Movement_PersonalService()
+                             LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                                         ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
                              LEFT JOIN MovementItemFloat AS MIFloat_SummSocialIn
                                                          ON MIFloat_SummSocialIn.MovementItemId = MovementItem.Id
@@ -755,12 +775,16 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummService(), inMovementId, vbTotalSummService);
          -- Сохранили свойство <Итого Сумма на карточку (БН)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCard(), inMovementId, vbTotalSummCard);
+         -- Сохранили свойство <Итого Сумма налогов - удержания с сотрудника>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalog(), inMovementId, vbTotalSummNalog);
          -- Сохранили свойство <Итого Сумма удержания>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
          -- Сохранили свойство <Итого Сумма премия>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
          -- Сохранили свойство <Итого Сумма на карточку (БН) для распределения>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardRecalc(), inMovementId, vbTotalSummCardRecalc);
+         -- Сохранили свойство <Итого Сумма налогов - удержания с сотрудника для распределения>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRecalc(), inMovementId, vbTotalSummNalogRecalc);
          -- Сохранили свойство <Итого Сумма соц выплаты (из зарплаты)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSocialIn(), inMovementId, vbTotalSummSocialIn);
          -- Сохранили свойство <Итого Сумма соц выплаты (доп. к зарплате)>

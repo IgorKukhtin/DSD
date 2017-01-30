@@ -27,7 +27,7 @@ BEGIN
       -- Результат
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
-             , Amount TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat) ON COMMIT DROP;
        
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
@@ -54,7 +54,7 @@ BEGIN
                              , MILinkObject_InfoMoney.ObjectId
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
-                           , Amount, SummService, SummCard, SummCardRecalc, SummMinus, SummAdd
+                           , Amount, SummService, SummCardRecalc, SummNalogRecalc, SummMinus, SummAdd
                            , SummHoliday, SummSocialIn, SummSocialAdd, SummChild)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
@@ -66,8 +66,8 @@ BEGIN
                  , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                  , COALESCE (MovementItem.Amount, 0):: TFloat 
                  , COALESCE (MIFloat_SummService.ValueData, 0):: TFloat     AS SummService
-                 , COALESCE (MIFloat_SummCard.ValueData, 0):: TFloat        AS SummCard
                  , COALESCE (MIFloat_SummCardRecalc.ValueData, 0):: TFloat  AS SummCardRecalc        
+                 , COALESCE (MIFloat_SummNalogRecalc.ValueData, 0):: TFloat AS SummNalogRecalc        
                  , COALESCE (MIFloat_SummMinus.ValueData, 0):: TFloat       AS SummMinus
                  , COALESCE (MIFloat_SummAdd.ValueData, 0):: TFloat         AS SummAdd
                  , COALESCE (MIFloat_SummHoliday.ValueData, 0):: TFloat     AS SummHoliday
@@ -97,13 +97,13 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_SummService 
                                              ON MIFloat_SummService.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummService.DescId = zc_MIFloat_SummService()
-                 LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                             ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                            AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
 
                  LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                              ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                             ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
                                                                               
                  LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                              ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
@@ -143,6 +143,7 @@ BEGIN
                                                         , inisMain             := isMain
                                                         , inSummService        := SummService
                                                         , inSummCardRecalc     := SummCardRecalc
+                                                        , inSummNalogRecalc    := SummNalogRecalc
                                                         , inSummMinus          := SummMinus
                                                         , inSummAdd            := SummAdd
                                                         , inSummHoliday        := SummHoliday

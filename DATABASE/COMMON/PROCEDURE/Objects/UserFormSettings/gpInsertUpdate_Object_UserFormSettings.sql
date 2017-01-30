@@ -29,13 +29,13 @@ BEGIN
           );
 
 
-   LOCK TABLE Object IN SHARE UPDATE EXCLUSIVE MODE;
-   LOCK TABLE ObjectLink IN SHARE UPDATE EXCLUSIVE MODE;
-   LOCK TABLE ObjectBLOB IN SHARE UPDATE EXCLUSIVE MODE;
 
 
    IF COALESCE (vbId, 0) = 0
    THEN
+      --
+      LOCK TABLE Object IN SHARE UPDATE EXCLUSIVE MODE;
+      LOCK TABLE ObjectLink IN SHARE UPDATE EXCLUSIVE MODE;
       --
       vbId := lpInsertUpdate_Object (vbId, zc_Object_UserFormSettings(), 0, inFormName);
 
@@ -45,6 +45,8 @@ BEGIN
    END IF;
 
 
+   --
+   LOCK TABLE ObjectBLOB IN SHARE UPDATE EXCLUSIVE MODE;
    --
    PERFORM lpInsertUpdate_ObjectBLOB (zc_ObjectBlob_UserFormSettings_Data(), vbId, inUserFormSettingsData);
    

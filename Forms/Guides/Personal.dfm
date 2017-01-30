@@ -118,6 +118,23 @@ object PersonalForm: TPersonalForm
         HeaderAlignmentVert = vaCenter
         Width = 128
       end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092#1080#1083'.'
+        DataBinding.FieldName = 'BranchCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
@@ -216,7 +233,7 @@ object PersonalForm: TPersonalForm
   object deStart: TcxDateEdit
     Left = 445
     Top = 26
-    EditValue = 41852d
+    EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -235,7 +252,7 @@ object PersonalForm: TPersonalForm
   object deEnd: TcxDateEdit
     Left = 563
     Top = 26
-    EditValue = 41852d
+    EditValue = 42948d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
@@ -423,6 +440,7 @@ object PersonalForm: TPersonalForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides

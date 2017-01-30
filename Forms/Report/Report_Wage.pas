@@ -70,6 +70,10 @@ type
     macPersonalService: TMultiAction;
     DocumentKindName: TcxGridDBColumn;
     bbPersonalService: TdxBarButton;
+    GoodsKind_FromName: TcxGridDBColumn;
+    GoodsKindComplete_FromName: TcxGridDBColumn;
+    GoodsKind_ToName: TcxGridDBColumn;
+    GoodsKindComplete_ToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

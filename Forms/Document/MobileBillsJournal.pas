@@ -37,12 +37,13 @@ type
     actPrint: TdsdPrintAction;
     ExecuteDialog: TExecuteDialog;
     actLoadXMLKS: TdsdLoadXMLKS;
-    bbLoadXMLKS: TdxBarButton;
+    bbLoadXML: TdxBarButton;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    mactLoadXML: TMultiAction;
   private
     { Private declarations }
   public

@@ -132,8 +132,8 @@ BEGIN
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = COALESCE (MILinkObject_Route.ObjectId, CASE WHEN Movement.DescId = zc_Movement_Transport() THEN MovementItem.ObjectId END)
 
-       WHERE (Object_Route.Id = vbRouteId OR vbRouteId = 0)
-         AND (ObjectLink_Route_Unit.ChildObjectId = vbUnitId OR vbUnitId = 0)
+--       WHERE (Object_Route.Id = vbRouteId OR vbRouteId = 0)
+--         AND (ObjectLink_Route_Unit.ChildObjectId = vbUnitId OR vbUnitId = 0)
        ORDER BY MovementDate_StartRunPlan.ValueData DESC
       ;
   

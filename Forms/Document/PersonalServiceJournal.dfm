@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -431
   ExplicitWidth = 1237
   ExplicitHeight = 439
   PixelsPerInch = 96
@@ -13,17 +14,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Height = 347
     TabOrder = 3
     ExplicitWidth = 1221
-    ExplicitHeight = 381
+    ExplicitHeight = 347
     ClientRectBottom = 347
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 381
+      ExplicitHeight = 347
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 347
         ExplicitWidth = 1221
-        ExplicitHeight = 381
+        ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -114,6 +115,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummTransportTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalog
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -200,6 +211,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummTransportTaxi
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalog
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummNalogRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -294,23 +315,44 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object colTotalSummCard: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053
             DataBinding.FieldName = 'TotalSummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colTotalSummCardRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053') '#1074#1074#1086#1076
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' ('#1074#1074#1086#1076')'
             DataBinding.FieldName = 'TotalSummCardRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 80
+          end
+          object TotalSummNalog: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'TotalSummNalog'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummNalogRecalc: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummNalogRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object colTotalSummMinus: TcxGridDBColumn
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103

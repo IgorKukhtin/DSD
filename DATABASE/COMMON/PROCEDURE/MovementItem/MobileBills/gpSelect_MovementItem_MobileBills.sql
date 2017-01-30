@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileBills (Integer, Boolean, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
     IN inMovementId  Integer      , -- ключ Документа
     IN inIsErased    Boolean      , --
@@ -126,14 +125,11 @@ BEGIN
                                              ON MILinkObject_PrevMobileTariff.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PrevMobileTariff.DescId = zc_MILinkObject_PrevMobileTariff()
             LEFT JOIN Object AS Object_PrevMobileTariff ON Object_PrevMobileTariff.Id = MILinkObject_PrevMobileTariff.ObjectId
-    
             ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

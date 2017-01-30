@@ -1,19 +1,19 @@
-п»ї-- Function: lpinsertupdate_objectDate()
+-- Function: lpinsertupdate_objectDate()
 
 -- DROP FUNCTION lpinsertupdate_objectDate();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectDate(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°  */
- inObjectId                  Integer           ,  /* РєР»СЋС‡ РѕР±СЉРµРєС‚Р°         */
- inValueData                 TDateTime            /* РґР°РЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°      */
+ inDescId                    Integer           ,  /* код класса свойства  */
+ inObjectId                  Integer           ,  /* ключ объекта         */
+ inValueData                 TDateTime            /* данные свойства      */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> Рё <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectDate SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> */
+       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
        INSERT INTO ObjectDate (DescId, ObjectId, ValueData)
            VALUES (inDescId, inObjectId, inValueData);
     END IF;             
@@ -25,8 +25,8 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_ObjectDate(Integer, Integer, TDateTime)  OWNER TO postgres;
 
 /*---------------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.07.13          * 
 
 */

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -21,7 +21,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
    OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
    OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
-    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения    
+    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
+    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
     IN inSummHoliday         TFloat    , -- Сумма отпускные
@@ -54,6 +55,7 @@ BEGIN
                                                      , inIsMain             := inIsMain
                                                      , inSummService        := inSummService
                                                      , inSummCardRecalc     := inSummCardRecalc
+                                                     , inSummNalogRecalc    := inSummNalogRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd
                                                      , inSummHoliday        := inSummHoliday
@@ -65,13 +67,13 @@ BEGIN
                                                      , inUnitId             := inUnitId
                                                      , inPositionId         := inPositionId
                                                      , inMemberId           := inMemberId
-                                                     , inPersonalServiceListId  := inPersonalServiceListId
+                                                     , inPersonalServiceListId := inPersonalServiceListId
                                                      , inUserId             := vbUserId
                                                       ) AS tmp;
 
      -- сохранили свойство строки <создан автоматически>
-     outisAuto := False;
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, False);
+     outisAuto := FALSE;
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_isAuto(), ioId, FALSE);
 
 END;
 $BODY$

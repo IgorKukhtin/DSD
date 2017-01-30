@@ -3,7 +3,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
   Top = 0
   BorderStyle = bsToolWindow
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1072#1088#1080#1092'>'
-  ClientHeight = 346
+  ClientHeight = 408
   ClientWidth = 346
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,13 +18,14 @@ object MobileTariffEditForm: TMobileTariffEditForm
   AddOnFormData.Params = dsdFormParams
   DesignSize = (
     346
-    346)
+    408)
   PixelsPerInch = 96
   TextHeight = 13
   object edTariffName: TcxTextEdit
     Left = 10
     Top = 72
     Anchors = [akLeft, akTop, akRight]
+    Style.BorderStyle = ebsUltraFlat
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -52,7 +53,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
   end
   object cxButton1: TcxButton
     Left = 179
-    Top = 310
+    Top = 372
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -65,7 +66,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
   end
   object cxButton2: TcxButton
     Left = 262
-    Top = 310
+    Top = 372
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -99,6 +100,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
+    Style.BorderStyle = ebsUltraFlat
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -110,10 +112,11 @@ object MobileTariffEditForm: TMobileTariffEditForm
     TabOrder = 5
     Width = 327
   end
-  object edComments: TcxTextEdit
-    Left = 8
-    Top = 277
+  object edComment: TcxTextEdit
+    Left = 10
+    Top = 338
     Anchors = [akLeft, akTop, akRight]
+    Style.BorderStyle = ebsUltraFlat
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -123,12 +126,12 @@ object MobileTariffEditForm: TMobileTariffEditForm
     StyleHot.LookAndFeel.Kind = lfOffice11
     StyleHot.LookAndFeel.NativeStyle = False
     TabOrder = 6
-    Width = 329
+    Width = 327
   end
   object cxLabel21: TcxLabel
-    Left = 8
-    Top = 260
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    Left = 10
+    Top = 321
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -141,8 +144,8 @@ object MobileTariffEditForm: TMobileTariffEditForm
   end
   object cxGroupBox1: TcxGroupBox
     Left = 8
-    Top = 181
-    Caption = #1042#1085#1077' '#1087#1072#1082#1077#1090#1072
+    Top = 242
+    Caption = #1062#1077#1085#1072' '#1074#1085#1077' '#1087#1072#1082#1077#1090#1072
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -154,13 +157,14 @@ object MobileTariffEditForm: TMobileTariffEditForm
     TabOrder = 8
     Height = 73
     Width = 329
-    object ceMinuteCost: TcxCurrencyEdit
+    object ceCostMinutes: TcxCurrencyEdit
       Left = 95
-      Top = 14
+      Top = 19
       EditValue = 0c
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0.00####'
       Properties.EditFormat = '0.00####'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -172,13 +176,14 @@ object MobileTariffEditForm: TMobileTariffEditForm
       TabOrder = 0
       Width = 77
     end
-    object ceSMSCost: TcxCurrencyEdit
+    object ceCostSMS: TcxCurrencyEdit
       Left = 95
-      Top = 41
+      Top = 46
       EditValue = 0c
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0.00####'
       Properties.EditFormat = '0.00####'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -190,13 +195,14 @@ object MobileTariffEditForm: TMobileTariffEditForm
       TabOrder = 1
       Width = 77
     end
-    object ceInetCost: TcxCurrencyEdit
+    object ceCostInet: TcxCurrencyEdit
       Left = 244
-      Top = 41
+      Top = 46
       EditValue = 0c
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0.00####'
       Properties.EditFormat = '0.00####'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -210,7 +216,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     end
     object cxLabel3: TcxLabel
       Left = 10
-      Top = 18
+      Top = 23
       Caption = '1 '#1052#1080#1085#1091#1090#1072
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
@@ -224,7 +230,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     end
     object cxLabel4: TcxLabel
       Left = 10
-      Top = 41
+      Top = 46
       Caption = '1 SMS'
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
@@ -238,7 +244,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     end
     object cxLabel5: TcxLabel
       Left = 244
-      Top = 18
+      Top = 23
       Caption = #1048#1085#1090#1077#1088#1085#1077#1090' 1'#1052#1041
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
@@ -253,7 +259,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
   end
   object cxGroupBox2: TcxGroupBox
     Left = 8
-    Top = 99
+    Top = 160
     Caption = #1042' '#1087#1072#1082#1077#1090#1077
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
@@ -267,7 +273,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     Height = 76
     Width = 329
     object cxLabel2: TcxLabel
-      Left = 10
+      Left = 6
       Top = 20
       Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072', '#1075#1088#1085
       Style.LookAndFeel.Kind = lfOffice11
@@ -281,12 +287,13 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Transparent = True
     end
     object ceMonthly: TcxCurrencyEdit
-      Left = 95
+      Left = 89
       Top = 19
       EditValue = 0c
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0.00####'
       Properties.EditFormat = '0.00####'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -299,7 +306,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Width = 77
     end
     object cxLabel15: TcxLabel
-      Left = 10
+      Left = 6
       Top = 47
       Caption = #1052#1080#1085#1091#1090
       Style.LookAndFeel.Kind = lfOffice11
@@ -313,12 +320,13 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Transparent = True
     end
     object cePocketMinutes: TcxCurrencyEdit
-      Left = 95
+      Left = 89
       Top = 46
       EditValue = 0
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0'
       Properties.EditFormat = '0'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -331,7 +339,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Width = 77
     end
     object cxLabel16: TcxLabel
-      Left = 180
+      Left = 172
       Top = 20
       Caption = 'SMS'
       Style.LookAndFeel.Kind = lfOffice11
@@ -345,12 +353,13 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Transparent = True
     end
     object cePocketSMS: TcxCurrencyEdit
-      Left = 244
+      Left = 247
       Top = 19
       EditValue = 0
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0'
       Properties.EditFormat = '0'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -363,9 +372,9 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Width = 77
     end
     object cxLabel17: TcxLabel
-      Left = 180
+      Left = 172
       Top = 47
-      Caption = #1048#1085#1090#1077#1088#1085#1077#1090
+      Caption = #1048#1085#1090#1077#1088#1085#1077#1090', '#1052#1041
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -377,12 +386,13 @@ object MobileTariffEditForm: TMobileTariffEditForm
       Transparent = True
     end
     object cePocketInet: TcxCurrencyEdit
-      Left = 244
+      Left = 247
       Top = 46
       EditValue = 0
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = '0'
       Properties.EditFormat = '0'
+      Style.BorderStyle = ebsUltraFlat
       Style.LookAndFeel.Kind = lfOffice11
       Style.LookAndFeel.NativeStyle = False
       StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -394,6 +404,23 @@ object MobileTariffEditForm: TMobileTariffEditForm
       TabOrder = 7
       Width = 77
     end
+  end
+  object cxLabel19: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object edContract: TcxButtonEdit
+    Left = 10
+    Top = 118
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 327
   end
   object ActionList: TActionList
     Left = 114
@@ -433,7 +460,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_dirMobileTariff'
+    StoredProcName = 'gpInsertUpdate_Object_MobileTariff2'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -441,12 +468,19 @@ object MobileTariffEditForm: TMobileTariffEditForm
         Name = 'ioId'
         Value = Null
         Component = dsdFormParams
-        ComponentItem = 'ID'
+        ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTariffName'
+        Name = 'inCode'
+        Value = Null
+        Component = ceCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
         Value = ''
         Component = edTariffName
         DataType = ftString
@@ -465,6 +499,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
         Name = 'inPocketMinutes'
         Value = ''
         Component = cePocketMinutes
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -472,6 +507,7 @@ object MobileTariffEditForm: TMobileTariffEditForm
         Name = 'inPocketSMS'
         Value = ''
         Component = cePocketSMS
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -479,51 +515,59 @@ object MobileTariffEditForm: TMobileTariffEditForm
         Name = 'inPocketInet'
         Value = ''
         Component = cePocketInet
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMinuteCost'
-        Value = ''
-        Component = ceMinuteCost
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSMSCost'
+        Name = 'inCostSMS'
         Value = ''
-        Component = ceSMSCost
+        Component = ceCostSMS
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInetCost'
+        Name = 'inCostMinutes'
         Value = ''
-        Component = ceInetCost
+        Component = ceCostMinutes
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComments'
+        Name = 'inCostInet'
         Value = ''
-        Component = edComments
+        Component = ceCostInet
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 112
+    Left = 104
     Top = 13
   end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
-        Name = 'ID'
+        Name = 'Id'
         Value = Null
-        Component = ceCode
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
@@ -531,20 +575,26 @@ object MobileTariffEditForm: TMobileTariffEditForm
     Top = 10
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_dirMobileTariff'
+    StoredProcName = 'gpGet_Object_MobileTariff2'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'intariffid'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
-        ComponentItem = 'ID'
-        ParamType = ptInputOutput
+        ComponentItem = 'Id'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'TariffName'
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
         Value = ''
         Component = edTariffName
         DataType = ftString
@@ -576,30 +626,45 @@ object MobileTariffEditForm: TMobileTariffEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MinuteCost'
+        Name = 'CostMinutes'
         Value = ''
-        Component = ceMinuteCost
+        Component = ceCostMinutes
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'SMSCost'
+        Name = 'CostSMS'
         Value = ''
-        Component = ceSMSCost
+        Component = ceCostSMS
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InetCost'
+        Name = 'CostInet'
         Value = ''
-        Component = ceInetCost
+        Component = ceCostInet
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Comms'
+        Name = 'Comment'
         Value = ''
-        Component = edComments
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -621,5 +686,35 @@ object MobileTariffEditForm: TMobileTariffEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 161
     Top = 13
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 204
+    Top = 104
   end
 end

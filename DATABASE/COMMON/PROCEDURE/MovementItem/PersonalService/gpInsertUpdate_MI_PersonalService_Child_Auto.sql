@@ -186,6 +186,7 @@ BEGIN
                                                                     , inIsMain             := vbIsMain
                                                                     , inSummService        := 0 -- !!!потом зальем сумму!!!
                                                                     , inSummCardRecalc     := 0
+                                                                    , inSummNalogRecalc    := 0
                                                                     , inSummMinus          := 0
                                                                     , inSummAdd            := 0
                                                                     , inSummHoliday        := 0
