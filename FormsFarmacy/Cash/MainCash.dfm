@@ -11,8 +11,8 @@ inherited MainCashForm: TMainCashForm
   OnShow = ParentFormShow
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
-  ExplicitWidth = 883
-  ExplicitHeight = 454
+  ExplicitWidth = 828
+  ExplicitHeight = 453
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -557,6 +557,40 @@ inherited MainCashForm: TMainCashForm
           Visible = False
           VisibleForCustomization = False
           Width = 30
+        end
+        object MainGoodsGroupName: TcxGridDBColumn
+          Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+          DataBinding.FieldName = 'GoodsGroupName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 95
+        end
+        object MainAmountIncome: TcxGridDBColumn
+          Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
+          DataBinding.FieldName = 'AmountIncome'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
+          Width = 50
+        end
+        object MainPriceSaleIncome: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
+          DataBinding.FieldName = 'PriceSaleIncome'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1062#1077#1085#1072' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
+          Width = 80
+        end
+        object MainNDS: TcxGridDBColumn
+          Caption = #1053#1044#1057
+          DataBinding.FieldName = 'NDS'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 40
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -1473,13 +1507,37 @@ inherited MainCashForm: TMainCashForm
         ValueColumn = MainColor_ExpirationDate
         BackGroundValueColumn = mainColor_calc
         ColorValueList = <>
+      end
+      item
+        ColorColumn = MainPriceSaleIncome
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainAmountIncome
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainGoodsGroupName
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MainNDS
+        ValueColumn = MainColor_ExpirationDate
+        BackGroundValueColumn = mainColor_calc
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 640
-    Top = 136
+    Left = 736
+    Top = 88
   end
   object spSelectRemains: TdsdStoredProc
     StoredProcName = 'gpSelect_CashRemains_ver2'
@@ -1508,7 +1566,7 @@ inherited MainCashForm: TMainCashForm
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 104
+    Left = 112
     Top = 64
   end
   object RemainsDS: TDataSource

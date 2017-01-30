@@ -46,6 +46,10 @@ RETURNS TABLE(
     ,MovementDescName               TVarChar
     ,ModelServiceItemChild_FromName TVarChar
     ,ModelServiceItemChild_ToName   TVarChar
+    ,GoodsKind_FromName             TVarChar
+    ,GoodsKindComplete_FromName     TVarChar
+    ,GoodsKind_ToName               TVarChar
+    ,GoodsKindComplete_ToName       TVarChar
     ,OperDate                       TDateTime
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
@@ -104,12 +108,20 @@ BEGIN
         , SelectKindId                   Integer
         , SelectKindName                 TVarChar
         , Ratio                          TFloat
-        , ModelServiceItemChild_FromId   Integer
+        , ModelServiceItemChild_FromId       Integer
         , ModelServiceItemChild_FromDescId   Integer
-        , ModelServiceItemChild_FromName TVarChar
-        , ModelServiceItemChild_ToId     Integer
+        , ModelServiceItemChild_FromName     TVarChar
+        , ModelServiceItemChild_ToId         Integer
         , ModelServiceItemChild_ToDescId     Integer
-        , ModelServiceItemChild_ToName   TVarChar
+        , ModelServiceItemChild_ToName       TVarChar
+        , GoodsKind_FromId                   Integer
+        , GoodsKind_FromName                 TVarChar
+        , GoodsKindComplete_FromId           Integer
+        , GoodsKindComplete_FromName         TVarChar
+        , GoodsKind_ToId                     Integer
+        , GoodsKind_ToName                   TVarChar
+        , GoodsKindComplete_ToId             Integer
+        , GoodsKindComplete_ToName           TVarChar
         , OperDate                       TDateTime
         , Count_Day                      Integer
         , Count_MemberInDay              Integer
@@ -137,6 +149,7 @@ BEGIN
     Insert Into Res (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName,PositionLevelId,PositionLevelName,Count_Member,HoursPlan,HoursDay, PersonalGroupId, PersonalGroupName, MemberId, MemberName, SheetWorkTime_Date, SUM_MemberHours, SheetWorkTime_Amount
                    , ServiceModelCode,ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName,SelectKindId,SelectKindName,Ratio
                    , ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
+                   , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName, GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
                    , OperDate, Count_Day, Count_MemberInDay,Gross,GrossOnOneMember,Amount,AmountOnOneMember
                    , ModelServiceId, StaffListSummKindId
                     )
@@ -145,6 +158,8 @@ BEGIN
          , Report_1.FromId,Report_1.FromName,Report_1.ToId,Report_1.ToName,Report_1.MovementDescId,Report_1.MovementDescName,Report_1.SelectKindId,Report_1.SelectKindName,Report_1.Ratio
          , Report_1.ModelServiceItemChild_FromId,Report_1.ModelServiceItemChild_FromDescId,Report_1.ModelServiceItemChild_FromName,Report_1.ModelServiceItemChild_ToId
          , Report_1.ModelServiceItemChild_ToDescId,Report_1.ModelServiceItemChild_ToName
+         , Report_1.GoodsKind_FromId, Report_1.GoodsKind_FromName, Report_1.GoodsKindComplete_FromId, Report_1.GoodsKindComplete_FromName
+         , Report_1.GoodsKind_ToId, Report_1.GoodsKind_ToName, Report_1.GoodsKindComplete_ToId, Report_1.GoodsKindComplete_ToName
          , Report_1.OperDate, Report_1.Count_Day, Report_1.Count_MemberInDay, Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
          , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
@@ -263,13 +278,27 @@ BEGIN
                 ELSE NULL::TVarChar END                         AS ToName
                ,CASE WHEN inDetailModelServiceItemMaster = TRUE
                      THEN Res.MovementDescName
-                ELSE NULL::TVarCHar END                         AS MovementDescName
+                ELSE NULL::TVarChar END                         AS MovementDescName
+
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.ModelServiceItemChild_FromName
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_FromName
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.ModelServiceItemChild_ToName
                 ELSE NULL::TVarChar END                         AS ModelServiceItemChild_ToName
+
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKind_FromName
+                ELSE NULL::TVarChar END                         AS GoodsKind_FromName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKindComplete_FromName
+                ELSE NULL::TVarChar END                         AS GoodsKindComplete_FromName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKind_ToName
+                ELSE NULL::TVarChar END                         AS GoodsKind_ToName
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKindComplete_ToName
+                ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
                ,CASE WHEN inDetailDay = TRUE 
                      THEN Res.OperDate 
@@ -338,13 +367,28 @@ BEGIN
                 ELSE NULL::TVarChar END
                ,CASE WHEN inDetailModelServiceItemMaster = TRUE
                      THEN Res.MovementDescName
-                ELSE NULL::TVarCHar END
+                ELSE NULL::TVarChar END
+
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.ModelServiceItemChild_FromName
                 ELSE NULL::TVarChar END
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN Res.ModelServiceItemChild_ToName
                 ELSE NULL::TVarChar END
+
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKind_FromName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKindComplete_FromName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKind_ToName
+                ELSE NULL::TVarChar END
+               ,CASE WHEN inDetailModelServiceItemChild = TRUE
+                     THEN Res.GoodsKindComplete_ToName
+                ELSE NULL::TVarChar END
+
                ,CASE WHEN inDetailDay = TRUE 
                      THEN Res.OperDate 
                 ELSE NULL::TDateTime END
@@ -413,6 +457,12 @@ BEGIN
            ,tmpRes.MovementDescName
            ,tmpRes.ModelServiceItemChild_FromName
            ,tmpRes.ModelServiceItemChild_ToName
+
+           ,tmpRes.GoodsKind_FromName
+           ,tmpRes.GoodsKindComplete_FromName
+           ,tmpRes.GoodsKind_ToName
+           ,tmpRes.GoodsKindComplete_ToName
+
            ,tmpRes.OperDate
            ,tmpRes.Count_Day                             -- Отраб. дн. 1 чел (инф.)
            ,tmpRes.Count_MemberInDay

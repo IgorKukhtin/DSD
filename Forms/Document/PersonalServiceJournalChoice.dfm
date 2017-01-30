@@ -4,8 +4,9 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   ClientWidth = 913
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -140
   ExplicitWidth = 929
-  ExplicitHeight = 572
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -178,7 +179,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             Width = 80
           end
           object colTotalSummCard: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' ('#1041#1053')'
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053
             DataBinding.FieldName = 'TotalSummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -299,17 +300,20 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inOperDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUnComplete: TdsdChangeMovementStatus
@@ -341,10 +345,12 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           FromParam.Value = Null
           FromParam.Component = MasterCDS
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -370,12 +376,14 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_PersonalService'
       ReportNameParam.Name = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -387,6 +395,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -394,6 +403,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ServiceDate'
@@ -401,12 +411,14 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'ServiceDate'
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalServiceListId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalServiceListId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PersonalServiceListName'
@@ -414,6 +426,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'PersonalServiceListName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -450,6 +463,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -457,6 +471,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalServiceListId'
@@ -464,6 +479,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsServiceDate'
@@ -471,6 +487,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = cbIsServiceDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsErased'
@@ -478,6 +495,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 163
@@ -622,11 +640,13 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Value = True
         DataType = ftBoolean
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -639,6 +659,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 384
@@ -651,6 +672,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 368
@@ -661,24 +683,28 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListId'
         Value = ''
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TopPersonalServiceListName'
@@ -686,6 +712,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -724,6 +751,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -734,6 +762,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     LookupControl = edPersonalServiceList
     FormNameParam.Value = 'TPersonalServiceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonalServiceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -743,6 +772,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -751,6 +781,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 616
     Top = 64

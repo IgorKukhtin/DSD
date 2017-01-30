@@ -3,7 +3,6 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileBills (Integer, TVarChar, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileBills (Integer, TVarChar, TDateTime, Integer, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MobileBills(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа

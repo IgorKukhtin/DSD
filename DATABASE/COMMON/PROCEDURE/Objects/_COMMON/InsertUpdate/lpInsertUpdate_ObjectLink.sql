@@ -1,11 +1,11 @@
-п»ї-- Function: lpInsertUpdate_ObjectLink()
+-- Function: lpInsertUpdate_ObjectLink()
 
 -- DROP FUNCTION lpInsertUpdate_ObjectLink();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectLink(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°       */
- inObjectId                  Integer           ,  /* РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°     */
- inChildObjectId             Integer              /* РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° */
+ inDescId                    Integer           ,  /* код класса свойства       */
+ inObjectId                  Integer           ,  /* ключ главного объекта     */
+ inChildObjectId             Integer              /* ключ подчиненного объекта */
 )
   RETURNS boolean AS
 $BODY$BEGIN
@@ -13,10 +13,10 @@ $BODY$BEGIN
        inChildObjectId := NULL;
     END IF;
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> Рё <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectLink SET ChildObjectId = inChildObjectId WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> Рё <РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> */
+       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
        INSERT INTO ObjectLink (DescId, ObjectId, ChildObjectId)
            VALUES (inDescId, inObjectId, inChildObjectId);
     END IF;             

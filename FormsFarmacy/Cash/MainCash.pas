@@ -239,6 +239,10 @@ type
     spCheck_RemainsError: TdsdStoredProc;
     actShowMessage: TShowMessageAction;
     MainConditionsKeepName: TcxGridDBColumn;
+    MainGoodsGroupName: TcxGridDBColumn;
+    MainAmountIncome: TcxGridDBColumn;
+    MainPriceSaleIncome: TcxGridDBColumn;
+    MainNDS: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

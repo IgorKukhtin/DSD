@@ -327,6 +327,9 @@ type
     N126: TMenuItem;
     actUnit_byReportBadm: TdsdOpenForm;
     N125: TMenuItem;
+    actMarginCategory_Cross: TdsdOpenForm;
+    N127: TMenuItem;
+    actMarginCategory_Total: TdsdOpenForm;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

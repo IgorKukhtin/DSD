@@ -11,7 +11,7 @@ uses
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
   dsdDB, dsdAction, cxButtonEdit, dsdAddOn, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxCalendar, cxGroupBox;
+  cxCalendar, cxGroupBox, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TMobileTariffEditForm = class(TParentForm)
@@ -30,12 +30,12 @@ type
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    edComments: TcxTextEdit;
+    edComment: TcxTextEdit;
     cxLabel21: TcxLabel;
     cxGroupBox1: TcxGroupBox;
-    ceMinuteCost: TcxCurrencyEdit;
-    ceSMSCost: TcxCurrencyEdit;
-    ceInetCost: TcxCurrencyEdit;
+    ceCostMinutes: TcxCurrencyEdit;
+    ceCostSMS: TcxCurrencyEdit;
+    ceCostInet: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
@@ -48,6 +48,9 @@ type
     cePocketSMS: TcxCurrencyEdit;
     cxLabel17: TcxLabel;
     cePocketInet: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public

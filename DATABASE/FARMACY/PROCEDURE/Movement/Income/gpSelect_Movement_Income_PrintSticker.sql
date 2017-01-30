@@ -23,11 +23,20 @@ $BODY$
 
     DECLARE cur1 CURSOR FOR
         SELECT MovementItem.Id
-             , MovementItem.Amount
+             , COALESCE (MIFloat_PrintCount.ValueData, MovementItem.Amount) AS Amount
         FROM MovementItem 
+               LEFT JOIN MovementItemBoolean AS MIBoolean_Print
+                                              ON MIBoolean_Print.MovementItemId = MovementItem.Id
+                                             AND MIBoolean_Print.DescId = zc_MIBoolean_Print()
+                                             
+               LEFT JOIN MovementItemFloat AS MIFloat_PrintCount
+                                           ON MIFloat_PrintCount.MovementItemId = MovementItem.Id
+                                          AND MIFloat_PrintCount.DescId = zc_MIFloat_PrintCount()
+
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Master()
-          AND MovementItem.isErased   = FALSE;
+          AND MovementItem.isErased   = FALSE
+          AND COALESCE (MIBoolean_Print.ValueData, TRUE) = TRUE;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры

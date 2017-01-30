@@ -44,6 +44,7 @@ BEGIN
                                  , View_Personal.UnitCode
                                  , View_Personal.UnitName
                                  , View_Personal.IsErased
+                                 , ROW_NUMBER() OVER (PARTITION BY View_Personal.PersonalCode ORDER BY CASE WHEN View_Personal.PositionId = 12939 THEN 1 ELSE 0 END, View_Personal.PersonalId) AS Ord
                             FROM Object_Personal_View AS View_Personal
                             WHERE View_Personal.IsErased = FALSE
                               AND View_Personal.isDateOut = FALSE
@@ -58,6 +59,7 @@ BEGIN
                                                                , 18315 -- комплектовщик
                                                                , 12943 -- нач. отдела комплектации
                                                                , 12988 -- стикеровщики
+                                                               , 12939 -- грузчик экспедиции
                                                                -- , 12982 -- старший кладовщик
                                                                 )
                                    )
@@ -67,8 +69,18 @@ BEGIN
                            )
 
        -- Результат
-       SELECT *
+       SELECT tmpPersonal.PersonalId
+            , tmpPersonal.PersonalCode
+            , tmpPersonal.PersonalName
+            , tmpPersonal.PositionId
+            , tmpPersonal.PositionCode
+            , tmpPersonal.PositionName
+            , tmpPersonal.UnitId
+            , tmpPersonal.UnitCode
+            , tmpPersonal.UnitName
+            , tmpPersonal.IsErased
        FROM tmpPersonal
+       WHERE tmpPersonal.Ord = 1
        ORDER BY tmpPersonal.PersonalName
               , tmpPersonal.PositionName
       ;

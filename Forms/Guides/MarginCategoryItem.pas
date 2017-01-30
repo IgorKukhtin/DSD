@@ -33,6 +33,7 @@ type
     bbSetUnErased: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

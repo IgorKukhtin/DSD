@@ -6,16 +6,15 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_ReportCollation(
     IN inBarCode             TVarChar  , -- штрихкод документа продажи 
     IN inSession             TVarChar
 )
-RETURNS Void 
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbId Integer;
   DECLARE vbUserId Integer;
-   DECLARE vbMemberId_user Integer;
+  DECLARE vbMemberId_user Integer;
 BEGIN
-
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId :=  lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReportCollation());
 
      -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
      IF COALESCE (TRIM (inBarCode), '') = ''
@@ -60,16 +59,15 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReportCollation_Buh(), vbId, True);
     
    
-
 END;$BODY$
  LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.01.17         *
-
 */
---select * from gpUpdate_Object_ReportCollation(inBarCode := '201000923136' ,  inSession := '5');
+
+-- тест
+-- SELECT * FROM gpUpdate_Object_ReportCollation(inBarCode := '201000923136' ,  inSession := '5');

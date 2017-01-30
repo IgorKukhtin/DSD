@@ -87,4 +87,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_MobileBills (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_MobileBills (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inJuridicalBasisId:=0, inIsErased := FALSE, inSession:= '2')

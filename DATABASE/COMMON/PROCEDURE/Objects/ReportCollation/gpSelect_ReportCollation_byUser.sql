@@ -1,12 +1,10 @@
--- Function: gpSelect_Object_Contract()
+-- Function: gpSelect_ReportCollation_byUser()
 
 DROP FUNCTION IF EXISTS gpSelect_ReportCollation_byUser (TDateTime, TDateTime, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpSelect_ReportCollation_byUser(
     IN inStartDate      TDateTime , --
     IN inEndDate        TDateTime , --
-
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, idBarCode TVarChar
@@ -21,16 +19,14 @@ RETURNS TABLE (Id Integer, idBarCode TVarChar
              , BuhName TVarChar
              , BuhDate TDateTime
              , isBuh Boolean
-            
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMemberId_user  Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
-   vbUserId:= lpGetUserBySession (inSession);
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
@@ -43,7 +39,7 @@ BEGIN
      -- Проверка
      IF COALESCE (vbMemberId_user, 0) = 0
      THEN 
-          RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
      END IF;
 
 
@@ -62,7 +58,7 @@ BEGIN
                    WHERE ObjectDate_Buh.DescId = zc_ObjectDate_ReportCollation_Buh()
                      AND ObjectDate_Buh.ValueData >= inStartDate AND ObjectDate_Buh.ValueData < inEndDate + INTERVAL '1 DAY'
                    )
-
+   -- Результат
    SELECT
          tmpReport.Id
        , zfFormat_BarCode (zc_BarCodePref_Object(), tmpReport.Id) ::TVarChar AS idBarCode
@@ -139,9 +135,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate:= NULL, inEndDate:= NULL, inSession := zfCalc_UserAdmin())
-
-
---select * from gpSelect_ReportCollation_byUser(instartdate := ('23.01.2017')::TDateTime , inenddate := ('24.01.2017')::TDateTime ,  inSession := '5');
-
---select * from gpSelect_ReportCollation_byUser(instartdate := ('24.01.2017')::TDateTime , inenddate := ('24.01.2017')::TDateTime ,  inSession := '9459');
+-- SELECT * FROM gpSelect_ReportCollation_byUser (inStartDate := '24.01.2017', inEndDate:= '24.01.2017', inSession := '9459');

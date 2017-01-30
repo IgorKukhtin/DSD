@@ -13,7 +13,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
              , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
              , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
-             , isErased boolean) AS
+             , BranchCode Integer, BranchName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , isDateOut Boolean, PersonalId Integer
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsAllUnit Boolean;
@@ -32,7 +38,48 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-   with tmpCar AS (SELECT Max( ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
+                     WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId   AS MemberId
+                                               , ObjectLink_Personal_Member.ObjectId        AS PersonalId
+                                               , ObjectLink_Personal_Unit.ChildObjectId     AS UnitId
+                                               , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+                                               , ObjectLink_Unit_Branch.ChildObjectId       AS BranchId
+                                               , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+                                               , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
+                                                                    -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
+                                                                    ORDER BY CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
+                                                                           , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                                           -- , CASE WHEN ObjectLink_Personal_PersonalServiceList.ChildObjectId > 0 THEN 0 ELSE 1 END
+                                                                           , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
+                                                                           , CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
+                                                                           , ObjectLink_Personal_Member.ObjectId
+                                                                   ) AS Ord
+                                          FROM ObjectLink AS ObjectLink_Personal_Member
+                                               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                                               LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                                                    ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                                    ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                   AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                                                    ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                   AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                                                    ON ObjectLink_Unit_Branch.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                                                   AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+                                               -- LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                               --                      ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                               --                     AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                                                       ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                      AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
+                                               LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                                       ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                                      AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                                          WHERE ObjectLink_Personal_Member.ChildObjectId > 0
+                                            AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                         )
+      , tmpCar AS (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
                         , View_PersonalDriver.PersonalId
                         , View_PersonalDriver.MemberId
                    FROM ObjectLink AS ObjectLink_Car_PersonalDriver 
@@ -73,6 +120,15 @@ BEGIN
          , Object_Car.ValueData       AS CarName
          , Object_CarModel.ValueData  AS CarModelName
          
+         , Object_Branch.ObjectCode   AS BranchCode
+         , Object_Branch.ValueData    AS BranchName
+         , Object_Unit.ObjectCode     AS UnitCode
+         , Object_Unit.ValueData      AS UnitName
+         , Object_Position.ObjectCode AS PositionCode
+         , Object_Position.ValueData  AS PositionName
+         , tmpPersonal.isDateOut :: Boolean AS isDateOut
+         , tmpPersonal.PersonalId
+
          , Object_Member.isErased                   AS isErased
 
      FROM Object AS Object_Member
@@ -150,6 +206,11 @@ BEGIN
 
          LEFT JOIN tmpCar ON tmpCar.MemberId = Object_Member.Id
          
+         LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id AND tmpPersonal.Ord = 1
+         LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
+         LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id     = tmpPersonal.UnitId
+         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
+
          LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpCar.CarId
          LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -191,6 +252,16 @@ BEGIN
            , CAST ('' as TVarChar)  AS CarNameAll
            , CAST ('' as TVarChar)  AS CarName
            , CAST ('' as TVarChar)  AS CarModelName
+
+           , 0              AS BranchCode
+           , '' :: TVarChar AS BranchName
+           , 0              AS UnitCode
+           , '' :: TVarChar AS UnitName
+           , 0              AS PositionCode
+           , '' :: TVarChar AS PositionName
+           , FALSE          AS isDateOut
+           , 0              AS PersonalId
+
            , FALSE AS isErased
 
 
@@ -200,7 +271,6 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -219,5 +289,5 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Member (FALSE, zfCalc_UserAdmin()) order by 3
 -- SELECT * FROM gpSelect_Object_Member (TRUE, zfCalc_UserAdmin())  order by 3
+-- SELECT * FROM gpSelect_Object_Member (FALSE, zfCalc_UserAdmin()) order by 3

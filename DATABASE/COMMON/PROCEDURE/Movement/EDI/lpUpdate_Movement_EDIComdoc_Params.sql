@@ -151,7 +151,10 @@ BEGIN
              -- Проверка - должны найти
              IF COALESCE (vbMovementId_Child, 0) = 0 AND vbMovementId_Master <> 0 AND EXISTS (SELECT MovementString.MovementId FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_InvNumberTax() AND TRIM (MovementString.ValueData) <> '')
              THEN
-                  RAISE EXCEPTION 'Ошибка.%Не найдена Налоговая у накладной продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО = <%>,% в документа EDI № <%> от <%> .', chr(13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), chr(13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO, chr(13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+                  RAISE EXCEPTION 'Ошибка.%Не найдена Налоговая у накладной продажи № <%> от <%>%для точки доставки GLN <%> (%) с ОКПО = <%>,% в документа EDI № <%> от <%> . <%> (%) (%)'
+                                 , CHR (13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), CHR (13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO
+                                 , CHR (13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                                 , CHR (13), vbMovementId_Master, (SELECT MovementString.MovementId FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_InvNumberTax())
              END IF;
 
          ELSE

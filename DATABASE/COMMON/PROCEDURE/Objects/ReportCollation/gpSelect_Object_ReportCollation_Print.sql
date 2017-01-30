@@ -29,12 +29,19 @@ BEGIN
                        END
                       ;
 
+     -- Проверка
+     IF COALESCE (vbMemberId_User, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
+     END IF;
+
+
      -- Результат
      OPEN Cursor1 FOR
     
        SELECT inStartDate AS StartDate
             , inEndDate   AS EndDate
-            , 'Сдали в бухгалтерию'    AS ReestrKindName
+            , 'Сдали в бухгалтерию'  ::TVarChar   AS ReestrName
             , Object_User.ValueData    AS UserName
        FROM Object AS Object_User
        WHERE Object_User.Id = vbUserId;
@@ -42,6 +49,7 @@ BEGIN
     RETURN NEXT Cursor1;
 
      OPEN Cursor2 FOR
+
      WITH 
      -- выбираем строки Актов сверки по пользователю (или всем пользователям)
      tmpReport AS (SELECT ObjectDate_Buh.ObjectId      AS Id
@@ -124,7 +132,7 @@ BEGIN
                 , Object_PaidKind.ValueData 
                 , ObjectDate_Start.ValueData 
                 , ObjectDate_End.ValueData
-;
+         ;
 
     RETURN NEXT Cursor2;
 
@@ -139,5 +147,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Object_ReportCollation_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640042 ,  inSession := '5');
---select * from gpSelect_Object_ReportCollation_Print(inStartDate := ('03.12.2016')::TDateTime , inEndDate := ('03.12.2016')::TDateTime , inReestrKindId := 640043 , inIsShowAll := 'True' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_ReportCollation_Print (inStartDate:= '03.12.2016', inEndDate:= '03.12.2016', inIsShowAll:= TRUE, inSession := '5');

@@ -24,6 +24,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbTmpDate TDateTime;
+   DECLARE vbisFarm Boolean;
+   DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
@@ -42,7 +44,35 @@ BEGIN
         vbTmpDate := vbTmpDate + INTERVAL '1 DAY';
     END LOOP;
 
-        
+    -- если долность Фармацевт, показываем только его подразделение
+    SELECT CASE WHEN ObjectLink_Personal_Position.ChildObjectId = 1672498 THEN TRUE ELSE FALSE END AS isFarm
+         , ObjectLink_Personal_Unit.ChildObjectId AS UnitId
+  INTO vbisFarm, vbUnitId
+    FROM ObjectLink AS ObjectLink_User_Member
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                             ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                            AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                             ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId 
+                            AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                             ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId 
+                            AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+    WHERE ObjectLink_User_Member.ObjectId = vbUserId --3354092
+      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member();
+
+    CREATE TEMP TABLE _tmpUnit(UnitId Integer) ON COMMIT DROP;
+    IF vbisFarm = TRUE THEN
+       INSERT INTO _tmpUnit(UnitId)
+             SELECT vbUnitId AS UnitId;
+    ELSE 
+       INSERT INTO _tmpUnit(UnitId)
+             SELECT Object.Id AS UnitId
+             FROM Object
+             WHERE Object.DescId = zc_Object_Unit();
+    END IF;
+      
+    
     RETURN QUERY
       WITH
            -- выбираем все данные из проводок  ( цена, док маркетинга)
@@ -54,6 +84,7 @@ BEGIN
                               , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) = 0 THEN 0 ELSE COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) END) AS SummaPromo
 
                          FROM MovementItemContainer AS MIContainer
+                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = COALESCE (MIContainer.WhereObjectId_analyzer,0)
                          WHERE MIContainer.DescId = zc_MIContainer_Count()
                            AND MIContainer.MovementDescId = zc_Movement_Check()
                            AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate
@@ -96,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 26.01.17         * ограничение для фармацевта
  09.01.17         * на проводках
  12.12.16         *
 */

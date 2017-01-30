@@ -50,6 +50,16 @@ RETURNS TABLE(
     ,ModelServiceItemChild_ToId     Integer
     ,ModelServiceItemChild_ToDescId Integer
     ,ModelServiceItemChild_ToName   TVarChar
+
+    ,GoodsKind_FromId               Integer
+    ,GoodsKind_FromName             TVarChar
+    ,GoodsKindComplete_FromId       Integer
+    ,GoodsKindComplete_FromName     TVarChar
+    ,GoodsKind_ToId                 Integer
+    ,GoodsKind_ToName               TVarChar
+    ,GoodsKindComplete_ToId         Integer
+    ,GoodsKindComplete_ToName       TVarChar
+
     ,OperDate                       TDateTime
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
@@ -100,18 +110,30 @@ BEGIN
        ,SelectKindName TVarChar
        ,isActive Boolean
        ,Ratio TFloat
-       ,ModelServiceItemChild_FromId Integer
+       ,ModelServiceItemChild_FromId     Integer
        ,ModelServiceItemChild_FromDescId Integer
-       ,ModelServiceItemChild_FromName TVarChar
-       ,ModelServiceItemChild_ToId Integer
-       ,ModelServiceItemChild_ToDescId Integer
-       ,ModelServiceItemChild_ToName TVarChar) ON COMMIT DROP;
+       ,ModelServiceItemChild_FromName   TVarChar
+       ,ModelServiceItemChild_ToId       Integer
+       ,ModelServiceItemChild_ToDescId   Integer
+       ,ModelServiceItemChild_ToName     TVarChar
+       ,GoodsKind_FromId                 Integer
+       ,GoodsKind_FromName               TVarChar
+       ,GoodsKindComplete_FromId         Integer
+       ,GoodsKindComplete_FromName       TVarChar
+       ,GoodsKind_ToId                   Integer
+       ,GoodsKind_ToName                 TVarChar
+       ,GoodsKindComplete_ToId           Integer
+       ,GoodsKindComplete_ToName         TVarChar
+       ) ON COMMIT DROP;
 
 
     -- получили Настройки
     INSERT INTO Setting_Wage_1 (StaffListId, DocumentKindId, UnitId,UnitName,PositionId,PositionName, isPositionLevel_all, PositionLevelId, PositionLevelName, Count_Member,HoursPlan,HoursDay, ServiceModelKindId, ServiceModelId,ServiceModelCode
                               , ServiceModelName,Price,FromId,FromName,ToId,ToName,MovementDescId,MovementDescName, SelectKindId, SelectKindCode, SelectKindName, isActive
-                              , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName)
+                              , Ratio,ModelServiceItemChild_FromId,ModelServiceItemChild_FromDescId,ModelServiceItemChild_FromName,ModelServiceItemChild_ToId,ModelServiceItemChild_ToDescId,ModelServiceItemChild_ToName
+                              , GoodsKind_FromId, GoodsKind_FromName, GoodsKindComplete_FromId, GoodsKindComplete_FromName
+                              , GoodsKind_ToId, GoodsKind_ToName, GoodsKindComplete_ToId, GoodsKindComplete_ToName
+                               )
     SELECT
         Object_StaffList.Id                                 AS StaffListId            -- Штатное расписание
        ,COALESCE (ObjectLink_ModelServiceItemMaster_DocumentKind.ChildObjectId, 0) AS DocumentKindId
@@ -153,6 +175,16 @@ BEGIN
        ,ModelServiceItemChild_To.Id                         AS ModelServiceItemChild_ToId         -- Товар,Группа(Кому) (из справочника Подчиненные элементы Модели начисления)
        ,ModelServiceItemChild_To.DescId                     AS ModelServiceItemChild_ToDescId
        ,ModelServiceItemChild_To.ValueData                  AS ModelServiceItemChild_ToName
+
+       , Object_GoodsKind_From.Id                AS GoodsKind_FromId
+       , Object_GoodsKind_From.ValueData         AS GoodsKind_FromName
+       , Object_GoodsKindComplete_From.Id        AS GoodsKindComplete_FromId
+       , Object_GoodsKindComplete_From.ValueData AS GoodsKindComplete_FromName
+       , Object_GoodsKind_To.Id                  AS GoodsKind_ToId
+       , Object_GoodsKind_To.ValueData           AS GoodsKind_ToName
+       , Object_GoodsKindComplete_To.Id          AS GoodsKindComplete_ToId
+       , Object_GoodsKindComplete_To.ValueData   AS GoodsKindComplete_ToName
+
     FROM Object as Object_StaffList
         LEFT JOIN ObjectBoolean AS ObjectBoolean_PositionLevel
                                 ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
@@ -270,6 +302,33 @@ BEGIN
         LEFT JOIN Object AS ModelServiceItemChild_To
                          ON ModelServiceItemChild_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
                         -- AND ModelServiceItemChild_To.isErased = FALSE
+
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_GoodsKind_From
+                                   ON ObjectLink_GoodsKind_From.ObjectId = Object_ModelServiceItemChild.Id
+                                  AND ObjectLink_GoodsKind_From.DescId = zc_ObjectLink_ModelServiceItemChild_FromGoodsKind()
+        LEFT OUTER JOIN Object AS Object_GoodsKind_From
+                               ON Object_GoodsKind_From.Id = ObjectLink_GoodsKind_From.ChildObjectId
+                              -- AND Object_GoodsKind_From.isErased = FALSE 
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_GoodsKind_To
+                                   ON ObjectLink_GoodsKind_To.ObjectId = Object_ModelServiceItemChild.Id
+                                  AND ObjectLink_GoodsKind_To.DescId = zc_ObjectLink_ModelServiceItemChild_ToGoodsKind()
+        LEFT OUTER JOIN Object AS Object_GoodsKind_To
+                               ON Object_GoodsKind_To.Id = ObjectLink_GoodsKind_To.ChildObjectId
+                              -- AND Object_GoodsKind_To.isErased = FALSE 
+
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_GoodsKindComplete_From
+                                   ON ObjectLink_GoodsKindComplete_From.ObjectId = Object_ModelServiceItemChild.Id
+                                  AND ObjectLink_GoodsKindComplete_From.DescId = zc_ObjectLink_ModelServiceItemChild_FromGoodsKindComplete()
+        LEFT OUTER JOIN Object AS Object_GoodsKindComplete_From
+                               ON Object_GoodsKindComplete_From.Id = ObjectLink_GoodsKindComplete_From.ChildObjectId
+                              -- AND Object_GoodsKindComplete_From.isErased = FALSE 
+        LEFT OUTER JOIN ObjectLink AS ObjectLink_GoodsKindComplete_To
+                                   ON ObjectLink_GoodsKindComplete_To.ObjectId = Object_ModelServiceItemChild.Id
+                                  AND ObjectLink_GoodsKindComplete_To.DescId = zc_ObjectLink_ModelServiceItemChild_ToGoodsKindComplete()
+        LEFT OUTER JOIN Object AS Object_GoodsKindComplete_To
+                               ON Object_GoodsKindComplete_To.Id = ObjectLink_GoodsKindComplete_To.ChildObjectId
+                              -- AND Object_GoodsKindComplete_To.isErased = FALSE 
+
     WHERE Object_StaffList.DescId = zc_Object_StaffList()
         AND (ObjectLink_StaffList_Unit.ChildObjectId = inUnitId OR inUnitId = 0)
         AND (ObjectLink_StaffList_Position.ChildObjectId = inPositionId OR inPositionId = 0)
@@ -297,6 +356,7 @@ BEGIN
                       THEN MovementItemContainer.WhereObjectId_Analyzer
                  ELSE MovementItemContainer.ObjectExtId_Analyzer
             END AS ToId
+
            ,CASE WHEN MovementItemContainer.IsActive = TRUE 
                       THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
                  ELSE MovementItemContainer.ObjectId_Analyzer
@@ -305,11 +365,30 @@ BEGIN
                       THEN MovementItemContainer.ObjectId_Analyzer
                  ELSE Container.ObjectId
             END AS GoodsId_to
+
            ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
                             THEN MovementItemContainer.Amount
                        ELSE -1 * MovementItemContainer.Amount
                  END)::TFloat as Amount
-           ,MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+
+           , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+
+           , CASE WHEN MovementItemContainer.IsActive = TRUE 
+                       THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                  ELSE MovementItemContainer.ObjectIntId_Analyzer
+             END AS GoodsKind_FromId
+           , CASE WHEN MovementItemContainer.IsActive = TRUE 
+                       THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                  ELSE OL_GoodsKindComplete_master.ChildObjectId
+             END AS GoodsKindComplete_FromId
+           , CASE WHEN MovementItemContainer.IsActive = TRUE
+                       THEN MovementItemContainer.ObjectIntId_Analyzer
+                  ELSE CLO_GoodsKind.ObjectId
+             END AS GoodsKind_ToId
+           , CASE WHEN MovementItemContainer.IsActive = TRUE
+                       THEN OL_GoodsKindComplete_master.ChildObjectId
+                  ELSE OL_GoodsKindComplete.ChildObjectId
+             END AS GoodsKindComplete_ToId
 
         FROM (SELECT DISTINCT
                      Setting.MovementDescId
@@ -319,7 +398,18 @@ BEGIN
              INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
                                              AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
+                                                                           AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
+             LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
+                                                                      AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
              LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId_Analyzer
+             LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                 AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+             LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete ON OL_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                               AND OL_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
              LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
                                                                    AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
         GROUP BY
@@ -349,6 +439,23 @@ BEGIN
                     THEN MovementItemContainer.ObjectId_Analyzer
             ELSE Container.ObjectId
             END
+
+           , CASE WHEN MovementItemContainer.IsActive = TRUE 
+                       THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                  ELSE MovementItemContainer.ObjectIntId_Analyzer
+             END
+           , CASE WHEN MovementItemContainer.IsActive = TRUE 
+                       THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                  ELSE OL_GoodsKindComplete_master.ChildObjectId
+             END
+           , CASE WHEN MovementItemContainer.IsActive = TRUE
+                       THEN MovementItemContainer.ObjectIntId_Analyzer
+                  ELSE CLO_GoodsKind.ObjectId
+             END
+           , CASE WHEN MovementItemContainer.IsActive = TRUE
+                       THEN OL_GoodsKindComplete_master.ChildObjectId
+                  ELSE OL_GoodsKindComplete.ChildObjectId
+             END
        )
          -- Документы разделения - поиск мастера
        , tmpGoodsMaster_out AS
@@ -377,7 +484,10 @@ BEGIN
            , tmpMovement_all.GoodsId_to
            , SUM (tmpMovement_all.Amount) :: TFloat AS Amount
            , tmpMovement_all.GoodsKindId
-
+           , tmpMovement_all.GoodsKind_FromId
+           , tmpMovement_all.GoodsKindComplete_FromId
+           , tmpMovement_all.GoodsKind_ToId
+           , tmpMovement_all.GoodsKindComplete_ToId
         FROM tmpMovement_all
              LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpGoodsMaster_out.MovementId
                                          AND tmpMovement_all.IsActive      = TRUE
@@ -392,6 +502,10 @@ BEGIN
            , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from)
            , tmpMovement_all.GoodsId_to
            , tmpMovement_all.GoodsKindId
+           , tmpMovement_all.GoodsKind_FromId
+           , tmpMovement_all.GoodsKindComplete_FromId
+           , tmpMovement_all.GoodsKind_ToId
+           , tmpMovement_all.GoodsKindComplete_ToId
        )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
@@ -471,6 +585,10 @@ BEGIN
            ,Setting.SelectKindId
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
+           ,Setting.GoodsKind_FromId
+           ,Setting.GoodsKindComplete_FromId
+           ,Setting.GoodsKind_ToId
+           ,Setting.GoodsKindComplete_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate) AS OperDate
            , tmpMovement.DocumentKindId
 
@@ -537,6 +655,12 @@ BEGIN
                                                           AND COALESCE (tmpMovement_HeadCount.GoodsId_to, tmpMovement.GoodsId_to) IN (SELECT GoodsTree.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (Setting.ModelServiceItemChild_ToId) AS GoodsTree)
                                                              )
               )
+
+          AND (Setting.GoodsKind_FromId         IS NULL OR tmpMovement.GoodsKind_FromId         = Setting.GoodsKind_FromId)
+          AND (Setting.GoodsKindComplete_FromId IS NULL OR tmpMovement.GoodsKindComplete_FromId = Setting.GoodsKindComplete_FromId)
+          AND (Setting.GoodsKind_ToId           IS NULL OR tmpMovement.GoodsKind_ToId           = Setting.GoodsKind_ToId)
+          AND (Setting.GoodsKindComplete_ToId   IS NULL OR tmpMovement.GoodsKindComplete_ToId   = Setting.GoodsKindComplete_ToId)
+
         GROUP BY
              Setting.StaffListId
            , Setting.UnitId
@@ -551,6 +675,10 @@ BEGIN
            , Setting.SelectKindCode
            , Setting.ModelServiceItemChild_FromId
            , Setting.ModelServiceItemChild_ToId
+           , Setting.GoodsKind_FromId
+           , Setting.GoodsKindComplete_FromId
+           , Setting.GoodsKind_ToId
+           , Setting.GoodsKindComplete_ToId
            , COALESCE (tmpMovement.OperDate, tmpMovement_HeadCount.OperDate)
            , tmpMovement.DocumentKindId
            , Setting.Price 
@@ -710,6 +838,9 @@ BEGIN
        ,Setting.ModelServiceItemChild_ToId
        ,Setting.ModelServiceItemChild_ToDescId
        ,Setting.ModelServiceItemChild_ToName
+       ,Setting.GoodsKind_FromId, Setting.GoodsKind_FromName, Setting.GoodsKindComplete_FromId, Setting.GoodsKindComplete_FromName
+       ,Setting.GoodsKind_ToId, Setting.GoodsKind_ToName, Setting.GoodsKindComplete_ToId, Setting.GoodsKindComplete_ToName
+
        , tmpOperDate.OperDate               :: TDateTime  AS OperDate
        , Movement_Sheet_Count_Day.Count_Day :: Integer    AS Count_Day
        , COALESCE (Movement_SheetGroup.Count_Member, Movement_Sheet.Count_MemberInDay) :: Integer
@@ -760,6 +891,12 @@ BEGIN
                                             AND COALESCE (Setting.SelectKindId, 0)                 = COALESCE (ServiceModelMovement.SelectKindId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_FromId, 0) = COALESCE (ServiceModelMovement.ModelServiceItemChild_FromId, 0)
                                             AND COALESCE (Setting.ModelServiceItemChild_ToId, 0)   = COALESCE (ServiceModelMovement.ModelServiceItemChild_ToId, 0)
+
+                                            AND COALESCE (Setting.GoodsKind_FromId, 0)             = COALESCE (ServiceModelMovement.GoodsKind_FromId, 0)
+                                            AND COALESCE (Setting.GoodsKindComplete_FromId, 0)     = COALESCE (ServiceModelMovement.GoodsKindComplete_FromId, 0)
+                                            AND COALESCE (Setting.GoodsKind_ToId, 0)               = COALESCE (ServiceModelMovement.GoodsKind_ToId, 0)
+                                            AND COALESCE (Setting.GoodsKindComplete_ToId, 0)       = COALESCE (ServiceModelMovement.GoodsKindComplete_ToId, 0)
+
                                             AND ServiceModelMovement.OperDate                      = tmpOperDate.OperDate
                                             AND (ServiceModelMovement.DocumentKindId               = Setting.DocumentKindId
                                               OR Setting.DocumentKindId = 0)

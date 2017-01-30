@@ -276,13 +276,14 @@ begin
       end;
     end;
     try
+      idFTP1.Put(SavePathBaDM+FileNameBaDM_byUnit,
+                 FileNameBaDM_byUnit);
+      DeleteFile(SavePathBaDM+FileNameBaDM_byUnit);
+
       idFTP1.Put(SavePathBaDM+FileNameBaDM,
                  FileNameBaDM);
       DeleteFile(SavePathBaDM+FileNameBaDM);
 
-      idFTP1.Put(SavePathBaDM+FileNameBaDM_byUnit,
-                 FileNameBaDM_byUnit);
-      DeleteFile(SavePathBaDM+FileNameBaDM_byUnit);
     except ON E: Exception DO
       Begin
         Add_Log(E.Message);

@@ -1,19 +1,19 @@
-п»ї-- Function: lpinsertupdate_objectBLOB()
+-- Function: lpinsertupdate_objectBLOB()
 
 -- DROP FUNCTION lpinsertupdate_objectBLOB();
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectBLOB(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°  */
- inObjectId                  Integer           ,  /* РєР»СЋС‡ РѕР±СЉРµРєС‚Р°         */
- inValueData                 TBLOB             /* РґР°РЅРЅС‹Рµ СЃРІРѕР№СЃС‚РІР°      */
+ inDescId                    Integer           ,  /* код класса свойства  */
+ inObjectId                  Integer           ,  /* ключ объекта         */
+ inValueData                 TBLOB             /* данные свойства      */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> Рё <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectBLOB SET ValueData = inValueData WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> */
+       /* вставить <ключ свойства> , <ключ объекта> и <данные> */
        INSERT INTO ObjectBLOB (DescId, ObjectId, ValueData)
            VALUES (inDescId, inObjectId, inValueData);
     END IF;             

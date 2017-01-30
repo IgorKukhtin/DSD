@@ -12,13 +12,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
 RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, DriverCertificate TVarChar, Card TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
-               UnitId Integer, UnitCode Integer, UnitName TVarChar,
+               UnitId Integer, UnitCode Integer, UnitName TVarChar, BranchCode Integer, BranchName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
                PersonalServiceListId Integer, PersonalServiceListName TVarChar,
                PersonalServiceListOfficialId Integer, PersonalServiceListOfficialName TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
-               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean, isErased Boolean) AS
+               DateIn TDateTime, DateOut TDateTime, isDateOut Boolean, isMain Boolean, isOfficial Boolean,
+               isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -70,6 +73,9 @@ BEGIN
          , Object_Personal_View.UnitCode
          , Object_Personal_View.UnitName
 
+         , Object_Branch.ObjectCode AS BranchCode
+         , Object_Branch.ValueData  AS BranchName
+
          , Object_Personal_View.PersonalGroupId
          , Object_Personal_View.PersonalGroupCode
          , Object_Personal_View.PersonalGroupName
@@ -106,6 +112,11 @@ BEGIN
                                  ON ObjectString_Card.ObjectId = Object_Personal_View.MemberId 
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
       
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
+                              AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                ON ObjectLink_Personal_PersonalServiceList.ObjectId = Object_Personal_View.PersonalId
                               AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
@@ -173,6 +184,8 @@ BEGIN
          , 0 AS UnitId
          , 0 AS UnitCode
          , CAST ('' as TVarChar) AS UnitName
+         , 0 AS BranchCode
+         , CAST ('' as TVarChar) AS BranchName
          , 0 AS PersonalGroupId
          , 0 AS PersonalGroupCode
          , CAST ('' as TVarChar) AS PersonalGroupName

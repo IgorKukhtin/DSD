@@ -52,6 +52,8 @@ type
     ExecuteDialog: TExecuteDialog;
     spSelectPrintSticker: TdsdStoredProc;
     actPrintSticker: TdsdPrintAction;
+    bbPrintSticker_notPrice: TdxBarButton;
+    actPrintSticker_notPrice: TdsdPrintAction;
   private
     { Private declarations }
   public

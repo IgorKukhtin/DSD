@@ -4,7 +4,7 @@ inherited Report_WageForm: TReport_WageForm
   ClientWidth = 991
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1007
-  ExplicitHeight = 439
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -215,12 +215,42 @@ inherited Report_WageForm: TReport_WageForm
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
+          object GoodsKind_FromName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074': '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'GoodsKind_FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GoodsKindComplete_FromName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074' ('#1043#1055'): '#1088#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'GoodsKindComplete_FromName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colModelServiceItemChild_ToName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088': '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'ModelServiceItemChild_ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 112
+          end
+          object GoodsKind_ToName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074': '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'GoodsKind_ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object GoodsKindComplete_ToName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074' ('#1043#1055'): '#1087#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'GoodsKindComplete_ToName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072

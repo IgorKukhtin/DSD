@@ -72,6 +72,11 @@ type
     actChoiceInfoMoneyForm: TOpenChoiceForm;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    isDateOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

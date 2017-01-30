@@ -371,7 +371,7 @@ begin
                   Except ON E: Exception DO
                     Begin
                       MovementId := -1;
-                      ShowMessage(E.Message);
+                      ShowMessage(E.Message +#10  +#13 + List[i]);
                     End;
                   end;
                   if MovementId <> -1 then
@@ -2268,8 +2268,11 @@ begin
       ParamByName('inOperDateSaleLink').Value :=
         ConvertEDIDate(Заголовок.ДокПідстава.ДатаДокументу);
     end
-    else
+    else begin
       ParamByName('inDesc').Value := 'Sale';
+      ParamByName('inInvNumberTax').Value := '';
+      ParamByName('inInvNumberSaleLink').Value := '';
+    end;
 
     for i := 0 to Сторони.Count - 1 do
       if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then

@@ -380,6 +380,7 @@ object JuridicalUKTZEDForm: TJuridicalUKTZEDForm
         item
           Name = 'Id'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -387,6 +388,7 @@ object JuridicalUKTZEDForm: TJuridicalUKTZEDForm
         item
           Name = 'TextValue'
           Value = Null
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput

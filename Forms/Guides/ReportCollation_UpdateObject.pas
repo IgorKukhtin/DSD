@@ -50,20 +50,15 @@ type
     dsdDBViewAddOn1: TdsdDBViewAddOn;
     bbErased: TdxBarButton;
     spGet_Period: TdsdStoredProc;
-    PrintItemsCDS: TClientDataSet;
-    PrintHeaderCDS: TClientDataSet;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     macMISetErased: TMultiAction;
-    actExternalDialog: TExecuteDialog;
     bbExternalDialog: TdxBarButton;
-    actPrintPeriod: TdsdPrintAction;
-    spSelectPrintPeriod: TdsdStoredProc;
-    bbPrintPeriod: TdxBarButton;
-    actDialog_Print: TExecuteDialog;
-    macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
     spSetErased: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public
