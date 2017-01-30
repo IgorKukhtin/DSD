@@ -71,7 +71,8 @@ uses
 {$R *.res}
 
 begin
-
+  Application.ShowMainForm:=False;
+  Application.MainFormOnTaskBar:=False;
   Application.Initialize;
   Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
@@ -86,7 +87,10 @@ begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     AllowLocalConnect := False; //True;
 
-    if ShowModal <> mrOk then exit;
+     if ParamStr(1)<>'' then
+       TAuthentication.CheckLogin(TStorageFactory.GetStorage, ParamStr(1), ParamStr(2), gc_User)
+      else
+       if ShowModal <> mrOk then exit;
 
     if not gc_User.Local then
     Begin
@@ -100,6 +104,7 @@ begin
    Application.CreateForm(TMainCashForm2, MainCashForm2);
 
   End;
+
   Application.Run;
 
 end.
