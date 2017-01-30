@@ -2201,11 +2201,9 @@ inherited MainForm: TMainForm
         object N47: TMenuItem
           Action = actMarginCategoryLink
         end
-        object N128: TMenuItem
-          Action = actMarginCategory_Total
-        end
         object N127: TMenuItem
           Action = actMarginCategory_Cross
+          Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082' ('#1054#1073#1097#1080#1081')'
         end
       end
       object miUser: TMenuItem [2]

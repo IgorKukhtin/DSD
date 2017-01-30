@@ -807,15 +807,6 @@ inherited MainCashForm2: TMainCashForm2
         Font.Style = [fsBold]
         ParentFont = False
       end
-      object Button1: TButton
-        Left = 779
-        Top = 6
-        Width = 118
-        Height = 25
-        Caption = #1047#1072#1087#1091#1089#1090#1080#1090#1100' '#1089#1077#1088#1074#1080#1089
-        TabOrder = 12
-        OnClick = Button1Click
-      end
     end
   end
   object pnlVIP: TPanel [3]
@@ -1444,6 +1435,14 @@ inherited MainCashForm2: TMainCashForm2
     object actServiseRun: TAction
       Caption = 'actServiseRun'
       OnExecute = actServiseRunExecute
+    end
+    object actSetMemdataFromDBF: TAction
+      Caption = 'actSetMemdataFromDBF'
+      OnExecute = actSetMemdataFromDBFExecute
+    end
+    object actSetUpdateFromMemdata: TAction
+      Caption = 'actSetUpdateFromMemdata'
+      OnExecute = actSetUpdateFromMemdataExecute
     end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn

@@ -1,8 +1,8 @@
--- Function: gpselect_object_reportpromoparams(tdatetime, boolean, tvarchar)
+-- Function: gpSelect_Object_ReportPromoParams(tdatetime, boolean, tvarchar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ReportSoldParams(TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ReportPromoParams(TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Reportpromoparams(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ReportPromoParams(
     IN inplandate tdatetime,
     IN inshowall boolean,
     IN insession tvarchar

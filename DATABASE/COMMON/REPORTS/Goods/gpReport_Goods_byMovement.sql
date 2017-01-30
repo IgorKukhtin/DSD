@@ -37,6 +37,8 @@ BEGIN
                                                                       , SaleAmountDay TFloat, SaleAmountPartnerDay TFloat, ReturnAmountDay TFloat, ReturnAmountPartnerDay TFloat
                                                                       , SaleAmountSh TFloat, SaleAmountPartnerSh TFloat, ReturnAmountSh TFloat, ReturnAmountPartnerSh TFloat
                                                                       , SaleAmountDaySh TFloat, SaleAmountPartnerDaySh TFloat, ReturnAmountDaySh TFloat, ReturnAmountPartnerDaySh TFloat
+                                                                      , OrderAmount TFloat, MoreAmount TFloat, UnderAmount TFloat, DiffAmount TFloat
+                                                                      , OrderAmountSh TFloat, MoreAmountSh TFloat, UnderAmountSh TFloat, DiffAmountSh TFloat
                                                                       , GoodsPlatformId Integer, TradeMarkId Integer, GoodsTagId Integer
                                    , ColorRecord_TradeMark Integer, ColorRecord_GoodsTag Integer) ON COMMIT DROP;
         
@@ -103,12 +105,17 @@ BEGIN
          tmpMovSale AS (SELECT Movement.DescId    AS MovementDescId
                              , Movement.Id        AS MovementId
                              , Movement.OperDate  AS OperDate
+                             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
                         FROM Movement 
                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                      ON MovementLinkObject_From.MovementId = Movement.Id
                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                     AND MovementLinkObject_From.ObjectId = inUnitId                    -- Склад Реализации
                              -- INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                             -- связь с заявкой от покупателя
+                             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                    ON MovementLinkMovement_Order.MovementId = Movement.Id       --5078302 --
+                                   AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
                           AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -128,26 +135,41 @@ BEGIN
                       )
 
         -- Элементы - что считаем "продажей"
-      , tmpMI_Sale AS (SELECT MovementItem.ObjectId AS GoodsId
-                            , tmp.OperDate
-                            , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData /*MovementItem.Amount*/, 0))  AS Amount
-                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0)) AS AmountPartner
+      , tmpMI_Sale_byOrder AS (SELECT tmpMovSale.OperDate
+                                    , tmpMovSale.MovementId
+                                    , tmpMovSale.MovementId_Order
+                                    , MovementItem.ObjectId AS GoodsId
+                                   
+                                    , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0))  AS Amount
+                                    , SUM (COALESCE (MIFloat_AmountPartner.ValueData,0)) AS AmountPartner
 
-                            , SUM (CASE WHEN tmp.OperDate = inEndDate THEN COALESCE (MIFloat_AmountChangePercent.ValueData /*MovementItem.Amount*/, 0) ELSE 0 END)  AS DayAmount
-                            , SUM (CASE WHEN tmp.OperDate = inEndDate THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS DayAmountPartner
-                       FROM tmpMovSale AS tmp 
-                           INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
-                                  AND MovementItem.DescId     = zc_MI_Master()
-                                  AND MovementItem.isErased   = FALSE
-                           INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId 
+                               FROM tmpMovSale 
+                                    INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovSale.MovementId
+                                           AND MovementItem.DescId     = zc_MI_Master()
+                                           AND MovementItem.isErased   = FALSE
+                                    INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId 
 
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                                       ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                       GROUP BY MovementItem.ObjectId, tmp.OperDate
+                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                           ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
+                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                               GROUP BY tmpMovSale.OperDate
+                                    , tmpMovSale.MovementId
+                                    , MovementItem.ObjectId
+                                    , tmpMovSale.MovementId_Order
+                       )
+
+      , tmpMI_Sale AS (SELECT tmpMI_Sale_byOrder.GoodsId
+                            , tmpMI_Sale_byOrder.OperDate
+                            , SUM (COALESCE (tmpMI_Sale_byOrder.Amount, 0))  AS Amount
+                            , SUM (COALESCE (tmpMI_Sale_byOrder.AmountPartner,0)) AS AmountPartner
+
+                            , SUM (CASE WHEN tmpMI_Sale_byOrder.OperDate = inEndDate THEN COALESCE (tmpMI_Sale_byOrder.Amount, 0) ELSE 0 END)  AS DayAmount
+                            , SUM (CASE WHEN tmpMI_Sale_byOrder.OperDate = inEndDate THEN COALESCE (tmpMI_Sale_byOrder.AmountPartner, 0) ELSE 0 END) AS DayAmountPartner
+                       FROM tmpMI_Sale_byOrder 
+                       GROUP BY tmpMI_Sale_byOrder.GoodsId, tmpMI_Sale_byOrder.OperDate
                        )
         -- Элементы - что считаем "возвратом"
       , tmpMI_Ret AS (SELECT MovementItem.ObjectId AS GoodsId
@@ -168,6 +190,50 @@ BEGIN
                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                       GROUP BY MovementItem.ObjectId, tmp.OperDate
                       )
+      , tmpMI_OrderAll AS (SELECT Movement.Id
+                                , MovementDate_OperDatePartner.ValueData  AS OperDatePartner
+                                , MovementItem.ObjectId                   AS GoodsId
+                                , SUM (MovementItem.Amount)               AS Amount
+                                , SUM((MIFloat_AmountSecond.ValueData ))  AS Amount_Dozakaz
+                           FROM Movement
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                       AND MovementLinkObject_To.ObjectId = inUnitId --8459 
+
+                                INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                       AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+
+                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                       AND MovementItem.DescId     = zc_MI_Master()
+                                       AND MovementItem.isErased   = FALSE
+                                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                       ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                      AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                           WHERE Movement.DescId = zc_Movement_OrderExternal()
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                           GROUP BY MovementItem.ObjectId
+                                  , MovementDate_OperDatePartner.ValueData 
+                                  , Movement.Id
+                           )
+        -- кол-во в заявках и отклонения от продаж
+        , tmpMI_Order AS (SELECT tmpMI_OrderAll.OperDatePartner AS OperDate
+                               , tmpMI_OrderAll.GoodsId
+                               , SUM (tmpMI_OrderAll.Amount) AS Amount
+                               , SUM (CASE WHEN COALESCE (tmpMI_Sale_byOrder.Amount,0) > tmpMI_OrderAll.Amount THEN (COALESCE (tmpMI_Sale_byOrder.Amount,0) - tmpMI_OrderAll.Amount) ELSE 0 END) AS Amount_More  -- сверх заказа
+                               , SUM (CASE WHEN COALESCE (tmpMI_Sale_byOrder.Amount,0) < tmpMI_OrderAll.Amount THEN (tmpMI_OrderAll.Amount - COALESCE (tmpMI_Sale_byOrder.Amount,0)) ELSE 0 END) AS Amount_Under -- меньше заказа
+                              -- , SUM (COALESCE (tmpMI_Sale_byOrder.Amount,0) - tmpMI_OrderAll.Amount)                                                                                            AS Amount_Diff
+                               , 0 AS Amount_Diff
+                          FROM tmpMI_OrderAll
+                               LEFT JOIN tmpMI_Sale_byOrder ON tmpMI_Sale_byOrder.MovementId_Order = tmpMI_OrderAll.Id
+                                                           AND tmpMI_Sale_byOrder.GoodsId = tmpMI_OrderAll.GoodsId
+                          GROUP BY tmpMI_OrderAll.OperDatePartner
+                                 , tmpMI_OrderAll.GoodsId
+                          )
+
           -- Элементы - что считаем "возвратом"
         , tmpData  AS (SELECT tmp.GoodsId
                             , tmp.OperDate
@@ -180,6 +246,12 @@ BEGIN
                             , SUM (tmp.SaleAmountPartnerDay)    AS SaleAmountPartnerDay
                             , SUM (tmp.ReturnAmountDay)         AS ReturnAmountDay
                             , SUM (tmp.ReturnAmountPartnerDay)  AS ReturnAmountPartnerDay
+
+                            , SUM (tmp.Amount_Order)            AS Amount_Order
+                            , SUM (tmp.Amount_More)             AS Amount_More
+                            , SUM (tmp.Amount_Under)            AS Amount_Under
+                            , SUM (tmp.SaleAmount - tmp.Amount_Order) AS Amount_Diff
+
                        FROM (SELECT tmp.GoodsId
                                   , tmp.OperDate
                                   , tmp.Amount              AS SaleAmount
@@ -190,6 +262,10 @@ BEGIN
                                   , 0 AS ReturnAmountPartner
                                   , 0 AS ReturnAmountDay
                                   , 0 AS ReturnAmountPartnerDay
+                                  , 0 AS Amount_Order
+                                  , 0 AS Amount_More
+                                  , 0 AS Amount_Under
+                                  , 0 AS Amount_Diff
                              FROM tmpMI_Sale AS tmp
                            UNION
                              SELECT tmp.GoodsId
@@ -202,7 +278,27 @@ BEGIN
                                   , tmp.AmountPartner    AS ReturnAmountPartner
                                   , tmp.DayAmount        AS ReturnAmountDay
                                   , tmp.DayAmountPartner AS ReturnAmountPartnerDay
+                                  , 0 AS Amount_Order
+                                  , 0 AS Amount_More
+                                  , 0 AS Amount_Under
+                                  , 0 AS Amount_Diff
                              FROM tmpMI_Ret AS tmp
+                           UNION
+                             SELECT tmp.GoodsId
+                                  , tmp.OperDate
+                                  , 0 AS SaleAmount
+                                  , 0 AS SaleAmountPartner
+                                  , 0 AS SaleAmountDay
+                                  , 0 AS SaleAmountPartnerDay
+                                  , 0 AS ReturnAmount
+                                  , 0 AS ReturnAmountPartner
+                                  , 0 AS ReturnAmountDay
+                                  , 0 AS ReturnAmountPartnerDay
+                                  , tmp.Amount
+                                  , tmp.Amount_More 
+                                  , tmp.Amount_Under
+                                  , tmp.Amount_Diff 
+                             FROM tmpMI_Order AS tmp
                              ) AS tmp
                        GROUP BY tmp.GoodsId, tmp.OperDate
                       )  
@@ -212,6 +308,8 @@ BEGIN
                                                                                            , SaleAmountDay,   SaleAmountPartnerDay,   ReturnAmountDay,   ReturnAmountPartnerDay
                                                                                            , SaleAmountSh,    SaleAmountPartnerSh,    ReturnAmountSh,    ReturnAmountPartnerSh
                                                                                            , SaleAmountDaySh, SaleAmountPartnerDaySh, ReturnAmountDaySh, ReturnAmountPartnerDaySh
+                                                                                           , OrderAmount,     MoreAmount,             UnderAmount,       DiffAmount
+                                                                                           , OrderAmountSh,   MoreAmountSh,           UnderAmountSh,     DiffAmountSh
                                 )
 
                        SELECT tmp.OperDate
@@ -239,6 +337,17 @@ BEGIN
                             , (SUM (tmp.SaleAmountPartnerDay)   ) AS SaleAmountPartnerDaySh
                             , (SUM (tmp.ReturnAmountDay)        ) AS ReturnAmountDaySh
                             , (SUM (tmp.ReturnAmountPartnerDay) ) AS ReturnAmountPartnerDaySh
+
+                            -- данные из заявок
+                            , (SUM (tmp.Amount_Order * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)) AS OrderAmount
+                            , (SUM (tmp.Amount_More * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END))  AS MoreAmount
+                            , (SUM (tmp.Amount_Under * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)) AS UnderAmount
+                            , (SUM (tmp.Amount_Diff * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END))  AS DiffAmount
+
+                            , (SUM (tmp.Amount_Order)           ) AS OrderAmountSh
+                            , (SUM (tmp.Amount_More)            ) AS MoreAmountSh
+                            , (SUM (tmp.Amount_Under)           ) AS UnderAmountSh
+                            , (SUM (tmp.Amount_Diff)            ) AS DiffAmountSh
 
                       FROM tmpData AS tmp
                            LEFT JOIN _tmpGoods  ON _tmpGoods.GoodsId = tmp.GoodsId
@@ -652,6 +761,16 @@ BEGIN
                              , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
                              , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
                              , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+
+                             , SUM (tmpData.OrderAmount)          :: TFloat   AS OrderAmount
+                             , SUM (tmpData.MoreAmount)           :: TFloat   AS MoreAmount
+                             , SUM (tmpData.UnderAmount)          :: TFloat   AS UnderAmount
+                             , SUM (tmpData.DiffAmount)           :: TFloat   AS DiffAmount
+
+                             , SUM (tmpData.OrderAmountSh)        :: TFloat   AS OrderAmountSh
+                             , SUM (tmpData.MoreAmountSh)         :: TFloat   AS MoreAmountSh
+                             , SUM (tmpData.UnderAmountSh)        :: TFloat   AS UnderAmountSh
+                             , SUM (tmpData.DiffAmountSh)         :: TFloat   AS DiffAmountSh
                              , 1 AS Num
                              , 1 AS Num2
                        FROM tmpData
@@ -668,6 +787,17 @@ BEGIN
                             , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
                             , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
                             , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+
+                             , SUM (tmpData.OrderAmount)          :: TFloat   AS OrderAmount
+                             , SUM (tmpData.MoreAmount)           :: TFloat   AS MoreAmount
+                             , SUM (tmpData.UnderAmount)          :: TFloat   AS UnderAmount
+                             , SUM (tmpData.DiffAmount)           :: TFloat   AS DiffAmount
+
+                             , SUM (tmpData.OrderAmountSh)        :: TFloat   AS OrderAmountSh
+                             , SUM (tmpData.MoreAmountSh)         :: TFloat   AS MoreAmountSh
+                             , SUM (tmpData.UnderAmountSh)        :: TFloat   AS UnderAmountSh
+                             , SUM (tmpData.DiffAmountSh)         :: TFloat   AS DiffAmountSh
+
                             , 1 AS Num
                             , 2 AS Num2
                        FROM tmpData
@@ -688,6 +818,17 @@ BEGIN
                              , SUM (tmpData.ReturnAmountSh)       :: TFloat   AS ReturnAmountSh
                              , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
                              , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
+
+                             , SUM (tmpData.OrderAmount)          :: TFloat   AS OrderAmount
+                             , SUM (tmpData.MoreAmount)           :: TFloat   AS MoreAmount
+                             , SUM (tmpData.UnderAmount)          :: TFloat   AS UnderAmount
+                             , SUM (tmpData.DiffAmount)           :: TFloat   AS DiffAmount
+
+                             , SUM (tmpData.OrderAmountSh)        :: TFloat   AS OrderAmountSh
+                             , SUM (tmpData.MoreAmountSh)         :: TFloat   AS MoreAmountSh
+                             , SUM (tmpData.UnderAmountSh)        :: TFloat   AS UnderAmountSh
+                             , SUM (tmpData.DiffAmountSh)         :: TFloat   AS DiffAmountSh
+
                              , 2 AS Num        
                              , CAST (ROW_NUMBER() OVER (ORDER BY Object_TradeMark.ObjectCode)   AS Integer) AS Num2
                         FROM tmpData
@@ -707,13 +848,17 @@ BEGIN
               , tmpWeekDay_Start.DayOfWeekName AS DOW_StartDate
               , tmpWeekDay_End.DayOfWeekName   AS DOW_EndDate
               -- итого колбаса
-              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.SaleAmount ELSE 0 END)   AS SaleAmount_11
-              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.ReturnAmount ELSE 0 END)   AS ReturnAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.SaleAmount ELSE 0 END)    AS SaleAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.ReturnAmount ELSE 0 END)  AS ReturnAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.OrderAmount ELSE 0 END)   AS OrderAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.MoreAmount ELSE 0 END)    AS MoreAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.UnderAmount ELSE 0 END)   AS UnderAmount_11
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 1 THEN tmp.DiffAmount ELSE 0 END)    AS DiffAmount_11
               -- алан
-              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 2 THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_12
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 2 THEN tmp.SaleAmount ELSE 0 END)   AS SaleAmount_12
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 2 THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_12
               -- ирна
-              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 3 THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_13
+              , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 3 THEN tmp.SaleAmount ELSE 0 END)   AS SaleAmount_13
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.NumLine = 3 THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_13
               -- торговые марки колбаса
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '1' THEN tmp.SaleAmount ELSE 0 END) AS SaleAmount_1_Alan
@@ -746,8 +891,13 @@ BEGIN
               , SUM (CASE WHEN tmp.GroupNum = 1 AND tmp.GroupName = '14' THEN tmp.ReturnAmount ELSE 0 END) AS ReturnAmount_1_Num1
 
               -- итого тушенка
-              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.SaleAmountSh ELSE 0 END) AS SaleAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.SaleAmountSh ELSE 0 END)   AS SaleAmount_21
               , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.OrderAmountSh ELSE 0 END)  AS OrderAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.MoreAmountSh ELSE 0 END)   AS MoreAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.UnderAmountSh ELSE 0 END)  AS UnderAmount_21
+              , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.NumLine = 1 THEN tmp.DiffAmountSh ELSE 0 END)   AS DiffAmount_21
+
               -- торговые марки тушенка
               , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '1' THEN tmp.SaleAmountSh ELSE 0 END) AS SaleAmount_2_Alan
               , SUM (CASE WHEN tmp.GroupNum = 2 AND tmp.GroupName = '1' THEN tmp.ReturnAmountSh ELSE 0 END) AS ReturnAmount_2_Alan
@@ -773,6 +923,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.17         *
  02.12.16         *
 */
 

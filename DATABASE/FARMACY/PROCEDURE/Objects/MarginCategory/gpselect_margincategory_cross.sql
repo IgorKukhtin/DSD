@@ -47,6 +47,7 @@ BEGIN
             SELECT _tmpMarginCategory.MarginCategoryId 
                  , _tmpminPrice.num AS Num
                  , _tmpMarginCategory.MarginCategoryId AS ObjectId 
+                 , tmpMarginCategoryItem.Id AS Object1Id 
                  , tmpMarginCategoryItem.MarginPercent  AS ShortName 
                  ,  avg(tmpMarginCategoryItem.MarginPercent) OVER (ORDER BY  _tmpminPrice.num)  AS avgPercent 
             FROM _tmpMarginCategory 
@@ -76,7 +77,8 @@ BEGIN
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
        vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
-                          ', DAY' || vbIndex || '[2]::Integer  AS MarginCategoryId'||vbIndex||' ';
+                          ', DAY' || vbIndex || '[2]::Integer  AS MarginCategoryId'||vbIndex||' '||
+                          ', DAY' || vbIndex || '[3]::Integer  AS MarginCategoryItemId'||vbIndex||' ';
      END LOOP;
 
      OPEN cur1 FOR SELECT _tmpMarginCategory.MarginCategoryId, 
@@ -99,6 +101,7 @@ BEGIN
                                          , COALESCE (tmpData.MarginCategoryId, Object_Data.MarginCategoryId) AS MarginCategoryId
                                          , ARRAY[ tmpData.ShortName :: VarChar
                                                , COALESCE (tmpData.ObjectId, 0) :: VarChar
+                                               , COALESCE (tmpData.Object1Id, 0) :: VarChar
                                                 ] :: TVarChar
                                     FROM (SELECT * FROM tmpMI) AS tmpData
                                         FULL JOIN  

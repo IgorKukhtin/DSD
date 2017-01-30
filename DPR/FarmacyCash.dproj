@@ -77,6 +77,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<Debugger_HostApplication>D:\Documents\RAD Studio\Projects\DSD.git\BIN\FarmacyCashServise.exe</Debugger_HostApplication>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.8.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>8</VerInfo_Release>
 			<VerInfo_Build>5</VerInfo_Build>
@@ -271,7 +272,21 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages/>
+					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfs16.bpl">File C:\Program Files\FastReports\LibD16\dclfs16.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfsDB16.bpl">File C:\Program Files\FastReports\LibD16\dclfsDB16.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxcs16.bpl">FastReport 4.0 Client/Server Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsbde16.bpl">FastScript 1.9 BDE Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxbde16.bpl">FastReport 4.0 BDE Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsado16.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxado16.bpl">FastReport 4.0 ADO Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsibx16.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxibx16.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxdbx16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfstee16.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
+					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">FarmacyCash.dpr</Source>
 					</Source>

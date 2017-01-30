@@ -71,7 +71,6 @@ type
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
-    actUpdateChildDS: TdsdUpdateDataSet;
     spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     bb: TdxBarButton;

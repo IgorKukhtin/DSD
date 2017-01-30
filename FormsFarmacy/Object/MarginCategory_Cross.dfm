@@ -88,17 +88,13 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
       end
       object TemplateColumn: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = MarginCategoryItemForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####;;'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         MinWidth = 40
-        Width = 40
+        Width = 50
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
@@ -275,15 +271,6 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
     Images = dmMain.ImageList
     Left = 51
     Top = 119
-    object actUpdateChildDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateChildDS'
-    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -359,6 +346,13 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
           Value = Null
           Component = CrossDBViewAddOn
           ComponentItem = 'MarginCategoryId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MarginCategoryItemId'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'MarginCategoryItemId'
           MultiSelectSeparator = ','
         end
         item
@@ -585,64 +579,42 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
     Top = 111
   end
   object spInsertUpdateMI: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'
+    StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPositionId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalGroupId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalGroupId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = HeaderCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioValue'
+        Name = 'inMarginCategoryItemId'
         Value = Null
         Component = CrossDBViewAddOn
-        ComponentItem = 'Value'
-        DataType = ftString
-        ParamType = ptInputOutput
+        ComponentItem = 'MarginCategoryItemId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioMarginCategoryId'
+        Name = 'inminPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'minPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMarginPercent'
+        Value = ''
+        Component = CrossDBViewAddOn
+        ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMarginCategoryId'
         Value = Null
         Component = CrossDBViewAddOn
         ComponentItem = 'MarginCategoryId'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
