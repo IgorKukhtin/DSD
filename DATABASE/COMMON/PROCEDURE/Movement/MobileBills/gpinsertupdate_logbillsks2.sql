@@ -177,7 +177,8 @@ BEGIN
                                        WHERE -- !!!за Предыдущий месяц!!!
                                              Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '1 MONTH' AND DATE_TRUNC ('MONTH', vbOperDate) - INTERVAL '1 DAY'
                                          AND Movement.DescId   = zc_Movement_MobileBills()
-                                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                         -- AND Movement.StatusId = zc_Enum_Status_Complete()
                                       )
           -- результат
           SELECT Object_MobileEmployee.Id                           AS MobileEmployeeId

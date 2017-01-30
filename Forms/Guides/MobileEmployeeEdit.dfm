@@ -139,7 +139,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   object lblMobileNumber: TcxLabel
     Left = 10
     Top = 54
-    Caption = #1053#1086#1084#1077#1088' '#1084#1086#1073#1080#1083#1100#1085#1086#1075#1086' '#1090#1077#1083#1077#1092#1086#1085#1072
+    Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -189,7 +189,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   object lblTariff: TcxLabel
     Left = 10
     Top = 134
-    Caption = #1058#1072#1088#1080#1092
+    Caption = #1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11

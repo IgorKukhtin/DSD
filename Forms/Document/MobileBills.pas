@@ -44,6 +44,15 @@ type
     cxLabel9: TcxLabel;
     edContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    isDateOut: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    UnitName_prev: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    PositionName_prev: TcxGridDBColumn;
+    MobileEmployeeComment: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
+    isPrev: TcxGridDBColumn;
   private
     { Private declarations }
   public

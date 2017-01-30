@@ -60,6 +60,7 @@ type
     isDateOut: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
+    ItemName: TcxGridDBColumn;
   private
     { Private declarations }
   public

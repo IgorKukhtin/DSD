@@ -26,6 +26,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_EDIComDoc());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- замена
+     inGLNCode:= TRIM (inGLNCode);
+
      -- Поиск элемента документа EDI
      vbMovementItemId:= (SELECT MAX (MovementItem.Id)
                          FROM MovementItemString 

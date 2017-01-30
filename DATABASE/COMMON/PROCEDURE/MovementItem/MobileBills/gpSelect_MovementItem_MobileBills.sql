@@ -7,16 +7,17 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
     IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, MobileEmployeeId Integer, MobileEmployeeCode Integer, MobileEmployeeName TVarChar
+RETURNS TABLE (Id Integer, MobileEmployeeId Integer, MobileEmployeeCode Integer, MobileEmployeeName TVarChar, MobileEmployeeComment TVarChar
              , Amount TFloat
              , CurrMonthly TFloat, CurrNavigator TFloat, PrevNavigator TFloat
              , MobileLimit TFloat, PrevLimit TFloat, DutyLimit TFloat, Overlimit TFloat
              , PrevMonthly TFloat
              , RegionId Integer, RegionName  TVarChar
-             , EmployeeId Integer, EmployeeName TVarChar
-             , PrevEmployeeId Integer, PrevEmployeeName TVarChar
+             , EmployeeId Integer, EmployeeName TVarChar, ItemName TVarChar, isDateOut Boolean, BranchName TVarChar, UnitName TVarChar, PositionName TVarChar
+             , PrevEmployeeId Integer, PrevEmployeeName TVarChar, UnitName_prev TVarChar, PositionName_prev TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
              , PrevMobileTariffId Integer, PrevMobileTariffName TVarChar
+             , isPrev Boolean
              , isErased Boolean
               )
 AS
@@ -37,6 +38,7 @@ BEGIN
            , Object_MobileEmployee.Id           AS MobileEmployeeId
            , Object_MobileEmployee.ObjectCode   AS MobileEmployeeCode
            , Object_MobileEmployee.ValueData    AS MobileEmployeeName
+           , ObjectString_Comment.ValueData     AS MobileEmployeeComment
 
            , MovementItem.Amount                AS Amount
            , MIFloat_CurrMonthly.ValueData      AS CurrMonthly
@@ -54,12 +56,22 @@ BEGIN
            , Object_Region.ValueData            AS RegionName
            , Object_Employee.Id                 AS EmployeeId
            , Object_Employee.ValueData          AS EmployeeName
-           , Object_PrevEmployee.Id             AS PrevEmployeeId
-           , Object_PrevEmployee.ValueData      AS PrevEmployeeName
+           , ObjectDesc.ItemName
+           , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END :: Boolean AS isDateOut
+           , Object_Branch.ValueData            AS BranchName
+           , Object_Unit.ValueData              AS UnitName
+           , Object_Position.ValueData          AS PositionName
+
+           , Object_Employee_prev.Id             AS PrevEmployeeId
+           , Object_Employee_prev.ValueData      AS PrevEmployeeName
+           , Object_Unit_prev.ValueData         AS UnitName_prev
+           , Object_Position_prev.ValueData     AS PositionName_prev
            , Object_MobileTariff.Id             AS MobileTariffId
            , Object_MobileTariff.ValueData      AS MobileTariffName
            , Object_PrevMobileTariff.Id         AS PrevMobileTariffId
            , Object_PrevMobileTariff.ValueData  AS PrevMobileTariffName
+
+           , COALESCE (MILinkObject_Employee_prev.ObjectId, 0) <> COALESCE (MILinkObject_Employee_prev.ObjectId, 0) AS isPrev
           
            , MovementItem.isErased              AS isErased
 
@@ -68,6 +80,9 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_MobileEmployee ON Object_MobileEmployee.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_Comment
+                                   ON ObjectString_Comment.ObjectId = Object_MobileEmployee.Id 
+                                  AND ObjectString_Comment.DescId = zc_ObjectString_MobileEmployee_Comment()
 
             LEFT JOIN MovementItemFloat AS MIFloat_CurrMonthly
                                         ON MIFloat_CurrMonthly.MovementItemId = MovementItem.Id
@@ -110,11 +125,38 @@ BEGIN
                                              ON MILinkObject_Employee.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Employee.DescId = zc_MILinkObject_Employee()
             LEFT JOIN Object AS Object_Employee ON Object_Employee.Id = MILinkObject_Employee.ObjectId
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Employee.DescId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PrevEmployee
-                                             ON MILinkObject_PrevEmployee.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PrevEmployee.DescId = zc_MILinkObject_PrevEmployee()
-            LEFT JOIN Object AS Object_PrevEmployee ON Object_PrevEmployee.Id = MILinkObject_PrevEmployee.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee_prev
+                                             ON MILinkObject_Employee_prev.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Employee_prev.DescId = zc_MILinkObject_PrevEmployee()
+            LEFT JOIN Object AS Object_Employee_prev ON Object_Employee_prev.Id = MILinkObject_Employee_prev.ObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                 ON ObjectDate_DateOut.ObjectId = Object_Employee.Id
+                                AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                 ON ObjectLink_Personal_Position.ObjectId = Object_Employee.Id
+                                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                 ON ObjectLink_Personal_Unit.ObjectId = Object_Employee.Id
+                                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id   = ObjectLink_Unit_Branch.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Position_prev
+                                 ON ObjectLink_Personal_Position_prev.ObjectId = Object_Employee_prev.Id
+                                AND ObjectLink_Personal_Position_prev.DescId = zc_ObjectLink_Personal_Position()
+            LEFT JOIN Object AS Object_Position_prev ON Object_Position_prev.Id = ObjectLink_Personal_Position_prev.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit_prev
+                                 ON ObjectLink_Personal_Unit_prev.ObjectId = Object_Employee_prev.Id
+                                AND ObjectLink_Personal_Unit_prev.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_Unit_prev ON Object_Unit_prev.Id = ObjectLink_Personal_Unit_prev.ChildObjectId
+
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MobileTariff
                                              ON MILinkObject_MobileTariff.MovementItemId = MovementItem.Id
