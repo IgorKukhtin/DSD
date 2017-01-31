@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DutyLimit TFloat
              , Navigator TFloat
              , Comment TVarChar
-             , PersonalId Integer, PersonalName TVarChar, isDateOut Boolean
+             , PersonalId Integer, PersonalName TVarChar, ItemName TVarChar, isDateOut Boolean
              , PositionCode Integer, PositionName TVarChar
              , BranchCode Integer, BranchName TVarChar, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
@@ -40,6 +40,7 @@ BEGIN
          
            , Object_Personal.Id                AS PersonalId
            , Object_Personal.ValueData         AS PersonalName 
+           , ObjectDesc.ItemName
            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END :: Boolean AS isDateOut
 
            , Object_Position.ObjectCode        AS PositionCode
@@ -75,6 +76,7 @@ BEGIN
                                  ON ObjectLink_MobileEmployee_Personal.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_Personal.DescId = zc_ObjectLink_MobileEmployee_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_MobileEmployee_Personal.ChildObjectId                               
+            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal.DescId
             LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                  ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                                 AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          

@@ -2,8 +2,9 @@ inherited MobileBillsForm: TMobileBillsForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1090#1088#1072#1090#1099' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1091#1102' '#1089#1074#1103#1079#1100'>'
   ClientHeight = 501
   ClientWidth = 751
+  ExplicitTop = -62
   ExplicitWidth = 767
-  ExplicitHeight = 539
+  ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,20 +12,18 @@ inherited MobileBillsForm: TMobileBillsForm
     Width = 751
     Height = 425
     ExplicitTop = 76
-    ExplicitWidth = 861
-    ExplicitHeight = 541
+    ExplicitWidth = 751
+    ExplicitHeight = 425
     ClientRectBottom = 425
     ClientRectRight = 751
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 861
-      ExplicitHeight = 517
+      ExplicitWidth = 751
+      ExplicitHeight = 401
       inherited cxGrid: TcxGrid
         Width = 751
         Height = 401
-        ExplicitLeft = -360
-        ExplicitTop = -72
         ExplicitWidth = 751
-        ExplicitHeight = 528
+        ExplicitHeight = 401
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -152,22 +151,78 @@ inherited MobileBillsForm: TMobileBillsForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupSummaryLayout = gslStandard
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colMobileEmployeeCode: TcxGridDBColumn [0]
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'MobileEmployeeCode'
+          object BranchName: TcxGridDBColumn [0]
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 70
           end
-          object colMobileEmployeeName: TcxGridDBColumn [1]
-            Caption = #1053#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072
+          object UnitName: TcxGridDBColumn [1]
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ItemName: TcxGridDBColumn [2]
+            Caption = #1069#1083#1077#1084#1077#1085#1090
+            DataBinding.FieldName = 'ItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colEmployeeName: TcxGridDBColumn [3]
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'EmployeeName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
+          object PositionName: TcxGridDBColumn [4]
+            Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isDateOut: TcxGridDBColumn [5]
+            Caption = #1059#1074#1086#1083#1077#1085
+            DataBinding.FieldName = 'isDateOut'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object MobileEmployeeComment: TcxGridDBColumn [6]
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'MobileEmployeeComment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object colMobileEmployeeCode: TcxGridDBColumn [7]
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'MobileEmployeeCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colMobileEmployeeName: TcxGridDBColumn [8]
+            Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072
             DataBinding.FieldName = 'MobileEmployeeName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -179,9 +234,9 @@ inherited MobileBillsForm: TMobileBillsForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 150
+            Width = 100
           end
-          object colAmount: TcxGridDBColumn [2]
+          object colAmount: TcxGridDBColumn [9]
             Caption = #1057#1091#1084#1084#1072' '#1080#1090#1086#1075#1086' '
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -192,7 +247,52 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 85
           end
-          object colCurrMonthly: TcxGridDBColumn [3]
+          object colOverlimit: TcxGridDBColumn [10]
+            Caption = #1055#1077#1088#1077#1083#1080#1084#1080#1090
+            DataBinding.FieldName = 'Overlimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colDutyLimit: TcxGridDBColumn [11]
+            Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
+            DataBinding.FieldName = 'DutyLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object colMobileLimit: TcxGridDBColumn [12]
+            Caption = #1051#1080#1084#1080#1090
+            DataBinding.FieldName = 'MobileLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1083#1080#1084#1080#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object colPrevLimit: TcxGridDBColumn [13]
+            Caption = #1087#1088#1077#1076'. '#1051#1080#1084#1080#1090
+            DataBinding.FieldName = 'PrevLimit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1083#1080#1084#1080#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object colCurrMonthly: TcxGridDBColumn [14]
             Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'CurrMonthly'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -203,105 +303,42 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 92
           end
-          object colCurrNavigator: TcxGridDBColumn [4]
-            Caption = #1053#1072#1074#1080#1075#1072#1090#1086#1088
-            DataBinding.FieldName = 'CurrNavigator'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object colPrevNavigator: TcxGridDBColumn [5]
-            Caption = #1055#1088#1077#1076'. '#1085#1072#1074#1080#1075#1072#1090#1086#1088
-            DataBinding.FieldName = 'PrevNavigator'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1091#1089#1083#1091#1075#1080' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
-            Options.Editing = False
-            Width = 95
-          end
-          object colMobileLimit: TcxGridDBColumn [6]
-            Caption = #1051#1080#1084#1080#1090
-            DataBinding.FieldName = 'MobileLimit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1058#1077#1082#1091#1097#1080#1081' '#1083#1080#1084#1080#1090
-            Options.Editing = False
-            Width = 70
-          end
-          object colPrevLimit: TcxGridDBColumn [7]
-            Caption = #1055#1088#1077#1076'. '#1083#1080#1084#1080#1090
-            DataBinding.FieldName = 'PrevLimit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1083#1080#1084#1080#1090
-            Options.Editing = False
-            Width = 70
-          end
-          object colDutyLimit: TcxGridDBColumn [8]
-            Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
-            DataBinding.FieldName = 'DutyLimit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 90
-          end
-          object colOverlimit: TcxGridDBColumn [9]
-            Caption = #1055#1077#1088#1077#1083#1080#1084#1080#1090
-            DataBinding.FieldName = 'Overlimit'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colPrevMonthly: TcxGridDBColumn [10]
-            Caption = #1055#1088#1077#1076'.'#1072#1073#1086#1087#1083#1072#1090#1072
+          object colPrevMonthly: TcxGridDBColumn [15]
+            Caption = #1087#1088#1077#1076'. '#1040#1073#1086#1085#1087#1083#1072#1090#1072
             DataBinding.FieldName = 'PrevMonthly'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1073#1086#1085#1087#1083#1072#1090#1072' '#1079#1072' '#1087#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1087#1077#1088#1080#1086#1076
             Options.Editing = False
             Width = 86
           end
-          object colRegionName: TcxGridDBColumn [11]
-            Caption = #1056#1077#1075#1080#1086#1085
-            DataBinding.FieldName = 'RegionName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actRegionChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colEmployeeName: TcxGridDBColumn [12]
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'EmployeeName'
+          object colCurrNavigator: TcxGridDBColumn [16]
+            Caption = #1053#1072#1074#1080#1075#1072#1090#1086#1088
+            DataBinding.FieldName = 'CurrNavigator'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 100
           end
-          object colPrevEmployeeName: TcxGridDBColumn [13]
-            Caption = #1055#1088#1077#1076'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082
-            DataBinding.FieldName = 'PrevEmployeeName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actPersonalChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
+          object colPrevNavigator: TcxGridDBColumn [17]
+            Caption = #1087#1088#1077#1076'. '#1053#1072#1074#1080#1075#1072#1090#1086#1088
+            DataBinding.FieldName = 'PrevNavigator'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
-            Width = 90
+            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1077#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1091#1089#1083#1091#1075#1080' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
+            Options.Editing = False
+            Width = 95
           end
-          object colMobileTariffName: TcxGridDBColumn [14]
+          object colMobileTariffName: TcxGridDBColumn [18]
             Caption = #1058#1077#1082#1091#1097#1080#1081' '#1090#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
             DataBinding.FieldName = 'MobileTariffName'
             HeaderAlignmentHorz = taCenter
@@ -309,8 +346,8 @@ inherited MobileBillsForm: TMobileBillsForm
             Options.Editing = False
             Width = 81
           end
-          object colPrevMobileTariffName: TcxGridDBColumn [15]
-            Caption = #1055#1088#1077#1076'. '#1090#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
+          object colPrevMobileTariffName: TcxGridDBColumn [19]
+            Caption = #1087#1088#1077#1076'. '#1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
             DataBinding.FieldName = 'PrevMobileTariffName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -325,6 +362,65 @@ inherited MobileBillsForm: TMobileBillsForm
             HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1090#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
             Width = 78
           end
+          object isPrev: TcxGridDBColumn [20]
+            Caption = #1048#1079#1084#1077#1085#1080#1083#1089#1103' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'isPrev'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colPrevEmployeeName: TcxGridDBColumn [21]
+            Caption = #1087#1088#1077#1076'. '#1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PrevEmployeeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1077#1076#1099#1076#1091#1097#1080#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
+            Width = 90
+          end
+          object UnitName_prev: TcxGridDBColumn [22]
+            Caption = #1087#1088#1077#1076'. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName_prev'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PositionName_prev: TcxGridDBColumn [23]
+            Caption = #1087#1088#1077#1076'. '#1076#1086#1083#1078#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'PositionName_prev'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colRegionName: TcxGridDBColumn [24]
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'RegionName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actRegionChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
         end
       end
     end
@@ -333,7 +429,7 @@ inherited MobileBillsForm: TMobileBillsForm
     Width = 751
     Height = 50
     TabOrder = 3
-    ExplicitWidth = 861
+    ExplicitWidth = 751
     ExplicitHeight = 50
     inherited edInvNumber: TcxTextEdit
       Left = 232
@@ -392,6 +488,12 @@ inherited MobileBillsForm: TMobileBillsForm
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      ShortCut = 0
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      ShortCut = 0
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -623,7 +725,6 @@ inherited MobileBillsForm: TMobileBillsForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ShortCut = 45
       ImageIndex = 0
     end
   end
@@ -700,30 +801,6 @@ inherited MobileBillsForm: TMobileBillsForm
         end
         item
           Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecord'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -733,10 +810,6 @@ inherited MobileBillsForm: TMobileBillsForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -758,6 +831,12 @@ inherited MobileBillsForm: TMobileBillsForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
+    inherited bbStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbInsertRecord: TdxBarButton
       Action = actInsertRecord

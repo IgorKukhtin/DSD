@@ -4,8 +4,9 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientWidth = 1284
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -31
   ExplicitWidth = 1300
-  ExplicitHeight = 491
+  ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -583,7 +584,6 @@ inherited EDIJournalForm: TEDIJournalForm
             OptionsData.DeletingConfirmation = False
             OptionsData.Editing = False
             OptionsData.Inserting = False
-            OptionsView.ColumnAutoWidth = True
             OptionsView.Footer = True
             OptionsView.GroupByBox = False
             OptionsView.GroupSummaryLayout = gslAlignWithColumns

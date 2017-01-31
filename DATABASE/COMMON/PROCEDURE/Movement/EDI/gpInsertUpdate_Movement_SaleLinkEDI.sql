@@ -92,56 +92,92 @@ BEGIN
        AND MovementItem.MovementId = inMovementId;*/
 
 
+
+     -- Новые данные для переноса данных из ComDoc в документ
+     CREATE TEMP TABLE _tmMI_newEDI (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountPartner TFloat, Price TFloat, AmountPartner_mi TFloat, Price_mi TFloat) ON COMMIT DROP;
+     -- сформировали
+     INSERT INTO _tmMI_newEDI (MovementItemId, GoodsId, GoodsKindId, AmountPartner, Price, AmountPartner_mi, Price_mi)
+        SELECT COALESCE (tmpMI.MovementItemId, 0)                  AS MovementItemId
+             , COALESCE (tmpMI_EDI.GoodsId, tmpMI.GoodsId)         AS GoodsId
+             , COALESCE (tmpMI_EDI.GoodsKindId, tmpMI.GoodsKindId) AS GoodsKindId
+             , COALESCE (tmpMI_EDI.AmountPartner, 0)               AS AmountPartner
+             , COALESCE (tmpMI_EDI.Price, tmpMI.Price)             AS Price
+             , COALESCE (tmpMI.AmountPartner, 0)                   AS AmountPartner_mi
+             , COALESCE (tmpMI.Price, 0)                           AS Price_mi
+        FROM (SELECT MovementItem.ObjectId                               AS GoodsId
+                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                   , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+              FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                   LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+              WHERE MovementItem.MovementId = vbMovementId_EDI
+                AND MovementItem.DescId =  zc_MI_Master()
+              GROUP BY MovementItem.ObjectId
+                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                     , COALESCE (MIFloat_Price.ValueData, 0)
+             ) AS tmpMI_EDI
+             FULL JOIN (SELECT MAX (MovementItem.Id)                               AS MovementItemId
+                             , MovementItem.ObjectId                               AS GoodsId
+                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                             , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                             , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+                        FROM MovementItem
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                        WHERE MovementItem.MovementId = inMovementId
+                          AND MovementItem.DescId = zc_MI_Master()
+                          AND MovementItem.isErased = FALSE
+                        GROUP BY MovementItem.ObjectId
+                               , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                               , COALESCE (MIFloat_Price.ValueData, 0)
+                       ) AS tmpMI ON tmpMI.GoodsId     = tmpMI_EDI.GoodsId
+                                 AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
+                                 AND tmpMI.Price       = tmpMI_EDI.Price
+      ;
+
+
+     -- Проверка - отклонение НЕ больше 1.5%
+     IF EXISTS (SELECT 1 FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нельзя перенести данные при отклонение > 1.5 процента.%Для товара <%(%)> с ценой <%>.%Кол-во в документе = <%>.%Кол-во по данным EDI = <%>.'
+                        , CHR (13)
+                        , lfGet_Object_ValueData  ((SELECT GoodsId          FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5 ORDER BY GoodsId, GoodsKindId, Price, MovementItemId, AmountPartner, AmountPartner_mi LIMIT 1))
+                        , lfGet_Object_ValueData  ((SELECT GoodsKindId      FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5 ORDER BY GoodsId, GoodsKindId, Price, MovementItemId, AmountPartner, AmountPartner_mi LIMIT 1))
+                        , zfConvert_FloatToString ((SELECT Price            FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5 ORDER BY GoodsId, GoodsKindId, Price, MovementItemId, AmountPartner, AmountPartner_mi LIMIT 1))
+                        , CHR (13)
+                        , zfConvert_FloatToString ((SELECT AmountPartner_mi FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5 ORDER BY GoodsId, GoodsKindId, Price, MovementItemId, AmountPartner, AmountPartner_mi LIMIT 1))
+                        , CHR (13)
+                        , zfConvert_FloatToString ((SELECT AmountPartner    FROM _tmMI_newEDI WHERE CASE WHEN AmountPartner_mi > 0 THEN 100 * ABS (AmountPartner_mi - AmountPartner) / AmountPartner_mi WHEN AmountPartner > 0 THEN 100 ELSE 0 END > 1.5 ORDER BY GoodsId, GoodsKindId, Price, MovementItemId, AmountPartner, AmountPartner_mi LIMIT 1))
+                         ;
+     END IF;
+
+
      -- перенос данных из ComDoc в документ
      PERFORM lpInsertUpdate_MI_SaleCOMDOC (inMovementId    := inMovementId
-                                         , inMovementItemId:= tmpMI.MovementItemId
-                                         , inGoodsId       := COALESCE (tmpMI_EDI.GoodsId, tmpMI.GoodsId)
-                                         , inGoodsKindId   := COALESCE (tmpMI_EDI.GoodsKindId, tmpMI.GoodsKindId)
-                                         , inAmountPartner := COALESCE (tmpMI_EDI.AmountPartner, 0)
-                                         , inPrice         := COALESCE (tmpMI_EDI.Price, tmpMI.Price)
+                                         , inMovementItemId:= _tmMI_newEDI.MovementItemId
+                                         , inGoodsId       := _tmMI_newEDI.GoodsId
+                                         , inGoodsKindId   := _tmMI_newEDI.GoodsKindId
+                                         , inAmountPartner := _tmMI_newEDI.AmountPartner
+                                         , inPrice         := _tmMI_newEDI.Price
                                          , inUserId        := vbUserId
                                           )
-     FROM (SELECT MovementItem.ObjectId                               AS GoodsId
-                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
-                , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
-           FROM MovementItem
-                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-           WHERE MovementItem.MovementId = vbMovementId_EDI
-             AND MovementItem.DescId =  zc_MI_Master()
-           GROUP BY MovementItem.ObjectId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                  , COALESCE (MIFloat_Price.ValueData, 0)
-          ) AS tmpMI_EDI
-          FULL JOIN (SELECT MAX (MovementItem.Id)                               AS MovementItemId
-                          , MovementItem.ObjectId                               AS GoodsId
-                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                          , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
-                     FROM MovementItem
-                          LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     WHERE MovementItem.MovementId = inMovementId
-                       AND MovementItem.DescId = zc_MI_Master()
-                       AND MovementItem.isErased = FALSE
-                     GROUP BY MovementItem.ObjectId
-                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                            , COALESCE (MIFloat_Price.ValueData, 0)
-                    ) AS tmpMI ON tmpMI.GoodsId     = tmpMI_EDI.GoodsId
-                              AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
-                              AND tmpMI.Price       = tmpMI_EDI.Price
-      ;
+     FROM _tmMI_newEDI;
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -185,6 +221,15 @@ BEGIN
      END IF;
      END IF;
 
+
+-- временно
+if inUserId = 5
+then
+    RAISE EXCEPTION 'Admin - Err _end';
+    -- 'Повторите действие через 3 мин.'
+end if;
+
+
      -- Результат     
      RETURN QUERY 
      SELECT tmp.*
@@ -206,4 +251,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_EDI (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_EDI (inMovementId_EDI:= 5069263 , inMovementId:= '-1', inSession:= '5')

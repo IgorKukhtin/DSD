@@ -353,7 +353,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
           Action = actLoadXMLKS
         end
         item
-          Action = actRefresh
+          Action = actRefreshStart
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1093' '#1080#1079' XML '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' XML'

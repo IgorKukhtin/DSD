@@ -32,7 +32,22 @@ object MobileEmployeeForm: TMobileEmployeeForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.KeyFieldNames = 'ID'
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colMobileLimit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colDutyLimit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colNavigator
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Kind = skCount
@@ -44,6 +59,21 @@ object MobileEmployeeForm: TMobileEmployeeForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = colPersonalName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colMobileLimit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colDutyLimit
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colNavigator
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -69,12 +99,27 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object isDateOut: TcxGridDBColumn
-        Caption = #1059#1074#1086#1083#1077#1085
-        DataBinding.FieldName = 'isDateOut'
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 70
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 124
+      end
+      object ItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colPersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
@@ -91,13 +136,12 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Options.Editing = False
         Width = 111
       end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object isDateOut: TcxGridDBColumn
+        Caption = #1059#1074#1086#1083#1077#1085
+        DataBinding.FieldName = 'isDateOut'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 124
+        Width = 55
       end
       object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083'.'
@@ -107,22 +151,15 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
       object colMobileNum: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1084#1086#1073'. '#1090#1077#1083'.'
+        Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 98
       end
       object colMobileTariffName: TcxGridDBColumn
-        Caption = #1058#1072#1088#1080#1092
+        Caption = #1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
         DataBinding.FieldName = 'MobileTariffName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -139,7 +176,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Width = 76
       end
       object colDutyLimit: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090' '#1089#1083#1091#1078#1077#1073#1085#1099#1081
+        Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
         DataBinding.FieldName = 'DutyLimit'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
