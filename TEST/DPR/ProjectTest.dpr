@@ -901,7 +901,8 @@ uses
   JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm},
   UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm},
   ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm},
-  ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm};
+  ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm},
+  MobileEmployee_Personal in '..\..\Forms\Guides\MobileEmployee_Personal.pas' {MobileEmployee_PersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

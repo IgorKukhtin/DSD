@@ -26,6 +26,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
     TabOrder = 0
     LookAndFeel.Kind = lfUltraFlat
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 24
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -83,7 +84,6 @@ object MobileEmployeeForm: TMobileEmployeeForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellEndEllipsis = True
       OptionsView.Footer = True
@@ -97,6 +97,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object BranchName: TcxGridDBColumn
@@ -104,6 +105,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object clUnitName: TcxGridDBColumn
@@ -119,11 +121,20 @@ object MobileEmployeeForm: TMobileEmployeeForm
         DataBinding.FieldName = 'ItemName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object colPersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'PersonalName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = OpenChoiceFormPersonalUnion
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 172
@@ -141,6 +152,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         DataBinding.FieldName = 'isDateOut'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object BranchCode: TcxGridDBColumn
@@ -149,6 +161,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object colMobileNum: TcxGridDBColumn
@@ -161,6 +174,13 @@ object MobileEmployeeForm: TMobileEmployeeForm
       object colMobileTariffName: TcxGridDBColumn
         Caption = #1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
         DataBinding.FieldName = 'MobileTariffName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = OpenChoiceFormMobileTariff
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 75
@@ -209,6 +229,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 41
       end
     end
@@ -628,6 +649,74 @@ object MobileEmployeeForm: TMobileEmployeeForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+        end>
+      Caption = 'actUpdateMainDS'
+      DataSource = DataSource
+    end
+    object OpenChoiceFormMobileTariff: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMobileTariffForm'
+      FormName = 'TMobileTariffForm'
+      FormNameParam.Value = 'TMobileTariffForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileTariffId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MobileTariffName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object OpenChoiceFormPersonalUnion: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMobileEmployee_PersonalForm'
+      FormName = 'TMobileEmployee_PersonalForm'
+      FormNameParam.Value = 'TMobileEmployee_PersonalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_MobileEmployee2'
@@ -695,7 +784,93 @@ object MobileEmployeeForm: TMobileEmployeeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 882
-    Top = 329
+    Left = 834
+    Top = 225
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_MobileEmployee2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLimit'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MobileLimit'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDutyLimit'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DutyLimit'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNavigator'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Navigator'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMobileTariffId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MobileTariffId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 99
   end
 end

@@ -1812,6 +1812,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileEmployee_PersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileEmployee_PersonalForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSourceFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSourceFuel_ObjectForm');
 
