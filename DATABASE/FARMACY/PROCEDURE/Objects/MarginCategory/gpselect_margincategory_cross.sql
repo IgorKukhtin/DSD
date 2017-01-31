@@ -18,8 +18,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
-  CREATE TEMP TABLE _tmpMarginCategory (MarginCategoryId integer, MarginCategoryName TVarChar) ON COMMIT DROP; /*tmpMI */
-     INSERT INTO _tmpMarginCategory (MarginCategoryId, MarginCategoryName)
+  -- определяем список аптек для просмотра категорий
+  CREATE TEMP TABLE _tmpMarginCategoryList (MarginCategoryId integer, MarginCategoryName TVarChar) ON COMMIT DROP;
+     INSERT INTO _tmpMarginCategoryList (MarginCategoryId, MarginCategoryName)
                                SELECT Object_MarginCategory.Id         AS MarginCategoryId
                                     , Object_MarginCategory.ValueData  AS MarginCategoryName
                                FROM  Object AS Object_MarginCategory
@@ -28,8 +29,43 @@ BEGIN
                                            AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
                                WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory()
                                  AND Object_MarginCategory.isErased = FALSE
+                                 AND COALESCE (ObjectFloat_Percent.ValueData ,0) = 0;
+
+  
+  CREATE TEMP TABLE _tmpMarginCategory (MarginCategoryId integer, MarginCategoryName TVarChar, JuridicalName TVarChar) ON COMMIT DROP; /*tmpMI */
+     INSERT INTO _tmpMarginCategory (MarginCategoryId, MarginCategoryName, JuridicalName)
+              SELECT Object_MarginCategoryLink_View.MarginCategoryId
+                   , _tmpMarginCategoryList.MarginCategoryName
+                   , MAX (Object_Juridical.ValueData)       AS JuridicalName
+              FROM Object_MarginCategoryLink_View 
+                   INNER JOIN (SELECT ObjectBoolean_MarginCategory.ObjectId AS UnitId
+                               FROM ObjectBoolean AS ObjectBoolean_MarginCategory
+                               WHERE ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
+                                 AND ObjectBoolean_MarginCategory.ValueData = TRUE
+                               ) AS tmpUnit ON tmpUnit.UnitId = Object_MarginCategoryLink_View.UnitId
+                   INNER JOIN _tmpMarginCategoryList ON _tmpMarginCategoryList.MarginCategoryId = Object_MarginCategoryLink_View.MarginCategoryId
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                        ON ObjectLink_Unit_Juridical.ObjectId = tmpUnit.UnitId
+                                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                   LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Unit_Juridical.ChildObjectId
+
+              WHERE Object_MarginCategoryLink_View.MarginCategoryId Not in (1327351, 1599495)   --"ПЕРЕОЦЕНКА ПО ВСЕЙ СЕТИ", "Для Сайта по Украине"
+              GROUP BY Object_MarginCategoryLink_View.MarginCategoryId
+                   , _tmpMarginCategoryList.MarginCategoryName
+              ORDER BY 1;
+            
+
+                              /*SELECT Object_MarginCategory.Id         AS MarginCategoryId
+                                    , Object_MarginCategory.ValueData  AS MarginCategoryName
+                               FROM  Object AS Object_MarginCategory
+                                     Left JOIN ObjectFloat AS ObjectFloat_Percent 	
+                                            ON Object_MarginCategory.Id = ObjectFloat_Percent.ObjectId
+                                           AND ObjectFloat_Percent.DescId = zc_ObjectFloat_MarginCategory_Percent()
+                               WHERE Object_MarginCategory.DescId = zc_Object_MarginCategory()
+                                 AND Object_MarginCategory.isErased = FALSE
                                  AND COALESCE (ObjectFloat_Percent.ValueData ,0) = 0
-                               ORDER by 1;
+                               ORDER by 1*/
 
      -- 
   CREATE TEMP TABLE _tmpminPrice (minPrice TFloat, Num integer) ON COMMIT DROP; 
@@ -70,6 +106,7 @@ BEGIN
      -- кол-во категорий наценок 
      vbCount := (SELECT COUNT(*) FROM _tmpMarginCategory);
 
+
      vbCrossString := 'Key Integer[]';
      vbFieldNameText := '';
      -- строим строчку для кросса
@@ -82,7 +119,7 @@ BEGIN
      END LOOP;
 
      OPEN cur1 FOR SELECT _tmpMarginCategory.MarginCategoryId, 
-                          _tmpMarginCategory.MarginCategoryName ::TVarChar AS ValueField
+                          ( _tmpMarginCategory.JuridicalName|| ', '||_tmpMarginCategory.MarginCategoryName )  ::TVarChar AS ValueField
                FROM _tmpMarginCategory
                ORDER by 1
      ;  
