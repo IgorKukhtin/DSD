@@ -35,6 +35,10 @@ type
     spUpdate_Unit_isUploadBadm: TdsdStoredProc;
     actUpdateisUploadBadm: TdsdExecStoredProc;
     bbUpdateisUploadBadm: TdxBarButton;
+    colisMarginCategory: TcxGridDBColumn;
+    spUpdate_Unit_isMarginCategory: TdsdStoredProc;
+    actUpdateisMarginCategory: TdsdExecStoredProc;
+    bbisMarginCategory: TdxBarButton;
   private
     { Private declarations }
   public

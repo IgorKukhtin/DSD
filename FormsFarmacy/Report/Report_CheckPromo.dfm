@@ -21,8 +21,6 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
       inherited cxGrid: TcxGrid
         Width = 841
         Height = 272
-        ExplicitLeft = 112
-        ExplicitTop = 3
         ExplicitWidth = 841
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -209,24 +207,24 @@ inherited Report_CheckPromoForm: TReport_CheckPromoForm
             Width = 70
           end
           object colPlanAmount: TcxGridDBColumn
-            Caption = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1072#1088#1082#1077#1090'.'
+            Caption = '% '#1074#1099#1087'. '#1087#1086' '#1084#1072#1088#1082#1077#1090'.'
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            HeaderHint = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
             Options.Editing = False
             Width = 70
           end
           object colDiffAmount: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' ('#1057#1091#1084#1084#1072' '#1084#1072#1088#1082#1077#1090'. - '#1055#1083#1072#1085')'
+            Caption = #1056#1072#1079#1085#1080#1094#1072'  (% '#1074#1099#1087'. '#1084#1072#1088#1082#1077#1090'. - % '#1074#1099#1087'.)'
             DataBinding.FieldName = 'DiffAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '+,0.00;-,0.00;0.00;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 78
           end
           object colPlanAmountAccum: TcxGridDBColumn
             Caption = #1055#1083#1072#1085' '#1089' '#1085#1072#1082#1086#1087#1083'.'
