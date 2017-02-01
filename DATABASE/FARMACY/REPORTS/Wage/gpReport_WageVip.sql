@@ -132,8 +132,8 @@ BEGIN
                                              AND MI_SheetWorkTime.DescId = zc_MI_Master()
                       INNER JOIN Object AS Object_Personal ON Object_Personal.Id = MI_SheetWorkTime.ObjectId
                       INNER JOIN MovementItemLinkObject AS MIObject_Position
-                                                       ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-                                                      AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+                                                        ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+                                                       AND MIObject_Position.DescId = zc_MILinkObject_Position() 
                       INNER JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                                                         ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
                                                        AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
@@ -191,7 +191,7 @@ BEGIN
                    WHERE Coalesce (tmp.OperDate2,tmp.OperDate1)<>tmp.OperDate1
                    ORDER BY 1
                    )
--- ВИП сотрудники (физ.лица) из чеков (+ документ)
+ -- ВИП сотрудники (физ.лица) из чеков (+ документ)
 , tmpVip AS (SELECT DISTINCT tmpListDate.OperDate1, tmpListDate.OperDate2
                   , MovementLinkObject_Unit.ObjectId         AS UnitId
                   , MovementLinkObject_CheckMember.ObjectId  AS PersonalId
@@ -357,6 +357,26 @@ BEGIN
                   
  , tmpMovementCheck AS (SELECT tmpListDate.OperDate1                                        AS OperDate1
                              , tmpListDate.OperDate2                                        AS OperDate2
+                             , SUM( (-1)* COALESCE (MIContainer.Amount,0) * COALESCE (MIContainer.Price,0))::TFloat     AS SummaSale
+                             , MIContainer.WhereObjectId_analyzer                           AS UnitId  
+                             , tmpListMember.MemberId                                       AS MemberId
+                        FROM tmpListDate
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.DescId = zc_MIContainer_Count()
+                                                           AND MIContainer.MovementDescId = zc_Movement_Check()
+                                                           AND MIContainer.OperDate >= tmpListDate.OperDate1 AND MIContainer.OperDate < tmpListDate.OperDate2 + interval '1 minute'
+                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                                        ON MovementLinkObject_CheckMember.MovementId = MIContainer.MovementId
+                                                       AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+                                                       
+                           INNER JOIN tmpListMember ON tmpListMember.MemberId = MovementLinkObject_CheckMember.ObjectId 
+
+                        GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2
+                               , MIContainer.WhereObjectId_analyzer, tmpListMember.MemberId
+                        HAVING SUM(COALESCE (MIContainer.Amount,0)) <> 0 
+                      /*SELECT tmpListDate.OperDate1                                        AS OperDate1
+                             , tmpListDate.OperDate2                                        AS OperDate2
                              , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
                              , MovementLinkObject_Unit.ObjectId                             AS UnitId  
                              , tmpListMember.MemberId                                       AS MemberId
@@ -389,6 +409,7 @@ BEGIN
                         GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2 , MovementLinkObject_Unit.ObjectId  
                                , tmpListMember.MemberId
                         HAVING SUM(MI_Check.Amount) <> 0 
+                        */
                        )
  
  , tabGroup AS (
@@ -474,3 +495,6 @@ $BODY$
 
 --select * from lpReport_WageVip(inUnitId := 377605 , inDateStart := ('01.01.2016')::TDateTime , inDateEnd := ('05.01.2016')::TDateTime , inIsDay := 'false' ,  inSession := '3')
 --where PersonalName like '%Блино%';
+
+
+select * from gpReport_Wage(inUnitId := 183292 , inDateStart := ('01.11.2016')::TDateTime , inDateEnd := ('30.11.2016')::TDateTime , inIsDay := 'False' , inisVipCheck := 'False' ,  inSession := '3');
