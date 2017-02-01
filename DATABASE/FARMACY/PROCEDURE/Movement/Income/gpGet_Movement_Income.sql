@@ -171,7 +171,8 @@ BEGIN
           , Movement_Income.JuridicalName
           , Movement_Income.isPay
           , Movement_Order.InvNumber
-          , Movement_Order.Id  ;
+          , Movement_Order.Id  
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE);
     END IF;
 
 END;
