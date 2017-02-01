@@ -1,25 +1,25 @@
 ﻿inherited IncomeForm: TIncomeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 516
-  ClientWidth = 946
-  ExplicitWidth = 962
+  ClientWidth = 971
+  ExplicitWidth = 987
   ExplicitHeight = 554
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 138
-    Width = 946
+    Width = 971
     Height = 378
     ExplicitTop = 138
     ExplicitWidth = 946
     ExplicitHeight = 378
     ClientRectBottom = 378
-    ClientRectRight = 946
+    ClientRectRight = 971
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 946
       ExplicitHeight = 354
       inherited cxGrid: TcxGrid
-        Width = 946
+        Width = 971
         Height = 354
         ExplicitWidth = 946
         ExplicitHeight = 354
@@ -514,7 +514,7 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 946
+    Width = 971
     Height = 112
     TabOrder = 3
     ExplicitWidth = 946
@@ -807,6 +807,14 @@
       TabOrder = 33
       Width = 123
     end
+    object cbisDeferred: TcxCheckBox
+      Left = 902
+      Top = 88
+      Caption = #1086#1090#1083#1086#1078#1077#1085
+      Properties.ReadOnly = True
+      TabOrder = 34
+      Width = 68
+    end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
     Left = 757
@@ -895,6 +903,7 @@
           StoredProc = spChangeStatus
         end
         item
+          StoredProc = spGet
         end>
     end
     inherited actDeleteMovement: TChangeGuidesStatus [10]
@@ -2002,6 +2011,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2797,6 +2813,14 @@
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 836
