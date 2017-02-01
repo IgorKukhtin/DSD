@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
+             , isOrder Boolean
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -24,6 +25,16 @@ BEGIN
    THEN
 
    RETURN QUERY
+   WITH 
+   tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                , ObjectBoolean_Order.ValueData AS isOrder
+                           FROM ObjectBoolean AS ObjectBoolean_Order
+                                LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                           WHERE ObjectBoolean_Order.ValueData = TRUE
+                             AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                           )
+
    SELECT
          Object_GoodsPropertyValue.Id         AS Id
        , Object_GoodsPropertyValue.ObjectCode AS Code
@@ -48,7 +59,7 @@ BEGIN
        , Object_Goods.ObjectCode              AS GoodsCode
        , Object_Goods.ValueData               AS GoodsName
        , Object_Measure.ValueData             AS MeasureName
-
+       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        , Object_GoodsPropertyValue.isErased   AS isErased
 
    FROM Object AS Object_GoodsPropertyValue
@@ -104,6 +115,9 @@ BEGIN
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+        LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = Object_Goods.Id
+                                     AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id 
+
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
      AND (ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = inGoodsPropertyId OR inGoodsPropertyId = 0);
 
@@ -126,6 +140,14 @@ BEGIN
                         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
                    WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                   )
+ , tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
+                                , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId
+                                , ObjectBoolean_Order.ValueData AS isOrder
+                           FROM ObjectBoolean AS ObjectBoolean_Order
+                                LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectBoolean_Order.ObjectId
+                           WHERE ObjectBoolean_Order.ValueData = TRUE
+                             AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                           )
 
    SELECT
          tmpObjectLink.GoodsPropertyValueId         AS Id
@@ -144,7 +166,7 @@ BEGIN
        , Object_GoodsProperty.Id              AS GoodsPropertyId
        , Object_GoodsProperty.ValueData       AS GoodsPropertyName
 
-       , tmpObjectLink. GoodsKindId
+       , tmpObjectLink.GoodsKindId
        , tmpObjectLink.GoodsKindName
 
        , tmpGoods.GoodsId                     AS GoodsId
@@ -152,6 +174,7 @@ BEGIN
        , tmpGoods.GoodsName                   AS GoodsName
        , tmpGoods.MeasureName                 AS MeasureName
 
+       , COALESCE (tmpGoodsByGoodsKind.isOrder, FALSE) :: Boolean AS isOrder
        ,tmpObjectLink.isErased
 
     FROM tmpGoods 
@@ -224,6 +247,9 @@ BEGIN
                    ) AS tmpObjectLink ON tmpObjectLink.GoodsId = tmpGoods.GoodsId 
          
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = COALESCE (tmpObjectLink.GoodsPropertyId, inGoodsPropertyId)
+
+        LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = tmpGoods.GoodsId
+                                     AND tmpGoodsByGoodsKind.GoodsKindId = tmpObjectLink.GoodsKindId
        ;
      END IF;         
     
@@ -235,6 +261,7 @@ END;$BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 01.02.17         * add isOrder 
  17.09.15         * add BoxCount
  13.02.15         * add inGoodsPropertyId
  10.10.14                                                       *
@@ -250,4 +277,3 @@ having Count(*)  > 1
 */
 -- òåñò
 -- SELECT * FROM gpSelect_Object_GoodsPropertyValue (351299 , TRUE, '2')
-

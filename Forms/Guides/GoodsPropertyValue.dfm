@@ -54,7 +54,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 82
       end
       object colCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -62,7 +62,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 36
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -77,7 +77,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 82
       end
       object clGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -92,7 +92,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 57
       end
       object colMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -100,14 +100,22 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 37
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 79
+      end
+      object clisOrder: TcxGridDBColumn
+        Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
+        DataBinding.FieldName = 'isOrder'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 91
       end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076'. '#1074' '#1103#1097'.'
@@ -117,7 +125,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 64
       end
       object ceAmount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1087#1088#1080' '#1089#1082#1072#1085'.'
@@ -127,7 +135,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 63
       end
       object BarCodeShort: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' ('#1087#1086#1080#1089#1082')'
@@ -135,42 +143,42 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 63
       end
       object ceBarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
         DataBinding.FieldName = 'BarCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 64
       end
       object clArticle: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 64
       end
       object clBarCodeGLN: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
         DataBinding.FieldName = 'BarCodeGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 63
       end
       object clArticleGLN: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
         DataBinding.FieldName = 'ArticleGLN'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 64
       end
       object GroupName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'GroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 63
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -433,10 +441,12 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TGoodsPropertyValueEditForm'
       FormNameParam.Value = 'TGoodsPropertyValueEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -452,6 +462,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TGoodsPropertyValueEditForm'
       FormNameParam.Value = 'TGoodsPropertyValueEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -459,6 +470,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -498,6 +510,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -505,6 +518,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -513,6 +527,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -524,12 +539,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -537,6 +554,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'GoodsPropertyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -548,12 +566,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -561,6 +581,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -572,12 +593,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -585,6 +608,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'GoodsKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -598,6 +622,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -605,6 +630,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -666,6 +692,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -673,6 +700,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
@@ -689,6 +717,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 424
@@ -737,6 +766,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -745,6 +775,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -753,6 +784,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBoxCount'
@@ -761,6 +793,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'BoxCount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outBarCodeShort'
@@ -768,6 +801,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'BarCodeShort'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBarCode'
@@ -776,6 +810,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'BarCode'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inArticle'
@@ -784,6 +819,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'Article'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBarCodeGLN'
@@ -792,6 +828,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'BarCodeGLN'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inArticleGLN'
@@ -800,6 +837,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'ArticleGLN'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGroupName'
@@ -808,6 +846,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         ComponentItem = 'GroupName'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsPropertyId'
@@ -815,6 +854,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'GoodsPropertyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -822,6 +862,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsKindId'
@@ -829,6 +870,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = ClientDataSet
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 112
@@ -839,6 +881,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -847,6 +890,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Value = ''
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -854,12 +898,14 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 760
     Top = 115
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
     ComponentList = <
       item
