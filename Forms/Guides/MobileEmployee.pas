@@ -12,7 +12,7 @@ uses
   dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxSpinEdit,
-  dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit;
+  dxSkinsCore, dxSkinsDefaultPainters, cxCurrencyEdit, cxButtonEdit;
 
 type
   TMobileEmployeeForm = class(TParentForm)
@@ -61,6 +61,10 @@ type
     BranchCode: TcxGridDBColumn;
     BranchName: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
+    spInsertUpdate: TdsdStoredProc;
+    OpenChoiceFormPersonalUnion: TOpenChoiceForm;
+    OpenChoiceFormMobileTariff: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -2963,6 +2963,18 @@
 				<Form>ReportCollation_UpdateObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PersonalUnitFounder_Object.pas">
+				<Form>PersonalUnitFounder_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_ObjectTo.pas">
+				<Form>Member_ObjectToForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Member_ObjectToEdit.pas">
+				<Form>Member_ObjectToEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

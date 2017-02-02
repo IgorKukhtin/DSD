@@ -104,7 +104,6 @@ BEGIN
  , tmpPosition AS (SELECT ObjectFloat_TaxService.ObjectId    AS PositionId
                        , ObjectFloat_TaxService.ValueData   AS TaxService
                   FROM ObjectFloat AS ObjectFloat_TaxService
-                  
                   WHERE ObjectFloat_TaxService.DescId = zc_ObjectFloat_Position_TaxService()
                  )
  , tmpmanager AS (SELECT  tmpUnit.UnitId
@@ -375,6 +374,27 @@ BEGIN
                   
  , tmpMovementCheck AS (SELECT tmpListDate.OperDate1                                        AS OperDate1
                              , tmpListDate.OperDate2                                        AS OperDate2
+                             , SUM( (-1)* COALESCE (MIContainer.Amount,0) * COALESCE (MIContainer.Price,0))::TFloat     AS SummaSale
+                             , MIContainer.WhereObjectId_analyzer                             AS UnitId  
+                        FROM tmpListDate
+                           INNER JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.DescId = zc_MIContainer_Count()
+                                                           AND MIContainer.MovementDescId = zc_Movement_Check()
+                                                          -- AND MIContainer.WhereObjectId_analyzer = tmpUnit.UnitId 
+                                                           AND MIContainer.OperDate >= tmpListDate.OperDate1 AND MIContainer.OperDate < tmpListDate.OperDate2 + interval '1 minute'
+                           INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckMember
+                                                        ON MovementLinkObject_CheckMember.MovementId = MIContainer.MovementId
+                                                       AND MovementLinkObject_CheckMember.DescId = zc_MovementLinkObject_CheckMember()
+                                                       
+                           LEFT JOIN tmpListMemberVIP ON tmpListMemberVIP.MemberId = MovementLinkObject_CheckMember.ObjectId
+                           
+                        WHERE tmpListMemberVIP.MemberId is null
+                        GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2, MIContainer.WhereObjectId_analyzer
+                        HAVING SUM(COALESCE (MIContainer.Amount,0)) <> 0 
+
+                        /*SELECT tmpListDate.OperDate1                                        AS OperDate1
+                             , tmpListDate.OperDate2                                        AS OperDate2
                              , SUM(-MIContainer.Amount*MIFloat_Price.ValueData)::TFloat     AS SummaSale
                              , MovementLinkObject_Unit.ObjectId                             AS UnitId  
                         FROM tmpListDate
@@ -404,13 +424,11 @@ BEGIN
                            LEFT JOIN tmpListMemberVIP ON tmpListMemberVIP.MemberId = MovementLinkObject_CheckMember.ObjectId
                            
                         WHERE  tmpListMemberVIP.MemberId is null
-                           /* COALESCE (MovementLinkObject_CheckMember.ObjectId,0) = 0 
-                           OR COALESCE (MovementLinkObject_CheckMember.ObjectId,0) NOT IN (SELECT tmpListMemberVip.MemberId FROM tmpListMemberVip)*/
                         GROUP BY tmpListDate.OperDate1, tmpListDate.OperDate2 , MovementLinkObject_Unit.ObjectId  
-                        HAVING SUM(MI_Check.Amount) <> 0 
+                        HAVING SUM(MI_Check.Amount) <> 0
+                        */ 
                        )
                        
-
 , tmpListManager AS (SELECT tmpALL.Operdate1, tmpALL.OperDate2
                           , tmpALL.UnitId
                           , tmpALL.PersonalId
@@ -582,10 +600,7 @@ BEGIN
                 FROM tmpUnion  AS tmpALL
                     LEFT JOIN tmpItogi ON tmpItogi.Operdate1 = tmpALL.Operdate1
                     LEFT JOIN tmpItogiVIP ON tmpItogiVIP.Operdate1 = tmpALL.Operdate1
-                                         
-                                   
                )
-
 
 , tmpResult_position AS (SELECT tmpResult.Operdate1, tmpResult.OperDate2
                               , tmpResult.PositionId, tmpResult.isVip

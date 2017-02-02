@@ -901,7 +901,10 @@ uses
   JuridicalUKTZED in '..\..\Forms\Guides\JuridicalUKTZED.pas' {JuridicalUKTZEDForm: TParentForm},
   UserSettings in '..\..\Forms\Guides\UserSettings.pas' {UserSettingsForm: TParentForm},
   ReportCollation_Object in '..\..\Forms\Guides\ReportCollation_Object.pas' {ReportCollation_ObjectForm: TParentForm},
-  ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm};
+  ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm},
+  PersonalUnitFounder_Object in '..\..\Forms\Guides\PersonalUnitFounder_Object.pas' {PersonalUnitFounder_ObjectForm: TParentForm},
+  Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
+  Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

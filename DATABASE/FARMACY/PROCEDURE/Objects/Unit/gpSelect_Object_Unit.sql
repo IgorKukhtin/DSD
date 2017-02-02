@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, Parent
              , isRepriceAuto Boolean
              , isOver Boolean
              , isUploadBadm Boolean
+             , isMarginCategory Boolean
              , Num_byReportBadm Integer
 ) AS
 $BODY$
@@ -57,6 +58,7 @@ BEGIN
       , COALESCE(ObjectBoolean_RepriceAuto.ValueData, False) AS isRepriceAuto
       , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
       , COALESCE(ObjectBoolean_UploadBadm.ValueData, False)  AS isUploadBadm
+      , COALESCE(ObjectBoolean_MarginCategory.ValueData, False)  AS isMarginCategory
       , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer AS Num_byReportBadm
 
     FROM Object AS Object_Unit
@@ -96,6 +98,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_UploadBadm
                                 ON ObjectBoolean_UploadBadm.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_UploadBadm.DescId = zc_ObjectBoolean_Unit_UploadBadm()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_MarginCategory
+                                ON ObjectBoolean_MarginCategory.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_MarginCategory.DescId = zc_ObjectBoolean_Unit_MarginCategory()
 
         LEFT JOIN ObjectDate AS ObjectDate_StartServiceNigth
                              ON ObjectDate_StartServiceNigth.ObjectId = Object_Unit.Id
@@ -119,6 +124,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 31.01.17         * add isMarginCategory
  16.01.17         * add isUploadBadm
  13.10.16         * add isOver
  08.04.16         *

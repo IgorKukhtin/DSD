@@ -1539,6 +1539,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_Education() RETURNS Integer AS $
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Member_Education', 'Связь физ.лиц со Специальностью', zc_Object_Member(), zc_Object_Education() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_Education');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_ObjectTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_ObjectTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_ObjectTo', 'Связь физ.лиц с сотрудник/учредитель/подразделение', zc_Object_Member(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_ObjectTo');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UserFarmacyCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UserFarmacyCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Unit_UserFarmacyCash', 'Связь подразделения с Пользователь последнего сеанса с FarmacyCash', zc_Object_Unit(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UserFarmacyCash');

@@ -1,23 +1,23 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
-  ClientWidth = 699
-  ExplicitWidth = 715
+  ClientWidth = 771
+  ExplicitWidth = 787
   ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 699
+    Width = 771
     Height = 394
     ExplicitWidth = 699
     ExplicitHeight = 394
     ClientRectBottom = 394
-    ClientRectRight = 699
+    ClientRectRight = 771
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 699
       ExplicitHeight = 394
       inherited cxGrid: TcxGrid
-        Width = 699
+        Width = 771
         Height = 394
         ExplicitWidth = 699
         ExplicitHeight = 394
@@ -27,7 +27,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsSelection.MultiSelect = True
-          OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = False
           Styles.Content = nil
           Styles.Inactive = nil
@@ -131,6 +130,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 55
           end
+          object colisMarginCategory: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084'. '#1074' '#1087#1088#1086#1089#1084'. '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'isMarginCategory'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1086#1089#1084#1086#1090#1088#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1082#1080
+            Options.Editing = False
+            Width = 115
+          end
         end
       end
     end
@@ -205,6 +213,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actUpdateisMarginCategory: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isMarginCategory
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isMarginCategory
+        end>
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1086#1089#1084#1086#1090#1088#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1082#1080
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1087#1088#1086#1089#1084#1086#1090#1088#1077' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 77
     end
     object actUpdateisUploadBadm: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -353,6 +374,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbisMarginCategory'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -390,6 +419,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdateisUploadBadm: TdxBarButton
       Action = actUpdateisUploadBadm
+      Category = 0
+    end
+    object bbisMarginCategory: TdxBarButton
+      Action = actUpdateisMarginCategory
       Category = 0
     end
   end
@@ -528,5 +561,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 616
     Top = 131
+  end
+  object spUpdate_Unit_isMarginCategory: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isMarginCategory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMarginCategory'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMarginCategory'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisMarginCategory'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isMarginCategory'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 211
   end
 end

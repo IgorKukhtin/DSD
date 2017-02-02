@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_Income (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId        Integer              , -- ключ Документа
+   OUT outisDeferred       Boolean              , -- при проведении меняем признак отложен у Заказа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Boolean -- VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -15,6 +16,7 @@ $BODY$
   DECLARE vbJuridicalId Integer;
   DECLARE vbOperDate    TDateTime;
   DECLARE vbUnit        Integer;
+  DECLARE vbOrderId     Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
@@ -43,6 +45,7 @@ BEGIN
         INNER JOIN MovementLinkObject AS Movement_Unit
                                       ON Movement_Unit.MovementId = Movement.Id
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
+
     WHERE Movement.Id = inMovementId;
     /*IF EXISTS(SELECT 1
               FROM Movement AS Movement_Inventory
@@ -148,6 +151,24 @@ BEGIN
 
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- при проведении прихода - Снять заказ из отложенных
+        SELECT MLM.MovementChildId 
+             , COALESCE (MB_Deferred.ValueData, False) AS isDeferred
+      INTO vbOrderId, outisDeferred
+        FROM MovementLinkMovement AS MLM 
+             LEFT JOIN MovementBoolean AS MB_Deferred
+                    ON MB_Deferred.MovementId = MLM.MovementChildId
+                   AND MB_Deferred.DescId = zc_MovementBoolean_Deferred()
+        WHERE MLM.descid = zc_MovementLinkMovement_Order()
+          AND MLM.MovementId = inMovementId; 
+
+     IF outisDeferred = TRUE THEN
+         outisDeferred = False;
+         PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_Deferred(), vbOrderId, outisDeferred);
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (vbOrderId, vbUserId, false);
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -155,6 +176,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.02.17         * при проведении прихода - Снять заказ из отложенных
  05.02.15                         * 
 
 */

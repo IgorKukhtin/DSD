@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JuridicalId Integer, JuridicalName TVarChar
              , IsPay Boolean, DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
+             , isDeferred Boolean
               )
 AS
 $BODY$
@@ -61,6 +62,7 @@ BEGIN
              , 0                                                AS Movement_OrderId
              , CAST('' as TVarChar)                             AS Movement_OrderInvNumber
              , CAST('' as TVarChar)                             AS Movement_OrderInvNumber_full
+             , false                                            AS isDeferred 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -134,11 +136,16 @@ BEGIN
           , Movement_Order.Id                              AS Movement_OrderId
           , Movement_Order.InvNumber                       AS Movement_OrderInvNumber
           , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
              LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Movement_Income.PaymentContainerId
                                                   AND MovementItemContainer.MovementDescId in (zc_Movement_BankAccount(), zc_Movement_Payment())
+             -- заказ отложен
+             LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                       ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
+                                      AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
         GROUP BY
             Movement_Income.Id
           , Movement_Income.InvNumber
@@ -164,7 +171,8 @@ BEGIN
           , Movement_Income.JuridicalName
           , Movement_Income.isPay
           , Movement_Order.InvNumber
-          , Movement_Order.Id  ;
+          , Movement_Order.Id  
+          , COALESCE (MovementBoolean_Deferred.ValueData, FALSE);
     END IF;
 
 END;

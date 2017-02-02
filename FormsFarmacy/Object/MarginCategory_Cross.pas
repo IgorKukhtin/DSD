@@ -55,25 +55,11 @@ type
     BandcolPersonalName: TcxGridDBBandedColumn;
     TemplateColumn: TcxGridDBBandedColumn;
     MarginCategoryItemForm: TOpenChoiceForm;
-    MultiAction: TMultiAction;
-    InsertAction: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
     UpdateAction: TdsdInsertUpdateAction;
-    bbUpdate: TdxBarButton;
-    spInsertUpdate_SheetWorkTime_FromTransport: TdsdStoredProc;
-    actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc;
-    bbLoadFromTransport: TdxBarButton;
-    actMISetErased: TdsdUpdateErased;
-    actMISetUnErased: TdsdUpdateErased;
-    spErasedMIMaster: TdsdStoredProc;
-    bbMISetErased: TdxBarButton;
-    bbMISetUnErased: TdxBarButton;
     isErased: TcxGridDBBandedColumn;
-    actShowErased: TBooleanStoredProcAction;
-    bbShowErased: TdxBarButton;
-    spInsertMaskMIMaster: TdsdStoredProc;
-    actAddMask: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    actOpenFormUnit: TdsdOpenForm;
+    bbOpenFormUnit: TdxBarButton;
+    ExecuteDialog: TExecuteDialog;
   private
   public
   end;

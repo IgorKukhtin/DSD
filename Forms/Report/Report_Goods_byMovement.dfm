@@ -14,6 +14,7 @@ inherited Report_Goods_byMovementForm: TReport_Goods_byMovementForm
     Width = 894
     Height = 248
     TabOrder = 3
+    Properties.ActivePage = tsDetail
     ExplicitTop = 80
     ExplicitWidth = 894
     ExplicitHeight = 248
