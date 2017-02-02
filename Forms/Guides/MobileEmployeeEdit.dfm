@@ -551,10 +551,10 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
     LookupControl = edPersonal
     isShowModal = True
     Key = '0'
-    FormNameParam.Value = 'TMobileEmployee_PersonalForm'
+    FormNameParam.Value = 'TPersonalUnitFounder_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMobileEmployee_PersonalForm'
+    FormName = 'TPersonalUnitFounder_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

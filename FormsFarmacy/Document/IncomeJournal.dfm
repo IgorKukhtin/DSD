@@ -1083,9 +1083,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       item
         Name = 'outisDeferred'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isDeferred'
         DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80

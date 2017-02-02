@@ -1,4 +1,4 @@
-unit MobileEmployee_Personal;
+unit PersonalUnitFounder_Object;
 
 interface
 
@@ -13,7 +13,7 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TMobileEmployee_PersonalForm = class(TAncestorEnumForm)
+  TPersonalUnitFounder_ObjectForm = class(TAncestorEnumForm)
     ceBranchName: TcxGridDBColumn;
     DescName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
@@ -28,5 +28,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TMobileEmployee_PersonalForm);
+  RegisterClass(TPersonalUnitFounder_ObjectForm);
 end.

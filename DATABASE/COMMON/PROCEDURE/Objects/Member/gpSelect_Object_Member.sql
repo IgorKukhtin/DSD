@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionCode Integer, PositionName TVarChar
+             , ObjectToId Integer, ObjectToName TVarChar, DescName TVarChar
              , isDateOut Boolean, PersonalId Integer
              , isErased Boolean
               )
@@ -126,6 +127,11 @@ BEGIN
          , Object_Unit.ValueData      AS UnitName
          , Object_Position.ObjectCode AS PositionCode
          , Object_Position.ValueData  AS PositionName
+
+         , ObjectTo.Id                AS ObjectToId
+         , ObjectTo.ValueData         AS ObjectToName
+         , ObjectDesc.ItemName        AS DescName
+
          , tmpPersonal.isDateOut :: Boolean AS isDateOut
          , tmpPersonal.PersonalId
 
@@ -175,6 +181,11 @@ BEGIN
                              AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Member_InfoMoney.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo
+                              ON ObjectLink_Member_ObjectTo.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
+         LEFT JOIN Object AS ObjectTo ON ObjectTo.Id = ObjectLink_Member_ObjectTo.ChildObjectId
+         LEFT JOIN ObjectDesc ON ObjectDesc.Id = ObjectTo.DescId
          
          LEFT JOIN ObjectDate AS ObjectDate_StartSummer
                               ON ObjectDate_StartSummer.ObjectId = Object_Member.Id
@@ -259,6 +270,11 @@ BEGIN
            , '' :: TVarChar AS UnitName
            , 0              AS PositionCode
            , '' :: TVarChar AS PositionName
+
+           , CAST (0 as Integer)   AS ObjectToId
+           , CAST ('' as TVarChar) AS ObjectToName
+           , CAST ('' as TVarChar) AS DescName
+
            , FALSE          AS isDateOut
            , 0              AS PersonalId
 
@@ -275,6 +291,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.02.17         * add ObjectTo
  25.03.16         * add Card
  14.01.16         * add Car, StartSummerDate, EndSummerDate 
                            , SummerFuel, WinterFuel, Reparation, LimitMoney, LimitDistance

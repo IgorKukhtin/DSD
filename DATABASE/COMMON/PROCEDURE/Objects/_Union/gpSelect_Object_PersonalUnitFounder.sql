@@ -1,8 +1,9 @@
 -- Function: gpSelect_Object_MobileEmployee_Personal()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_MobileEmployee_Personal (Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_PersonalUnitFounder (Boolean,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_MobileEmployee_Personal(
+CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalUnitFounder(
     IN inisShowDel         Boolean,     -- показать все
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -67,7 +68,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_MobileEmployee_Personal (Boolean,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_PersonalUnitFounder (Boolean,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

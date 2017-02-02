@@ -1,9 +1,9 @@
-object MobileEmployeeForm: TMobileEmployeeForm
+object Member_ObjectToForm: TMember_ObjectToForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1086#1073#1080#1083#1100#1085#1099#1077' '#1090#1077#1083#1077#1092#1086#1085#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074'>'
-  ClientHeight = 404
-  ClientWidth = 994
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  ClientHeight = 520
+  ClientWidth = 777
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,112 +20,50 @@ object MobileEmployeeForm: TMobileEmployeeForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 994
-    Height = 378
+    Width = 777
+    Height = 494
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfUltraFlat
+    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
-      DataController.KeyFieldNames = 'ID'
-      DataController.Summary.DefaultGroupSummaryItems = <
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colMobileLimit
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colDutyLimit
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colNavigator
-        end>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Kind = skCount
-        end
-        item
-          Column = colisErased
-        end
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-          Column = colPersonalName
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colMobileLimit
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colDutyLimit
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colNavigator
-        end>
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.CellHints = True
       OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.CellEndEllipsis = True
-      OptionsView.Footer = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colCode: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 40
+        Width = 52
       end
-      object BranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentHorz = taCenter
+      object clName: TcxGridDBColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 126
       end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 124
-      end
-      object ItemName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090
-        DataBinding.FieldName = 'ItemName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 70
-      end
-      object colPersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
-        DataBinding.FieldName = 'PersonalName'
+      object colObjectToName: TcxGridDBColumn
+        Caption = #1050#1086#1084#1091' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1103#1077#1084
+        DataBinding.FieldName = 'ObjectToName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
@@ -138,13 +76,39 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentVert = vaCenter
         Width = 172
       end
-      object clPositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
+      object clDescName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091' '#1087#1088#1077#1074#1099#1089#1090'.)'
+        DataBinding.FieldName = 'DescName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1103#1077#1084')'
+        Width = 93
+      end
+      object clCard: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055
+        DataBinding.FieldName = 'Card'
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object clMember_INN: TcxGridDBColumn
+        Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
+        HeaderAlignmentVert = vaCenter
+        Width = 89
+      end
+      object clDriverCertificate: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+        DataBinding.FieldName = 'DriverCertificate'
+        HeaderAlignmentVert = vaCenter
+        Width = 102
+      end
+      object clIsOfficial: TcxGridDBColumn
+        Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        DataBinding.FieldName = 'isOfficial'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 111
+        Width = 78
       end
       object isDateOut: TcxGridDBColumn
         Caption = #1059#1074#1086#1083#1077#1085
@@ -152,7 +116,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 45
       end
       object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083'.'
@@ -163,73 +127,65 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Options.Editing = False
         Width = 45
       end
-      object colMobileNum: TcxGridDBColumn
-        Caption = #8470' '#1090#1077#1083#1077#1092#1086#1085#1072
-        DataBinding.FieldName = 'Name'
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 98
+        Options.Editing = False
+        Width = 70
       end
-      object colMobileTariffName: TcxGridDBColumn
-        Caption = #1058#1072#1088#1080#1092#1085#1099#1081' '#1087#1083#1072#1085
-        DataBinding.FieldName = 'MobileTariffName'
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 52
+      end
+      object clInfoMoneyName_all: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoMoneyName_all'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = OpenChoiceFormMobileTariff
+            Action = actChoiceInfoMoneyForm
             Default = True
             Kind = bkEllipsis
           end>
-        HeaderAlignmentHorz = taCenter
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 126
       end
-      object colMobileLimit: TcxGridDBColumn
-        Caption = #1051#1080#1084#1080#1090
-        DataBinding.FieldName = 'MobileLimit'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 76
-      end
-      object colDutyLimit: TcxGridDBColumn
-        Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1081' '#1083#1080#1084#1080#1090
-        DataBinding.FieldName = 'DutyLimit'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 73
-      end
-      object colNavigator: TcxGridDBColumn
-        Caption = #1059#1089#1083#1091#1075#1072' '#1053#1072#1074#1080#1075#1072#1090#1086#1088
-        DataBinding.FieldName = 'Navigator'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 84
-      end
-      object colComment: TcxGridDBColumn
+      object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 127
+        Width = 150
       end
-      object colisErased: TcxGridDBColumn
+      object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 41
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -238,14 +194,14 @@ object MobileEmployeeForm: TMobileEmployeeForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 182
+    Left = 56
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 114
-    Top = 241
+    Left = 48
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -259,8 +215,8 @@ object MobileEmployeeForm: TMobileEmployeeForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 80
-    Top = 88
+    Left = 288
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -279,8 +235,8 @@ object MobileEmployeeForm: TMobileEmployeeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 212
-    Top = 91
+    Left = 168
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -308,16 +264,16 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbErased'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbUnErased'
         end
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -325,7 +281,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -333,7 +289,15 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateIsOfficial'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -341,7 +305,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -349,7 +313,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -357,7 +321,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -377,22 +341,22 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Action = actUpdate
       Category = 0
     end
-    object bbSetErased: TdxBarButton
+    object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbSetUnErased: TdxBarButton
+    object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel1
+      Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
-      Caption = '    '
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
-      Hint = '    '
+      Hint = '     '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -404,6 +368,10 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Action = actShowAll
       Category = 0
     end
+    object bbUpdateIsOfficial: TdxBarButton
+      Action = actUpdateIsOfficial
+      Category = 0
+    end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
@@ -411,21 +379,102 @@ object MobileEmployeeForm: TMobileEmployeeForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 151
-    Top = 86
+    Left = 288
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TMember_ObjectToEditForm'
+      FormNameParam.Value = 'TMember_ObjectToEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TMember_ObjectToEditForm'
+      FormNameParam.Value = 'TMember_ObjectToEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actChoiceInfoMoneyForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'InfoMoneyChoiceForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName_all'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -439,137 +488,8 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
-      ErasedFieldName = 'Erased'
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'Erased'
-      isSetErased = False
-      DataSource = DataSource
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Code'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MobileTariffId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MobileTariffId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MobileTariffName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MobileTariffName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalId'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PersonalName'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'PersonalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MobileLimit'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MobileLimit'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'DutyLimit'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'DutyLimit'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Navigator'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Navigator'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1042#1099#1073#1088#1072#1090#1100
-      Hint = #1055#1088#1080#1085#1103#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 7
-      DataSource = DataSource
-    end
-    object dsdGridToExcel1: TdsdGridToExcel
-      Category = 'DSDLib'
-      MoveParams = <>
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
-    object actShowAll: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
     end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -601,54 +521,64 @@ object MobileEmployeeForm: TMobileEmployeeForm
         end>
       isShowModal = False
     end
-    object actUpdate: TdsdInsertUpdateAction
+    object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TMobileEmployeeEditForm'
-      FormNameParam.Value = 'TMobileEmployeeEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spErasedUnErased
+      StoredProcList = <
         item
-          Name = 'Id'
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
-      ActionType = acUpdate
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
       DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
-    object actInsert: TdsdInsertUpdateAction
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TMobileEmployeeEditForm'
-      FormNameParam.Value = 'TMobileEmployeeEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
-    object dsdUpdateDataSet: TdsdUpdateDataSet
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -656,38 +586,41 @@ object MobileEmployeeForm: TMobileEmployeeForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
-        end
-        item
         end>
-      Caption = 'actUpdateMainDS'
+      Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
-    object OpenChoiceFormMobileTariff: TOpenChoiceForm
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateIsOfficial: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'TMobileTariffForm'
-      FormName = 'TMobileTariffForm'
-      FormNameParam.Value = 'TMobileTariffForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
+      StoredProc = spUpdateIsOfficial
+      StoredProcList = <
         item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MobileTariffId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'MobileTariffName'
-          DataType = ftString
-          MultiSelectSeparator = ','
+          StoredProc = spUpdateIsOfficial
         end>
-      isShowModal = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1054#1092#1080#1094#1080#1072#1083#1100#1085#1086' '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 52
     end
     object OpenChoiceFormPersonalUnion: TOpenChoiceForm
       Category = 'DSDLib'
@@ -703,22 +636,22 @@ object MobileEmployeeForm: TMobileEmployeeForm
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PersonalId'
+          ComponentItem = 'ObjectToId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'PersonalName'
+          ComponentItem = 'ObjectToName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MobileEmployee2'
+  object spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Member'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -726,28 +659,28 @@ object MobileEmployeeForm: TMobileEmployeeForm
       end>
     Params = <
       item
-        Name = 'inShowAll'
-        Value = 0
+        Name = 'inIsShowAll'
+        Value = False
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 228
-    Top = 230
+    Left = 48
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 75
-    Top = 142
+    Left = 168
+    Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MobileNumbersEmployee'
+    StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inTariffID'
+        Name = 'inObjectId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
@@ -755,18 +688,18 @@ object MobileEmployeeForm: TMobileEmployeeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 260
-    Top = 142
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'Erased'
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end
       item
-        Action = dsdChoiceGuides
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -783,11 +716,11 @@ object MobileEmployeeForm: TMobileEmployeeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 834
-    Top = 225
+    Left = 328
+    Top = 264
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MobileEmployee2'
+    StoredProcName = 'gpInsertUpdate_Object_Member_All'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -817,29 +750,38 @@ object MobileEmployeeForm: TMobileEmployeeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inLimit'
+        Name = 'inIsOfficial'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'MobileLimit'
-        DataType = ftFloat
+        ComponentItem = 'isOfficial'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDutyLimit'
+        Name = 'inINN'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'DutyLimit'
-        DataType = ftFloat
+        ComponentItem = 'INN'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNavigator'
+        Name = 'inDriverCertificate'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'Navigator'
-        DataType = ftFloat
+        ComponentItem = 'DriverCertificate'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCard'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Card'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -853,23 +795,49 @@ object MobileEmployeeForm: TMobileEmployeeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inInfoMoneyId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'PersonalId'
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMobileTariffId'
+        Name = 'inObjectToId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'MobileTariffId'
+        ComponentItem = 'ObjectToId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 99
+    Left = 560
+    Top = 152
+  end
+  object spUpdateIsOfficial: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_isOfficial'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsOfficial'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'IsOfficial'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 379
   end
 end
