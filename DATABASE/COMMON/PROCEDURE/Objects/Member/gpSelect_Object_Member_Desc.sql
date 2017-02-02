@@ -14,7 +14,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
              , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
              , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
-             , isErased boolean) AS
+             , BranchCode Integer, BranchName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , isDateOut Boolean, PersonalId Integer
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

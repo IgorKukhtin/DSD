@@ -69,84 +69,61 @@ BEGIN
                               )
             AND
             DescId = zc_MIFloat_AmountSecond();
-        --заливаем согласно разници между остатком и НТЗ
-        PERFORM
-            lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountSecond()
-                                            ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := COALESCE(MovementItemSaved.Id,0)
-                                                                                                          ,inMovementId := vbMovementId
-                                                                                                          ,inGoodsId    := Object_Price.GoodsId
-                                                                                                          ,inAmount     := COALESCE(MovementItemSaved.Amount,0)
-                                                                                                          ,inAmountManual:= NULL
-                                                                                                          ,inPrice      := Object_Price.Price
-                                                                                                          ,inUserId     := vbUserId)
-                                            ,inValueData       := CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                                                            THEN CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                                                       WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                                                            THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                                                       ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                                                                  END :: TFloat
-                                            )
-        from Object_Price_View AS Object_Price
-            -- LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                -- ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                               -- AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
-            LEFT OUTER JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
-                                     AND Container.ObjectId = Object_Price.GoodsId
-                                     AND Container.DescId = zc_Container_Count() 
-                                     AND Container.Amount <> 0
-            LEFT OUTER JOIN (
-                                SELECT 
-                                    T1.Id,
-                                    T1.Amount, 
-                                    T1.ObjectId  
-                                FROM (
-                                        SELECT MovementItem.Id,
-                                            MovementItem.Amount,
-                                            MovementItem.ObjectId,
-                                            ROW_NUMBER() OVER(PARTITION BY MovementItem.ObjectId Order By MovementItem.Id) as Ord
-                                        FROM
-                                            MovementItem
-                                        WHERE
-                                            MovementItem.MovementId = vbMovementId
-                                        AND MovementItem.isErased = FALSE
-                                      ) AS T1
-                                WHERE
-                                    T1.Ord = 1
-                            )AS MovementItemSaved
-                             ON MovementItemSaved.ObjectId = Object_Price.GoodsId
-            INNER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id    
-                                        AND Object_Goods_View.IsClose = FALSE                          
-            LEFT OUTER JOIN (
-                                SELECT
-                                    MovementItem_Income.ObjectId    as GoodsId 
-                                   ,SUM(MovementItem_Income.Amount) as Amount_Income
-                                FROM
-                                    Movement AS Movement_Income
-                                    INNER JOIN MovementItem AS MovementItem_Income
-                                                            ON Movement_Income.Id = MovementItem_Income.MovementId
-                                                           AND MovementItem_Income.DescId = zc_MI_Master()
-                                                           AND MovementItem_Income.isErased = FALSE
-                                    INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                  ON Movement_Income.Id = MovementLinkObject_To.MovementId
-                                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                                                 AND MovementLinkObject_To.ObjectId = inUnitId
-                                    INNER JOIN MovementDate AS MovementDate_Branch
-                                                            ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                           AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
-                                WHERE
-                                    Movement_Income.DescId = zc_Movement_Income()
-                                    AND
-                                    Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                                    AND
-                                    MovementDate_Branch.ValueData >= CURRENT_DATE
-                                GROUP BY
-                                    MovementItem_Income.ObjectId
-                                HAVING
-                                    SUM(MovementItem_Income.Amount) > 0
-                             ) AS Income
-                               ON Income.GoodsId = Object_Price.GoodsId
 
-            LEFT OUTER JOIN (SELECT MovementItem.ObjectId     AS GoodsId 
+
+
+        -- заливаем согласно разници между остатком и НТЗ
+        PERFORM lpInsertUpdate_MovementItemFloat(inDescId         := zc_MIFloat_AmountSecond()
+                                                ,inMovementItemId := lpInsertUpdate_MovementItem_OrderInternal(ioId         := tmp.MovementItemId
+                                                                                                              ,inMovementId := vbMovementId
+                                                                                                              ,inGoodsId    := tmp.GoodsId
+                                                                                                              ,inAmount     := tmp.Amount
+                                                                                                              ,inAmountManual:= NULL
+                                                                                                              ,inPrice      := tmp.Price
+                                                                                                              ,inUserId     := vbUserId)
+                                                ,inValueData       := tmp.ValueData
+                                                )
+        FROM (WITH Object_Price AS (SELECT Object_Price.*
+                                    FROM Object_Price_View AS Object_Price
+                                    WHERE Object_Price.MCSValue > 0
+                                              AND Object_Price.MCSIsClose = False 
+                                              AND Object_Price.UnitId = inUnitId
+                                              AND Object_Price.isErased = FALSE
+                                   )
+            , MovementItemSaved AS (SELECT T1.Id,
+                                           T1.Amount, 
+                                           T1.ObjectId  
+                                    FROM (SELECT MovementItem.Id,
+                                                 MovementItem.Amount,
+                                                 MovementItem.ObjectId,
+                                                 ROW_NUMBER() OVER(PARTITION BY MovementItem.ObjectId Order By MovementItem.Id) as Ord
+                                          FROM MovementItem
+                                          WHERE MovementItem.MovementId = vbMovementId
+                                            AND MovementItem.isErased = FALSE
+                                         ) AS T1
+                                    WHERE T1.Ord = 1
+                                   )
+                      , Income AS (SELECT MovementItem_Income.ObjectId    as GoodsId 
+                                        , SUM (MovementItem_Income.Amount) as Amount_Income
+                                   FROM Movement AS Movement_Income
+                                        INNER JOIN MovementItem AS MovementItem_Income
+                                                                ON Movement_Income.Id = MovementItem_Income.MovementId
+                                                               AND MovementItem_Income.DescId = zc_MI_Master()
+                                                               AND MovementItem_Income.isErased = FALSE
+                                        INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                      ON Movement_Income.Id = MovementLinkObject_To.MovementId
+                                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                     AND MovementLinkObject_To.ObjectId = inUnitId
+                                        INNER JOIN MovementDate AS MovementDate_Branch
+                                                                ON MovementDate_Branch.MovementId = Movement_Income.Id
+                                                               AND MovementDate_Branch.DescId = zc_MovementDate_Branch() 
+                                                               AND MovementDate_Branch.ValueData >= CURRENT_DATE
+                                WHERE Movement_Income.DescId = zc_Movement_Income()
+                                  AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                                GROUP BY MovementItem_Income.ObjectId
+                                HAVING SUM (MovementItem_Income.Amount) > 0
+                             )
+            , tmpMI_Send AS (SELECT MovementItem.ObjectId     AS GoodsId 
                                   , SUM (MovementItem.Amount) AS Amount
                              FROM Movement
                                     INNER JOIN MovementItem AS MovementItem
@@ -165,9 +142,8 @@ BEGIN
                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                   AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
                              GROUP BY MovementItem.ObjectId
-                            ) AS tmpMI_Send
-                              ON tmpMI_Send.GoodsId = Object_Price.GoodsId
-            LEFT OUTER JOIN (SELECT MI_OrderExternal.ObjectId                AS GoodsId
+                            )
+   , tmpMI_OrderExternal AS (SELECT MI_OrderExternal.ObjectId                AS GoodsId
                                   , SUM (MI_OrderExternal.Amount) ::TFloat   AS Amount 
                              FROM Movement AS Movement_OrderExternal
                                   INNER JOIN MovementBoolean AS MovementBoolean_Deferred
@@ -187,14 +163,37 @@ BEGIN
                                AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
                              GROUP BY MI_OrderExternal.ObjectId 
                              HAVING SUM (MI_OrderExternal.Amount) <> 0 
-                            ) AS tmpMI_OrderExternal
-                              ON tmpMI_OrderExternal.GoodsId = Object_Price.GoodsId
+                            )
+              -- Результат
+              SELECT COALESCE(MovementItemSaved.Id,0) AS MovementItemId
+                   , Object_Price.GoodsId
+                   , COALESCE (MovementItemSaved.Amount, 0) AS Amount
+                   , Object_Price.Price AS Price
+                   , CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                               THEN CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                          WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                               THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                          ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                     END :: TFloat AS ValueData
+              FROM Object_Price
+            -- LEFT OUTER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                -- ON ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                               -- AND ContainerLinkObject_Unit.ObjectId = Object_Price.UnitId
+            LEFT OUTER JOIN Container ON Container.WhereObjectId = Object_Price.UnitId
+                                     AND Container.ObjectId = Object_Price.GoodsId
+                                     AND Container.DescId = zc_Container_Count() 
+                                     AND Container.Amount <> 0
 
+            LEFT OUTER JOIN MovementItemSaved ON MovementItemSaved.ObjectId = Object_Price.GoodsId
 
-        WHERE Object_Price.MCSValue > 0
-          AND Object_Price.MCSIsClose = False 
-          AND Object_Price.UnitId = inUnitId
-          AND Object_Price.isErased = FALSE
+            INNER JOIN Object_Goods_View ON Object_Price.GoodsId = Object_Goods_View.Id    
+                                        AND Object_Goods_View.IsClose = FALSE                          
+
+            LEFT OUTER JOIN Income ON Income.GoodsId = Object_Price.GoodsId
+
+            LEFT OUTER JOIN tmpMI_Send ON tmpMI_Send.GoodsId = Object_Price.GoodsId
+
+            LEFT OUTER JOIN tmpMI_OrderExternal ON tmpMI_OrderExternal.GoodsId = Object_Price.GoodsId
         GROUP BY
             Object_Price.UnitId,
             Object_Price.GoodsId,
@@ -212,7 +211,12 @@ BEGIN
                     WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                          THEN ROUND  (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0)- COALESCE (tmpMI_OrderExternal.Amount,0))
                     ELSE FLOOR (Object_Price.MCSValue - SUM (COALESCE (Container.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-               END > 0;
+               END > 0
+       ) AS tmp;
+
+
+-- RAISE EXCEPTION 'ok' ;
+
 
         -- Пересчитываем ручное количество для строк с авторасчетом
         PERFORM

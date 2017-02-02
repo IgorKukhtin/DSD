@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
 )
 RETURNS TABLE (Id Integer, MobileEmployeeId Integer, MobileEmployeeCode Integer, MobileEmployeeName TVarChar, MobileEmployeeComment TVarChar
              , Amount TFloat
+             , Amount_ProfitLoss TFloat
              , CurrMonthly TFloat, CurrNavigator TFloat, PrevNavigator TFloat
              , MobileLimit TFloat, PrevLimit TFloat, DutyLimit TFloat, Overlimit TFloat
              , PrevMonthly TFloat
@@ -41,6 +42,8 @@ BEGIN
            , ObjectString_Comment.ValueData     AS MobileEmployeeComment
 
            , MovementItem.Amount                AS Amount
+           , (COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_Overlimit.ValueData, 0)) :: TFloat AS Amount_ProfitLoss
+
            , MIFloat_CurrMonthly.ValueData      AS CurrMonthly
            , MIFloat_CurrNavigator.ValueData    AS CurrNavigator
 
@@ -62,8 +65,8 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
            , Object_Position.ValueData          AS PositionName
 
-           , Object_Employee_prev.Id             AS PrevEmployeeId
-           , Object_Employee_prev.ValueData      AS PrevEmployeeName
+           , Object_Employee_prev.Id            AS PrevEmployeeId
+           , Object_Employee_prev.ValueData     AS PrevEmployeeName
            , Object_Unit_prev.ValueData         AS UnitName_prev
            , Object_Position_prev.ValueData     AS PositionName_prev
            , Object_MobileTariff.Id             AS MobileTariffId

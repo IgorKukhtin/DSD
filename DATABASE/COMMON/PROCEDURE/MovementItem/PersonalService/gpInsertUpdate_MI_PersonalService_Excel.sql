@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_MI_PersonalService_Excel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Excel (Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PersonalService_Excel (Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PersonalService_Excel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inINN                 TVarChar  , -- ИНН
+    IN inFIO                 TVarChar  , -- ФИО
     IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
     IN inSummCardRecalc1     TFloat    , -- Сумма1 на карточку (БН) для распределения
     IN inSummCardRecalc2     TFloat    , -- Сумма2 на карточку (БН) для распределения
@@ -20,15 +21,29 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalService());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE(inMovementId,0) = 0
+     -- замена
+     inINN:= TRIM (inINN);
+
+     IF COALESCE (inMovementId,0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;
 
      -- проверка
+     IF inINN = '' AND inFIO = '' AND COALESCE (inSummNalogRecalc, 0) = 0 AND COALESCE (inSummCardRecalc1, 0) = 0 AND COALESCE (inSummCardRecalc2, 0) = 0
+     THEN
+         RETURN;
+     END IF;
+     -- проверка
+     IF inINN = '-' AND inFIO = '-' AND COALESCE (inSummNalogRecalc, 0) = 0 AND COALESCE (inSummCardRecalc1, 0) = 0 AND COALESCE (inSummCardRecalc2, 0) = 0
+     THEN
+         RETURN;
+     END IF;
+
+     -- проверка
      IF COALESCE (inINN, '') = ''
      THEN
-         RAISE EXCEPTION 'Ошибка.Не заполненное поле <ИНН> в файле Excel для сумм <%> <%> <%>.', inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
+         RAISE EXCEPTION 'Ошибка.У <%> не заполненное поле <ИНН> в файле Excel для сумм <%> <%> <%>.', inFIO, inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
      END IF;
 
 
@@ -70,7 +85,7 @@ BEGIN
      -- проверка
      IF COALESCE (vbPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Сотрудник не найден для ИНН = <%> и суммы <%> <%> <%>.', inINN, inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
+         RAISE EXCEPTION 'Ошибка.Сотрудник <%> не найден с ИНН = <%> и суммы <%> <%> <%>.', inFIO, inINN, inSummCardRecalc1, inSummCardRecalc2, inSummNalogRecalc;
      END IF;
 
      -- сохранили

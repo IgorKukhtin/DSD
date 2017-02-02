@@ -497,7 +497,10 @@ BEGIN
                , tmpResult_new.ContainerId_master
                , tmpResult_new.ContainerId
                , tmpResult_new.GoodsId
-               , SUM (tmpResult_new.OperCount + COALESCE (tmpResult_diff.OperCount, 0)) AS OperCount
+               , CASE WHEN SUM (tmpResult_new.OperCount + COALESCE (tmpResult_diff.OperCount, 0)) > 0
+                           THEN SUM (tmpResult_new.OperCount + COALESCE (tmpResult_diff.OperCount, 0))
+                      ELSE SUM (tmpResult_new.OperCount)
+                 END AS OperCount
                , FALSE AS isDelete
           FROM tmpResult_new
                LEFT JOIN tmpResult_diff_find ON tmpResult_diff_find.OperDate           = tmpResult_new.OperDate
@@ -551,12 +554,12 @@ BEGIN
      IF 1=0 OR EXISTS (SELECT 1 FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0)
      THEN
          RAISE EXCEPTION 'Error. Child.Amount < 0 : * % * % *** (%)+(%)=(%) <%>  <%> Amount = <%> Count = <%> <%>'
-                               , (SELECT STRING_AGG (_tmpResult_child.ContainerId_master :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853)
-                               , (SELECT STRING_AGG (_tmpResult_child.OperCount :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853)
-                               -- , (SELECT sum (_tmpResult_child.OperCount) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 )
-                               -- , (SELECT count(*) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 )
-                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 and _tmpResult_child.ContainerId_master = 119924)
-                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119853 and _tmpResult_child.ContainerId_master = 451446)
+                               , (SELECT STRING_AGG (_tmpResult_child.ContainerId_master :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849)
+                               , (SELECT STRING_AGG (_tmpResult_child.OperCount :: TVarChar, ';') FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849)
+                               -- , (SELECT sum (_tmpResult_child.OperCount) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 )
+                               -- , (SELECT count(*) FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 )
+                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 and _tmpResult_child.ContainerId_master = 119924)
+                               -- , (SELECT _tmpResult_child.OperCount FROM _tmpResult_child WHERE _tmpResult_child.ContainerId = 119849 and _tmpResult_child.ContainerId_master = 451446)
 
                                , (SELECT MIN (_tmpResult_child.ContainerId_master) FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.ContainerId IN
                                  (SELECT _tmpResult_child.ContainerId FROM _tmpResult_child WHERE _tmpResult_child.isDelete = FALSE AND _tmpResult_child.OperCount < 0 ORDER BY _tmpResult_child.GoodsId LIMIT 1)

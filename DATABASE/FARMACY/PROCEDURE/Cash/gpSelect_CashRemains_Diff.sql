@@ -1,8 +1,7 @@
 -- Function: gpSelect_CashRemains_Diff_ver2()
 
--- DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpselect_cashremains_diff_ver2( Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpselect_cashremains_diff_ver2( Integer, TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2( Integer, TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
     IN inMovementId    Integer,    -- Текущая накладная
@@ -20,15 +19,12 @@ RETURNS TABLE (
     NewRow Boolean,
     Color_calc Integer
 )
-
 AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
 BEGIN
-    
-
 -- if inSession = '3' then return; end if;
 
     -- проверка прав пользователя на вызов процедуры
@@ -71,13 +67,17 @@ BEGIN
                       AND CLO.DescId = zc_ContainerLinkObject_PartionMovementItem()
                    )
        , tmpObject AS (SELECT Object.Id, Object.ObjectCode FROM Object WHERE Object.Id IN (SELECT tmpCLO.ObjectId FROM tmpCLO))
+       , tmpExpirationDate2 AS (SELECT MIDate_ExpirationDate.MovementItemId, MIDate_ExpirationDate.ValueData
+                                FROM MovementItemDate AS MIDate_ExpirationDate
+                                WHERE MIDate_ExpirationDate.MovementItemId IN (SELECT tmpObject.ObjectCode FROM tmpObject)
+                                  AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               )
        , tmpExpirationDate AS (SELECT tmpCLO.ContainerId, MIDate_ExpirationDate.ValueData
                                FROM tmpCLO
                                     INNER JOIN tmpObject ON tmpObject.Id = tmpCLO.ObjectId
-                                    INNER JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
-                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                               )
+                                    INNER JOIN tmpExpirationDate2 AS MIDate_ExpirationDate
+                                                                  ON MIDate_ExpirationDate.MovementItemId = tmpObject.ObjectCode
+                              )
        , GoodsRemains AS
      (SELECT Container.ObjectId
            , SUM (Container.Amount) AS Remains
@@ -238,5 +238,5 @@ ALTER FUNCTION gpSelect_CashRemains_Diff_ver2 (Integer, TVarChar, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '3')
 -- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{ACAF6C5B-24C4-43F0-B920-55444A167EC31}', '390016')
+-- SELECT * FROM gpSelect_CashRemains_Diff_ver2 (0, '{B99F7690-905F-48E7-99DB-EDED1B007F56}', '3')
