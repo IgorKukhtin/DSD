@@ -98,6 +98,11 @@ type
     cxLabel6: TcxLabel;
     edInvNumberProduction: TcxButtonEdit;
     ProductionDocGuides: TdsdGuides;
+    spSelectPrint_TTN: TdsdStoredProc;
+    actDialog_TTN: TdsdOpenForm;
+    actPrint_TTN: TdsdPrintAction;
+    mactPrint_TTN: TMultiAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public
