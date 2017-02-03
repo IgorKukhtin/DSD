@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
     IN inIsShowAll        Boolean,       --
     IN inSession          TVarChar       -- сессия пользователя
 )
+
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
              , isOfficial Boolean

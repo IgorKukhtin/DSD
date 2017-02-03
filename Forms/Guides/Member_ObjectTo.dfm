@@ -1,7 +1,7 @@
 object Member_ObjectToForm: TMember_ObjectToForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1074#1089#1077')>'
   ClientHeight = 520
   ClientWidth = 777
   Color = clBtnFace
@@ -77,7 +77,7 @@ object Member_ObjectToForm: TMember_ObjectToForm
         Width = 172
       end
       object clDescName: TcxGridDBColumn
-        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091' '#1087#1088#1077#1074#1099#1089#1090'.)'
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091')'
         DataBinding.FieldName = 'DescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

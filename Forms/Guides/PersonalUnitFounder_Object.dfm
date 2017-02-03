@@ -4,7 +4,7 @@ inherited PersonalUnitFounder_ObjectForm: TPersonalUnitFounder_ObjectForm
   ClientWidth = 699
   AddOnFormData.isAlwaysRefresh = True
   ExplicitWidth = 715
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -188,6 +188,9 @@ inherited PersonalUnitFounder_ObjectForm: TPersonalUnitFounder_ObjectForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll

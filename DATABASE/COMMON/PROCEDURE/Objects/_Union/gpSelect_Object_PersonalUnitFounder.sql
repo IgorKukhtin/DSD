@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_MobileEmployee_Personal (Boolean,TVarCha
 DROP FUNCTION IF EXISTS gpSelect_Object_PersonalUnitFounder (Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PersonalUnitFounder(
-    IN inisShowDel         Boolean,     -- показать все
+    IN inIsShowDel         Boolean,     -- показать все
     IN inSession           TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -32,7 +32,7 @@ BEGIN
         FROM Object AS Object_Personal
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal.DescId
         WHERE Object_Personal.DescId = zc_Object_Personal()
-         AND (Object_Personal.isErased = FALSE OR inisShowDel = TRUE)
+         AND (Object_Personal.isErased = FALSE OR inIsShowDel = TRUE)
         UNION ALL
         SELECT 
             Object_Unit.Id
@@ -51,7 +51,7 @@ BEGIN
                                    ON Object_Branch.id = ObjectLink_Unit_Branch.ChildObjectId
                                   AND Object_Branch.DescId = zc_Object_Branch()
         WHERE Object_Unit.DescId = zc_Object_Unit()
-          AND (Object_Unit.isErased = FALSE OR inisShowDel = TRUE)
+          AND (Object_Unit.isErased = FALSE OR inIsShowDel = TRUE)
         UNION ALL
         SELECT 
             Object_Founder.Id
@@ -64,7 +64,7 @@ BEGIN
         FROM Object AS Object_Founder
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
         WHERE Object_Founder.DescId = zc_Object_Founder()
-          AND (Object_Founder.isErased = FALSE OR inisShowDel = TRUE);
+          AND (Object_Founder.isErased = FALSE OR inIsShowDel = TRUE);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -77,4 +77,4 @@ ALTER FUNCTION gpSelect_Object_PersonalUnitFounder (Boolean,TVarChar) OWNER TO p
  */
 
 -- тест
--- SELECT * FROM gpSelect_Object_MobileEmployee_Personal (inisShowDel := FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_PersonalUnitFounder (inIsShowDel := FALSE, inSession := zfCalc_UserAdmin())
