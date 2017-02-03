@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_MobileBills()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileBills (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileBills (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileBills(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileBills(
     IN inDutyLimit           TFloat    , -- 
     IN inOverlimit           TFloat    , -- 
     IN inPrevMonthly         TFloat    , -- 
-    IN inRegionId            Integer   , --
+   -- IN inRegionId            Integer   , --
     IN inEmployeeId          Integer   , --
     IN inPrevEmployeeId      Integer   , --
     IN inMobileTariffId      Integer   , --
@@ -57,7 +58,7 @@ BEGIN
                                                     , inDutyLimit          := inDutyLimit
                                                     , inOverlimit          := inOverlimit
                                                     , inPrevMonthly        := inPrevMonthly
-                                                    , inRegionId           := inRegionId
+                                                    --, inRegionId           := inRegionId
                                                     , inEmployeeId         := inEmployeeId
                                                     , inPrevEmployeeId     := inPrevEmployeeId
                                                     , inMobileTariffId     := inMobileTariffId
@@ -72,6 +73,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.02.17         * del inRegionId
  27.09.16         *
 */
 

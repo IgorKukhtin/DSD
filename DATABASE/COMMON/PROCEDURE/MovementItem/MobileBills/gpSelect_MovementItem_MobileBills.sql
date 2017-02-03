@@ -119,11 +119,6 @@ BEGIN
                                         ON MIFloat_PrevMonthly.MovementItemId = MovementItem.Id
                                        AND MIFloat_PrevMonthly.DescId = zc_MIFloat_PrevMonthly()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Region
-                                             ON MILinkObject_Region.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Region.DescId = zc_MILinkObject_Region()
-            LEFT JOIN Object AS Object_Region ON Object_Region.Id = MILinkObject_Region.ObjectId
-
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee
                                              ON MILinkObject_Employee.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Employee.DescId = zc_MILinkObject_Employee()
@@ -170,6 +165,11 @@ BEGIN
                                              ON MILinkObject_PrevMobileTariff.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PrevMobileTariff.DescId = zc_MILinkObject_PrevMobileTariff()
             LEFT JOIN Object AS Object_PrevMobileTariff ON Object_PrevMobileTariff.Id = MILinkObject_PrevMobileTariff.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_Region
+                                 ON ObjectLink_MobileEmployee_Region.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId
             ;
 
 END;

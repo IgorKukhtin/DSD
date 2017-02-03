@@ -45,6 +45,9 @@ type
     ceDutyLimit: TcxCurrencyEdit;
     lblNavigator: TcxLabel;
     ceNavigator: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    edRegion: TcxButtonEdit;
+    RegionGuides: TdsdGuides;
   private
     { Private declarations }
   public

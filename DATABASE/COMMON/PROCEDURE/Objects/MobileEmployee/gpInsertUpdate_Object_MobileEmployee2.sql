@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_MobileEmployee  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileEmployee2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MobileEmployee2(
     IN inComment                  TVarChar  ,    -- Комментарий
     IN inPersonalId               Integer   ,    -- Сотрудник
     IN inMobileTariffId           Integer   ,    -- Тариф
+    IN inRegionId                 Integer   ,    -- регион
     IN inSession                  TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -36,6 +38,7 @@ BEGIN
                                                , inComment        := inComment
                                                , inPersonalId     := inPersonalId
                                                , inMobileTariffId := inMobileTariffId
+                                               , inRegionId       := inRegionId
                                                , inUserId         := vbUserId
                                                  );
    
@@ -47,6 +50,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.02.17         * add inRegionId
  05.10.16         * parce
  23.09.16         *
 */

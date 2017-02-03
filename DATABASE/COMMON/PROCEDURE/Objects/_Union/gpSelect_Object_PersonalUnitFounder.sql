@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , DescId Integer, DescName TVarChar
              , isErased Boolean
              , BranchName TVarChar
+             , UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , isDateOut Boolean
 )
 AS
 $BODY$
@@ -25,12 +28,39 @@ BEGIN
             Object_Personal.Id
           , Object_Personal.ObjectCode  AS Code
           , Object_Personal.ValueData   AS Name
+
           , Object_Personal.DescId      AS DescId
           , ObjectDesc.ItemName         AS DescName
           , Object_Personal.isErased
-          , NULL::TVarChar            AS BranchName
+
+          , Object_Branch.ValueData     AS BranchName
+          , Object_Unit.ValueData       AS UnitName
+          , Object_Position.ObjectCode  AS PositionCode
+          , Object_Position.ValueData   AS PositionName
+          , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+
         FROM Object AS Object_Personal
-            LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal.DescId
+           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal.DescId
+ 
+           LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
+                               AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out() 
+
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
+                               AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
+                               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                                ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
         WHERE Object_Personal.DescId = zc_Object_Personal()
          AND (Object_Personal.isErased = FALSE OR inIsShowDel = TRUE)
         UNION ALL
@@ -42,6 +72,12 @@ BEGIN
           , ObjectDesc.ItemName     AS DescName
           , Object_Unit.isErased
           , Object_Branch.ValueData AS BranchName
+
+          , NULL::TVarChar          AS UnitName
+          , NULL::Integer           AS PositionCode
+          , NULL::TVarChar          AS PositionName
+          , False::Boolean          AS isDateOut
+
         FROM Object AS Object_Unit
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -58,9 +94,15 @@ BEGIN
           , Object_Founder.ObjectCode  AS Code
           , Object_Founder.ValueData   AS Name
           , Object_Founder.DescId      AS DescId
-          , ObjectDesc.ItemName          AS DescName
+          , ObjectDesc.ItemName        AS DescName
           , Object_Founder.isErased
-          , NULL::TVarChar              AS BranchName
+          , NULL::TVarChar             AS BranchName
+
+          , NULL::TVarChar          AS UnitName
+          , NULL::Integer           AS PositionCode
+          , NULL::TVarChar          AS PositionName
+          , False::Boolean          AS isDateOut
+
         FROM Object AS Object_Founder
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
         WHERE Object_Founder.DescId = zc_Object_Founder()

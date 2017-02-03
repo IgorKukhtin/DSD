@@ -3,7 +3,7 @@ inherited MobileBillsForm: TMobileBillsForm
   ClientHeight = 501
   ClientWidth = 751
   ExplicitWidth = 767
-  ExplicitHeight = 536
+  ExplicitHeight = 539
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -154,6 +154,11 @@ inherited MobileBillsForm: TMobileBillsForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount_ProfitLoss
+            end
+            item
+              Format = ',0.####'
+              Kind = skCount
+              Column = colEmployeeName
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -435,6 +440,7 @@ inherited MobileBillsForm: TMobileBillsForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           inherited colIsErased: TcxGridDBColumn
@@ -871,10 +877,10 @@ inherited MobileBillsForm: TMobileBillsForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 11
       end>
-    Left = 750
-    Top = 225
+    Left = 678
+    Top = 217
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -1189,11 +1195,10 @@ inherited MobileBillsForm: TMobileBillsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRegionId'
         Value = '0'
         Component = MasterCDS
         ComponentItem = 'RegionId'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1438,8 +1443,8 @@ inherited MobileBillsForm: TMobileBillsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 367
-    Top = 376
+    Left = 391
+    Top = 368
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'

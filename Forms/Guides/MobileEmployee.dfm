@@ -214,6 +214,21 @@ object MobileEmployeeForm: TMobileEmployeeForm
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
+      object colRegionName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'RegionName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = OpenChoiceFormRegion
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object colComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -662,6 +677,33 @@ object MobileEmployeeForm: TMobileEmployeeForm
       Caption = 'actUpdateMainDS'
       DataSource = DataSource
     end
+    object OpenChoiceFormRegion: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Region'
+      FormName = 'TRegionForm'
+      FormNameParam.Value = 'TRegionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RegionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'RegionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object OpenChoiceFormMobileTariff: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -865,6 +907,14 @@ object MobileEmployeeForm: TMobileEmployeeForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'MobileTariffId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRegionId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'RegionId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

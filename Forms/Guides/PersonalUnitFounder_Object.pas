@@ -18,6 +18,10 @@ type
     DescName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    PositionCode: TcxGridDBColumn;
+    PositionName: TcxGridDBColumn;
+    isDateOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

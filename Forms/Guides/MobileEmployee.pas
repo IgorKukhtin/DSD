@@ -65,6 +65,8 @@ type
     spInsertUpdate: TdsdStoredProc;
     OpenChoiceFormPersonalUnion: TOpenChoiceForm;
     OpenChoiceFormMobileTariff: TOpenChoiceForm;
+    colRegionName: TcxGridDBColumn;
+    OpenChoiceFormRegion: TOpenChoiceForm;
   private
     { Private declarations }
   public
