@@ -44,9 +44,9 @@ BEGIN
     inEndDate := inEndDate+interval '1 day';
 
     RETURN QUERY
-   WITH 
-          -- Id строк Маркетинговых контрактов inMakerId
-          tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id AS MI_Id
+    WITH 
+             -- Id строк Маркетинговых контрактов inMakerId
+             tmpMIPromo AS (SELECT DISTINCT MI_Goods.Id AS MI_Id
                             FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Maker
                                                             ON MovementLinkObject_Maker.MovementId = Movement.Id
@@ -69,17 +69,19 @@ BEGIN
                         , MIContainer.ObjectId_analyzer   AS GoodsId
                         , MIFloat_Price.ValueData                 ::TFloat  AS Price  
                         , COALESCE (MIFloat_PriceSale.ValueData,0)::TFloat  AS PriceSale
-                        , COALESCE(MIFloat_AmountManual.ValueData,MIContainer.Amount)  AS Amount
-
-
-                   FROM MovementItemContainer AS MIContainer 
-                      INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
-                      LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId 
-                      INNER JOIN Object AS Status 
-                                        ON Status.Id = Movement.StatusId 
-                                       AND Status.Id = zc_Enum_Status_Complete()
+                        , COALESCE (MIFloat_AmountManual.ValueData,MIContainer.Amount)  AS Amount
+                   FROM Movement 
+                      INNER JOIN Object AS Status ON Status.Id = Movement.StatusId 
                       LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
+                      INNER JOIN MovementItemContainer AS MIContainer 
+                                                       ON MIContainer.MovementId = Movement.Id
+                                                      AND MIContainer.DescId = zc_MIContainer_Count()
+                                                      AND MIContainer.MovementDescId = zc_Movement_Income()
+                                                      AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
+
+                      INNER JOIN tmpMIPromo ON tmpMIPromo.MI_Id = MIContainer.ObjectIntId_analyzer
+                      
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountManual
                                                   ON MIFloat_AmountManual.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
@@ -92,11 +94,10 @@ BEGIN
                                                   ON MIFloat_PriceSale.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
-                   WHERE MIContainer.DescId = zc_MIContainer_Count()
-                     AND MIContainer.MovementDescId = zc_Movement_Income()
+                   WHERE Movement.DescId = zc_Movement_Income()
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                     AND Movement.OperDate >= inStartDate AND Movement.OperDate < inEndDate 
                   -- AND MIContainer.OperDate >= '01.12.2016' AND MIContainer.OperDate < '04.12.2016'
-                     AND MIContainer.OperDate >= inStartDate AND MIContainer.OperDate < inEndDate   
-                     AND COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0
                      AND COALESCE (inMakerId,0) <> 0
                  )
    -- получаем свойства Документов

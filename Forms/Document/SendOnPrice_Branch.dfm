@@ -944,6 +944,90 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         #1044#1083#1103' '#1042#1057#1045#1061' <'#1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1088#1072#1089#1093#1086#1076')> '#1074' <'#1050#1086#1083'-'#1074#1086' ('#1087#1088#1080#1093#1086#1076')> '#1087#1077#1088#1077#1085#1077 +
         #1089#1083#1080' '#1091#1089#1087#1077#1096#1085#1086'.'
     end
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'Print_TTN'
+      MoveParams = <>
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_TransportGoods'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDate_TransportGoods'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object mactPrint_TTN: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1040,7 +1124,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbtInsertUpdateMIAmountChangePercent'
         end
         item
           Visible = True
@@ -1116,6 +1200,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1151,8 +1243,12 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Action = actPrintSaleOrder
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbtInsertUpdateMIAmountChangePercent: TdxBarButton
       Action = actInsertUpdateMIAmountChangePercent
+      Category = 0
+    end
+    object bbPrint_TTN: TdxBarButton
+      Action = mactPrint_TTN
       Category = 0
     end
   end
@@ -1228,6 +1324,20 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Value = Null
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = 'NULL'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -1415,6 +1525,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = TransportChoiceGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_TransportGoods'
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -2434,5 +2559,29 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 330
     Top = 376
+  end
+  object spSelectPrint_TTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 787
+    Top = 360
   end
 end

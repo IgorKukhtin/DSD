@@ -93,6 +93,13 @@ type
     TotalCountShFrom: TcxGridDBColumn;
     TotalCountKgFrom: TcxGridDBColumn;
     TotalSummFrom: TcxGridDBColumn;
+    spSelectPrint_TTN: TdsdStoredProc;
+    spGet_TTN: TdsdStoredProc;
+    actPrint_TTN: TdsdPrintAction;
+    actGet_TTN: TdsdExecStoredProc;
+    actDialog_TTN: TdsdOpenForm;
+    mactPrint_TTN: TMultiAction;
+    bbPrint_TTN: TdxBarButton;
   private
     { Private declarations }
   public

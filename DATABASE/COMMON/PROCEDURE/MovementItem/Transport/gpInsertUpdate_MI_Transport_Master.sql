@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, In
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,  TFloat,Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                        Integer   , -- Ключ объекта <Элемент документа>
@@ -24,6 +24,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inRatePrice                 TFloat    , -- Ставка грн/км (дальнобойные)
     IN inTimePrice                 TFloat    , -- Ставка грн/ч коммандировочных
     IN inTaxi                      TFloat    , -- Сумма на такси
+    IN inTaxiMore                  TFloat    , -- Сумма на такси(водитель дополнительный)
    OUT outRatePrice_Calc           TFloat    , -- Сумма грн (дальнобойные)
     IN inFreightId                 Integer   , -- Название груза
     IN inRouteKindId_Freight       Integer   , -- Типы маршрутов(груз)
@@ -158,6 +159,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Taxi(), ioId, inTaxi);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxiMore(), ioId, inTaxiMore);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TimePrice(), ioId, inTimePrice);
 
    IF COALESCE (inTimePrice,0) <> 0 OR 1=1 -- !!!временно - что б всегда!!!
@@ -197,6 +200,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.02.17         *
  17.04.16         * 
  03.06.15         * add UnitID
  10.12.13         * add DistanceWeightTransport
