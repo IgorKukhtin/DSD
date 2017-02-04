@@ -1,9 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_PromoUnit_From_Excel()
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoUnit_From_Excel (Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoUnit_From_Excel (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoUnit_From_Excel(
     IN inMovementId          Integer   , -- Ключ объекта <Документ Инвентаризации>
+    IN inUnitId              Integer   , -- Ключ подразделения
     IN inGoodsCode           Integer   , -- Код товара
     IN inAmount              TFloat    , -- Количество
     IN inAmountPlanMax       TFloat    , -- кол-во для премии
@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbGoodsId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbId Integer;
+   DECLARE vbPrice TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -28,6 +29,9 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
     END IF;
+
+    -- нашли цену товара
+    vbPrice := (SELECT Object_Price_View.Price FROM Object_Price_View WHERE Object_Price_View.UnitId = inUnitId AND Object_Price_View.GoodsId = vbGoodsId);
     
     IF inAmount is not null AND (inAmount < 0)
     THEN
@@ -36,10 +40,17 @@ BEGIN
     
 
     SELECT Id INTO vbId from MovementItem Where MovementId = COALESCE(inMovementId,0) AND ObjectId = vbGoodsId;
+
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (COALESCE(vbId,0), zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-    -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, inAmountPlanMax);
+    PERFORM lpInsertUpdate_MovementItem_PromoUnit (ioId                 := COALESCE(vbId,0)
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := vbGoodsId
+                                                 , inAmount             := inAmount
+                                                 , inAmountPlanMax      := inAmountPlanMax
+                                                 , inPrice              := COALESCE(vbPrice,0) ::TFloat
+                                                 , inComment            := '' ::TVarChar
+                                                 , inUserId             := vbUserId
+                                                );
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

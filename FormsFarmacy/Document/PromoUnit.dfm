@@ -301,6 +301,13 @@ inherited PromoUnitForm: TPromoUnitForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inUnitId'
+          Value = Null
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
         end>
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
@@ -338,7 +345,7 @@ inherited PromoUnitForm: TPromoUnitForm
         item
           StoredProc = spInsertUpdate_MI_PromoUnit_Set_Zero
         end>
-      Caption = 'actInsertUpdate_MovementItem_Promo_Set_Zero'
+      Caption = 'actInsertUpdate_MI_PromoUnit_Set_Zero'
     end
     object actGetImportSettingId: TdsdExecStoredProc
       Category = 'Load'
@@ -960,7 +967,7 @@ inherited PromoUnitForm: TPromoUnitForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TPromoForm;zc_Object_ImportSetting_Promo'
+        Value = 'TPromoUnitForm;zc_Object_ImportSetting_PromoUnit'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
