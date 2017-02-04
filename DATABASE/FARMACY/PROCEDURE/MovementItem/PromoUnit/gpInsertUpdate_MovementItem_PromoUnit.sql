@@ -30,15 +30,15 @@ BEGIN
     outSummPlanMax := ROUND(COALESCE(inAmountPlanMax,0)*COALESCE(inPrice,0),2);
 
     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-    
-    -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, inAmountPlanMax);
-    -- сохранили <цену>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-    -- сохранили свойство <>
-    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
-
+    PERFORM lpInsertUpdate_MovementItem_PromoUnit (ioId                 := ioId
+                                                 , inMovementId         := inMovementId
+                                                 , inGoodsId            := inGoodsId
+                                                 , inAmount             := inAmount
+                                                 , inAmountPlanMax      := inAmountPlanMax
+                                                 , inPrice              := inPrice
+                                                 , inComment            := inComment
+                                                 , inUserId             := vbUserId
+                                                );
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
     
