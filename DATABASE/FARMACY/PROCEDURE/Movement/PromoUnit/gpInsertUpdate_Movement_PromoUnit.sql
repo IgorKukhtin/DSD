@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoUnit(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPersonalId          Integer   , -- Ответственный представитель маркетингового отдела
     IN inUnitId              Integer   , -- Подразделения
-    IN inComment             TVarChar    -- комментарий
+    IN inComment             TVarChar  , -- комментарий
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS

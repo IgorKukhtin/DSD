@@ -167,10 +167,12 @@ BEGIN
           , OperSumm_SocialIn
           , OperSumm_SocialAdd
           , OperSumm_Child
-
+         
             INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Second, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday, vbTotalSummCardRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday, vbTotalSummCardRecalc
+               , vbTotalSummSocialIn, vbTotalSummSocialAdd, vbTotalSummChild
+              
      FROM 
           (SELECT SUM (tmpMI.OperCount_Master)  AS OperCount_Master
                 , SUM (tmpMI.OperCount_Child)   AS OperCount_Child
@@ -271,13 +273,15 @@ BEGIN
                       , tmpMI.OperSumm_Service
                       , tmpMI.OperSumm_Card
                       , tmpMI.OperSumm_Minus
-                      , tmpMI.OperSumm_Add
+                      , CASE WHEN tmpMI.MovementDescId = zc_Movement_PromoUnit() THEN CAST (tmpMI.OperCount_PlanMax * tmpMI.Price AS NUMERIC (16, 2))
+                             ELSE tmpMI.OperSumm_Add
+                        END AS OperSumm_Add
                       , tmpMI.OperSumm_Holiday
                       , tmpMI.OperSumm_CardRecalc
                       , tmpMI.OperSumm_SocialIn
                       , tmpMI.OperSumm_SocialAdd
                       , tmpMI.OperSumm_Child
-
+                     
                   FROM (SELECT Movement.DescId AS MovementDescId
                              , MovementItem.DescId
                              , MovementItem.ObjectId AS GoodsId
@@ -301,7 +305,7 @@ BEGIN
                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
                              , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer
                              , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))  AS OperCount_Second
-
+                               
                              , SUM (COALESCE (CASE WHEN Movement.DescId <> zc_Movement_EDI() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
 
                              , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))   AS OperSumm_ToPay
@@ -315,6 +319,8 @@ BEGIN
                              , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))   AS OperSumm_SocialIn
                              , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))  AS OperSumm_SocialAdd
                              , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))      AS OperSumm_Child
+ 
+                             , SUM (COALESCE (MIFloat_AmountPlanMax.ValueData, 0))  AS OperCount_PlanMax -- 
 
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -386,6 +392,11 @@ BEGIN
                                                          ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                         AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
                                                         AND Movement.DescId = zc_Movement_PersonalService()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                                                         ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+                                                        AND Movement.DescId = zc_Movement_PromoUnit()
 
                         WHERE Movement.Id = inMovementId
                         GROUP BY Movement.DescId
@@ -464,6 +475,8 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
+         -- Сохранили свойство <Итого Сумма премия>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
      END IF;
      END IF;
 
@@ -477,6 +490,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.02.17         * 
  20.04.16         * add vbTotalSummHoliday
  19.10.14                                        * add vbOperCount_Second
  09.08.14                                        * add zc_Movement_SendOnPrice

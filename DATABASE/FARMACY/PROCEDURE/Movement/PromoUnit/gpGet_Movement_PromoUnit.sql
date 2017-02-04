@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PromoUnit(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , TotalSumm TFloat, TotalSummAdd TFloat
              , UnitId Integer, UnitName TVarChar
              , PersonalId Integer,  PersonalName TVarChar
              , Comment TVarChar
@@ -46,8 +45,6 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-           , MovementFloat_TotalSumm.ValueData          AS TotalSum
-           , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
            , Object_Unit.Id                             AS UnitId
            , Object_Unit.ValueData                      AS UnitName
            , Object_Personal.Id                         AS PersonalId

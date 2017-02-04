@@ -25,16 +25,51 @@ inherited PromoUnitForm: TPromoUnitForm
         ExplicitWidth = 979
         ExplicitHeight = 324
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.FooterSummaryItems = <
+          DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.####'
+              Column = colAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPlanMax
+            end
+            item
+              Format = ',0.####'
               Kind = skSum
               Column = colSumm
             end
             item
-              Format = ',0.000'
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummPlanMax
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPlanMax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummPlanMax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSumm
             end>
           OptionsBehavior.IncSearch = True
           OptionsView.ColumnAutoWidth = True
@@ -221,10 +256,25 @@ inherited PromoUnitForm: TPromoUnitForm
           StoredProc = spGet
         end
         item
-          StoredProc = spGetTotalSumm
+          StoredProc = spSelect
         end
         item
-          StoredProc = spSelect
+        end
+        item
+        end>
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end
+        item
+        end>
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
         end
         item
         end>
@@ -251,6 +301,14 @@ inherited PromoUnitForm: TPromoUnitForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end>
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
         end>
     end
     inherited actPrint: TdsdPrintAction
@@ -411,7 +469,7 @@ inherited PromoUnitForm: TPromoUnitForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 11
       end>
     SearchAsFilter = False
   end
@@ -481,15 +539,6 @@ inherited PromoUnitForm: TPromoUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'inOperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
@@ -513,18 +562,6 @@ inherited PromoUnitForm: TPromoUnitForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ffff'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ffff'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -564,30 +601,6 @@ inherited PromoUnitForm: TPromoUnitForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = 'NULL'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -617,34 +630,6 @@ inherited PromoUnitForm: TPromoUnitForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = 'NULL'
-        DataType = ftDateTime
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'fff'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -863,7 +848,7 @@ inherited PromoUnitForm: TPromoUnitForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

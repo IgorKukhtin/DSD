@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoUnit(
 RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountPlanMax TFloat
-             , Price TFloat, Summ TFloat, SummPlanMax TFloat 
+             , Price TFloat
+             , Summ TFloat, SummPlanMax TFloat 
              , Comment TVarChar
              , isErased Boolean
               )
@@ -19,6 +20,7 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbObjectId Integer;
+    DECLARE vbUnitId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoUnit());
@@ -27,18 +29,17 @@ BEGIN
     -- поиск <Торговой сети>
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
+    vbUnitId := (SELECT ML.ObjectId FROM MovementLinkObject AS ML WHERE  ML.MovementId = inMovementId AND ML.DescId = zc_MovementLinkObject_Unit());
+
     -- Результат
     IF inShowAll THEN
         -- Результат такой
         RETURN QUERY
             WITH 
-            tmpGoods AS (  SELECT Object_Goods_View.Id
-                                , Object_Goods_View.isErased
-                                , Object_Goods_View.Price
-                                , CASE WHEN Object_Goods_View.isSecond = TRUE THEN 16440317 WHEN Object_Goods_View.isFirst = TRUE THEN zc_Color_GreenL() ELSE zc_Color_White() END AS Color_calc   --10965163
-                           FROM Object_Goods_View
-                           WHERE Object_Goods_View.ObjectId = vbObjectId
-                             AND (Object_Goods_View.isErased = FALSE OR (Object_Goods_View.isErased = TRUE AND inIsErased = TRUE))
+            tmpPrice AS (SELECT Object_Price_View.GoodsId
+                              , Object_Price_View.Price
+                         FROM Object_Price_View
+                         WHERE Object_Price_View.UnitId = vbUnitId
                          )
 
         , MI_PromoUnit AS (SELECT MI_PromoUnit.Id
@@ -72,14 +73,14 @@ BEGIN
                  , Object_Goods.ValueData                AS GoodsName
                  , MI_PromoUnit.Amount                   AS Amount
                  , MI_PromoUnit.AmountPlanMax            AS AmountPlanMax
-                 , COALESCE(MI_PromoUnit.Price,0) ::TFloat   AS Price
+                 , COALESCE(MI_PromoUnit.Price,tmpPrice.Price) ::TFloat   AS Price
                  , MI_PromoUnit.Summ              ::TFloat   AS Summ
                  , MI_PromoUnit.SummPlanMax       ::TFloat   AS SummPlanMax
                  , COALESCE(MI_PromoUnit.Comment, '') ::TVarChar AS Comment
                  , COALESCE(MI_PromoUnit.IsErased,FALSE)     AS isErased
-            FROM tmpGoods
-                FULL OUTER JOIN MI_PromoUnit ON tmpGoods.Id = MI_PromoUnit.GoodsId
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_PromoUnit.GoodsId,tmpGoods.Id)
+            FROM tmpPrice
+                FULL OUTER JOIN MI_PromoUnit ON tmpPrice.GoodsId = MI_PromoUnit.GoodsId
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MI_PromoUnit.GoodsId,tmpPrice.GoodsId)
             WHERE Object_Goods.isErased = FALSE 
                OR MI_PromoUnit.id is not null;
     ELSE
@@ -93,7 +94,7 @@ BEGIN
                 , MIFloat_AmountPlanMax.ValueData  ::TFloat AS AmountPlanMax
                 , MIFloat_Price.ValueData          ::TFloat AS Price
                 , (COALESCE(MI_PromoUnit.Amount,0) * COALESCE(MIFloat_Price.ValueData,0))           ::TFloat AS Summ
-                , COALESCE(MIFloat_AmountPlanMax.ValueData,0) * COALESCE(MIFloat_Price.ValueData,0) ::TFloat AS SummPlanMax
+                , (COALESCE(MIFloat_AmountPlanMax.ValueData,0) * COALESCE(MIFloat_Price.ValueData,0)) ::TFloat AS SummPlanMax
                 , MIString_Comment.ValueData       ::TVarChar AS Comment
                 , MI_PromoUnit.IsErased
            FROM MovementItem AS MI_PromoUnit

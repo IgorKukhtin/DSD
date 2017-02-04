@@ -29,15 +29,36 @@ inherited PromoUnitJournalForm: TPromoUnitJournalForm
         ExplicitWidth = 769
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = colTotalSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummAdd
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.##'
               Kind = skSum
               Column = colTotalSumm
             end
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummAdd
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colUnitName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
