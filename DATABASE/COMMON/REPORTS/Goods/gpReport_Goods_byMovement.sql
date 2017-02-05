@@ -177,7 +177,7 @@ BEGIN
                            , SUM (COALESCE (CASE WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END, 0))  AS Amount
                            , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
 
-                           , SUM (CASE WHEN tmp.OperDate = inEndDate THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END)  AS DayAmount
+                           , SUM (CASE WHEN tmp.OperDate = inEndDate THEN COALESCE (CASE WHEN tmp.MovementDescId = zc_Movement_SendOnPrice() THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END, 0) ELSE 0 END)  AS DayAmount
                            , SUM (CASE WHEN tmp.OperDate = inEndDate THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS DayAmountPartner
                       FROM tmpMovRet AS tmp 
                            INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId

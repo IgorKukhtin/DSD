@@ -108,6 +108,7 @@ BEGIN
                    , Operation_all.InfoMoneyId
                    , Operation_all.Comment
                    , Operation_all.OperDate
+                   , Operation_all.AnalyzerId
           FROM
               (SELECT tmpContainer.Id AS ContainerId, tmpContainer.AccountId, tmpContainer.FounderId
                     , tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount
@@ -121,6 +122,7 @@ BEGIN
                     , 0 AS InfoMoneyId
                     , '' AS Comment
                     , zc_DateStart() :: TDatetime AS OperDate
+                    , 0 AS AnalyzerId
                FROM tmpContainer
                     LEFT JOIN MovementItemContainer AS MIContainer
                                                     ON MIContainer.ContainerId = tmpContainer.Id
@@ -132,14 +134,16 @@ BEGIN
                     , 0 AS StartAmount
                     , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
                     , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
-                    , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Income()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
+                    , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Income(), zc_Movement_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS MoneySumm
                     , SUM (CASE WHEN Movement.DescId IN (zc_Movement_FounderService()) THEN -1 * MIContainer.Amount ELSE 0 END)     AS ServiceSumm
                     , 0 AS EndAmount
                     , MovementItem.ObjectId
                     , MILO_MoneyPlace.ObjectId                  AS MoneyPlaceId
-                    , MILO_InfoMoney.ObjectId                   AS InfoMoneyId
+                      -- Налоговые платежи по ЗП - Отчисления ИЛИ ...
+                    , CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN zc_Enum_InfoMoney_50101() ELSE MILO_InfoMoney.ObjectId END AS InfoMoneyId
                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
                     , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
+                    , MIContainer.AnalyzerId
                FROM tmpContainer
                     LEFT JOIN MovementItemContainer AS MIContainer
                                                     ON MIContainer.ContainerId = tmpContainer.Id
@@ -161,10 +165,12 @@ BEGIN
                       , MILO_InfoMoney.ObjectId
                       , MIString_Comment.ValueData
                       , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime
+                      , MIContainer.AnalyzerId
              ) AS Operation_all
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.FounderId
                  , Operation_all.ObjectId, Operation_all.MoneyPlaceId, Operation_all.InfoMoneyId, Operation_all.Comment
                  , Operation_all.OperDate
+                 , Operation_all.AnalyzerId
          ) AS Operation
 
      LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = Operation.MoneyPlaceId

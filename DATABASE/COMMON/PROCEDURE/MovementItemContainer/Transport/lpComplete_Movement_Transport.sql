@@ -267,7 +267,7 @@ BEGIN
         SELECT _tmpItem.MovementItemId_parent            AS MovementItemId
              , MIFloat_RateSumma.ValueData               AS OperSumm_Add
              , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS OperSumm_AddLong
-             , MIFloat_Taxi.ValueData                    AS OperSumm_Taxi
+             , CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END AS OperSumm_Taxi
 
                -- для Сотрудника (ЗП)
              , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -373,10 +373,13 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                          ON MIFloat_Taxi.MovementItemId = _tmpItem.MovementItemId_parent
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+             LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
+                                         ON MIFloat_TaxiMore.MovementItemId = _tmpItem.MovementItemId_parent
+                                        AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()
 
         WHERE MIFloat_RateSumma.ValueData <> 0
            OR MIFloat_RatePrice.ValueData <> 0
-           OR MIFloat_Taxi.ValueData      <> 0
+           OR CASE WHEN MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriverMore() THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE COALESCE (MIFloat_Taxi.ValueData, 0) END <> 0
        ;
 
 

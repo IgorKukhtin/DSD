@@ -106,7 +106,23 @@ BEGIN
         FROM Object AS Object_Founder
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Founder.DescId
         WHERE Object_Founder.DescId = zc_Object_Founder()
-          AND (Object_Founder.isErased = FALSE OR inIsShowDel = TRUE);
+          AND (Object_Founder.isErased = FALSE OR inIsShowDel = TRUE)
+
+       UNION ALL
+        SELECT 
+            NULL::Integer           Id
+          , NULL::Integer           AS Code
+          , 'Очистить Значение' :: TVarChar    AS Name
+          , NULL::Integer           AS DescId
+          , NULL::TVarChar          AS DescName
+          , FALSE                   AS isErased
+          , NULL::TVarChar          AS BranchName
+
+          , NULL::TVarChar          AS UnitName
+          , NULL::Integer           AS PositionCode
+          , NULL::TVarChar          AS PositionName
+          , False::Boolean          AS isDateOut
+       ;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

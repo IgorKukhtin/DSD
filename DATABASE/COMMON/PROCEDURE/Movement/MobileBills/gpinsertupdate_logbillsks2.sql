@@ -89,6 +89,7 @@ BEGIN
                                                   , inComment        := ''
                                                   , inPersonalId     := 0
                                                   , inMobileTariffId := 0
+                                                  , inRegionId       := 0
                                                   , inUserId         := vbUserId
                                                    )
      FROM (SELECT DISTINCT PhoneNum FROM _tmpItem WHERE PhoneNum <> '') AS tmp
@@ -138,7 +139,7 @@ BEGIN
                                                    , inDutyLimit          := tmp.DutyLimit           -- Служебный лимит
                                                    , inOverlimit          := CASE WHEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit) > 0 THEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit) ELSE 0 END
                                                    , inPrevMonthly        := tmp.Monthly_prev        -- *** Ежемесячная абонплата за предыдущий период
-                                                   , inRegionId           := 0                       -- Текущий регион обслуживания
+                                                   -- , inRegionId           := 0                       -- Текущий регион обслуживания
                                                    , inEmployeeID         := tmp.PersonalId          -- Сотрудник
                                                    , inPrevEmployeeId     := tmp.PersonalId_prev     -- *** Предыдущий сотрудник
                                                    , inMobileTariffId     := tmp.MobileTariffId      -- Текущий тарифный план
