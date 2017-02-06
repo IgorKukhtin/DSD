@@ -21,7 +21,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     UtilConvert, UtilConst, ZLibEx, zLibUtil, JuridicalTest, Data.DB;
+     UtilConvert, UtilConst, ZLibEx, zLibUtil, Data.DB;
 
 { TUserTest }
 

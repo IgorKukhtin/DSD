@@ -38,6 +38,23 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
+   -- проверка уникальность <INN>
+   IF TRIM (inINN) <> ''
+   THEN
+       IF EXISTS (SELECT ObjectString.ObjectId
+                  FROM ObjectString
+                  WHERE TRIM (ObjectString.ValueData) = TRIM (inINN)
+                    AND ObjectString.ObjectId <> COALESCE (ioId, 0)
+                    AND ObjectString.DescId = zc_ObjectString_Member_INN())
+       THEN
+           RAISE EXCEPTION 'Ошибка. Код ИНН <%> уже установлен у <%>.', TRIM (inINN), lfGet_Object_ValueData ((SELECT ObjectString.ObjectId
+                                                                                                               FROM ObjectString
+                                                                                                               WHERE TRIM (ObjectString.ValueData) = TRIM (inINN)
+                                                                                                                 AND ObjectString.ObjectId <> COALESCE (ioId, 0)
+                                                                                                                 AND ObjectString.DescId = zc_ObjectString_Member_INN()
+                                                                                                             ));
+       END IF;
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= NULL);

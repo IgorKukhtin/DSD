@@ -1,2 +1,2 @@
--- CREATE DATABASE Boutique;
+CREATE DATABASE Boutique;
 

@@ -51,6 +51,12 @@
 			<Projects Include="ExportSalesForSuppliers.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="Boutique.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="..\TEST\DPR\BoutiqueTest.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -203,14 +209,32 @@
 		<Target Name="ExportSalesForSuppliers:Make">
 			<MSBuild Projects="ExportSalesForSuppliers.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="Boutique">
+			<MSBuild Projects="Boutique.dproj"/>
+		</Target>
+		<Target Name="Boutique:Clean">
+			<MSBuild Projects="Boutique.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="Boutique:Make">
+			<MSBuild Projects="Boutique.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="BoutiqueTest">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj"/>
+		</Target>
+		<Target Name="BoutiqueTest:Clean">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="BoutiqueTest:Make">
+			<MSBuild Projects="..\TEST\DPR\BoutiqueTest.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;SavePriceToXls;ExportSalesForSuppliers"/>
+			<CallTarget Targets="ProjectComponent;ProjectDesignComponent;ProjectTest;Project;Load_PostgreSql;Load_Farmacy;FarmacyTest;Farmacy;FarmacyCash;FarmacyCashServise;ProjectCom;Scale;ScaleCeh;GetEmail;SavePriceToXls;ExportSalesForSuppliers;Boutique;BoutiqueTest"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean"/>
+			<CallTarget Targets="ProjectComponent:Clean;ProjectDesignComponent:Clean;ProjectTest:Clean;Project:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;FarmacyTest:Clean;Farmacy:Clean;FarmacyCash:Clean;FarmacyCashServise:Clean;ProjectCom:Clean;Scale:Clean;ScaleCeh:Clean;GetEmail:Clean;SavePriceToXls:Clean;ExportSalesForSuppliers:Clean;Boutique:Clean;BoutiqueTest:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make"/>
+			<CallTarget Targets="ProjectComponent:Make;ProjectDesignComponent:Make;ProjectTest:Make;Project:Make;Load_PostgreSql:Make;Load_Farmacy:Make;FarmacyTest:Make;Farmacy:Make;FarmacyCash:Make;FarmacyCashServise:Make;ProjectCom:Make;Scale:Make;ScaleCeh:Make;GetEmail:Make;SavePriceToXls:Make;ExportSalesForSuppliers:Make;Boutique:Make;BoutiqueTest:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
