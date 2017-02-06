@@ -1,0 +1,30 @@
+-- Function: gpSetErased_Movement_PromoUnit (Integer, TVarChar)
+
+DROP FUNCTION IF EXISTS gpSetErased_Movement_PromoUnit (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpSetErased_Movement_PromoUnit(
+    IN inMovementId        Integer               , -- ключ Документа
+    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_PromoUnit());
+    vbUserId:= lpGetUserBySession (inSession);
+
+    -- Удаляем Документ
+    PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                 , inUserId     := vbUserId);
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 06.02.17         *
+*/
