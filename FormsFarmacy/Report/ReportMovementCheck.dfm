@@ -61,6 +61,16 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Format = ',0.00'
               Kind = skSum
               Column = colSummaMarginWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPromoPlanMax
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,6 +112,16 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Format = ',0.00'
               Kind = skSum
               Column = colSummaMarginWithVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPromo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountPromoPlanMax
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -263,11 +283,51 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colAmountPromo: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'., '#1096#1090'.'
+            DataBinding.FieldName = 'AmountPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091', '#1096#1090'.'
+            Width = 72
+          end
+          object colAmountPromoPlanMax: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080', '#1096#1090'. '
+            DataBinding.FieldName = 'AmountPromoPlanMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080', '#1096#1090'. '
+            Width = 78
+          end
           object PartionDescName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#1042#1080#1076
             DataBinding.FieldName = 'PartionDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colisPromoUnit: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085
+            DataBinding.FieldName = 'isPromoUnit'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085' '#1044#1072'/'#1085#1077#1090
+            Options.Editing = False
+            Width = 70
+          end
+          object colisPromoPlanMax: TcxGridDBColumn
+            Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'.  '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1074#1099#1087#1086#1083#1085#1077#1085
+            DataBinding.FieldName = 'isPromoPlanMax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085' '#1044#1072'/'#1085#1077#1090
+            Options.Editing = False
             Width = 80
           end
           object PartionInvNumber: TcxGridDBColumn

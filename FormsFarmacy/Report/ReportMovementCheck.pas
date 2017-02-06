@@ -58,6 +58,7 @@ type
     bbPrint: TdxBarButton;
     cbJuridical: TcxCheckBox;
     actRefreshJuridical: TdsdDataSetRefresh;
+    colisPromoUnit: TcxGridDBColumn;
   private
     { Private declarations }
   public
