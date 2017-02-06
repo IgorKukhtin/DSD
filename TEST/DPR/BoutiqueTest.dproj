@@ -1,0 +1,315 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{D8BAD5CF-CB27-4E81-AEC7-ABFCB1B2B50C}</ProjectGuid>
+			<ProjectVersion>13.4</ProjectVersion>
+			<FrameworkType>VCL</FrameworkType>
+			<MainSource>BoutiqueTest.dpr</MainSource>
+			<Base>True</Base>
+			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Platform Condition="'$(Platform)'==''">Win32</Platform>
+			<TargetedPlatforms>1</TargetedPlatforms>
+			<AppType>Application</AppType>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+			<Base_Win64>true</Base_Win64>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+			<Base_Win32>true</Base_Win32>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_1)'!=''">
+			<Cfg_1>true</Cfg_1>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+			<Cfg_1_Win32>true</Cfg_1_Win32>
+			<CfgParent>Cfg_1</CfgParent>
+			<Cfg_1>true</Cfg_1>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
+			<Cfg_2>true</Cfg_2>
+			<CfgParent>Base</CfgParent>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+			<Cfg_2_Win32>true</Cfg_2_Win32>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<DCC_UsePackage>DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;CustomIPTransport;dsnap;IndyCore;JvDB;bindcompfmx;dbrtl;bindcomp;inetdb;JvPluginSystem;xmlrtl;ibxpress;bindengine;soaprtl;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;JvDlgs;IndySystem;DataSnapClient;DataSnapProviderClient;DBXOracleDriver;JvCore;fmxase;inetdbxpress;rtl;DbxClientDriver;JvSystem;JvControls;IndyProtocols;DBXMySQLDriver;JvPageComps;JvStdCtrls;JvCustom;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<DCC_UsePackage>cxLibraryRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;officeXPrt;cxPageControlRS16;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;cxPageControldxBarPopupMenuRS16;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;DBXOdbcDriver;dxPScxSSLnkRS16;vclactnband;dxServerModeRS16;bindcompvcl;Jcl;vclie;ipstudiowinclient;dsnapcon;vclx;dxFlowChartRS16;dxGDIPlusRS16;dxdborRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;webdsnap;EhLib160;adortl;ZDbc;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;dxmdsRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;ipstudiowin;cxSchedulerRS16;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Base_Win32)'!=''">
+			<DCC_UsePackage>dxTileControlRS16;JvGlobus;fsADO16;JvMM;cxLibraryRS16;JvManagedThreads;ipstudiowindataset;JvCrypt;frxBDE16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;JvNet;officeXPrt;cxPageControlRS16;JvDotNetCtrls;fsIBX16;vclimg;QR5RunDXE2;fmi;RtmRxCtl160;dxComnRS16;JvXPCtrls;vcldb;dxADOServerModeRS16;CloudService;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;ipstudiowinwordxp;JvRuntimeDesign;ADDONS_XE2;dxPSLnksRS16;dxBarExtItemsRS16;JclDeveloperTools;dxPSdxLCLnkRS16;DSDComponent;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;DBXOdbcDriver;JvCmp;dxdbtrRS16;kassa;JvTimeFramework;dxPScxSSLnkRS16;fsBDE16;frxDB16;intrawebdb_120_160;fs16;vclactnband;FMXTee;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;frxcs16;Jcl;vclie;ipstudiowinclient;dclfrxTee16;dsnapcon;JvPascalInterpreter;dcldxSkinsCoreRS16;vclx;T557_R100;dxFlowChartRS16;frxIBX16;dxGDIPlusRS16;JvBDE;dxdborRS16;dxPScxVGridLnkRS16;dxLayoutControlRS16;dxPScxPivotGridLnkRS16;dxCoreRS16;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;frxTee16;inetdbbde;vclib;Rave100VCL;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;vcldsnap;DBXDb2Driver;Intraweb_120_160;frxADO16;vclribbon;frxe16;vtable160;vcl;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;fsTee16;JvAppFrm;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;EhLibDataDrivers160;EhLib160;JvDocking;adortl;JvWizards;JvHMI;frxDBX16;JvBands;ZDbc;frx16;ZPlain;Tee;JclContainers;dxSkinsCoreRS16;svnui;dxmdsRS16;dxSpellCheckerRS16;dxPScxCommonRS16;cxGridRS16;cxEditorsRS16;TeeUI;cxPivotGridRS16;JvJans;JvPrintPreview;ipstudiowin;QImport3RT_D16;cxSchedulerRS16;ZCore;vcltouch;websnap;DSDDesignComponent;VclSmp;dxTabbedMDIRS16;fsDB16;DataSnapConnectors;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;svn;bdertl;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1)'!=''">
+			<DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+			<DCC_Optimize>false</DCC_Optimize>
+			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+			<DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+			<DCC_RemoteDebug>true</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\..\DCU\Boutique</DCC_DcuOutput>
+			<DCC_RemoteDebug>false</DCC_RemoteDebug>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2)'!=''">
+			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\..\DCU\Boutique</DCC_DcuOutput>
+		</PropertyGroup>
+		<ItemGroup>
+			<DelphiCompile Include="$(MainSource)">
+				<MainSource>MainSource</MainSource>
+			</DelphiCompile>
+			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureBoutiqueTest.pas"/>
+			<DCCReference Include="..\SOURCE\METADATA\dbMetadataBoutiqueTest.pas"/>
+			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbBoutiqueProcedureTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
+			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
+			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
+				<Form>PriceListGoodsItemForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
+			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
+			<DCCReference Include="..\..\SOURCE\FormStorage.pas"/>
+			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
+				<Form>ParentForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuides.pas"/>
+			<DCCReference Include="..\..\SOURCE\DataModul.pas">
+				<Form>dmMain</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\dbTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
+				<Form>PeriodChoiceForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\Defaults.pas"/>
+			<DCCReference Include="..\..\SOURCE\UnilWin.pas"/>
+			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
+				<Form>MessagesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\SimpleGauge.pas">
+				<Form>SimpleGaugeForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\Document.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\Log.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalData.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFDataSet.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFPrx.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFUtil.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFMemMgr.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCDX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFIndex.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSorters.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCollate.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFParser.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFNTX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\ObjectTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
+			<DCCReference Include="..\..\Forms\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
+			<DCCReference Include="..\..\Forms\Role.pas">
+				<Form>RoleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas">
+				<Form>tCheck.pas&apos; {ReportMovementCheckForm</Form>
+				<DesignClass>TParentForm},
+  Income in &apos;..\..\FormsBoutique\Document\Income.pas&apos; {IncomeForm: TParentForm},
+  Maker in &apos;..\..\Forms\Guides\Maker.pas&apos; {MakerForm: TParentForm},
+  MakerEdit in &apos;..\..\Forms\Guides\MakerEdit.pas&apos; {MakerEditForm: TParentForm},
+  Promo in &apos;..\..\FormsBoutique\Document\Promo.pas&apos; {PromoForm: TParentForm},
+  PromoJournal in &apos;..\..\FormsBoutique\Document\PromoJournal.pas&apos; {PromoJournalForm: TParentForm},
+  ReportMovementCheckMiddle in &apos;..\..\FormsBoutique\Report\ReportMovementCheckMiddle.pas&apos; {ReportMovementCheckMiddleForm: TParentForm},
+  Report_RemainsOverGoodsDialog in &apos;..\..\FormsBoutique\Report\Report_RemainsOverGoodsDialog.pas&apos; {Report_RemainsOverGoodsDialogForm: TParentForm},
+  MovementItemProtocol in &apos;..\..\Forms\System\MovementItemProtocol.pas&apos; {MovementItemProtocolForm: TParentForm},
+  UnitForBoutiqueCash in &apos;..\..\FormsBoutique\Guides\UnitForBoutiqueCash.pas&apos; {UnitForBoutiqueCashForm: TParentForm},
+  Report_GoodsPartionMoveDialog in &apos;..\..\FormsBoutique\Report\Report_GoodsPartionMoveDialog.pas&apos; {Report_GoodsPartionMoveDialogForm: TParentForm},
+  Email in &apos;..\..\FormsBoutique\Guides\Email.pas&apos; {EmailForm: TParentForm},
+  EmailEdit in &apos;..\..\FormsBoutique\Guides\EmailEdit.pas&apos; {EmailEditForm: TParentForm},
+  Price in &apos;..\..\FormsBoutique\Guides\Price.pas&apos; {PriceForm: TParentForm},
+  Report_GoodsPartionHistoryDialog in &apos;..\..\FormsBoutique\Report\Report_GoodsPartionHistoryDialog.pas&apos; {Report_GoodsPartionHistoryDialogForm: TParentForm},
+  Over in &apos;..\..\FormsBoutique\Document\Over.pas&apos; {OverForm: TParentForm},
+  OverJournal in &apos;..\..\FormsBoutique\Document\OverJournal.pas&apos; {OverJournalForm: TParentForm},
+  RoleUnion in &apos;..\..\Forms\RoleUnion.pas&apos; {RoleUnionForm: TParentForm},
+  Report_RemainsOverGoods in &apos;..\..\FormsBoutique\Report\Report_RemainsOverGoods.pas&apos; {Report_RemainsOverGoodsForm: TParentForm},
+  PriceGoodsDialog in &apos;..\..\FormsBoutique\Guides\PriceGoodsDialog.pas&apos; {PriceGoodsDialogForm: TParentForm},
+  Color in &apos;..\..\FormsBoutique\System\Color.pas&apos; {ColorForm: TParentForm},
+  OverSettingsEdit in &apos;..\..\FormsBoutique\Guides\OverSettingsEdit.pas&apos; {OverSettingsEditForm: TParentForm},
+  OverSettings in &apos;..\..\FormsBoutique\Guides\OverSettings.pas&apos; {OverSettingsForm: TParentForm},
+  DiscountExternalToolsEdit in &apos;..\..\FormsBoutique\Guides\DiscountExternalToolsEdit.pas&apos; {DiscountExternalToolsEditForm: TParentForm},
+  DiscountCard in &apos;..\..\FormsBoutique\Guides\DiscountCard.pas&apos; {DiscountCardForm: TParentForm},
+  BarCodeEdit in &apos;..\..\FormsBoutique\Guides\BarCodeEdit.pas&apos; {BarCodeEditForm: TParentForm},
+  BarCode in &apos;..\..\FormsBoutique\Guides\BarCode.pas&apos; {BarCodeForm: TParentForm},
+  DiscountExternalTools_Object in &apos;..\..\FormsBoutique\Guides\DiscountExternalTools_Object.pas&apos; {DiscountExternalTools_ObjectForm: TParentForm},
+  DiscountCardEdit in &apos;..\..\FormsBoutique\Guides\DiscountCardEdit.pas&apos; {DiscountCardEditForm: TParentForm},
+  DiscountExternal_Object in &apos;..\..\FormsBoutique\Guides\DiscountExternal_Object.pas&apos; {DiscountExternal_ObjectForm: TParentForm},
+  ConfirmedKind in &apos;..\..\FormsBoutique\Kind\ConfirmedKind.pas&apos; {ConfirmedKindForm: TParentForm},
+  DiscountExternal in &apos;..\..\FormsBoutique\Guides\DiscountExternal.pas&apos; {DiscountExternalForm: TParentForm},
+  DiscountExternalEdit in &apos;..\..\FormsBoutique\Guides\DiscountExternalEdit.pas&apos; {DiscountExternalEditForm: TParentForm},
+  DiscountExternalTools in &apos;..\..\FormsBoutique\Guides\DiscountExternalTools.pas&apos; {DiscountExternalToolsForm: TParentForm},
+  PriceGroupSettingsTOP in &apos;..\..\FormsBoutique\Guides\PriceGroupSettingsTOP.pas&apos; {PriceGroupSettingsTopForm: TParentForm},
+  Report_MovementCheck_UnLiquid in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_UnLiquid.pas&apos; {Report_MovementCheck_UnLiquidForm: TParentForm},
+  Report_MovementCheck_UnLiquidDialog in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_UnLiquidDialog.pas&apos; {Report_MovementCheck_UnLiquidDialogForm: TParentForm},
+  Report_Payment_Plan in &apos;..\..\FormsBoutique\Report\Report_Payment_Plan.pas&apos; {Report_Payment_PlanForm: TParentForm},
+  Report_Payment_PlanDialog in &apos;..\..\FormsBoutique\Report\Report_Payment_PlanDialog.pas&apos; {Report_Payment_PlanDialogForm: TParentForm},
+  Report_MovementCheckErrorDialog in &apos;..\..\FormsBoutique\Report\Report_MovementCheckErrorDialog.pas&apos; {Report_MovementCheckErrorDialogForm: TParentForm},
+  Report_MovementCheckError in &apos;..\..\FormsBoutique\Report\Report_MovementCheckError.pas&apos; {Report_MovementCheckErrorForm: TParentForm},
+  MCS_Lite in &apos;..\..\FormsBoutique\Guides\MCS_Lite.pas&apos; {MCS_LiteForm: TParentForm},
+  OrderShedule in &apos;..\..\FormsBoutique\Guides\OrderShedule.pas&apos; {OrderSheduleForm: TParentForm},
+  OrderSheduleEdit in &apos;..\..\FormsBoutique\Guides\OrderSheduleEdit.pas&apos; {OrderSheduleEditForm: TParentForm},
+  CheckVIP_Error in &apos;..\..\FormsBoutique\Document\CheckVIP_Error.pas&apos; {CheckVIP_ErrorForm: TParentForm},
+  Report_MovementIncome_Promo in &apos;..\..\FormsBoutique\Report\Report_MovementIncome_Promo.pas&apos; {Report_MovementIncome_PromoForm: TParentForm},
+  Report_MovementCheck_Promo in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_Promo.pas&apos; {Report_MovementCheck_PromoForm: TParentForm},
+  InventoryPartion in &apos;..\..\FormsBoutique\Document\InventoryPartion.pas&apos; {InventoryPartionForm: TParentForm},
+  CheckPrintDialog in &apos;..\..\FormsBoutique\Document\CheckPrintDialog.pas&apos; {CheckPrintDialogForm: TParentForm},
+  Report_CheckPromo in &apos;..\..\FormsBoutique\Report\Report_CheckPromo.pas&apos; {Report_CheckPromoForm: TParentForm},
+  Report_PeriodDialog in &apos;..\..\FormsBoutique\Report\Report_PeriodDialog.pas&apos; {Report_PeriodDialogForm: TParentForm},
+  KindOutSP in &apos;..\..\FormsBoutique\Guides\KindOutSP.pas&apos; {KindOutSPForm: TParentForm},
+  KindOutSPEdit in &apos;..\..\FormsBoutique\Guides\KindOutSPEdit.pas&apos; {KindOutSPEditForm: TParentForm},
+  IntenalSPEdit in &apos;..\..\FormsBoutique\Guides\IntenalSPEdit.pas&apos; {IntenalSPEditForm: TParentForm},
+  IntenalSP in &apos;..\..\FormsBoutique\Guides\IntenalSP.pas&apos; {IntenalSPForm: TParentForm},
+  BrandSP in &apos;..\..\FormsBoutique\Guides\BrandSP.pas&apos; {BrandSPForm: TParentForm},
+  BrandSPEdit in &apos;..\..\FormsBoutique\Guides\BrandSPEdit.pas&apos; {BrandSPEditForm: TParentForm},
+  GoodsSP in &apos;..\..\FormsBoutique\Guides\GoodsSP.pas&apos; {GoodsSPForm: TParentForm},
+  Report_CheckSP in &apos;..\..\FormsBoutique\Report\Report_CheckSP.pas&apos; {Report_CheckSPForm: TParentForm},
+  Report_CheckSPDialog in &apos;..\..\FormsBoutique\Report\Report_CheckSPDialog.pas&apos; {Report_CheckSPDialogForm: TParentForm},
+  PartnerMedical in &apos;..\..\FormsBoutique\Guides\PartnerMedical.pas&apos; {PartnerMedicalForm: TParentForm},
+  PartnerMedicalEdit in &apos;..\..\FormsBoutique\Guides\PartnerMedicalEdit.pas&apos; {PartnerMedicalEditForm: TParentForm},
+  ConditionsKeepEdit in &apos;..\..\FormsBoutique\Guides\ConditionsKeepEdit.pas&apos; {ConditionsKeepEditForm: TParentForm},
+  ConditionsKeep in &apos;..\..\FormsBoutique\Guides\ConditionsKeep.pas&apos; {ConditionsKeepForm: TParentForm},
+  ReportPromoParams in &apos;..\..\FormsBoutique\Object\ReportPromoParams.pas&apos; {ReportPromoParamsForm: TParentForm},
+  Report_MinPrice_onGoods in &apos;..\..\FormsBoutique\Report\Report_MinPrice_onGoods.pas&apos; {Report_MinPrice_onGoodsForm: TParentForm},
+  Report_MinPrice_onGoodsDialog in &apos;..\..\FormsBoutique\Report\Report_MinPrice_onGoodsDialog.pas&apos; {Report_MinPrice_onGoodsDialogForm: TParentForm},
+  Contract_Object in &apos;..\..\FormsBoutique\Guides\Contract_Object.pas&apos; {Contract_ObjectForm: TParentForm},
+  Report_Badm in &apos;..\..\FormsBoutique\Report\Report_Badm.pas&apos; {Report_BadmForm: TParentForm},
+  Unit_byReportBadm in &apos;..\..\FormsBoutique\Guides\Unit_byReportBadm.pas&apos; {Unit_byReportBadmForm: TParentForm},
+  Unit_Object in &apos;..\..\FormsBoutique\Guides\Unit_Object.pas&apos; {Unit_ObjectForm: TParentForm},
+  DataTimeDialog in &apos;..\..\FormsBoutique\Document\DataTimeDialog.pas&apos; {DataTimeDialogForm: TParentForm},
+  MarginCategory_Cross in &apos;..\..\FormsBoutique\Object\MarginCategory_Cross.pas&apos; {MarginCategory_CrossForm: TParentForm},
+  MarginCategory_Total in &apos;..\..\FormsBoutique\Object\MarginCategory_Total.pas&apos; {MarginCategory_TotalForm: TParentForm}*</DesignClass>
+			</DCCReference>
+			<BuildConfiguration Include="Release">
+				<Key>Cfg_2</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Base">
+				<Key>Base</Key>
+			</BuildConfiguration>
+			<BuildConfiguration Include="Debug">
+				<Key>Cfg_1</Key>
+				<CfgParent>Base</CfgParent>
+			</BuildConfiguration>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Delphi.Personality>
+					<VersionInfo>
+						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>
+						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
+						<VersionInfo Name="MajorVer">1</VersionInfo>
+						<VersionInfo Name="MinorVer">0</VersionInfo>
+						<VersionInfo Name="Release">0</VersionInfo>
+						<VersionInfo Name="Build">0</VersionInfo>
+						<VersionInfo Name="Debug">False</VersionInfo>
+						<VersionInfo Name="PreRelease">False</VersionInfo>
+						<VersionInfo Name="Special">False</VersionInfo>
+						<VersionInfo Name="Private">False</VersionInfo>
+						<VersionInfo Name="DLL">False</VersionInfo>
+						<VersionInfo Name="Locale">1049</VersionInfo>
+						<VersionInfo Name="CodePage">1251</VersionInfo>
+					</VersionInfo>
+					<VersionInfoKeys>
+						<VersionInfoKeys Name="CompanyName"/>
+						<VersionInfoKeys Name="FileDescription"/>
+						<VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="InternalName"/>
+						<VersionInfoKeys Name="LegalCopyright"/>
+						<VersionInfoKeys Name="LegalTrademarks"/>
+						<VersionInfoKeys Name="OriginalFilename"/>
+						<VersionInfoKeys Name="ProductName"/>
+						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+						<VersionInfoKeys Name="Comments"/>
+					</VersionInfoKeys>
+					<Excluded_Packages/>
+					<Source>
+						<Source Name="MainSource">BoutiqueTest.dpr</Source>
+					</Source>
+				</Delphi.Personality>
+				<Deployment/>
+				<Platforms>
+					<Platform value="Win64">False</Platform>
+					<Platform value="Win32">True</Platform>
+				</Platforms>
+				<ModelSupport>False</ModelSupport>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+	</Project>
