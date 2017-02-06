@@ -14,7 +14,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
              , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
              , CarNameAll TVarChar, CarName TVarChar, CarModelName TVarChar
-             , isErased boolean) AS
+             , BranchCode Integer, BranchName TVarChar
+             , UnitCode Integer, UnitName TVarChar
+             , PositionCode Integer, PositionName TVarChar
+             , ObjectToId Integer, ObjectToName TVarChar, DescName TVarChar
+             , isDateOut Boolean, PersonalId Integer
+             , isErased Boolean
+              )
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -46,7 +53,20 @@ BEGIN
           , tmpMember AS (SELECT * FROM gpSelect_Object_Member (inIsShowAll, inSession))
 
        -- Результат
-       SELECT tmpMember.*
+       SELECT tmpMember.Id
+            , tmpMember.Code, tmpMember.Name
+             , tmpMember.INN, tmpMember.DriverCertificate, tmpMember.Card, tmpMember.Comment
+             , tmpMember.isOfficial
+             , tmpMember.InfoMoneyId, tmpMember.InfoMoneyCode, tmpMember.InfoMoneyName, tmpMember.InfoMoneyName_all
+             , tmpMember.StartSummerDate, tmpMember.EndSummerDate
+             , tmpMember.SummerFuel, tmpMember.WinterFuel, tmpMember.Reparation, tmpMember.LimitMoney, tmpMember.LimitDistance
+             , tmpMember.CarNameAll, tmpMember.CarName, tmpMember.CarModelName
+             , tmpMember.BranchCode, tmpMember.BranchName
+             , tmpMember.UnitCode, tmpMember.UnitName
+             , tmpMember.PositionCode, tmpMember.PositionName
+             , tmpMember.ObjectToId, tmpMember.ObjectToName, tmpMember.DescName
+             , tmpMember.isDateOut, tmpMember.PersonalId
+             , tmpMember.isErased
        FROM tmpContainer
             INNER JOIN tmpMember ON tmpMember.Id = tmpContainer.MemberId
       ;

@@ -166,7 +166,9 @@ BEGIN
                      , 0 AS MovementId_Tax
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                     , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                     , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                 THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                            WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                             ELSE MIFloat_Price.ValueData
                        END AS Price
@@ -174,6 +176,7 @@ BEGIN
                      , -1 * SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM (SELECT Movement.Id
+                           , Movement.DescId AS MovementDescId
                       FROM MovementDate AS MovementDate_OperDatePartner
                            JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                         AND Movement.DescId = zc_Movement_ReturnIn()
@@ -195,6 +198,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                 ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -241,6 +247,8 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , MIFloat_ChangePercent.ValueData
+                       , Movement.MovementDescId
                        , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Продажа покупателю
@@ -259,7 +267,9 @@ BEGIN
                      , Movement_Tax.Id AS MovementId_Tax
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                     , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                     , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                            WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                             ELSE MIFloat_Price.ValueData
                        END AS Price
@@ -267,6 +277,7 @@ BEGIN
                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0                                                   AS Amount_Tax
                 FROM (SELECT Movement.Id
+                           , Movement.DescId AS MovementDescId
                       FROM MovementDate AS MovementDate_OperDatePartner
                            JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                         AND Movement.DescId = zc_Movement_Sale()
@@ -301,6 +312,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                 ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -349,6 +363,8 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , MIFloat_ChangePercent.ValueData
+                       , Movement.MovementDescId
                        , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Перевод долга (расход)
@@ -668,4 +684,4 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpReport_CheckTax (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_CheckTax (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());

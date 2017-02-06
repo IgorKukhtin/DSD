@@ -41,6 +41,7 @@ BEGIN
             , COALESCE (MIFloat_RatePrice.ValueData, 0) /** (COALESCE(MovementItem.Amount,0)+COALESCE(MIFloat_DistanceFuelChild.ValueData,0))*/  AS RatePrice_Calc
             , COALESCE (MIFloat_TimePrice.ValueData, 0) AS TimePrice
             , MIFloat_Taxi.ValueData                    AS Taxi
+            , COALESCE (MIFloat_TaxiMore.ValueData,0) :: Tfloat AS TaxiMore
            
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
@@ -72,6 +73,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Taxi
                                          ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
                                         AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+             LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
+                                         ON MIFloat_TaxiMore.MovementItemId =  MovementItem.Id
+                                        AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()
 
              LEFT JOIN MovementItemFloat AS MIFloat_DistanceWeightTransport
                                          ON MIFloat_DistanceWeightTransport.MovementItemId = MovementItem.Id
@@ -417,6 +421,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.02.17         * add TaxiMore
  17.04.16         *
  10.12.13         * add WeightTransport, DistanceWeightTransport              
  02.12.13         * add Comment

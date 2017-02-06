@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
+             , RegionId Integer, RegionName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -43,6 +44,9 @@ BEGIN
            , CAST (0 as Integer)    AS MobileTariffId
            , CAST ('' as TVarChar)  AS MobileTariffName
 
+           , CAST (0 as Integer)    AS RegionId
+           , CAST ('' as TVarChar)  AS RegionName
+
            , CAST (NULL AS Boolean) AS isErased
 ;
    ELSE
@@ -63,6 +67,9 @@ BEGIN
            
            , Object_MobileTariff.Id            AS MobileTariffId
            , Object_MobileTariff.ValueData     AS MobileTariffName 
+
+           , Object_Region.Id                  AS RegionId
+           , Object_Region.ValueData           AS RegionName 
 
            , Object_MobileEmployee.isErased    AS isErased
            
@@ -91,6 +98,11 @@ BEGIN
                                  ON ObjectLink_MobileEmployee_MobileTariff.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_MobileTariff.DescId = zc_ObjectLink_MobileEmployee_MobileTariff()
             LEFT JOIN Object AS Object_MobileTariff ON Object_MobileTariff.Id = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId                               
+
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_Region
+                                 ON ObjectLink_MobileEmployee_Region.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId   
 
        WHERE Object_MobileEmployee.Id = inId;
       

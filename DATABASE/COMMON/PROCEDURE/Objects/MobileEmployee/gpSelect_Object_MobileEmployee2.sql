@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PositionCode Integer, PositionName TVarChar
              , BranchCode Integer, BranchName TVarChar, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
+             , RegionId Integer, RegionName TVarChar
              , isErased Boolean
              ) AS
 $BODY$
@@ -54,6 +55,9 @@ BEGIN
            , Object_MobileTariff.Id            AS MobileTariffId
            , Object_MobileTariff.ValueData     AS MobileTariffName 
 
+           , Object_Region.Id                  AS RegionId
+           , Object_Region.ValueData           AS RegionName 
+
            , Object_MobileEmployee.isErased    AS isErased
            
        FROM Object AS Object_MobileEmployee
@@ -84,7 +88,13 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_MobileTariff
                                  ON ObjectLink_MobileEmployee_MobileTariff.ObjectId = Object_MobileEmployee.Id 
                                 AND ObjectLink_MobileEmployee_MobileTariff.DescId = zc_ObjectLink_MobileEmployee_MobileTariff()
-            LEFT JOIN Object AS Object_MobileTariff ON Object_MobileTariff.Id = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId                               
+            LEFT JOIN Object AS Object_MobileTariff ON Object_MobileTariff.Id = ObjectLink_MobileEmployee_MobileTariff.ChildObjectId 
+
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_Region
+                                 ON ObjectLink_MobileEmployee_Region.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId    
+                              
 --
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                                  ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
@@ -112,6 +122,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.02.17         * 
  05.10.16         * parce
  23.09.16         *
 */

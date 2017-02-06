@@ -6,7 +6,7 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 442
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,17 +14,17 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     Height = 350
     TabOrder = 3
     ExplicitWidth = 1110
-    ExplicitHeight = 478
+    ExplicitHeight = 350
     ClientRectBottom = 350
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
-      ExplicitHeight = 478
+      ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 350
         ExplicitWidth = 1110
-        ExplicitHeight = 478
+        ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -195,6 +195,24 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
           object InvNumber_Order: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1103#1074#1082#1072
             DataBinding.FieldName = 'InvNumber_Order'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InvNumber_TransportGoods: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'InvNumber_TransportGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate_TransportGoods: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
+            DataBinding.FieldName = 'OperDate_TransportGoods'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -900,6 +918,115 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrint_TTN: TdsdPrintAction
+      Category = 'Print_TTN'
+      MoveParams = <>
+      StoredProc = spSelectPrint_TTN
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_TTN
+        end>
+      Caption = 'actPrint_TTN'
+      Hint = 'actPrint_TTN'
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+    end
+    object actGet_TTN: TdsdExecStoredProc
+      Category = 'Print_TTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_TTN
+      StoredProcList = <
+        item
+          StoredProc = spGet_TTN
+        end>
+      Caption = 'actGet_TTN'
+      Hint = 'actGet_TTN'
+    end
+    object actDialog_TTN: TdsdOpenForm
+      Category = 'Print_TTN'
+      MoveParams = <>
+      Caption = 'actDialog_TTN'
+      Hint = 'actDialog_TTN'
+      FormName = 'TTransportGoodsForm'
+      FormNameParam.Value = 'TTransportGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_TransportGoods'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_Sale'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate_TransportGoods_calc'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactPrint_TTN: TMultiAction
+      Category = 'Print_TTN'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actDialog_TTN
+        end
+        item
+          Action = actGet_TTN
+        end
+        item
+          Action = actPrint_TTN
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      Hint = #1055#1077#1095#1072#1090#1100' '#1058#1058#1053
+      ImageIndex = 15
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1048,6 +1175,14 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_TTN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1077,6 +1212,10 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     end
     object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
+      Category = 0
+    end
+    object bbPrint_TTN: TdxBarButton
+      Action = mactPrint_TTN
       Category = 0
     end
   end
@@ -1413,5 +1552,87 @@ inherited SendOnPrice_BranchJournalForm: TSendOnPrice_BranchJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spSelectPrint_TTN: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TTN_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 983
+    Top = 160
+  end
+  object spGet_TTN: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_SendOnPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercentAmount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_TransportGoods'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_TransportGoods'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'InvNumber_TransportGoods'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate_TransportGoods'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'OperDate_TransportGoods'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 208
   end
 end

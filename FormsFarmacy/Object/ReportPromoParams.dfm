@@ -2,7 +2,6 @@ inherited ReportPromoParamsForm: TReportPromoParamsForm
   Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
   ClientWidth = 658
   ExplicitWidth = 674
-  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -14,8 +13,6 @@ inherited ReportPromoParamsForm: TReportPromoParamsForm
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 658
-        ExplicitLeft = 3
-        ExplicitTop = -3
         ExplicitWidth = 658
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -67,7 +64,7 @@ inherited ReportPromoParamsForm: TReportPromoParamsForm
             Width = 109
           end
           object colPlanAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1083#1072#1085#1072
+            Caption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'PlanAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.MinValue = True

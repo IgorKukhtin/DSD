@@ -244,6 +244,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
             Options.Editing = False
             Width = 105
           end
+          object clisDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
         end
       end
     end
@@ -343,6 +351,14 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'InvNumber_full'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isDeferred'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isDeferred'
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072

@@ -16,8 +16,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalCode Integer, JuridicalName TVarChar
              , TotalSumm TFloat
               )
-
-
 AS
 $BODY$
    DECLARE vbUserId Integer;

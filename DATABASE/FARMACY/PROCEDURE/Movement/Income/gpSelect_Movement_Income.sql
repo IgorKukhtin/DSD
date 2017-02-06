@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PayColor Integer
              , DateLastPay TDateTime
              , Movement_OrderId Integer, Movement_OrderInvNumber TVarChar, Movement_OrderInvNumber_full TVarChar
+             , isDeferred Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , PaymentDays TFloat
@@ -179,6 +180,7 @@ BEGIN
              , Movement_Order.Id                    AS Movement_OrderId
              , Movement_Order.InvNumber             AS Movement_OrderInvNumber
              , ('№ ' || Movement_Order.InvNumber ||' от '||TO_CHAR(Movement_Order.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS Movement_OrderInvNumber_full
+             , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) :: Boolean  AS isDeferred
 
              , Object_Insert.ValueData              AS InsertName
              , MovementDate_Insert.ValueData        AS InsertDate
@@ -279,6 +281,10 @@ BEGIN
                                        ON MLM_Order.MovementId = Movement_Income.Id
                                       AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
         LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MLM_Order.MovementChildId
+        -- заказ отложен
+        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                  ON MovementBoolean_Deferred.MovementId = Movement_Order.Id
+                                 AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
 
         GROUP BY Movement_Income.Id
                , Movement_Income.InvNumber
@@ -309,7 +315,8 @@ BEGIN
                , MovementBoolean_Registered.ValueData 
                , Movement_Income.PayColor
                , Movement_Order.Id              
-               , Movement_Order.InvNumber       
+               , Movement_Order.InvNumber  
+               , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)     
                , Object_Insert.ValueData        
                , MovementDate_Insert.ValueData  
                , Object_Update.ValueData        

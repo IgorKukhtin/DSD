@@ -53,6 +53,7 @@ type
     MobileEmployeeComment: TcxGridDBColumn;
     ItemName: TcxGridDBColumn;
     isPrev: TcxGridDBColumn;
+    Amount_ProfitLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

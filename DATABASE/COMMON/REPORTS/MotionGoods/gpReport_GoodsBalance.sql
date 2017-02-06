@@ -517,7 +517,7 @@ BEGIN
          , tmpPriceEnd AS (-- Цены Прайс конечные !!!временно * 1.2!!!
                            SELECT lfObjectHistory_PriceListItem.GoodsId
                                 , (lfObjectHistory_PriceListItem.ValuePrice * 1.2) :: TFloat AS Price
-                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate) AS lfObjectHistory_PriceListItem
+                           FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= inEndDate + INTERVAL '1 DAY') AS lfObjectHistory_PriceListItem
                            WHERE lfObjectHistory_PriceListItem.ValuePrice <> 0
                           )   
 

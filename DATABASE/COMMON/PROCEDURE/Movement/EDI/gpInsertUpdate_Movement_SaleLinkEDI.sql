@@ -223,7 +223,7 @@ BEGIN
 
 
 -- временно
-if inUserId = 5
+if vbUserId = 5
 then
     RAISE EXCEPTION 'Admin - Err _end';
     -- 'ѕовторите действие через 3 мин.'

@@ -47,6 +47,10 @@ BEGIN
              vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
              IF vbUnitKey = '' THEN vbUnitKey := '0'; END IF;   
              vbUnitId := vbUnitKey :: Integer;
+
+             IF vbUnitId <> 0
+             THEN
+
              -- Проверка
              IF COALESCE(vbUnitId, 0) = 0 THEN
                RAISE EXCEPTION 'Ошибка.Для пользователя <%> не установлено значение <Подразделение>.', lfGet_Object_ValueData (vbUserId);
@@ -73,6 +77,8 @@ BEGIN
                                        LEFT JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
                                                              AND DefaultValue.UserKeyId    = vbUserId
                                   WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit'));
+             END IF;
+
              END IF;
              
              -- Заменили пользователю - АПТЕКУ

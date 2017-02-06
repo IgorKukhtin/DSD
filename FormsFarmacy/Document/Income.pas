@@ -121,6 +121,7 @@ type
     colisPrint: TcxGridDBColumn;
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
+    cbisDeferred: TcxCheckBox;
   private
     { Private declarations }
   public

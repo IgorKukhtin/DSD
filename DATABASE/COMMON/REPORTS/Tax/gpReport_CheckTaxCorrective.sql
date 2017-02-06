@@ -194,9 +194,11 @@ BEGIN
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      -- , MIFloat_Price.ValueData                       AS Price
-                     , CASE WHEN Movement.DiscountPercent <> 0
+                     , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                 THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                            WHEN Movement.DiscountPercent <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 - Movement.DiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                            WHEN Movement.ExtraChargesPercent <> 0
+                            WHEN Movement.ExtraChargesPercent <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 + Movement.ExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
                        END AS Price
@@ -204,6 +206,7 @@ BEGIN
                      , -1 * SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
                 FROM (SELECT Movement.Id
+                           , Movement.DescId AS MovementDescId
                            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
                            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
                       FROM MovementDate AS MovementDate_OperDatePartner
@@ -234,6 +237,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                 ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -276,6 +282,8 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , MIFloat_ChangePercent.ValueData
+                       , Movement.MovementDescId
                        , Movement.DiscountPercent
                        , Movement.ExtraChargesPercent
                UNION ALL
@@ -296,9 +304,11 @@ BEGIN
                      , MovementItem.ObjectId                         AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                      -- , MIFloat_Price.ValueData                      AS Price
-                     , CASE WHEN Movement.DiscountPercent <> 0
+                     , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                 THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                            WHEN Movement.DiscountPercent <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 - Movement.DiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                            WHEN Movement.ExtraChargesPercent <> 0
+                            WHEN Movement.ExtraChargesPercent <> 0 AND Movement.MovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
                                  THEN CAST ( (1 + Movement.ExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                             ELSE COALESCE (MIFloat_Price.ValueData, 0)
                        END AS Price
@@ -307,6 +317,7 @@ BEGIN
                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
                 FROM (SELECT Movement.Id
+                           , Movement.DescId AS MovementDescId
                            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
                            , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
                       FROM MovementDate AS MovementDate_OperDatePartner
@@ -345,6 +356,9 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                  ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                 AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                     LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                 ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -386,6 +400,8 @@ BEGIN
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
+                       , MIFloat_ChangePercent.ValueData
+                       , Movement.MovementDescId
                        , Movement.DiscountPercent
                        , Movement.ExtraChargesPercent
                UNION ALL
@@ -783,4 +799,4 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, Integer, TVarC
 */
 
 -- тест
--- SELECT * FROM gpReport_CheckTaxCorrective (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_CheckTaxCorrective (inStartDate:= '01.01.2017', inEndDate:= '01.01.2017', inDocumentTaxKindId:= 0, inSession:= zfCalc_UserAdmin());

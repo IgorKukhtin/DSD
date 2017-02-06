@@ -90,6 +90,7 @@ type
     actPrintSticker: TdsdPrintAction;
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
+    colisDeferred: TcxGridDBColumn;
   private
     { Private declarations }
   public

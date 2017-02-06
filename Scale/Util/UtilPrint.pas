@@ -403,7 +403,7 @@ begin
           //
           try
              //Print
-             if MovementDescId = zc_Movement_Sale
+             if (MovementDescId = zc_Movement_Sale) or (MovementDescId = zc_Movement_SendOnPrice)
              then Print_TransportDocument(MovementId,MovementId_sale,OperDate,myPrintCount,isPreview)
              else begin ShowMessage ('Ошибка.Форма печати <ТТН> не найдена.');exit;end;
           except

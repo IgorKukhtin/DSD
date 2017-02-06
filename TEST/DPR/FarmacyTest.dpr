@@ -484,7 +484,10 @@ uses
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
   DataTimeDialog in '..\..\FormsFarmacy\Document\DataTimeDialog.pas' {DataTimeDialogForm: TParentForm},
   MarginCategory_Cross in '..\..\FormsFarmacy\Object\MarginCategory_Cross.pas' {MarginCategory_CrossForm: TParentForm},
-  MarginCategory_Total in '..\..\FormsFarmacy\Object\MarginCategory_Total.pas' {MarginCategory_TotalForm: TParentForm};
+  MarginCategory_Total in '..\..\FormsFarmacy\Object\MarginCategory_Total.pas' {MarginCategory_TotalForm: TParentForm},
+  MarginCategory_CrossDialog in '..\..\FormsFarmacy\Object\MarginCategory_CrossDialog.pas' {MarginCategory_CrossDialogForm: TParentForm},
+  PromoUnit in '..\..\FormsFarmacy\Document\PromoUnit.pas' {PromoUnitForm: TParentForm},
+  PromoUnitJournal in '..\..\FormsFarmacy\Document\PromoUnitJournal.pas' {PromoUnitJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

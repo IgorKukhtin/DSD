@@ -207,8 +207,8 @@ BEGIN
 -- IF inBranchId <> 8379 THEN RETURN; END IF;
 
 -- !!!¬–≈ћ≈ЌЌќ!!!
- IF inStartDate = '01.01.2017' THEN inItearationCount:= 100; END IF;
--- IF inItearationCount >= 800 THEN inItearationCount:= 400; END IF;
+-- IF inStartDate = '01.01.2017' THEN inItearationCount:= 100; END IF;
+ IF inItearationCount >= 800 THEN inItearationCount:= 400; END IF;
 -- !!!¬–≈ћ≈ЌЌќ!!!
 
      -- !!!если не филиал, тогда начальна€ дата всегда 1-ое число мес€ца!!!
@@ -1308,5 +1308,5 @@ SELECT * FROM HistoryCost WHERE ('01.12.2016' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.12.2016', inEndDate:= '31.12.2016', inBranchId:= 0, inItearationCount:= 40, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext

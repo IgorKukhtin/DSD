@@ -327,7 +327,7 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_Taxi.ValueData, 0) ELSE 0 END AS SumTransportTaxi
+                                             THEN COALESCE (MIFloat_TaxiMore.ValueData, 0) ELSE 0 END AS SumTransportTaxi
 
                                  , 0 AS StartOdometre
                                  , 0 AS EndOdometre
@@ -376,9 +376,9 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_RatePrice
                                                              ON MIFloat_RatePrice.MovementItemId =  MovementItem.Id
                                                             AND MIFloat_RatePrice.DescId = zc_MIFloat_RatePrice()
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Taxi
-                                                             ON MIFloat_Taxi.MovementItemId =  MovementItem.Id
-                                                            AND MIFloat_Taxi.DescId = zc_MIFloat_Taxi()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_TaxiMore
+                                                             ON MIFloat_TaxiMore.MovementItemId =  MovementItem.Id
+                                                            AND MIFloat_TaxiMore.DescId = zc_MIFloat_TaxiMore()
 
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                                                   ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id

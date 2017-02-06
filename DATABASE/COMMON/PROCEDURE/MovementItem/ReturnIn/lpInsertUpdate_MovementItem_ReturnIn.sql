@@ -26,6 +26,13 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+     -- проверка
+     IF COALESCE (inGoodsId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Товар не определен.';
+     END IF;
+
+
      -- параметры акции - на "Дата накладной у контрагента"
      SELECT tmp.MovementId
           , CASE WHEN tmp.isChangePercent = TRUE

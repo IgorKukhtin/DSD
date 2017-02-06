@@ -345,13 +345,21 @@ inherited IncomeJournalForm: TIncomeJournalForm
             Width = 85
           end
           object colMovement_OrderInvNumber_full: TcxGridDBColumn
-            Caption = #1047#1072#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+            Caption = #1047#1072#1103#1074#1082#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
             DataBinding.FieldName = 'Movement_OrderInvNumber_full'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 80
+          end
+          object clisDeferred: TcxGridDBColumn
+            Caption = #1054#1090#1083#1086#1078#1077#1085#1072' ('#1079#1072#1103#1074#1082#1072')'
+            DataBinding.FieldName = 'isDeferred'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
           object clInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
@@ -1071,6 +1079,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 320
@@ -1229,8 +1244,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 496
-    Top = 104
+    Left = 488
+    Top = 152
   end
   object spGetDataForSendNew: TdsdStoredProc
     StoredProcName = 'gpGetDataForSendNew'
@@ -1261,8 +1276,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 104
+    Left = 440
+    Top = 152
   end
   object spUpdateIncome_PartnerData: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Income_PartnerData'

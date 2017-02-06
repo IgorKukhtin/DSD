@@ -3,7 +3,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   Top = 0
   BorderStyle = bsToolWindow
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072'>'
-  ClientHeight = 340
+  ClientHeight = 382
   ClientWidth = 347
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   AddOnFormData.Params = dsdFormParams
   DesignSize = (
     347
-    340)
+    382)
   PixelsPerInch = 96
   TextHeight = 13
   object edPersonal: TcxButtonEdit
@@ -44,7 +44,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 94
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'/'#1057#1086#1090#1088#1091#1076#1085#1080#1082'/'#1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
     StyleDisabled.LookAndFeel.Kind = lfOffice11
@@ -57,7 +57,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   end
   object cxButton1: TcxButton
     Left = 180
-    Top = 304
+    Top = 346
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -67,10 +67,11 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 3
+    ExplicitTop = 304
   end
   object cxButton2: TcxButton
     Left = 262
-    Top = 304
+    Top = 346
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -81,6 +82,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
     LookAndFeel.NativeStyle = False
     ModalResult = 8
     TabOrder = 4
+    ExplicitTop = 304
   end
   object lblID: TcxLabel
     Left = 10
@@ -117,7 +119,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   end
   object edComment: TcxTextEdit
     Left = 8
-    Top = 273
+    Top = 317
     Style.BorderStyle = ebsUltraFlat
     Style.LookAndFeel.Kind = lfOffice11
     Style.LookAndFeel.NativeStyle = False
@@ -132,7 +134,7 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
   end
   object lblComments: TcxLabel
     Left = 10
-    Top = 256
+    Top = 300
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     Transparent = True
   end
@@ -315,6 +317,40 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
       Width = 77
     end
   end
+  object cxLabel2: TcxLabel
+    Left = 10
+    Top = 256
+    Caption = #1056#1077#1075#1080#1086#1085
+    Style.LookAndFeel.Kind = lfOffice11
+    Style.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.Kind = lfOffice11
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleFocused.LookAndFeel.Kind = lfOffice11
+    StyleFocused.LookAndFeel.NativeStyle = False
+    StyleHot.LookAndFeel.Kind = lfOffice11
+    StyleHot.LookAndFeel.NativeStyle = False
+    Transparent = True
+  end
+  object edRegion: TcxButtonEdit
+    Left = 8
+    Top = 271
+    Properties.Buttons = <
+      item
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    Style.BorderStyle = ebsUltraFlat
+    Style.LookAndFeel.Kind = lfOffice11
+    Style.LookAndFeel.NativeStyle = False
+    StyleDisabled.LookAndFeel.Kind = lfOffice11
+    StyleDisabled.LookAndFeel.NativeStyle = False
+    StyleFocused.LookAndFeel.Kind = lfOffice11
+    StyleFocused.LookAndFeel.NativeStyle = False
+    StyleHot.LookAndFeel.Kind = lfOffice11
+    StyleHot.LookAndFeel.NativeStyle = False
+    TabOrder = 14
+    Width = 329
+  end
   object ActionList: TActionList
     Left = 44
     Top = 5
@@ -427,6 +463,14 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRegionId'
+        Value = Null
+        Component = RegionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
@@ -527,6 +571,21 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RegionId'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RegionName'
+        Value = Null
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 281
@@ -551,11 +610,11 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
     LookupControl = edPersonal
     isShowModal = True
     Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TPersonalUnitFounder_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TPersonalUnitFounder_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -603,5 +662,34 @@ object MobileEmployeeEditForm: TMobileEmployeeEditForm
       end>
     Left = 256
     Top = 124
+  end
+  object RegionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRegion
+    isShowModal = True
+    Key = '0'
+    FormNameParam.Value = 'TRegionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRegionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = RegionGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RegionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 268
   end
 end

@@ -1812,6 +1812,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnitFounder_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalUnitFounder_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSourceFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSourceFuel_ObjectForm');
 
@@ -2190,6 +2193,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_TrasportChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_TrasportChoiceForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ObjectToForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMember_ObjectToForm');
 end;
 
 procedure TLoadFormTest.LoadMemberExternalFormTest;

@@ -753,7 +753,9 @@ BEGIN
           )
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
-                , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND Movement.DescId = zc_Movement_ReturnIn()
+                            THEN CAST ( (1 + MIFloat_ChangePercent.ValueData       / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       WHEN MovementFloat_ChangePercent.ValueData <> 0 AND Movement.DescId <> zc_Movement_ReturnIn()
                             THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
                   END AS Price
@@ -775,11 +777,16 @@ BEGIN
                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                            ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                           AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
                 LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                         ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
            GROUP BY MovementItem.ObjectId
                   , MIFloat_Price.ValueData
+                  , MIFloat_ChangePercent.ValueData
+                  , Movement.DescId
                   , MovementFloat_ChangePercent.ValueData
           )
 

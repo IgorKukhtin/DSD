@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileBills(
 )
 RETURNS TABLE (Id Integer, MobileEmployeeId Integer, MobileEmployeeCode Integer, MobileEmployeeName TVarChar, MobileEmployeeComment TVarChar
              , Amount TFloat
+             , Amount_ProfitLoss TFloat
              , CurrMonthly TFloat, CurrNavigator TFloat, PrevNavigator TFloat
              , MobileLimit TFloat, PrevLimit TFloat, DutyLimit TFloat, Overlimit TFloat
              , PrevMonthly TFloat
@@ -41,6 +42,8 @@ BEGIN
            , ObjectString_Comment.ValueData     AS MobileEmployeeComment
 
            , MovementItem.Amount                AS Amount
+           , (COALESCE (MovementItem.Amount, 0) - COALESCE (MIFloat_Overlimit.ValueData, 0)) :: TFloat AS Amount_ProfitLoss
+
            , MIFloat_CurrMonthly.ValueData      AS CurrMonthly
            , MIFloat_CurrNavigator.ValueData    AS CurrNavigator
 
@@ -62,8 +65,8 @@ BEGIN
            , Object_Unit.ValueData              AS UnitName
            , Object_Position.ValueData          AS PositionName
 
-           , Object_Employee_prev.Id             AS PrevEmployeeId
-           , Object_Employee_prev.ValueData      AS PrevEmployeeName
+           , Object_Employee_prev.Id            AS PrevEmployeeId
+           , Object_Employee_prev.ValueData     AS PrevEmployeeName
            , Object_Unit_prev.ValueData         AS UnitName_prev
            , Object_Position_prev.ValueData     AS PositionName_prev
            , Object_MobileTariff.Id             AS MobileTariffId
@@ -116,11 +119,6 @@ BEGIN
                                         ON MIFloat_PrevMonthly.MovementItemId = MovementItem.Id
                                        AND MIFloat_PrevMonthly.DescId = zc_MIFloat_PrevMonthly()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Region
-                                             ON MILinkObject_Region.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Region.DescId = zc_MILinkObject_Region()
-            LEFT JOIN Object AS Object_Region ON Object_Region.Id = MILinkObject_Region.ObjectId
-
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee
                                              ON MILinkObject_Employee.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Employee.DescId = zc_MILinkObject_Employee()
@@ -167,6 +165,11 @@ BEGIN
                                              ON MILinkObject_PrevMobileTariff.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PrevMobileTariff.DescId = zc_MILinkObject_PrevMobileTariff()
             LEFT JOIN Object AS Object_PrevMobileTariff ON Object_PrevMobileTariff.Id = MILinkObject_PrevMobileTariff.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_MobileEmployee_Region
+                                 ON ObjectLink_MobileEmployee_Region.ObjectId = Object_MobileEmployee.Id 
+                                AND ObjectLink_MobileEmployee_Region.DescId = zc_ObjectLink_MobileEmployee_Region()
+            LEFT JOIN Object AS Object_Region ON Object_Region.Id = ObjectLink_MobileEmployee_Region.ChildObjectId
             ;
 
 END;

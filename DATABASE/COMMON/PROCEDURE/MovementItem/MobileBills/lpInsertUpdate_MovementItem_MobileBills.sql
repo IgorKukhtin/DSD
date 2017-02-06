@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_MobileBills()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_MobileBills (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_MobileBills (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_MobileBills(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -15,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_MobileBills(
     IN inDutyLimit           TFloat    , -- 
     IN inOverlimit           TFloat    , -- 
     IN inPrevMonthly         TFloat    , -- 
-    IN inRegionId            Integer   , --
+--    IN inRegionId            Integer   , --
     IN inEmployeeId          Integer   , --
     IN inPrevEmployeeId      Integer   , --
     IN inMobileTariffId      Integer   , --
@@ -52,7 +53,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PrevMonthly(), ioId, inPrevMonthly);
     
      -- сохранили св€зь с <>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Region(), ioId, inRegionId);
+     --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Region(), ioId, inRegionId);
      -- сохранили св€зь с <>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Employee(), ioId, inEmployeeId);
      -- сохранили св€зь с <>

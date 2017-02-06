@@ -113,7 +113,8 @@ BEGIN
               , (tmpData.TotalSumma - tmpData.SummaPromo)       :: TFloat AS SummaSale
               , CASE WHEN tmpData.TotalSumma <> 0 THEN (tmpData.SummaPromo * 100 / tmpData.TotalSumma) ELSE 0 END :: TFloat AS PercentPromo
               , COALESCE (tmpPlanPromo.PlanAmount,0)            :: TFloat AS PlanAmount
-              , (COALESCE (tmpData.SummaPromo,0) - COALESCE (tmpPlanPromo.PlanAmount,0))                          :: TFloat AS DiffAmount
+              , ((CASE WHEN tmpData.TotalSumma <> 0 THEN (tmpData.SummaPromo * 100 / tmpData.TotalSumma) ELSE 0 END) 
+                  - COALESCE (tmpPlanPromo.PlanAmount,0) )      :: TFloat AS DiffAmount
           FROM tmpData
                LEFT JOIN tmpPlanPromo ON tmpPlanPromo.UnitId = tmpData.UnitId 
                                      AND tmpPlanPromo.PlanDate = tmpData.OperDate 

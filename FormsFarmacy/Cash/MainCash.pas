@@ -678,6 +678,7 @@ var
   UID,CheckNumber: String;
   lMsg: String;
   fErr: Boolean;
+  dsdSave: TdsdStoredProc;
 begin
   if CheckCDS.RecordCount = 0 then exit;
   PaidType:=ptMoney;
@@ -701,6 +702,25 @@ begin
   //проверили что есть остаток
   if fCheck_RemainsError = false then exit;
 
+  //проверили что этот чек Не был проведен другой кассой - 04.02.2017
+  dsdSave := TdsdStoredProc.Create(nil);
+  try
+     //Проверить в каком состоянии документ.
+     dsdSave.StoredProcName := 'gpGet_Movement_CheckState';
+     dsdSave.OutputType := otResult;
+     dsdSave.Params.Clear;
+     dsdSave.Params.AddParam('inId',ftInteger,ptInput,FormParams.ParamByName('CheckId').Value);
+     dsdSave.Params.AddParam('outState',ftInteger,ptOutput,Null);
+     dsdSave.Execute(False,False);
+     if VarToStr(dsdSave.Params.ParamByName('outState').Value) = '2' then //проведен
+     Begin
+          ShowMessage ('Ошибка.Данный чек уже сохранен другой кассой.Для продолжения - необходимо обнулить чек и набрать позиции заново.');
+          exit;
+     End;
+  finally
+     freeAndNil(dsdSave);
+  end;
+
   //послали на печать
   try
     if PutCheckToCash(MainCashForm.ASalerCash, MainCashForm.PaidType, FiscalNumber, CheckNumber) then
@@ -716,7 +736,7 @@ begin
 
       ShapeState.Brush.Color := clRed;
       ShapeState.Repaint;
-      if SaveLocal(CheckCDS,
+        if SaveLocal(CheckCDS,
                    FormParams.ParamByName('ManagerId').Value,
                    FormParams.ParamByName('ManagerName').Value,
                    FormParams.ParamByName('BayerName').Value,
@@ -2880,6 +2900,7 @@ var
   dsdSave: TdsdStoredProc;
   I: Integer;
   Trd:  TRefreshDiffThread;
+  fError_isComplete: Boolean;
 begin
   inherited;
   if gc_User.Local then exit;
@@ -2892,9 +2913,9 @@ begin
       InterlockedIncrement(CountRRT);
       InterlockedIncrement(CountSaveThread);
       try
-       
+
          WaitForSingleObject(MutexDBF, INFINITE);
-       
+
          FLocalDataBaseHead.Active:=True;
          FLocalDataBaseBody.Active:=True;
         try
@@ -2961,8 +2982,11 @@ begin
           FLocalDataBaseHead.Active:=False;
           FLocalDataBaseBody.Active:=False;
           ReleaseMutex(MutexDBF);
-        
+
         end; // Загрузили чек в head and body
+
+        //т.е. чек можно потом удалить из ДБФ
+        fError_isComplete:= FALSE; // 04.02.2017
 
         if Find AND NOT HEAD.SAVE then
         Begin
@@ -2980,6 +3004,9 @@ begin
               Begin
                 Head.SAVE := True;
                 Head.NEEDCOMPL := False;
+
+                //т.е. чек НЕЛЬЗЯ потом удалить из ДБФ
+                fError_isComplete:= TRUE; // 04.02.2017
               End
               else
               //Если не проведен
@@ -3164,9 +3191,9 @@ begin
           finally
             freeAndNil(dsdSave);
           end;
-          //удаляем проведенный чек
-          if Head.COMPL then
-          Begin
+          //удаляем проведенный чек - если можно ... 04.02.2017
+          if Head.COMPL AND (fError_isComplete = FALSE)
+          then Begin
             WaitForSingleObject(MutexDBF, INFINITE);
             FLocalDataBaseHead.Active:=True;
             FLocalDataBaseBody.Active:=True;
@@ -3191,10 +3218,10 @@ begin
             end;
           End;
         end
-        //если проводить не нужно
+        //если проводить не нужно и если можно ... 04.02.2017
         ELSE
-        if find and Head.SAVE then
-        BEGIN
+        if find and Head.SAVE and (fError_isComplete = FALSE)
+        then BEGIN
           if (Head.MANAGER <> 0) or (Head.BAYER <> '') then
           Begin
            //было

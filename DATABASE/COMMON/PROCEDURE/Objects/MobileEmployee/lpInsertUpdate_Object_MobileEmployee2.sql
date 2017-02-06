@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_MobileEmployee  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MobileEmployee2 (Integer,Integer,TVarChar,TFloat,TFloat,TFloat,TVarChar,Integer,Integer,Integer,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MobileEmployee2(
  INOUT ioId                       Integer   ,    -- ключ объекта <> 
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MobileEmployee2(
     IN inComment                  TVarChar  ,    -- Комментарий
     IN inPersonalId               Integer   ,    -- Сотрудники
     IN inMobileTariffId           Integer   ,    -- Тарифы мобильных операторов
+    IN inRegionId                 Integer   ,    -- регион
     IN inUserId                   Integer        -- сессия пользователя
 )
  RETURNS Integer AS
@@ -39,7 +41,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_Personal(), ioId, inPersonalId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_MobileTariff(), ioId, inMobileTariffId);
-
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_MobileEmployee_Region(), ioId, inRegionId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);

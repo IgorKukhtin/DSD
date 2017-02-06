@@ -933,12 +933,12 @@ BEGIN
                                                       inSession           := vbUserId::TVarChar);
     -- 3
     vbImportTypeItemId := 0;
-    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummNalogRecalc');
+    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inFIO');
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 3, 
-                                                                inName          := 'inSummNalogRecalc', 
-                                                                inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Сумма Налоги - удержания с ЗП для распределения', 
+                                                                inName          := 'inFIO', 
+                                                                inParamType     := 'ftString', 
+                                                                inUserParamName := 'ФИО',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -947,16 +947,16 @@ BEGIN
                                                       inName              := 'B',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
-                                                      inDefaultValue      := NULL::TVarChar,
+                                                      inDefaultValue      := NULL::TVarCHar,
                                                       inSession           := vbUserId::TVarChar);
     -- 4
     vbImportTypeItemId := 0;
-    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummCardRecalc1');
+    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummNalogRecalc');
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 4, 
-                                                                inName          := 'inSummCardRecalc1', 
+                                                                inName          := 'inSummNalogRecalc', 
                                                                 inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Сумма1 на карточку (БН) для распределения', 
+                                                                inUserParamName := 'Сумма Налоги - удержания с ЗП для распределения', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -967,15 +967,14 @@ BEGIN
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarChar,
                                                       inSession           := vbUserId::TVarChar);
-                                              
     -- 5
     vbImportTypeItemId := 0;
-    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummCardRecalc2');
+    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummCardRecalc1');
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
-                                                                inParamNumber   := 4, 
-                                                                inName          := 'inSummCardRecalc2', 
+                                                                inParamNumber   := 5, 
+                                                                inName          := 'inSummCardRecalc1', 
                                                                 inParamType     := 'ftFloat', 
-                                                                inUserParamName := 'Сумма2 на карточку (БН) для распределения', 
+                                                                inUserParamName := 'Сумма1 на карточку (БН) для распределения', 
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;
@@ -985,6 +984,25 @@ BEGIN
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarChar,
+                                                      inSession           := vbUserId::TVarChar);
+                                              
+    -- 6
+    vbImportTypeItemId := 0;
+    vbImportTypeItemId:= (SELECT Id FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inSummCardRecalc2');
+    vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
+                                                                inParamNumber   := 6, 
+                                                                inName          := 'inSummCardRecalc2', 
+                                                                inParamType     := 'ftFloat', 
+                                                                inUserParamName := 'Сумма2 на карточку (БН) для распределения', 
+                                                                inImportTypeId  := vbImportTypeId, 
+                                                                inSession       := vbUserId::TVarChar);
+    vbImportSettingsItem := 0;
+    vbImportSettingsItem := (SELECT Id FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId);
+    PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
+                                                      inName              := '',
+                                                      inImportSettingsId  := vbImportSettingId,
+                                                      inImportTypeItemsId := vbImportTypeItemId,
+                                                      inDefaultValue      := '0',
                                                       inSession           := vbUserId::TVarChar);
 
 END $$;
