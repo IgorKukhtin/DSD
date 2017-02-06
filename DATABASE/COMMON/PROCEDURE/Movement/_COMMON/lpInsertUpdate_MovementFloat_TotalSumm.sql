@@ -583,13 +583,19 @@ BEGIN
 
                                -- !!!очень важное кол-во, для него расчет сумм!!!
                              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner(), zc_Movement_Income(), zc_Movement_ReturnOut())
+                                          AND MovementItem.DescId IN (zc_MI_Master())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                         ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                         WHEN MovementItem.DescId IN (zc_MI_Master())
+                                              THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                         ELSE 0
                                     END) AS OperCount_calc
                                -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
                              , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale())
+                                          AND MovementItem.DescId IN (zc_MI_Master())
                                               THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0)
-                                         ELSE MovementItem.Amount
+                                         WHEN MovementItem.DescId IN (zc_MI_Master())
+                                              THEN MovementItem.Amount
+                                         ELSE 0
                                     END) AS OperCount_calcFrom
 
                              , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS OperCount_Master

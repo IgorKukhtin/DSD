@@ -736,7 +736,7 @@ begin
 
       ShapeState.Brush.Color := clRed;
       ShapeState.Repaint;
-      if SaveLocal(CheckCDS,
+        if SaveLocal(CheckCDS,
                    FormParams.ParamByName('ManagerId').Value,
                    FormParams.ParamByName('ManagerName').Value,
                    FormParams.ParamByName('BayerName').Value,
