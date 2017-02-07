@@ -78,9 +78,9 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<Debugger_HostApplication>D:\Documents\RAD Studio\Projects\DSD.git\BIN\FarmacyCashServise.exe</Debugger_HostApplication>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.11.30;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.11.31;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
 			<VerInfo_Release>11</VerInfo_Release>
-			<VerInfo_Build>30</VerInfo_Build>
+			<VerInfo_Build>31</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
