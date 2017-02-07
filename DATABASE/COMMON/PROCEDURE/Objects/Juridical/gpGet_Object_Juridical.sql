@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                DayTaxSummary TFloat,
                GLNCode TVarChar,
-               isCorporate Boolean,  isTaxSummary Boolean, isDiscountPrice Boolean,
+               isCorporate Boolean,  isTaxSummary Boolean, isDiscountPrice Boolean, isPriceWithVAT Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                RetailId Integer, RetailName TVarChar,
@@ -41,6 +41,7 @@ BEGIN
            , CAST (false as Boolean)  AS isCorporate
            , CAST (false as Boolean)  AS isTaxSummary
            , CAST (false as Boolean)  AS isDiscountPrice
+           , CAST (false as Boolean)  AS isPriceWithVAT
 
            , CAST (0 as Integer)    AS JuridicalGroupId
            , CAST ('' as TVarChar)  AS JuridicalGroupName
@@ -80,6 +81,7 @@ BEGIN
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
            , COALESCE (ObjectBoolean_isTaxSummary.ValueData, False::Boolean)     AS isTaxSummary        
            , COALESCE (ObjectBoolean_isDiscountPrice.ValueData, False::Boolean)  AS isDiscountPrice   
+           , COALESCE (ObjectBoolean_isPriceWithVAT.ValueData, False::Boolean)   AS isPriceWithVAT
 
            , Object_JuridicalGroup.Id         AS JuridicalGroupId
            , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
@@ -125,6 +127,10 @@ BEGIN
                                    ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
            
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                                   ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                                  AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
+
            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                 ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id
                                AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
@@ -179,6 +185,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.02.17         * add isPriceWithVAT
  17.12.15         * add isDiscountPrice
  21.05.15         * add  isTaxSummary
  20,11,14         * add  Retail

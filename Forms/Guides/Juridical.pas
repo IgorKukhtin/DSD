@@ -96,6 +96,7 @@ type
     bbShowAll: TdxBarButton;
     clisDiscountPrice: TcxGridDBColumn;
     isLongUKTZED: TcxGridDBColumn;
+    colisPriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

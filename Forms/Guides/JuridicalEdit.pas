@@ -136,6 +136,7 @@ type
     cbisDiscountPrice: TcxCheckBox;
     edInvNumberBranch: TcxDBTextEdit;
     cxLabel23: TcxLabel;
+    cbisPriceWithVAT: TcxCheckBox;
   private
     { Private declarations }
   public
