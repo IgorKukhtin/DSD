@@ -132,8 +132,8 @@ BEGIN
                -- √лавное ёр.лицо: из какой кассы будет выплачено
              , zc_Juridical_Basis() AS JuridicalId_Basis
 
-             , COALESCE (MILinkObject_Unit.ObjectId, 0)                      AS UnitId
-             , COALESCE (MILinkObject_Position.ObjectId, 0)                  AS PositionId
+             , COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, 0))          AS UnitId
+             , COALESCE (ObjectLink_PersonalTo_Position.ChildObjectId, COALESCE (MILinkObject_Position.ObjectId, 0))  AS PositionId
              , COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, 0) AS PersonalServiceListId
 
                -- ‘илиал Ѕаланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
@@ -176,18 +176,22 @@ BEGIN
                                           ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                          AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
 
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
-                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummNalog()
-
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
              LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
                                                 AND Object_ObjectTo.DescId = zc_Object_Personal()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit ON ObjectLink_PersonalTo_Unit.ObjectId = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                               AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Position ON ObjectLink_PersonalTo_Position.ObjectId = ObjectLink_Member_ObjectTo.ChildObjectId
+                                                                   AND ObjectLink_PersonalTo_Position.DescId = zc_ObjectLink_Personal_Position()
+
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, 0))
+                                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummNalog()
 
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_PersonalService()
