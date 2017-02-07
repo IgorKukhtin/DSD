@@ -340,6 +340,14 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 73
       end
+      object colisPriceWithVAT: TcxGridDBColumn
+        Caption = #1055#1077#1095'. '#1094#1077#1085#1091' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'isPriceWithVAT'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 71
+      end
       object isLongUKTZED: TcxGridDBColumn
         Caption = '10-'#1090#1080' '#1079#1085#1072#1095#1085#1099#1081' '#1082#1086#1076' '#1059#1050#1058' '#1047#1045#1044
         DataBinding.FieldName = 'isLongUKTZED'
