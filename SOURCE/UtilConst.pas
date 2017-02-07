@@ -13,6 +13,30 @@ var
 
   ConnectionPath: string = '..\init\init.php';
 
+//  EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
+//  ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
+//  LocalProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
+//  FunctionPath: string = '..\DATABASE\COMMON\Function\';
+//  ReportsPath: string = '..\DATABASE\COMMON\Reports\';
+//  ViewPath: string = '..\DATABASE\COMMON\View\';
+//  LocalViewPath: string = '..\DATABASE\MEAT\View\';
+//  ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
+//  LocalProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
+//  gc_AdminPassword: string = 'Admin';
+
+{$IFDEF Boutique}
+  EnumPath: string = '..\DATABASE\Boutique\METADATA\Enum\';
+  ProcedurePath: string = '..\DATABASE\Boutique\PROCEDURE\';
+  LocalProcedurePath: string = '..\DATABASE\Boutique\PROCEDURE\';
+  FunctionPath: string = '..\DATABASE\Boutique\Function\';
+  ReportsPath: string = '..\DATABASE\Boutique\Reports\';
+  ViewPath: string = '..\DATABASE\Boutique\View\';
+  LocalViewPath: string = '..\DATABASE\Boutique\View\';
+  ProcessPath: string = '..\DATABASE\Boutique\PROCESS\';
+  LocalProcessPath: string = '..\DATABASE\Boutique\PROCESS\';
+  gc_AdminPassword: string = 'Admin';
+
+{$ELSE}
   EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
   ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
   LocalProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
@@ -23,6 +47,10 @@ var
   ProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
   LocalProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
   gc_AdminPassword: string = 'Admin';
+
+{$ENDIF}
+
+
 
 
   LocalFormatSettings: TFormatSettings;

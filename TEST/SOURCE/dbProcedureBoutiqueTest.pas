@@ -1,4 +1,4 @@
-unit dbBoutiqueProcedureTest;
+unit dbProcedureBoutiqueTest;
 
 interface
 uses TestFramework, dbTest;
@@ -23,7 +23,7 @@ uses zLibUtil, utilConst;
 const
   FunctionPath = '..\DATABASE\Boutique\FUNCTION\';
   ReportsPath = '..\DATABASE\Boutique\REPORTS\';
-
+  ProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
 { TdbProcedureTest }
 
 procedure TdbProcedureTest.CreateHistoryProcedure;

@@ -34,6 +34,12 @@
 			<CfgParent>Base</CfgParent>
 			<Base>true</Base>
 		</PropertyGroup>
+		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+			<Cfg_2_Win32>true</Cfg_2_Win32>
+			<CfgParent>Cfg_2</CfgParent>
+			<Cfg_2>true</Cfg_2>
+			<Base>true</Base>
+		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
 			<DCC_UsePackage>fmx;IndySystem;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapServer;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;dsnap;fmxase;IndyCore;inetdbxpress;IPIndyImpl;bindcompfmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;xmlrtl;ibxpress;IndyProtocols;DBXMySQLDriver;soaprtl;bindengine;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
 			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
@@ -62,6 +68,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 			<DCC_RemoteDebug>false</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -69,6 +79,12 @@
 			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
 			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
 			<DCC_DebugInformation>false</DCC_DebugInformation>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+			<DCC_ExeOutput>..\BIN</DCC_ExeOutput>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<DCC_DcuOutput>..\TEMP</DCC_DcuOutput>
 		</PropertyGroup>
 		<ItemGroup>
 			<DelphiCompile Include="$(MainSource)">
@@ -215,6 +231,21 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
+					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfs16.bpl">File C:\Program Files\FastReports\LibD16\dclfs16.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\LibD16\dclfsDB16.bpl">File C:\Program Files\FastReports\LibD16\dclfsDB16.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxcs16.bpl">FastReport 4.0 Client/Server Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsbde16.bpl">FastScript 1.9 BDE Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxbde16.bpl">FastReport 4.0 BDE Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsado16.bpl">FastScript 1.9 ADO Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxado16.bpl">FastReport 4.0 ADO Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfsibx16.bpl">FastScript 1.9 IBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxibx16.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfrxdbx16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files\FastReports\FastReport 4\LibD16\dclfstee16.bpl">FastScript 1.9 Tee Components</Excluded_Packages>
+					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>

@@ -1,0 +1,377 @@
+-- Возвращаем с цифрами расчет и тип расценки
+
+     SELECT 
+           Object_StaffListCost.Id        AS Id
+ 
+         , ObjectFloat_Price.ValueData     AS Price
+         , ObjectString_Comment.ValueData  AS Comment
+                                                        
+         , Object_StaffList.Id            AS StaffListId
+         
+         , Object_ModelService.Id         AS ModelServiceId
+         , Object_ModelService.ValueData  AS ModelServiceName
+
+         , Object_StaffListCost.isErased  AS isErased
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+          LEFT JOIN Object AS Object_StaffList ON Object_StaffList.Id = ObjectLink_StaffListCost_StaffList.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+          LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = ObjectLink_StaffListCost_ModelService.ChildObjectId
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Price 
+                                ON ObjectFloat_Price.ObjectId = Object_StaffListCost.Id 
+                               AND ObjectFloat_Price.DescId = zc_ObjectFloat_StaffListCost_Price()
+          
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_StaffListCost.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_StaffListCost_Comment()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND Object_StaffList.Id = 12816
+
+
+А вот и список моделей начисления 
+     SELECT 
+           Object_ModelServiceItemMaster.Id    AS Id
+ 
+         , MovementDesc.Id  AS MovementDescId
+         , MovementDesc.ItemName  AS MovementDescName
+         , ObjectFloat_Ratio.ValueData         AS Ratio
+         , ObjectString_Comment.ValueData      AS Comment
+                                                        
+         , Object_From.Id          AS FromId
+         , Object_From.ValueData   AS FromName
+
+         , Object_To.Id         AS ToId
+         , Object_To.ValueData  AS ToName
+
+         , Object_SelectKind.Id          AS SelectKindId
+         , Object_SelectKind.ValueData   AS SelectKindName
+         
+         , Object_ModelService.Id         AS ModelServiceId
+         , Object_ModelService.ValueData  AS ModelServiceName
+
+         , Object_ModelServiceItemMaster.isErased AS isErased
+         
+     FROM OBJECT AS Object_ModelServiceItemMaster
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
+                               ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_From.DescId = zc_ObjectLink_ModelServiceItemMaster_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = ObjectLink_ModelServiceItemMaster_From.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_To
+                               ON ObjectLink_ModelServiceItemMaster_To.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_To.DescId = zc_ObjectLink_ModelServiceItemMaster_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemMaster_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_SelectKind
+                               ON ObjectLink_ModelServiceItemMaster_SelectKind.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_SelectKind.DescId = zc_ObjectLink_ModelServiceItemMaster_SelectKind()
+          LEFT JOIN Object AS Object_SelectKind ON Object_SelectKind.Id = ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId
+          
+          LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc 
+                                ON ObjectFloat_MovementDesc.ObjectId = Object_ModelServiceItemMaster.Id 
+                               AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_ModelServiceItemMaster_MovementDesc()
+          LEFT JOIN MovementDesc ON MovementDesc.Id = ObjectFloat_MovementDesc.ValueData
+          
+          LEFT JOIN ObjectFloat AS ObjectFloat_Ratio 
+                                ON ObjectFloat_Ratio.ObjectId = Object_ModelServiceItemMaster.Id 
+                               AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_ModelServiceItemMaster_Ratio()
+                               
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_ModelServiceItemMaster.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemMaster_Comment()
+
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+     AND Object_ModelService.Id IN 
+     
+     (SELECT 
+           
+          ObjectLink_StaffListCost_ModelService.ChildObjectId         
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND ObjectLink_StaffListCost_StaffList.ChildObjectId = 12816)
+
+А это выбранные ModelServiceItemMaster
+
+     SELECT 
+           Object_ModelServiceItemMaster.Id    AS Id
+ 
+         
+     FROM OBJECT AS Object_ModelServiceItemMaster
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          
+
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+     AND ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId IN 
+     
+     (SELECT 
+           
+          ObjectLink_StaffListCost_ModelService.ChildObjectId         
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND ObjectLink_StaffListCost_StaffList.ChildObjectId = 12816)
+
+                                      
+
+ЧАЙЛД
+
+     SELECT 
+           Object_ModelServiceItemChild.Id    AS Id
+ 
+         , ObjectString_Comment.ValueData      AS Comment
+                                                        
+         , Object_From.Id          AS FromId
+         , Object_From.ValueData   AS FromName
+
+         , Object_To.Id         AS ToId
+         , Object_To.ValueData  AS ToName
+
+         , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
+         , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
+
+         , Object_ModelServiceItemChild.isErased AS isErased
+         
+     FROM OBJECT AS Object_ModelServiceItemChild
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                               ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = ObjectLink_ModelServiceItemChild_From.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                               ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                               ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+          LEFT JOIN Object AS Object_ModelServiceItemMaster ON Object_ModelServiceItemMaster.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
+
+     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild();
+
+
+ограниченный чайлд
+
+
+     SELECT 
+           Object_ModelServiceItemChild.Id    AS Id
+ 
+         , ObjectString_Comment.ValueData      AS Comment
+                                                        
+         , Object_From.Id          AS FromId
+         , Object_From.ValueData   AS FromName
+
+         , Object_To.Id         AS ToId
+         , Object_To.ValueData  AS ToName
+
+         , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
+         , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
+
+         , Object_ModelServiceItemChild.isErased AS isErased
+         
+     FROM OBJECT AS Object_ModelServiceItemChild
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                               ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = ObjectLink_ModelServiceItemChild_From.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                               ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                               ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+          LEFT JOIN Object AS Object_ModelServiceItemMaster ON Object_ModelServiceItemMaster.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemChild_Comment()
+
+     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+     AND Object_ModelServiceItemMaster.Id  in
+
+
+(     SELECT 
+           Object_ModelServiceItemMaster.Id    AS Id
+ 
+         
+     FROM OBJECT AS Object_ModelServiceItemMaster
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          
+
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+     AND ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId IN 
+     
+     (SELECT 
+           
+          ObjectLink_StaffListCost_ModelService.ChildObjectId         
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND ObjectLink_StaffListCost_StaffList.ChildObjectId = 12816))
+
+
+Это выбраны товары 
+
+     SELECT 
+           Object_ModelServiceItemChild.Id    AS Id
+ 
+                                                        
+         , ObjectLink_ModelServiceItemChild_From.ChildObjectId          AS FromId
+
+         , ObjectLink_ModelServiceItemChild_To.ChildObjectId         AS ToId
+
+         , ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId         AS ModelServiceItemMasterId
+
+         , Object_ModelServiceItemChild.isErased AS isErased
+         
+     FROM OBJECT AS Object_ModelServiceItemChild
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                               ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                               ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                               ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+          
+     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+     AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId  in
+
+
+(     SELECT 
+           Object_ModelServiceItemMaster.Id    AS Id
+ 
+         
+     FROM OBJECT AS Object_ModelServiceItemMaster
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          
+
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+     AND ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId IN 
+     
+     (SELECT 
+           
+          ObjectLink_StaffListCost_ModelService.ChildObjectId         
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND ObjectLink_StaffListCost_StaffList.ChildObjectId = 12816))
+
+а здесь готовая база для расчетов
+
+
+     SELECT 
+           
+          ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId         AS ModelServiceItemMasterId
+
+         , SUM(test_View_PersonalService.Amount)
+         
+     FROM OBJECT AS Object_ModelServiceItemChild
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_From
+                               ON ObjectLink_ModelServiceItemChild_From.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_From.DescId = zc_ObjectLink_ModelServiceItemChild_From()
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_To
+                               ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                               ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+          
+          JOIN test_View_PersonalService ON test_View_PersonalService.GoodsId = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+          
+          
+     WHERE Object_ModelServiceItemChild.DescId = zc_Object_ModelServiceItemChild()
+     AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId  in
+
+
+(     SELECT 
+           Object_ModelServiceItemMaster.Id    AS Id
+ 
+         
+     FROM OBJECT AS Object_ModelServiceItemMaster
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          
+
+     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
+     AND ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId IN 
+     
+     (SELECT 
+           
+          ObjectLink_StaffListCost_ModelService.ChildObjectId         
+         
+     FROM OBJECT AS Object_StaffListCost
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
+                               ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_ModelService
+                               ON ObjectLink_StaffListCost_ModelService.ObjectId = Object_StaffListCost.Id
+                              AND ObjectLink_StaffListCost_ModelService.DescId = zc_ObjectLink_StaffListCost_ModelService()
+
+     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost() AND ObjectLink_StaffListCost_StaffList.ChildObjectId = 12816))
+     GROUP BY ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId
