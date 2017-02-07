@@ -1,0 +1,81 @@
+SELECT * FROM containerlinkobject 
+
+left JOIN OBJECT ON OBJECT.Id = ObjectId
+
+LEFT JOIN ContainerLinkObjectDesc ON ContainerLinkObjectDesc.id = ContainerLinkObject.descid
+JOIN Container ON Container.Id = ContainerId
+
+WHERE Containerid IN 
+
+(SELECT ContainerId FROM movementitemcontainer 
+WHERE MovementId = 121562)
+ORDER BY 2 , 9
+
+
+
+SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                    , inParentId:= 0
+                                    , inObjectId:= 9171
+                                    , inJuridicalId_basis:= 9399
+                                    , inBusinessId       := 0
+                                    , inObjectCostDescId := NULL
+                                    , inObjectCostId     := NULL
+                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                    , inObjectId_1 := 8455
+                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                    , inObjectId_2 :=  5147
+                                    , inDescId_3   := zc_ContainerLinkObject_InfoMoney()
+                                    , inObjectId_3 := 8913
+                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                    , inObjectId_4 := 8913
+                                    , inDescId_5   := NULL--zc_ContainerLinkObject_InfoMoneyDetail()
+                                    , inObjectId_5 := NULL--23463
+                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                     )
+
+
+
+SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                    , inParentId:= 0
+                                    , inObjectId:= 9091
+                                    , inJuridicalId_basis:= 9399
+                                    , inBusinessId       := 0
+                                    , inObjectCostDescId := NULL
+                                    , inObjectCostId     := NULL
+                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                    , inObjectId_1 := 8455
+                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                    , inObjectId_2 :=  5147
+                                    , inDescId_3   := zc_ContainerLinkObject_InfoMoney()
+                                    , inObjectId_3 := 8913
+                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                    , inObjectId_4 := 8913
+                                    , inDescId_5   := NULL--zc_ContainerLinkObject_InfoMoneyDetail()
+                                    , inObjectId_5 := NULL--23463
+                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                     )
+
+
+CREATE INDEX idx_containerlinkobject_containerid_descid_objectid
+  ON containerlinkobject
+  USING btree
+  (containerid, descid, objectid);
+
+-- Index: idx_containerlinkobject_containerid_objectid_descid
+
+-- DROP INDEX idx_containerlinkobject_containerid_objectid_descid;
+
+CREATE UNIQUE INDEX idx_containerlinkobject_containerid_objectid_descid
+  ON containerlinkobject
+  USING btree
+  (containerid, objectid, descid);
+
+-- Index: idx_containerlinkobject_objectid_descid_containerid
+
+-- DROP INDEX idx_containerlinkobject_objectid_descid_containerid;
+
+CREATE INDEX idx_containerlinkobject_objectid_descid_containerid
+  ON containerlinkobject
+  USING btree
+  (objectid, descid, containerid);
+

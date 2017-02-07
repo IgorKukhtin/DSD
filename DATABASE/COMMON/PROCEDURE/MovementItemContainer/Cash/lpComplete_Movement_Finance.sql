@@ -302,6 +302,12 @@ BEGIN
      -- для теста
      -- return;
 
+     -- Проверка - прибыль текущего периода
+     IF EXISTS (SELECT WhereObjectId_Analyzer FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В проводке не определена Группа ОПиУ для подразделения : <%>', lfGet_Object_ValueData ((SELECT WhereObjectId_Analyzer FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0 LIMIT 1));
+     END IF;
+
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = CASE WHEN _tmpItem.MovementDescId = zc_Movement_Currency()
                                               THEN zc_Enum_ProfitLoss_80103() -- Курсовая разница
