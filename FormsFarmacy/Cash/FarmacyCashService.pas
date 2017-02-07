@@ -180,6 +180,7 @@ type
     //ѕеречитывает остаток
     procedure StartRefreshDiffThread;
 //       procedure LoadUserSettings;
+    procedure SetGreen;
   end;
 
  TSaveRealThread = class(TThread)
@@ -188,8 +189,6 @@ type
     FShapeColor: TColor;
     FNeedSaveVIP: Boolean;
     FLastError: String;
-    procedure SetShapeState(AColor: TColor);
-    procedure SyncShapeState;
     procedure UpdateRemains;
     procedure SendError(const AErrorMessage: String);
   private
@@ -206,8 +205,6 @@ type
    TRefreshDiffThread = class(TThread)
     FUserSesion: string; // ѕодмененна€ сеси€
     FShapeColor: TColor;
-    procedure SetShapeState(AColor: TColor);
-    procedure SyncShapeState;
     procedure UpdateRemains;
   protected
     procedure Execute; override;
@@ -237,6 +234,12 @@ var
 implementation
 
 {$R *.dfm}
+procedure TMainCashForm2.SetGreen;
+begin
+
+  MainCashForm2.tiServise.IconIndex:=0;
+
+end;
 
 
 
@@ -271,21 +274,8 @@ begin
 end;
 
 
-procedure TSaveRealThread.SetShapeState(AColor: TColor);
-begin
-  FShapeColor := AColor;
-  Synchronize(SyncShapeState);
-end;
 
-procedure TSaveRealThread.SyncShapeState;
-begin
-  MainCashForm2.ShapeState.Pen.Color := FShapeColor;
-  if (FShapeColor=clBlack) or (FShapeColor=clGreen) or (FShapeColor=clWhite) then
-  MainCashForm2.tiServise.IconIndex:=1
-  else   MainCashForm2.tiServise.IconIndex:=0;
-//  clWhite   clBlue clBlack
 
-end;
 
 procedure TRefreshDiffThread.Execute;
 begin
@@ -298,14 +288,11 @@ begin
     try
       EnterCriticalSection(csCriticalSection);
       try
-        SetShapeState(clRed);
         WaitForSingleObject(MutexRemains, INFINITE);
 //        MainCashForm2.spSelect_CashRemains_Diff.ParamByName('inUserSesion').Value:= FUserSesion;
         MainCashForm2.spSelect_CashRemains_Diff.Execute(False,False,False);
         ReleaseMutex(MutexRemains);
-        SetShapeState(clBlue);
         Synchronize(UpdateRemains);
-        SetShapeState(clWhite);
       finally
         LeaveCriticalSection(csCriticalSection);
       end;
@@ -322,16 +309,6 @@ begin
   MainCashForm2.UpdateRemainsFromDiff(nil);
 end;
 
-procedure TRefreshDiffThread.SyncShapeState;
-begin
-  MainCashForm2.ShapeState.Pen.Color := FShapeColor;
-end;
-
-procedure TRefreshDiffThread.SetShapeState(AColor: TColor);
-begin
-  FShapeColor := AColor;
-  Synchronize(SyncShapeState);
-end;
 
 
 procedure TSaveRealThread.UpdateRemains;
@@ -380,6 +357,7 @@ end;
 
 procedure TMainCashForm2.SaveRealAll;
 begin  // «апускаем поиски чеков
+  MainCashForm2.tiServise.IconIndex:=1;
   WaitForSingleObject(MutexRefresh, INFINITE);
   With TSaveRealAllThread.Create(true) do
   Begin
@@ -1151,15 +1129,12 @@ begin
   EnterCriticalSection(csCriticalSection_Save);
   try
     CoInitialize(nil);
-    SetShapeState(clRed);
     try
       Find := False;
       InterlockedIncrement(CountRRT);
       InterlockedIncrement(CountSaveThread);
       try
-         SetShapeState(clGreen);
          WaitForSingleObject(MutexDBF, INFINITE);
-         SetShapeState(clRed);
          FLocalDataBaseHead.Active:=True;
          FLocalDataBaseBody.Active:=True;
         try
@@ -1226,7 +1201,6 @@ begin
           FLocalDataBaseHead.Active:=False;
           FLocalDataBaseBody.Active:=False;
           ReleaseMutex(MutexDBF);
-          SetShapeState(clGreen);
         end; // «агрузили чек в head and body
 
         if Find AND NOT HEAD.SAVE then
@@ -1281,13 +1255,11 @@ begin
                 //
                 dsdSave.Params.AddParam('inUserSesion', ftString, ptInput, Head.USERSESION);
                 dsdSave.Execute(False,False);
-                SetShapeState(clBlack);
                 //сохранили в локальной базе полученный номер
                 if Head.ID <> StrToInt(dsdSave.Params.ParamByName('ioID').AsString) then
                 Begin
                   Head.ID := StrToInt(dsdSave.Params.ParamByName('ioID').AsString);
                   WaitForSingleObject(MutexDBF, INFINITE);
-                  SetShapeState(clRed);
                   FLocalDataBaseHead.Active:=True;
                   try
                     if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
@@ -1300,7 +1272,6 @@ begin
                   finally
                    FLocalDataBaseHead.Active:=False;
                    ReleaseMutex(MutexDBF);
-                   SetShapeState(clGreen);
                   end;
                 end;
 
@@ -1341,14 +1312,11 @@ begin
                   dsdSave.ParamByName('inList_UID').Value :=  Body[I].LIST_UID;
                   //
 
-                  SetShapeState(clRed);
                   dsdSave.Execute(False,False);  // сохринили на сервере
-                  SetShapeState(clGreen);
                   if Body[I].ID <> StrToInt(dsdSave.ParamByName('ioId').AsString) then
                   Begin
                     Body[I].ID := StrToInt(dsdSave.ParamByName('ioId').AsString);
                      WaitForSingleObject(MutexDBF, INFINITE);
-                     SetShapeState(clRed);
                      FLocalDataBaseBody.Active:=True;
                     try
                       FLocalDataBaseBody.First;
@@ -1370,14 +1338,11 @@ begin
                     finally
                      FLocalDataBaseBody.Active:=False;
                      ReleaseMutex(MutexDBF);
-                     SetShapeState(clGreen);
                     end;
                   End;
                 End; // обработали все позиции товара в чеке
-                SetShapeState(clBlue);
                 Head.SAVE := True;
                 WaitForSingleObject(MutexDBF, INFINITE);
-                SetShapeState(clRed);
                 FLocalDataBaseHead.Active:=True;
                 try
                   if FLocalDataBaseHead.Locate('UID',FCheckUID,[loPartialKey]) AND
@@ -1390,7 +1355,6 @@ begin
                 finally
                   FLocalDataBaseHead.Active:=False;
                   ReleaseMutex(MutexDBF);
-                  SetShapeState(clGreen);
                 end;
               End; // обработали чек с товарами
             except ON E: Exception do
@@ -1428,7 +1392,6 @@ begin
               end;
               //  Synchronize(UpdateRemains);   // была синхронизаци€ с римаинс // не используем по новому алгоритму
               DiffCDS.First;
-              SetShapeState(clWhite);
               if DiffCDS.FieldCount>0 then
               begin
                WaitForSingleObject(MutexDBFDiff, INFINITE);
@@ -1451,7 +1414,6 @@ begin
                ReleaseMutex(MutexDBFDiff);
               end;
 
-              SetShapeState(clBlack);
             finally
               // ќтправка сообщени€ приложению про надобность обновить остатки из файла
               PostMessage(HWND_BROADCAST, FM_SERVISE, 1, 1);
@@ -1554,6 +1516,7 @@ var
   T:TSaveRealThread;
 begin
   inherited;
+
   MutexAllowedConduct := CreateMutex(nil, false, 'farmacycashMutexAlternative');
   WaitForSingleObject(MutexAllowedConduct, INFINITE);
 
@@ -1567,6 +1530,7 @@ begin
 
   InterlockedIncrement(CountRRT);
   try
+
     EnterCriticalSection(csCriticalSection_All);
     try
       for I := 0 to 6 do
@@ -1621,6 +1585,7 @@ begin
     end;
   finally
     InterlockedDecrement(CountRRT);
+    Synchronize(MainCashForm2.SetGreen);
   end;
 end;
 
