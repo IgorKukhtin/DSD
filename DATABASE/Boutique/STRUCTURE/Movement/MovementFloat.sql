@@ -23,7 +23,6 @@ CREATE TABLE MovementFloat(
 CREATE UNIQUE INDEX idx_MovementFloat_MovementId_DescId ON MovementFloat (MovementId, DescId); 
 CREATE INDEX idx_MovementFloat_ValueData_DescId ON MovementFloat (ValueData, DescId); 
 
-
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

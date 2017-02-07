@@ -1,5 +1,5 @@
 inherited PromoUnitForm: TPromoUnitForm
-  Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1082#1086#1085#1090#1088#1072#1082#1090' '#1076#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+  Caption = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' '#1076#1083#1103' '#1090#1086#1095#1077#1082
   ClientHeight = 479
   ClientWidth = 979
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
@@ -185,6 +185,7 @@ inherited PromoUnitForm: TPromoUnitForm
     inherited edOperDate: TcxDateEdit
       Left = 108
       EditValue = 42767d
+      Properties.DisplayFormat = 'mmmm yyyy'
       ExplicitLeft = 108
     end
     inherited cxLabel2: TcxLabel

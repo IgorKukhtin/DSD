@@ -28,8 +28,19 @@ WITH (
 ALTER TABLE Movement
   OWNER TO postgres;
 
+
 /*-------------------------------------------------------------------------------*/
 
+/*                                  Индексы                                      */
+
+
+CREATE INDEX idx_Movement_OperDate_DescId ON Movement(OperDate, DescId);
+CREATE INDEX idx_Movement_ParentId ON Movement(ParentId); 
+CREATE INDEX idx_Movement_StatusId ON Movement(StatusId); -- констрейнт
+CREATE INDEX idx_Movement_DescId_InvNumber ON Movement(DescId, zfConvert_StringToNumber(InvNumber));
+
+
+/*-------------------------------------------------------------------------------*/
 
 
 /*

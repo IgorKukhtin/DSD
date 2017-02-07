@@ -24,6 +24,7 @@ CREATE INDEX idx_MovementDate_MovementId_DescId_ValueData ON MovementDate (Movem
 -- CREATE INDEX idx_MovementDate_ValueData_MovementId_DescId ON MovementDate (ValueData, MovementId, DescId); 
 -- CREATE INDEX idx_MovementDate_ValueData_DescId_MovementId ON MovementDate (ValueData, DescId, MovementId); 
 
+
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

@@ -26,6 +26,9 @@ BEGIN
     IF (COALESCE(ioId, 0) = 0) AND (COALESCE(inInvNumber, '') = '') THEN
         inInvNumber := (NEXTVAL ('movement_PromoUnit_seq'))::TVarChar;
     END IF;
+    
+    -- дата док всегда первое число 
+    inOperDate := date_trunc('month', inOperDate);
 
     -- сохранили <ƒокумент>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PromoUnit(), inInvNumber, inOperDate, NULL);
