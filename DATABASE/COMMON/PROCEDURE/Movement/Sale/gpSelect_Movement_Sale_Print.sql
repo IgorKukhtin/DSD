@@ -18,6 +18,7 @@ $BODY$
     DECLARE vbGoodsPropertyId Integer;
     DECLARE vbGoodsPropertyId_basis Integer;
 
+    DECLARE vbOperDate TdateTime;
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
     DECLARE vbPriceWithVAT Boolean;
@@ -38,9 +39,11 @@ $BODY$
 
     DECLARE vbStoreKeeperName TVarChar;
     DECLARE vbIsInfoMoney_30201 Boolean;
-    DECLARE vbIsInfoMoney_30200 Integer;
+    DECLARE vbIsInfoMoney_30200 Boolean;
 
     DECLARE vbKiev Integer;
+
+    DECLARE vbIsLongUKTZED Boolean;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -83,7 +86,8 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT Movement.DescId
+     SELECT Movement.OperDate
+          , Movement.DescId
           , Movement.StatusId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)        AS VATPercent
@@ -98,8 +102,10 @@ BEGIN
                      THEN TRUE
                  ELSE FALSE
             END AS isInfoMoney_30200
-            INTO vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
-               , vbIsInfoMoney_30200
+          , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
+
+            INTO vbOperDate, vbDescId, vbStatusId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbPaidKindId, vbContractId, vbIsDiscountPrice
+               , vbIsInfoMoney_30200, vbIsLongUKTZED
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -130,6 +136,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
                                   ON ObjectBoolean_isDiscountPrice.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                  AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
+
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
+                                  ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_To.ObjectId 
+                                 AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
           /*LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
@@ -898,6 +908,68 @@ BEGIN
                               , COALESCE (MIFloat_Price.ValueData, 0)
                               , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
                          )
+ -- строки док
+ , tmpMI AS (SELECT MovementItem.ObjectId AS GoodsId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
+                              THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
+                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
+                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                    END AS Price
+                  , MIFloat_CountForPrice.ValueData AS CountForPrice
+                  , SUM (MovementItem.Amount) AS Amount
+                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
+                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                              WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
+                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                              ELSE MovementItem.Amount
+
+                         END) AS AmountPartner
+                  , ObjectLink_GoodsGroup.ChildObjectId    AS GoodsGroupId
+
+             FROM MovementItem
+                  LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                              --AND MIFloat_Price.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup
+                                       ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                      AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Master()
+               AND MovementItem.isErased   = FALSE
+             GROUP BY MovementItem.ObjectId
+                    , MILinkObject_GoodsKind.ObjectId
+                    , MIFloat_Price.ValueData
+                    , MIFloat_CountForPrice.ValueData
+                    , MIFloat_ChangePercent.ValueData
+                    , ObjectLink_GoodsGroup.ChildObjectId
+            )
+      , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+      , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED 
+                      FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
            , tmpObject_GoodsPropertyValue_basis.BarCode AS BarCode_Main
@@ -993,57 +1065,27 @@ BEGIN
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
 --           , CAST ((CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI.AmountPartner ELSE 0 END) AS TFloat) AS Amount_Sh
 
-       FROM (SELECT MovementItem.ObjectId AS GoodsId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE -- !!!для НАЛ не учитываем, но НЕ всегда!!!
-                              THEN CAST ( (1 + MIFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbDescId <> zc_Movement_Sale()
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                    END AS Price
-                  , MIFloat_CountForPrice.ValueData AS CountForPrice
-                  , SUM (MovementItem.Amount) AS Amount
-                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              WHEN Movement.DescId IN (zc_Movement_SendOnPrice()) AND vbIsProcess_BranchIn = TRUE
-                                   THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                              ELSE MovementItem.Amount
 
-                         END) AS AmountPartner
-             FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                              --AND MIFloat_Price.ValueData <> 0
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+           , CASE WHEN vbOperDate < '01.01.2017'
+                       THEN ''
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                  WHEN ObjectString_Goods_UKTZED.ValueData <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN ObjectString_Goods_UKTZED.ValueData ELSE SUBSTRING (ObjectString_Goods_UKTZED.ValueData FROM 1 FOR 4) END
 
-                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                  WHEN tmpUKTZED.CodeUKTZED <> ''
+                       THEN CASE WHEN vbIsLongUKTZED = TRUE THEN tmpUKTZED.CodeUKTZED ELSE SUBSTRING (tmpUKTZED.CodeUKTZED FROM 1 FOR 4) END
 
-                  LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                              ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                             AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101())
+                       THEN '1601'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102())
+                       THEN '1602'
+                  WHEN ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30103()
+                       THEN '1905'
+                  ELSE '0'
+              END :: TVarChar AS GoodsCodeUKTZED
 
-             WHERE MovementItem.MovementId = inMovementId
-               AND MovementItem.DescId     = zc_MI_Master()
-               AND MovementItem.isErased   = FALSE
-             GROUP BY MovementItem.ObjectId
-                    , MILinkObject_GoodsKind.ObjectId
-                    , MIFloat_Price.ValueData
-                    , MIFloat_CountForPrice.ValueData
-                    , MIFloat_ChangePercent.ValueData
-            ) AS tmpMI
-
+       FROM tmpMI
+            LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
                                  AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
 
@@ -1074,6 +1116,12 @@ BEGIN
 
             LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
                                                   AND Object_GoodsByGoodsKind_View.GoodsKindId = Object_GoodsKind.Id
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+            LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
+                                   ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
 
        WHERE tmpMI.AmountPartner <> 0
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954 -- Метро

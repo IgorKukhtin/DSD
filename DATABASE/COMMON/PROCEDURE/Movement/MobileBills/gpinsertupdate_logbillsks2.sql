@@ -137,7 +137,7 @@ BEGIN
                                                    , inLimit              := tmp.MobileLimit         -- Текущий лимит
                                                    , inPrevLimit          := tmp.MobileLimit_prev    -- ***Предыдущий лимит
                                                    , inDutyLimit          := tmp.DutyLimit           -- Служебный лимит
-                                                   , inOverlimit          := CASE WHEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit) > 0 THEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit) ELSE 0 END
+                                                   , inOverlimit          := CASE WHEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit + tmp.Navigator) > 0 THEN tmp.TotalSumm - (tmp.MobileLimit + tmp.DutyLimit + tmp.Navigator) ELSE 0 END
                                                    , inPrevMonthly        := tmp.Monthly_prev        -- *** Ежемесячная абонплата за предыдущий период
                                                    -- , inRegionId           := 0                       -- Текущий регион обслуживания
                                                    , inEmployeeID         := tmp.PersonalId          -- Сотрудник

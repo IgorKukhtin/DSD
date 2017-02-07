@@ -156,7 +156,9 @@ BEGIN
                                 ON ObjectFloat_Time.ObjectId = gpSelect.Id
                                AND ObjectFloat_Time.DescId = zc_ObjectFloat_ImportSettings_Time()
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
-UNION ALL
+       -- AND ((gpSelect.Id  = 2357054 AND gpGet_Host.EmailId <> 2567237) OR inSession <> '3') -- Приход ММО Оптима + Шапиро И А
+
+   UNION ALL
      SELECT 
             gpGet_Host.EmailId
           , gpGet_Host.EmailName
@@ -218,6 +220,7 @@ UNION ALL
                                 ON ObjectFloat_Time.ObjectId = gpSelect.Id
                                AND ObjectFloat_Time.DescId = zc_ObjectFloat_ImportSettings_Time()
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
+     -- AND (gpSelect.Id  = 2357054 OR inSession <> '3') -- Приход ММО Оптима + Шапиро И А
      -- ORDER BY gpGet_Host.EmailId, gpGet_Host.EmailKindId, gpSelect.Name, COALESCE (gpSelect_two.ContactPersonName, gpSelect.ContactPersonName)
      ORDER BY 1, 5, 11
     ;

@@ -29,8 +29,8 @@ BEGIN
     outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(inPrice,0),2);
     outSummPlanMax := ROUND(COALESCE(inAmountPlanMax,0)*COALESCE(inPrice,0),2);
 
-    -- сохранили <Ёлемент документа>
-    PERFORM lpInsertUpdate_MovementItem_PromoUnit (ioId                 := ioId
+     -- сохранили <Ёлемент документа>
+     ioId:= lpInsertUpdate_MovementItem_PromoUnit (ioId                 := ioId
                                                  , inMovementId         := inMovementId
                                                  , inGoodsId            := inGoodsId
                                                  , inAmount             := inAmount
