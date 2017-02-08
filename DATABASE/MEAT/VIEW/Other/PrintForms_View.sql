@@ -38,6 +38,22 @@ AS
                           AND ObjectBoolean_isDiscountPrice.ValueData = TRUE
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- признак isPriceWithVAT = True - печатать цену с НДС
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale2PriceWithVAT' AS TVarChar)
+      FROM Object AS Object_Juridical
+        JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                          AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 -- Счет
       SELECT
              zc_Movement_Sale()                         AS DescId

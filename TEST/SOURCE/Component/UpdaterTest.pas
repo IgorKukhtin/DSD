@@ -15,6 +15,7 @@ type
     procedure UpdateScale;
     procedure UpdateScaleCeh;
     procedure UpdateFarmacyCash;
+    procedure UpdateFarmacyCashServise;
   end;
 
 implementation
@@ -60,6 +61,11 @@ end;
 procedure TUpdaterTest.UpdateFarmacyCash;
 begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
+end;
+
+procedure TUpdaterTest.UpdateFarmacyCashServise;
+begin
+   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
 end;
 
 procedure TUpdaterTest.UpdateMainProgram;

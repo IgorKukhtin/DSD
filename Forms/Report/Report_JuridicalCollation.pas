@@ -98,6 +98,13 @@ type
     bbisInsert: TdxBarControlContainerItem;
     macPrintOfficial: TMultiAction;
     macPrintCurrency: TMultiAction;
+    macPrintPopupMenu: TMultiAction;
+    macPrintPopupMenu1: TMenuItem;
+    N2: TMenuItem;
+    spSaveReportCollationState: TdsdStoredProc;
+    actSaveReportCollationState: TdsdExecStoredProc;
+    spSavePrintObject_Buh: TdsdStoredProc;
+    actSPSaveObject_Buh: TdsdExecStoredProc;
   private
     { Private declarations }
   public

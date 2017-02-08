@@ -3,7 +3,7 @@
   ClientHeight = 599
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 624
+  ExplicitHeight = 627
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -24,23 +24,23 @@
   end
   object edName: TcxTextEdit [2]
     Left = 5
-    Top = 67
+    Top = 58
     TabOrder = 0
     Width = 272
   end
   object cxLabel1: TcxLabel [3]
     Left = 5
-    Top = 47
+    Top = 38
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   end
   object Код: TcxLabel [4]
     Left = 5
-    Top = 2
+    Top = 0
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit [5]
     Left = 5
-    Top = 24
+    Top = 16
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
@@ -48,35 +48,35 @@
   end
   object cxLabel2: TcxLabel [6]
     Left = 5
-    Top = 158
+    Top = 167
     Caption = #1050#1086#1076' GLN - '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '#1080'/'#1080#1083#1080' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1100' '
   end
   object edGLNCode: TcxTextEdit [7]
     Left = 5
-    Top = 180
+    Top = 186
     TabOrder = 1
     Width = 272
   end
   object cbisCorporate: TcxCheckBox [8]
     Left = 161
-    Top = 24
+    Top = 16
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086
     TabOrder = 2
     Width = 116
   end
   object cxLabel3: TcxLabel [9]
     Left = 5
-    Top = 204
+    Top = 210
     Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   end
   object cxLabel4: TcxLabel [10]
     Left = 5
-    Top = 249
+    Top = 253
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
   object ceJuridicalGroup: TcxButtonEdit [11]
     Left = 5
-    Top = 227
+    Top = 229
     Properties.Buttons = <
       item
         Default = True
@@ -710,14 +710,14 @@
   end
   object cbisTaxSummary: TcxCheckBox [28]
     Left = 8
-    Top = 101
+    Top = 91
     Caption = #1057#1074#1086#1076#1085#1072#1103' '#1053#1053
     TabOrder = 28
     Width = 90
   end
   object edDayTaxSummary: TcxCurrencyEdit [29]
     Left = 110
-    Top = 107
+    Top = 97
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -727,15 +727,22 @@
   end
   object cxLabel21: TcxLabel [30]
     Left = 110
-    Top = 89
+    Top = 79
     Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
   end
   object cbisDiscountPrice: TcxCheckBox [31]
     Left = 8
-    Top = 131
+    Top = 120
     Caption = #1055#1077#1095#1072#1090#1072#1090#1100' '#1094#1077#1085#1091' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1074' '#1085#1072#1082#1083'.'
     TabOrder = 31
     Width = 225
+  end
+  object cbisPriceWithVAT: TcxCheckBox [32]
+    Left = 8
+    Top = 140
+    Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1094#1077#1085#1091' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 36
+    Width = 241
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1147,6 +1154,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisPriceWithVAT'
+        Value = Null
+        Component = cbisPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDayTaxSummary'
         Value = Null
         Component = edDayTaxSummary
@@ -1412,6 +1427,13 @@
         Component = cbisDiscountPrice
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPriceWithVAT'
+        Value = Null
+        Component = cbisPriceWithVAT
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1639,13 +1661,13 @@
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
     Left = 104
-    Top = 48
+    Top = 8
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 48
+    Left = 48
+    Top = 8
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -1759,7 +1781,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     Left = 184
-    Top = 48
+    Top = 8
   end
   object PartnerAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

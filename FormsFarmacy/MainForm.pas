@@ -332,6 +332,8 @@ type
     actMarginCategory_Total: TdsdOpenForm;
     actPromoUnit: TdsdOpenForm;
     N128: TMenuItem;
+    actReport_MovementCheck_Cross: TdsdOpenForm;
+    N210: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
