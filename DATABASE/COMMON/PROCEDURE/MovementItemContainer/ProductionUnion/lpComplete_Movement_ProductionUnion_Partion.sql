@@ -22,6 +22,7 @@ BEGIN
                               SELECT _tmpItem_pr.MovementItemId
                                    , _tmpItem_pr.GoodsId
                                    , _tmpItem_pr.GoodsKindId
+                                   , _tmpItem_pr.InfoMoneyDestinationId
                                    , _tmpItem_pr.OperCount
                                    , MIDate_PartionGoods.ValueData AS PartionGoodsDate
                                    , COALESCE (MIFloat_Count.ValueData, 0) AS Count_onCount
@@ -42,45 +43,43 @@ BEGIN
                              SELECT tmpGoods.GoodsId
                                   , tmpGoods.GoodsKindId
                                   , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
-                             FROM (SELECT tmpMI_master.GoodsId, tmpMI_master.GoodsKindId FROM tmpMI_master GROUP BY tmpMI_master.GoodsId, tmpMI_master.GoodsKindId) AS tmpGoods
+                             FROM (SELECT DISTINCT tmpMI_master.GoodsId, tmpMI_master.GoodsKindId, tmpMI_master.InfoMoneyDestinationId FROM tmpMI_master) AS tmpGoods
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
                                                        AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
-                                  INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
-                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                                                       AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
+                                  LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                       ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                      AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                                   INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
                                                                      AND Object_Receipt.isErased = FALSE
                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                            ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
+                             WHERE (ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId OR tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- Основное сырье + Мясное сырье
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )
-                , tmpPartion AS (-- поиск Партий
-                                 SELECT ObjectDate_PartionGoods_Value.ObjectId AS PartionGoodsId -- Партия нужна что б проверить закрыта ли она, если нет - такие элементы распределяться не будут
+                , tmpPartion AS (-- поиск Партий - надо группировать GoodsId + GoodsKindId + PartionGoodsDate в строчной части могут дублироваться
+                                 SELECT DISTINCT
+                                        ObjectDate_PartionGoods_Value.ObjectId AS PartionGoodsId -- Партия нужна что б проверить закрыта ли она, если нет - такие элементы распределяться не будут
                                       , tmpMI_master.PartionGoodsDate
                                       , tmpMI_master.GoodsId
                                       , tmpMI_master.GoodsKindId
+                                      , tmpMI_master.InfoMoneyDestinationId
                                  FROM tmpMI_master
                                       INNER JOIN ObjectDate AS ObjectDate_PartionGoods_Value ON ObjectDate_PartionGoods_Value.ValueData = tmpMI_master.PartionGoodsDate
                                                                                             AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                                       INNER JOIN ObjectLink AS ObjectLink_PartionGoods_GoodsKindComplete
                                                             ON ObjectLink_PartionGoods_GoodsKindComplete.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
                                                            AND ObjectLink_PartionGoods_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.ChildObjectId = tmpMI_master.GoodsKindId
-                                 -- надо группировать GoodsId + GoodsKindId + PartionGoodsDate в строчной части могут дублироваться
-                                 GROUP BY ObjectDate_PartionGoods_Value.ObjectId
-                                        , tmpMI_master.PartionGoodsDate
-                                        , tmpMI_master.GoodsId
-                                        , tmpMI_master.GoodsKindId
+                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.ChildObjectId = CASE WHEN tmpMI_master.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() THEN zc_GoodsKind_Basis() ELSE tmpMI_master.GoodsKindId END
                                 )
      , tmpReceipt_parent AS (-- поиск из чего делается товар + в разрезе нужных партий
                              SELECT tmpPartion.PartionGoodsId
                                   , tmpPartion.GoodsId
                                   , tmpPartion.GoodsKindId
+                                  , tmpPartion.InfoMoneyDestinationId
                                   , ObjectLink_Receipt_Goods_parent.ChildObjectId     AS GoodsId_parent
                                   , ObjectLink_Receipt_GoodsKind_parent.ChildObjectId AS GoodsKindId_parent
                              FROM tmpPartion
@@ -101,9 +100,8 @@ BEGIN
        , tmpPartionClose AS (-- поиск ПФ-ГП, и определяется закрыта ли по ним партия
                              SELECT tmp.PartionGoodsId, tmp.GoodsId_parent, tmp.GoodsKindId_parent
                                   , MAX (CASE WHEN COALESCE (MIBoolean_PartionClose.ValueData, FALSE) = TRUE THEN 0 ELSE 1 END) AS isPartionClose
-                             FROM (SELECT tmpReceipt_parent.PartionGoodsId, tmpReceipt_parent.GoodsId_parent, tmpReceipt_parent.GoodsKindId_parent
+                             FROM (SELECT DISTINCT tmpReceipt_parent.PartionGoodsId, tmpReceipt_parent.GoodsId_parent, tmpReceipt_parent.GoodsKindId_parent
                                    FROM tmpReceipt_parent
-                                   GROUP BY tmpReceipt_parent.PartionGoodsId, tmpReceipt_parent.GoodsId_parent, tmpReceipt_parent.GoodsKindId_parent
                                   ) AS tmp
                                   INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                  ON CLO_PartionGoods.ObjectId = tmp.PartionGoodsId

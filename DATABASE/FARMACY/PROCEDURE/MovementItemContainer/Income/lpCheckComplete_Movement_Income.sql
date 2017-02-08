@@ -1,4 +1,4 @@
--- Function: gpComplete_Movement_Income()
+ -- Function: gpComplete_Movement_Income()
 
 DROP FUNCTION IF EXISTS lpCheckComplete_Movement_Income (Integer);
 

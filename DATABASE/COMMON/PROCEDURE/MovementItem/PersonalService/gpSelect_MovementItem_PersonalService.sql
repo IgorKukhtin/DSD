@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalService(
 )
 RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , INN TVarChar, Card TVarChar, isMain Boolean, isOfficial Boolean
+             , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -54,6 +55,26 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
+          , tmpMIContainer_all AS (SELECT MIContainer.MovementItemId
+                                        , CLO_Unit.ObjectId     AS UnitId
+                                        , CLO_Position.ObjectId AS PositionId
+                                        , CLO_Personal.ObjectId AS PersonalId
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
+                                        , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                   FROM MovementItemContainer AS MIContainer
+                                        LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                      ON CLO_Unit.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                      ON CLO_Position.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Personal
+                                                                      ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                   WHERE MIContainer.MovementId = inMovementId
+                                     AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                     AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
+                                  )
           , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                    AS PersonalId
@@ -140,6 +161,9 @@ BEGIN
             , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
+            , Object_PersonalTo.ObjectCode            AS PersonalCode_to
+            , Object_PersonalTo.ValueData             AS PersonalName_to
+
             , Object_Unit.Id                          AS UnitId
             , Object_Unit.ObjectCode                  AS UnitCode
             , Object_Unit.ValueData                   AS UnitName
@@ -185,6 +209,9 @@ BEGIN
             , COALESCE(MIBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
          
        FROM tmpAll 
+            LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
+                                        AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -261,6 +288,7 @@ BEGIN
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpAll.InfoMoneyId
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpAll.PersonalServiceListId
+            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_all.PersonalId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId

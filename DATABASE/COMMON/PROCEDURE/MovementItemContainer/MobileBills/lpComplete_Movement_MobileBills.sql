@@ -1,93 +1,15 @@
--- Function: lpComplete_Movement_PersonalService (Integer, Boolean)
+-- Function: lpComplete_Movement_MobileBills (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Integer);
+DROP FUNCTION IF EXISTS lpComplete_Movement_MobileBills (Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_MobileBills(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
 )                              
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbMovementId_check Integer;
 BEGIN
-     -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
-     -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummNalogRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
-
-
-     -- Проверка - других быть не должно
-     vbMovementId_check:= (SELECT MovementDate_ServiceDate.MovementId
-                           FROM (SELECT MovementDate.MovementId     AS MovementId
-                                      , MovementDate.ValueData      AS ServiceDate
-                                      , MovementLinkObject.ObjectId AS PersonalServiceListId
-                                 FROM MovementDate
-                                      LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
-                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                 WHERE MovementDate.MovementId = inMovementId
-                                   AND MovementDate.DescId = zc_MIDate_ServiceDate()
-                                 ) tmpMovement
-                                INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                        ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
-                                                       AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                       AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
-                                INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                             AND MovementLinkObject_PersonalServiceList.ObjectId = tmpMovement.PersonalServiceListId
-                           LIMIT 1
-                          );
-     IF vbMovementId_check <> 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Найдена другая <Ведомость начисления> № <%> от <%> для <%> за <%>.Дублирование запрещено. <%>', (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_check)
-                                                                                                                           , DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_check))
-                                                                                                                           , lfGet_Object_ValueData ((SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = vbMovementId_check AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()))
-                                                                                                                           , zfCalc_MonthYearName ((SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = vbMovementId_check AND MovementDate.DescId = zc_MIDate_ServiceDate()))
-                        , (SELECT MovementDate_ServiceDate.MovementId
-                           FROM (SELECT MovementDate.MovementId     AS MovementId
-                                      , MovementDate.ValueData      AS ServiceDate
-                                      , MovementLinkObject.ObjectId AS PersonalServiceListId
-                                 FROM MovementDate
-                                      LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementDate.MovementId
-                                                                  AND MovementLinkObject.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                 WHERE MovementDate.MovementId = inMovementId
-                                   AND MovementDate.DescId = zc_MIDate_ServiceDate()
-                                 ) tmpMovement
-                                INNER JOIN MovementDate AS MovementDate_ServiceDate
-                                                        ON MovementDate_ServiceDate.ValueData = tmpMovement.ServiceDate
-                                                       AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
-                                                       AND MovementDate_ServiceDate.MovementId <> tmpMovement.MovementId
-                                INNER JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
-                                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                                INNER JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                              ON MovementLinkObject_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
-                                                             AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-                                                             AND MovementLinkObject_PersonalServiceList.ObjectId = tmpMovement.PersonalServiceListId
-                           LIMIT 1
-                          )
-                         ;
-     END IF;
-
-
-     -- распределение !!!если это БН!!! - <Сумма на карточку (БН) для распределения> + <Сумма налогов - удержания с сотрудника для распределения> 
-     IF EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
-                FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
-                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
-                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
-                WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-                  AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-               )
-     THEN
-          PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
-                                                            , inUserId     := inUserId);
-     END IF;
-
-
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      DELETE FROM _tmpMIReport_insert;
@@ -105,12 +27,12 @@ BEGIN
                          , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
-        -- 1.1. долг сотруднику по ЗП, или расчеты с Учредителем
+        -- 1.1. долг поставщику услуг - Юр Лицу
         SELECT Movement.DescId
              , Movement.OperDate
-             , COALESCE (Object_ObjectTo.Id, COALESCE (MovementItem.ObjectId, 0)) AS ObjectId
-             , COALESCE (Object_ObjectTo.DescId, COALESCE (Object.DescId, 0))     AS ObjectDescId
-             , -1 * MovementItem.Amount AS OperSumm
+             , COALESCE (Object_Object.Id, 0)      AS ObjectId
+             , COALESCE (Object_Object.DescId, 0)  AS ObjectDescId
+             , 1 * MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -124,91 +46,101 @@ BEGIN
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-               -- Бизнес Баланс: из какой кассы будет выплачено
+               -- Бизнес Баланс: не используется
              , 0 AS BusinessId_Balance
                -- Бизнес ОПиУ: не используется
              , 0 AS BusinessId_ProfitLoss
 
-               -- Главное Юр.лицо: из какой кассы будет выплачено
-             , zc_Juridical_Basis() AS JuridicalId_Basis
+               -- Главное Юр.лицо всегда из договора
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
-             , COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, 0))          AS UnitId
-             , COALESCE (ObjectLink_PersonalTo_Position.ChildObjectId, COALESCE (MILinkObject_Position.ObjectId, 0))  AS PositionId
-             , COALESCE (MovementLinkObject_PersonalServiceList.ObjectId, 0) AS PersonalServiceListId
+             , Object_Unit.Id   AS UnitId -- здесь НЕ используется (нужен для следующей проводки)
+             , 0 AS PositionId            -- не используется
+             , 0 AS PersonalServiceListId -- не используется
 
-               -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_Balance
-               -- Филиал ОПиУ: не используется !!!в кассе и р/счете - делать аналогично!!!
-             , 0 AS BranchId_ProfitLoss
+               -- Филиал Баланс: (нужен для НАЛ долгов)
+             , zc_Branch_Basis() AS BranchId_Balance
+               -- Филиал ОПиУ: всегда по подразделению или "Главный филиал" (здесь не используется, нужен для следующей проводки)
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId_ProfitLoss
 
-               -- Месяц начислений - есть
-             , CASE WHEN View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_60000() -- Заработная плата
-                         THEN lpInsertFind_Object_ServiceDate (inOperDate:= MovementDate_ServiceDate.ValueData)
-                    ELSE 0
-               END AS ServiceDateId
+               -- Месяц начислений: не используется
+             , 0 AS AS ServiceDateId
 
-             , 0 AS ContractId -- не используется
-             , 0 AS PaidKindId -- не используется
+             , COALESCE (MLO_Contract.ObjectId, 0) AS ContractId
+             , zc_Enum_PaidKind_FirstForm()        AS PaidKindId -- !!!захардкодил-БН!!!
 
-             , 0                     AS AnalyzerId           -- не надо, т.к. это обычная ЗП
-             , MovementItem.ObjectId AS ObjectIntId_Analyzer -- надо, сохраним "оригинал"
+             , 0 AS AnalyzerId -- не надо, т.к. это обычные услуги
+               -- приоритет:
+             , CASE -- 1) если это учредитель - На кого "переносятся" затраты
+                    WHEN Object_ObjectTo.DescId = zc_Object_Founder()
+                         THEN Object_ObjectTo.Id
+                    -- 2) если это Сотрудник - На кого "переносятся" затраты
+                    WHEN Object_ObjectTo.DescId = zc_Object_Personal()
+                         THEN Object_ObjectTo.Id
+                    -- 3) Сотрудник/Подразделение/Учредитель ИЛИ На кого "переносятся" затраты
+                    ELSE COALESCE (MILinkObject_Employee.ObjectId, Object_ObjectTo.Id)
+               END AS ObjectIntId_Analyzer
 
-             -- , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsActive -- всегда такая
              , TRUE AS IsMaster
         FROM Movement
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
-             LEFT JOIN MovementDate AS MovementDate_ServiceDate
-                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                   AND MovementDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
+             LEFT JOIN MovementLinkObject AS MLO_Contract
+                                          ON MLO_Contract.MovementItemId = MovementItem.MovementId
+                                         AND MLO_Contract.DescId = zc_MovementLinkObject_Contract()
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
-                                              ON MILinkObject_Position.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = MLO_Contract.ObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney ON ObjectLink_Contract_Juridical.ObjectId = MLO_Contract.ObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Contract_Juridical.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MLO_Contract.ObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+             -- Сотрудник/Подразделение/Учредитель
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Employee
+                                              ON MILinkObject_Employee.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Employee.DescId = zc_MILinkObject_Employee()
+             LEFT JOIN Object AS Object_Employee ON Object_Employee.Id = MILinkObject_Employee.ObjectId
              -- нашли Физ лицо
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = MILinkObject_Employee.ObjectId
                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
              -- если у Физ лица установлено - На кого "переносятся" затраты в "Налоги с ЗП" или в "Мобильная связь"
              LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
-             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
-                                                AND Object_ObjectTo.DescId = zc_Object_Personal()
-             LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit ON ObjectLink_PersonalTo_Unit.ObjectId = ObjectLink_Member_ObjectTo.ChildObjectId
-                                                               AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
-             LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Position ON ObjectLink_PersonalTo_Position.ObjectId = ObjectLink_Member_ObjectTo.ChildObjectId
-                                                                   AND ObjectLink_PersonalTo_Position.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id = ObjectLink_Member_ObjectTo.ChildObjectId
 
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, 0))
-                                                           AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummNalog()
+             -- если "Сотрудник" - у него определяется "Подразделение"
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                  ON ObjectLink_Personal_Unit.ObjectId = COALESCE (Object_ObjectTo.Id, MILinkObject_Employee.ObjectId)
+                                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
 
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE -- если На кого "переносятся" затраты = Подразделение
+                                                                      WHEN Object_ObjectTo.DescId = zc_Object_Unit()
+                                                                           THEN Object_ObjectTo.Id
+                                                                      -- если нашли Сотрудника или Телефон привязан к подразделению
+                                                                      WHEN ObjectLink_Personal_Unit.ChildObjectId > 0 OR Object_Employee.DescId = zc_Object_Unit()
+                                                                           THEN COALESCE (ObjectLink_Personal_Unit.ChildObjectId, Object_Employee.Id)
+                                                                      -- иначе захардкодим - Подразделение "Административный"
+                                                                      ELSE 8383
+                                                                 END
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
         WHERE Movement.Id = inMovementId
-          AND Movement.DescId = zc_Movement_PersonalService()
+          AND Movement.DescId = zc_Movement_MobileBills()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-          AND (MovementItem.Amount <> 0 OR MIF.ValueData <> 0)
        ;
 
 
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN
-         RAISE EXCEPTION 'В документе не определен <Сотрудник>. Проведение невозможно.';
+         RAISE EXCEPTION 'В документе не определен <Договор>. Проведение невозможно.';
      END IF;
-   
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
@@ -227,12 +159,17 @@ BEGIN
                          , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
-        -- 1.2.1. ОПиУ по ЗП
+        -- 1.2.1. ОПиУ по "услуги полученные" - для Сотрудник/Подразделение или временно хардкодим "Админ" - если вдруг будет пусто
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , 0 AS ObjectId
              , 0 AS ObjectDescId
-             , -1 * _tmpItem.OperSumm
+             , -1 *  _tmpItem.OperSumm
+               -- !!!уменьшили на "Перелимит"
+             + CASE WHEN Object_Employee.DescId = zc_Object_Personal()
+                         THEN COALESCE (MIFloat_Overlimit.ValueData, 0)
+                    ELSE 0
+               END AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                               -- сформируем позже
@@ -252,7 +189,7 @@ BEGIN
 
                -- Бизнес Баланс: не используется
              , 0 AS BusinessId_Balance
-               -- Бизнес ОПиУ: ObjectLink_Unit_Business
+               -- Бизнес ОПиУ:
              , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
 
                -- Главное Юр.лицо: из какой кассы будет выплачено
@@ -273,26 +210,27 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , 0 AS AnalyzerId               -- не надо, т.к. это ОПиУ
+             , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
              , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это ОПиУ
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
+             LEFT JOIN Object AS Object_Employee ON Object_Employee.Id = _tmpItem.ObjectIntId_Analyzer
+
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = _tmpItem.UnitId
                                                              AND ObjectLink_Unit_Contract.DescId = zc_ObjectLink_Unit_Contract()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
-                                                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-             LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                                                               AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
-             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
-                                                AND Object_ObjectTo.DescId = zc_Object_Founder()
+             LEFT JOIN MovementItemFloat AS MIFloat_Overlimit
+                                         ON MIFloat_Overlimit.MovementItemId = _tmpItem.MovementItemId
+                                        AND MIFloat_Overlimit.DescId = zc_MIFloat_Overlimit()
 
-        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
-          AND Object_ObjectTo.Id IS NULL
+        WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL                                -- если НЕ Перевыставление
+          AND (Object_Employee.Id IS NULL OR Object_Employee.DescId <> zc_Object_Founder()) -- если НЕ Учредитель
+
        UNION ALL
          -- 1.2.2. Перевыставление затрат на Юр Лицо
         SELECT _tmpItem.MovementDescId
@@ -337,7 +275,7 @@ BEGIN
              , ObjectLink_Unit_Contract.ChildObjectId     AS ContractId
              , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
 
-             , 0 AS AnalyzerId               -- не надо, т.к. это Перевыставление
+             , 0 AS AnalyzerId -- не надо, т.к. это Перевыставление
              , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это Перевыставление
 
              , NOT _tmpItem.IsActive
@@ -353,11 +291,7 @@ BEGIN
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN Object ON Object.Id = ObjectLink_Contract_Juridical.ChildObjectId
 
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
-                                                               AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-             LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                                                               AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
-             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+             LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = _tmpItem.ObjectIntId_Analyzer
                                                 AND Object_ObjectTo.DescId = zc_Object_Founder()
 
         WHERE ObjectLink_Unit_Contract.ChildObjectId > 0
@@ -407,20 +341,14 @@ BEGIN
              , 0 AS ContractId
              , 0 AS PaidKindId
 
-             , 0 AS AnalyzerId               -- не надо, т.к. это Перевыставление
-             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это Перевыставление
-
+             , 0 AS AnalyzerId -- не надо, т.к. это Перевыставление
+             , 0  As ObjectIntId_Analyzer -- не надо, т.к. это Перевыставление
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
 
         FROM _tmpItem
-             INNER JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = _tmpItem.ObjectId
-                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-             INNER JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
-                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
-             INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
+             INNER JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = _tmpItem.ObjectIntId_Analyzer
                                                  AND Object_ObjectTo.DescId = zc_Object_Founder()
-
 
        UNION ALL
         -- 1.3.1. ОПиУ по налогам - удержания с ЗП (или Учредителя) - !!!доход!!!
@@ -470,7 +398,6 @@ BEGIN
              , 0 AS PaidKindId -- не используется
 
              , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
-             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это ОПиУ
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -524,8 +451,7 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , zc_Enum_AnalyzerId_PersonalService_Nalog() AS AnalyzerId -- надо, т.к. это удержания с ЗП
-             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
+             , zc_Enum_AnalyzerId_MobileBills_Nalog() AS AnalyzerId -- надо, т.к. это удержания с ЗП
 
              , _tmpItem.IsActive -- всегда такая
              , FALSE AS IsMaster
@@ -585,9 +511,7 @@ BEGIN
              , 0 AS ContractId
              , 0 AS PaidKindId
 
-             , zc_Enum_AnalyzerId_PersonalService_Nalog() AS AnalyzerId -- надо, т.к. это Перевыставление - Налоги
-             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
-
+             , zc_Enum_AnalyzerId_MobileBills_Nalog() AS AnalyzerId -- надо, т.к. это Перевыставление - Налоги
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
 
@@ -673,7 +597,7 @@ BEGIN
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_PersonalService()
+                                , inDescId     := zc_Movement_MobileBills()
                                 , inUserId     := inUserId
                                  );
      -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - НЕ надо "минус" <Сумма налогов - удержания с ЗП>
@@ -697,10 +621,10 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone()           , tmpMovement.MovementItemId, tmpMovement.SummPhone)
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
+                , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
+                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
                 , 0 AS SummPhone
            FROM _tmpItem
                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = _tmpItem.ContainerId
@@ -729,5 +653,5 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM gpComplete_Movement_PersonalService (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_MobileBills (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())

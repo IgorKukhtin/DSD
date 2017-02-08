@@ -137,7 +137,6 @@ begin
   LoadReportFromFile('Отчет по счетам', ReportPath + '\Отчеты (финансы)\Отчет по счетам.fr3');
 
   LoadReportFromFile('PrintObject_ReportCollation', ReportPath + '\Отчеты (финансы)\PrintObject_ReportCollation.fr3');
-  exit;
   //  Финансовый учет
 
   LoadReportFromFile('Платежка Банк', ReportPath + '\Финансовый Учет\Платежка Банк.fr3');

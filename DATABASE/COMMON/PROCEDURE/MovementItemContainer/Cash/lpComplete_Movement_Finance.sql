@@ -303,9 +303,9 @@ BEGIN
      -- return;
 
      -- Проверка - прибыль текущего периода
-     IF EXISTS (SELECT WhereObjectId_Analyzer FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0)
+     IF EXISTS (SELECT UnitId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке не определена Группа ОПиУ для подразделения : <%>', lfGet_Object_ValueData ((SELECT WhereObjectId_Analyzer FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0 LIMIT 1));
+         RAISE EXCEPTION 'Ошибка.В проводке не определена Группа ОПиУ для подразделения : <%>', lfGet_Object_ValueData ((SELECT UnitId FROM _tmpItem WHERE _tmpItem.AccountId = zc_Enum_Account_100301() AND _tmpItem.MovementDescId = zc_Movement_PersonalService() AND _tmpItem.ProfitLossGroupId = 0 LIMIT 1));
      END IF;
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
