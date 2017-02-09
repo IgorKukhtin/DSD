@@ -904,7 +904,8 @@ uses
   ReportCollation_UpdateObject in '..\..\Forms\Guides\ReportCollation_UpdateObject.pas' {ReportCollation_UpdateObjectForm: TParentForm},
   PersonalUnitFounder_Object in '..\..\Forms\Guides\PersonalUnitFounder_Object.pas' {PersonalUnitFounder_ObjectForm: TParentForm},
   Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
-  Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm};
+  Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm},
+  Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

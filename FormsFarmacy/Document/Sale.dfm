@@ -4,26 +4,26 @@ inherited SaleForm: TSaleForm
   ClientWidth = 733
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 749
-  ExplicitHeight = 514
+  ExplicitHeight = 517
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 141
+    Top = 182
     Width = 733
-    Height = 338
-    ExplicitTop = 141
+    Height = 297
+    ExplicitTop = 182
     ExplicitWidth = 733
-    ExplicitHeight = 338
-    ClientRectBottom = 338
+    ExplicitHeight = 297
+    ClientRectBottom = 297
     ClientRectRight = 733
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 733
-      ExplicitHeight = 314
+      ExplicitHeight = 273
       inherited cxGrid: TcxGrid
         Width = 733
-        Height = 216
+        Height = 175
         ExplicitWidth = 733
-        ExplicitHeight = 216
+        ExplicitHeight = 175
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
             item
@@ -60,7 +60,7 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 340
+            Width = 267
           end
           object colAmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -85,7 +85,24 @@ inherited SaleForm: TSaleForm
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object colPriceSale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'PriceSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colChangePercent: TcxGridDBColumn
+            Caption = '% c'#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -99,11 +116,17 @@ inherited SaleForm: TSaleForm
             Options.Editing = False
             Width = 72
           end
+          object coisSP: TcxGridDBColumn
+            Caption = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1077
+            DataBinding.FieldName = 'isSP'
+            HeaderAlignmentHorz = taCenter
+            Options.Editing = False
+          end
         end
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 224
+        Top = 183
         Width = 733
         Height = 90
         Align = alBottom
@@ -206,7 +229,7 @@ inherited SaleForm: TSaleForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 216
+        Top = 175
         Width = 733
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -217,21 +240,43 @@ inherited SaleForm: TSaleForm
   end
   inherited DataPanel: TPanel
     Width = 733
-    Height = 115
+    Height = 156
     TabOrder = 3
     ExplicitWidth = 733
-    ExplicitHeight = 115
+    ExplicitHeight = 156
+    inherited edInvNumber: TcxTextEdit
+      Top = 22
+      ExplicitTop = 22
+    end
+    inherited cxLabel1: TcxLabel
+      Top = 4
+      ExplicitTop = 4
+    end
+    inherited edOperDate: TcxDateEdit
+      Top = 22
+      ExplicitTop = 22
+    end
+    inherited cxLabel2: TcxLabel
+      Top = 4
+      ExplicitTop = 4
+    end
+    inherited cxLabel15: TcxLabel
+      Top = 4
+      ExplicitTop = 4
+    end
     inherited ceStatus: TcxButtonEdit
+      Top = 22
+      ExplicitTop = 22
       ExplicitHeight = 22
     end
     object lblUnit: TcxLabel
       Left = 384
-      Top = 5
+      Top = 4
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
     object edUnit: TcxButtonEdit
       Left = 384
-      Top = 23
+      Top = 22
       Properties.Buttons = <
         item
           Default = True
@@ -242,7 +287,7 @@ inherited SaleForm: TSaleForm
     end
     object lblJuridical: TcxLabel
       Left = 8
-      Top = 41
+      Top = 42
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
     end
     object edJuridical: TcxButtonEdit
@@ -254,15 +299,15 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 270
+      Width = 252
     end
     object cxLabel3: TcxLabel
-      Left = 284
+      Left = 270
       Top = 42
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 284
+      Left = 270
       Top = 57
       Properties.Buttons = <
         item
@@ -270,46 +315,46 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 101
+      Width = 100
     end
     object cxLabel4: TcxLabel
-      Left = 505
+      Left = 472
       Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
     end
     object edTotalSumm: TcxCurrencyEdit
-      Left = 506
+      Left = 473
       Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 66
+      Width = 76
     end
     object cxLabel5: TcxLabel
-      Left = 418
+      Left = 384
       Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086
     end
     object edTotalCount: TcxCurrencyEdit
-      Left = 418
+      Left = 384
       Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 15
-      Width = 63
+      Width = 81
     end
     object cxLabel6: TcxLabel
-      Left = 586
+      Left = 556
       Top = 41
       Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' ('#1079#1072#1082'.)'
     end
     object edTotalSummPrimeCost: TcxCurrencyEdit
-      Left = 586
+      Left = 556
       Top = 57
       Properties.DisplayFormat = ',0.00'
       Properties.ReadOnly = True
       TabOrder = 17
-      Width = 66
+      Width = 98
     end
     object cxLabel7: TcxLabel
       Left = 8
@@ -321,8 +366,73 @@ inherited SaleForm: TSaleForm
       Top = 92
       Properties.ReadOnly = False
       TabOrder = 19
-      Width = 644
+      Width = 646
     end
+    object cxLabel12: TcxLabel
+      Left = 8
+      Top = 114
+      Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+    end
+    object edOperDateSP: TcxDateEdit
+      Left = 226
+      Top = 130
+      Properties.AutoSelect = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 21
+      Width = 90
+    end
+    object cxLabel13: TcxLabel
+      Left = 226
+      Top = 115
+      Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
+    end
+    object cxLabel14: TcxLabel
+      Left = 322
+      Top = 114
+      Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
+    end
+    object edInvNumberSP: TcxTextEdit
+      Left = 322
+      Top = 130
+      Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
+      TabOrder = 24
+      Width = 80
+    end
+    object cxLabel16: TcxLabel
+      Left = 408
+      Top = 114
+      Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
+    end
+    object edMedicSP: TcxTextEdit
+      Left = 408
+      Top = 130
+      TabOrder = 26
+      Width = 120
+    end
+    object edPartnerMedical: TcxButtonEdit
+      Left = 8
+      Top = 130
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 211
+    end
+  end
+  object cxLabel8: TcxLabel [2]
+    Left = 531
+    Top = 114
+    Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
+  end
+  object edMemberSP: TcxTextEdit [3]
+    Left = 531
+    Top = 130
+    TabOrder = 7
+    Width = 123
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -368,10 +478,20 @@ inherited SaleForm: TSaleForm
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
   end
+  inherited MasterDS: TDataSource
+    Top = 224
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 224
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Sale'
+    Left = 64
+    Top = 224
   end
   inherited BarManager: TdxBarManager
+    Left = 96
+    Top = 223
     DockControlHeights = (
       0
       0
@@ -380,6 +500,7 @@ inherited SaleForm: TSaleForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
+    Top = 225
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -387,12 +508,14 @@ inherited SaleForm: TSaleForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Key'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ShowAll'
@@ -400,32 +523,40 @@ inherited SaleForm: TSaleForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
         Value = Null
         Component = edTotalSummPrimeCost
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 312
+  end
+  inherited StatusGuides: TdsdGuides
+    Top = 232
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
+    Top = 232
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -436,6 +567,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -444,22 +576,26 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
@@ -467,30 +603,35 @@ inherited SaleForm: TSaleForm
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         Component = edTotalCount
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         Component = edTotalSumm
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
         Value = Null
         Component = edTotalSummPrimeCost
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
@@ -498,12 +639,14 @@ inherited SaleForm: TSaleForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
         Component = GuidesJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -511,12 +654,14 @@ inherited SaleForm: TSaleForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = Null
         Component = GuidesPaidKind
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -524,15 +669,60 @@ inherited SaleForm: TSaleForm
         Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerMedicalName'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateSP'
+        Value = 'NULL'
+        Component = edOperDateSP
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberSP'
+        Value = Null
+        Component = edInvNumberSP
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicSPName'
+        Value = Null
+        Component = edMedicSP
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPName'
+        Value = Null
+        Component = edMemberSP
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 224
+    Left = 160
+    Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Sale'
@@ -543,6 +733,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -550,6 +741,7 @@ inherited SaleForm: TSaleForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -557,6 +749,7 @@ inherited SaleForm: TSaleForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitId'
@@ -564,6 +757,7 @@ inherited SaleForm: TSaleForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -571,6 +765,7 @@ inherited SaleForm: TSaleForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -578,6 +773,47 @@ inherited SaleForm: TSaleForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerMedicalId'
+        Value = Null
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateSP'
+        Value = 'NULL'
+        Component = edOperDateSP
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberSP'
+        Value = Null
+        Component = edInvNumberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMedicSP'
+        Value = Null
+        Component = edMedicSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberSP'
+        Value = Null
+        Component = edMemberSP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -585,6 +821,7 @@ inherited SaleForm: TSaleForm
         Component = edComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -606,6 +843,8 @@ inherited SaleForm: TSaleForm
       item
         Action = actRefresh
       end>
+    Left = 248
+    Top = 240
   end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
@@ -623,9 +862,24 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edComment
+      end
+      item
+        Control = edPartnerMedical
+      end
+      item
+        Control = edOperDateSP
+      end
+      item
+        Control = edInvNumberSP
+      end
+      item
+        Control = edMedicSP
+      end
+      item
+        Control = edMemberSP
       end>
-    Left = 200
-    Top = 177
+    Left = 208
+    Top = 233
   end
   inherited RefreshAddOn: TRefreshAddOn
     Left = 72
@@ -633,7 +887,7 @@ inherited SaleForm: TSaleForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     Left = 550
-    Top = 224
+    Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     Left = 550
@@ -648,6 +902,7 @@ inherited SaleForm: TSaleForm
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId'
@@ -655,6 +910,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsId'
@@ -662,6 +918,7 @@ inherited SaleForm: TSaleForm
         Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAmount'
@@ -670,14 +927,34 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'ioPrice'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceSale'
+        DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'outSumm'
@@ -685,15 +962,24 @@ inherited SaleForm: TSaleForm
         Component = MasterCDS
         ComponentItem = 'Summ'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSP'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 400
-    Top = 272
+    Left = 352
+    Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 360
-    Top = 312
+    Left = 448
+    Top = 320
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_TotalSumm'
@@ -704,6 +990,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
@@ -711,6 +998,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'TotalCount'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
@@ -718,6 +1006,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'TotalSumm'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
@@ -725,15 +1014,17 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'TotalSummPrimeCost'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 628
-    Top = 172
+    Left = 636
+    Top = 252
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -743,6 +1034,7 @@ inherited SaleForm: TSaleForm
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -751,6 +1043,7 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 472
   end
@@ -759,6 +1052,7 @@ inherited SaleForm: TSaleForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -768,6 +1062,7 @@ inherited SaleForm: TSaleForm
         Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -776,6 +1071,7 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 56
@@ -785,6 +1081,7 @@ inherited SaleForm: TSaleForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -794,6 +1091,7 @@ inherited SaleForm: TSaleForm
         Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -802,9 +1100,10 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 48
+    Left = 328
+    Top = 88
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
@@ -824,22 +1123,23 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 415
-    Top = 208
+    Left = 407
+    Top = 224
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 476
-    Top = 206
+    Left = 500
+    Top = 238
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 444
-    Top = 209
+    Left = 452
+    Top = 249
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>
@@ -871,6 +1171,7 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inShowAll'
@@ -879,6 +1180,7 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -900,10 +1202,40 @@ inherited SaleForm: TSaleForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
     Left = 318
     Top = 409
+  end
+  object PartnerMedicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartnerMedical
+    FormNameParam.Value = 'TPartnerMedicalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartnerMedicalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PartnerMedicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 120
   end
 end

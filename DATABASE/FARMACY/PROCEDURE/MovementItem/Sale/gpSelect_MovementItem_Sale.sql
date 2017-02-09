@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountRemains TFloat
-             , Price TFloat, Summ TFloat
+             , Price TFloat, PriceSale TFloat, ChangePercent TFloat
+             , Summ TFloat
+             , isSP Boolean 
              , isErased Boolean
               )
 AS
@@ -48,24 +50,21 @@ BEGIN
                                 GROUP BY 
                                     Container.ObjectId
                              )
-               ,MovementItem_Sale AS (
-                                        SELECT 
+               ,MovementItem_Sale AS ( SELECT 
                                             MI_Sale.Id
                                            ,MI_Sale.GoodsId
                                            ,MI_Sale.Amount
                                            ,MI_Sale.Price
+                                           ,COALESCE (MI_Sale.PriceSale, MI_Sale.Price) AS PriceSale
+                                           ,MI_Sale.ChangePercent
                                            ,MI_Sale.Summ
+                                           ,MI_Sale.isSP
                                            ,MI_Sale.IsErased
                                         FROM 
                                             MovementItem_Sale_View AS MI_Sale
                                         WHERE 
                                             MI_Sale.MovementId = inMovementId
-                                            AND
-                                            (
-                                                MI_Sale.isErased = FALSE 
-                                                or 
-                                                inIsErased = TRUE
-                                            )
+                                            AND (MI_Sale.isErased = FALSE OR inIsErased = TRUE)
                                      )
             SELECT
                 COALESCE(MovementItem_Sale.Id,0)                     AS Id
@@ -75,7 +74,10 @@ BEGIN
               , MovementItem_Sale.Amount                             AS Amount
               , tmpRemains.Amount::TFloat                            AS AmountRemains
               , COALESCE(MovementItem_Sale.Price,Object_Price.Price) AS Price
-              , MovementItem_Sale.Summ                               AS Summ
+              , COALESCE(MovementItem_Sale.PriceSale,Object_Price.Price) AS PriceSale
+              , MovementItem_Sale.ChangePercent
+              , MovementItem_Sale.Summ
+              , MovementItem_Sale.isSP
               , COALESCE(MovementItem_Sale.IsErased,FALSE)           AS isErased
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Sale ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
@@ -110,7 +112,10 @@ BEGIN
                                            ,MI_Sale.GoodsName
                                            ,MI_Sale.Amount
                                            ,MI_Sale.Price
+                                           ,COALESCE (MI_Sale.PriceSale, MI_Sale.Price) AS PriceSale
+                                           ,MI_Sale.ChangePercent
                                            ,MI_Sale.Summ
+                                           ,MI_Sale.isSP
                                            ,MI_Sale.IsErased
                                         FROM 
                                             MovementItem_Sale_View AS MI_Sale
@@ -131,7 +136,10 @@ BEGIN
               , MovementItem_Sale.Amount      AS Amount
               , tmpRemains.Amount::TFloat     AS AmountRemains
               , MovementItem_Sale.Price       AS Price
-              , MovementItem_Sale.Summ        AS Summ
+              , MovementItem_Sale.PriceSale
+              , MovementItem_Sale.ChangePercent
+              , MovementItem_Sale.Summ
+              , MovementItem_Sale.isSP
               , MovementItem_Sale.IsErased    AS isErased
             FROM MovementItem_Sale
                 LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId;

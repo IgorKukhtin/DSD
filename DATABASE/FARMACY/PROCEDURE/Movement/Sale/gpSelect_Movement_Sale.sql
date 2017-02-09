@@ -23,6 +23,12 @@ RETURNS TABLE (Id Integer
              , PaidKindId Integer
              , PaidKindName TVarChar
              , Comment TVarChar
+             , OperDateSP TDateTime
+             , PartnerMedicalName TVarChar
+             , InvNumberSP TVarChar
+             , MedicSPName TVarChar
+             , MemberSPName TVarChar
+             , isSP Boolean
               )
 
 AS
@@ -67,6 +73,19 @@ BEGIN
           , Movement_Sale.PaidKindId
           , Movement_Sale.PaidKindName
           , Movement_Sale.Comment
+
+          , Movement_Sale.OperDateSP
+          , Movement_Sale.PartnerMedicalName
+          , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSPName
+          , Movement_Sale.MemberSPName 
+          , CASE WHEN COALESCE (Movement_Sale.PartnerMedicalName,'') <> '' OR
+                      COALESCE (Movement_Sale.InvNumberSP,'') <> '' OR
+                      COALESCE (Movement_Sale.MedicSPName,'') <> '' OR
+                      COALESCE (Movement_Sale.MemberSPName,'') <> ''
+                 THEN TRUE
+                 ELSE FALSE
+            END ::Boolean AS isSP
         FROM
             tmpUnit
             LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId
@@ -84,6 +103,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 08.02.17         * add SP
  04.05.16         * 
  13.10.15                                                                        *
 */

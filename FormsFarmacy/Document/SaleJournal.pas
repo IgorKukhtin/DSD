@@ -27,6 +27,7 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
+    colisSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

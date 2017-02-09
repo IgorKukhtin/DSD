@@ -102,7 +102,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
-                         , AnalyzerId
+                         , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
         -- 1.1. долг сотруднику по ЗП, или расчеты с Учредителем
@@ -150,7 +150,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , 0 AS AnalyzerId -- не надо, т.к. это обычная ЗП
+             , 0                     AS AnalyzerId           -- не надо, т.к. это обычная ЗП
+             , MovementItem.ObjectId AS ObjectIntId_Analyzer -- надо, сохраним "оригинал"
 
              -- , CASE WHEN -1 * MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsActive -- всегда такая
@@ -176,8 +177,10 @@ BEGIN
                                           ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                          AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
 
+             -- нашли Физ лицо
              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                                                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+             -- если у Физ лица установлено - На кого "переносятся" затраты в "Налоги с ЗП" или в "Мобильная связь"
              LEFT JOIN ObjectLink AS ObjectLink_Member_ObjectTo ON ObjectLink_Member_ObjectTo.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                                AND ObjectLink_Member_ObjectTo.DescId = zc_ObjectLink_Member_ObjectTo()
              LEFT JOIN Object AS Object_ObjectTo ON Object_ObjectTo.Id     = ObjectLink_Member_ObjectTo.ChildObjectId
@@ -221,7 +224,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, PersonalServiceListId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
-                         , AnalyzerId
+                         , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
         -- 1.2.1. ОПиУ по ЗП
@@ -270,7 +273,8 @@ BEGIN
              , 0 AS ContractId -- не используется
              , 0 AS PaidKindId -- не используется
 
-             , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
+             , 0 AS AnalyzerId               -- не надо, т.к. это ОПиУ
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это ОПиУ
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -333,7 +337,9 @@ BEGIN
              , ObjectLink_Unit_Contract.ChildObjectId     AS ContractId
              , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
 
-             , 0 AS AnalyzerId -- не надо, т.к. это Перевыставление
+             , 0 AS AnalyzerId               -- не надо, т.к. это Перевыставление
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это Перевыставление
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
@@ -401,7 +407,9 @@ BEGIN
              , 0 AS ContractId
              , 0 AS PaidKindId
 
-             , 0 AS AnalyzerId -- не надо, т.к. это Перевыставление
+             , 0 AS AnalyzerId               -- не надо, т.к. это Перевыставление
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это Перевыставление
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
 
@@ -462,6 +470,7 @@ BEGIN
              , 0 AS PaidKindId -- не используется
 
              , 0 AS AnalyzerId -- не надо, т.к. это ОПиУ
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это ОПиУ
 
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
@@ -516,6 +525,7 @@ BEGIN
              , 0 AS PaidKindId -- не используется
 
              , zc_Enum_AnalyzerId_PersonalService_Nalog() AS AnalyzerId -- надо, т.к. это удержания с ЗП
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
 
              , _tmpItem.IsActive -- всегда такая
              , FALSE AS IsMaster
@@ -576,6 +586,8 @@ BEGIN
              , 0 AS PaidKindId
 
              , zc_Enum_AnalyzerId_PersonalService_Nalog() AS AnalyzerId -- надо, т.к. это Перевыставление - Налоги
+             , _tmpItem.ObjectIntId_Analyzer -- надо, т.к. это удержания с ЗП
+
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
 
@@ -685,10 +697,10 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone()           , tmpMovement.MovementItemId, tmpMovement.SummPhone)
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm
-                , COALESCE (SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
-                , COALESCE (SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
                 , 0 AS SummPhone
            FROM _tmpItem
                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = _tmpItem.ContainerId

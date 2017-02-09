@@ -58,6 +58,18 @@ type
     spSelect_MovementItem_SalePartion: TdsdStoredProc;
     cxSplitter1: TcxSplitter;
     dsdDBViewAddOn1: TdsdDBViewAddOn;
+    cxLabel12: TcxLabel;
+    edOperDateSP: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    cxLabel14: TcxLabel;
+    edInvNumberSP: TcxTextEdit;
+    cxLabel16: TcxLabel;
+    edMedicSP: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edMemberSP: TcxTextEdit;
+    edPartnerMedical: TcxButtonEdit;
+    PartnerMedicalGuides: TdsdGuides;
+    coisSP: TcxGridDBColumn;
   private
     { Private declarations }
   public

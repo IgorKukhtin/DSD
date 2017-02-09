@@ -27,8 +27,17 @@ BEGIN
      END IF;
 
 
+     IF zc_Enum_Status_Erased() = (SELECT StatusId FROM Movement WHERE Id = inMovementId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = (SELECT DescId FROM Movement WHERE Id = inMovementId)), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+     END IF;
+     IF zc_Enum_Status_UnComplete() = (SELECT StatusId FROM Movement WHERE Id = inMovementId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = (SELECT DescId FROM Movement WHERE Id = inMovementId)), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+     END IF;
+
      --
-    OPEN Cursor1 FOR
+     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
 
 
@@ -153,8 +162,36 @@ BEGIN
 
 
     OPEN Cursor2 FOR
-    
-       WITH tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
+       WITH tmpMIContainer_all AS (SELECT MIContainer.MovementItemId
+                                        , CLO_Unit.ObjectId     AS UnitId
+                                        , CLO_Position.ObjectId AS PositionId
+                                        , CLO_Personal.ObjectId AS PersonalId
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
+                                        , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
+                                   FROM MovementItemContainer AS MIContainer
+                                        LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                      ON CLO_Unit.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Position
+                                                                      ON CLO_Position.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
+                                        LEFT JOIN ContainerLinkObject AS CLO_Personal
+                                                                      ON CLO_Personal.ContainerId = MIContainer.ContainerId
+                                                                     AND CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                   WHERE MIContainer.MovementId = inMovementId
+                                     AND MIContainer.DescId     = zc_MIContainer_Summ()
+                                     AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_PersonalService_Nalog())
+	                                  )
+          , tmpMIContainer AS (SELECT tmpMIContainer_all.UnitId
+                                    , tmpMIContainer_all.PositionId
+                                    , tmpMIContainer_all.PersonalId
+                                    , SUM (tmpMIContainer_all.SummNalog) :: TFloat AS SummNalog
+                               FROM tmpMIContainer_all
+                               GROUP BY tmpMIContainer_all.UnitId
+                                      , tmpMIContainer_all.PositionId
+                                      , tmpMIContainer_all.PersonalId
+                              )
+          , tmpMI AS (SELECT MovementItem.Id                          AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                    AS PersonalId
                            , MILinkObject_Unit.ObjectId               AS UnitId
@@ -164,11 +201,10 @@ BEGIN
                            , ObjectLink_Personal_Member.ChildObjectId AS MemberId_Personal
                            , MILinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                           
-                      FROM MovementItem 
-
+                      FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                           ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                                            ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
@@ -184,7 +220,7 @@ BEGIN
                                                            AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList() 
                       WHERE  MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Master()
-                         AND MovementItem.isErased = False
+                         AND MovementItem.isErased = FALSE
                      )
           , tmpUserAll AS (SELECT DISTINCT UserId FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId) -- Документы-меню (управленцы) AND <> Рудик Н.В.
           , tmpPersonal AS (SELECT 0 AS MovementItemId
@@ -209,8 +245,8 @@ BEGIN
                                                      --AND vbIsSummCardRecalc = TRUE -- !!!т.е. если это БН!!!
 
                                  JOIN tmpMI ON tmpMI.PersonalId = View_Personal.PersonalId
-                                                AND tmpMI.UnitId     = View_Personal.UnitId
-                                                AND tmpMI.PositionId = View_Personal.PositionId
+                                           AND tmpMI.UnitId     = View_Personal.UnitId
+                                           AND tmpMI.PositionId = View_Personal.PositionId
                                               
                             WHERE tmpMI.PersonalId IS NULL
                            )
@@ -226,22 +262,24 @@ BEGIN
             , CASE WHEN tmpAll.MovementItemId > 0 THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean   AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
+            , Object_PersonalTo.ObjectCode            AS PersonalCode_to
+            , Object_PersonalTo.ValueData             AS PersonalName_to
+
             , Object_Unit.Id                          AS UnitId
             , Object_Unit.ObjectCode                  AS UnitCode
             , Object_Unit.ValueData                   AS UnitName
             , Object_Position.Id                      AS PositionId
             , Object_Position.ValueData               AS PositionName
 
-
             , COALESCE (Object_Member.Id, 0)          AS MemberId
             , COALESCE (Object_Member.ValueData, ''::TVarChar) AS MemberName
 
 --            , tmpAll.Amount :: TFloat          AS Amount
 --            , MIFloat_SummToPay.ValueData      AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
-            , (COALESCE (MIFloat_SummService.ValueData, 0) + COALESCE (MIFloat_SummAdd.ValueData, 0) + COALESCE (MIFloat_SummHoliday.ValueData, 0)) :: TFloat AS SummService   
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
+            , (COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + COALESCE (MIFloat_SummHoliday.ValueData, 0)) :: TFloat AS SummService
             , MIFloat_SummCard.ValueData       AS SummCard
-            , MIFloat_SummNalog.ValueData      AS SummNalog
+            , tmpMIContainer.SummNalog         AS SummNalog
 --            , MIFloat_SummCardRecalc.ValueData AS SummCardRecalc        
             , MIFloat_SummMinus.ValueData      AS SummMinus
 --            , MIFloat_SummAdd.ValueData        AS SummAdd
@@ -253,9 +291,15 @@ BEGIN
             , MIFloat_SummTransport.ValueData    AS SummTransport
             , MIFloat_SummPhone.ValueData        AS SummPhone
 
-            , MIString_Comment.ValueData       AS Comment
+            , MIString_Comment.ValueData         AS Comment
          
-       FROM tmpAll 
+       FROM tmpAll
+            LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId = tmpAll.PersonalId
+                                    AND tmpMIContainer.UnitId     = tmpAll.UnitId
+                                    AND tmpMIContainer.PositionId = tmpAll.PositionId
+            LEFT JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId
+                                        AND tmpMIContainer_all.Ord            = 1 -- !!!только 1-ый!!!
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = tmpAll.MovementItemId
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -269,9 +313,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                         ON MIFloat_SummCard.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
-            LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+            /*LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                         ON MIFloat_SummNalog.MovementItemId = tmpAll.MovementItemId
-                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                                       AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()*/
                                                           
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = tmpAll.MovementItemId
@@ -309,6 +353,7 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
+            LEFT JOIN Object AS Object_PersonalTo ON Object_PersonalTo.Id = tmpMIContainer_all.PersonalId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal_Main
                                     ON ObjectBoolean_Personal_Main.ObjectId = tmpAll.PersonalId
@@ -319,6 +364,14 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+       WHERE 0 <> COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)
+          OR 0 <> COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + COALESCE (MIFloat_SummHoliday.ValueData, 0)
+          OR 0 <> MIFloat_SummCard.ValueData
+          OR 0 <> tmpMIContainer.SummNalog
+          OR 0 <> MIFloat_SummMinus.ValueData
+          OR 0 <> MIFloat_SummTransportAdd.ValueData
+          OR 0 <> MIFloat_SummTransport.ValueData
+          OR 0 <> MIFloat_SummPhone.ValueData
       ;
 
     RETURN NEXT Cursor2;
