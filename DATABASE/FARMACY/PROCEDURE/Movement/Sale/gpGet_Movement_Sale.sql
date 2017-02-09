@@ -24,10 +24,13 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
 
              , OperDateSP TDateTime
+             , PartnerMedicalId Integer
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , MemberSPName TVarChar
+             , GroupMemberSPId Integer
+             , GroupMemberSPName TVarChar
              )
 AS
 $BODY$
@@ -57,10 +60,14 @@ BEGIN
           , NULL::TVarChar                                   AS Comment
 
           , NULL::TDateTime                                  AS OperDateSP
+          , NULL::Integer                                    AS PartnerMedicalId
           , NULL::TVarChar                                   AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
           , NULL::TVarChar                                   AS MedicSPName
           , NULL::TVarChar                                   AS MemberSPName
+
+          , NULL::Integer                                    AS GroupMemberSPId
+          , NULL::TVarChar                                   AS GroupMemberSPName
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -83,10 +90,14 @@ BEGIN
           , Movement_Sale.Comment
 
           , COALESCE(Movement_Sale.OperDateSP, NULL) :: TDateTime AS OperDateSP
+          , Movement_Sale.PartnerMedicalId
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP
           , Movement_Sale.MedicSPName
           , Movement_Sale.MemberSPName
+
+          , Movement_Sale.GroupMemberSPId
+          , Movement_Sale.GroupMemberSPName
         FROM
             Movement_Sale_View AS Movement_Sale
         WHERE Movement_Sale.Id =  inMovementId;

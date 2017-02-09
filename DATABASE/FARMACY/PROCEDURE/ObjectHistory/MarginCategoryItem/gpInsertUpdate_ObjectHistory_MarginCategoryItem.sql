@@ -1,11 +1,10 @@
 -- Function: gpInsertUpdate_ObjectHistory_Price ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_MarginCategoryItem (Integer, Integer, TDateTime, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_MarginCategoryItem (Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_MarginCategoryItem(
  INOUT ioId                        Integer,    -- ключ объекта <Элемент истории>
     IN inMarginCategoryItemId      Integer,    -- 
-    IN inOperDate                  TDateTime,  -- Дата действия
     IN inPrice                     TFloat,     -- 
     IN inValue                     TFloat,     -- 
     IN inSession                   TVarChar    -- сессия пользователя
@@ -24,7 +23,7 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Не установлена <категория наценки>.';
    END IF;
    -- Вставляем или меняем объект историю
-   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_MarginCategoryItem(), inMarginCategoryItemId, inOperDate, vbUserId);
+   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_MarginCategoryItem(), inMarginCategoryItemId, CURRENT_DATE, vbUserId);
    -- Минимальная цена
    PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_MarginCategoryItem_Price(), ioId, inPrice);
    -- % наценки

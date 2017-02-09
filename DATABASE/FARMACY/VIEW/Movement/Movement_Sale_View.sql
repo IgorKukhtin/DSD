@@ -23,7 +23,11 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
       , MovementString_InvNumberSP.ValueData            AS InvNumberSP
       , MovementString_MedicSP.ValueData                AS MedicSPName
       , MovementString_MemberSP.ValueData               AS MemberSPName
+      , Object_PartnerMedical.Id                        AS PartnerMedicalId
       , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
+
+      , Object_GroupMemberSP.Id                         AS GroupMemberSPId
+      , Object_GroupMemberSP.ValueData                  AS GroupMemberSPName
 
     FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -80,6 +84,10 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
                                         AND MovementLinkObject_PartnerMedical.DescId = zc_MovementLinkObject_PartnerMedical()
             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = MovementLinkObject_PartnerMedical.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_GroupMemberSP
+                                         ON MovementLinkObject_GroupMemberSP.MovementId = Movement.Id
+                                        AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
+            LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = MovementLinkObject_GroupMemberSP.ObjectId
 
     WHERE Movement.DescId = zc_Movement_Sale();
 

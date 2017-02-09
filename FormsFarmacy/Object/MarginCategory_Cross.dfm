@@ -123,7 +123,7 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
     Left = 158
     Top = 119
   end
-  object spSelectMI: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MarginCategory_Cross'
     DataSet = HeaderCDS
     DataSets = <
@@ -256,10 +256,10 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMI
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMI
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -349,10 +349,10 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectMI
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spSelectMI
+          StoredProc = spSelect
         end
         item
         end>
@@ -452,7 +452,7 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
     Left = 352
     Top = 111
   end
-  object spInsertUpdateMI: TdsdStoredProc
+  object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MarginCategoryItem'
     DataSets = <>
     OutputType = otResult

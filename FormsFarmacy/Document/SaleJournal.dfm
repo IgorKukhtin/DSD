@@ -16,17 +16,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 675
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 663
+    ExplicitWidth = 675
     ExplicitHeight = 434
     ClientRectBottom = 434
     ClientRectRight = 675
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 663
+      ExplicitWidth = 675
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
         Width = 675
         Height = 434
-        ExplicitWidth = 663
+        ExplicitWidth = 675
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -167,13 +167,21 @@ inherited SaleJournalForm: TSaleJournalForm
             Options.Editing = False
             Width = 98
           end
+          object colGroupMemberSPName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'GroupMemberSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 675
-    ExplicitWidth = 663
+    ExplicitWidth = 675
   end
   inherited ActionList: TActionList
     Left = 55

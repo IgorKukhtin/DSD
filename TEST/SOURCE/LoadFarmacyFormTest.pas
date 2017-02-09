@@ -1152,6 +1152,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TKindOutSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPEditForm'));

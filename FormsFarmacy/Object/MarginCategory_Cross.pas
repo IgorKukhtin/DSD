@@ -30,7 +30,7 @@ uses
 type
   TMarginCategory_CrossForm = class(TParentForm)
     FormParams: TdsdFormParams;
-    spSelectMI: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
@@ -42,7 +42,7 @@ type
     cxGrid: TcxGrid;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
-    spInsertUpdateMI: TdsdStoredProc;
+    spInsertUpdate: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbStatic: TdxBarStatic;

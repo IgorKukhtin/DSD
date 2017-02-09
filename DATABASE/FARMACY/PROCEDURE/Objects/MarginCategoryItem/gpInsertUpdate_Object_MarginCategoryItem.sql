@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MarginCategoryItem(
 RETURNS TABLE(Id INTEGER) AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsUpdate Boolean;   
+   DECLARE vbIsUpdate Boolean; 
+   DECLARE vbMarginPercent TFloat;
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
@@ -26,6 +27,15 @@ BEGIN
    -- определили <Признак новый или корректировка>
    vbIsUpdate:= COALESCE (inId, 0) > 0;
 
+   IF COALESCE(inId, 0) <> 0 THEN
+      vbMarginPercent := (SELECT ObjectFloat.ValueData 
+                          FROM ObjectFloat 
+                          WHERE ObjectFloat.ObjectId = inId 
+                            AND ObjectFloat.DescId = zc_ObjectFloat_MarginCategoryItem_MarginPercent()
+                          );
+   END IF;
+
+
    IF COALESCE(inId, 0) = 0 THEN
       -- сохранили <Объект>
       inId := lpInsertUpdate_Object (0, zc_Object_MarginCategoryItem(), 0, '');
@@ -38,6 +48,20 @@ BEGIN
 
    -- сохранили связь с <Категорией наценки>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MarginCategoryItem_MarginCategory(), inId, inMarginCategoryId);
+
+
+   -- сохранили историю
+    IF ((COALESCE(inMarginPercent,0) <>0 ) AND (inMarginPercent <> COALESCE(vbMarginPercent,0))) 
+    THEN
+        -- сохранили историю
+        PERFORM gpInsertUpdate_ObjectHistory_MarginCategoryItem(
+                ioId                    := 0 :: Integer,    -- ключ объекта <Элемент истории>
+                inMarginCategoryItemId  := inId,            -- 
+                inPrice                 := inMinPrice,      -- Цена
+                inValue                 := inMarginPercent, -- % наценки
+                inSession  := inSession);
+
+    END IF;
 
 
    -- сохранили протокол
@@ -58,8 +82,8 @@ ALTER FUNCTION gpInsertUpdate_Object_MarginCategoryItem (Integer, TFloat, TFloat
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.17         *
  09.04.15                          *
-
 */
 
 -- тест

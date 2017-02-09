@@ -28,6 +28,7 @@ type
     colComment: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     colisSP: TcxGridDBColumn;
+    colGroupMemberSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public
