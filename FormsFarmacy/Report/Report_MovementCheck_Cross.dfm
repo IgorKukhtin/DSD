@@ -1,7 +1,7 @@
 object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1083#1072#1085#1091' '#1084#1072#1088#1082#1077#1090#1087#1088#1086#1076#1072#1078' ('#1092#1072#1088#1084#1072#1094#1077#1074#1090#1091')'
   ClientHeight = 334
   ClientWidth = 822
   Color = clBtnFace
@@ -352,25 +352,9 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'OperDate'
-        Value = 0d
-        Component = edDateStart
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'isFarm'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 182
@@ -409,6 +393,15 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsFarm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isFarm'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -512,20 +505,6 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end
-      item
-        Component = GuidesUnit
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -534,6 +513,20 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Component = edDateStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -557,10 +550,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdateMI
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -650,6 +641,7 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
           StoredProc = spSelect
         end
         item
+          StoredProc = spGetUnitName
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -782,10 +774,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     object actMISetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedMIMaster
       StoredProcList = <
         item
-          StoredProc = spErasedMIMaster
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -798,10 +788,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     object actMISetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErasedMIMaster
       StoredProcList = <
         item
-          StoredProc = spErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -834,10 +822,8 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertMaskMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertMaskMIMaster
         end
         item
           StoredProc = spSelect
@@ -935,73 +921,6 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
       end>
     Left = 376
   end
-  object spInsertUpdateMI: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPositionId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalGroupId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalGroupId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = HeaderCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioValue'
-        Value = Null
-        Component = CrossDBViewAddOn
-        ComponentItem = 'Value'
-        DataType = ftString
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioTypeId'
-        Value = Null
-        Component = CrossDBViewAddOn
-        ComponentItem = 'TypeId'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 750
-    Top = 159
-  end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView
@@ -1029,37 +948,15 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     IdParam.Value = Null
     IdParam.MultiSelectSeparator = ','
     RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = edDateStart
-      end
-      item
-        Component = GuidesUnit
-      end>
+    ComponentList = <>
     Left = 648
     Top = 8
   end
-  object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMI_SheetWorkTime_SetErased'
+  object spGetUnitName: TdsdStoredProc
+    StoredProcName = 'gpGet_Unit_Farm'
     DataSets = <>
     OutputType = otResult
     Params = <
-      item
-        Name = 'inPersonalId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPositionId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inUnitId'
         Value = ''
@@ -1069,57 +966,24 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalGroupId'
+        Name = 'inIsFarm'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PersonalGroupId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = edDateStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioIsErased'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isErased'
+        Component = FormParams
+        ComponentItem = 'isFarm'
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 742
-    Top = 223
-  end
-  object spInsertMaskMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertMask_MI_SheetWorkTime'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
+      end
       item
-        Name = 'inUnitId'
+        Name = 'outUnitName'
         Value = Null
         Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 42430d
-        Component = edDateStart
-        DataType = ftDateTime
-        ParamType = ptInput
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 752
-    Top = 96
+    Left = 432
+    Top = 175
   end
 end

@@ -243,7 +243,7 @@ type
     miReport_PriceInterventionForm: TMenuItem;
     N40: TMenuItem;
     actReportMovementCheckFarmForm: TdsdOpenForm;
-    N41: TMenuItem;
+    miReportMovementCheckFarmForm: TMenuItem;
     actReportMovementIncomeFarmForm: TdsdOpenForm;
     N51: TMenuItem;
     actReport_PriceIntervention2: TdsdOpenForm;
@@ -333,7 +333,9 @@ type
     actPromoUnit: TdsdOpenForm;
     N128: TMenuItem;
     actReport_MovementCheck_Cross: TdsdOpenForm;
-    N210: TMenuItem;
+    miReport_MovementCheck_Cross: TMenuItem;
+    actReport_MovementCheckFarm_Cross: TdsdOpenForm;
+    miReport_MovementCheckFarm_Cross: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
