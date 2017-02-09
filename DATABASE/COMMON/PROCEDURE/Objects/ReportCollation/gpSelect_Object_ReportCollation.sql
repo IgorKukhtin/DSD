@@ -103,6 +103,8 @@ BEGIN
       LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = ObjectLink_Buh.ChildObjectId   
 
   WHERE Object_ReportCollation.DescId = zc_Object_ReportCollation()
+    AND ObjectDate_Start.ValueData >= inStartDate
+    AND ObjectDate_End.ValueData <= inEndDate
    ;
   
 END;
