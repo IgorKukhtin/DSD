@@ -118,6 +118,46 @@ inherited SaleJournalForm: TSaleJournalForm
             DataBinding.FieldName = 'Comment'
             Width = 147
           end
+          object clPartnerMedicalName: TcxGridDBColumn
+            Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'PartnerMedicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 119
+          end
+          object clOperDateSP: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'OperDateSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInvNumberSP: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
+            DataBinding.FieldName = 'InvNumberSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object clMedicSPName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
+            DataBinding.FieldName = 'MedicSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
+          object clMemberSPName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
+            DataBinding.FieldName = 'MemberSPName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
         end
       end
     end
@@ -146,6 +186,7 @@ inherited SaleJournalForm: TSaleJournalForm
       FormName = 'TMovement_PeriodDialogForm'
       FormNameParam.Value = 'TMovement_PeriodDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -153,6 +194,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -160,6 +202,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -223,6 +266,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Name = 'inMovementId'
         Value = 41640d
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -230,76 +274,92 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = False
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusCode'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StatusName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalCount'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSumm'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TotalSummPrimeCost'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 168

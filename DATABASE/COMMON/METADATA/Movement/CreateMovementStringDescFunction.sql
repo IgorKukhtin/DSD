@@ -144,6 +144,10 @@ CREATE OR REPLACE FUNCTION zc_MovementString_MedicSP() RETURNS Integer AS $BODY$
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_MedicSP', 'ФИО врача (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_MedicSP');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_MemberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_MemberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_MemberSP', 'ФИО пациента (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_MemberSP');
+
 CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_InvNumberSP', 'Номер рецепта (Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberSP');

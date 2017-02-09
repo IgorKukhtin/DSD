@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Sale()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +9,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
+    IN inPriceSale           TFloat    , -- Цена без скидки
+    IN inChangePercent       TFloat    , -- % Скидки
     IN inSumm                TFloat    , -- сумма
+    IN inisSP                Boolean   , -- участвует в Соц. проекте
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -24,9 +28,16 @@ BEGIN
     
     -- сохранили <цену>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-
-    -- сохранили <сумма>
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceSale(), ioId, inPriceSale);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
+    -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SP(), ioId, inisSP);
+
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
@@ -40,6 +51,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А,
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 09.02.17         *
  13.10.15                                                                       *
  */
