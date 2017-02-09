@@ -88,7 +88,6 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
@@ -931,6 +930,15 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceSale'
         Value = Null
         Component = MasterCDS
@@ -946,14 +954,6 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -974,12 +974,12 @@ inherited SaleForm: TSaleForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 400
-    Top = 272
+    Left = 352
+    Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 360
-    Top = 312
+    Left = 448
+    Top = 320
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_TotalSumm'

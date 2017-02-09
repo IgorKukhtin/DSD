@@ -2,15 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+ INOUT ioPrice               TFloat    , -- Цена
     IN inPriceSale           TFloat    , -- Цена без скидки
     IN inChangePercent       TFloat    , -- % скидки
-   OUT outPrice              TFloat    , -- Цена
    OUT outSumm               TFloat    , -- Сумма
    OUT outIsSp               Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -56,20 +57,18 @@ BEGIN
 
     --Посчитали цену продажи
     IF COALESCE(inChangePercent,0) <> 0 THEN
-       outPrice:= ROUND( COALESCE(inPriceSale,0) - (COALESCE(inPriceSale,0)/100 * inChangePercent) ,2);
-    ELSE 
-       outPrice:= COALESCE(inPriceSale,0);
+       ioPrice:= ROUND( COALESCE(inPriceSale,0) - (COALESCE(inPriceSale,0)/100 * inChangePercent) ,2);
     END IF;
 
     --Посчитали сумму
-    outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(outPrice,0),2);
+    outSumm := ROUND(COALESCE(inAmount,0)*COALESCE(ioPrice,0),2);
 
      -- сохранили
     ioId := lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                             , inMovementId         := inMovementId
                                             , inGoodsId            := inGoodsId
                                             , inAmount             := inAmount
-                                            , inPrice              := outPrice
+                                            , inPrice              := ioPrice
                                             , inPriceSale          := inPriceSale
                                             , inChangePercent      := inChangePercent
                                             , inSumm               := outSumm
@@ -80,7 +79,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.

@@ -1,30 +1,30 @@
 inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1087#1088#1086#1076#1072#1078
   ClientHeight = 491
-  ClientWidth = 663
+  ClientWidth = 675
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Sale'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
-  ExplicitWidth = 679
+  ExplicitWidth = 691
   ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 663
+    Width = 675
     Height = 434
     TabOrder = 3
     ExplicitWidth = 663
     ExplicitHeight = 434
     ClientRectBottom = 434
-    ClientRectRight = 663
+    ClientRectRight = 675
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 663
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
-        Width = 663
+        Width = 675
         Height = 434
         ExplicitWidth = 663
         ExplicitHeight = 434
@@ -116,7 +116,16 @@ inherited SaleJournalForm: TSaleJournalForm
           object colComment: TcxGridDBColumn
             Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
             Width = 147
+          end
+          object colisSP: TcxGridDBColumn
+            Caption = #1054#1090#1087#1091#1097#1077#1085#1086' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' '#8470'1303'
+            DataBinding.FieldName = 'isSP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1091#1097#1077#1085#1086' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' '#8470'1303'
+            Width = 99
           end
           object clPartnerMedicalName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
@@ -163,7 +172,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 663
+    Width = 675
     ExplicitWidth = 663
   end
   inherited ActionList: TActionList
