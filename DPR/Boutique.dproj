@@ -148,17 +148,13 @@
 			<DCCReference Include="..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\MainForm.pas">
+			<DCCReference Include="..\FormsBoutique\MainForm.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\SOURCE\LoginForm.pas">
 				<Form>LoginForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas">
-				<Form>dmUnloadUploadData</Form>
-				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LookAndFillSettings.pas">
 				<Form>LookAndFillSettingsForm</Form>
@@ -175,9 +171,6 @@
 			<DCCReference Include="..\SOURCE\dsdApplication.pas"/>
 			<DCCReference Include="..\SOURCE\dsdException.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdXMLTransform.pas"/>
-			<DCCReference Include="..\FormsFarmacy\ConnectWithOld\RepriceUnit.pas">
-				<Form>RepriceUnitForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
 			<DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
 			<DCCReference Include="..\Forms\RoleUnion.pas">

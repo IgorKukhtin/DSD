@@ -116,6 +116,10 @@ begin
   ExecFile(StructurePath + 'Movement\MovementDate.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementStringDesc.sql', ZQuery);
   ExecFile(StructurePath + 'Movement\MovementString.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementLinkMovementDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementLinkMovement.sql', ZQuery);
+
+
 end;
 
 procedure TdbCreateStructureTest.CreateMovementItem;
@@ -177,7 +181,11 @@ end;
 
 procedure TdbCreateStructureTest.CreateProtocol;
 begin
-  ExecFile(StructurePath + 'Protocol\ObjectProtocol.sql', ZQuery);
+  DirectoryLoad(StructurePath + 'Protocol\');
+
+//  ExecFile(StructurePath + 'Protocol\ObjectProtocol.sql', ZQuery);
+
+
 end;
 
 procedure TdbCreateStructureTest.CreateType;

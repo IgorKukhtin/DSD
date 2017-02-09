@@ -24,6 +24,7 @@ var
 //  LocalProcessPath: string = '..\DATABASE\COMMON\PROCESS\';
 //  gc_AdminPassword: string = 'Admin';
 
+
 {$IFDEF Boutique}
   EnumPath: string = '..\DATABASE\Boutique\METADATA\Enum\';
   ProcedurePath: string = '..\DATABASE\Boutique\PROCEDURE\';
