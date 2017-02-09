@@ -36,9 +36,6 @@ type
     N31: TMenuItem;
     actForms: TdsdOpenForm;
     N74: TMenuItem;
-    procedure actSaveDataExecute(Sender: TObject);
-
-    procedure miRepriceClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -49,31 +46,10 @@ var
   MainFormInstance: TMainForm;
 
 implementation
-uses  UploadUnloadData,
- Dialogs, Forms, SysUtils, IdGlobal, RepriceUnit;
+uses // UploadUnloadData,
+ Dialogs, Forms, SysUtils, IdGlobal
+// , RepriceUnit
+ ;
 {$R *.dfm}
-
-procedure TMainForm.actSaveDataExecute(Sender: TObject);
-begin
-  with TdmUnloadUploadData.Create(nil) do
-     try
-       UnloadData;
-     finally
-       Free;
-     end;
-
-  Application.ProcessMessages;
-  ShowMessage('Выгрузили');
-end;
-
-procedure TMainForm.miRepriceClick(Sender: TObject);
-begin
-  with TRepriceUnitForm.Create(nil) do
-  try
-     Show;
-  finally
-     //Free;
-  end;
-end;
 
 end.

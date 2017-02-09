@@ -11,15 +11,34 @@ type
   end;
 
   procedure ExecFile(FileName: string; Query: TZQuery);
-
+  procedure doLog(AText: String);
 implementation
 
 uses StrUtils, Classes, SysUtils, UtilConst;
 { TConnectionFactory }
+procedure doLog(AText: String);
+var
+  F: TextFile;
+const
+  fl: string = 'c:\log.txt';
+begin
+  Assign(F, fl);
+  if FileExists(fl) then
+    Append(F)
+  else
+    Rewrite(F);
+  try
+    Writeln(F, FormatDateTime('hh:nn:ss', now)+#9+AText);
+  finally
+    CloseFile(F);
+  end;
+
+end;
 
 procedure ExecFile(FileName: string; Query: TZQuery);
 begin
   try
+    doLog(FileName);
     Query.ParamCheck := false;
     Query.SQL.LoadFromFile(FileName);
     Query.ExecSQL;

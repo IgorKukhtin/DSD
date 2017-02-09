@@ -19,6 +19,7 @@ uses UtilConst, TestFramework;
 
 procedure TView.ProcedureLoad;
 begin
+
   ScriptDirectory := ViewPath;
   inherited;
   ScriptDirectory := LocalViewPath;
