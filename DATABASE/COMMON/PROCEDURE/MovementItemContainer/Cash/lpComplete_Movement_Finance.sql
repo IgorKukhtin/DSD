@@ -31,6 +31,7 @@ BEGIN
                                                                            )
      WHERE _tmpItem.AssetId > 0;
 
+
      -- 1.1.1 определяется AccountDirectionId для проводок суммового учета
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
@@ -136,6 +137,17 @@ BEGIN
           LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
           -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
      WHERE Object.Id = _tmpItem.ObjectId;
+     --
+     -- Проверка - AccountDirectionId
+     IF EXISTS (SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В проводке не определена Направление счета : <%> <%> <%> <%>'
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1))
+                       , (SELECT _tmpItem.OperSumm FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1)
+                       , (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1)
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1))
+                        ;
+     END IF;
 
      -- 1.1.2. определяется AccountGroupId для проводок суммового учета
      UPDATE _tmpItem SET AccountGroupId = View_AccountDirection.AccountGroupId
