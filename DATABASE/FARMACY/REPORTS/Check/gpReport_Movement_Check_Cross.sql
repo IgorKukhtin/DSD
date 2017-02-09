@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Cross (Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Cross (Integer, TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check_Cross (Integer, TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Movement_Check_Cross(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
     IN inIsFarm           Boolean,    -- 
+    IN inShowAll          Boolean,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor 
@@ -107,7 +109,7 @@ BEGIN
                FROM 
                   (SELECT DISTINCT _tmpMovPromoUnit.GoodsId FROM _tmpMovPromoUnit
                   UNION
-                  SELECT DISTINCT tmpContainer.GoodsId FROM tmpContainer
+                  SELECT DISTINCT tmpContainer.GoodsId FROM tmpContainer WHERE inShowAll = True
                   ) AS tmp
                LEFT JOIN Object_Price_View AS Object_Price ON Object_Price.GoodsId  = tmp.GoodsId
                                                           AND Object_Price.UnitId = inUnitId 
@@ -119,7 +121,7 @@ BEGIN
                LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                             ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                            AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-                  ;
+               ;
 
    -- все данные за месяц
    CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
@@ -127,8 +129,9 @@ BEGIN
                            , COALESCE(tmpContainer.GoodsId, 0) AS GoodsId
                            , SUM (tmpContainer.Amount) AS Amount
                       FROM tmpOperDate
-                           JOIN tmpContainer ON tmpContainer.operDate = tmpOperDate.OperDate
-                      GROUP BY COALESCE(tmpContainer.GoodsId, 0) ,  tmpOperDate.operdate
+                           INNER JOIN tmpContainer ON tmpContainer.operDate = tmpOperDate.OperDate
+                           INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
+                      GROUP BY COALESCE(tmpContainer.GoodsId, 0), tmpOperDate.operdate
                       ORDER BY 1
                       ;
 

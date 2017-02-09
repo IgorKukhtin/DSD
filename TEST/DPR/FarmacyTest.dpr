@@ -488,7 +488,6 @@ uses
   MarginCategory_CrossDialog in '..\..\FormsFarmacy\Object\MarginCategory_CrossDialog.pas' {MarginCategory_CrossDialogForm: TParentForm},
   PromoUnit in '..\..\FormsFarmacy\Document\PromoUnit.pas' {PromoUnitForm: TParentForm},
   PromoUnitJournal in '..\..\FormsFarmacy\Document\PromoUnitJournal.pas' {PromoUnitJournalForm: TParentForm},
-  Report_MovementCheckFarm_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheckFarm_Cross.pas' {Report_MovementCheckFarm_CrossForm: TParentForm},
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm};
 
 {$R *.res}

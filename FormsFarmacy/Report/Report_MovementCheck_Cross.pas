@@ -77,6 +77,8 @@ type
     cxLabel7: TcxLabel;
     bbExecuteDialog: TdxBarButton;
     spGetUnitName: TdsdStoredProc;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
   public
   end;
