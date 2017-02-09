@@ -48,7 +48,6 @@ type
     cxGrid: TcxGrid;
     cxGridLevel: TcxGridLevel;
     actUpdateMasterDS: TdsdUpdateDataSet;
-    spInsertUpdateMI: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -69,16 +68,15 @@ type
     actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc;
     actMISetErased: TdsdUpdateErased;
     actMISetUnErased: TdsdUpdateErased;
-    spErasedMIMaster: TdsdStoredProc;
     isErased: TcxGridDBBandedColumn;
     actShowErased: TBooleanStoredProcAction;
     actUpdateChildDS: TdsdUpdateDataSet;
-    spInsertMaskMIMaster: TdsdStoredProc;
     actAddMask: TdsdExecStoredProc;
     ExecuteDialog: TExecuteDialog;
     deEnd: TcxDateEdit;
     cxLabel7: TcxLabel;
     bbExecuteDialog: TdxBarButton;
+    spGetUnitName: TdsdStoredProc;
   private
   public
   end;

@@ -139,7 +139,7 @@ BEGIN
      WHERE Object.Id = _tmpItem.ObjectId;
      --
      -- Проверка - AccountDirectionId
-     IF EXISTS (SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0)
+     /*IF EXISTS (SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0)
      THEN
          RAISE EXCEPTION 'Ошибка.В проводке не определена Направление счета : <%> <%> <%> <%>'
                        , lfGet_Object_ValueData ((SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1))
@@ -147,7 +147,7 @@ BEGIN
                        , (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1)
                        , lfGet_Object_ValueData ((SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1))
                         ;
-     END IF;
+     END IF;*/
 
      -- 1.1.2. определяется AccountGroupId для проводок суммового учета
      UPDATE _tmpItem SET AccountGroupId = View_AccountDirection.AccountGroupId

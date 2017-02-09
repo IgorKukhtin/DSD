@@ -1,11 +1,13 @@
 -- Function:  gpReport_Movement_Check_Cross()
 
 DROP FUNCTION IF EXISTS gpReport_Movement_Check_Cross (Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Check_Cross (Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION  gpReport_Movement_Check_Cross(
+CREATE OR REPLACE FUNCTION gpReport_Movement_Check_Cross(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inStartDate        TDateTime,  -- Дата начала
     IN inEndDate          TDateTime,  -- Дата окончания
+    IN inIsFarm           Boolean,    -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor 
@@ -26,7 +28,13 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
-    --vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpGetUserBySession (inSession);
+
+
+    -- !!!меняем параметр!!!
+    IF inIsFarm = TRUE THEN inUnitId:= zfConvert_StringToNumber (COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), ''));
+    END IF;
+
 
     vbDateStartPromo := date_trunc('month', inStartDate);
     vbDatEndPromo := date_trunc('month', inEndDate) + interval '1 month'; 
@@ -192,7 +200,6 @@ BEGIN
 
      OPEN cur2 FOR EXECUTE vbQueryText;  
      RETURN NEXT cur2;
-
 
 END;
 $BODY$
