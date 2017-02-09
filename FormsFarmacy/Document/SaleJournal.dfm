@@ -39,6 +39,11 @@ inherited SaleJournalForm: TSaleJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = colTotalSummPrimeCost
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colUnitName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False

@@ -490,7 +490,8 @@ uses
   PromoUnitJournal in '..\..\FormsFarmacy\Document\PromoUnitJournal.pas' {PromoUnitJournalForm: TParentForm},
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
   GroupMemberSPEdit in '..\..\FormsFarmacy\Guides\GroupMemberSPEdit.pas' {GroupMemberSPEditForm: TParentForm},
-  GroupMemberSP in '..\..\FormsFarmacy\Guides\GroupMemberSP.pas' {GroupMemberSPForm: TParentForm};
+  GroupMemberSP in '..\..\FormsFarmacy\Guides\GroupMemberSP.pas' {GroupMemberSPForm: TParentForm},
+  MarginCategoryItemHistory in '..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas' {MarginCategoryItemHistoryForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

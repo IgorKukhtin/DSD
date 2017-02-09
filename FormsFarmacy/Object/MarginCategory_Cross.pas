@@ -60,6 +60,8 @@ type
     actOpenFormUnit: TdsdOpenForm;
     bbOpenFormUnit: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    actMarginCategoryItemOpen: TdsdOpenForm;
+    bbMarginCategoryItemOpen: TdxBarButton;
   private
   public
   end;

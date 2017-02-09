@@ -35,6 +35,11 @@ inherited SaleForm: TSaleForm
               Format = ',0.000'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil

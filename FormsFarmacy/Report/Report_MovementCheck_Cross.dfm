@@ -140,6 +140,11 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
           Format = ',0.##'
           Kind = skSum
           Column = BandcolPromoAmountPlanMaxDiff
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = BandcolGoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True

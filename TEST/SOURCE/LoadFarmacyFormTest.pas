@@ -381,6 +381,9 @@ end;
 
 procedure TLoadFormTest.LoadMargineCategory;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemHistoryForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemForm'));
