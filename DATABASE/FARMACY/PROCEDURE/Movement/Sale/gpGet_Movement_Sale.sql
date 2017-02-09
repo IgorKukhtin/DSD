@@ -21,7 +21,14 @@ RETURNS TABLE (Id Integer
              , JuridicalName TVarChar
              , PaidKindId Integer
              , PaidKindName TVarChar
-             , Comment TVarChar)
+             , Comment TVarChar
+
+             , OperDateSP TDateTime
+             , PartnerMedicalName TVarChar
+             , InvNumberSP TVarChar
+             , MedicSPName TVarChar
+             , MemberSPName TVarChar
+             )
 AS
 $BODY$
 BEGIN
@@ -48,6 +55,13 @@ BEGIN
           , NULL::Integer                                    AS PaidKindId
           , NULL::TVarChar                                   AS PaidKindName
           , NULL::TVarChar                                   AS Comment
+
+          , NULL::TDateTime                                  AS OperDateSP
+          , NULL::TVarChar                                   AS PartnerMedicalName
+          , NULL::TVarChar                                   AS InvNumberSP
+          , NULL::TVarChar                                   AS MedicSPName
+          , NULL::TVarChar                                   AS MemberSPName
+
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
         RETURN QUERY
@@ -67,6 +81,12 @@ BEGIN
           , Movement_Sale.PaidKindId
           , Movement_Sale.PaidKindName
           , Movement_Sale.Comment
+
+          , COALESCE(Movement_Sale.OperDateSP, NULL) :: TDateTime AS OperDateSP
+          , Movement_Sale.PartnerMedicalName
+          , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSPName
+          , Movement_Sale.MemberSPName
         FROM
             Movement_Sale_View AS Movement_Sale
         WHERE Movement_Sale.Id =  inMovementId;
@@ -81,6 +101,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 08.02.17         * add SP
  15.09.16         *
  13.10.15                                                                        *
 */
