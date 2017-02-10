@@ -78,7 +78,7 @@ BEGIN
                      WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
                      ) AS tmp;
 
-     -- все данные 
+     -- все данные  
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             SELECT _tmpMarginCategory.MarginCategoryId 
                  , _tmpminPrice.num AS Num
