@@ -168,6 +168,7 @@ object MobileEmployeeForm: TMobileEmployeeForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 98
       end
       object colMobileTariffName: TcxGridDBColumn

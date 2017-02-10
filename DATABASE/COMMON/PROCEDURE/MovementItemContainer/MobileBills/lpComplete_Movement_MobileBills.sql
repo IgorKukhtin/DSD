@@ -32,7 +32,7 @@ BEGIN
              , Movement.OperDate
              , COALESCE (Object.Id, 0)      AS ObjectId
              , COALESCE (Object.DescId, 0)  AS ObjectDescId
-             , 1 * MovementItem.Amount AS OperSumm
+             , -1 * MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -166,7 +166,7 @@ BEGIN
              , 0 AS ObjectDescId
              , -1 *  _tmpItem.OperSumm
                -- !!!уменьшили на "Перелимит"
-             + CASE WHEN Object_Employee.DescId = zc_Object_Personal()
+             - CASE WHEN Object_Employee.DescId = zc_Object_Personal()
                          THEN COALESCE (MIFloat_Overlimit.ValueData, 0)
                     ELSE 0
                END AS OperSumm
@@ -351,11 +351,12 @@ BEGIN
                                                  AND Object_Employee.DescId = zc_Object_Founder()
 
        UNION
+        -- 1.2.4. Уменьшили долг по ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , Object_Employee.Id               AS ObjectId
              , Object_Employee.DescId           AS ObjectDescId
-             , -1 * MIFloat_Overlimit.ValueData AS OperSumm
+             , 1 * MIFloat_Overlimit.ValueData AS OperSumm
              , _tmpItem.MovementItemId
 
              , 0 AS ContainerId                                                     -- сформируем позже
@@ -404,11 +405,12 @@ BEGIN
                                           ON MIFloat_Overlimit.MovementItemId = _tmpItem.MovementItemId
                                          AND MIFloat_Overlimit.DescId = zc_MIFloat_Overlimit()
 
-             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position ON ObjectLink_Personal_Position.ObjectId = _tmpItem.ObjectId
-                                                                 AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+             LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                  ON ObjectLink_Personal_Position.ObjectId = _tmpItem.ObjectIntId_Analyzer
+                                 AND ObjectLink_Personal_Position.DescId   = zc_ObjectLink_Personal_Position()
              LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                   ON ObjectLink_Personal_PersonalServiceList.ObjectId = _tmpItem.ObjectIntId_Analyzer
-                                 AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
+                                 AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101() -- 60101 Заработная плата + Заработная плата
 
         WHERE MIFloat_Overlimit.ValueData <> 0
