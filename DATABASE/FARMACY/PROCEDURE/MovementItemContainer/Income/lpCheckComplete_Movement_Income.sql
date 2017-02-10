@@ -47,6 +47,21 @@ BEGIN
       RAISE EXCEPTION 'У документа не установлена дата прихода на аптеке';
   END IF;
 
+   -- проверяем цены реализации (нулевые цены в колонке Цена реализации) 
+   vbGoodsId:= (SELECT MovementItem.ObjectId
+                FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
+                                               ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                              AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.IsErased   = FALSE
+                  AND COALESCE(MIFloat_PriceSale.ValueData,0) = 0
+                LIMIT 1);
+
+   IF vbGoodsId <> 0 THEN
+      RAISE EXCEPTION 'НЕ ВОЗМОЖНО ПРОВЕСТИ НАКЛАДНУЮ. У "%" не посчитана Цена Реализации', lfGet_Object_ValueData (vbGoodsId);
+   END IF;
 
 END;
 $BODY$
@@ -55,6 +70,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.17         *
  26.01.15                         *
  26.12.14                         *
 */
