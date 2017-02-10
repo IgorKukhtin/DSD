@@ -101,6 +101,9 @@ type
     cxLabel7: TcxLabel;
     cbAssortment: TcxCheckBox;
     edAssortment: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cbTerm: TcxCheckBox;
+    edTerm: TcxCurrencyEdit;
   private
     { Private declarations }
   public
