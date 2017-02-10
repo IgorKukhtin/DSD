@@ -1156,6 +1156,13 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+  // отчет реестр по постановлению 1303
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));

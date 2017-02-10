@@ -1,9 +1,9 @@
-object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
+object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1054#1090#1095#1077#1090#1072' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072'>'
-  ClientHeight = 214
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303>'
+  ClientHeight = 189
   ClientWidth = 383
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 74
-    Top = 166
+    Left = 69
+    Top = 153
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 248
-    Top = 166
+    Left = 251
+    Top = 153
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,44 +37,44 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 263
-    Top = 28
+    Left = 258
+    Top = 15
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 82
-    Top = 28
+    Left = 77
+    Top = 15
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 90
   end
   object cxLabel6: TcxLabel
-    Left = 31
-    Top = 29
+    Left = 26
+    Top = 16
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 208
-    Top = 29
+    Left = 203
+    Top = 16
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel4: TcxLabel
-    Left = 31
-    Top = 64
+    Left = 26
+    Top = 51
     Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
   end
   object cxLabel1: TcxLabel
-    Left = 31
-    Top = 93
+    Left = 26
+    Top = 80
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edJuridical: TcxButtonEdit
-    Left = 123
-    Top = 63
+    Left = 118
+    Top = 50
     Properties.Buttons = <
       item
         Default = True
@@ -85,8 +85,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     Width = 230
   end
   object ceUnit: TcxButtonEdit
-    Left = 123
-    Top = 92
+    Left = 118
+    Top = 79
     Properties.Buttons = <
       item
         Default = True
@@ -100,13 +100,13 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
     Width = 230
   end
   object cxLabel5: TcxLabel
-    Left = 31
-    Top = 124
+    Left = 26
+    Top = 111
     Caption = #1055#1088#1077#1076#1087#1088'-'#1090#1080#1077' '#1054#1047':'
   end
   object ceHospital: TcxButtonEdit
-    Left = 123
-    Top = 123
+    Left = 118
+    Top = 110
     Properties.Buttons = <
       item
         Default = True
@@ -119,12 +119,12 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 344
-    Top = 165
+    Left = 347
+    Top = 96
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 223
-    Top = 171
+    Left = 202
+    Top = 142
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -136,8 +136,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 128
-    Top = 177
+    Left = 107
+    Top = 132
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -208,8 +208,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 23
-    Top = 147
+    Left = 18
+    Top = 134
   end
   object JuridicalGuide: TdsdGuides
     KeyField = 'Id'
@@ -237,8 +237,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 64
+    Left = 195
+    Top = 51
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -266,8 +266,8 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 88
+    Left = 275
+    Top = 75
   end
   object HospitalGuides: TdsdGuides
     KeyField = 'Id'
@@ -295,7 +295,7 @@ object Report_CheckSPDialogForm: TReport_CheckSPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 176
-    Top = 112
+    Left = 171
+    Top = 99
   end
 end
