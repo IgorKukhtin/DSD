@@ -101,7 +101,7 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()))
+          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
                         , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
                         , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
                                    FROM MovementItem
@@ -165,7 +165,7 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()))
+          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
                         , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
                         , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
                                    FROM MovementItem
@@ -255,7 +255,7 @@ BEGIN
      SELECT MAX (_tmpPeriodClose.PeriodCloseId) AS PeriodCloseId, MIN (_tmpPeriodClose.PeriodCloseId) AS vbPeriodCloseId_two, MAX (_tmpPeriodClose.CloseDate) AS CloseDate
             INTO vbPeriodCloseId, vbPeriodCloseId_two, vbCloseDate
      FROM _tmpPeriodClose
-          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn()))
+          LEFT JOIN (WITH tmpDesc AS (SELECT zc_MovementLinkObject_PaidKind() AS DescId UNION SELECT zc_MovementLinkObject_PaidKindFrom() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()) UNION SELECT zc_MovementLinkObject_PaidKindTo() WHERE inMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut()))
                         , tmp1 AS (SELECT DISTINCT MovementLinkObject.ObjectId AS PaidKindId FROM MovementLinkObject JOIN tmpDesc ON tmpDesc.DescId = MovementLinkObject.DescId WHERE MovementLinkObject.MovementId = inMovementId)
                         , tmp2 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PaidKindId
                                    FROM MovementItem

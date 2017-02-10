@@ -71,6 +71,7 @@ object MemberForm: TMemberForm
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 89
       end
       object clDriverCertificate: TcxGridDBColumn

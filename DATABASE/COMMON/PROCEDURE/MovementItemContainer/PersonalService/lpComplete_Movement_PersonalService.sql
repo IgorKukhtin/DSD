@@ -194,12 +194,14 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (ObjectLink_PersonalTo_Unit.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, 0))
                                                            AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-             LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummNalog()
+
+             -- LEFT JOIN MovementItemFloat AS MIF_SummNalog ON MIF_SummNalog.MovementItemId = MovementItem.Id AND MIF_SummNalog.DescId = zc_MIFloat_SummNalog()
+             -- LEFT JOIN MovementItemFloat AS MIF_SummPhone ON MIF_SummPhone.MovementItemId = MovementItem.Id AND MIF_SummPhone.DescId = zc_MIFloat_SummPhone()
 
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_PersonalService()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-          AND (MovementItem.Amount <> 0 OR MIF.ValueData <> 0)
+          -- AND (MovementItem.Amount <> 0 OR MIF_SummNalog.ValueData <> 0 OR MIF_SummPhone.ValueData <> 0)
        ;
 
 
@@ -695,18 +697,21 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransportTaxi()   , tmpMovement.MovementItemId, tmpMovement.SummTransportTaxi)
              -- Сумма Моб.связь (удержание)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPhone()           , tmpMovement.MovementItemId, tmpMovement.SummPhone)
-     FROM (SELECT _tmpItem.MovementItemId
-                , _tmpItem.OperSumm
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.MovementDescId = zc_Movement_Income() THEN MIContainer.Amount ELSE 0 END), 0) AS SummTransport
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Add()     THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_AddLong() THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
-                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Transport_Taxi()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
-                , 0 AS SummPhone
-           FROM _tmpItem
+     FROM (SELECT MovementItem.Id AS MovementItemId
+                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.MovementDescId = zc_Movement_Income()                      THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransport
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Add()        THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAdd
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_AddLong()    THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportAddLong
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_Transport_Taxi()       THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS SummTransportTaxi
+                , COALESCE (SUM (CASE WHEN _tmpItem.ObjectId = _tmpItem.ObjectIntId_Analyzer AND MIContainer.AnalyzerId     = zc_Enum_AnalyzerId_MobileBills_Personal() THEN  1 * MIContainer.Amount ELSE 0 END), 0) AS SummPhone
+           FROM MovementItem
+                LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = MovementItem.Id
+                                  AND _tmpItem.IsMaster       = TRUE
                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId    = _tmpItem.ContainerId
-                                                              -- AND MIContainer.MovementDescId = zc_Movement_Income()
-           WHERE _tmpItem.IsMaster = TRUE
-           GROUP BY _tmpItem.MovementItemId
+                                                           -- AND MIContainer.MovementDescId = zc_Movement_Income()
+           WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.DescId     = zc_MI_Master()
+           GROUP BY MovementItem.Id
                   , _tmpItem.OperSumm
           ) AS tmpMovement
           LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
