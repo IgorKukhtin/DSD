@@ -63,6 +63,7 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
       object BandcolPersonalName: TcxGridDBBandedColumn
         Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1094#1077#1085#1072
         DataBinding.FieldName = 'minPrice'
+        GroupSummaryAlignment = taRightJustify
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         MinWidth = 67
@@ -89,9 +90,6 @@ object MarginCategory_CrossForm: TMarginCategory_CrossForm
       end
       object TemplateColumn: TcxGridDBBandedColumn
         DataBinding.FieldName = 'Value'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.00;-,0.00;;'
         Visible = False
         GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
