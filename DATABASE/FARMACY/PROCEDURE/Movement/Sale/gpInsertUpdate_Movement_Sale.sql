@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inJuridicalId           Integer    , -- Кому (покупатель)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
     IN inPartnerMedicalId      Integer    , -- Медицинское учреждение(Соц. проект)
+    IN inGroupMemberSPId       Integer    , -- Категория пациента(Соц. проект)
     IN inOperDateSP            TDateTime  , -- дата рецепта (Соц. проект)
     IN inInvNumberSP           TVarChar   , -- номер рецепта (Соц. проект)
     IN inMedicSP               TVarChar   , -- ФИО врача (Соц. проект)
@@ -33,6 +35,7 @@ BEGIN
                                         , inJuridicalId := inJuridicalId
                                         , inPaidKindId  := inPaidKindId
                                         , inPartnerMedicalId:= inPartnerMedicalId
+                                        , inGroupMemberSPId := inGroupMemberSPId
                                         , inOperDateSP      := inOperDateSP
                                         , inInvNumberSP     := inInvNumberSP
                                         , inMedicSP         := inMedicSP

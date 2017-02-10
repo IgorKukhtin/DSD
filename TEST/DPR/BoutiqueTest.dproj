@@ -71,7 +71,7 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<BRCC_Defines>Boutique;$(BRCC_Defines)</BRCC_Defines>
+			<DCC_Define>Boutique;$(DCC_Define)</DCC_Define>
 			<DCC_ExeOutput>..\..\BIN</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -178,7 +178,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas">
-				<Form>ortMovementCheckForm</Form>
+				<Form>/  Measure in &apos;..\..\Forms\Measure.pas&apos; {MeasureForm</Form>
 				<DesignClass>TParentForm},
   Income in &apos;..\..\FormsBoutique\Document\Income.pas&apos; {IncomeForm: TParentForm},
   Maker in &apos;..\..\Forms\Guides\Maker.pas&apos; {MakerForm: TParentForm},
@@ -253,6 +253,35 @@
   DataTimeDialog in &apos;..\..\FormsBoutique\Document\DataTimeDialog.pas&apos; {DataTimeDialogForm: TParentForm},
   MarginCategory_Cross in &apos;..\..\FormsBoutique\Object\MarginCategory_Cross.pas&apos; {MarginCategory_CrossForm: TParentForm},
   MarginCategory_Total in &apos;..\..\FormsBoutique\Object\MarginCategory_Total.pas&apos; {MarginCategory_TotalForm: TParentForm}*</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas">
+				<Form>/</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas">
+				<Form>/  MovementItemsLoad in &apos;..\..\FormsBoutique\Load\MovementItemsLoad.pas&apos; {MovementItemsLoadForm</Form>
+				<DesignClass>TParentForm},</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas">
+				<Form>/  ImportTypeItemsTest in &apos;..\SOURCE\Objects\All\ImportTypeItemsTest.pas&apos;,</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas">
+				<Form>/  UserKey in &apos;..\..\Forms\Guides\UserKey.pas&apos; {UserKeyForm</Form>
+				<DesignClass>TParentForm},</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas">
+				<Form>/  Goods in &apos;..\..\FormsBoutique\Guides\Goods.pas&apos; {GoodsForm</Form>
+				<DesignClass>TParentForm},</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas">
+				<Form>/  PriceListMovementTest in &apos;..\SOURCE\Movement\All\PriceListMovementTest.pas&apos;,</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas">
+				<Form>/  ActionTest in &apos;..\SOURCE\Objects\All\ActionTest.pas&apos;,</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas">
+				<Form>/  UploadUnloadData in &apos;..\..\FormsBoutique\ConnectWithOld\UploadUnloadData.pas&apos; {dmUnloadUploadData</Form>
+				<DesignClass>TDataModule},</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

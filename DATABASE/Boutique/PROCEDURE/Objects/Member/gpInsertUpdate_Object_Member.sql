@@ -1,0 +1,107 @@
+-- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
+ INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
+    IN inCode                Integer   ,    -- код объекта 
+    IN inName                TVarChar  ,    -- Название объекта <
+    IN inIsOfficial          Boolean   ,    -- Оформлен официально
+    IN inINN                 TVarChar  ,    -- Код ИНН
+    IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
+    IN inCard                TVarChar  ,    -- № карточного счета ЗП
+    IN inComment             TVarChar  ,    -- Примечание 
+    IN inInfoMoneyId         Integer   ,    --
+    IN inSession             TVarChar       -- сессия пользователя
+)
+  RETURNS integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;
+BEGIN
+   -- !!! это временно !!!
+   -- IF COALESCE(ioId, 0) = 0
+   -- THEN ioId := (SELECT Id FROM Object WHERE ValueData = inName AND DescId = zc_Object_Member());
+   -- END IF;
+
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Member());
+   
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
+   -- Если код не установлен, определяем его как последний + 1
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Member());
+   
+   -- проверка уникальности <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Member(), inName);
+   -- проверка уникальности <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
+   -- проверка уникальность <INN>
+   IF TRIM (inINN) <> ''
+   THEN
+       IF EXISTS (SELECT ObjectString.ObjectId
+                  FROM ObjectString
+                  WHERE TRIM (ObjectString.ValueData) = TRIM (inINN)
+                    AND ObjectString.ObjectId <> COALESCE (ioId, 0)
+                    AND ObjectString.DescId = zc_ObjectString_Member_INN())
+       THEN
+           RAISE EXCEPTION 'Ошибка. Код ИНН <%> уже установлен у <%>.', TRIM (inINN), lfGet_Object_ValueData ((SELECT ObjectString.ObjectId
+                                                                                                               FROM ObjectString
+                                                                                                               WHERE TRIM (ObjectString.ValueData) = TRIM (inINN)
+                                                                                                                 AND ObjectString.ObjectId <> COALESCE (ioId, 0)
+                                                                                                                 AND ObjectString.DescId = zc_ObjectString_Member_INN()
+                                                                                                             ));
+       END IF;
+   END IF;
+
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= NULL);
+
+   -- сохранили свойство <Оформлен официально>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Official(), ioId, inIsOfficial);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_INN(), ioId, inINN);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_DriverCertificate(), ioId, inDriverCertificate);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Card(), ioId, inCard);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
+   
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_InfoMoney(), ioId, inInfoMoneyId);
+
+   -- синхронизируем <Физические лица> и <Сотрудники>
+   UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
+   WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
+--ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.16         * add Card
+ 19.02.15         * add inInfoMoneyId
+ 12.09.14                                        * add inIsOfficial
+ 13.12.13                                        * del inAccessKeyId
+ 08.12.13                                        * add inAccessKeyId
+ 30.10.13                         * синхронизируем <Физические лица> и <Сотрудники>
+ 09.10.13                                        * пытаемся найти код
+ 01.10.13         *  add DriverCertificate, Comment              
+ 01.07.13         *
+*/
+
+-- !!!синхронизируем <Физические лица> и <Сотрудники>!!!
+-- UPDATE Object SET ValueData = Object2.ValueData , ObjectCode = Object2.ObjectCode from (SELECT Object.*, ObjectId FROM ObjectLink join Object on Object.Id = ObjectLink.ChildObjectId WHERE ObjectLink.DescId = zc_ObjectLink_Personal_Member()) as Object2 WHERE Object.Id  = Object2. ObjectId;
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Member()

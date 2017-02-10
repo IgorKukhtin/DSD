@@ -381,6 +381,9 @@ end;
 
 procedure TLoadFormTest.LoadMargineCategory;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemHistoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemHistoryForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemForm'));
@@ -1152,6 +1155,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TKindOutSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPEditForm'));

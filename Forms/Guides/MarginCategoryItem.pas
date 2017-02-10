@@ -34,6 +34,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     FormParams: TdsdFormParams;
+    actMarginCategoryItemOpen: TdsdOpenForm;
+    bbMarginCategoryItemOpen: TdxBarButton;
   private
     { Private declarations }
   public

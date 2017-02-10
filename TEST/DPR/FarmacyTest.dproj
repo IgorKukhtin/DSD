@@ -1589,12 +1589,20 @@
 				<Form>PromoUnitJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheckFarm_Cross.pas">
-				<Form>Report_MovementCheckFarm_CrossForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas">
 				<Form>Report_MovementCheck_CrossForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMemberSPEdit.pas">
+				<Form>GroupMemberSPEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GroupMemberSP.pas">
+				<Form>GroupMemberSPForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas">
+				<Form>MarginCategoryItemHistoryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

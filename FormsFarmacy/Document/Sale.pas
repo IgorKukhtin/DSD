@@ -70,6 +70,9 @@ type
     edPartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
     coisSP: TcxGridDBColumn;
+    cxLabel9: TcxLabel;
+    edGroupMemberSP: TcxButtonEdit;
+    GroupMemberSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

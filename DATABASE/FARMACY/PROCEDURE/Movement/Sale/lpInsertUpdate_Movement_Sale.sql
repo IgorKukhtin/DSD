@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inJuridicalId           Integer    , -- Кому (покупатель)
     IN inPaidKindId            Integer    , -- Виды форм оплаты
     IN inPartnerMedicalId      Integer    , -- Медицинское учреждение(Соц. проект)
+    IN inGroupMemberSPId       Integer    , -- Категория пациента(Соц. проект)
     IN inOperDateSP            TDateTime  , -- дата рецепта (Соц. проект)
     IN inInvNumberSP           TVarChar   , -- номер рецепта (Соц. проект)
     IN inMedicSP               TVarChar   , -- ФИО врача (Соц. проект)
@@ -63,6 +65,9 @@ BEGIN
 
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartnerMedical(), ioId, inPartnerMedicalId);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_GroupMemberSP(), ioId, inGroupMemberSPId);
+
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
     -- сохранили <>

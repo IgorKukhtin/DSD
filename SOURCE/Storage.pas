@@ -301,7 +301,7 @@ begin
     if gc_isDebugMode then
        TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
     FSendList.Clear;
-    FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+    FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
     Logger.AddToLog(pData);
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;

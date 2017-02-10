@@ -197,6 +197,27 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actMarginCategoryItemOpen: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1069#1083#1077#1084#1077#1085#1090#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1082#1080
+      ImageIndex = 42
+      FormName = 'TMarginCategoryItemHistoryForm'
+      FormNameParam.Value = 'TMarginCategoryItemHistoryForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMarginCategoryItemId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -254,6 +275,14 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMarginCategoryItemOpen'
         end
         item
           Visible = True
@@ -320,6 +349,10 @@ inherited MarginCategoryItemForm: TMarginCategoryItemForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbMarginCategoryItemOpen: TdxBarButton
+      Action = actMarginCategoryItemOpen
       Category = 0
     end
   end

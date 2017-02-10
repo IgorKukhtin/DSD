@@ -140,6 +140,11 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
           Format = ',0.##'
           Kind = skSum
           Column = BandcolPromoAmountPlanMaxDiff
+        end
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = BandcolGoodsName
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.GoToNextCellOnEnter = True
@@ -356,6 +361,14 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         Value = Null
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 182
     Top = 159
@@ -404,10 +417,19 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ShowAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 440
-    Top = 223
+    Left = 240
+    Top = 167
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -460,6 +482,14 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -499,6 +529,10 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
   end
@@ -879,6 +913,27 @@ object Report_MovementCheck_CrossForm: TReport_MovementCheck_CrossForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
   end
   object MasterDS: TDataSource

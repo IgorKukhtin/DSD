@@ -28,6 +28,8 @@ RETURNS TABLE (Id Integer
              , InvNumberSP TVarChar
              , MedicSPName TVarChar
              , MemberSPName TVarChar
+             , GroupMemberSPName TVarChar
+             , isSP Boolean
               )
 
 AS
@@ -77,8 +79,15 @@ BEGIN
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP
           , Movement_Sale.MedicSPName
-          , Movement_Sale.MemberSPName
-
+          , Movement_Sale.MemberSPName 
+          , Movement_Sale.GroupMemberSPName
+          , CASE WHEN COALESCE (Movement_Sale.PartnerMedicalName,'') <> '' OR
+                      COALESCE (Movement_Sale.InvNumberSP,'') <> '' OR
+                      COALESCE (Movement_Sale.MedicSPName,'') <> '' OR
+                      COALESCE (Movement_Sale.MemberSPName,'') <> ''
+                 THEN TRUE
+                 ELSE FALSE
+            END ::Boolean AS isSP
         FROM
             tmpUnit
             LEFT JOIN Movement_Sale_View AS Movement_Sale ON Movement_Sale.UnitId = tmpUnit.UnitId

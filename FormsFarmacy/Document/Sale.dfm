@@ -35,6 +35,11 @@ inherited SaleForm: TSaleForm
               Format = ',0.000'
               Kind = skSum
               Column = colAmount
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = colGoodsName
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -88,7 +93,6 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
           end
           object colPriceSale: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
@@ -375,38 +379,38 @@ inherited SaleForm: TSaleForm
       Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077'('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
     end
     object edOperDateSP: TcxDateEdit
-      Left = 226
+      Left = 181
       Top = 130
       Properties.AutoSelect = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 21
-      Width = 90
+      Width = 83
     end
     object cxLabel13: TcxLabel
-      Left = 226
+      Left = 181
       Top = 115
       Caption = #1044#1072#1090#1072' '#1088#1077#1094#1077#1087#1090#1072
     end
     object cxLabel14: TcxLabel
-      Left = 322
+      Left = 268
       Top = 114
       Caption = #1053#1086#1084#1077#1088' '#1088#1077#1094#1077#1087#1090#1072
     end
     object edInvNumberSP: TcxTextEdit
-      Left = 322
+      Left = 268
       Top = 130
       Hint = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072' ('#1057#1086#1089#1090#1086#1103#1085#1080#1077' VIP-'#1095#1077#1082#1072')'
       TabOrder = 24
       Width = 80
     end
     object cxLabel16: TcxLabel
-      Left = 408
+      Left = 352
       Top = 114
       Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
     end
     object edMedicSP: TcxTextEdit
-      Left = 408
+      Left = 352
       Top = 130
       TabOrder = 26
       Width = 120
@@ -421,19 +425,36 @@ inherited SaleForm: TSaleForm
         end>
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 211
+      Width = 169
     end
   end
   object cxLabel8: TcxLabel [2]
-    Left = 531
+    Left = 476
     Top = 114
     Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
   object edMemberSP: TcxTextEdit [3]
-    Left = 531
+    Left = 476
     Top = 130
     TabOrder = 7
     Width = 123
+  end
+  object cxLabel9: TcxLabel [4]
+    Left = 602
+    Top = 114
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
+  end
+  object edGroupMemberSP: TcxButtonEdit [5]
+    Left = 602
+    Top = 130
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 121
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -721,6 +742,21 @@ inherited SaleForm: TSaleForm
         Component = edMemberSP
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 272
@@ -780,6 +816,14 @@ inherited SaleForm: TSaleForm
         Name = 'inPartnerMedicalId'
         Value = Null
         Component = PartnerMedicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGroupMemberSPId'
+        Value = Null
+        Component = GroupMemberSPGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -878,6 +922,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Control = edMemberSP
+      end
+      item
+        Control = edGroupMemberSP
       end>
     Left = 208
     Top = 233
@@ -931,6 +978,15 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceSale'
         Value = Null
         Component = MasterCDS
@@ -946,14 +1002,6 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'ChangePercent'
         DataType = ftFloat
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -974,12 +1022,12 @@ inherited SaleForm: TSaleForm
       end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
-    Left = 400
-    Top = 272
+    Left = 352
+    Top = 280
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
-    Left = 360
-    Top = 312
+    Left = 448
+    Top = 320
   end
   inherited spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_TotalSumm'
@@ -1102,8 +1150,8 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 328
-    Top = 88
+    Left = 264
+    Top = 48
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleExactly_Print'
@@ -1237,5 +1285,34 @@ inherited SaleForm: TSaleForm
       end>
     Left = 96
     Top = 120
+  end
+  object GroupMemberSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGroupMemberSP
+    FormNameParam.Value = 'TGroupMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 640
+    Top = 128
   end
 end
