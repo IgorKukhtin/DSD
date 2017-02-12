@@ -14,7 +14,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, cxSplitter;
 
 type
   TReport_MovementCheck_UnLiquidForm = class(TAncestorReportForm)
@@ -45,6 +45,14 @@ type
     colAmount_LastIncome: TcxGridDBColumn;
     colPrice_Remains: TcxGridDBColumn;
     colSumma_Remains: TcxGridDBColumn;
+    ChildDS: TDataSource;
+    ChildCDS: TClientDataSet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    chUnitName: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    colisSaleAnother: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
   private
     { Private declarations }
   public
