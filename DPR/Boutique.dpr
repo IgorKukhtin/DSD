@@ -82,10 +82,13 @@ begin
   //Если все хорошо создаем главную форму Application.CreateForm();
   if ShowModal = mrOk then
   begin
-     TUpdater.AutomaticUpdateProgram;
-     TUpdater.AutomaticCheckConnect;
-     Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+  // что бы не перезаписал boutique_init.php закоменчено 2 стр.
+  //     TUpdater.AutomaticUpdateProgram;
+  //     TUpdater.AutomaticCheckConnect;
+
+
+    Application.CreateForm(TdmMain, dmMain);
+    Application.CreateForm(TMainForm, MainFormInstance);
   end;
   Application.Run;
 end.
