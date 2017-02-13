@@ -22,9 +22,9 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 941
-        Height = 422
+        Height = 200
         ExplicitWidth = 941
-        ExplicitHeight = 422
+        ExplicitHeight = 208
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -226,6 +226,13 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colisSaleAnother: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1085#1072' '#1076#1088'. '#1072#1087#1090#1077#1082#1072#1093
+            DataBinding.FieldName = 'isSaleAnother'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 62
+          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -428,6 +435,266 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
             Width = 100
           end
         end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 208
+        Width = 941
+        Height = 214
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale6
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale6
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmount_Sale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale3
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumma_Sale6
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 231
+          end
+          object chAmount_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Amount_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chSumma_Sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' '#1087#1077#1088#1080#1086#1076
+            DataBinding.FieldName = 'Summa_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chAmount_Sale1: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1-'#1099#1081' '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_Sale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chSumma_Sale1: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 1-'#1099#1081' '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Summa_Sale1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chAmount_Sale3: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_Sale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chSumma_Sale3: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 3 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Summa_Sale3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chAmount_Sale6: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Amount_Sale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chSumma_Sale6: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079'. '#1079#1072' 6 '#1084#1077#1089'.'
+            DataBinding.FieldName = 'Summa_Sale6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 200
+        Width = 941
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
+        ExplicitTop = 8
       end
     end
   end
@@ -643,6 +910,14 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Movement_Check_UnLiquid'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inUnitId'
@@ -668,7 +943,7 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
+    Left = 72
     Top = 160
   end
   inherited BarManager: TdxBarManager
@@ -801,5 +1076,21 @@ inherited Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm
     PackSize = 1
     Left = 384
     Top = 32
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 608
+    Top = 384
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'GoodsId'
+    MasterFields = 'GoodsId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 528
+    Top = 384
   end
 end

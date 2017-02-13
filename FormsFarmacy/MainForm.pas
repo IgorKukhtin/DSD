@@ -336,6 +336,8 @@ type
     miReport_MovementCheck_Cross: TMenuItem;
     actReport_MovementCheckFarm_Cross: TdsdOpenForm;
     miReport_MovementCheckFarm_Cross: TMenuItem;
+    actReport_SaleSP: TdsdOpenForm;
+    N13031: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

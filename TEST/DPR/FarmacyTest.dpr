@@ -491,7 +491,9 @@ uses
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
   GroupMemberSPEdit in '..\..\FormsFarmacy\Guides\GroupMemberSPEdit.pas' {GroupMemberSPEditForm: TParentForm},
   GroupMemberSP in '..\..\FormsFarmacy\Guides\GroupMemberSP.pas' {GroupMemberSPForm: TParentForm},
-  MarginCategoryItemHistory in '..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas' {MarginCategoryItemHistoryForm: TParentForm};
+  MarginCategoryItemHistory in '..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas' {MarginCategoryItemHistoryForm: TParentForm},
+  Report_SaleSP in '..\..\FormsFarmacy\Report\Report_SaleSP.pas' {Report_SaleSPForm: TParentForm},
+  Report_SaleSPDialog in '..\..\FormsFarmacy\Report\Report_SaleSPDialog.pas' {Report_SaleSPDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

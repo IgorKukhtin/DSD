@@ -1,4 +1,4 @@
-unit Report_MovementCheck_UnLiquid;
+unit Report_SaleSP;
 
 interface
 
@@ -14,45 +14,36 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dsdGuides, cxButtonEdit, cxCurrencyEdit, dxSkinsCore,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxCheckBox, cxSplitter;
+  dxSkinsdxBarPainter, cxCheckBox;
 
 type
-  TReport_MovementCheck_UnLiquidForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    rdUnit: TRefreshDispatcher;
-    UnitGuides: TdsdGuides;
+  TReport_SaleSPForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
-    colGoodsId: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colPrice_Sale: TcxGridDBColumn;
-    colSumma_Sale: TcxGridDBColumn;
-    spGet_UserUnit: TdsdStoredProc;
+    colAmount: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    clGoodsGroupName: TcxGridDBColumn;
-    clNDSKindName: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
+    clMemberSP: TcxGridDBColumn;
+    clPriceSP: TcxGridDBColumn;
     actRefreshIsPartion: TdsdDataSetRefresh;
+    clOperDateSP: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
+    clMedicSP: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actRefreshJuridical: TdsdDataSetRefresh;
-    colMinExpirationDate: TcxGridDBColumn;
-    colOperDate_LastIncome: TcxGridDBColumn;
-    colAmount_LastIncome: TcxGridDBColumn;
-    colPrice_Remains: TcxGridDBColumn;
-    colSumma_Remains: TcxGridDBColumn;
-    ChildDS: TDataSource;
-    ChildCDS: TClientDataSet;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
-    chUnitName: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    colisSaleAnother: TcxGridDBColumn;
-    cxSplitter1: TcxSplitter;
+    clNumLine: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuide: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceHospital: TcxButtonEdit;
+    HospitalGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -60,7 +51,7 @@ type
   end;
 
 var
-  Report_MovementCheck_UnLiquidForm: TReport_MovementCheck_UnLiquidForm;
+  Report_SaleSPForm: TReport_SaleSPForm;
 
 implementation
 
@@ -68,5 +59,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_MovementCheck_UnLiquidForm)
+  RegisterClass(TReport_SaleSPForm)
 end.

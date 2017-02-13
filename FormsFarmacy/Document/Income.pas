@@ -122,6 +122,12 @@ type
     actPrintSticker_notPrice: TdsdPrintAction;
     bbPrintSticker_notPrice: TdxBarButton;
     cbisDeferred: TcxCheckBox;
+    spUpdate_isDeferred_Yes: TdsdStoredProc;
+    spUpdate_isDeferred_No: TdsdStoredProc;
+    spUpdateisDeferredNo: TdsdExecStoredProc;
+    spUpdateisDeferredYes: TdsdExecStoredProc;
+    bbUpdateisDeferredYes: TdxBarButton;
+    bbUpdateisDeferredNo: TdxBarButton;
   private
     { Private declarations }
   public
