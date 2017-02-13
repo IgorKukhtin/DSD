@@ -272,10 +272,10 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   object HospitalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceHospital
-    FormNameParam.Value = 'TJuridicalCorporateForm'
+    FormNameParam.Value = 'TPartnerMedicalForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalCorporateForm'
+    FormName = 'TPartnerMedicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

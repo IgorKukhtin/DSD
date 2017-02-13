@@ -19,19 +19,19 @@ uses
 type
   TReport_SaleSPForm = class(TAncestorReportForm)
     dxBarButton1: TdxBarButton;
-    colIntenalSPName: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     clUnitName: TcxGridDBColumn;
-    clBrandSPName: TcxGridDBColumn;
+    clMemberSP: TcxGridDBColumn;
     clPriceSP: TcxGridDBColumn;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    clCountSP: TcxGridDBColumn;
+    clOperDateSP: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshPartionPrice: TdsdDataSetRefresh;
-    clKindOutSPName: TcxGridDBColumn;
+    clMedicSP: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     clNumLine: TcxGridDBColumn;
