@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
@@ -202,6 +200,14 @@ BEGIN
                                                            , inOKPO             := inOKPO
                                                            , inIsCheck          := FALSE
                                                            , inUserId           := vbUserId);
+
+     -- обнулили <Кол-во у покуп.>, т.к. будем кол-ва суммировать
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = vbMovementId
+       AND MovementItem.DescId     = zc_MI_Master()
+          ;
+
 
 
      -- пересчитали Итоговые суммы по накладной

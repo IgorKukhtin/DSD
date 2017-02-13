@@ -32,8 +32,8 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
-   vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы
-                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100() -- Cклад 
+   vbAccountId := lpInsertFind_Object_Account (inAccountGroupId := zc_Enum_AccountGroup_20000()         -- Запасы
+                                     , inAccountDirectionId     := zc_Enum_AccountDirection_20100()     -- Cклад 
                                      , inInfoMoneyDestinationId := zc_Enum_InfoMoneyDestination_10200() -- Медикаменты
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId);
@@ -46,7 +46,7 @@ BEGIN
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
       
-    SELECT date_trunc('day', Movement.OperDate),COALESCE(MovementBoolean_FullInvent.ValueData,False) 
+    SELECT date_trunc ('day', Movement.OperDate),COALESCE(MovementBoolean_FullInvent.ValueData,False) 
     INTO vbInventoryDate, vbFullInvent
     FROM Movement
         LEFT OUTER JOIN MovementBoolean AS MovementBoolean_FullInvent
@@ -186,22 +186,17 @@ BEGIN
             GROUP By T0.ObjectId
             ) as Saldo
             LEFT OUTER JOIN MovementItem AS MovementItem_Inventory
-                                         ON Saldo.ObjectId = MovementItem_Inventory.ObjectId
+                                         ON MovementItem_Inventory.ObjectId   = Saldo.ObjectId
                                         AND MovementItem_Inventory.MovementId = inMovementId
-                                        AND MovementItem_Inventory.DescId = zc_MI_Master()
-            LEFT OUTER JOIN (
-                                SELECT 
-                                    Object_Price_View.GoodsId
+                                        AND MovementItem_Inventory.DescId     = zc_MI_Master()
+            LEFT OUTER JOIN (SELECT Object_Price_View.GoodsId
                                   , Object_Price_View.Price
-                                FROM 
-                                    Object_Price_View
-                                WHERE 
-                                    Object_Price_View.UnitId = vbUnitId                    
-                            ) AS Object_Price ON Saldo.ObjectId = Object_Price.GoodsId
-        WHERE
-            Saldo.Amount > 0
-            AND
-            MovementItem_Inventory.Id is null;
+                             FROM Object_Price_View
+                             WHERE Object_Price_View.UnitId = vbUnitId                    
+                            ) AS Object_Price ON Object_Price.GoodsId = Saldo.ObjectId
+        WHERE Saldo.Amount > 0
+          AND MovementItem_Inventory.Id IS NULL
+       ;
     END IF;
     
     WITH -- расч. Остаток на конец vbInventoryDate (т.е. после даты переучета)
@@ -227,6 +222,7 @@ BEGIN
                         LEFT OUTER JOIN (SELECT T0.ObjectId, SUM (T0.Amount) as Amount FROM tmpRemains AS T0 GROUP BY ObjectId
                                         ) AS Saldo ON Saldo.ObjectId = MovementItem.ObjectId
                     WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId = zc_MI_Master()
                       AND MovementItem.IsErased = FALSE
                       AND COALESCE(MovementItem.Amount,0.0) - COALESCE(Saldo.Amount,0.0) <> 0.0
                    )
@@ -248,7 +244,7 @@ BEGIN
                                        AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                        AND CLI_Unit.ObjectId = vbUnitId
                JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-               JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
+               JOIN MovementItem ON MovementItem.Id     = Object_PartionMovementItem.ObjectCode
                JOIN Movement ON Movement.Id = movementitem.movementid
           WHERE Container.Amount > 0.0 AND DiffRemains.Amount < 0.0
          )
