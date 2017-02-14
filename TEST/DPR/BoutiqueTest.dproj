@@ -95,16 +95,16 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureBoutiqueTest.pas"/>
-			<DCCReference Include="..\SOURCE\METADATA\dbMetadataBoutiqueTest.pas"/>
-			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
-			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
-			<DCCReference Include="..\SOURCE\dbProcedureBoutiqueTest.pas"/>
-			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
-			<DCCReference Include="..\SOURCE\dbEnumBoutiqueTest.pas"/>
-			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
-			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\STRUCTURE\dbCreateStructureTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\METADATA\dbMetadataTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbBoutiqueProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\UtilConst.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\View\dbCreateViewTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Defaults\DefaultsTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
@@ -124,7 +124,7 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\dbTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
 				<Form>PeriodChoiceForm</Form>
 			</DCCReference>
@@ -155,133 +155,83 @@
 			<DCCReference Include="..\..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\ObjectTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Objects\ObjectTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
-			<DCCReference Include="..\..\Forms\User.pas">
-				<Form>UserForm</Form>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UserEdit.pas">
-				<Form>UserEditForm</Form>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\UserTest.pas"/>
-			<DCCReference Include="..\..\Forms\Role.pas">
-				<Form>RoleForm</Form>
+			<DCCReference Include="..\..\Forms\Box.pas">
+				<Form>BoxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RoleEdit.pas">
-				<Form>RoleEditForm</Form>
+			<DCCReference Include="..\..\Forms\BoxEdit.pas">
+				<Form>BoxEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas">
-				<Form>/  Measure in &apos;..\..\Forms\Measure.pas&apos; {MeasureForm</Form>
-				<DesignClass>TParentForm},
-  Income in &apos;..\..\FormsBoutique\Document\Income.pas&apos; {IncomeForm: TParentForm},
-  Maker in &apos;..\..\Forms\Guides\Maker.pas&apos; {MakerForm: TParentForm},
-  MakerEdit in &apos;..\..\Forms\Guides\MakerEdit.pas&apos; {MakerEditForm: TParentForm},
-  Promo in &apos;..\..\FormsBoutique\Document\Promo.pas&apos; {PromoForm: TParentForm},
-  PromoJournal in &apos;..\..\FormsBoutique\Document\PromoJournal.pas&apos; {PromoJournalForm: TParentForm},
-  ReportMovementCheckMiddle in &apos;..\..\FormsBoutique\Report\ReportMovementCheckMiddle.pas&apos; {ReportMovementCheckMiddleForm: TParentForm},
-  Report_RemainsOverGoodsDialog in &apos;..\..\FormsBoutique\Report\Report_RemainsOverGoodsDialog.pas&apos; {Report_RemainsOverGoodsDialogForm: TParentForm},
-  MovementItemProtocol in &apos;..\..\Forms\System\MovementItemProtocol.pas&apos; {MovementItemProtocolForm: TParentForm},
-  UnitForBoutiqueCash in &apos;..\..\FormsBoutique\Guides\UnitForBoutiqueCash.pas&apos; {UnitForBoutiqueCashForm: TParentForm},
-  Report_GoodsPartionMoveDialog in &apos;..\..\FormsBoutique\Report\Report_GoodsPartionMoveDialog.pas&apos; {Report_GoodsPartionMoveDialogForm: TParentForm},
-  Email in &apos;..\..\FormsBoutique\Guides\Email.pas&apos; {EmailForm: TParentForm},
-  EmailEdit in &apos;..\..\FormsBoutique\Guides\EmailEdit.pas&apos; {EmailEditForm: TParentForm},
-  Price in &apos;..\..\FormsBoutique\Guides\Price.pas&apos; {PriceForm: TParentForm},
-  Report_GoodsPartionHistoryDialog in &apos;..\..\FormsBoutique\Report\Report_GoodsPartionHistoryDialog.pas&apos; {Report_GoodsPartionHistoryDialogForm: TParentForm},
-  Over in &apos;..\..\FormsBoutique\Document\Over.pas&apos; {OverForm: TParentForm},
-  OverJournal in &apos;..\..\FormsBoutique\Document\OverJournal.pas&apos; {OverJournalForm: TParentForm},
-  RoleUnion in &apos;..\..\Forms\RoleUnion.pas&apos; {RoleUnionForm: TParentForm},
-  Report_RemainsOverGoods in &apos;..\..\FormsBoutique\Report\Report_RemainsOverGoods.pas&apos; {Report_RemainsOverGoodsForm: TParentForm},
-  PriceGoodsDialog in &apos;..\..\FormsBoutique\Guides\PriceGoodsDialog.pas&apos; {PriceGoodsDialogForm: TParentForm},
-  Color in &apos;..\..\FormsBoutique\System\Color.pas&apos; {ColorForm: TParentForm},
-  OverSettingsEdit in &apos;..\..\FormsBoutique\Guides\OverSettingsEdit.pas&apos; {OverSettingsEditForm: TParentForm},
-  OverSettings in &apos;..\..\FormsBoutique\Guides\OverSettings.pas&apos; {OverSettingsForm: TParentForm},
-  DiscountExternalToolsEdit in &apos;..\..\FormsBoutique\Guides\DiscountExternalToolsEdit.pas&apos; {DiscountExternalToolsEditForm: TParentForm},
-  DiscountCard in &apos;..\..\FormsBoutique\Guides\DiscountCard.pas&apos; {DiscountCardForm: TParentForm},
-  BarCodeEdit in &apos;..\..\FormsBoutique\Guides\BarCodeEdit.pas&apos; {BarCodeEditForm: TParentForm},
-  BarCode in &apos;..\..\FormsBoutique\Guides\BarCode.pas&apos; {BarCodeForm: TParentForm},
-  DiscountExternalTools_Object in &apos;..\..\FormsBoutique\Guides\DiscountExternalTools_Object.pas&apos; {DiscountExternalTools_ObjectForm: TParentForm},
-  DiscountCardEdit in &apos;..\..\FormsBoutique\Guides\DiscountCardEdit.pas&apos; {DiscountCardEditForm: TParentForm},
-  DiscountExternal_Object in &apos;..\..\FormsBoutique\Guides\DiscountExternal_Object.pas&apos; {DiscountExternal_ObjectForm: TParentForm},
-  ConfirmedKind in &apos;..\..\FormsBoutique\Kind\ConfirmedKind.pas&apos; {ConfirmedKindForm: TParentForm},
-  DiscountExternal in &apos;..\..\FormsBoutique\Guides\DiscountExternal.pas&apos; {DiscountExternalForm: TParentForm},
-  DiscountExternalEdit in &apos;..\..\FormsBoutique\Guides\DiscountExternalEdit.pas&apos; {DiscountExternalEditForm: TParentForm},
-  DiscountExternalTools in &apos;..\..\FormsBoutique\Guides\DiscountExternalTools.pas&apos; {DiscountExternalToolsForm: TParentForm},
-  PriceGroupSettingsTOP in &apos;..\..\FormsBoutique\Guides\PriceGroupSettingsTOP.pas&apos; {PriceGroupSettingsTopForm: TParentForm},
-  Report_MovementCheck_UnLiquid in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_UnLiquid.pas&apos; {Report_MovementCheck_UnLiquidForm: TParentForm},
-  Report_MovementCheck_UnLiquidDialog in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_UnLiquidDialog.pas&apos; {Report_MovementCheck_UnLiquidDialogForm: TParentForm},
-  Report_Payment_Plan in &apos;..\..\FormsBoutique\Report\Report_Payment_Plan.pas&apos; {Report_Payment_PlanForm: TParentForm},
-  Report_Payment_PlanDialog in &apos;..\..\FormsBoutique\Report\Report_Payment_PlanDialog.pas&apos; {Report_Payment_PlanDialogForm: TParentForm},
-  Report_MovementCheckErrorDialog in &apos;..\..\FormsBoutique\Report\Report_MovementCheckErrorDialog.pas&apos; {Report_MovementCheckErrorDialogForm: TParentForm},
-  Report_MovementCheckError in &apos;..\..\FormsBoutique\Report\Report_MovementCheckError.pas&apos; {Report_MovementCheckErrorForm: TParentForm},
-  MCS_Lite in &apos;..\..\FormsBoutique\Guides\MCS_Lite.pas&apos; {MCS_LiteForm: TParentForm},
-  OrderShedule in &apos;..\..\FormsBoutique\Guides\OrderShedule.pas&apos; {OrderSheduleForm: TParentForm},
-  OrderSheduleEdit in &apos;..\..\FormsBoutique\Guides\OrderSheduleEdit.pas&apos; {OrderSheduleEditForm: TParentForm},
-  CheckVIP_Error in &apos;..\..\FormsBoutique\Document\CheckVIP_Error.pas&apos; {CheckVIP_ErrorForm: TParentForm},
-  Report_MovementIncome_Promo in &apos;..\..\FormsBoutique\Report\Report_MovementIncome_Promo.pas&apos; {Report_MovementIncome_PromoForm: TParentForm},
-  Report_MovementCheck_Promo in &apos;..\..\FormsBoutique\Report\Report_MovementCheck_Promo.pas&apos; {Report_MovementCheck_PromoForm: TParentForm},
-  InventoryPartion in &apos;..\..\FormsBoutique\Document\InventoryPartion.pas&apos; {InventoryPartionForm: TParentForm},
-  CheckPrintDialog in &apos;..\..\FormsBoutique\Document\CheckPrintDialog.pas&apos; {CheckPrintDialogForm: TParentForm},
-  Report_CheckPromo in &apos;..\..\FormsBoutique\Report\Report_CheckPromo.pas&apos; {Report_CheckPromoForm: TParentForm},
-  Report_PeriodDialog in &apos;..\..\FormsBoutique\Report\Report_PeriodDialog.pas&apos; {Report_PeriodDialogForm: TParentForm},
-  KindOutSP in &apos;..\..\FormsBoutique\Guides\KindOutSP.pas&apos; {KindOutSPForm: TParentForm},
-  KindOutSPEdit in &apos;..\..\FormsBoutique\Guides\KindOutSPEdit.pas&apos; {KindOutSPEditForm: TParentForm},
-  IntenalSPEdit in &apos;..\..\FormsBoutique\Guides\IntenalSPEdit.pas&apos; {IntenalSPEditForm: TParentForm},
-  IntenalSP in &apos;..\..\FormsBoutique\Guides\IntenalSP.pas&apos; {IntenalSPForm: TParentForm},
-  BrandSP in &apos;..\..\FormsBoutique\Guides\BrandSP.pas&apos; {BrandSPForm: TParentForm},
-  BrandSPEdit in &apos;..\..\FormsBoutique\Guides\BrandSPEdit.pas&apos; {BrandSPEditForm: TParentForm},
-  GoodsSP in &apos;..\..\FormsBoutique\Guides\GoodsSP.pas&apos; {GoodsSPForm: TParentForm},
-  Report_CheckSP in &apos;..\..\FormsBoutique\Report\Report_CheckSP.pas&apos; {Report_CheckSPForm: TParentForm},
-  Report_CheckSPDialog in &apos;..\..\FormsBoutique\Report\Report_CheckSPDialog.pas&apos; {Report_CheckSPDialogForm: TParentForm},
-  PartnerMedical in &apos;..\..\FormsBoutique\Guides\PartnerMedical.pas&apos; {PartnerMedicalForm: TParentForm},
-  PartnerMedicalEdit in &apos;..\..\FormsBoutique\Guides\PartnerMedicalEdit.pas&apos; {PartnerMedicalEditForm: TParentForm},
-  ConditionsKeepEdit in &apos;..\..\FormsBoutique\Guides\ConditionsKeepEdit.pas&apos; {ConditionsKeepEditForm: TParentForm},
-  ConditionsKeep in &apos;..\..\FormsBoutique\Guides\ConditionsKeep.pas&apos; {ConditionsKeepForm: TParentForm},
-  ReportPromoParams in &apos;..\..\FormsBoutique\Object\ReportPromoParams.pas&apos; {ReportPromoParamsForm: TParentForm},
-  Report_MinPrice_onGoods in &apos;..\..\FormsBoutique\Report\Report_MinPrice_onGoods.pas&apos; {Report_MinPrice_onGoodsForm: TParentForm},
-  Report_MinPrice_onGoodsDialog in &apos;..\..\FormsBoutique\Report\Report_MinPrice_onGoodsDialog.pas&apos; {Report_MinPrice_onGoodsDialogForm: TParentForm},
-  Contract_Object in &apos;..\..\FormsBoutique\Guides\Contract_Object.pas&apos; {Contract_ObjectForm: TParentForm},
-  Report_Badm in &apos;..\..\FormsBoutique\Report\Report_Badm.pas&apos; {Report_BadmForm: TParentForm},
-  Unit_byReportBadm in &apos;..\..\FormsBoutique\Guides\Unit_byReportBadm.pas&apos; {Unit_byReportBadmForm: TParentForm},
-  Unit_Object in &apos;..\..\FormsBoutique\Guides\Unit_Object.pas&apos; {Unit_ObjectForm: TParentForm},
-  DataTimeDialog in &apos;..\..\FormsBoutique\Document\DataTimeDialog.pas&apos; {DataTimeDialogForm: TParentForm},
-  MarginCategory_Cross in &apos;..\..\FormsBoutique\Object\MarginCategory_Cross.pas&apos; {MarginCategory_CrossForm: TParentForm},
-  MarginCategory_Total in &apos;..\..\FormsBoutique\Object\MarginCategory_Total.pas&apos; {MarginCategory_TotalForm: TParentForm}*</DesignClass>
+			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
+				<Form>ImportExportLinkTypeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas">
-				<Form>/</Form>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
+				<Form>AncestorBaseForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas">
-				<Form>/  MovementItemsLoad in &apos;..\..\FormsBoutique\Load\MovementItemsLoad.pas&apos; {MovementItemsLoadForm</Form>
-				<DesignClass>TParentForm},</DesignClass>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorData.pas">
+				<Form>AncestorDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas">
-				<Form>/  ImportTypeItemsTest in &apos;..\SOURCE\Objects\All\ImportTypeItemsTest.pas&apos;,</Form>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
+				<Form>AncestorDBGridForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas">
-				<Form>/  UserKey in &apos;..\..\Forms\Guides\UserKey.pas&apos; {UserKeyForm</Form>
-				<DesignClass>TParentForm},</DesignClass>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\CommonObjectProcedureTest.pas">
-				<Form>/  Goods in &apos;..\..\FormsBoutique\Guides\Goods.pas&apos; {GoodsForm</Form>
-				<DesignClass>TParentForm},</DesignClass>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+				<Form>AncestorDocumentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\dbMovementTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas">
-				<Form>/  PriceListMovementTest in &apos;..\SOURCE\Movement\All\PriceListMovementTest.pas&apos;,</Form>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
+				<Form>AncestorDocumentMCForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas">
-				<Form>/  ActionTest in &apos;..\SOURCE\Objects\All\ActionTest.pas&apos;,</Form>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
+				<Form>AncestorEditDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas">
-				<Form>/  UploadUnloadData in &apos;..\..\FormsBoutique\ConnectWithOld\UploadUnloadData.pas&apos; {dmUnloadUploadData</Form>
-				<DesignClass>TDataModule},</DesignClass>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+				<Form>AncestorEnumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+				<Form>AncestorGuidesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
+				<Form>AncestorJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
+				<Form>AboutBox</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCEBoutique\Component\UpdaterTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbObjectTest.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\RoleTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\UserTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

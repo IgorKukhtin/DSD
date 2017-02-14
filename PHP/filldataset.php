@@ -68,13 +68,13 @@
 
      $fieldlist = '';
      for ($i = 0; $i < $fieldcount; $i++) {
-         $fieldlist .= pack(C, strlen($fieldname[$i])); // длина названия
+         $fieldlist .= pack('C', strlen($fieldname[$i])); // длина названия
          $fieldlist .= $fieldname[$i];  // название
          $fieldlist .= PostgresTypeToClientDataSetBinary($type[$i], 255); // тип и размер типа
      };
-     $fieldlist .= pack(S, 0);// количество свойств вообще
+     $fieldlist .= pack('S', 0);// количество свойств вообще
      
-     return $header.$fieldlistheader.pack(S, strlen($fieldlist) + 24).$fieldlist.$res;
+     return $header.$fieldlistheader.pack('S', strlen($fieldlist) + 24).$fieldlist.$res;
   }; 
 	
   function ClientDataSetFillDataSetBinaryAutoWidth($dataset)

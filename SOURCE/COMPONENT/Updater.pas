@@ -54,7 +54,7 @@ begin
        do fFind:= (fFind) or (StringList[i] = Connection);
        StringList.Free;
     end;
-    if    (TStorageFactory.GetStorage.Connection <> Connection)and(fFind = FALSE)
+    if    (TStorageFactory.GetStorage.Connection <> Connection) and (fFind = FALSE) and (Connection<>'')
       // and (TStorageFactory.GetStorage.Connection <> ReplaceStr(Connection,'srv.alan','srv2.alan'))
     then
        UpdateConnect(Connection);
