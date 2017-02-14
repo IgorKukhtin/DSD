@@ -14,7 +14,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateUser(const Id, Code: integer; UserName, Password: string; MemberId: Integer): integer;
+    function InsertUpdateUser(const Id, Code: integer; UserName, Password, Sign, Seal, Key : string; MemberId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -35,19 +35,23 @@ end;
 
 function TUser.InsertDefault: integer;
 begin
-  result := InsertUpdateUser(0, -4, 'UserName', 'Password', 0);
+  result := InsertUpdateUser(0, -2, 'UserName', 'Password', 'sign', 'seal', 'key', 0);
   inherited;
 end;
 
-function TUser.InsertUpdateUser(const Id, Code: integer; UserName, Password: string; MemberId: Integer): integer;
+function TUser.InsertUpdateUser(const Id, Code: integer; UserName, Password, Sign, Seal, Key: string; MemberId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inUserName', ftString, ptInput, UserName);
   FParams.AddParam('inPassword', ftString, ptInput, Password);
+  FParams.AddParam('inSign', ftString, ptInput, Sign);
+  FParams.AddParam('inSeal', ftString, ptInput, Seal);
+  FParams.AddParam('inKey', ftString, ptInput, Key);
   FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   result := InsertUpdate(FParams);
+
 end;
 
 procedure TUserTest.ProcedureLoad;
@@ -70,13 +74,13 @@ begin
     // Получение данных о пользователе
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('name').AsString = 'UserName'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-    // Проверка на дублируемость
-    try
-      ObjectTest.InsertUpdateUser(0, -4, 'UserName', 'Password', 0);
-      Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
-    except
-
-    end;
+//    // Проверка на дублируемость
+//    try
+//      ObjectTest.InsertUpdateUser(0, -2, 'UserName', 'Password', 'sign', 'seal', 'key', 0);
+//      Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
+//    except
+//
+//    end;
     // Изменение пользователя
 
     // Получим список пользователей

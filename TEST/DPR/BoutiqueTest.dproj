@@ -99,7 +99,7 @@
 			<DCCReference Include="..\SOURCEBoutique\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\zLibUtil.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Function\CommonFunctionTest.pas"/>
-			<DCCReference Include="..\SOURCEBoutique\dbFarmacyProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbBoutiqueProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Process\ProcessTest.pas"/>

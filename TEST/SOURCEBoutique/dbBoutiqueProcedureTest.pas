@@ -1,4 +1,4 @@
-unit dbFarmacyProcedureTest;
+unit dbBoutiqueProcedureTest;
 
 interface
 uses TestFramework, ZConnection, ZDataset, dbTest;
@@ -7,19 +7,16 @@ type
   TdbProcedureTest = class (TdbTest)
   published
     procedure CreateFunction;
-    procedure CreateContainerProcedure;
     procedure CreateDefaultProcedure;
     procedure CreateHistoryProcedure;
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
     procedure CreateMovementItemContainerProcedure;
-    procedure CreateCheckProcedure;
+    procedure CreateProtocolProcedure;
     procedure CreateOvjectToolsProcedure;
     procedure CreateObjectProcedure;
-    procedure CreateProtocolProcedure;
-    procedure CreatePeriodCloseProcedure;
 
-    procedure CreateLoadProcedure;
+
   end;
 
 
@@ -32,29 +29,10 @@ const
   CommonProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
   CommonReportsPath = '..\DATABASE\Boutique\REPORTS\';
 
-  FarmacyFunctionPath = '..\DATABASE\Boutique\FUNCTION\';
-  FarmacyProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
-  FarmacyReportsPath = '..\DATABASE\Boutique\REPORTS\';
 
 { TdbProcedureTest }
 
-procedure TdbProcedureTest.CreateCheckProcedure;
-begin
-  ScriptDirectory := FarmacyProcedurePath + 'Protocol\';
-  ProcedureLoad;
-end;
 
-procedure TdbProcedureTest.CreateContainerProcedure;
-begin
-{  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container1.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container2.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container3.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container4.sql');
-  ZQuery.ExecSQL;}
-end;
 
 procedure TdbProcedureTest.CreateDefaultProcedure;
 begin
@@ -81,33 +59,24 @@ begin
 
 end;
 
-procedure TdbProcedureTest.CreateLoadProcedure;
-begin
-  ScriptDirectory := FarmacyProcedurePath + 'Load\';
-  ProcedureLoad;
-end;
+
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
-  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\_COMMON\InsertUpdate\';
-  ProcedureLoad;
-  ScriptDirectory := FarmacyProcedurePath + 'MovementItemContainer\_COMMON\';
+  ScriptDirectory := CommonProcedurePath + 'MovementItemContainer\_COMMON\';
   ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
-  ScriptDirectory := FarmacyProcedurePath + 'MovementItem\_COMMON\';
+  ScriptDirectory := CommonProcedurePath + 'MovementItem\_COMMON\';
   ProcedureLoad;
-
-
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
 begin
-  ScriptDirectory := FarmacyProcedurePath + 'Movement\_COMMON\';
+  ScriptDirectory := CommonProcedurePath + 'Movement\_COMMON\';
   ProcedureLoad;
-
 end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
@@ -132,16 +101,12 @@ begin
 //  ZQuery.ExecSQL;
 end;
 
-procedure TdbProcedureTest.CreatePeriodCloseProcedure;
-begin
-//  ScriptDirectory := CommonProcedurePath + 'PeriodClose\';
-//  ProcedureLoad;
-end;
+
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
 begin
-//  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'Protocol\lpInsert_ObjectProtocol.sql');
-//  ZQuery.ExecSQL;
+  ScriptDirectory := CommonProcedurePath + 'Protocol\';
+  ProcedureLoad;
 end;
 
 
