@@ -624,10 +624,15 @@ BEGIN
                                                   ON MI_OrderExternal.MovementId = Movement_OrderExternal.Id
                                                  AND MI_OrderExternal.DescId = zc_MI_Master()
                                                  AND MI_OrderExternal.isErased = FALSE
-                       
+
+                          LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                         ON MLM_Order.MovementChildId = Movement_OrderExternal.Id     --MLM_Order.MovementId = Movement_Income.Id
+                                                        AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
+--        LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MLM_Order.MovementChildId
                       WHERE /*Movement_OrderExternal.OperDate >= vbOperDate AND Movement_OrderExternal.OperDate < vbOperDateEnd
                         AND */Movement_OrderExternal.DescId = zc_Movement_OrderExternal()
                         AND Movement_OrderExternal.StatusId = zc_Enum_Status_Complete()
+                        AND MLM_Order.MovementId is Null
                       GROUP BY MI_OrderExternal.ObjectId 
                       HAVING SUM (MI_OrderExternal.Amount) <> 0 
                      )

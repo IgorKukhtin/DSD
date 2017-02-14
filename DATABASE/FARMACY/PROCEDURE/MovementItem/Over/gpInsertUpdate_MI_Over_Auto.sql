@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Over_Auto (Integer, TDateTime, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Auto(
     IN inUnitId              Integer   , -- от кого
@@ -12,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Over_Auto(
     IN inAmountSend          TFloat    , -- автоперемещение приход
     IN inPrice               TFloat    , -- Цена от кого
     IN inMCS                 TFloat    , -- период для расчета НТЗ
+    IN inTerm                TFloat    , -- Не распределять сроки менее ХХХ месяцев
+    IN inisTerm              Boolean   , --  ХХХ месяцев (Не распределять сроки менее ХХХ месяцев)
     IN inMinExpirationDate   TDateTime , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -22,6 +25,7 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbTerm TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
@@ -97,8 +101,10 @@ BEGIN
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
       HAVING  SUM (tmp.RemainsStart) <> 0;
 
+      vbTerm:= (SELECT DATE_PART('day', inMinExpirationDate - inOperDate) / 30);
 
-
+      IF (inisTerm = TRUE AND vbTerm > inTerm) OR (inisTerm =FALSE)
+      THEN
        -- сохранили строку документа
        vbMovementItemId := lpInsertUpdate_MI_Over_Master    (ioId                 := 0 -- COALESCE (vbMovementItemId, 0)
                                                            , inMovementId         := vbMovementId
@@ -121,6 +127,8 @@ BEGIN
           RAISE EXCEPTION 'Ошибка.Дублируется "главный" товар <%>', lfGet_Object_ValueData ((SELECT ObjectId FROM MovementItem WHERE MovementId = vbMovementId AND isErased = FALSE AND DescId = zc_MI_Master() GROUP BY ObjectId HAVING COUNT(*) > 1 LIMIT 1));
        END IF;
 
+   END IF;
+
 
 END;
 $BODY$
@@ -129,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.16         * Term
  19.06.16         *
 */
 

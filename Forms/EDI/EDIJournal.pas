@@ -186,8 +186,10 @@ type
     actShowMessage: TShowMessageAction;
     clPrice_EDI: TcxGridDBColumn;
     actOpenOrderForm: TdsdOpenForm;
-    dxBarButton1: TdxBarButton;
+    bbOpenOrderForm: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbMovementProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

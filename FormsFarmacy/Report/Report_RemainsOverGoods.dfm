@@ -1498,17 +1498,32 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxLabel7: TcxLabel
       Left = 6
       Top = 30
-      Caption = #1054#1089#1090#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072':'
+      Caption = #1054#1089#1090#1072#1074#1080#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1072#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1072
     end
     object edAssortment: TcxCurrencyEdit
-      Left = 228
+      Left = 214
       Top = 29
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.MinValue = 1.000000000000000000
       TabOrder = 10
-      Width = 35
+      Width = 30
+    end
+    object cxLabel8: TcxLabel
+      Left = 252
+      Top = 30
+      Caption = #1053#1077' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1103#1090#1100' '#1089#1088#1086#1082#1080' '#1084#1077#1085#1077#1077' '#1061#1061#1061' '#1084#1077#1089#1103#1094#1077#1074
+    end
+    object edTerm: TcxCurrencyEdit
+      Left = 498
+      Top = 29
+      EditValue = 1.000000000000000000
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.MinValue = 1.000000000000000000
+      TabOrder = 12
+      Width = 30
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -1550,10 +1565,17 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Width = 22
   end
   object cbAssortment: TcxCheckBox [7]
-    Left = 199
+    Left = 190
     Top = 29
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
     TabOrder = 11
+    Width = 21
+  end
+  object cbTerm: TcxCheckBox [8]
+    Left = 474
+    Top = 29
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    TabOrder = 12
     Width = 22
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2519,6 +2541,22 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Component = MasterCDS
         ComponentItem = 'MCSValue'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTerm'
+        Value = Null
+        Component = edTerm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTerm'
+        Value = Null
+        Component = cbTerm
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

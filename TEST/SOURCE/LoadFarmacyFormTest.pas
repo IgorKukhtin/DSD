@@ -523,7 +523,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Payment_PlanDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Payment_PlanDialogForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_UnLiquidForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_UnLiquidDialogForm'));
@@ -538,6 +538,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoodsDialogForm');
   exit;
+  {
   //Отчет Приход на точку
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MovementIncomeForm');
@@ -1155,6 +1156,13 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+  // отчет реестр по постановлению 1303
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleSPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleSPDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));

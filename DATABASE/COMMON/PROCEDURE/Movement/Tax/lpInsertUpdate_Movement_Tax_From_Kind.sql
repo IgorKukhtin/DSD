@@ -1,6 +1,5 @@
 -- Function: lpInsertUpdate_Movement_Tax_From_Kind()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (
@@ -146,14 +145,18 @@ BEGIN
                   ELSE DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' -- будет последним днем месяца
              END AS OperDate
 
-           , CASE WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
-                    OR EXTRACT ('MONTH' FROM Movement.OperDate) <> EXTRACT ('MONTH' FROM Movement.OperDate - ((ObjectFloat_Juridical_DayTaxSummary.ValueData - 1) :: TVarChar || ' DAY') :: INTERVAL)
+           , CASE -- будет с 1-ого числа месяца
+                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                    OR DATE_TRUNC ('MONTH', Movement.OperDate) = DATE_TRUNC ('MONTH', Movement.OperDate + INTERVAL '1 DAY')
                        THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END)
+                  -- будет с 1-ого + 15дней
                   WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
-                       THEN Movement.OperDate - ((ObjectFloat_Juridical_DayTaxSummary.ValueData - 1) :: TVarChar || ' DAY') :: INTERVAL
+                       THEN DATE_TRUNC ('MONTH', Movement.OperDate) + ((ObjectFloat_Juridical_DayTaxSummary.ValueData + 0) :: TVarChar || ' DAY') :: INTERVAL
              END AS StartDate
-           , CASE WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+           , CASE -- будет до последнего числа месяца
+                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
                        THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                  -- будет до числа в документе (это или 15-ое или 31 число, т.е. важно что б документ был последним днем)
                   WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
                        THEN Movement.OperDate
              END AS EndDate

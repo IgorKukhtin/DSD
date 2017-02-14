@@ -426,9 +426,16 @@ BEGIN
                                                 AND (_tmpItem_pr.isPartionCount = TRUE OR _tmpItem_pr.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem_pr.PartionGoods)
 
+                                               -- Упаковка Мяса
                                                WHEN vbIsPartionDate_Unit_To = TRUE
-                                                AND _tmpItem_pr.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
-                                                                                         , zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                AND vbIsPeresort = FALSE
+                                                AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                   THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem_pr.PartionGoodsDate
+                                                                                        , inGoodsKindId_complete := _tmpItem_pr.GoodsKindId_complete
+                                                                                         )
+                                               -- Производство ПФ-ГП
+                                               WHEN vbIsPartionDate_Unit_To = TRUE
+                                                AND _tmpItem_pr.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                          , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                          , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                           )
@@ -467,9 +474,17 @@ BEGIN
                                                      AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
 
+                                                    -- Упаковка Мяса
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
-                                                     AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
-                                                                                                , zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
+                                                     AND vbUnitId_From <> vbUnitId_To
+                                                     -- AND EXISTS (SELECT 1 FROM _tmpItem_pr WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100())
+                                                     AND _tmpItemChild.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                        THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItemChild.PartionGoodsDate
+                                                                                             , inGoodsKindId_complete := _tmpItemChild.GoodsKindId_complete
+                                                                                              )
+                                                    -- Производство ПФ-ГП
+                                                    WHEN vbIsPartionDate_Unit_From = TRUE
+                                                     AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                                 , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                                  )

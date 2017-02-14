@@ -11,17 +11,17 @@
     Width = 971
     Height = 378
     ExplicitTop = 138
-    ExplicitWidth = 946
+    ExplicitWidth = 971
     ExplicitHeight = 378
     ClientRectBottom = 378
     ClientRectRight = 971
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 946
+      ExplicitWidth = 971
       ExplicitHeight = 354
       inherited cxGrid: TcxGrid
         Width = 971
         Height = 354
-        ExplicitWidth = 946
+        ExplicitWidth = 971
         ExplicitHeight = 354
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -517,7 +517,7 @@
     Width = 971
     Height = 112
     TabOrder = 3
-    ExplicitWidth = 946
+    ExplicitWidth = 971
     ExplicitHeight = 112
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1279,6 +1279,32 @@
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
     end
+    object spUpdateisDeferredNo: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_No
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
+      ImageIndex = 77
+    end
+    object spUpdateisDeferredYes: TdsdExecStoredProc
+      Category = 'Deferred'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isDeferred_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isDeferred_Yes
+        end>
+      Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      ImageIndex = 52
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1438,6 +1464,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateisDeferredNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1499,6 +1533,16 @@
     end
     object bbPrintSticker_notPrice: TdxBarButton
       Action = actPrintSticker_notPrice
+      Category = 0
+    end
+    object bbUpdateisDeferredYes: TdxBarButton
+      Action = spUpdateisDeferredYes
+      Caption = #1047#1072#1082#1072#1079' '#1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
+      Category = 0
+    end
+    object bbUpdateisDeferredNo: TdxBarButton
+      Action = spUpdateisDeferredNo
+      Caption = #1047#1072#1082#1072#1079' '#1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       Category = 0
     end
   end
@@ -1737,8 +1781,8 @@
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 830
-    Top = 265
+    Left = 774
+    Top = 289
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -2206,8 +2250,8 @@
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 840
+    Top = 360
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Income_SetErased'
@@ -2885,5 +2929,67 @@
     PackSize = 1
     Left = 703
     Top = 264
+  end
+  object spUpdate_isDeferred_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'True'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 219
+  end
+  object spUpdate_isDeferred_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_isDeferred'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = OrderExternalChoiceGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDeferred'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisDeferred'
+        Value = Null
+        Component = cbisDeferred
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 259
   end
 end

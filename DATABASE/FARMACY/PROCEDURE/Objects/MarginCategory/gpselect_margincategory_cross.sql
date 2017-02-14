@@ -78,7 +78,7 @@ BEGIN
                      WHERE ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()
                      ) AS tmp;
 
-     -- все данные 
+     -- все данные  
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
             SELECT _tmpMarginCategory.MarginCategoryId 
                  , _tmpminPrice.num AS Num
@@ -89,7 +89,7 @@ BEGIN
             FROM _tmpMarginCategory 
                     LEFT JOIN  (SELECT MAX (Object_MarginCategoryItem.Id)      AS Id
                                     , Object_MarginCategoryItem.MarginCategoryId
-                                    , Object_MarginCategoryItem.MarginPercent
+                                    , CAST (Object_MarginCategoryItem.MarginPercent AS NUMERIC (16,2)) AS MarginPercent
                                     , Object_MarginCategoryItem.minPrice
                                FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem 
                                GROUP BY Object_MarginCategoryItem.MarginCategoryId
@@ -113,7 +113,7 @@ BEGIN
      WHILE (vbIndex < vbCount) LOOP
        vbIndex := vbIndex + 1;
        vbCrossString := vbCrossString || ', DAY' || vbIndex || ' VarChar[]'; 
-       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] AS Value'||vbIndex||'  '||
+       vbFieldNameText := vbFieldNameText || ', DAY' || vbIndex || '[1] :: TFloat AS Value'||vbIndex||'  '||
                           ', DAY' || vbIndex || '[2]::Integer  AS MarginCategoryId'||vbIndex||' '||
                           ', DAY' || vbIndex || '[3]::Integer  AS MarginCategoryItemId'||vbIndex||' ';
      END LOOP;

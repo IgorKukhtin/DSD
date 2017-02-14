@@ -1,28 +1,28 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <EXITE>'
   ClientHeight = 453
-  ClientWidth = 1284
+  ClientWidth = 1366
   AddOnFormData.OnLoadAction = actSetDefaults
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -31
-  ExplicitWidth = 1300
+  ExplicitLeft = -354
+  ExplicitWidth = 1382
   ExplicitHeight = 488
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Width = 1284
+    Width = 1366
     Height = 396
     ExplicitTop = 57
     ExplicitWidth = 1284
     ExplicitHeight = 396
     ClientRectBottom = 396
-    ClientRectRight = 1284
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1284
       ExplicitHeight = 396
       inherited cxGrid: TcxGrid
-        Width = 1284
+        Width = 1366
         Height = 209
         Align = alTop
         ExplicitWidth = 1284
@@ -466,19 +466,21 @@ inherited EDIJournalForm: TEDIJournalForm
       object Splitter: TcxSplitter
         Left = 0
         Top = 209
-        Width = 1284
+        Width = 1366
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
+        ExplicitWidth = 1284
       end
       object BottomPanel: TPanel
         Left = 0
         Top = 214
-        Width = 1284
+        Width = 1366
         Height = 182
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
+        ExplicitWidth = 1284
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -754,11 +756,12 @@ inherited EDIJournalForm: TEDIJournalForm
         object cxProtocolGrid: TcxGrid
           Left = 957
           Top = 0
-          Width = 327
+          Width = 409
           Height = 182
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
+          ExplicitWidth = 327
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -826,10 +829,11 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1284
+    Width = 1366
     Height = 31
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1284
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -1097,6 +1101,36 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
       Caption = 'actExecPrintStoredProc'
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object maEDIReceiptLoad: TMultiAction
       Category = 'EDI Load'
       MoveParams = <>
@@ -1165,7 +1199,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1042#1086#1079#1074#1088#1072#1090
+      Caption = #1086#1090#1087#1088'. '#1042#1086#1079#1074#1088#1072#1090
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090'> '#1074' EXITE'
     end
     object maEDIOrdersLoad: TMultiAction
@@ -1307,7 +1341,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = actRefresh
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1056#1072#1089#1093#1086#1076
+      Caption = #1086#1090#1087#1088'. '#1056#1072#1089#1093#1086#1076
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076'> '#1074' EXITE'
     end
     object mactDECLAR: TMultiAction
@@ -1324,7 +1358,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Action = EDIDeclar
         end>
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'> '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1091#1102
+      Caption = #1086#1090#1087#1088'. '#1053#1072#1083#1086#1075#1086#1074#1091#1102
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103'> '#1074' EXITE'
     end
     object EDIDeclar: TEDIAction
@@ -1724,6 +1758,10 @@ inherited EDIJournalForm: TEDIJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1736,7 +1774,7 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbOpenOrderForm'
         end
         item
           Visible = True
@@ -1826,14 +1864,6 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbInvoice'
         end
         item
@@ -1851,6 +1881,14 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Visible = True
           ItemName = 'bbDecadv'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocolOpenForm'
         end
         item
           Visible = True
@@ -1926,8 +1964,12 @@ inherited EDIJournalForm: TEDIJournalForm
       Action = actOpenSaleForm
       Category = 0
     end
-    object dxBarButton1: TdxBarButton
+    object bbOpenOrderForm: TdxBarButton
       Action = actOpenOrderForm
+      Category = 0
+    end
+    object bbMovementProtocolOpenForm: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end

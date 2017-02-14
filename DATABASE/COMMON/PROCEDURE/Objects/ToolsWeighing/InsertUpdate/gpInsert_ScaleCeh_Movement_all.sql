@@ -121,10 +121,10 @@ BEGIN
      END IF;
 
 
-     -- для zc_Movement_ProductionUnion + если Обвалка
-     IF vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
+     -- для zc_Movement_ProductionUnion + если Обвалка - !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
+     IF 1=0 AND vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
      THEN
-           -- определили <Приход или Расход>, нужен только для zc_Movement_ProductionSeparate
+           -- определили <Приход или Расход>, нужен только для Обвалка
            vbIsProductionIn:= (SELECT MB_isIncome.ValueData FROM MovementBoolean AS MB_isIncome WHERE MB_isIncome.MovementId = inMovementId AND MB_isIncome.DescId = zc_MovementBoolean_isIncome());
 
            -- поиск существующего документа <Производство> по ВСЕМ параметрам
@@ -638,8 +638,9 @@ BEGIN
                                        THEN 0 -- надо суммировать
                                   WHEN inBranchCode <> 201 -- если НЕ Обвалка
                                        THEN 0 -- можно суммировать
-                                  WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
-                                       THEN 0 -- надо суммировать
+                                  -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
+                                  -- WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
+                                  --      THEN 0 -- надо суммировать
                                   ELSE MovementItem.Id -- пока не надо суммировать
                              END AS myId
 
@@ -902,7 +903,9 @@ BEGIN
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), inMovementId, vbPartionGoods);
      --
-     IF vbMovementDescId = zc_Movement_ProductionSeparate() OR (vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201) -- если Обвалка
+     IF vbMovementDescId = zc_Movement_ProductionSeparate()
+        -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
+        -- OR (vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201) -- если Обвалка
      THEN
           -- сохранили свойство <Номер взвешивания>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), inMovementId, vbWeighingNumber);
@@ -1017,7 +1020,8 @@ BEGIN
 
      END IF;
 
-     -- !!!Проверка!!!
+     -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
+     /*-- !!!Проверка!!!
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
      THEN -- !!!Проверка что документ один!!!
           IF EXISTS (SELECT Movement.Id
@@ -1079,7 +1083,7 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Документ <Упаковка> за <%> заблокирован другим пользователем.Повторите действие через 25 сек.', DATE (inOperDate);
           END IF;
 
-     END IF;
+     END IF;*/
 
 if inSession = '5' AND 1=1
 then
