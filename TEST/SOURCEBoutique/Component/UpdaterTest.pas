@@ -12,10 +12,7 @@ type
   published
     procedure ProcedureLoad; override;
     procedure UpdateMainProgram;
-    procedure UpdateScale;
-    procedure UpdateScaleCeh;
-    procedure UpdateFarmacyCash;
-    procedure UpdateFarmacyCashServise;
+    procedure UpdateBoutique;
   end;
 
 implementation
@@ -58,15 +55,12 @@ begin
   end;
 end;
 
-procedure TUpdaterTest.UpdateFarmacyCash;
+procedure TUpdaterTest.UpdateBoutique;
 begin
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCash.exe');
+  SaveFile(ExtractFileDir(ParamStr(0)) + '\Boutique.exe');
 end;
 
-procedure TUpdaterTest.UpdateFarmacyCashServise;
-begin
-   SaveFile(ExtractFileDir(ParamStr(0)) + '\FarmacyCashServise.exe');
-end;
+
 
 procedure TUpdaterTest.UpdateMainProgram;
 begin
@@ -75,15 +69,6 @@ begin
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;
 
-procedure TUpdaterTest.UpdateScale;
-begin
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\Scale.exe');
-end;
-
-procedure TUpdaterTest.UpdateScaleCeh;
-begin
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\ScaleCeh.exe');
-end;
 
 
 initialization

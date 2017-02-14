@@ -222,6 +222,7 @@
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCEBoutique\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\dbObjectTest.pas"/>
 			<DCCReference Include="..\..\FormsBoutique\MainForm.pas">
 				<Form>MainForm</Form>

@@ -80,7 +80,7 @@ uses
 //  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
 //  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
 //  MovementLoad in '..\..\FormsFarmacy\Load\MovementLoad.pas' {MovementLoadForm: TParentForm},
-//  UpdaterTest in '..\SOURCEBoutique\Component\UpdaterTest.pas',
+  UpdaterTest in '..\SOURCEBoutique\Component\UpdaterTest.pas',
   dbObjectTest in '..\SOURCEBoutique\dbObjectTest.pas',
 //  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
 //  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
@@ -159,7 +159,7 @@ uses
 //  ImportGroupTest in '..\SOURCEBoutique\Objects\All\ImportGroupTest.pas',
 //  ImportGroupItemsTest in '..\SOURCEBoutique\Objects\All\ImportGroupItemsTest.pas',
 //  ImportSettings in '..\..\Forms\Import\ImportSettings.pas' {ImportSettingsForm: TParentForm},
-//  CommonMovementItemProcedureTest in '..\SOURCEBoutique\MovementItem\CommonMovementItemProcedureTest.pas',
+//  не нужно  CommonMovementItemProcedureTest in '..\SOURCEBoutique\MovementItem\CommonMovementItemProcedureTest.pas',
 //  UploadUnloadData in '..\..\FormsFarmacy\ConnectWithOld\UploadUnloadData.pas' {dmUnloadUploadData: TDataModule},
 //  ContactPersonKind in '..\..\Forms\Kind\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
 //  OrderKind in '..\..\Forms\Kind\OrderKind.pas' {OrderKindForm: TParentForm},
@@ -504,15 +504,6 @@ begin
   LocalViewPath := '..\DATABASE\Boutique\View\';
   LocalProcedurePath := '..\DATABASE\Boutique\PROCEDURE\';
   LocalProcessPath := '..\DATABASE\COMMONBoutique\Boutique\PROCESS\';
-
-
-//  ConnectionPath := '..\INIT\Boutique_init.php';
-//  EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
-//  CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
-//  LocalViewPath := '..\DATABASE\FARMACY\View\';
-//  LocalProcedurePath := '..\DATABASE\FARMACY\PROCEDURE\';
-//  LocalProcessPath := '..\DATABASE\COMMON\PROCESS\';
-
 
   dsdProject := prBoutique;
 
