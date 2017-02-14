@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ImportSettings_Email (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettings_Email (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ImportSettings_Email (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ImportSettings_Email(
+    IN inEmailKindDesc    TVarChar ,      --
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (EmailId          Integer
@@ -50,7 +52,8 @@ BEGIN
                                  FROM gpSelect_Object_ImportSettings (inSession:= inSession) AS tmp
                                  WHERE tmp.isErased    = FALSE
                                    AND tmp.Directory   <> ''
-                                   AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO())
+                                   -- AND tmp.EmailKindId IN (zc_Enum_EmailKind_InPrice(), zc_Enum_EmailKind_IncomeMMO())
+                                   AND tmp.EmailKindId = CASE WHEN LOWER (inEmailKindDesc) = LOWER ('zc_Enum_EmailKind_InPrice') THEN zc_Enum_EmailKind_InPrice() WHEN LOWER (inEmailKindDesc) = LOWER ('zc_Enum_EmailKind_IncomeMMO') THEN zc_Enum_EmailKind_IncomeMMO() END
                                 )
         , tmp_IncomeMMO AS (SELECT tmp.Id
                                  , tmp.EmailKindId
@@ -236,4 +239,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ImportSettings_Email (zfCalc_UserAdmin()) AS tmp WHERE EmailKindId = zc_Enum_EmailKind_IncomeMMO() order by 3
+-- SELECT * FROM gpSelect_Object_ImportSettings_Email ('zc_Enum_EmailKind_InPrice', zfCalc_UserAdmin()) AS tmp order by 3
+-- SELECT * FROM gpSelect_Object_ImportSettings_Email ('zc_Enum_EmailKind_IncomeMMO', zfCalc_UserAdmin()) AS tmp order by 3

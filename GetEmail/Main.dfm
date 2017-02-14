@@ -31,7 +31,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Host : '
     TabOrder = 1
-    ExplicitWidth = 684
     object GaugeHost: TGauge
       Left = 1
       Top = 50
@@ -52,7 +51,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Mail From : '
     TabOrder = 2
-    ExplicitWidth = 684
     object GaugeMailFrom: TGauge
       Left = 1
       Top = 50
@@ -73,7 +71,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Parts : '
     TabOrder = 3
-    ExplicitWidth = 684
     object GaugeParts: TGauge
       Left = 1
       Top = 50
@@ -94,7 +91,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Load XLS : '
     TabOrder = 4
-    ExplicitWidth = 684
     object GaugeLoadXLS: TGauge
       Left = 1
       Top = 50
@@ -115,7 +111,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Move : '
     TabOrder = 5
-    ExplicitWidth = 684
     object GaugeMove: TGauge
       Left = 1
       Top = 50
@@ -159,7 +154,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 8
-    ExplicitWidth = 684
   end
   object IdPOP33: TIdPOP3
     AutoLogin = True

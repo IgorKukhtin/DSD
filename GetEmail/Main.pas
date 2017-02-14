@@ -93,6 +93,8 @@ type
     procedure TimerTimer(Sender: TObject);
     procedure cbTimerClick(Sender: TObject);
   private
+    vbEmailKindDesc :String;// Важный параметр - Определяет "Загрузка Прайса" ИЛИ "Загрузка ММО"
+
     vbIsBegin :Boolean;// запущена обработка
     vbOnTimer :TDateTime;// время когда сработал таймер
     fIsOptimizeLastPriceList_View :Boolean;// если была загрузка прайса - надо потом запустить оптимизацию
@@ -126,6 +128,11 @@ uses Authentication, Storage, CommonData, UtilConst, sevenzip, StrUtils;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  // ЗАХАРДКОДИЛ - Важный параметр - Определяет "Загрузка Прайса" ИЛИ "Загрузка ММО"
+  if Pos ('GetEmail.exe', Application.ExeName) > 0
+  then begin vbEmailKindDesc:= 'zc_Enum_EmailKind_InPrice';   Self.Caption:= Self.Caption + ' - Только Прайсы'; end
+  else begin vbEmailKindDesc:= 'zc_Enum_EmailKind_IncomeMMO'; Self.Caption:= Self.Caption + ' - Только ММО';    end;
+
   //создает сессию и коннект
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-загрузка прайс-поставщик', gc_AdminPassword, gc_User);
   // запущена обработка
@@ -247,8 +254,11 @@ begin
      with spSelect do
      begin
        StoredProcName:='gpSelect_Object_ImportSettings_Email';
-       OutputType:=otDataSet;
        Params.Clear;
+       // Важный параметр - Определяет "Загрузка Прайса" ИЛИ "Загрузка ММО"
+       Params.AddParam('inEmailKindDesc',ftString,ptInput,vbEmailKindDesc);
+
+       OutputType:=otDataSet;
        Execute;// получили всех поставщиков, по которым надо загружать Email
        //
        //первый цикл
@@ -316,7 +326,7 @@ begin
                 // Время последней проверки - инициализируем значением "много дней назад"
                 vbArrayMail[i].BeginTime:=NOW-1000;
                 // переносить прайс в актуальные цены (а загрузка выполняется всегда)
-                cbBeginMove.Checked:=DataSet.FieldByName('isBeginMove').asBoolean;
+                cbBeginMove.Checked:=(vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice') and (DataSet.FieldByName('isBeginMove').asBoolean);
                 //
                 i:=i+1;
           end
@@ -340,6 +350,26 @@ begin
      vbIsBegin:= false;
      // !!!включили таймер!!!
      Timer.Enabled:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+// что б отловить ошибки - запишим в лог строчку
+procedure Add_Log_XML(APath, AMessage: String);
+var F: TextFile;
+begin
+  try
+    AssignFile(F,APath+'\'+ChangeFileExt(ExtractFileName (Application.ExeName),'_err.txt'));
+    if not fileExists(APath+'\'+ChangeFileExt(ExtractFileName (Application.ExeName),'_err.txt')) then
+    begin
+      Rewrite(F);
+    end
+    else
+      Append(F);
+    //
+    try  Writeln(F,AMessage);
+    finally CloseFile(F);
+    end;
+  except
+  end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка всей почты
@@ -650,6 +680,14 @@ begin
            end;// with IdPOP3 do
        except
            PanelHost.Caption:= 'ERROR - TIdIMAP4 - try on Next Step - End Mail (8.) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime)+' to '+FormatDateTime('dd.mm.yyyy hh:mm:ss',NOW)+' and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',vbArrayMail[ii].BeginTime + vbArrayMail[ii].onTime / 24 / 60);
+
+           //current directory to store the email
+           mailFolderMain:= vbArrayMail[ii].Directory + '\' + ReplaceStr(vbArrayMail[ii].UserName, '@', '_') + '_' + Session;
+           //создали папку для ПРОТОКОЛА если таковой нет + это протокол что по данному ящику была обработка
+           ForceDirectories(mailFolderMain);
+           //сохранили - что была ОШИБКА
+           Add_Log_XML(mailFolderMain, PanelHost.Caption);
+
            Application.ProcessMessages;
            Sleep(5000);
        end;//финиш - цикл по почтовым ящикам
@@ -894,12 +932,12 @@ begin
      fInitArray;
      // обработка всей почты
      fBeginMail;
-     // обработка всех XLS
-     fBeginXLS;
-     // оптимизация если была загрузка XLS
-     fRefreshMovementItemLastPriceList_View;
-     // перенос цен
-     if cbBeginMove.Checked = TRUE then fBeginMove;
+     // обработка всех XLS - !!!Только если "Загрузка Прайса"!!!
+     if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fBeginXLS;
+     // оптимизация если была загрузка XLS - !!!Только если "Загрузка Прайса"!!!
+     if vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice' then fRefreshMovementItemLastPriceList_View;
+     // перенос цен - !!!Только если "Загрузка Прайса"!!!
+     if (cbBeginMove.Checked = TRUE) and (vbEmailKindDesc= 'zc_Enum_EmailKind_InPrice') then fBeginMove;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.BtnStartClick(Sender: TObject);

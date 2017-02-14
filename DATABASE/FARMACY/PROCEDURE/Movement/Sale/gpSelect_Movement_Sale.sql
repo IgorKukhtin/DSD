@@ -36,6 +36,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitId Integer;   
 BEGIN
 
      vbUserId:= lpGetUserBySession (inSession);
@@ -43,8 +44,17 @@ BEGIN
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
 
+     -- Ограничение - если роль Кассир аптеки
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 308121 AND UserId = vbUserId)
+     THEN
+         vbUnitId:= zfConvert_StringToNumber (lpGet_DefaultValue ('zc_Object_Unit', vbUserId));
+     ELSE
+         vbUnitId:= 0;
+     END IF;
 
-    RETURN QUERY
+
+     -- Результат
+     RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                      UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
@@ -55,9 +65,10 @@ BEGIN
                                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                           AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                    WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                    WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                      AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
                     )
-                                       
+        -- Результат
         SELECT
             Movement_Sale.Id
           , Movement_Sale.InvNumber
@@ -94,13 +105,13 @@ BEGIN
                                         AND Movement_Sale.OperDate BETWEEN inStartDate AND inEndDate
             INNER JOIN tmpStatus ON Movement_Sale.StatusId = tmpStatus.StatusId
             
-        ORDER BY InvNumber;
+        -- ORDER BY InvNumber
+       ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -109,3 +120,6 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar) 
  04.05.16         * 
  13.10.15                                                                        *
 */
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased := FALSE, inSession:= zfCalc_UserAdmin());
