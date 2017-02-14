@@ -91,7 +91,7 @@ function PostgresTypeToClientDataSetBinary($type, $size)
  {
    switch ($type) {
      case 23:   // Integer
-        $res = pack('S', 4).pack('S', 1).pack(S, 16).pack(S, 0);
+        $res = pack('S', 4).pack('S', 1).pack('S', 16).pack('S', 0);
         break;
      case 1043: // Varchar
         $res = pack('S',2).pack('S', 73).pack('S', 16).pack('S', 1).pack('C',5).'WIDTH'.
@@ -103,13 +103,13 @@ function PostgresTypeToClientDataSetBinary($type, $size)
                'WIDTH'.pack('S',2).pack('S',2).pack('S',1);
         break;
      case 16:
-        $res = pack('S', 2).pack('S', 3).pack(S, 16).pack(S, 0);
+        $res = pack('S', 2).pack('S', 3).pack('S', 16).pack('S', 0);
         break;
      case 1700: // numeric
-        $res = pack('S', 8).pack('S', 4).pack(S, 16).pack(S, 0);
+        $res = pack('S', 8).pack('S', 4).pack('S', 16).pack('S', 0);
         break;
      case 20: // datetime
-        $res = pack('S', 8).pack('S', 8).pack(S, 16).pack(S, 0);
+        $res = pack('S', 8).pack('S', 8).pack('S', 16).pack('S', 0);
         break;
 //     case 1184: // datetime
   //      $res = pack('S', 8).pack('S', 8).pack(S, 16).pack(S, 0);
