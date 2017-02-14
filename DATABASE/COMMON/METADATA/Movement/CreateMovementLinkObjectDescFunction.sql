@@ -316,7 +316,16 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_GroupMemberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GroupMemberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MovementLinkObject_GroupMemberSP', 'Медицинское учреждение(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GroupMemberSP');
+  SELECT 'zc_MovementLinkObject_GroupMemberSP', 'Категория пациента(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_GroupMemberSP');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MemberSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MemberSP', 'ФИО пациента(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MemberSP');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_MedicSP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicSP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_MedicSP', 'ФИО врача(Соц. проект)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_MedicSP');
+
 
 
 /*-------------------------------------------------------------------------------

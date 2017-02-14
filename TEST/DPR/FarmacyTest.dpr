@@ -493,7 +493,11 @@ uses
   GroupMemberSP in '..\..\FormsFarmacy\Guides\GroupMemberSP.pas' {GroupMemberSPForm: TParentForm},
   MarginCategoryItemHistory in '..\..\FormsFarmacy\Guides\MarginCategoryItemHistory.pas' {MarginCategoryItemHistoryForm: TParentForm},
   Report_SaleSP in '..\..\FormsFarmacy\Report\Report_SaleSP.pas' {Report_SaleSPForm: TParentForm},
-  Report_SaleSPDialog in '..\..\FormsFarmacy\Report\Report_SaleSPDialog.pas' {Report_SaleSPDialogForm: TParentForm};
+  Report_SaleSPDialog in '..\..\FormsFarmacy\Report\Report_SaleSPDialog.pas' {Report_SaleSPDialogForm: TParentForm},
+  MedicSPEdit in '..\..\FormsFarmacy\Guides\MedicSPEdit.pas' {MedicSPEditForm: TParentForm},
+  MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm},
+  MemberSPEdit in '..\..\FormsFarmacy\Guides\MemberSPEdit.pas' {MemberSPEditForm: TParentForm},
+  MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -26,7 +26,9 @@ RETURNS TABLE (Id Integer
              , OperDateSP TDateTime
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
+             , MedicSPId   Integer
              , MedicSPName TVarChar
+             , MemberSPId   Integer
              , MemberSPName TVarChar
              , GroupMemberSPName TVarChar
              , isSP Boolean
@@ -89,7 +91,9 @@ BEGIN
           , Movement_Sale.OperDateSP
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSPid
           , Movement_Sale.MedicSPName
+          , Movement_Sale.MemberSPId
           , Movement_Sale.MemberSPName 
           , Movement_Sale.GroupMemberSPName
           , CASE WHEN COALESCE (Movement_Sale.PartnerMedicalName,'') <> '' OR

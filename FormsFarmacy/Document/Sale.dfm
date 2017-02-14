@@ -409,12 +409,6 @@ inherited SaleForm: TSaleForm
       Top = 114
       Caption = #1060#1048#1054' '#1074#1088#1072#1095#1072
     end
-    object edMedicSP: TcxTextEdit
-      Left = 352
-      Top = 130
-      TabOrder = 26
-      Width = 120
-    end
     object edPartnerMedical: TcxButtonEdit
       Left = 8
       Top = 130
@@ -424,7 +418,7 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 27
+      TabOrder = 26
       Width = 169
     end
   end
@@ -433,18 +427,12 @@ inherited SaleForm: TSaleForm
     Top = 114
     Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
-  object edMemberSP: TcxTextEdit [3]
-    Left = 476
-    Top = 130
-    TabOrder = 7
-    Width = 123
-  end
-  object cxLabel9: TcxLabel [4]
+  object cxLabel9: TcxLabel [3]
     Left = 602
     Top = 114
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
-  object edGroupMemberSP: TcxButtonEdit [5]
+  object edGroupMemberSP: TcxButtonEdit [4]
     Left = 602
     Top = 130
     Properties.Buttons = <
@@ -453,7 +441,29 @@ inherited SaleForm: TSaleForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 121
+  end
+  object edMedicSP: TcxButtonEdit [5]
+    Left = 352
+    Top = 130
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 9
+    Width = 121
+  end
+  object edMemberSP: TcxButtonEdit [6]
+    Left = 479
+    Top = 130
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
     Width = 121
   end
   inherited ActionList: TActionList
@@ -730,16 +740,32 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MedicSPId'
+        Value = Null
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MedicSPName'
         Value = Null
-        Component = edMedicSP
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberSPId'
+        Value = Null
+        Component = MemberSPGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberSPName'
         Value = Null
-        Component = edMemberSP
+        Component = MemberSPGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1313,6 +1339,64 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     Left = 640
+    Top = 128
+  end
+  object MemberSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMemberSP
+    FormNameParam.Value = 'TMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 520
+    Top = 128
+  end
+  object MedicSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMedicSP
+    FormNameParam.Value = 'TMedicSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMedicSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MedicSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 400
     Top = 128
   end
 end
