@@ -21,8 +21,12 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
 
       , MovementDate_OperDateSP.ValueData               AS OperDateSP
       , MovementString_InvNumberSP.ValueData            AS InvNumberSP
-      , MovementString_MedicSP.ValueData                AS MedicSPName
-      , MovementString_MemberSP.ValueData               AS MemberSPName
+
+      , Object_MedicSP.Id                               AS MedicSPId
+      , Object_MedicSP.ValueData                        AS MedicSPName
+      , Object_MemberSP.Id                              AS MemberSPId
+      , Object_MemberSP.ValueData                       AS MemberSPName
+
       , Object_PartnerMedical.Id                        AS PartnerMedicalId
       , Object_PartnerMedical.ValueData                 AS PartnerMedicalName
 
@@ -68,13 +72,13 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
             LEFT JOIN MovementString AS MovementString_InvNumberSP
                                      ON MovementString_InvNumberSP.MovementId = Movement.Id
                                     AND MovementString_InvNumberSP.DescId = zc_MovementString_InvNumberSP()
-            LEFT JOIN MovementString AS MovementString_MedicSP
+           /* LEFT JOIN MovementString AS MovementString_MedicSP
                                      ON MovementString_MedicSP.MovementId = Movement.Id
                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
             LEFT JOIN MovementString AS MovementString_MemberSP
                                      ON MovementString_MemberSP.MovementId = Movement.Id
                                     AND MovementString_MemberSP.DescId = zc_MovementString_MemberSP()
-
+*/
             LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                    ON MovementDate_OperDateSP.MovementId = Movement.Id
                                   AND MovementDate_OperDateSP.DescId = zc_MovementDate_OperDateSP()
@@ -88,6 +92,16 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
                                          ON MovementLinkObject_GroupMemberSP.MovementId = Movement.Id
                                         AND MovementLinkObject_GroupMemberSP.DescId = zc_MovementLinkObject_GroupMemberSP()
             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = MovementLinkObject_GroupMemberSP.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MedicSP
+                                         ON MovementLinkObject_MedicSP.MovementId = Movement.Id
+                                        AND MovementLinkObject_MedicSP.DescId = zc_MovementLinkObject_MedicSP()
+            LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = MovementLinkObject_MedicSP.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_MemberSP
+                                         ON MovementLinkObject_MemberSP.MovementId = Movement.Id
+                                        AND MovementLinkObject_MemberSP.DescId = zc_MovementLinkObject_MemberSP()
+            LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = MovementLinkObject_MemberSP.ObjectId
 
     WHERE Movement.DescId = zc_Movement_Sale();
 

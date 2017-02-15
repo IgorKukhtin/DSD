@@ -24,6 +24,16 @@ BEGIN
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
 
+   -- Ограничение - если роль Бухгалтер ПАВИЛЬОНЫ
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = 80548 AND UserId = vbUserId)
+      AND COALESCE (inPriceListId, 0) NOT IN (140208 -- Пав-ны приход
+                                            , 140209 -- Пав-ны продажа
+                                             )
+   THEN
+       RAISE EXCEPTION 'Ошибка. Нет прав корректировать прайс <%>', lfGet_Object_ValueData (inPriceListId);
+   END IF;
+
+
    -- !!!определяется!!!
    IF inIsLast = TRUE THEN ioId:= 0; END IF;
 

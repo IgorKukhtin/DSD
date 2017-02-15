@@ -496,7 +496,7 @@ type
     actOrderType: TdsdOpenForm;
     miOrderType: TMenuItem;
     N42: TMenuItem;
-    N43: TMenuItem;
+    miProductionUnionTechDelic: TMenuItem;
     N44: TMenuItem;
     N45: TMenuItem;
     N46: TMenuItem;
@@ -718,8 +718,8 @@ type
     N122: TMenuItem;
     actProductionUnionTechReceipt: TdsdOpenForm;
     actProductionUnionTechReceiptDelic: TdsdOpenForm;
-    N115: TMenuItem;
-    N123: TMenuItem;
+    miProductionUnionTechReceipt: TMenuItem;
+    miProductionUnionTechReceiptDelic: TMenuItem;
     actReport_Invoice: TdsdOpenForm;
     N124: TMenuItem;
     N125: TMenuItem;
@@ -796,6 +796,10 @@ type
     miMobile: TMenuItem;
     actMember_ObjectTo: TdsdOpenForm;
     N107: TMenuItem;
+    actProductionUnionTechSiryo: TdsdOpenForm;
+    actProductionUnionTechReceiptSiryo: TdsdOpenForm;
+    miProductionUnionTechSiryo: TMenuItem;
+    miProductionUnionTechReceiptSiryo: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
