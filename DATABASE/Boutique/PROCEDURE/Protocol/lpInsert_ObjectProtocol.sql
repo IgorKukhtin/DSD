@@ -37,7 +37,7 @@ BEGIN
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' || COALESCE (CASE WHEN ObjectDate.DescId IN (zc_ObjectDate_ImportSettings_StartTime(), zc_ObjectDate_ImportSettings_EndTime()) THEN TO_CHAR (ObjectDate.ValueData , 'hh:mm') ELSE DATE (ObjectDate.ValueData) :: TVarChar END, 'NULL') || '"/>' AS FieldXML 
+           SELECT '<Field FieldName = "' || zfStrToXmlStr(ObjectDateDesc.ItemName) || '" FieldValue = "' ||  DATE (ObjectDate.ValueData) :: TVarChar || '"/>' AS FieldXML 
                 , 3 AS GroupId
                 , ObjectDate.DescId
            FROM ObjectDate

@@ -20,7 +20,7 @@ procedure doLog(AText: String);
 var
   F: TextFile;
 const
-  fl: string = 'c:\log.txt';
+  fl: string = 'logTest.txt';
 begin
   Assign(F, fl);
   if FileExists(fl) then

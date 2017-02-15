@@ -52,23 +52,44 @@ BEGIN
      -- определяется <Пользователь>
      vbUserId := lpGetUserBySession (inSession);
 
+     --Выбираем договора
+     CREATE TEMP TABLE _tmpContract (ContractId Integer, Deferment Integer) ON COMMIT DROP;
+          INSERT INTO _tmpContract (ContractId, Deferment)
+               SELECT ObjectLink_Contract_Juridical.ObjectId     AS ContractId
+                    , ObjectFloat_Deferment.ValueData ::Integer  AS Deferment
+               FROM ObjectLink AS ObjectLink_Contract_Juridical
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Deferment 
+                                        ON ObjectFloat_Deferment.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                       AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
+              WHERE ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                AND ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId_from;
 
          -- Ищем подразделение и Договор. Два в одном
          SELECT tmp.ContractId, tmp.UnitId
                 INTO vbContractId, vbUnitId
-         FROM (WITH tmpList AS (SELECT Object_ImportExportLink_View.ValueId                                       AS ContractId -- здесь Договор
-                                     , Object_ImportExportLink_View.MainId                                        AS UnitId
-                                     , LOWER (TRIM (Object_ImportExportLink_View.StringKey)) :: TVarChar          AS StringKey
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 1)) AS StringKey1
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 2)) AS StringKey2
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 3)) AS StringKey3
-                                FROM Object_Contract_View
-                                     INNER JOIN Object_ImportExportLink_View ON Object_ImportExportLink_View.ValueId = Object_Contract_View.Id
+         FROM (WITH tmpList AS (SELECT ObjectLink_ObjectChild.ChildObjectId            AS ContractId -- здесь Договор
+                                     , ObjectLink_ObjectMain.ChildObjectId                                   AS UnitId
+                                     , LOWER (TRIM (Object_ImportExportLink.ValueData)) :: TVarChar          AS StringKey
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 1)) AS StringKey1
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 2)) AS StringKey2
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 3)) AS StringKey3
+                                FROM _tmpContract
+                                     INNER JOIN ObjectLink AS ObjectLink_ObjectChild
+                                             ON ObjectLink_ObjectChild.ChildObjectId =  _tmpContract.ContractId               --ObjectLink_ObjectChild.ObjectId = Object_ImportExportLink.Id
+                                            AND ObjectLink_ObjectChild.DescId = zc_ObjectLink_ImportExportLink_ObjectChild()
+
+                                     LEFT JOIN Object AS Object_ImportExportLink
+                                            ON Object_ImportExportLink.Id = ObjectLink_ObjectChild.ObjectId
+                                           AND Object_ImportExportLink.DescId = zc_Object_ImportExportLink()
+
+                                     LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
+                                            ON ObjectLink_ObjectMain.ObjectId = ObjectLink_ObjectChild.ObjectId
+                                           AND ObjectLink_ObjectMain.DescId = zc_ObjectLink_ImportExportLink_ObjectMain()
+
                                      LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                          ON ObjectLink_Unit_Juridical.ObjectId = Object_ImportExportLink_View.MainId
-                                                         AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
-                                WHERE Object_Contract_View.JuridicalId = inJuridicalId_from
-                                  AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId_to OR COALESCE (inJuridicalId_to, 0) = 0)
+                                            ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_ObjectMain.ChildObjectId -- Object_ImportExportLink_View.MainId
+                                           AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                                WHERE (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId_to OR COALESCE (inJuridicalId_to, 0) = 0)
                                )
                -- почти результат
                SELECT tmpList.ContractId, tmpList.UnitId
@@ -93,17 +114,26 @@ BEGIN
 
          SELECT tmp.UnitId
                 INTO vbUnitId
-         FROM (WITH tmpList AS (SELECT Object_ImportExportLink_View.ValueId                                       AS JuridicalId -- здесь Юр.Лицо
-                                     , Object_ImportExportLink_View.MainId                                        AS UnitId
-                                     , LOWER (TRIM (Object_ImportExportLink_View.StringKey)) :: TVarChar          AS StringKey
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 1)) AS StringKey1
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 2)) AS StringKey2
-                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink_View.StringKey, '%', 3)) AS StringKey3
-                                FROM Object_ImportExportLink_View
-                                     LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                          ON ObjectLink_Unit_Juridical.ObjectId = Object_ImportExportLink_View.MainId
-                                                         AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
-                                WHERE Object_ImportExportLink_View.ValueId = inJuridicalId_from
+         FROM (WITH tmpList AS (SELECT ObjectLink_ObjectChild.ChildObjectId AS JuridicalId
+                                     , ObjectLink_ObjectMain.ChildObjectId  AS UnitId
+                                     , LOWER (TRIM (Object_ImportExportLink.ValueData)) :: TVarChar          AS StringKey
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 1)) AS StringKey1
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 2)) AS StringKey2
+                                     , LOWER (zfCalc_Word_Split (Object_ImportExportLink.ValueData, '%', 3)) AS StringKey3
+                                FROM Object AS Object_ImportExportLink
+                                    INNER JOIN ObjectLink AS ObjectLink_ObjectChild
+                                            ON ObjectLink_ObjectChild.ObjectId = Object_ImportExportLink.Id
+                                           AND ObjectLink_ObjectChild.DescId = zc_ObjectLink_ImportExportLink_ObjectChild()
+                                           AND ObjectLink_ObjectChild.ChildObjectId = inJuridicalId_from
+ 
+                                    LEFT JOIN ObjectLink AS ObjectLink_ObjectMain
+                                           ON ObjectLink_ObjectMain.ObjectId = Object_ImportExportLink.Id
+                                          AND ObjectLink_ObjectMain.DescId = zc_ObjectLink_ImportExportLink_ObjectMain()
+       
+                                    LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                           ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_ObjectMain.ChildObjectId -- Object_ImportExportLink_View.MainId
+                                          AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                                WHERE Object_ImportExportLink.DescId = zc_Object_ImportExportLink()
                                   AND (ObjectLink_Unit_Juridical.ChildObjectId = inJuridicalId_to OR COALESCE (inJuridicalId_to, 0) = 0)
                                )
                -- почти результат
@@ -173,7 +203,6 @@ BEGIN
         RAISE EXCEPTION 'Документ уже Проведен № "%" от "%" Поставщик = "%" Аптека = "%".', inInvNumber, DATE (inOperDate), lfGet_Object_ValueData (inJuridicalId_from), lfGet_Object_ValueData (vbUnitId);
     END IF;
 
-
      -- Аж вот тут мы будем менять, если документа нет или НДС определен точно
      IF COALESCE (vbMovementId, 0) = 0
      THEN
@@ -182,35 +211,33 @@ BEGIN
         -- А вот тут попытка угадать договор.
           -- Если даты не равны, то ищем любой договор с отсрочкой платежа
           IF inPaymentDate is null or inPaymentDate > (inOperDate + interval '1 day') THEN
-             SELECT MAX(Id) INTO vbContractId 
-     	       FROM Object_Contract_View 
-              WHERE Object_Contract_View.JuridicalId = inJuridicalId_from AND COALESCE(Deferment, 0) <> 0;
+             SELECT MAX(_tmpContract.ContractId) INTO vbContractId 
+     	     FROM _tmpContract 
+             WHERE COALESCE(_tmpContract.Deferment, 0) <> 0;
           ELSE
           -- иначе любой договор без отсрочки платежа
-             SELECT MAX(Id) INTO vbContractId 
-               FROM Object_Contract_View 
-              WHERE Object_Contract_View.JuridicalId = inJuridicalId_from AND COALESCE(Deferment, 0) = 0;
+             SELECT MAX(_tmpContract.ContractId) INTO vbContractId 
+             FROM _tmpContract 
+             WHERE COALESCE(_tmpContract.Deferment, 0) = 0;
           END IF;	     	
 
           -- Ищем хоть какой-нить договор
           IF COALESCE(vbContractId, 0) = 0 THEN 
-             SELECT MAX(Id) INTO vbContractId 
-               FROM Object_Contract_View 
-              WHERE Object_Contract_View.JuridicalId = inJuridicalId_from;
+             SELECT MAX(_tmpContract.ContractId)  INTO vbContractId 
+             FROM _tmpContract;
           END IF;
+
        END IF;
+
        --Если дата оплаты пустая - то вытягиваем её из договора
        IF inPaymentDate is Null or inPaymentDate = '19000101'::TDateTime
        THEN
-           SELECT
-               inOperDate::Date + COALESCE(Deferment, 0)::Integer
-           INTO
-               inPaymentDate
-           FROM
-               Object_Contract_View
-           WHERE
-               Object_Contract_View.Id = vbContractId;
+           SELECT inOperDate::Date + COALESCE(_tmpContract.Deferment, 0)::Integer
+          INTO inPaymentDate
+           FROM _tmpContract
+           WHERE _tmpContract.ContractId = vbContractId;
        END IF;
+
        IF inPaymentDate IS NULL
        THEN
            inPaymentDate := inOperDate;
@@ -238,36 +265,64 @@ BEGIN
      END IF;
 
 
-
       -- Ищем товар поставщика
-      SELECT Goods_Juridical.Id INTO vbPartnerGoodsId
-      FROM Object_Goods_View AS Goods_Juridical
-      WHERE Goods_Juridical.ObjectId = inJuridicalId_from AND Goods_Juridical.GoodsCode = inGoodsCode;
+      SELECT ObjectLink_Goods_Object.ObjectId INTO vbPartnerGoodsId
+      FROM ObjectLink AS ObjectLink_Goods_Object
+           INNER JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
+                                  AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+                                  AND ObjectString.ValueData = inGoodsCode
+      WHERE ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+        AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId_from ;
   
      -- Если вдруг такого нет, то мы его ОБЯЗАТЕЛЬНО добавляем. БЕЗ проверки на уникальность
      IF COALESCE(vbPartnerGoodsId, 0) = 0 THEN
         vbPartnerGoodsId := lpInsertUpdate_Object_Goods(0, inGoodsCode, inGoodsName, NULL, NULL, NULL, inJuridicalId_from, vbUserId, NULL, inMakerName, false);    
      END IF;
  
-  -- Ищем товар для накладной. 
-      SELECT Goods_Retail.GoodsId, Object_Goods_View.NDSKindId INTO vbGoodsId, vbNDSKindId
-        FROM Object_LinkGoods_View AS Goods_Juridical
-        LEFT JOIN Object_LinkGoods_View AS Goods_Retail ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
-                                                  AND Goods_Retail.ObjectId = vbObjectId
-        LEFT JOIN Object_Goods_View ON Goods_Retail.GoodsId = Object_Goods_View.Id                                          
+      -- Ищем товар для накладной. 
+      SELECT Goods_Retail.GoodsId, ObjectLink_Goods_NDSKind.ChildObjectId  -- Object_Goods_View.NDSKindId 
+     INTO vbGoodsId, vbNDSKindId
+      FROM Object_LinkGoods_View AS Goods_Juridical
+        LEFT JOIN Object_LinkGoods_View AS Goods_Retail
+                                        ON Goods_Retail.GoodsMainId = Goods_Juridical.GoodsMainId
+                                       AND Goods_Retail.ObjectId = vbObjectId
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                             ON ObjectLink_Goods_NDSKind.ObjectId = Goods_Retail.GoodsId
+                            AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()                                        
+      WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
 
-       WHERE Goods_Juridical.GoodsId = vbPartnerGoodsId;
-
-
+       
+      -- выбираем элементы документа
+       CREATE TEMP TABLE _tmpMI (Id Integer, PartnerGoodsId Integer, Price TFloat, PartionGoods TVarChar, ExpirationDate TDateTime) ON COMMIT DROP;
+          INSERT INTO _tmpMI (Id, PartnerGoodsId, Price, PartionGoods, ExpirationDate)
+                         SELECT MovementItem.Id
+                              , MILinkObject_Goods.ObjectId AS PartnerGoodsId
+                              , MIFloat_Price.ValueData     AS Price
+                              , COALESCE(MIString_PartionGoods.ValueData, '')              AS PartionGoods
+                              , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateStart()) AS ExpirationDate
+                         FROM MovementItem
+                              LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods
+                                     ON MILinkObject_Goods.MovementItemId = MovementItem.Id
+                                    AND MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
+                              LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                              LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                     ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                    AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()  
+                              LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
+                                     ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
+                                    AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()                                         
+                         WHERE MovementItem.MovementId = vbMovementId
+                           AND MovementItem.DescId     = zc_MI_Master()
+                           AND MovementItem.isErased = FALSE;
     -- Если элементов документа > 1
     IF EXISTS (SELECT 1
-               FROM MovementItem_Income_View AS MovementItem
-               WHERE MovementItem.MovementId     = vbMovementId
-                 AND MovementItem.isErased = FALSE
-               GROUP BY MovementItem.PartnerGoodsId
-                      , MovementItem.Price
-                      , MovementItem.PartionGoods
-                      , MovementItem.ExpirationDate
+               FROM _tmpMI
+               GROUP BY _tmpMI.PartnerGoodsId
+                      , _tmpMI.Price
+                      , _tmpMI.PartionGoods
+                      , _tmpMI.ExpirationDate
                HAVING COUNT (*) > 1
               )
     THEN
@@ -275,14 +330,13 @@ BEGIN
     END IF;
 
      -- Ищем элемент документа. Пока ключи: код поставщика, документ, цена, партия, срок годности. 
-     vbMovementItemId:= (SELECT MovementItem.Id
-                         FROM MovementItem_Income_View AS MovementItem
-                         WHERE MovementItem.MovementId     = vbMovementId
-                           AND MovementItem.PartnerGoodsId = vbPartnerGoodsId
-                           AND MovementItem.Price          = inPrice -- MovementItem.Price
-                           AND MovementItem.PartionGoods   = inPartitionGoods
-                           AND MovementItem.ExpirationDate = COALESCE (inExpirationDate, zc_DateStart())
-                           AND MovementItem.isErased = FALSE);
+     vbMovementItemId:= (SELECT _tmpMI.Id
+                         FROM _tmpMI
+                         WHERE _tmpMI.PartnerGoodsId = vbPartnerGoodsId
+                           AND _tmpMI.Price          = inPrice -- MovementItem.Price
+                           AND _tmpMI.PartionGoods   = inPartitionGoods
+                           AND _tmpMI.ExpirationDate = COALESCE (inExpirationDate, zc_DateStart())
+                         );
   
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
@@ -337,6 +391,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 15.02.17         * уходим от вьюх
  01.10.15                                                                      * inSertificatNumber, inSertificatStart, inSertificatEnd
  14.01.15                        *   
  08.01.15                        *   
@@ -345,3 +400,4 @@ LANGUAGE PLPGSQL VOLATILE;
  25.12.14                        *   
  02.12.14                        *   
 */
+--select * from gpInsertUpdate_MovementItem_Income_MMOLoad(inOKPOFrom := '36852896', inOKPOTo := '2591702304' , inInvNumber := '6612083' , inOperDate := ('15.02.2017')::TDateTime , inInvTaxNumber := '6612083' , inPaymentDate := ('27.02.2017')::TDateTime , inPriceWithVAT := 'False' , inSyncCode := 1 , inRemark := 'ЧП "Шапира И. А.", г.Днепропетровск, пр.Правды, 6' , inGoodsCode := '28036' , inGoodsName := 'Ліпримар табл. в/о 20мг №30' , inMakerCode := '292' , inMakerName := 'Пфайзер' , inCommonCode := 155344 , inVAT := 7 , inPartitionGoods := 'R71613' , inExpirationDate := ('01.05.2019')::TDateTime , inAmount := 10 , inPrice := 523.57 , inFea := '3004900000' , inMeasure := 'пак' , inSertificatNumber := 'UA/2377/01/01' , inSertificatStart := ('27.06.2014')::TDateTime , inSertificatEnd := ('27.06.2019')::TDateTime , inisLastRecord := 'True' ,  inSession := '1871720');

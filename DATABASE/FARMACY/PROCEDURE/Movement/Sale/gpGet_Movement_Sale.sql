@@ -27,7 +27,9 @@ RETURNS TABLE (Id Integer
              , PartnerMedicalId Integer
              , PartnerMedicalName TVarChar
              , InvNumberSP TVarChar
+             , MedicSPId   Integer
              , MedicSPName TVarChar
+             , MemberSPId   Integer
              , MemberSPName TVarChar
              , GroupMemberSPId Integer
              , GroupMemberSPName TVarChar
@@ -63,7 +65,9 @@ BEGIN
           , NULL::Integer                                    AS PartnerMedicalId
           , NULL::TVarChar                                   AS PartnerMedicalName
           , NULL::TVarChar                                   AS InvNumberSP
+          , NULL::Integer                                    AS MedicSPId
           , NULL::TVarChar                                   AS MedicSPName
+          , NULL::Integer                                    AS MemberSPId
           , NULL::TVarChar                                   AS MemberSPName
 
           , NULL::Integer                                    AS GroupMemberSPId
@@ -93,7 +97,9 @@ BEGIN
           , Movement_Sale.PartnerMedicalId
           , Movement_Sale.PartnerMedicalName
           , Movement_Sale.InvNumberSP
+          , Movement_Sale.MedicSPid
           , Movement_Sale.MedicSPName
+          , Movement_Sale.MemberSPId
           , Movement_Sale.MemberSPName
 
           , Movement_Sale.GroupMemberSPId

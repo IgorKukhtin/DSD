@@ -64,15 +64,17 @@ type
     cxLabel14: TcxLabel;
     edInvNumberSP: TcxTextEdit;
     cxLabel16: TcxLabel;
-    edMedicSP: TcxTextEdit;
     cxLabel8: TcxLabel;
-    edMemberSP: TcxTextEdit;
     edPartnerMedical: TcxButtonEdit;
     PartnerMedicalGuides: TdsdGuides;
     coisSP: TcxGridDBColumn;
     cxLabel9: TcxLabel;
     edGroupMemberSP: TcxButtonEdit;
     GroupMemberSPGuides: TdsdGuides;
+    edMedicSP: TcxButtonEdit;
+    edMemberSP: TcxButtonEdit;
+    MemberSPGuides: TdsdGuides;
+    MedicSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

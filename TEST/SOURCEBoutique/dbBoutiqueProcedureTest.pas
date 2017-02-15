@@ -1,123 +1,148 @@
 unit dbBoutiqueProcedureTest;
 
 interface
+
 uses TestFramework, ZConnection, ZDataset, dbTest;
 
 type
-  TdbProcedureTest = class (TdbTest)
+  TdbProcedureTest = class(TdbTest)
   published
-    procedure CreateFunction;
-    procedure CreateDefaultProcedure;
-    procedure CreateHistoryProcedure;
-    procedure CreateMovementProcedure;
-    procedure CreateMovementItemProcedure;
-    procedure CreateMovementItemContainerProcedure;
-    procedure CreateProtocolProcedure;
-    procedure CreateOvjectToolsProcedure;
-    procedure CreateObjectProcedure;
-
-
+    procedure CreateDefault;
+    procedure CreateProtocol;
+    procedure CreateObjectTools;
   end;
 
+type
+  TdbObjectHistoryProcedureTest = class(TdbTest)
+  published
+    procedure CreateCOMMON;
+  end;
+
+type
+  TdbMovementProcedureTest = class(TdbTest)
+  published
+    procedure CreateCOMMON;
+  end;
+
+type
+  TdbMovementItemProcedureTest = class(TdbTest)
+  published
+    procedure CreateCOMMON;
+  end;
+
+type
+  TdbMovementItemContainerProcedureTest = class(TdbTest)
+  published
+    procedure CreateCOMMON;
+  end;
+
+type
+  TdbObjectProcedureTest = class(TdbTest)
+  published
+    procedure CreateCOMMON;
+    procedure CreateAccount;
+    procedure CreateAccountDirection;
+    procedure CreateAccountGroup;
+    procedure CreateAccountKind;
+    procedure CreateImportSettings;
+    procedure CreateImportSettingsItems;
+  end;
 
 implementation
 
 uses zLibUtil;
 
 const
-  CommonFunctionPath = '..\DATABASE\Boutique\FUNCTION\';
+
   CommonProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
-  CommonReportsPath = '..\DATABASE\Boutique\REPORTS\';
 
+  { TdbProcedureTest }
 
-{ TdbProcedureTest }
-
-
-
-procedure TdbProcedureTest.CreateDefaultProcedure;
+procedure TdbProcedureTest.CreateDefault;
 begin
-  ScriptDirectory := CommonProcedurePath + 'Default\';
-  ProcedureLoad;
+  DirectoryLoad(CommonProcedurePath + 'Default\');
 end;
 
-procedure TdbProcedureTest.CreateFunction;
+procedure TdbProcedureTest.CreateProtocol;
 begin
-  ZQuery.SQL.LoadFromFile(CommonFunctionPath + 'ConstantFunction.sql');
-  ZQuery.ExecSQL;
-//  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'FUNCTION\zfCalc_SalePrice.sql');
-//  ZQuery.ExecSQL;
+  DirectoryLoad(CommonProcedurePath + 'Protocol\');
 end;
 
-procedure TdbProcedureTest.CreateHistoryProcedure;
-begin
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\InsertUpdate\lpInsertUpdate_ObjectHistory.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\InsertUpdate\lpInsertUpdate_ObjectHistoryFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\Delete\lpDelete_ObjectHistory.sql');
-  ZQuery.ExecSQL;
-
-end;
-
-
-
-procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
-begin
-  ScriptDirectory := CommonProcedurePath + 'MovementItemContainer\_COMMON\';
-  ProcedureLoad;
-end;
-
-procedure TdbProcedureTest.CreateMovementItemProcedure;
-begin
-  ScriptDirectory := CommonProcedurePath + 'MovementItem\_COMMON\';
-  ProcedureLoad;
-end;
-
-procedure TdbProcedureTest.CreateMovementProcedure;
-begin
-  ScriptDirectory := CommonProcedurePath + 'Movement\_COMMON\';
-  ProcedureLoad;
-end;
-
-procedure TdbProcedureTest.CreateObjectProcedure;
-begin
-  DirectoryLoad(CommonProcedurePath + 'Objects\');
-
-//  DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
-//  DirectoryLoad(CommonProcedurePath + 'OBJECTS\FileTypeKind\');
-//  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettings\');
-//  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\User\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Role\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Program\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Process\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Protocol\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\UserFormSettings\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Action\');
-//  DirectoryLoad(FarmacyProcedurePath + 'OBJECTS\Form\');
-
-
-//  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\PartionGoods\gpSelect_Object_PartionGoods.sql');
-//  ZQuery.ExecSQL;
-end;
-
-
-
-procedure TdbProcedureTest.CreateProtocolProcedure;
-begin
-  ScriptDirectory := CommonProcedurePath + 'Protocol\';
-  ProcedureLoad;
-end;
-
-
-procedure TdbProcedureTest.CreateOvjectToolsProcedure;
+procedure TdbProcedureTest.CreateObjectTools;
 begin
   DirectoryLoad(CommonProcedurePath + 'ObjectsTools\');
+end;
 
+{ TdbObjectHistoryProcedureTest }
+procedure TdbObjectHistoryProcedureTest.CreateCOMMON;
+begin
+  DirectoryLoad(CommonProcedurePath + 'ObjectHistory\_COMMON\');
+end;
+
+{ TdbMovementProcedureTest }
+procedure TdbMovementProcedureTest.CreateCOMMON;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Movement\_COMMON\');
+end;
+
+
+{ TdbObjectProcedureTest }
+procedure TdbObjectProcedureTest.CreateAccountDirection;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\AccountDirection\');
+end;
+
+procedure TdbObjectProcedureTest.CreateAccountGroup;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\AccountGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateAccountKind;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\AccountKind\');
+end;
+
+procedure TdbObjectProcedureTest.CreateAccount;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Account\');
+end;
+
+procedure TdbObjectProcedureTest.CreateCOMMON;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+end;
+
+procedure TdbObjectProcedureTest.CreateImportSettingsItems;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
+end;
+
+procedure TdbObjectProcedureTest.CreateImportSettings;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettings\');
+end;
+
+{ TdbMovementItemProcedureTest }
+
+procedure TdbMovementItemProcedureTest.CreateCOMMON;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItem\_COMMON\');
+end;
+
+{ TdbMovementItemContainerProcedureTest }
+
+procedure TdbMovementItemContainerProcedureTest.CreateCOMMON;
+begin
+  DirectoryLoad(CommonProcedurePath + 'MovementItemContainer\_COMMON\');
 end;
 
 initialization
-  TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);
 
+TestFramework.RegisterTest('Процедуры', TdbProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbObjectHistoryProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbMovementProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbMovementItemProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbMovementItemContainerProcedureTest.Suite);
+TestFramework.RegisterTest('Процедуры', TdbObjectProcedureTest.Suite);
 
 end.

@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, TVarChar, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -15,8 +17,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inGroupMemberSPId       Integer    , -- Категория пациента(Соц. проект)
     IN inOperDateSP            TDateTime  , -- дата рецепта (Соц. проект)
     IN inInvNumberSP           TVarChar   , -- номер рецепта (Соц. проект)
-    IN inMedicSP               TVarChar   , -- ФИО врача (Соц. проект)
-    IN inMemberSP              TVarChar   , -- ФИО пациента (Соц. проект)
+    IN inMedicSP               Integer    , -- ФИО врача (Соц. проект)
+    IN inMemberSP              Integer    , -- ФИО пациента (Соц. проект)
     IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer     -- сессия пользователя
 )
@@ -71,15 +73,22 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSP(), ioId, inInvNumberSP);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_MemberSP(), ioId, inMemberSP);
+    --PERFORM lpInsertUpdate_MovementString (zc_MovementString_MemberSP(), ioId, inMemberSP);
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_MedicSP(), ioId, inMedicSP);
+    --PERFORM lpInsertUpdate_MovementString (zc_MovementString_MedicSP(), ioId, inMedicSP);
    
     IF COALESCE(inPartnerMedicalId,0) <> 0 OR COALESCE(inInvNumberSP,'') <> '' THEN
        -- сохранили <>
        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateSP(), ioId, inOperDateSP);
     END IF;
     
+
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MedicSP(), ioId, inMedicSP);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MemberSP(), ioId, inMemberSP);
+
+
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
@@ -90,6 +99,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 14.02.17         *
  08.02.17         * add SP
  13.10.15                                                                       *
 */

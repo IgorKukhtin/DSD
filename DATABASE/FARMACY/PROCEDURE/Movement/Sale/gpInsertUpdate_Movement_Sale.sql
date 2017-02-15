@@ -23,10 +23,45 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMedicSPId Integer;
+   DECLARE vbMemberSPId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
     vbUserId := inSession;
+
+   IF COALESCE (inMemberSP, '') <> ''
+      THEN
+          inMemberSP:= TRIM (COALESCE (inMemberSP, ''));
+
+          vbMemberSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MemberSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMemberSP));
+          IF COALESCE (vbMemberSPId,0) = 0
+             THEN 
+                 -- не нашли Сохраняем
+                 vbMemberSPId := gpInsertUpdate_Object_MemberSP (ioId      := 0
+                                                               , inCode    := lfGet_ObjectCode(0, zc_Object_MemberSP()) 
+                                                               , inName    := inMemberSP
+                                                               , inSession := inSession
+                                                                );
+          END IF;
+   END IF;
+
+   IF COALESCE (inMedicSP, '') <> ''
+      THEN
+          inMedicSP:= TRIM (COALESCE (inMedicSP, ''));
+
+          vbMedicSPId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_MedicSP() AND UPPER(CAST(Object.ValueData AS TVarChar)) LIKE UPPER(inMedicSP));
+          IF COALESCE (vbMedicSPId,0) = 0
+             THEN 
+                 -- не нашли Сохраняем
+                 vbMedicSPId := gpInsertUpdate_Object_MedicSP (ioId      := 0
+                                                             , inCode    := lfGet_ObjectCode(0, zc_Object_MedicSP()) 
+                                                             , inName    := inMedicSP
+                                                             , inSession := inSession
+                                                             );
+          END IF;
+   END IF;
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement_Sale (ioId          := ioId
                                         , inInvNumber   := inInvNumber
@@ -38,8 +73,8 @@ BEGIN
                                         , inGroupMemberSPId := inGroupMemberSPId
                                         , inOperDateSP      := inOperDateSP
                                         , inInvNumberSP     := inInvNumberSP
-                                        , inMedicSP         := inMedicSP
-                                        , inMemberSP        := inMemberSP
+                                        , inMedicSP         := COALESCE (vbMedicSPId,0)
+                                        , inMemberSP        := COALESCE (vbMemberSPId,0)
                                         , inComment         := inComment
                                         , inUserId          := vbUserId
                                         );
