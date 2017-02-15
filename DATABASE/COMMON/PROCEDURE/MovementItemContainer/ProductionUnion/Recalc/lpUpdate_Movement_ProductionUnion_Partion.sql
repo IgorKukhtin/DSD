@@ -22,6 +22,8 @@ $BODY$
 BEGIN
      -- определяется документ Инвентаризация, т.к. надо её учесть + распределить "Ковбаси сирокопчені"
      vbMovementId_inv:= (SELECT Movement.Id
+                         FROM
+                        (SELECT Movement.Id
                          FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                                             ON MovementLinkObject_From.MovementId = Movement.Id
@@ -40,6 +42,29 @@ BEGIN
                            AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
                              OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
                                )
+                        UNION
+                         SELECT Movement.Id
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                           AND MovementLinkObject_From.ObjectId = inFromId
+                                                           -- !!!захардкодил!!!
+                                                           AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.isErased = FALSE
+                                                     AND MovementItem.Amount <> 0
+                              INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                              INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                         WHERE Movement.OperDate = DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
+                           AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           AND Movement.DescId = zc_Movement_Inventory()
+                           AND (EXTRACT (MONTH FROM Movement.OperDate) < EXTRACT (MONTH FROM CURRENT_DATE)
+                             OR EXTRACT (YEAR FROM Movement.OperDate)  < EXTRACT (YEAR FROM CURRENT_DATE)
+                               )
+                        ) AS Movement
                          LIMIT 1
                         );
 
@@ -47,17 +72,18 @@ BEGIN
      -- таблица - Приходы ГП с пр-ва
      CREATE TEMP TABLE _tmpItem_GP (MovementId Integer, MovementItemId_gp Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
      -- таблица - Расходы ПФ(ГП) на пр-во ГП (без этикетки)
-     CREATE TEMP TABLE _tmpItem_PF (MovementId Integer, MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer, GoodsId Integer, PartionGoodsId Integer, TermProduction TFloat, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_PF (MovementId Integer, MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer, GoodsId Integer, InfoMoneyDestinationId Integer, PartionGoodsId Integer, TermProduction TFloat, OperCount TFloat) ON COMMIT DROP;
      -- таблица - найденные партии пр-ва ПФ(ГП)
      CREATE TEMP TABLE _tmpItem_PF_find (ContainerId Integer, MovementItemId_in Integer, OperCount TFloat, isPartionClose Boolean, PartionGoodsDate TDateTime, PartionGoodsDateClose TDateTime) ON COMMIT DROP;
      -- таблица - распределение пр-во ПФ(ГП) -> Приходы ГП
-     CREATE TEMP TABLE _tmpItem_Result (MovementId Integer, MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_Result (MovementId Integer, MovementItemId_gp Integer, MovementItemId_out Integer, ContainerId Integer, GoodsId Integer, InfoMoneyDestinationId Integer, OperCount TFloat) ON COMMIT DROP;
 
 
-     -- Приходы ГП с пр-ва на Склад
+     -- Приходы ГП с пр-ва на Склад + Упаковка Мяса
      INSERT INTO _tmpItem_GP (MovementId, MovementItemId_gp, GoodsId, OperCount)
              -- !!!Товары временно захардкодил: Ковбаси сирокопчені!!!
         WITH tmpGoodsCK AS (SELECT ObjectId AS GoodsId FROM ObjectLink WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst() AND ObjectLink.ChildObjectId = 340591 AND vbMovementId_inv IS NULL)
+           , tmpUnitTo AS (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS tmp)
         SELECT MIContainer.MovementId
              , MIContainer.MovementItemId           AS MovementItemId_gp
              , MIContainer.ObjectId_Analyzer        AS GoodsId
@@ -69,12 +95,12 @@ BEGIN
           AND MIContainer.DescId                 = zc_MIContainer_Count()
           AND MIContainer.isActive               = TRUE
           AND MIContainer.AnalyzerId             = inFromId
-          AND MIContainer.WhereObjectId_Analyzer = inToId
+          AND MIContainer.WhereObjectId_Analyzer IN (SELECT tmpUnitTo.UnitId FROM tmpUnitTo)
           AND tmpGoodsCK.GoodsId IS NULL
        ;
 
      -- Расходы ПФ(ГП) на пр-во (без этикетки)
-     INSERT INTO _tmpItem_PF (MovementId, MovementItemId_gp, MovementItemId_out, ContainerId, GoodsId, PartionGoodsId, TermProduction, OperCount)
+     INSERT INTO _tmpItem_PF (MovementId, MovementItemId_gp, MovementItemId_out, ContainerId, GoodsId, InfoMoneyDestinationId, PartionGoodsId, TermProduction, OperCount)
         WITH tmpMIGoods AS (-- Товары ГП: важное св-во TermProduction
                             SELECT tmp.GoodsId, COALESCE (ObjectFloat_TermProduction.ValueData, 0) AS TermProduction
                             FROM (SELECT _tmpItem_GP.GoodsId FROM _tmpItem_GP GROUP BY _tmpItem_GP.GoodsId) AS tmp
@@ -85,15 +111,25 @@ BEGIN
                                                        ON ObjectFloat_TermProduction.ObjectId = ObjectLink_OrderType_Goods.ObjectId
                                                       AND ObjectFloat_TermProduction.DescId = zc_ObjectFloat_OrderType_TermProduction() 
                            )
+           , tmpItem_GP AS (-- Товары ГП: важное св-во TermProduction
+                            SELECT _tmpItem_GP.*
+                                 , View_InfoMoney.InfoMoneyDestinationId
+                            FROM _tmpItem_GP
+                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = _tmpItem_GP.GoodsId
+                                                     AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                 LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                           )
         SELECT _tmpItem_GP.MovementId                  AS MovementId
              , _tmpItem_GP.MovementItemId_gp           AS MovementItemId_gp
              , MIContainer.MovementItemId              AS MovementItemId_out
              , MIContainer.ContainerId                 AS ContainerId
              , MIContainer.ObjectId_Analyzer           AS GoodsId
+             , _tmpItem_GP.InfoMoneyDestinationId      AS InfoMoneyDestinationId -- !!!не совсем корректно, т.к. это "GP", а надо бы для ObjectId_Analyzer!!!
              , CLO_PartionGoods.ObjectId               AS PartionGoodsId
              , COALESCE (tmpMIGoods.TermProduction, 0) AS TermProduction
              , MIContainer.Amount                      AS OperCount      -- !!не используется, только для теста!!!
-        FROM _tmpItem_GP
+        FROM tmpItem_GP AS _tmpItem_GP
              INNER JOIN MovementItem ON MovementItem.MovementId = _tmpItem_GP.MovementId
                                     AND MovementItem.ParentId   = _tmpItem_GP.MovementItemId_gp
                                     AND MovementItem.DescId     = zc_MI_Child()
@@ -106,15 +142,16 @@ BEGIN
                                               ON MIContainer.MovementId = _tmpItem_GP.MovementId
                                              AND MIContainer.MovementItemId = MovementItem.Id
                                              AND MIContainer.DescId = zc_MIContainer_Count()
-             INNER JOIN ContainerLinkObject AS CLO_GoodsKind
-                                            ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
-                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                           AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
+             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
+                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
              INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                             ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                            AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
              LEFT JOIN tmpMIGoods ON tmpMIGoods.GoodsId = _tmpItem_GP.GoodsId
-       ;
+        WHERE (CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
+            OR _tmpItem_GP.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+              );
 
 
      -- Производство + Остатки партий, их и будем распределять
@@ -141,6 +178,31 @@ BEGIN
                                 GROUP BY MovementItem.ObjectId
                                        , MIDate_PartionGoods.ValueData
                                        , MILinkObject_GoodsKind.ObjectId
+                                       , MILinkObject_GoodsKind_complete.ObjectId
+                               UNION
+                                SELECT MovementItem.ObjectId                    AS GoodsId
+                                     , MIDate_PartionGoods.ValueData            AS PartionGoodsDate
+                                     , 0                                        AS GoodsKindId
+                                     , COALESCE (MILinkObject_GoodsKind_complete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
+                                     , SUM (MovementItem.Amount)                AS Amount
+                                FROM MovementItem
+                                     INNER JOIN MovementItemDate AS MIDate_PartionGoods
+                                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                     INNER JOIN ObjectLink ON ObjectLink.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                     INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
+                                                                                       AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_complete
+                                                                      ON MILinkObject_GoodsKind_complete.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind_complete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                WHERE MovementItem.MovementId = vbMovementId_inv
+                                  AND MovementItem.isErased = FALSE
+                                  AND MovementItem.Amount <> 0
+                                  -- !!!захардкодил!!!
+                                  AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                GROUP BY MovementItem.ObjectId
+                                       , MIDate_PartionGoods.ValueData
                                        , MILinkObject_GoodsKind_complete.ObjectId
                                )
                 , tmpOut_PF AS (-- "другие" расходы ПФ(ГП)
@@ -253,7 +315,7 @@ BEGIN
                                       AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                   LEFT JOIN tmpInventory_PF ON tmpInventory_PF.GoodsId              = tmp.GoodsId
                                            AND tmpInventory_PF.PartionGoodsDate     = tmp.PartionGoodsDate
-                                           AND tmpInventory_PF.GoodsKindId          = CLO_GoodsKind.ObjectId
+                                           AND tmpInventory_PF.GoodsKindId          = COALESCE (CLO_GoodsKind.ObjectId, 0)
                                            AND tmpInventory_PF.GoodsKindId_complete = COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis())
                   LEFT JOIN tmpOut_PF ON tmpOut_PF.ContainerId = tmp.ContainerId
         WHERE tmp.Amount - COALESCE (tmpInventory_PF.Amount, 0) - COALESCE (tmpOut_PF.Amount, 0) > 0
@@ -273,13 +335,14 @@ BEGIN
 
 
      -- распределение Производство + Остатки партий ИТОГ ПФ(ГП) -> _tmpItem_PF
-     INSERT INTO _tmpItem_Result (MovementId, MovementItemId_gp, MovementItemId_out, ContainerId, GoodsId, OperCount)
+     INSERT INTO _tmpItem_Result (MovementId, MovementItemId_gp, MovementItemId_out, ContainerId, GoodsId, InfoMoneyDestinationId, OperCount)
         WITH tmp_All AS (-- Эементы Приход ГП с пр-ва + Расход ПФ(ГП) в одну строку, если не 1:1 будет !!!ошибка, надо исправить!!!
                          SELECT _tmpItem_PF.MovementId
                               , _tmpItem_PF.MovementItemId_gp
                               , _tmpItem_PF.MovementItemId_out
                               , _tmpItem_PF.ContainerId
                               , _tmpItem_PF.GoodsId
+                              , _tmpItem_PF.InfoMoneyDestinationId
                                 -- переводится в вес
                               , _tmpItem_GP.OperCount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS OperCount_Weight
                          FROM _tmpItem_PF
@@ -297,6 +360,7 @@ BEGIN
              , tmp_All.MovementItemId_out
              , tmp_All.ContainerId
              , tmp_All.GoodsId
+             , tmp_All.InfoMoneyDestinationId
              , CAST (CASE WHEN tmp_All_sum.OperCount_Weight > 0 THEN tmpPF_find.OperCount * tmp_All.OperCount_Weight / tmp_All_sum.OperCount_Weight ELSE 0 END AS NUMERIC(16, 4)) AS OperCount
         FROM tmp_All
              LEFT JOIN (-- Итог по Производство + Остатки партий ПФ(ГП) !!!если надо закрыть!!!
@@ -362,7 +426,10 @@ BEGIN
                                                     , inParentId            := _tmpItem_Result.MovementItemId_gp
                                                     , inPartionGoodsDate    := MIDate_PartionGoods.ValueData
                                                     , inPartionGoods        := NULL
-                                                    , inGoodsKindId         := zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
+                                                    , inGoodsKindId         := CASE WHEN _tmpItem_Result.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                                         THEN 0
+                                                                                    ELSE zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
+                                                                               END
                                                     , inGoodsKindCompleteId := NULL
                                                     , inCount_onCount       := COALESCE (MIFloat_Count.ValueData, 0)
                                                     , inUserId              := zc_Enum_Process_Auto_PartionClose()
@@ -416,7 +483,8 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '20.07.2015', inFromId:=8448, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов + Склад База ГП
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2015', inEndDate:= '20.07.2015', inFromId:=8447, inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный   + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8448,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов       + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ ЦЕХ упаковки мясо + Участок мясного сырья
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111

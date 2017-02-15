@@ -127,7 +127,7 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
+            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto
 
             , MovementItem.isErased               AS isErased
 
@@ -248,7 +248,7 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyDestinationName
             , Object_InfoMoney_View.InfoMoneyName
             , Object_InfoMoney_View.InfoMoneyName_all
-            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
+            , COALESCE(MIBoolean_isAuto.ValueData, FALSE)  AS isAuto
 
             , MovementItem.isErased               AS isErased
 
@@ -372,6 +372,7 @@ BEGIN
                                              , inIsTaxExit              := MIBoolean_TaxExit.ValueData
                                               ) AS GroupNumber
 
+            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
             , MovementItem.isErased             AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -379,6 +380,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Child()
                              AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+             LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
+                                           ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
                                               ON MILinkObject_Receipt.MovementItemId = MovementItem.Id

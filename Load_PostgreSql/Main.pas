@@ -20945,7 +20945,7 @@ begin
         toStoredProc_two.Params.AddParam ('inToId',ftInteger,ptInput, 0);
 
         Gauge.Progress:=0;
-        Gauge.MaxValue:=2;
+        Gauge.MaxValue:=3;
 
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
@@ -20953,7 +20953,7 @@ begin
              toStoredProc_two.Params.ParamByName('inFromId').Value:=8448;//ЦЕХ деликатесов
              toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
              if not myExecToStoredProc_two then ;//exit;
-        Gauge.Progress:=1;
+        Gauge.Progress:= Gauge.Progress + 1;
         MyDelay(3 * 1000);
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
@@ -20961,7 +20961,15 @@ begin
              toStoredProc_two.Params.ParamByName('inFromId').Value:=8447;//ЦЕХ колбасный
              toStoredProc_two.Params.ParamByName('inToId').Value:=8458;//Склад База ГП
              if not myExecToStoredProc_two then ;//exit;
-        Gauge.Progress:=2;
+        Gauge.Progress:= Gauge.Progress + 1;
+        MyDelay(1 * 1000);
+             //
+             toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
+             toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
+             toStoredProc_two.Params.ParamByName('inFromId').Value:=951601;//ЦЕХ упаковки мясо
+             toStoredProc_two.Params.ParamByName('inToId').Value:=8439 ;//Участок мясного сырья
+             if not myExecToStoredProc_two then ;//exit;
+        Gauge.Progress:= Gauge.Progress + 1;
         MyDelay(1 * 1000);
      //
      pCompleteDocument_List(false,true, FALSE);

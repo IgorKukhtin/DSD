@@ -66,6 +66,7 @@ type
     actPrintCeh: TdsdPrintAction;
     spSelectPrintCeh: TdsdStoredProc;
     bbPrintCeh: TdxBarButton;
+    colChildIsAuto: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,7 +1,10 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1020
+  ExplicitLeft = -260
+  ExplicitTop = -252
   ExplicitWidth = 1036
+  ExplicitHeight = 709
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -284,17 +287,17 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 90
           end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object isAuto: TcxGridDBColumn
+          object isAuto: TcxGridDBColumn [22]
             Caption = #1040#1074#1090'.'
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
         end
       end
@@ -433,6 +436,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
+          end
+          object colChildIsAuto: TcxGridDBColumn [13]
+            Caption = #1040#1074#1090'.'
+            DataBinding.FieldName = 'isAuto'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
           end
           inherited colChildIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter

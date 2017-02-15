@@ -14,7 +14,8 @@ $BODY$
 BEGIN
 
      RETURN QUERY 
-     WITH tmpUnit AS (SELECT tmp.UnitId, TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
+     WITH tmpUnit AS (SELECT tmp.UnitId,       TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
+            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 951601 -- ЦЕХ упаковки мясо
                )
      -- !!!Internal!!!
      -- 5. Send + ProductionUnion + ProductionSeparate

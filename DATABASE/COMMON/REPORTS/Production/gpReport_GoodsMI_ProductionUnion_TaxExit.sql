@@ -55,7 +55,11 @@ BEGIN
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
-                        AND MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                        AND (MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                              -- !!!захардкодил!!!
+                          OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
+                          AND MIContainer.AnalyzerId             = 951601 -- ЦЕХ упаковки мясо
+                            ))
                       )
          -- расходы п/ф ГП - что б отловить партии которых нет в tmpMI_WorkProgress_in
        , tmpMI_WorkProgress_find AS
@@ -112,8 +116,8 @@ BEGIN
                             , tmpMI_WorkProgress_in_group.GoodsId
                             , tmpMI_WorkProgress_in_group.PartionGoodsId
                      )
-         -- подразделения из группы "Участок мясного сырья"
-       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect)
+         -- подразделения из группы "Участок мясного сырья", но - !!!захардкодил!!!
+       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect WHERE inFromId <> 951601) -- ЦЕХ упаковки мясо
          -- расходы п/ф ГП в разрезе ParentId - если они ушли на "переработку"
        , tmpMI_WorkProgress_oth AS
                      (SELECT tmpMI_WorkProgress_out.ContainerId
