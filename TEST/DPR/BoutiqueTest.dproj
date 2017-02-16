@@ -105,6 +105,7 @@
 			<DCCReference Include="..\SOURCEBoutique\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueFormTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
@@ -159,20 +160,20 @@
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
-			<DCCReference Include="..\..\Forms\Measure.pas">
+			<DCCReference Include="..\..\FormsBoutique\Guides\Measure.pas">
 				<Form>MeasureForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+			<DCCReference Include="..\..\FormsBoutique\Guides\MeasureEdit.pas">
 				<Form>MeasureEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Box.pas">
-				<Form>BoxForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CompositionGroup.pas">
+				<Form>CompositionGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BoxEdit.pas">
-				<Form>BoxEditForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CompositionGroupEdit.pas">
+				<Form>CompositionGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
@@ -227,11 +228,78 @@
 			<DCCReference Include="..\..\FormsBoutique\MainForm.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\SOURCEBoutique\Objects\All\RoleTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Objects\All\UserTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Form\ParentFormTest.pas">
+				<Form>TestForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Objects.pas">
+				<Form>ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\ObjectDesc.pas">
+				<Form>ObjectDescForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\SOURCEBoutique\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
 				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Account.pas">
+				<Form>AccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Account_Object.pas">
+				<Form>Account_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountDirection.pas">
+				<Form>AccountDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountDirection_Object.pas">
+				<Form>AccountDirection_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountDirectionEdit.pas">
+				<Form>AccountDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountEdit.pas">
+				<Form>AccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountGroup.pas">
+				<Form>AccountGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountGroup_Object.pas">
+				<Form>AccountGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\AccountGroupEdit.pas">
+				<Form>AccountGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\AccountDirectionTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\AccountGroupTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\Objects\All\AccountTest.pas"/>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
+				<Form>AncestorReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

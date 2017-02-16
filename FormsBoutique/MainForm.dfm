@@ -76,6 +76,28 @@ inherited MainForm: TMainForm
     inherited actProfitLoss: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
     end
+    object actMeasure: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+      FormName = 'TMeasureForm'
+      FormNameParam.Value = 'TMeasureForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCompositionGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TCompositionGroupForm'
+      FormNameParam.Value = 'TCompositionGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -102,6 +124,14 @@ inherited MainForm: TMainForm
   end
   inherited MainMenu: TMainMenu
     Top = 88
+    inherited miGuides: TMenuItem
+      object N1: TMenuItem
+        Action = actMeasure
+      end
+      object N4: TMenuItem
+        Action = actCompositionGroup
+      end
+    end
     object miLoad: TMenuItem [1]
       Caption = #1047#1072#1075#1088#1091#1079#1082#1080
       object miImportGroup: TMenuItem
