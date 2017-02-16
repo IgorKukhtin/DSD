@@ -8,23 +8,23 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
+    Top = 91
     Width = 1077
-    Height = 422
+    Height = 389
     TabOrder = 3
-    ExplicitTop = 58
+    ExplicitTop = 91
     ExplicitWidth = 1077
-    ExplicitHeight = 422
-    ClientRectBottom = 422
+    ExplicitHeight = 389
+    ClientRectBottom = 389
     ClientRectRight = 1077
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1077
-      ExplicitHeight = 422
+      ExplicitHeight = 389
       inherited cxGrid: TcxGrid
         Width = 1077
-        Height = 422
+        Height = 389
         ExplicitWidth = 1077
-        ExplicitHeight = 422
+        ExplicitHeight = 389
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -127,6 +127,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 42
           end
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'OperDate'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.#;-,0.#; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
           object clUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
@@ -157,6 +166,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 217
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object clMemberSP: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1072#1094#1080#1077#1085#1090#1072
@@ -252,40 +269,251 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
+          object JuridicalFullName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'JuridicalFullName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object JuridicalAddress: TcxGridDBColumn
+            Caption = #1070#1088'. '#1072#1076#1088#1077#1089' ('#1057#1043')'
+            DataBinding.FieldName = 'JuridicalAddress'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1057#1043')'
+            DataBinding.FieldName = 'OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object AccounterName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1043')'
+            DataBinding.FieldName = 'AccounterName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object INN: TcxGridDBColumn
+            Caption = #1048#1053#1053' ('#1057#1043')'
+            DataBinding.FieldName = 'INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1030#1055#1053' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object NumberVAT: TcxGridDBColumn
+            Caption = #8470' '#1089#1074#1080#1076'. ('#1057#1043')'
+            DataBinding.FieldName = 'NumberVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1089#1074#1110#1076#1086#1094#1090#1074#1072' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1089' ('#1057#1043')'
+            DataBinding.FieldName = 'BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1088' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Phone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1043')'
+            DataBinding.FieldName = 'Phone'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1057#1043')'
+            DataBinding.FieldName = 'BankName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1057#1043')'
+            DataBinding.FieldName = 'MFO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1060#1054' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_FullName: TcxGridDBColumn
+            Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' ('#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
+            DataBinding.FieldName = 'PartnerMedical_FullName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_JuridicalAddress: TcxGridDBColumn
+            Caption = #1070#1088'. '#1072#1076#1088#1077#1089' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_JuridicalAddress'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1070#1088'. '#1072#1076#1088#1077#1089#1072' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_Phone: TcxGridDBColumn
+            Caption = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_Phone'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1047#1054#1047')'
+            Options.Editing = False
+            Width = 155
+          end
+          object PartnerMedical_OKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_OKPO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1050#1055#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_AccounterName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_AccounterName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_INN: TcxGridDBColumn
+            Caption = #1048#1053#1053' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_INN'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1030#1055#1053' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_NumberVAT: TcxGridDBColumn
+            Caption = #8470' '#1089#1074#1080#1076'. ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_NumberVAT'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1089#1074#1110#1076'. ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_BankAccount: TcxGridDBColumn
+            Caption = #1056'/'#1088' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_BankAccount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056'/'#1088' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_BankName: TcxGridDBColumn
+            Caption = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_BankName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1041#1072#1085#1082' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
+          object PartnerMedical_MFO: TcxGridDBColumn
+            Caption = #1052#1060#1054' ('#1047#1054#1047')'
+            DataBinding.FieldName = 'PartnerMedical_MFO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1060#1054' ('#1047#1054#1047')'
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 155
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1077
-    Height = 32
+    Height = 65
     ExplicitWidth = 1077
-    ExplicitHeight = 32
+    ExplicitHeight = 65
     inherited deStart: TcxDateEdit
-      Left = 26
-      ExplicitLeft = 26
+      Left = 34
+      ExplicitLeft = 34
     end
     inherited deEnd: TcxDateEdit
-      Left = 138
-      ExplicitLeft = 138
+      Left = 34
+      Top = 32
+      ExplicitLeft = 34
+      ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
+      Left = 15
       Caption = #1057':'
+      ExplicitLeft = 15
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 117
+      Left = 13
+      Top = 33
       Caption = #1087#1086':'
-      ExplicitLeft = 117
+      ExplicitLeft = 13
+      ExplicitTop = 33
       ExplicitWidth = 20
     end
     object cxLabel3: TcxLabel
-      Left = 470
+      Left = 416
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 562
+      Left = 505
       Top = 5
       Properties.Buttons = <
         item
@@ -297,15 +525,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Properties.UseNullString = True
       TabOrder = 5
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
-      Width = 230
+      Width = 225
     end
     object cxLabel4: TcxLabel
-      Left = 230
+      Left = 128
       Top = 6
       Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
     end
     object edJuridical: TcxButtonEdit
-      Left = 322
+      Left = 220
       Top = 5
       Properties.Buttons = <
         item
@@ -314,17 +542,24 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 143
+      Width = 186
+    end
+    object cbGroupMemberSP: TcxCheckBox
+      Left = 736
+      Top = 32
+      Action = actRefresh1
+      TabOrder = 8
+      Width = 169
     end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 798
-    Top = 6
+    Left = 135
+    Top = 33
     Caption = #1055#1088#1077#1076#1087#1088'-'#1090#1080#1077' '#1054#1047':'
   end
   object ceHospital: TcxButtonEdit [3]
-    Left = 888
-    Top = 5
+    Left = 220
+    Top = 32
     Properties.Buttons = <
       item
         Default = True
@@ -334,7 +569,38 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     TabOrder = 7
     Width = 186
   end
+  object cxLabel6: TcxLabel [4]
+    Left = 414
+    Top = 32
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072':'
+  end
+  object edGroupMemberSP: TcxButtonEdit [5]
+    Left = 533
+    Top = 32
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 197
+  end
   inherited ActionList: TActionList
+    object actRefresh1: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1082#1088#1086#1084#1077' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+      Hint = #1082#1088#1086#1084#1077' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -461,6 +727,31 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPId'
+          Value = Null
+          Component = GroupMemberSPGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = Null
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = Null
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -471,13 +762,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090#1072
+      Hint = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitName;IntenalSPName'
+          IndexFieldNames = 'UnitName;HospitalName;OperDate;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -495,8 +786,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072
+      ReportName = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
+      ReportNameParam.Value = 'P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
     end
@@ -549,6 +840,22 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         Value = Null
         Component = HospitalGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGroupMemberSPId'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGroupMemberSP'
+        Value = Null
+        Component = cbGroupMemberSP
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -619,8 +926,8 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 112
-    Top = 32
+    Left = 200
+    Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -635,6 +942,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end
       item
         Component = JuridicalGuide
+      end
+      item
+        Component = GroupMemberSPGuides
       end>
     Left = 304
     Top = 168
@@ -665,8 +975,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 600
-    Top = 16
+    Left = 632
   end
   object JuridicalGuide: TdsdGuides
     KeyField = 'Id'
@@ -694,8 +1003,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 8
+    Left = 288
   end
   object HospitalGuides: TdsdGuides
     KeyField = 'Id'
@@ -723,7 +1031,36 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 920
-    Top = 8
+    Left = 344
+    Top = 24
+  end
+  object GroupMemberSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGroupMemberSP
+    FormNameParam.Value = 'TGroupMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 584
+    Top = 32
   end
 end

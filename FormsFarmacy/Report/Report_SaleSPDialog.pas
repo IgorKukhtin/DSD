@@ -32,6 +32,10 @@ type
     JuridicalGuide: TdsdGuides;
     UnitGuides: TdsdGuides;
     HospitalGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edGroupMemberSP: TcxButtonEdit;
+    cbGroupMemberSP: TcxCheckBox;
+    GroupMemberSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

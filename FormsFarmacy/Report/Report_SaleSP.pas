@@ -44,6 +44,11 @@ type
     cxLabel5: TcxLabel;
     ceHospital: TcxButtonEdit;
     HospitalGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edGroupMemberSP: TcxButtonEdit;
+    GroupMemberSPGuides: TdsdGuides;
+    cbGroupMemberSP: TcxCheckBox;
+    actRefresh1: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
