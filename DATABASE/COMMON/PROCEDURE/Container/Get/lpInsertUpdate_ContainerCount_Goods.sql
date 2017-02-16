@@ -66,6 +66,8 @@ BEGIN
                                                  , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
+                                                 , inDescId_4          := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_ContainerLinkObject_GoodsKind() ELSE NULL END
+                                                 , inObjectId_4        := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN inGoodsKindId ELSE NULL END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
