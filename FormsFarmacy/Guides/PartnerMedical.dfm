@@ -69,13 +69,22 @@ object PartnerMedicalForm: TPartnerMedicalForm
         HeaderAlignmentVert = vaCenter
         Width = 147
       end
+      object clMedicFIO: TcxGridDBColumn
+        Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
+        DataBinding.FieldName = 'MedicFIO'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Options.Editing = False
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel

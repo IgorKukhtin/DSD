@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1053#1086#1074#1086#1077' '#1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077
-  ClientHeight = 201
+  ClientHeight = 246
   ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,12 +24,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 50
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 71
-    Top = 162
+    Top = 212
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 221
-    Top = 162
+    Top = 212
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -50,7 +50,7 @@
   end
   object Код: TcxLabel
     Left = 40
-    Top = 3
+    Top = 6
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
@@ -63,7 +63,7 @@
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 98
+    Top = 101
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
@@ -75,6 +75,17 @@
         Kind = bkEllipsis
       end>
     TabOrder = 7
+    Width = 296
+  end
+  object cxLabel2: TcxLabel
+    Left = 40
+    Top = 149
+    Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
+  end
+  object edFIO: TcxTextEdit
+    Left = 40
+    Top = 168
+    TabOrder = 9
     Width = 296
   end
   object ActionList: TActionList
@@ -134,6 +145,14 @@
         Name = 'inName'
         Value = ''
         Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFIO'
+        Value = Null
+        Component = edFIO
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -199,6 +218,13 @@
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MedicFIO'
+        Value = Null
+        Component = edFIO
         DataType = ftString
         MultiSelectSeparator = ','
       end>

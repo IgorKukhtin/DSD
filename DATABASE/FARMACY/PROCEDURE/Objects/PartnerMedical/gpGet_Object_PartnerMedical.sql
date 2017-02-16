@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PartnerMedical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , MedicFIO TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -27,6 +28,7 @@ BEGIN
            , CAST (0 as Integer)   AS JuridicalId
            , CAST (0 as Integer)   AS JuridicalCode
            , CAST ('' as TVarChar) AS JuridicalName
+           , CAST ('' as TVarChar) AS MedicFIO
 
            , CAST (NULL AS Boolean) AS isErased
 ;
@@ -41,13 +43,19 @@ BEGIN
            , Object_Juridical.ObjectCode  AS JuridicalCode
            , Object_Juridical.ValueData   AS JuridicalName
 
+           , ObjectString_PartnerMedical_FIO.ValueData  AS MedicFIO
+
            , Object_PartnerMedical.isErased AS isErased
            
        FROM Object AS Object_PartnerMedical
        
+           LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
+                                  ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
+                                 AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()   
+
            LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
-                               ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
-                              AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+                                ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
+                               AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_PartnerMedical_Juridical.ChildObjectId              
 
        WHERE Object_PartnerMedical.Id = inId;
@@ -63,6 +71,7 @@ ALTER FUNCTION gpGet_Object_PartnerMedical(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.02.17         * FIO
  22.12.16         * 
 
 */

@@ -3,8 +3,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303>'
-  ClientHeight = 189
-  ClientWidth = 383
+  ClientHeight = 244
+  ClientWidth = 374
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 69
-    Top = 153
+    Top = 209
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cxButton2: TcxButton
     Left = 251
-    Top = 153
+    Top = 209
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -116,6 +116,30 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     TabOrder = 11
     Width = 230
   end
+  object cxLabel2: TcxLabel
+    Left = 26
+    Top = 145
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072':'
+  end
+  object edGroupMemberSP: TcxButtonEdit
+    Left = 141
+    Top = 144
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 207
+  end
+  object cbGroupMemberSP: TcxCheckBox
+    Left = 141
+    Top = 171
+    Caption = #1082#1088#1086#1084#1077' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
+    TabOrder = 14
+    Width = 172
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -123,8 +147,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     Top = 96
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 202
-    Top = 142
+    Left = 330
+    Top = 166
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -136,8 +160,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 107
-    Top = 132
+    Left = 81
+    Top = 180
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -207,9 +231,34 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPId'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGroupMemberSP'
+        Value = Null
+        Component = cbGroupMemberSP
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 18
-    Top = 134
+    Top = 142
   end
   object JuridicalGuide: TdsdGuides
     KeyField = 'Id'
@@ -297,5 +346,34 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
       end>
     Left = 171
     Top = 99
+  end
+  object GroupMemberSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGroupMemberSP
+    FormNameParam.Value = 'TGroupMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 240
+    Top = 144
   end
 end
