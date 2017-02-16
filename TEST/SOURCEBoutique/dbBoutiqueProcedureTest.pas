@@ -46,6 +46,11 @@ type
     procedure CreateAccountKind;
     procedure CreateImportSettings;
     procedure CreateImportSettingsItems;
+    procedure CreateMeasure;
+    procedure CreateInfoMoney;
+    procedure CreateInfoMoneyDestination;
+    procedure CreateInfoMoneyGroup;
+    procedure CreateCompositionGroup;
   end;
 
 implementation
@@ -63,10 +68,13 @@ begin
   DirectoryLoad(CommonProcedurePath + 'Default\');
 end;
 
+
+
 procedure TdbProcedureTest.CreateProtocol;
 begin
   DirectoryLoad(CommonProcedurePath + 'Protocol\');
 end;
+
 
 procedure TdbProcedureTest.CreateObjectTools;
 begin
@@ -112,9 +120,34 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
 end;
 
+procedure TdbObjectProcedureTest.CreateCompositionGroup;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
+end;
+
 procedure TdbObjectProcedureTest.CreateImportSettingsItems;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\');
+end;
+
+procedure TdbObjectProcedureTest.CreateInfoMoney;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoney\');
+end;
+
+procedure TdbObjectProcedureTest.CreateInfoMoneyDestination;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoneyDestination\');
+end;
+
+procedure TdbObjectProcedureTest.CreateInfoMoneyGroup;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoneyGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateMeasure;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Measure\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettings;

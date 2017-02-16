@@ -36,6 +36,10 @@ type
     N31: TMenuItem;
     actForms: TdsdOpenForm;
     N74: TMenuItem;
+    actMeasure: TdsdOpenForm;
+    N1: TMenuItem;
+    actCompositionGroup: TdsdOpenForm;
+    N4: TMenuItem;
   private
     { Private declarations }
   public

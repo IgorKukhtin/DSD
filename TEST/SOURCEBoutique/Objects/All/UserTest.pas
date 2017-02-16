@@ -74,15 +74,6 @@ begin
     // Получение данных о пользователе
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('name').AsString = 'UserName'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-//    // Проверка на дублируемость
-//    try
-//      ObjectTest.InsertUpdateUser(0, -2, 'UserName', 'Password', 'sign', 'seal', 'key', 0);
-//      Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
-//    except
-//
-//    end;
-    // Изменение пользователя
-
     // Получим список пользователей
     Check((ObjectTest.GetDataSet.RecordCount = RecordCount + 1), 'Количество записей не изменилось');
   finally

@@ -32,11 +32,11 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), vbCode);
 
    -- определяем свойство <Виды счетов>
-   IF EXISTS (SELECT Object_AccountGroup.Id
+   IF 1=1 /* EXISTS (SELECT Object_AccountGroup.Id
               FROM Object AS Object_AccountGroup
                    LEFT JOIN Object AS Object_AccountGroup_70000 ON Object_AccountGroup_70000.Id = zc_Enum_AccountGroup_70000()
               WHERE Object_AccountGroup.Id = inAccountGroupId
-                AND Object_AccountGroup.ObjectCode < Object_AccountGroup_70000.ObjectCode)
+                AND Object_AccountGroup.ObjectCode < Object_AccountGroup_70000.ObjectCode) */
    THEN
        vbAccountKindId:= zc_Enum_AccountKind_Active();
    ELSE
