@@ -128,6 +128,8 @@ type
     spUpdateisDeferredYes: TdsdExecStoredProc;
     bbUpdateisDeferredYes: TdxBarButton;
     bbUpdateisDeferredNo: TdxBarButton;
+    InsertName: TcxGridDBColumn;
+    InsertDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

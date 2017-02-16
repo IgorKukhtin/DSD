@@ -182,7 +182,7 @@ BEGIN
                                UNION
                                 SELECT MovementItem.ObjectId                    AS GoodsId
                                      , MIDate_PartionGoods.ValueData            AS PartionGoodsDate
-                                     , 0                                        AS GoodsKindId
+                                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                             AS GoodsKindId
                                      , COALESCE (MILinkObject_GoodsKind_complete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
                                      , SUM (MovementItem.Amount)                AS Amount
                                 FROM MovementItem
@@ -193,6 +193,9 @@ BEGIN
                                                           AND ObjectLink.DescId = zc_ObjectLink_Goods_InfoMoney()
                                      INNER JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink.ChildObjectId
                                                                                        AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_complete
                                                                       ON MILinkObject_GoodsKind_complete.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_GoodsKind_complete.DescId = zc_MILinkObject_GoodsKindComplete()
@@ -203,6 +206,7 @@ BEGIN
                                   AND inFromId = 951601 -- ЦЕХ упаковки мясо
                                 GROUP BY MovementItem.ObjectId
                                        , MIDate_PartionGoods.ValueData
+                                       , MILinkObject_GoodsKind.ObjectId
                                        , MILinkObject_GoodsKind_complete.ObjectId
                                )
                 , tmpOut_PF AS (-- "другие" расходы ПФ(ГП)
@@ -427,7 +431,7 @@ BEGIN
                                                     , inPartionGoodsDate    := MIDate_PartionGoods.ValueData
                                                     , inPartionGoods        := NULL
                                                     , inGoodsKindId         := CASE WHEN _tmpItem_Result.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
-                                                                                         THEN 0
+                                                                                         THEN zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
                                                                                     ELSE zc_GoodsKind_WorkProgress() -- !!!ПФ(ГП)!!!
                                                                                END
                                                     , inGoodsKindCompleteId := NULL

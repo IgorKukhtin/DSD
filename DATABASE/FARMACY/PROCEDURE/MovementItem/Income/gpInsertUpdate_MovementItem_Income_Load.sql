@@ -380,6 +380,12 @@ BEGIN
         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
      END IF;
 
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили ВСЕГДА
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbMovementItemId, CURRENT_TIMESTAMP);
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbMovementItemId, vbUserId);
+    END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
