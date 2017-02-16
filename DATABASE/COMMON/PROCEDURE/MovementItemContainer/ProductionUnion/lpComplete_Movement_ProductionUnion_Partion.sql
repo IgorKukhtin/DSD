@@ -50,13 +50,16 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                        ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                                                       AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                      -- AND ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId
                                   INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
                                                                      AND Object_Receipt.isErased = FALSE
                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                            ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
-                             WHERE (ObjectLink_Receipt_GoodsKind.ChildObjectId = tmpGoods.GoodsKindId OR tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()) -- ќсновное сырье + ћ€сное сырье
+                             WHERE (COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
+                                 -- OR tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- ќсновное сырье + ћ€сное сырье
+                                   )
                              GROUP BY tmpGoods.GoodsId
                                     , tmpGoods.GoodsKindId
                             )

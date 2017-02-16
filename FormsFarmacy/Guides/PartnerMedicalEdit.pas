@@ -33,6 +33,8 @@ type
     cxLabel4: TcxLabel;
     JuridicalGuides: TdsdGuides;
     ceJuridical: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    edFIO: TcxTextEdit;
   private
     { Private declarations }
   public

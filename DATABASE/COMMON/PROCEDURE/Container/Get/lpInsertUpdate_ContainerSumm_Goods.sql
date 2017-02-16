@@ -78,6 +78,8 @@ BEGIN
                                                  , inObjectId_4 := inInfoMoneyId
                                                  , inDescId_5   := zc_ContainerLinkObject_PartionGoods()
                                                  , inObjectId_5 := inPartionGoodsId -- CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
+                                                 , inDescId_6   := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_ContainerLinkObject_GoodsKind() ELSE NULL END
+                                                 , inObjectId_6 := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN inGoodsKindId ELSE NULL END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство

@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, TFloat,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PartnerMedical (Integer,Integer,TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PartnerMedical(
  INOUT ioId              Integer   ,    -- ключ объекта < Медицинское учреждение>
     IN inCode            Integer   ,    -- Код объекта <>
     IN inName            TVarChar  ,    -- Название объекта <>
+    IN inFIO             TVarChar  ,    -- Главврач
     IN inJuridicalId     Integer   ,    -- Юридические лица 	
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -31,18 +33,20 @@ BEGIN
 
     -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartnerMedical_Juridical(), ioId, inJuridicalId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_PartnerMedical_FIO(), ioId, inFIO);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_PartnerMedical(Integer,Integer,TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.02.17         * inFIO
  22.12.16         *  
  
 */
