@@ -474,6 +474,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             VisibleForCustomization = False
             Width = 155
           end
+          object MedicFIO: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1075#1083#1072#1074'.'#1074#1088#1072#1095#1072
+            DataBinding.FieldName = 'MedicFIO'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end

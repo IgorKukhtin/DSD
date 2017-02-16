@@ -49,6 +49,7 @@ RETURNS TABLE (UnitName       TVarChar
              , PartnerMedical_FullName         TVarChar
              , PartnerMedical_JuridicalAddress TVarChar
              , PartnerMedical_Phone            TVarChar
+             , MedicFIO TVarChar
              )
 AS
 $BODY$
@@ -242,6 +243,7 @@ BEGIN
            , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
            , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
            , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
+           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
 
         FROM tmpMI AS tmpData
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId 
@@ -258,6 +260,10 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
                                   ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
                                 AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+
+             LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
+                                    ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
+                                   AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()   
 
              LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
              LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1

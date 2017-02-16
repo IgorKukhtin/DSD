@@ -49,6 +49,7 @@ type
     GroupMemberSPGuides: TdsdGuides;
     cbGroupMemberSP: TcxCheckBox;
     actRefresh1: TdsdDataSetRefresh;
+    MedicFIO: TcxGridDBColumn;
   private
     { Private declarations }
   public

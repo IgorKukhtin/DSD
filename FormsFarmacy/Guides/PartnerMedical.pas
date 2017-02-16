@@ -46,6 +46,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clJuridicalName: TcxGridDBColumn;
+    clMedicFIO: TcxGridDBColumn;
   private
     { Private declarations }
   public
