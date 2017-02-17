@@ -51,6 +51,7 @@ type
     procedure CreateInfoMoneyDestination;
     procedure CreateInfoMoneyGroup;
     procedure CreateCompositionGroup;
+    procedure CreateComposition;
   end;
 
 implementation
@@ -118,6 +119,11 @@ end;
 procedure TdbObjectProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+end;
+
+procedure TdbObjectProcedureTest.CreateComposition;
+begin
+DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCompositionGroup;

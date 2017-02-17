@@ -40,6 +40,8 @@ type
     N1: TMenuItem;
     actCompositionGroup: TdsdOpenForm;
     N4: TMenuItem;
+    actComposition: TdsdOpenForm;
+    N5: TMenuItem;
   private
     { Private declarations }
   public

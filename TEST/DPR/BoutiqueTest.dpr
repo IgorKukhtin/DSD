@@ -14,7 +14,9 @@ uses
   ProcessTest in '..\SOURCEBoutique\Process\ProcessTest.pas',
   dbCreateViewTest in '..\SOURCEBoutique\View\dbCreateViewTest.pas',
   DefaultsTest in '..\SOURCEBoutique\Defaults\DefaultsTest.pas',
+  { Forms }
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
+
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
@@ -65,6 +67,8 @@ uses
   CompositionGroup in '..\..\FormsBoutique\Guides\CompositionGroup.pas' {CompositionGroupForm: TParentForm},
   CompositionGroupEdit in '..\..\FormsBoutique\Guides\CompositionGroupEdit.pas' {CompositionGroupEditForm: TParentForm},
 
+  Composition in '..\..\FormsBoutique\Guides\Composition.pas' {CompositionForm: TParentForm},
+  CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
 
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},

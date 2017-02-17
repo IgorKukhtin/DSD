@@ -1,9 +1,9 @@
-object CompositionGroupForm: TCompositionGroupForm
+object CompositionForm: TCompositionForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
-  ClientWidth = 403
+  ClientWidth = 608
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object CompositionGroupForm: TCompositionGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 403
+    Width = 608
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,7 +50,7 @@ object CompositionGroupForm: TCompositionGroupForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 90
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -57,7 +58,15 @@ object CompositionGroupForm: TCompositionGroupForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 243
+        Width = 339
+      end
+      object dCompositionGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'CompositionGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 165
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -75,14 +84,14 @@ object CompositionGroupForm: TCompositionGroupForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 104
-    Top = 128
+    Left = 56
+    Top = 224
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 32
-    Top = 128
+    Left = 24
+    Top = 184
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -267,8 +276,8 @@ object CompositionGroupForm: TCompositionGroupForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCompositionGroupEditForm'
-      FormNameParam.Value = 'TCompositionGroupEditForm'
+      FormName = 'TCompositionEditForm'
+      FormNameParam.Value = 'TCompositionEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -289,8 +298,8 @@ object CompositionGroupForm: TCompositionGroupForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCompositionGroupEditForm'
-      FormNameParam.Value = 'TCompositionGroupEditForm'
+      FormName = 'TCompositionEditForm'
+      FormNameParam.Value = 'TCompositionEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -424,7 +433,7 @@ object CompositionGroupForm: TCompositionGroupForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_CompositionGroup'
+    StoredProcName = 'gpSelect_Object_Composition'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -440,11 +449,11 @@ object CompositionGroupForm: TCompositionGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 216
-    Top = 88
+    Left = 88
+    Top = 128
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_CompositionGroup'
+    StoredProcName = 'gpUpdate_Object_isErased_Composition'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -457,12 +466,12 @@ object CompositionGroupForm: TCompositionGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 88
+    Left = 232
+    Top = 144
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 216
-    Top = 208
+    Left = 288
+    Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -489,7 +498,7 @@ object CompositionGroupForm: TCompositionGroupForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 216
-    Top = 160
+    Left = 104
+    Top = 248
   end
 end

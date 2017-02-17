@@ -60,6 +60,7 @@ type
 //    procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadCompositionGroupFormTest;
+    procedure LoadCompositionFormTest;
 //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
 //    procedure LoadOrderSheduleFormTest;
@@ -184,6 +185,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
 end;
+procedure TLoadFormTest.LoadCompositionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompositionEditForm');
+end;
+
 procedure TLoadFormTest.LoadCompositionGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionGroupForm'));
