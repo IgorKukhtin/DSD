@@ -3,6 +3,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   ClientHeight = 480
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -148
   ExplicitWidth = 1267
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -71,6 +72,21 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPromoPlanMax
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaBonus
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaPenalty
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaPay
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -122,6 +138,21 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPromoPlanMax
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaBonus
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaPenalty
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummaPay
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -329,6 +360,43 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderHint = #1055#1083#1072#1085' '#1087#1086' '#1084#1072#1088#1082#1077#1090'. '#1074#1099#1087#1086#1083#1085#1077#1085' '#1044#1072'/'#1085#1077#1090
             Options.Editing = False
             Width = 80
+          end
+          object colPersentPlan: TcxGridDBColumn
+            Caption = '% '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072
+            DataBinding.FieldName = 'PersentPlan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colSummaBonus: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
+            DataBinding.FieldName = 'SummaBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colSummaPenalty: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1096#1090#1088#1072#1092#1072
+            DataBinding.FieldName = 'SummaPenalty'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colSummaPay: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075' '#1076#1083#1103' '#1090#1086#1095#1082#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaPay'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075' '#1076#1083#1103' '#1090#1086#1095#1082#1080' - '#1055#1088#1077#1084#1080#1103' - '#1064#1090#1088#1072#1092
+            Width = 70
           end
           object PartionInvNumber: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' '#8470
