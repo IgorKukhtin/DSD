@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
       , Object_Status.ValueData                                        AS StatusName
       , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat         AS TotalCount
       , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat          AS TotalSumm
-      , COALESCE(MovementFloat_TotalSummSale.ValueData,COALESCE(MovementFloat_TotalSumm.ValueData,0))::TFloat      AS TotalSummSale
+      , COALESCE(MovementFloat_TotalSummSale.ValueData,0)::TFloat      AS TotalSummSale
       , COALESCE(MovementFloat_TotalSummPrimeCost.ValueData,0)::TFloat AS TotalSummPrimeCost
       , MovementLinkObject_Unit.ObjectId                               AS UnitId
       , Object_Unit.ValueData                                          AS UnitName
