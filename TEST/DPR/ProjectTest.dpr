@@ -420,7 +420,7 @@ uses
   PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
-  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
+  StoreRealJournal in '..\..\Forms\Document\StoreRealJournal.pas' {StoreRealJournalForm: TParentForm},
   OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
@@ -905,7 +905,8 @@ uses
   PersonalUnitFounder_Object in '..\..\Forms\Guides\PersonalUnitFounder_Object.pas' {PersonalUnitFounder_ObjectForm: TParentForm},
   Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
   Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm},
-  Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm};
+  Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
+  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
