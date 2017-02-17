@@ -26,14 +26,30 @@ RETURNS TABLE (Id              Integer
 )
 AS $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbPersonalId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
   vbUserId:= lpGetUserBySession (inSession);
 
+  vbPersonalId := (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+
   -- Результат
-  RETURN;
-  -- RETURN QUERY
+  IF vbPersonalId IS NOT NULL THEN
+    RETURN QUERY
+      SELECT 
+        Object_Partner.Id
+        , Object_Partner.ObjectCode
+        , Object_Partner.ValueData
+        , Object_Partner.isErased
+        , (ObjectLink_Partner_PersonalTrade.ChildObjectId IS NOT NULL) AS isSync
+      FROM Object AS Object_Partner
+        LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
+                             ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
+                            AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                            AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId 
+      WHERE Object_Partner.DescId = zc_Object_Partner();
+  END IF;
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
