@@ -184,6 +184,14 @@
 				<Form>CompositionEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CountryBrand.pas">
+				<Form>CountryBrandForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CountryBrandEdit.pas">
+				<Form>CountryBrandEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
 				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>

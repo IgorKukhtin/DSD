@@ -70,6 +70,8 @@ uses
   Composition in '..\..\FormsBoutique\Guides\Composition.pas' {CompositionForm: TParentForm},
   CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
 
+  CountryBrand in '..\..\FormsBoutique\Guides\CountryBrand.pas' {CountryBrandForm: TParentForm},
+  CountryBrandEdit in '..\..\FormsBoutique\Guides\CountryBrandEdit.pas' {CountryBrandEditForm: TParentForm},
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},

@@ -61,6 +61,8 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadCompositionGroupFormTest;
     procedure LoadCompositionFormTest;
+    procedure LoadCountryBrandFormTest;
+
 //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
 //    procedure LoadOrderSheduleFormTest;
@@ -199,6 +201,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCompositionGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompositionGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadCountryBrandFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryBrandForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryBrandForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryBrandEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryBrandEditForm');
 end;
 
 //

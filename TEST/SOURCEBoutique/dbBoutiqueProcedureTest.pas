@@ -52,6 +52,7 @@ type
     procedure CreateInfoMoneyGroup;
     procedure CreateCompositionGroup;
     procedure CreateComposition;
+    procedure CreateCountryBrand;
   end;
 
 implementation
@@ -129,6 +130,11 @@ end;
 procedure TdbObjectProcedureTest.CreateCompositionGroup;
 begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateCountryBrand;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CountryBrand\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettingsItems;

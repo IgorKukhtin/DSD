@@ -109,6 +109,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCountryBrand: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+      FormName = 'TCountryBrandForm'
+      FormNameParam.Value = 'TCountryBrandForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -145,11 +156,8 @@ inherited MainForm: TMainForm
       object N5: TMenuItem
         Action = actComposition
       end
-    end
-    object miLoad: TMenuItem [1]
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
-      object miImportGroup: TMenuItem
-        Action = actImportGroup
+      object N7: TMenuItem
+        Action = actCountryBrand
       end
     end
     inherited miService: TMenuItem
@@ -203,13 +211,7 @@ inherited MainForm: TMainForm
       object miRole: TMenuItem [2]
         Action = actRole
       end
-      object miImportType: TMenuItem [3]
-        Action = actImportType
-      end
-      object miImportSettings: TMenuItem [4]
-        Action = actImportSettings
-      end
-      object miImportExportLink: TMenuItem [5]
+      object miImportExportLink: TMenuItem [3]
         Action = actImportExportLink
       end
     end
