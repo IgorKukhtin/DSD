@@ -405,7 +405,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1050#1055#1054' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_AccounterName: TcxGridDBColumn
@@ -416,7 +415,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1041#1091#1093#1075#1072#1083#1090#1077#1088' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_INN: TcxGridDBColumn
@@ -427,7 +425,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1030#1055#1053' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_NumberVAT: TcxGridDBColumn
@@ -438,7 +435,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1089#1074#1110#1076'. ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_BankAccount: TcxGridDBColumn
@@ -449,7 +445,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056'/'#1088' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_BankName: TcxGridDBColumn
@@ -460,7 +455,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1041#1072#1085#1082' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object PartnerMedical_MFO: TcxGridDBColumn
@@ -471,7 +465,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1060#1054' ('#1047#1054#1047')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 155
           end
           object MedicFIO: TcxGridDBColumn
