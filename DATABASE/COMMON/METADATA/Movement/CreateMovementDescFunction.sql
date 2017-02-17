@@ -248,6 +248,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_Reestr() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_Reestr', 'Реестры накладных' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Reestr');
 
+CREATE OR REPLACE FUNCTION zc_Movement_StoreReal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_StoreReal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_StoreReal', 'Фактический остаток по ТТ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_StoreReal');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

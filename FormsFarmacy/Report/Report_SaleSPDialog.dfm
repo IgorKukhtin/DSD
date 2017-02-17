@@ -325,7 +325,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPartnerMedicalForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

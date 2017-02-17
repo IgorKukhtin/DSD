@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 257
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4987,6 +4987,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actStoreReal: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1058#1058
+      FormName = 'TStoreRealJournalForm'
+      FormNameParam.Value = 'TStoreRealJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -5136,6 +5147,9 @@ inherited MainForm: TMainForm
       end
       object N109: TMenuItem
         Action = actOrderIncome
+      end
+      object miStoreReal: TMenuItem
+        Action = actStoreReal
       end
       object N41: TMenuItem
         Caption = '-'
