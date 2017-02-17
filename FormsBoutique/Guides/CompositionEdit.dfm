@@ -1,9 +1,9 @@
-object CompositionGroupEditForm: TCompositionGroupEditForm
+object CompositionEditForm: TCompositionEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 197
-  ClientWidth = 295
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072'>'
+  ClientHeight = 217
+  ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 152
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 152
+    Top = 168
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,8 +60,24 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     TabOrder = 5
     Width = 273
   end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 104
+    Caption = #1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceCompositionGroup: TcxButtonEdit
+    Left = 8
+    Top = 120
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 273
+  end
   object ActionList: TActionList
-    Left = 240
+    Left = 176
     Top = 8
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -93,7 +109,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_CompositionGroup'
+    StoredProcName = 'gpInsertUpdate_Object_Composition'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -119,6 +135,14 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCompositionGroupId'
+        Value = Null
+        Component = CompositionGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -136,12 +160,12 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_CompositionGroup'
+    StoredProcName = 'gpGet_Object_Composition'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
@@ -163,19 +187,23 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InternalCode'
+        Name = 'CompositionGroupId'
         Value = Null
+        Component = CompositionGroupGuides
+        ComponentItem = 'Key'
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InternalName'
+        Name = 'CompositionGroupName'
         Value = Null
+        Component = CompositionGroupGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 160
+    Left = 240
     Top = 8
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -190,11 +218,40 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 64
+    Left = 176
+    Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 96
-    Top = 96
+    Left = 104
+    Top = 104
+  end
+  object CompositionGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCompositionGroup
+    FormNameParam.Value = 'TCompositionGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCompositionGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CompositionGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CompositionGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 200
+    Top = 101
   end
 end

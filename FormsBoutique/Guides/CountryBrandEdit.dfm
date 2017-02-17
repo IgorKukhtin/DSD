@@ -1,7 +1,7 @@
-object CompositionGroupEditForm: TCompositionGroupEditForm
+object CountryBrandEditForm: TCountryBrandEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1090#1088#1072#1085#1091' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100'>'
   ClientHeight = 197
   ClientWidth = 295
   Color = clBtnFace
@@ -93,7 +93,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_CompositionGroup'
+    StoredProcName = 'gpInsertUpdate_Object_CountryBrand'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -136,7 +136,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_CompositionGroup'
+    StoredProcName = 'gpGet_Object_CountryBrand'
     DataSets = <>
     OutputType = otResult
     Params = <

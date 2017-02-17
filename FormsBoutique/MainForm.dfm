@@ -1,10 +1,10 @@
 inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
-  ClientHeight = 171
+  ClientHeight = 280
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 230
+  ExplicitHeight = 339
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -98,6 +98,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actComposition: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TCompositionForm'
+      FormNameParam.Value = 'TCompositionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCountryBrand: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+      FormName = 'TCountryBrandForm'
+      FormNameParam.Value = 'TCountryBrandForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -131,11 +153,11 @@ inherited MainForm: TMainForm
       object N4: TMenuItem
         Action = actCompositionGroup
       end
-    end
-    object miLoad: TMenuItem [1]
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
-      object miImportGroup: TMenuItem
-        Action = actImportGroup
+      object N5: TMenuItem
+        Action = actComposition
+      end
+      object N7: TMenuItem
+        Action = actCountryBrand
       end
     end
     inherited miService: TMenuItem
@@ -189,13 +211,7 @@ inherited MainForm: TMainForm
       object miRole: TMenuItem [2]
         Action = actRole
       end
-      object miImportType: TMenuItem [3]
-        Action = actImportType
-      end
-      object miImportSettings: TMenuItem [4]
-        Action = actImportSettings
-      end
-      object miImportExportLink: TMenuItem [5]
+      object miImportExportLink: TMenuItem [3]
         Action = actImportExportLink
       end
     end

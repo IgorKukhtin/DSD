@@ -1,7 +1,7 @@
-object CompositionGroupForm: TCompositionGroupForm
+object CountryBrandForm: TCountryBrandForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100'>'
   ClientHeight = 376
   ClientWidth = 403
   Color = clBtnFace
@@ -267,8 +267,8 @@ object CompositionGroupForm: TCompositionGroupForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCompositionGroupEditForm'
-      FormNameParam.Value = 'TCompositionGroupEditForm'
+      FormName = 'TCountryBrandEditForm'
+      FormNameParam.Value = 'TCountryBrandEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -289,8 +289,8 @@ object CompositionGroupForm: TCompositionGroupForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCompositionGroupEditForm'
-      FormNameParam.Value = 'TCompositionGroupEditForm'
+      FormName = 'TCountryBrandEditForm'
+      FormNameParam.Value = 'TCountryBrandEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -424,7 +424,7 @@ object CompositionGroupForm: TCompositionGroupForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_CompositionGroup'
+    StoredProcName = 'gpSelect_Object_CountryBrand'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -444,7 +444,7 @@ object CompositionGroupForm: TCompositionGroupForm
     Top = 88
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_CompositionGroup'
+    StoredProcName = 'gpUpdate_Object_isErased_CountryBrand'
     DataSets = <>
     OutputType = otResult
     Params = <

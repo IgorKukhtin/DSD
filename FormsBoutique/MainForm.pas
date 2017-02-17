@@ -14,13 +14,9 @@ type
   TMainForm = class(TAncestorMainForm)
     actUser: TdsdOpenForm;
     actRole: TdsdOpenForm;
-    miLoad: TMenuItem;
-    miImportGroup: TMenuItem;
     miUser: TMenuItem;
     N6: TMenuItem;
     miRole: TMenuItem;
-    miImportType: TMenuItem;
-    miImportSettings: TMenuItem;
     miImportExportLink: TMenuItem;
     N20: TMenuItem;
     N21: TMenuItem;
@@ -40,6 +36,10 @@ type
     N1: TMenuItem;
     actCompositionGroup: TdsdOpenForm;
     N4: TMenuItem;
+    actComposition: TdsdOpenForm;
+    N5: TMenuItem;
+    actCountryBrand: TdsdOpenForm;
+    N7: TMenuItem;
   private
     { Private declarations }
   public
