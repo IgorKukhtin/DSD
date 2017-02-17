@@ -89,8 +89,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
- 
-   
+
   LoadReportFromFile('Отчет движение по ОС', ReportPath + '\Отчеты (товарные)\Отчет движение по ОС.fr3');
   LoadReportFromFile('Отчет движение по товару (МО)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (МО).fr3');
   LoadReportFromFile('Отчет движение по товару (Итого)', ReportPath + '\Отчеты (товарные)\Отчет движение по товару (Итого).fr3');
