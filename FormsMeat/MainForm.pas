@@ -800,6 +800,8 @@ type
     actProductionUnionTechReceiptSiryo: TdsdOpenForm;
     miProductionUnionTechSiryo: TMenuItem;
     miProductionUnionTechReceiptSiryo: TMenuItem;
+    actStoreReal: TdsdOpenForm;
+    miStoreReal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

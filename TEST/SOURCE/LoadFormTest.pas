@@ -90,6 +90,7 @@ type
     procedure LoadOrderIncomeFormTest;
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
+    procedure LoadStoreRealFormTest;
     procedure LoadOrderTypeFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPartnerTagFormTest;
@@ -2111,6 +2112,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorage_ObjectEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectEditForm');
+end;
+
+procedure TLoadFormTest.LoadStoreRealFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStoreRealJournalForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;
