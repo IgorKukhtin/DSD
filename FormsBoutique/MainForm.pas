@@ -52,6 +52,10 @@ type
     N12: TMenuItem;
     actKassa: TdsdOpenForm;
     N13: TMenuItem;
+    actValuta: TdsdOpenForm;
+    N14: TMenuItem;
+    actMember: TdsdOpenForm;
+    N15: TMenuItem;
   private
     { Private declarations }
   public

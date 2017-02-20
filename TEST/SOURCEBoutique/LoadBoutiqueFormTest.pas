@@ -69,6 +69,9 @@ type
     procedure LoadGoodsSizeFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadKassaFormTest;
+    procedure LoadValutaFormTest;
+    procedure LoadMemberFormTest;
+
 
     //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
@@ -508,6 +511,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMeasureForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMeasureEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMeasureEditForm');
+end;
+
+procedure TLoadFormTest.LoadMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
 end;
 
 //procedure TLoadFormTest.LoadKindFormTest;
@@ -1272,6 +1283,14 @@ begin
 //  }
 end;
 
+
+procedure TLoadFormTest.LoadValutaFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TValutaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TValutaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TValutaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TValutaEditForm');
+end;
 
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);
