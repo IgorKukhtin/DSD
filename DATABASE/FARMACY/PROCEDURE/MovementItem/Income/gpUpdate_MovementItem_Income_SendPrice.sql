@@ -74,8 +74,11 @@ BEGIN
 
 
     -- Сохранили новую цену
-    PERFORM (WITH DD AS (SELECT DISTINCT MarginPercent, MinPrice FROM Object_MarginCategoryItem_View 
-                                                        WHERE MarginCategoryId = vbMarginCategoryId), 
+    PERFORM (WITH DD AS (SELECT DISTINCT MarginPercent, MinPrice
+                         FROM Object_MarginCategoryItem_View 
+                              INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
+                                                                             AND Object_MarginCategoryItem.isErased = FALSE
+                        WHERE MarginCategoryId = vbMarginCategoryId), 
          MarginCondition AS (SELECT MarginPercent, MinPrice, 
                                     COALESCE((SELECT MIN(FF.minprice) FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice), 1000000) AS MaxPrice 
                                FROM DD),

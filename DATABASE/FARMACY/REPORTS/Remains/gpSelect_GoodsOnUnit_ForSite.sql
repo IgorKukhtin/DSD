@@ -412,6 +412,8 @@ BEGIN
                      INNER JOIN ObjectLink AS ObjectLink_MarginCategoryItem_MarginCategory
                                            ON ObjectLink_MarginCategoryItem_MarginCategory.ChildObjectId = tmp.MarginCategoryId
                                           AND ObjectLink_MarginCategoryItem_MarginCategory.DescId = zc_ObjectLink_MarginCategoryItem_MarginCategory()
+                     INNER JOIN Object ON Object.Id = ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
+                                      AND Object.isErased = FALSE
                      LEFT JOIN ObjectFloat AS ObjectFloat_MinPrice
                                            ON ObjectFloat_MinPrice.ObjectId =ObjectLink_MarginCategoryItem_MarginCategory.ObjectId
                                           AND ObjectFloat_MinPrice.DescId = zc_ObjectFloat_MarginCategoryItem_MinPrice()  

@@ -77,8 +77,9 @@ BEGIN
             Object_MarginCategoryItem_View.MinPrice, 
             Object_MarginCategoryItem_View.MarginCategoryId,
             ROW_NUMBER()OVER(PARTITION BY Object_MarginCategoryItem_View.MarginCategoryId ORDER BY Object_MarginCategoryItem_View.MinPrice) as ORD
-        FROM 
-            Object_MarginCategoryItem_View
+        FROM Object_MarginCategoryItem_View
+             INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
+                                                           AND Object_MarginCategoryItem.isErased = FALSE
     ),
     MarginCondition 
     AS 

@@ -42,6 +42,8 @@ BEGIN
                                , Object_MarginCategoryItem_View.MinPrice
                                , Object_MarginCategoryItem_View.MarginCategoryId
                  FROM Object_MarginCategoryItem_View
+                      INNER JOIN Object AS Object_MarginCategoryItem ON Object_MarginCategoryItem.Id = Object_MarginCategoryItem_View.Id
+                                                                    AND Object_MarginCategoryItem.isErased = FALSE
                 )
         , MarginCondition AS (SELECT DD.MarginCategoryId, DD.MarginPercent, DD.MinPrice
                                    , COALESCE ((SELECT MIN (FF.minprice) FROM DD AS FF WHERE FF.MinPrice > DD.MinPrice AND FF.MarginCategoryId = DD.MarginCategoryId)

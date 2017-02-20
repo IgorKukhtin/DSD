@@ -43,7 +43,11 @@ BEGIN
         , Object_Partner.ValueData
         , CAST('' AS TVarChar) AS Address
         , CAST('' AS TVarChar) AS GPS
-        , CAST('' AS TVarChar) AS Schedule
+          -- !!!ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!!
+        , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0
+                    THEN 't;f;t;f;t;f;f;'
+               ELSE ''
+          END :: TVarChar AS Schedule
         , CAST(0.0 AS TFloat) AS DebtSum
         , CAST(0.0 AS TFloat) AS OverSum
         , CAST(0 AS Integer) AS OverDays
@@ -54,7 +58,42 @@ BEGIN
         , CAST(0 AS Integer) AS PriceListId
         , CAST(0 AS Integer) AS PriceListId_ret
         , Object_Partner.isErased
-        , (ObjectLink_Partner_PersonalTrade.ChildObjectId IS NOT NULL) AS isSync
+        , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isSync
+      FROM Object AS Object_Partner
+        LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
+                             ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
+                            AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                            AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+        LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                             ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                             ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+      WHERE Object_Partner.DescId = zc_Object_Partner()
+     -- !!!ÂÑ¨ - ÂÐÅÌÅÍÍÎ - ÄËß ÒÅÑÒÀ!!!
+        AND ObjectLink_Partner_PersonalTrade.ChildObjectId > 0
+     UNION
+      SELECT *
+      FROM
+     (SELECT 
+        Object_Partner.Id
+        , Object_Partner.ObjectCode
+        , Object_Partner.ValueData
+        , CAST('' AS TVarChar) AS Address
+        , CAST('' AS TVarChar) AS GPS
+        , '' :: TVarChar AS Schedule
+        , CAST(0.0 AS TFloat) AS DebtSum
+        , CAST(0.0 AS TFloat) AS OverSum
+        , CAST(0 AS Integer) AS OverDays
+        , CAST(0 AS Integer) AS PrepareDayCount
+        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+        , CAST(0 AS Integer) AS RouteId
+        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+        , CAST(0 AS Integer) AS PriceListId
+        , CAST(0 AS Integer) AS PriceListId_ret
+        , Object_Partner.isErased
+        , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isSync
       FROM Object AS Object_Partner
         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
@@ -66,7 +105,11 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                              ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-      WHERE Object_Partner.DescId = zc_Object_Partner();
+      WHERE Object_Partner.DescId = zc_Object_Partner()
+        AND ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
+      LIMIT 10) AS tmp
+     ;
+
   END IF;
 
 END; $BODY$
@@ -79,4 +122,4 @@ END; $BODY$
 */
 
 -- òåñò
--- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin()) WHERE isSync = TRUE
