@@ -3,6 +3,9 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
  INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
@@ -12,6 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inINN                 TVarChar  ,    -- Код ИНН
     IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
     IN inCard                TVarChar  ,    -- № карточного счета ЗП
+    IN inCardSecond          TVarChar  ,    -- № карточного счета ЗП - вторая форма
+    IN inCardChild           TVarChar  ,    -- № карточного счета ЗП - - алименты (удержание)
     IN inComment             TVarChar  ,    -- Примечание 
     IN inInfoMoneyId         Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
@@ -70,6 +75,10 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Card(), ioId, inCard);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardSecond(), ioId, inCardSecond);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardChild(), ioId, inCardChild);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
    
     -- сохранили свойство <>
@@ -90,6 +99,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.02.17         * add CardSecond,inCardChild
  25.03.16         * add Card
  19.02.15         * add inInfoMoneyId
  12.09.14                                        * add inIsOfficial

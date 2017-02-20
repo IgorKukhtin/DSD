@@ -119,7 +119,6 @@ uses
   RouteSorting_Object in '..\..\Forms\Guides\RouteSorting_Object.pas' {RouteSorting_ObjectForm},
   RouteSortingEdit in '..\..\Forms\Guides\RouteSortingEdit.pas' {RouteSortingEditForm},
   Member_ObjectDesc in '..\..\Forms\Guides\Member_ObjectDesc.pas' {Member_ObjectDescForm},
-  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm},
   CarModel in '..\..\Forms\CarModel.pas' {CarModelForm},
   CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
   Car in '..\..\Forms\Guides\Car.pas' {CarForm},
@@ -906,7 +905,8 @@ uses
   Member_ObjectTo in '..\..\Forms\Guides\Member_ObjectTo.pas' {Member_ObjectToForm: TParentForm},
   Member_ObjectToEdit in '..\..\Forms\Guides\Member_ObjectToEdit.pas' {Member_ObjectToEditForm: TParentForm},
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
-  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm};
+  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
+  MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

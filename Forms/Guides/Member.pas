@@ -77,6 +77,7 @@ type
     UnitName: TcxGridDBColumn;
     PositionName: TcxGridDBColumn;
     isDateOut: TcxGridDBColumn;
+    clCardSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -299,9 +299,6 @@
 			<DCCReference Include="..\..\Forms\Guides\Member_ObjectDesc.pas">
 				<Form>Member_ObjectDescForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
-				<Form>MemberEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\CarModel.pas">
 				<Form>CarModelForm</Form>
 			</DCCReference>
@@ -2981,6 +2978,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
 				<Form>OrderExternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
+				<Form>MemberEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Member(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-            , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
+            , INN TVarChar, DriverCertificate TVarChar
+            , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
+            , Comment TVarChar
             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
             , isOfficial Boolean) AS
 $BODY$
@@ -27,6 +29,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Card
+           , CAST ('' as TVarChar)  AS CardSecond
+           , CAST ('' as TVarChar)  AS CardChild
            , CAST ('' as TVarChar)  AS Comment
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
@@ -43,6 +47,8 @@ BEGIN
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
+         , ObjectString_CardSecond.ValueData        AS CardSecond3
+         , ObjectString_CardChild.ValueData         AS CardChild
          , ObjectString_Comment.ValueData           AS Comment
          
          , Object_InfoMoney_View.InfoMoneyId
@@ -63,6 +69,12 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Card
                                  ON ObjectString_Card.ObjectId = Object_Member.Id 
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
+          LEFT JOIN ObjectString AS ObjectString_CardSecond
+                                 ON ObjectString_CardSecond.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
+          LEFT JOIN ObjectString AS ObjectString_CardChild
+                                 ON ObjectString_CardChild.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardChild.DescId = zc_ObjectString_Member_CardChild()
 
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate 
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
@@ -88,6 +100,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.02.17         * add CardSecond
  19.02.15         * add InfoMoney
  12.09.14                                        * add isOfficial
  01.10.13         * add DriverCertificate, Comment             

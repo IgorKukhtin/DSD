@@ -8,7 +8,8 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit;
+  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit,
+  cxCheckBox;
 
 type
   TPersonalServiceListEditForm = class(TParentForm)
@@ -39,6 +40,7 @@ type
     cxLabel16: TcxLabel;
     edBankId: TcxButtonEdit;
     BankGuides: TdsdGuides;
+    ceisSecond: TcxCheckBox;
   private
     { Private declarations }
   public
