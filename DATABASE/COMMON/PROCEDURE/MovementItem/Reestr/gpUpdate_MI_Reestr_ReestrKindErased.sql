@@ -15,7 +15,7 @@ $BODY$
    DECLARE vbId_miSale Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Reestr());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Reestr());
      
 
     -- ищем строку Реестра с таким док продажи

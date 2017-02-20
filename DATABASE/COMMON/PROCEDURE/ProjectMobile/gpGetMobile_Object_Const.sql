@@ -35,6 +35,9 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
+-- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!! - Волошина Е.А.
+if inSession = '5' then  inSession :=  '140094'; end if;
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
      vbUserId:= lpGetUserBySession (inSession);
