@@ -206,6 +206,7 @@ BEGIN
                                                                   , inIsMain             := MIBoolean_Main.ValueData
                                                                   , inSummService        := 0
                                                                   , inSummCardRecalc     := 0
+                                                                  , inSummCardSecondRecalc := 0
                                                                   , inSummNalogRecalc    := 0
                                                                   , inSummMinus          := 0
                                                                   , inSummAdd            := 0

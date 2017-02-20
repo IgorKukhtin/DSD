@@ -22,8 +22,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 347
-        ExplicitLeft = -3
-        ExplicitTop = 3
         ExplicitWidth = 1221
         ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -126,6 +124,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummNalogRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecondRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -222,6 +230,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummNalogRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecond
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummCardSecondRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -316,7 +334,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object colTotalSummCard: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' -  '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
             DataBinding.FieldName = 'TotalSummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -326,7 +344,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 92
           end
           object colTotalSummCardRecalc: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' ('#1074#1074#1086#1076') -  '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
+            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053' ('#1074#1074#1086#1076') - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
             DataBinding.FieldName = 'TotalSummCardRecalc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

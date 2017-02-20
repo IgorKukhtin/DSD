@@ -16,7 +16,9 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MemberId Integer, MemberName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat, SummCard TFloat, SummCardRecalc TFloat, SummNalog TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, SummService TFloat
+             , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat
+             , SummNalog TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , TotalSummChild TFloat, SummDiff TFloat
@@ -186,6 +188,8 @@ BEGIN
             , MIFloat_SummService.ValueData     AS SummService
             , MIFloat_SummCard.ValueData        AS SummCard
             , MIFloat_SummCardRecalc.ValueData  AS SummCardRecalc
+            , MIFloat_SummCardSecond.ValueData        AS SummCardSecond
+            , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
             , MIFloat_SummNalog.ValueData       AS SummNalog
             , MIFloat_SummNalogRecalc.ValueData AS SummNalogRecalc
             , MIFloat_SummMinus.ValueData       AS SummMinus
@@ -229,7 +233,14 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                         ON MIFloat_SummCardRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
-                                                                              
+                                            
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                        ON MIFloat_SummCardSecond.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                        ON MIFloat_SummCardSecondRecalc.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+                                  
             LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                         ON MIFloat_SummNalog.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
@@ -313,6 +324,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.02.17         *
  21.06.16         *
  20.04.16         * add SummHoliday
  25.03.16         * add Card

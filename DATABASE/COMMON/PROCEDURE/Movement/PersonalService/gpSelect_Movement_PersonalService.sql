@@ -13,8 +13,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
-             , TotalSummCardRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
+             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
+             , TotalSummCard TFloat, TotalSummCardSecond TFloat,TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
+             , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
@@ -73,14 +74,16 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0)) :: TFloat AS TotalSummToPay
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
-           , MovementFloat_TotalSummService.ValueData   AS TotalSummService
-           , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
-           , MovementFloat_TotalSummNalog.ValueData     AS TotalSummNalog
-           , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
-           , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
+           , MovementFloat_TotalSummService.ValueData    AS TotalSummService
+           , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard
+           , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond
+           , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog
+           , MovementFloat_TotalSummMinus.ValueData      AS TotalSummMinus
+           , MovementFloat_TotalSummAdd.ValueData        AS TotalSummAdd
 
            , MovementFloat_TotalSummHoliday.ValueData     AS TotalSummHoliday
            , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
+           , MovementFloat_TotalSummCardSecondRecalc.ValueData  AS TotalSummCardSecondRecalc
            , MovementFloat_TotalSummNalogRecalc.ValueData AS TotalSummNalogRecalc
            , MovementFloat_TotalSummSocialIn.ValueData    AS TotalSummSocialIn
            , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
@@ -135,6 +138,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
+                                    ON MovementFloat_TotalSummCardSecond.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalog
                                     ON MovementFloat_TotalSummNalog.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummNalog.DescId = zc_MovementFloat_TotalSummNalog()
@@ -152,6 +158,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardRecalc
                                     ON MovementFloat_TotalSummCardRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummCardRecalc.DescId = zc_MovementFloat_TotalSummCardRecalc()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecondRecalc
+                                    ON MovementFloat_TotalSummCardSecondRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCardSecondRecalc.DescId = zc_MovementFloat_TotalSummCardSecondRecalc()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummNalogRecalc
                                     ON MovementFloat_TotalSummNalogRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummNalogRecalc.DescId = zc_MovementFloat_TotalSummNalogRecalc()
@@ -209,6 +218,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.02.17         * add CardSecond
  07.10.16         * add inJuridicalBasisId
  21.06.16         *
  20.04.16         *

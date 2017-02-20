@@ -1484,10 +1484,6 @@
 				<Form>PersonalServiceJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
-				<Form>PersonalServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
 				<Form>PersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -2982,6 +2978,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
+				<Form>PersonalServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

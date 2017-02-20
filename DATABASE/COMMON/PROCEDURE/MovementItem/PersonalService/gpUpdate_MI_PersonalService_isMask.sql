@@ -27,7 +27,7 @@ BEGIN
       -- –ÂÁÛÎ¸Ú‡Ú
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
-             , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
+             , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat) ON COMMIT DROP;
        
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
@@ -54,7 +54,7 @@ BEGIN
                              , MILinkObject_InfoMoney.ObjectId
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
-                           , Amount, SummService, SummCardRecalc, SummNalogRecalc, SummMinus, SummAdd
+                           , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummNalogRecalc, SummMinus, SummAdd
                            , SummHoliday, SummSocialIn, SummSocialAdd, SummChild)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
@@ -67,6 +67,7 @@ BEGIN
                  , COALESCE (MovementItem.Amount, 0):: TFloat 
                  , COALESCE (MIFloat_SummService.ValueData, 0):: TFloat     AS SummService
                  , COALESCE (MIFloat_SummCardRecalc.ValueData, 0):: TFloat  AS SummCardRecalc        
+                 , COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0):: TFloat  AS SummCardSecondRecalc    
                  , COALESCE (MIFloat_SummNalogRecalc.ValueData, 0):: TFloat AS SummNalogRecalc        
                  , COALESCE (MIFloat_SummMinus.ValueData, 0):: TFloat       AS SummMinus
                  , COALESCE (MIFloat_SummAdd.ValueData, 0):: TFloat         AS SummAdd
@@ -101,6 +102,9 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                              ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                             ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
                  LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                              ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
@@ -143,6 +147,7 @@ BEGIN
                                                         , inisMain             := isMain
                                                         , inSummService        := SummService
                                                         , inSummCardRecalc     := SummCardRecalc
+                                                        , inSummCardSecondRecalc     := SummCardSecondRecalc
                                                         , inSummNalogRecalc    := SummNalogRecalc
                                                         , inSummMinus          := SummMinus
                                                         , inSummAdd            := SummAdd
@@ -169,6 +174,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.02.17         * add SummCardSecondRecalc
  20.04.16         * inSummHoliday
  23.05.15                                        *
  24.10.14         * 
