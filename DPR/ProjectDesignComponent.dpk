@@ -30,8 +30,7 @@ package ProjectDesignComponent;
 requires
   rtl,
   ProjectComponent,
-  DesignIde,
-  ZLibEx;
+  DesignIde;
 
 contains
   dsdComponentEditor in '..\SOURCE\COMPONENT\dsdComponentEditor.pas';

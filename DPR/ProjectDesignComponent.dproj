@@ -77,7 +77,6 @@
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="ProjectComponent.dcp"/>
 			<DCCReference Include="DesignIde.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdComponentEditor.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
