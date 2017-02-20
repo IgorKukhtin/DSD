@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_InfoMoney()
 
 RETURNS TABLE (InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar) AS
-   
-$BODY$BEGIN
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar)
+  AS  
+$BODY$
+BEGIN
 
      -- Выбираем данные для справочника уп-назначения (на самом деле это три справочника)
      RETURN QUERY 
@@ -39,10 +40,10 @@ $BODY$BEGIN
 
      WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney();
           
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfSelect_Object_InfoMoney () OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

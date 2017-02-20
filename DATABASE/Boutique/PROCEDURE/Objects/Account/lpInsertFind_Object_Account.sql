@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_Account(
     IN inInsert                 Boolean  DEFAULT FALSE , -- 
     IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
-  RETURNS Integer AS
+  RETURNS Integer
+  AS
 $BODY$
    DECLARE vbAccountDirectionId Integer;
    DECLARE vbAccountDirectionCode Integer;
@@ -157,12 +158,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer)  OWNER TO postgres;
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   
  31.01.14                                        * add проверка - статья не должна быть удалена
  25.01.14                                        * add !!!запрет вставки счета!!!, т.е. inInsert = FALSE
  22.12.13                                        * add inInsert

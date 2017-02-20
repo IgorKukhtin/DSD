@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Measure(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, InternalCode TVarChar, InternalName TVarChar) 
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -51,12 +51,9 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 09.10.14                                                       *
- 13.06.13          *
- 00.06.13
- 18.06.13                      *  COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+16.02.17                                                          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Measure('2')
+-- SELECT * FROM gpSelect_Measure (1,'2')

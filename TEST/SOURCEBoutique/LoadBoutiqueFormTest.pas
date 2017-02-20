@@ -60,7 +60,17 @@ type
 //    procedure LoadMarginReport;
     procedure LoadMeasureFormTest;
     procedure LoadCompositionGroupFormTest;
-//    procedure LoadMemberFormTest;
+    procedure LoadCompositionFormTest;
+    procedure LoadCountryBrandFormTest;
+    procedure LoadBrandFormTest;
+    procedure LoadFabrikaFormTest;
+    procedure LoadLineFabricaFormTest;
+    procedure LoadGoodsInfoFormTest;
+    procedure LoadGoodsSizeFormTest;
+    procedure LoadGoodsGroupFormTest;
+    procedure LoadKassaFormTest;
+
+    //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
 //    procedure LoadOrderSheduleFormTest;
 //    procedure LoadOrderInternalFormTest;
@@ -184,12 +194,85 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
 end;
+
+procedure TLoadFormTest.LoadBrandFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBrandEditForm');
+end;
+
+procedure TLoadFormTest.LoadCompositionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCompositionEditForm');
+end;
+
 procedure TLoadFormTest.LoadCompositionGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompositionGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCompositionGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadCountryBrandFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryBrandForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryBrandForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryBrandEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryBrandEditForm');
+end;
+
+procedure TLoadFormTest.LoadFabrikaFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFabrikaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFabrikaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFabrikaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFabrikaEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsInfoFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsInfoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsInfoForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsInfoEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsInfoEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsSizeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeEditForm');
+end;
+
+procedure TLoadFormTest.LoadKassaFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKassaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TKassaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKassaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TKassaEditForm');
+end;
+
+procedure TLoadFormTest.LoadLineFabricaFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLineFabricaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLineFabricaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLineFabricaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLineFabricaEditForm');
 end;
 
 //
@@ -1106,94 +1189,10 @@ end;
 //  TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentForm');
 //end;
 //
-//procedure TLoadFormTest.LoadChangeIncomePaymentKindFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangeIncomePaymentKindForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TChangeIncomePaymentKindForm');
-//end;
+
+
 //
-//procedure TLoadFormTest.LoadCheckDeferredFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckDeferredForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TCheckDeferredForm');
-//end;
-//
-//procedure TLoadFormTest.LoadPriceListFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
-//end;
-//
-//procedure TLoadFormTest.LoadSaleFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-//end;
-//
-//procedure TLoadFormTest.LoadSendFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-//end;
-//
-//procedure TLoadFormTest.LoadSendOnPriceFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
-//end;
-//
-//procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
-//
-//end;
-//
-//procedure TLoadFormTest.LoadSPObjectFormTest;
-//begin
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGroupMemberSPEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TGroupMemberSPEditForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TKindOutSPForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TKindOutSPEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TKindOutSPEditForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TBrandSPForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBrandSPEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TBrandSPEditForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TIntenalSPForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntenalSPEditForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TIntenalSPEditForm');
-//
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TGoodsSPForm');
-//  // отчет по продажам товара соц. проекта
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPForm');
-//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckSPDialogForm'));
-//  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckSPDialogForm');
-//
-//end;
+
 //
 procedure TLoadFormTest.LoadServiceFormTest;
 begin

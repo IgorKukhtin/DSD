@@ -1,7 +1,7 @@
 object CompositionGroupForm: TCompositionGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1072' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
   ClientWidth = 403
   Color = clBtnFace
@@ -75,14 +75,14 @@ object CompositionGroupForm: TCompositionGroupForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 224
+    Left = 104
+    Top = 128
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 184
+    Left = 32
+    Top = 128
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -440,8 +440,8 @@ object CompositionGroupForm: TCompositionGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 128
+    Left = 216
+    Top = 88
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_CompositionGroup'
@@ -457,12 +457,12 @@ object CompositionGroupForm: TCompositionGroupForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 144
+    Left = 296
+    Top = 88
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 200
+    Left = 216
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -489,7 +489,7 @@ object CompositionGroupForm: TCompositionGroupForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 104
-    Top = 248
+    Left = 216
+    Top = 160
   end
 end

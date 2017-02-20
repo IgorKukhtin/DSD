@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
     IN inInfoMoneyId            Integer,    -- Управленческие аналитики
     IN inSession                TVarChar    -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS Integer 
+  AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
@@ -60,11 +61,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
+
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
  18.04.14                                        * rem !!! это временно !!!
  31.01.14                                        * add zc_ObjectBoolean_Account_onComplete
  25.08.13                                        * !!! это временно !!!

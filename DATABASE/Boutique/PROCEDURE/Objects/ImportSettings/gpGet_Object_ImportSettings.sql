@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartRow Integer, HDR Boolean, 
                Directory TVarChar, Query TBlob, 
                isErased boolean, 
-               ProcedureName TVarChar) AS
+               ProcedureName TVarChar) 
+  AS
 $BODY$
 BEGIN
 
@@ -53,7 +54,6 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_ImportSettings(Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

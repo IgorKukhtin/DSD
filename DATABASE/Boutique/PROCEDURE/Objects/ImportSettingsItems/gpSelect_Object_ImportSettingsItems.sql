@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, ParamValue TVarChar, DefaultValue TVarChar,
                ParamType TVarChar,
                ParamNumber Integer,
                UserParamName TVarChar,
-               isErased boolean) AS
+               isErased boolean) 
+  AS
 $BODY$
 BEGIN
 
@@ -44,7 +45,6 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettingsItems(Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

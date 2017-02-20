@@ -10,6 +10,7 @@ $BODY$
   DECLARE vbMovementDescId Integer;
 
   DECLARE vbTotalCountSale         TFloat;
+  DECLARE vbTotalSumm              TFloat;
   DECLARE vbTotalSummSale          TFloat;
   DECLARE vbTotalSummPrimeCostSale TFloat;
   
@@ -22,8 +23,10 @@ BEGIN
     SELECT 
         SUM(COALESCE(MI_Sale.Amount,0))
        ,SUM(COALESCE(MI_Sale.Summ,0)) 
+       ,SUM(COALESCE(MI_Sale.Amount,0) * COALESCE(MI_Sale.PriceSale,0))
     INTO 
         vbTotalCountSale
+       ,vbTotalSumm
        ,vbTotalSummSale
     FROM 
         MovementItem_Sale_View AS MI_Sale
@@ -35,7 +38,9 @@ BEGIN
     -- Сохранили свойство <Итого количество>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbTotalCountSale);
     -- Сохранили свойство <Итого Сумма>
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSummSale);
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbTotalSumm);
+    -- Сохранили свойство <Итого Сумма без скидки>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSale(), inMovementId, vbTotalSummSale);
 
     IF EXISTS(SELECT 1 
               FROM Movement_Sale_View 

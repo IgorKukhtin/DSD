@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                EmailId Integer, EmailName TVarChar,
                EmailKindId Integer, EmailKindName TVarChar,
                isMultiLoad Boolean,
-               isErased Boolean) AS
+               isErased Boolean) 
+  AS
 $BODY$
 BEGIN
 
@@ -101,7 +102,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ImportSettings (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

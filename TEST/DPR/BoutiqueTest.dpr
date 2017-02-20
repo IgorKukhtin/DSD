@@ -14,7 +14,9 @@ uses
   ProcessTest in '..\SOURCEBoutique\Process\ProcessTest.pas',
   dbCreateViewTest in '..\SOURCEBoutique\View\dbCreateViewTest.pas',
   DefaultsTest in '..\SOURCEBoutique\Defaults\DefaultsTest.pas',
+  { Forms }
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
+
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
@@ -65,7 +67,32 @@ uses
   CompositionGroup in '..\..\FormsBoutique\Guides\CompositionGroup.pas' {CompositionGroupForm: TParentForm},
   CompositionGroupEdit in '..\..\FormsBoutique\Guides\CompositionGroupEdit.pas' {CompositionGroupEditForm: TParentForm},
 
+  Composition in '..\..\FormsBoutique\Guides\Composition.pas' {CompositionForm: TParentForm},
+  CompositionEdit in '..\..\FormsBoutique\Guides\CompositionEdit.pas' {CompositionEditForm: TParentForm},
 
+  CountryBrand in '..\..\FormsBoutique\Guides\CountryBrand.pas' {CountryBrandForm: TParentForm},
+  CountryBrandEdit in '..\..\FormsBoutique\Guides\CountryBrandEdit.pas' {CountryBrandEditForm: TParentForm},
+
+  Brand in '..\..\FormsBoutique\Guides\Brand.pas' {BrandForm: TParentForm},
+  BrandEdit in '..\..\FormsBoutique\Guides\BrandEdit.pas' {BrandEditForm: TParentForm},
+
+  Fabrika in '..\..\FormsBoutique\Guides\Fabrika.pas' {FabrikaForm: TParentForm},
+  FabrikaEdit in '..\..\FormsBoutique\Guides\FabrikaEdit.pas' {FabrikaEditForm: TParentForm},
+
+  LineFabrica in '..\..\FormsBoutique\Guides\LineFabrica.pas' {LineFabricaForm: TParentForm},
+  LineFabricaEdit in '..\..\FormsBoutique\Guides\LineFabricaEdit.pas' {LineFabricaEditForm: TParentForm},
+
+  GoodsInfo in '..\..\FormsBoutique\Guides\GoodsInfo.pas' {GoodsInfoForm: TParentForm},
+  GoodsInfoEdit in '..\..\FormsBoutique\Guides\GoodsInfoEdit.pas' {GoodsInfoEditForm: TParentForm},
+
+  GoodsSize in '..\..\FormsBoutique\Guides\GoodsSize.pas' {GoodsSizeForm: TParentForm},
+  GoodsSizeEdit in '..\..\FormsBoutique\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
+
+  GoodsGroup in '..\..\FormsBoutique\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroupEdit in '..\..\FormsBoutique\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
+
+  Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
+  KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},

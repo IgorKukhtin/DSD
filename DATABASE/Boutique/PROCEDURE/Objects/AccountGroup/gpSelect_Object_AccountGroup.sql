@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_AccountGroup(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
-AS
+  AS
 $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -22,14 +22,14 @@ BEGIN
      FROM Object AS Object_AccountGroup
      WHERE Object_AccountGroup.DescId = zc_Object_AccountGroup();
   
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_AccountGroup (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  21.06.13          * zc_Enum_Process_Select_Object_AccountGroup()
  17.06.13          *
 */

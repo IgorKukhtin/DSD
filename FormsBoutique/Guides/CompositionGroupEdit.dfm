@@ -1,7 +1,7 @@
 object CompositionGroupEditForm: TCompositionGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1045#1076#1080#1085#1080#1094#1091' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1076#1083#1103' '#1089#1086#1089#1090#1072#1074#1072' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 197
   ClientWidth = 295
   Color = clBtnFace
@@ -61,8 +61,8 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     Width = 273
   end
   object ActionList: TActionList
-    Left = 152
-    Top = 56
+    Left = 240
+    Top = 8
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -175,8 +175,8 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 160
+    Top = 8
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -190,11 +190,11 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 104
+    Left = 240
+    Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 96
+    Top = 96
   end
 end

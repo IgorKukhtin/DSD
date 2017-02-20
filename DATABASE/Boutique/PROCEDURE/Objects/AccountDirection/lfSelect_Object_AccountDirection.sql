@@ -5,9 +5,11 @@
 CREATE OR REPLACE FUNCTION lfSelect_Object_AccountDirection()
 
 RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupName TVarChar, 
-               AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar) AS
+               AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar) 
+  AS
    
-$BODY$BEGIN
+$BODY$
+BEGIN
 
      -- Выбираем и группируем данные из справочника Аналитики счетов - направления (по двум справочникам)
 
@@ -27,15 +29,16 @@ $BODY$BEGIN
              , lfObject_Account.AccountDirectionId, lfObject_Account.AccountDirectionCode, lfObject_Account.AccountDirectionName;
 
  
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfSelect_Object_AccountDirection() OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  29.06.13          *                            
 
 */

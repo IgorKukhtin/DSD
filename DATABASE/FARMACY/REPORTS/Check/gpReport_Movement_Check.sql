@@ -35,6 +35,11 @@ RETURNS TABLE (
   AmountPromo           TFloat,
   AmountPromoPlanMax    TFloat,
 
+  PersentPlan           TFloat,   -- Процент выполнения
+  SummaBonus            TFloat,   -- сумма премии
+  SummaPenalty          TFloat,   -- сумма штрафа
+  SummaPay              TFloat,   -- Итог для точки - Премия минус Штраф равно разница 
+
   isPromoUnit           Boolean,
   isPromoPlanMax        Boolean,
 
@@ -203,6 +208,41 @@ BEGIN
                          GROUP BY tmpMovPromoUnit.GoodsId
                          )
 
+   , tmpDataRez AS (SELECT tmpData.MovementId_Income
+                         , tmpData.MovementId_find
+                         , tmpData.JuridicalId_Income
+                         , tmpData.NDSKindId_Income
+                         , tmpData.GoodsId
+                         , tmpData.Summa
+                         , tmpData.SummaWithOutVAT
+                         , tmpData.SummaWithVAT
+                         , tmpData.Amount
+                         , tmpData.SummaSale
+                         , tmpData.isPrice
+                         , tmpData.OurJuridicalId_Income
+                         , tmpData.ToId_Income
+                         , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
+                         , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale       / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
+                         , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
+                         , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
+                    FROM tmpData
+                    )
+
+     , tmpPrice AS ( SELECT tmp.GoodsId
+                          , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) AS Price
+                     FROM (SELECT DISTINCT tmpPromoUnit.GoodsId FROM tmpPromoUnit) AS tmp
+                          LEFT JOIN Object_Price_View AS Object_Price
+                                                      ON Object_Price.GoodsId  = tmp.GoodsId
+                                                     AND Object_Price.UnitId = inUnitId 
+                          -- получаем значения цены из истории значений на кон.дату
+                          LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                  ON ObjectHistory_Price.ObjectId = Object_Price.Id
+                                                 AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                 AND inDateFinal >= ObjectHistory_Price.StartDate AND inDateFinal < ObjectHistory_Price.EndDate
+                          LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                            ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                           AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                    )
 
         -- результат
         SELECT
@@ -218,11 +258,10 @@ BEGIN
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar           AS ConditionsKeepName           
 
            , tmpData.Amount :: TFloat AS Amount
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa           / tmpData.Amount ELSE 0 END :: TFloat AS Price
-           --, CASE WHEN tmpData.Amount <> 0 THEN tmpData.Summa_original  / tmpData.Amount ELSE 0 END :: TFloat AS Price_original
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaSale       / tmpData.Amount ELSE 0 END :: TFloat AS PriceSale
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithVAT    / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithVAT
-           , CASE WHEN tmpData.Amount <> 0 THEN tmpData.SummaWithOutVAT / tmpData.Amount ELSE 0 END :: TFloat AS PriceWithOutVAT
+           , tmpData.Price
+           , COALESCE(tmpData.PriceSale,tmpPrice.Price) ::TFloat  AS PriceSale
+           , tmpData.PriceWithVAT
+           , tmpData.PriceWithOutVAT
 
            , tmpData.Summa           :: TFloat AS Summa
            , tmpData.SummaSale       :: TFloat AS SummaSale
@@ -234,8 +273,27 @@ BEGIN
 
            , tmpPromoUnit.Amount        :: TFloat AS AmountPromo
            , tmpPromoUnit.AmountPlanMax :: TFloat AS AmountPromoPlanMax
-           , CASE WHEN (tmpData.Amount - tmpPromoUnit.Amount) >= 0 THEN TRUE ELSE FALSE END  AS isPromoUnit
-           , CASE WHEN (tmpData.Amount - tmpPromoUnit.AmountPlanMax) >= 0 THEN TRUE ELSE FALSE END  AS isPromoPlanMax
+
+           , CAST ( (CASE WHEN COALESCE (tmpPromoUnit.Amount,0) <> 0 THEN tmpData.Amount*100 /tmpPromoUnit.Amount ELSE 0 END) AS NUMERIC (16,0) )  ::TFloat AS PersentPlan  -- Процент выполнения
+           , CAST ( (CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.AmountPlanMax) >= 0 THEN tmpData.SummaSale/100 * 3 ELSE 0 END) AS NUMERIC (16,2) )   ::TFloat AS SummaBonus               -- сумма премии
+           , CAST ( (CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.Amount) < 0 
+                          THEN (tmpPromoUnit.Amount - COALESCE(tmpData.Amount,0)) * COALESCE(tmpData.PriceSale,tmpPrice.Price) / 100 * 10
+                          ELSE 0 END) AS NUMERIC (16,2) )   ::TFloat AS SummaPenalty             -- сумма штрафа
+           , CAST (CASE WHEN (CASE WHEN COALESCE (tmpPromoUnit.Amount,0) <> 0 THEN COALESCE(tmpData.Amount,0) * 100 /tmpPromoUnit.Amount ELSE 0 END)  >= 90
+                        THEN
+                            ( (CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.AmountPlanMax) >= 0 THEN tmpData.SummaSale/100 * 3 ELSE 0 END)
+                             - 
+                              (CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.Amount) < 0 
+                                    THEN (tmpPromoUnit.Amount - COALESCE(tmpData.Amount,0)) * COALESCE(tmpData.PriceSale,tmpPrice.Price) / 100 * 10
+                                    ELSE 0 END)
+                             )
+                        ELSE (CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.Amount) < 0 
+                                    THEN (tmpPromoUnit.Amount - COALESCE(tmpData.Amount,0)) * COALESCE(tmpData.PriceSale,tmpPrice.Price) / 100 * 10
+                                    ELSE 0 END) * (-1)
+                    END  AS NUMERIC (16,2) )   ::TFloat AS SummaPay                                  -- Итог для точки - Премия минус Штраф равно разница 
+
+           , CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.Amount) >= 0 THEN TRUE ELSE FALSE END  AS isPromoUnit
+           , CASE WHEN (COALESCE(tmpData.Amount,0) - tmpPromoUnit.AmountPlanMax) >= 0 THEN TRUE ELSE FALSE END  AS isPromoPlanMax
 
            , MovementDesc_Income.ItemName AS PartionDescName
            , Movement_Income.InvNumber    AS PartionInvNumber
@@ -246,12 +304,12 @@ BEGIN
 
            , Object_To_Income.ValueData              AS UnitName
            , Object_OurJuridical_Income.ValueData    AS OurJuridicalName
-        FROM tmpData
+        FROM tmpDataRez AS tmpData
              LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
              LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
 
              FUll JOIN tmpPromoUnit ON tmpPromoUnit.GoodsId = tmpData.GoodsId
-
+          
              LEFT JOIN Object_Goods_View ON Object_Goods_View.Id = COALESCE (tmpData.GoodsId,tmpPromoUnit.GoodsId)
 
              LEFT JOIN Object AS Object_To_Income ON Object_To_Income.Id = tmpData.ToId_Income
@@ -267,7 +325,8 @@ BEGIN
                                   ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
                                  AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
-
+ 
+             LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpPromoUnit.GoodsId
         --     FUll JOIN tmpPromoUnit ON tmpPromoUnit.GoodsId = tmpData.GoodsId
         ORDER BY
             GoodsGroupName, GoodsName;
@@ -278,6 +337,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 17.02.17         *
  12.01.17         *
  14.03.16                                        * ALL
  28.01.16         * 

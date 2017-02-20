@@ -51,6 +51,15 @@ type
     procedure CreateInfoMoneyDestination;
     procedure CreateInfoMoneyGroup;
     procedure CreateCompositionGroup;
+    procedure CreateComposition;
+    procedure CreateCountryBrand;
+    procedure CreateBrand;
+    procedure CreateFabrika;
+    procedure CreateLineFabrica;
+    procedure CreateGoodsInfo;
+    procedure CreateGoodsSize;
+    procedure CreateGoodsGroup;
+    procedure CreateKassa;
   end;
 
 implementation
@@ -110,6 +119,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\AccountKind\');
 end;
 
+procedure TdbObjectProcedureTest.CreateBrand;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Brand\');
+end;
+
 procedure TdbObjectProcedureTest.CreateAccount;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Account\');
@@ -120,9 +134,39 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
 end;
 
+procedure TdbObjectProcedureTest.CreateComposition;
+begin
+DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
+end;
+
 procedure TdbObjectProcedureTest.CreateCompositionGroup;
 begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateCountryBrand;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CountryBrand\');
+end;
+
+procedure TdbObjectProcedureTest.CreateFabrika;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');
+end;
+
+procedure TdbObjectProcedureTest.CreateGoodsGroup;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateGoodsInfo;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsInfo\');
+end;
+
+procedure TdbObjectProcedureTest.CreateGoodsSize;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsSize\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettingsItems;
@@ -143,6 +187,16 @@ end;
 procedure TdbObjectProcedureTest.CreateInfoMoneyGroup;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoneyGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateKassa;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
+end;
+
+procedure TdbObjectProcedureTest.CreateLineFabrica;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\LineFabrica\');
 end;
 
 procedure TdbObjectProcedureTest.CreateMeasure;

@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AccountDirection(
     IN inName           TVarChar,      -- свойство <Наименование Аналитики управленческих счетов>
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer 
+  AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_calc Integer;   
@@ -36,14 +37,14 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_AccountDirection (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  18.04.14                                        * rem !!! это временно !!!
  25.08.13                                        * !!! это временно !!!
  21.06.13          * Code_calc:=lpGet_ObjectCode (inCode, zc_Object_AccountDirection()); 

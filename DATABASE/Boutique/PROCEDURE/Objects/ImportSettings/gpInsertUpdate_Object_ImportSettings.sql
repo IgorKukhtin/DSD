@@ -22,7 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
     IN inIsMultiLoad             Boolean   ,
     IN inSession                 TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS Integer 
+  AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
@@ -92,7 +93,8 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
