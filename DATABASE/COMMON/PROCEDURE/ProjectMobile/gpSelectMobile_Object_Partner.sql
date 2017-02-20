@@ -37,6 +37,15 @@ BEGIN
   -- Результат
   IF vbPersonalId IS NOT NULL THEN
     RETURN QUERY
+      WITH tmpProtocol AS (
+        SELECT ObjectProtocol.ObjectId AS PartnerId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+        FROM ObjectProtocol
+          JOIN Object AS Object_Partner
+                      ON Object_Partner.Id = ObjectProtocol.ObjectId
+                     AND Object_Partner.DescId = zc_Object_Partner() 
+        WHERE ObjectProtocol.OperDate > inSyncDateIn
+        GROUP BY ObjectProtocol.ObjectId
+      )
       SELECT 
         Object_Partner.Id
         , Object_Partner.ObjectCode
@@ -56,10 +65,11 @@ BEGIN
         , Object_Partner.isErased
         , (ObjectLink_Partner_PersonalTrade.ChildObjectId IS NOT NULL) AS isSync
       FROM Object AS Object_Partner
+        JOIN tmpProtocol ON tmpProtocol.PartnerId = Object_Partner.Id
         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
                              ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                            AND ObjectLink_Partner_PersonalTrade.ChildObjectId = 340847 -- vbPersonalId
+                            AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                              ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()

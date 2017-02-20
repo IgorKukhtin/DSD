@@ -39,6 +39,15 @@ BEGIN
         WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
           AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
       )    
+        , tmpProtocol AS (
+        SELECT ObjectProtocol.ObjectId AS JuridicalId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+        FROM ObjectProtocol
+          JOIN Object AS Object_Juridical
+                      ON Object_Juridical.Id = ObjectProtocol.ObjectId
+                     AND Object_Juridical.DescId = zc_Object_Juridical() 
+        WHERE ObjectProtocol.OperDate > inSyncDateIn
+        GROUP BY ObjectProtocol.ObjectId
+      )
       SELECT
         Object_Juridical.Id
         , Object_Juridical.ObjectCode
@@ -50,6 +59,7 @@ BEGIN
         , Object_Juridical.isErased
         , EXISTS(SELECT 1 FROM tmpJuridical WHERE tmpJuridical.JuridicalId = Object_Juridical.Id) AS isSync
       FROM Object AS Object_Juridical
+        JOIN tmpProtocol ON tmpProtocol.JuridicalId = Object_Juridical.Id
         JOIN ObjectLink AS ObjectLink_Contract_Juridical
                         ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
