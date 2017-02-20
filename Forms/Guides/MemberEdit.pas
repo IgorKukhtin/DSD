@@ -39,6 +39,8 @@ type
     ceCard: TcxTextEdit;
     cxLabel9: TcxLabel;
     ceCardSecond: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    ceCardChild: TcxTextEdit;
   private
     { Private declarations }
   public

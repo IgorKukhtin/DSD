@@ -1,35 +1,35 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 406
+  ClientHeight = 455
   ClientWidth = 287
   ExplicitWidth = 293
-  ExplicitHeight = 434
+  ExplicitHeight = 483
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 45
-    Top = 368
+    Left = 37
+    Top = 421
     TabOrder = 1
-    ExplicitLeft = 45
-    ExplicitTop = 368
+    ExplicitLeft = 37
+    ExplicitTop = 421
   end
   inherited bbCancel: TcxButton
-    Left = 177
-    Top = 368
+    Left = 169
+    Top = 421
     TabOrder = 2
-    ExplicitLeft = 177
-    ExplicitTop = 368
+    ExplicitLeft = 169
+    ExplicitTop = 421
   end
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
     Width = 287
-    Height = 345
+    Height = 409
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 345
+    ClientRectBottom = 409
     ClientRectRight = 287
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
@@ -50,6 +50,39 @@
         Left = 7
         Top = 4
         Caption = #1050#1086#1076
+      end
+      object cxLabel10: TcxLabel
+        Left = 7
+        Top = 249
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055'  - '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+      end
+      object ceCardChild: TcxTextEdit
+        Left = 7
+        Top = 267
+        TabOrder = 12
+        Width = 273
+      end
+      object cxLabel9: TcxLabel
+        Left = 7
+        Top = 204
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+      end
+      object ceCardSecond: TcxTextEdit
+        Left = 7
+        Top = 222
+        TabOrder = 6
+        Width = 273
+      end
+      object cxLabel8: TcxLabel
+        Left = 7
+        Top = 162
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
+      end
+      object ceCard: TcxTextEdit
+        Left = 7
+        Top = 177
+        TabOrder = 14
+        Width = 273
       end
       object ceCode: TcxCurrencyEdit
         Left = 7
@@ -77,7 +110,7 @@
       end
       object cxLabel4: TcxLabel
         Left = 7
-        Top = 278
+        Top = 340
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object ceDriverCertificate: TcxTextEdit
@@ -88,7 +121,7 @@
       end
       object ceComment: TcxTextEdit
         Left = 7
-        Top = 296
+        Top = 359
         TabOrder = 5
         Width = 273
       end
@@ -102,19 +135,19 @@
       end
       object cxLabel7: TcxLabel
         Left = 7
-        Top = 238
+        Top = 293
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object ceInfoMoney: TcxButtonEdit
         Left = 7
-        Top = 254
+        Top = 314
         Properties.Buttons = <
           item
             Default = True
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 12
+        TabOrder = 10
         Width = 273
       end
     end
@@ -145,28 +178,6 @@
         Width = 273
       end
     end
-  end
-  object cxLabel8: TcxLabel [3]
-    Left = 7
-    Top = 184
-    Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
-  end
-  object ceCard: TcxTextEdit [4]
-    Left = 7
-    Top = 199
-    TabOrder = 4
-    Width = 273
-  end
-  object cxLabel9: TcxLabel [5]
-    Left = 7
-    Top = 223
-    Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
-  end
-  object ceCardSecond: TcxTextEdit [6]
-    Left = 6
-    Top = 238
-    TabOrder = 6
-    Width = 273
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -270,6 +281,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCardChild'
+        Value = Null
+        Component = ceCardChild
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -344,6 +363,13 @@
         Name = 'CardSecond'
         Value = Null
         Component = ceCardSecond
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CardChild'
+        Value = Null
+        Component = ceCardChild
         DataType = ftString
         MultiSelectSeparator = ','
       end
