@@ -441,7 +441,7 @@ BEGIN
                                                 AND (_tmpItem_pr.isPartionCount = TRUE OR _tmpItem_pr.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem_pr.PartionGoods)
 
-                                               -- Упаковка Мяса
+                                               -- Упаковка Мяса (тоже ПФ-ГП)
                                                WHEN vbIsPartionDate_Unit_To = TRUE
                                                 AND vbIsPeresort = FALSE
                                                 AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье

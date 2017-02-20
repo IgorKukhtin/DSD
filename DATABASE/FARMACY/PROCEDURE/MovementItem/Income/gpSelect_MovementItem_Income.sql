@@ -57,6 +57,7 @@ RETURNS TABLE (Id Integer, /*IdBarCode TVarChar,*/ GoodsId Integer, GoodsCode In
              , PrintCount TFloat
              , isPrint  Boolean
 
+             , InsertName TVarChar, InsertDate TDateTime 
              )
 AS
 $BODY$
@@ -166,6 +167,10 @@ BEGIN
                           , MIString_SertificatNumber.ValueData AS SertificatNumber
                           , MIDate_SertificatStart.ValueData    AS SertificatStart
                           , MIDate_SertificatEnd.ValueData      AS SertificatEnd
+
+                          , Object_Insert.ValueData        AS InsertName
+                          , MIDate_Insert.ValueData        AS InsertDate
+
                      FROM tmpIsErased
                         JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                          AND MovementItem.DescId     = zc_MI_Master()
@@ -174,6 +179,13 @@ BEGIN
                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
+                        LEFT JOIN MovementItemDate AS MIDate_Insert
+                                                   ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                                  AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                        LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                         ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                        AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId  
 
                         LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                         ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
@@ -362,6 +374,9 @@ BEGIN
 
               , NULL::TFloat               AS PrintCount
               , FALSE                      AS isPrint
+              , NULL::TVarChar             AS InsertName
+              , NULL::TDateTime            AS InsertDate
+
             FROM tmpGoods
                 LEFT JOIN tmpMI ON tmpMI.GoodsId = tmpGoods.GoodsId
                 LEFT OUTER JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
@@ -448,6 +463,9 @@ BEGIN
               , MovementItem.PrintCount
               , MovementItem.isPrint
 
+              , MovementItem.InsertName
+              , MovementItem.InsertDate
+
             FROM tmpMI AS MovementItem
 
             LEFT JOIN Object_Goods_View AS Object_PartnerGoods ON Object_PartnerGoods.Id = MovementItem.PartnerGoodsId
@@ -507,10 +525,22 @@ BEGIN
                      , COALESCE (MIBoolean_Print.ValueData, TRUE)   ::Boolean     AS isPrint
                      , MILinkObject_ReasonDifferences.ObjectId                    AS ReasonDifferencesId
 
+                     , Object_Insert.ValueData        AS InsertName
+                     , MIDate_Insert.ValueData        AS InsertDate
+
                 FROM tmpIsErased
                    INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                    AND MovementItem.isErased   = tmpIsErased.isErased
-                                    AND MovementItem.DescId     = zc_MI_Master()
+                                          AND MovementItem.isErased   = tmpIsErased.isErased
+                                          AND MovementItem.DescId     = zc_MI_Master()
+
+                   LEFT JOIN MovementItemDate AS MIDate_Insert
+                                              ON MIDate_Insert.MovementItemId = MovementItem.Id
+                                             AND MIDate_Insert.DescId = zc_MIDate_Insert()
+                   LEFT JOIN MovementItemLinkObject AS MILO_Insert
+                                                    ON MILO_Insert.MovementItemId = MovementItem.Id
+                                                   AND MILO_Insert.DescId = zc_MILinkObject_Insert()
+                   LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId  
+
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = MovementItem.Id
                                               AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -716,6 +746,9 @@ BEGIN
 
               , MovementItem.PrintCount
               , MovementItem.isPrint
+
+              , MovementItem.InsertName
+              , MovementItem.InsertDate
 
             FROM tmpMI AS MovementItem 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId

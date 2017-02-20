@@ -5,7 +5,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1059
-  ExplicitHeight = 573
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -861,6 +861,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -1594,6 +1598,9 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <

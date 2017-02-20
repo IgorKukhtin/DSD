@@ -59,8 +59,8 @@ BEGIN
      ELSE
      -- 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
-                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Физ. лицо (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
+          -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение  2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)Вид товара - не всегда
+          -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Физ. лицо (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с) 6)Вид товара - не всегда
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                  , inParentId          := inContainerId_Goods
                                                  , inObjectId          := inAccountId
@@ -78,8 +78,8 @@ BEGIN
                                                  , inObjectId_4 := inInfoMoneyId
                                                  , inDescId_5   := zc_ContainerLinkObject_PartionGoods()
                                                  , inObjectId_5 := inPartionGoodsId -- CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
-                                                 , inDescId_6   := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_ContainerLinkObject_GoodsKind() ELSE NULL END
-                                                 , inObjectId_6 := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN inGoodsKindId ELSE NULL END
+                                                 , inDescId_6   := CASE WHEN COALESCE (inGoodsKindId, 0) IN (0, zc_GoodsKind_Basis()) THEN NULL ELSE zc_ContainerLinkObject_GoodsKind() END
+                                                 , inObjectId_6 := CASE WHEN COALESCE (inGoodsKindId, 0) IN (0, zc_GoodsKind_Basis()) THEN NULL ELSE inGoodsKindId END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство

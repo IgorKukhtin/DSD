@@ -20966,8 +20966,8 @@ begin
              //
              toStoredProc_two.Params.ParamByName('inStartDate').Value:=StrToDate(StartDateCompleteEdit.Text);
              toStoredProc_two.Params.ParamByName('inEndDate').Value:=StrToDate(EndDateCompleteEdit.Text) ;
-             toStoredProc_two.Params.ParamByName('inFromId').Value:=951601;//ЦЕХ упаковки мясо
-             toStoredProc_two.Params.ParamByName('inToId').Value:=8439 ;//Участок мясного сырья
+             toStoredProc_two.Params.ParamByName('inFromId').Value:=951601; //ЦЕХ упаковки мясо
+             toStoredProc_two.Params.ParamByName('inToId').Value:=8439; //Участок мясного сырья
              if not myExecToStoredProc_two then ;//exit;
         Gauge.Progress:= Gauge.Progress + 1;
         MyDelay(1 * 1000);

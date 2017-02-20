@@ -51,8 +51,8 @@ BEGIN
      ELSE
      -- 10100 Мясное сырье
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-          -- 0)Товар 1)Подразделение 2)!Партия товара!
-          -- 0)Товар 1)Физ. лицо (МО) 2)!Партия товара!
+          -- 0)Товар 1)Подразделение 2)!Партия товара! 3)Вид товара - не всегда 4)Счет - не всегда
+          -- 0)Товар 1)Физ. лицо (МО) 2)!Партия товара! 3)Вид товара - не всегда 4)Счет - не всегда
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                  , inParentId          := NULL
                                                  , inObjectId          := inGoodsId
@@ -66,8 +66,8 @@ BEGIN
                                                  , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId                      ELSE CASE WHEN inUnitId <> 0 THEN inUnitId ELSE zc_Juridical_Basis() END END
                                                  , inDescId_3          := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN zc_ContainerLinkObject_Account() ELSE NULL END
                                                  , inObjectId_3        := CASE WHEN COALESCE (inAccountId, 0) <> 0 THEN inAccountId ELSE NULL END
-                                                 , inDescId_4          := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_ContainerLinkObject_GoodsKind() ELSE NULL END
-                                                 , inObjectId_4        := CASE WHEN inGoodsKindId = zc_GoodsKind_WorkProgress() THEN inGoodsKindId ELSE NULL END
+                                                 , inDescId_4          := CASE WHEN COALESCE (inGoodsKindId, 0) IN (0, zc_GoodsKind_Basis()) THEN NULL ELSE zc_ContainerLinkObject_GoodsKind() END
+                                                 , inObjectId_4        := CASE WHEN COALESCE (inGoodsKindId, 0) IN (0, zc_GoodsKind_Basis()) THEN NULL ELSE inGoodsKindId END
                                                   );
      ELSE
      -- 20100 Запчасти и Ремонты + 20400 ГСМ + 70000 Инвестиции: Капитальные инвестиции + Капитальный ремонт + Долгосрочные инвестиции + Капитальное строительство
