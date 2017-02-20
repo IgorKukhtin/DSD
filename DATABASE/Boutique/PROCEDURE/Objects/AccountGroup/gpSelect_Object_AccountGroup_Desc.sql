@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_AccountGroup_Desc(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
-AS
+  AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
@@ -32,14 +32,14 @@ BEGIN
             , Object_AccountGroup.isErased
     ;
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_AccountGroup_Desc (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  04.04.15                                        *
 */
 

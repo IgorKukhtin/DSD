@@ -6,8 +6,10 @@ CREATE OR REPLACE FUNCTION gpGet_Object_AccountGroup(
     IN inId             Integer,       -- ключ объекта <Группы управленческих счетов>
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean) AS
-$BODY$BEGIN
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
+  AS
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_AccountGroup());
@@ -33,16 +35,16 @@ $BODY$BEGIN
        WHERE Object_AccountGroup.Id = inId;
    END IF;
   
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_AccountGroup (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  21.06.13          *  zc_Enum_Process_Get_Object_AccountGroup()              
  17.06.13          *
 

@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Object_InfoMoneyGroup(Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoneyGroup(
- INOUT ioId	             Integer   ,   	-- ключ <Группы управленческих аналитик>
+ INOUT ioId              Integer   ,   	-- ключ <Группы управленческих аналитик>
     IN inCode            Integer   ,    -- код
     IN inName            TVarChar  ,    -- Наименование  
     IN inSession         TVarChar       -- сессия пользователя
@@ -35,7 +35,7 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyGroup (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+
   
 /*-------------------------------------------------------------------------------*/
 /*

@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION lfGet_Object_InfoMoney (IN inInfoMoneyId Integer)
   RETURNS TABLE (InfoMoneyId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer)
-AS
+  AS
 $BODY$
 BEGIN
      -- Выбираем данные для справочника уп-назначения (на самом деле это три справочника)
@@ -25,7 +25,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfGet_Object_InfoMoney (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

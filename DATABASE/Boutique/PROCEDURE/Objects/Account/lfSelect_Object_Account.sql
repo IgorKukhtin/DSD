@@ -12,7 +12,7 @@ RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupNam
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
                onComplete Boolean)
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -85,8 +85,6 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lfSelect_Object_Account () OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

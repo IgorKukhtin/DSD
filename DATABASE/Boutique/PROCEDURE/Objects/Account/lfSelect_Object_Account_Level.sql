@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_Account_Level(
     IN inUserId    Integer      --
 )
 RETURNS TABLE (AccountId Integer)
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -50,7 +50,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-  ALTER FUNCTION lfSelect_Object_Account_Level (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

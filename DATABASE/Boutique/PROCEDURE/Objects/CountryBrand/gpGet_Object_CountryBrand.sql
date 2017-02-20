@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpGet_Object_CountryBrand (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_CountryBrand(
-    IN inId          Integer,       -- Единица измерения
+    IN inId          Integer,       -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) 
-AS
+  AS
 $BODY$
 BEGIN
 

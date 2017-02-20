@@ -40,6 +40,18 @@ type
     N5: TMenuItem;
     actCountryBrand: TdsdOpenForm;
     N7: TMenuItem;
+    actBrand: TdsdOpenForm;
+    N8: TMenuItem;
+    actFabrika: TdsdOpenForm;
+    N9: TMenuItem;
+    actGoodsInfo: TdsdOpenForm;
+    N10: TMenuItem;
+    actGoodsSize: TdsdOpenForm;
+    N11: TMenuItem;
+    actGoodsGroup: TdsdOpenForm;
+    N12: TMenuItem;
+    actKassa: TdsdOpenForm;
+    N13: TMenuItem;
   private
     { Private declarations }
   public

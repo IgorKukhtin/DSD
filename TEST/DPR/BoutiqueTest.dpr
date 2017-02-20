@@ -73,6 +73,27 @@ uses
   CountryBrand in '..\..\FormsBoutique\Guides\CountryBrand.pas' {CountryBrandForm: TParentForm},
   CountryBrandEdit in '..\..\FormsBoutique\Guides\CountryBrandEdit.pas' {CountryBrandEditForm: TParentForm},
 
+  Brand in '..\..\FormsBoutique\Guides\Brand.pas' {BrandForm: TParentForm},
+  BrandEdit in '..\..\FormsBoutique\Guides\BrandEdit.pas' {BrandEditForm: TParentForm},
+
+  Fabrika in '..\..\FormsBoutique\Guides\Fabrika.pas' {FabrikaForm: TParentForm},
+  FabrikaEdit in '..\..\FormsBoutique\Guides\FabrikaEdit.pas' {FabrikaEditForm: TParentForm},
+
+  LineFabrica in '..\..\FormsBoutique\Guides\LineFabrica.pas' {LineFabricaForm: TParentForm},
+  LineFabricaEdit in '..\..\FormsBoutique\Guides\LineFabricaEdit.pas' {LineFabricaEditForm: TParentForm},
+
+  GoodsInfo in '..\..\FormsBoutique\Guides\GoodsInfo.pas' {GoodsInfoForm: TParentForm},
+  GoodsInfoEdit in '..\..\FormsBoutique\Guides\GoodsInfoEdit.pas' {GoodsInfoEditForm: TParentForm},
+
+  GoodsSize in '..\..\FormsBoutique\Guides\GoodsSize.pas' {GoodsSizeForm: TParentForm},
+  GoodsSizeEdit in '..\..\FormsBoutique\Guides\GoodsSizeEdit.pas' {GoodsSizeEditForm: TParentForm},
+
+  GoodsGroup in '..\..\FormsBoutique\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroupEdit in '..\..\FormsBoutique\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
+
+  Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
+  KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

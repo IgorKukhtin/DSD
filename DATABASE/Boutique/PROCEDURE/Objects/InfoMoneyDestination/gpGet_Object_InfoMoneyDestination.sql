@@ -38,7 +38,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_InfoMoneyDestination (integer, TVarChar) OWNER TO postgres;
+
 
 
 /*-------------------------------------------------------------------------------*/

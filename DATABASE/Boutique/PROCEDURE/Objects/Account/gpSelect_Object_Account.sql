@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar
              , onComplete Boolean, isErased Boolean
               )
-AS
+  AS
 $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -56,12 +56,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   
  02.11.13                                        * add Object_Account.ObjectCode < 100000
  29.10.13                                        * add Object_InfoMoney_View
  04.07.13          * + onComplete... +AccountKind...

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Composition(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CompositionGroupId Integer, CompositionGroupName TVarChar) 
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -40,9 +40,6 @@ BEGIN
             LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = ObjectLink_Composition_CompositionGroup.ChildObjectId
 
        WHERE Object_Composition.Id = inId;
-
-
-
 
    END IF;
 

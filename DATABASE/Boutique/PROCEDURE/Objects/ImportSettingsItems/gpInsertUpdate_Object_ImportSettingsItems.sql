@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettingsItems(
     IN inDefaultValue            TVarChar  ,    -- Значение параметра по умолчанию
     IN inSession                 TVarChar       -- сессия пользователя
 )
-  RETURNS Integer AS
+  RETURNS Integer 
+  AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
@@ -33,10 +34,10 @@ BEGIN
      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Integer, Integer, TVarchar, TVarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

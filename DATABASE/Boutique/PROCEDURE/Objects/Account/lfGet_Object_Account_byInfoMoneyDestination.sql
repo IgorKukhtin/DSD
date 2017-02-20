@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION lfGet_Object_Account_byInfoMoneyDestination (IN inAccountGroupId Integer, IN inAccountDirectionId Integer, IN inInfoMoneyDestinationId Integer)
 
 RETURNS Integer
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -30,7 +30,6 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lfGet_Object_Account_byInfoMoneyDestination (Integer, Integer, Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

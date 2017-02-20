@@ -34,7 +34,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_InfoMoneyGroup_Desc (TVarChar, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------*/
 /*

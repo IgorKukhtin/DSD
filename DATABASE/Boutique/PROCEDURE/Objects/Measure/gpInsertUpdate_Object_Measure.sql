@@ -3,17 +3,18 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
- INOUT ioId	          Integer,   	-- ключ объекта <Единица измерения>
+ INOUT ioId           Integer,       -- ключ объекта <Единица измерения>
     IN inCode         Integer,       -- свойство <Код Единицы измерения>
     IN inName         TVarChar,      -- главное Название Единицы измерения
     IN inInternalCode TVarChar,      --
     IN inInternalName TVarChar,      --
     IN inSession      TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS integer
+  AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;
+  DECLARE UserId Integer;
+  DECLARE Code_max Integer;
 
 BEGIN
 
@@ -33,7 +34,7 @@ BEGIN
    END IF;
 
    -- проверка уникальности для свойства <Наименование Единицы измерения>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); --!!!временно откл.!!! 
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); 
    -- проверка уникальности для свойства <Код Единицы измерения>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Measure(), Code_max);
 
@@ -48,20 +49,18 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 09.10.14                                                       *
- 13.06.13          *
- 16.06.13                                        * COALESCE( MAX (ObjectCode), 0)
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+16.02.17                                                          *
 */
 
 -- тест

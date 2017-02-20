@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                isProfitLoss boolean,
-               isErased boolean) AS
+               isErased boolean) 
+  AS
 $BODY$
 BEGIN
       -- проверка прав пользователя на вызов процедуры
@@ -75,7 +76,6 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_InfoMoney (integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

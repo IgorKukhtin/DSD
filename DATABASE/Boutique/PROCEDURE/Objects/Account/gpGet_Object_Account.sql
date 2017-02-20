@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
                AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
-               isErased boolean) AS
+               isErased boolean)
+  AS
 $BODY$
 BEGIN
 
@@ -119,12 +120,11 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Account (Integer, TVarChar)  OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  04.07.13          * + lfSelect...  + AccountKind           
  24.06.13                                         *  errors
  21.06.13          *                              *  создание врем.таблиц
