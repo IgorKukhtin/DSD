@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_CountryBrand(
     IN inSession  TVarChar
 )
 RETURNS VOID
-AS
+  AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

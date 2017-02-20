@@ -5,9 +5,10 @@
 CREATE OR REPLACE FUNCTION lfSelect_Object_InfoMoneyDestination()
 
 RETURNS TABLE (InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar) AS
-   
-$BODY$BEGIN
+               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar)
+  AS 
+$BODY$
+BEGIN
 
      -- Выбираем и группируем данные из справочника уп-назначения (по двум справочникам)
 
@@ -27,10 +28,10 @@ $BODY$BEGIN
              , lfObject_InfoMoney.InfoMoneyDestinationId, lfObject_InfoMoney.InfoMoneyDestinationCode, lfObject_InfoMoney.InfoMoneyDestinationName;
 
  
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfSelect_Object_InfoMoneyDestination() OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

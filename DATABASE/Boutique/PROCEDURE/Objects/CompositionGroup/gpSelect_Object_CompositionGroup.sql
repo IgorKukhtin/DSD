@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CompositionGroup(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  isErased boolean)
-AS
+  AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры

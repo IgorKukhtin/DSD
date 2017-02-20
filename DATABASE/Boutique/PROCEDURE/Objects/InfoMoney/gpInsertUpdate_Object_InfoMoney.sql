@@ -8,10 +8,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
     IN inName                   TVarChar  ,    -- Название объекта <Статья назначения>
     IN inInfoMoneyGroupId       Integer   ,    -- ссылка на <Группы управленческих назначений>
     IN inInfoMoneyDestinationId Integer   ,    -- ссылка на <Управленческие назначения>
-    IN inisProfitLoss           Boolean  ,     -- затраты по оплате
+    IN inisProfitLoss           Boolean   ,    -- затраты по оплате
     IN inSession                TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS integer 
+  AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_calc Integer; 
@@ -47,7 +48,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------*/
 /*

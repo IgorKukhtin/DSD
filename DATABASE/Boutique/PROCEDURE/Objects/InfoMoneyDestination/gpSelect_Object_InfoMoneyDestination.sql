@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                isErased Boolean
               )
-AS
+  AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -34,9 +34,10 @@ BEGIN
          LEFT JOIN tmpInfoMoneyDestination ON tmpInfoMoneyDestination.InfoMoneyDestinationId = Object_InfoMoneyDestination.Id
     WHERE Object_InfoMoneyDestination.DescId = zc_Object_InfoMoneyDestination();
   
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_InfoMoneyDestination (TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------*/
 /*

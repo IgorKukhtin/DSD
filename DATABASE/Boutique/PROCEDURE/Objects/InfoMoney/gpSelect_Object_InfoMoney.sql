@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameAll TVarChar,
                isProfitLoss boolean,
                isErased boolean
 )
-AS
+  AS
 $BODY$
 BEGIN
      
@@ -56,9 +56,9 @@ BEGIN
            , FALSE  AS isErased
 ;
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

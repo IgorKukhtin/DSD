@@ -3,12 +3,13 @@
 -- DROP FUNCTION gpInsertUpdate_Object_InfoMoneyDestination();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoneyDestination(
- INOUT ioId	         Integer   ,   	-- ключ  Управленческие аналитики - назначение
+ INOUT ioId          Integer   ,    -- ключ  Управленческие аналитики - назначение
     IN inCode        Integer   ,    -- код
     IN inName        TVarChar  ,    -- Наименование
     IN inSession     TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS integer
+  AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_calc Integer;   
@@ -37,7 +38,6 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyDestination (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

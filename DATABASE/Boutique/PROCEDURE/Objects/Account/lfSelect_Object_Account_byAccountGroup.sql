@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Account_byAccountGroup (IN inAccountGroupId Integer)
 RETURNS TABLE  (AccountId Integer)  
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -16,7 +16,6 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lfSelect_Object_Account_byAccountGroup (Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

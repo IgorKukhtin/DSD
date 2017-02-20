@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lfSelect_Object_InfoMoney_Level(
     IN inUserId    Integer      --
 )
 RETURNS TABLE (InfoMoneyId Integer)
-AS
+  AS
 $BODY$
 BEGIN
 
@@ -52,7 +52,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-  ALTER FUNCTION lfSelect_Object_InfoMoney_Level (Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

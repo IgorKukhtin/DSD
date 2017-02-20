@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CompositionGroup(
     IN inSession      TVarChar       -- сессия пользователя
 )
   RETURNS integer 
-AS
+  AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_max Integer;
@@ -53,10 +53,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 09.10.14                                                       *
- 13.06.13          *
- 16.06.13                                        * COALESCE( MAX (ObjectCode), 0)
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+16.02.17                                                          *
 
 */
 

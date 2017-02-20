@@ -8,7 +8,8 @@ inherited MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
-    Left = 328
+    Left = 336
+    Top = 8
     inherited actAbout: TAction
       Category = 'but'
     end
@@ -120,17 +121,88 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actBrand: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1041#1088#1077#1085#1076
+      FormName = 'TBrandForm'
+      FormNameParam.Value = 'TBrandForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actFabrika: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+      FormName = 'TFabrikaForm'
+      FormNameParam.Value = 'TFabrikaForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsInfo: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TGoodsInfoForm'
+      FormNameParam.Value = 'TGoodsInfoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsSize: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TGoodsSizeForm'
+      FormNameParam.Value = 'TGoodsSizeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TGoodsGroupForm'
+      FormNameParam.Value = 'TGoodsGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actKassa: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1072#1089#1089#1072
+      FormName = 'TKassaForm'
+      FormNameParam.Value = 'TKassaForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 496
-    Top = 24
+    Left = 152
+    Top = 8
   end
   inherited StoredProc: TdsdStoredProc
     Left = 48
+    Top = 8
   end
   inherited ClientDataSet: TClientDataSet
-    Left = 104
-    Top = 104
+    Left = 48
+    Top = 56
+  end
+  inherited frxXMLExport: TfrxXMLExport
+    Left = 152
+    Top = 56
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -142,14 +214,13 @@ inherited MainForm: TMainForm
           'Top'
           'Width')
       end>
-    Left = 200
+    Left = 48
+    Top = 112
   end
   inherited MainMenu: TMainMenu
-    Top = 88
+    Left = 272
+    Top = 8
     inherited miGuides: TMenuItem
-      object N1: TMenuItem
-        Action = actMeasure
-      end
       object N4: TMenuItem
         Action = actCompositionGroup
       end
@@ -158,6 +229,27 @@ inherited MainForm: TMainForm
       end
       object N7: TMenuItem
         Action = actCountryBrand
+      end
+      object N8: TMenuItem
+        Action = actBrand
+      end
+      object N9: TMenuItem
+        Action = actFabrika
+      end
+      object N10: TMenuItem
+        Action = actGoodsInfo
+      end
+      object N11: TMenuItem
+        Action = actGoodsSize
+      end
+      object N1: TMenuItem
+        Action = actMeasure
+      end
+      object N12: TMenuItem
+        Action = actGoodsGroup
+      end
+      object N13: TMenuItem
+        Action = actKassa
       end
     end
     inherited miService: TMenuItem
@@ -215,5 +307,9 @@ inherited MainForm: TMainForm
         Action = actImportExportLink
       end
     end
+  end
+  inherited frxXLSExport: TfrxXLSExport
+    Left = 152
+    Top = 112
   end
 end

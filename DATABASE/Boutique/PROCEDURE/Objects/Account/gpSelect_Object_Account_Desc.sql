@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar
              , onComplete Boolean, isErased Boolean
               )
-AS
+  AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
@@ -66,11 +66,10 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Account_Desc (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   
  04.04.15                                        *
 */
 

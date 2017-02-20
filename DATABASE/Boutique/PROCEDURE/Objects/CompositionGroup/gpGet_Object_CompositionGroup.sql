@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CompositionGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) 
-AS
+  AS
 $BODY$
 BEGIN
 

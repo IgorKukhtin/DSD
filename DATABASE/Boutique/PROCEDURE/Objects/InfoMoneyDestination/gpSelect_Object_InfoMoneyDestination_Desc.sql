@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                isErased Boolean
               )
-AS
+  AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
@@ -41,9 +41,9 @@ BEGIN
             , Object_InfoMoneyDestination.isErased
     ;
   
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_InfoMoneyDestination_Desc (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
