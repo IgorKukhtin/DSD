@@ -1,4 +1,4 @@
-unit PersonalServiceList;
+unit Member;
 
 interface
 
@@ -11,10 +11,10 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
   cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxButtonEdit;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TPersonalServiceListForm = class(TParentForm)
+  TMemberForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -25,10 +25,13 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
@@ -43,21 +46,13 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
-    clJuridicalName: TcxGridDBColumn;
+    INN: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clPaidKindName: TcxGridDBColumn;
-    clBranchName: TcxGridDBColumn;
-    clBankName: TcxGridDBColumn;
-    MemberName: TcxGridDBColumn;
-    MemberChoice: TOpenChoiceForm;
-    actUpdateMember: TdsdUpdateDataSet;
-    spUpdate: TdsdStoredProc;
-    MemberHeadManagerChoice: TOpenChoiceForm;
-    MemberManagerChoice: TOpenChoiceForm;
-    MemberBookkeeperChoice: TOpenChoiceForm;
-    isSecond: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    EMail: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -69,6 +64,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalServiceListForm);
+  RegisterClass(TMemberForm);
 
 end.

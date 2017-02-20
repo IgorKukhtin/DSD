@@ -26,8 +26,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 728
-    ExplicitHeight = 295
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -161,6 +159,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 110
+      end
+      object isSecond: TcxGridDBColumn
+        Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+        DataBinding.FieldName = 'isSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -353,10 +359,12 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TPersonalServiceListEditForm'
       FormNameParam.Value = 'TPersonalServiceListEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -387,6 +395,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TPersonalServiceListEditForm'
       FormNameParam.Value = 'TPersonalServiceListEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -394,6 +403,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -410,6 +420,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -417,12 +428,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -430,6 +443,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -454,6 +468,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -461,6 +476,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -469,6 +485,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -480,12 +497,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -493,6 +512,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'MemberName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -504,12 +524,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberHeadManagerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -517,6 +539,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'MemberHeadManagerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -528,12 +551,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberManagerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -541,6 +566,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'MemberManagerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -552,12 +578,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
       FormName = 'TMember_ObjectForm'
       FormNameParam.Value = 'TMember_ObjectForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'MemberBookkeeperId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -565,6 +593,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
           Component = ClientDataSet
           ComponentItem = 'MemberBookkeeperName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -604,6 +633,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 296
@@ -652,6 +682,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId'
@@ -659,6 +690,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'MemberId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberHeadManagerId'
@@ -666,6 +698,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'MemberHeadManagerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberManagerId'
@@ -673,6 +706,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'MemberManagerId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberBookkeeperId'
@@ -680,6 +714,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Component = ClientDataSet
         ComponentItem = 'MemberBookkeeperId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 571

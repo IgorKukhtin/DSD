@@ -1,4 +1,4 @@
-unit PersonalServiceListEdit;
+unit MemberEdit;
 
 interface
 
@@ -8,18 +8,17 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit,
-  cxCheckBox;
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TPersonalServiceListEditForm = class(TParentForm)
+  TMemberEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
@@ -29,18 +28,11 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    cePaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    edComment: TcxTextEdit;
+    edINN: TcxTextEdit;
+    edEMail: TcxTextEdit;
     cxLabel5: TcxLabel;
-    ceBranch: TcxButtonEdit;
-    BranchGuides: TdsdGuides;
-    cxLabel16: TcxLabel;
-    edBankId: TcxButtonEdit;
-    BankGuides: TdsdGuides;
-    ceisSecond: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -52,6 +44,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalServiceListEditForm);
+  RegisterClass(TMemberEditForm);
 
 end.

@@ -60,6 +60,8 @@ type
     procedure CreateGoodsSize;
     procedure CreateGoodsGroup;
     procedure CreateKassa;
+    procedure CreateValuta;
+    procedure CreateMember;
   end;
 
 implementation
@@ -202,6 +204,16 @@ end;
 procedure TdbObjectProcedureTest.CreateMeasure;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Measure\');
+end;
+
+procedure TdbObjectProcedureTest.CreateMember;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Member\');
+end;
+
+procedure TdbObjectProcedureTest.CreateValuta;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Valuta\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettings;

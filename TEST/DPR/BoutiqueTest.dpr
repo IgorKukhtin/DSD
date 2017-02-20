@@ -94,6 +94,12 @@ uses
   Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
   KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
 
+  Valuta in '..\..\FormsBoutique\Guides\Valuta.pas' {ValutaForm: TParentForm},
+  ValutaEdit in '..\..\FormsBoutique\Guides\ValutaEdit.pas' {ValutaEditForm: TParentForm},
+
+  Member in '..\..\FormsBoutique\Guides\Member.pas' {MemberForm: TParentForm},
+  MemberEdit in '..\..\FormsBoutique\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

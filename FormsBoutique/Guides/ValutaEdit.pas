@@ -1,4 +1,4 @@
-unit PersonalServiceListEdit;
+unit ValutaEdit;
 
 interface
 
@@ -8,18 +8,27 @@ uses
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters, dsdGuides, cxMaskEdit, cxButtonEdit,
-  cxCheckBox;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TPersonalServiceListEditForm = class(TParentForm)
+  TValutaEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
@@ -28,19 +37,6 @@ type
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    cePaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
-    cxLabel5: TcxLabel;
-    ceBranch: TcxButtonEdit;
-    BranchGuides: TdsdGuides;
-    cxLabel16: TcxLabel;
-    edBankId: TcxButtonEdit;
-    BankGuides: TdsdGuides;
-    ceisSecond: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -52,6 +48,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalServiceListEditForm);
+  RegisterClass(TValutaEditForm);
 
 end.

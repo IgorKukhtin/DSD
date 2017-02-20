@@ -20,8 +20,15 @@ BEGIN
   vbUserId:= lpGetUserBySession (inSession);
 
   -- Результат
-  RETURN;
-  -- RETURN QUERY
+  RETURN QUERY
+    SELECT
+      Object_Measure.Id
+      , Object_Measure.ObjectCode
+      , Object_Measure.ValueData
+      , Object_Measure.isErased
+      , (NOT Object_Measure.isErased) AS isSync
+    FROM Object AS Object_Measure
+    WHERE Object_Measure.DescId = zc_Object_Measure();
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
 )
 
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, Comment TVarChar
+             , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar
+             , Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
@@ -102,6 +103,7 @@ BEGIN
          , ObjectString_INN.ValueData               AS INN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
+         , ObjectString_CardSecond.ValueData        AS CardSecond
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
@@ -173,6 +175,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Card
                                  ON ObjectString_Card.ObjectId = Object_Member.Id 
                                 AND ObjectString_Card.DescId = zc_ObjectString_Member_Card()
+          LEFT JOIN ObjectString AS ObjectString_CardSecond
+                                 ON ObjectString_CardSecond.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -248,6 +253,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS INN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Card
+           , CAST ('' as TVarChar)  AS CardSecond
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
            , CAST (0 as Integer)    AS InfoMoneyId
@@ -294,6 +300,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.02.17         * add CardSecond
  02.02.17         * add ObjectTo
  25.03.16         * add Card
  14.01.16         * add Car, StartSummerDate, EndSummerDate 

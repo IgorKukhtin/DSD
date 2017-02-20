@@ -187,6 +187,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actValuta: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1042#1072#1083#1102#1090#1072
+      FormName = 'TValutaForm'
+      FormNameParam.Value = 'TValutaForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMember: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      FormName = 'TMemberForm'
+      FormNameParam.Value = 'TMemberForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -250,6 +272,12 @@ inherited MainForm: TMainForm
       end
       object N13: TMenuItem
         Action = actKassa
+      end
+      object N14: TMenuItem
+        Action = actValuta
+      end
+      object N15: TMenuItem
+        Action = actMember
       end
     end
     inherited miService: TMenuItem
