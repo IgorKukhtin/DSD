@@ -12,20 +12,49 @@ RETURNS TABLE (Id         Integer
              , DebtSum    TFloat   -- Сумма долга (нам) - БН - т.к. БН долг формируется только в разрезе Юр Лиц + договоров
              , OverSum    TFloat   -- Сумма просроченного долга (нам) - БН - Просрочка наступает спустя определенное кол-во дней
              , OverDays   Integer  -- Кол-во дней просрочки (нам)
-             , ContractId Integer  -- Структура_Таблиц_Мобильное_приложение_Справочники#Object_Contract|Договор]] - все возможные договора...
+             , ContractId Integer  -- Договор - все возможные договора...
              , isErased   Boolean  -- Удаленный ли элемент
              , isSync     Boolean  -- Синхронизируется (да/нет)
 )
 AS $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbPersonalId Integer;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
   vbUserId:= lpGetUserBySession (inSession);
 
+  vbPersonalId := (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+
   -- Результат
-  RETURN;
-  -- RETURN QUERY
+  IF vbPersonalId IS NOT NULL THEN
+    RETURN QUERY
+      WITH tmpJuridical AS (
+        SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+        FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+          JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                          ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                         AND ObjectLink_Partner_Juridical.ChildObjectId IS NOT NULL
+        WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+      )    
+      SELECT
+        Object_Juridical.Id
+        , Object_Juridical.ObjectCode
+        , Object_Juridical.ValueData
+        , CAST(0.0 AS TFloat) AS DebtSum
+        , CAST(0.0 AS TFloat) AS OverSum
+        , CAST(0 AS Integer) AS OverDays
+        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+        , Object_Juridical.isErased
+        , EXISTS(SELECT 1 FROM tmpJuridical WHERE tmpJuridical.JuridicalId = Object_Juridical.Id) AS isSync
+      FROM Object AS Object_Juridical
+        JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                        ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
+                       AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+      WHERE Object_Juridical.DescId = zc_Object_Juridical();
+    END IF;  
 
 END; $BODY$
   LANGUAGE plpgsql VOLATILE;
