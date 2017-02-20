@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
-             , isErased boolean) AS
+             , isSecond Boolean
+             , isErased Boolean) AS
 $BODY$
 BEGIN
 
@@ -48,6 +49,8 @@ BEGIN
            , 0                      AS MemberId
            , CAST ('' as TVarChar)  AS MemberName
 
+           , CAST(FALSE AS Boolean) AS isSecond
+
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -75,9 +78,15 @@ BEGIN
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
 
+           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
+
            , Object_PersonalServiceList.isErased   AS isErased
 
        FROM Object AS Object_PersonalServiceList
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
+                                   ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
+
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Juridical
                                 ON ObjectLink_PersonalServiceList_Juridical.ObjectId = Object_PersonalServiceList.Id 
                                AND ObjectLink_PersonalServiceList_Juridical.DescId = zc_ObjectLink_PersonalServiceList_Juridical()
