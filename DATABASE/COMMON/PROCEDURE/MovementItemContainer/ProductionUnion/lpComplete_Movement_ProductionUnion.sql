@@ -489,7 +489,7 @@ BEGIN
                                                      AND (_tmpItemChild.isPartionCount = TRUE OR _tmpItemChild.isPartionSumm = TRUE)
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItemChild.PartionGoods)
 
-                                                    -- Упаковка Мяса
+                                                    -- Упаковка Мяса (тоже ПФ-ГП)
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND vbUnitId_From <> vbUnitId_To
                                                      -- AND EXISTS (SELECT 1 FROM _tmpItem_pr WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100())

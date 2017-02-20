@@ -468,8 +468,11 @@ BEGIN
                                        , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice5 AND COALESCE(Object_MarginCategoryItem.MinPrice,0) < inPrice6 THEN COALESCE(Object_MarginCategoryItem.MarginPercent,0) ELSE 0 END AS MarginPercent6
                                        , CASE WHEN COALESCE(Object_MarginCategoryItem.MinPrice,0) >= inPrice6 THEN Object_MarginCategoryItem.MarginPercent ELSE 0 END AS MarginPercent7
                                   FROM tmpMarginCategory
-                                      LEFT JOIN Object_MarginCategoryItem_View AS Object_MarginCategoryItem
-                                                                               ON Object_MarginCategoryItem.MarginCategoryId =tmpMarginCategory.MarginCategoryId
+                                      LEFT JOIN (SELECT Object_MarginCategoryItem_View.*
+                                                 FROM Object_MarginCategoryItem_View
+                                                      INNER JOIN Object ON Object.Id = Object_MarginCategoryItem_View.Id
+                                                                       AND Object.isErased = FALSE
+                                                ) AS Object_MarginCategoryItem ON Object_MarginCategoryItem.MarginCategoryId = tmpMarginCategory.MarginCategoryId
                                   ) AS tmp
                             GROUP BY tmp.UnitId, tmp.MarginCategoryId
                            )

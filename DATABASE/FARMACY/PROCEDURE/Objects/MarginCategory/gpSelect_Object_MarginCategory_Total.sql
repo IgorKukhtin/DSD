@@ -33,7 +33,9 @@ BEGIN
                                   , Object_MarginCategoryItem.MarginCategoryId
                                   , Object_MarginCategoryItem.MarginPercent
                                   , Object_MarginCategoryItem.minPrice
-                             FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem 
+                             FROM Object_MarginCategoryItem_View AS Object_MarginCategoryItem
+                                  INNER JOIN Object ON Object.Id = Object_MarginCategoryItem.Id
+                                                   AND Object.isErased = FALSE
                              GROUP BY Object_MarginCategoryItem.MarginCategoryId
                                   , Object_MarginCategoryItem.MarginPercent
                                   , Object_MarginCategoryItem.minPrice

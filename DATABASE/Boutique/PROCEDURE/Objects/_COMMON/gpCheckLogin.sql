@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION gpCheckLogin(
     IN inUserLogin    TVarChar, 
     IN inUserPassword TVarChar, 
     IN inIP           TVarChar, 
- INOUT Session TVarChar
+    INOUT Session     TVarChar
 )
 RETURNS TVarChar
-AS
+  AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
