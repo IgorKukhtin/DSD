@@ -40,6 +40,10 @@ type
     cxLabel9: TcxLabel;
     edPersonal: TcxButtonEdit;
     PersonalGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceCardSecond: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    ceCardChild: TcxTextEdit;
   private
     { Private declarations }
   public

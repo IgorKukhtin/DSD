@@ -90,9 +90,23 @@ object Member_ObjectToForm: TMember_ObjectToForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object clCardSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+        DataBinding.FieldName = 'CardSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
+      end
+      object clCardChild: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' - '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'CardChild'
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 89

@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
 )
 
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , INN TVarChar, DriverCertificate TVarChar, Card TVarChar, CardSecond TVarChar
+             , INN TVarChar, DriverCertificate TVarChar
+             , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , Comment TVarChar
              , isOfficial Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -104,6 +105,7 @@ BEGIN
          , ObjectString_DriverCertificate.ValueData AS DriverCertificate
          , ObjectString_Card.ValueData              AS Card
          , ObjectString_CardSecond.ValueData        AS CardSecond
+         , ObjectString_CardChild.ValueData         AS CardChild
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
@@ -178,6 +180,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_CardSecond
                                  ON ObjectString_CardSecond.ObjectId = Object_Member.Id 
                                 AND ObjectString_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
+          LEFT JOIN ObjectString AS ObjectString_CardChild
+                                 ON ObjectString_CardChild.ObjectId = Object_Member.Id 
+                                AND ObjectString_CardChild.DescId = zc_ObjectString_Member_CardChild()
           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                  ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
@@ -254,6 +259,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS DriverCertificate
            , CAST ('' as TVarChar)  AS Card
            , CAST ('' as TVarChar)  AS CardSecond
+           , CAST ('' as TVarChar)  AS CardChild
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
            , CAST (0 as Integer)    AS InfoMoneyId
