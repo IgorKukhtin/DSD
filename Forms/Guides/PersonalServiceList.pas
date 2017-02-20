@@ -57,6 +57,7 @@ type
     MemberHeadManagerChoice: TOpenChoiceForm;
     MemberManagerChoice: TOpenChoiceForm;
     MemberBookkeeperChoice: TOpenChoiceForm;
+    isSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

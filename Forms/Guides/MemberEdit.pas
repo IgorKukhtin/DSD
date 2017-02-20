@@ -37,6 +37,8 @@ type
     InfoMoneyGuides: TdsdGuides;
     cxLabel8: TcxLabel;
     ceCard: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    ceCardSecond: TcxTextEdit;
   private
     { Private declarations }
   public

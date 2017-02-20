@@ -57,7 +57,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
+    Width = 119
   end
   object cxLabel3: TcxLabel
     Left = 10
@@ -125,6 +125,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 13
     Width = 177
   end
+  object ceisSecond: TcxCheckBox
+    Left = 188
+    Top = 30
+    Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+    TabOrder = 14
+    Width = 95
+  end
   object ActionList: TActionList
     Left = 152
     Top = 56
@@ -168,12 +175,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -181,6 +190,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -188,6 +198,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
@@ -195,6 +206,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBranchId'
@@ -202,6 +214,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankId'
@@ -209,6 +222,15 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = BankGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSecond'
+        Value = Null
+        Component = ceisSecond
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -220,9 +242,10 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 72
+    Top = 128
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_PersonalServiceList'
@@ -235,23 +258,27 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -259,12 +286,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = Null
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -272,12 +301,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
         Value = Null
         Component = BranchGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -285,12 +316,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = BranchGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankId'
         Value = Null
         Component = BankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
@@ -298,10 +331,18 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = BankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSecond'
+        Value = Null
+        Component = ceisSecond
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 16
+    Left = 208
+    Top = 104
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -320,13 +361,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 24
-    Top = 16
+    Top = 128
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -337,6 +379,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -345,6 +388,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 104
@@ -354,6 +398,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     LookupControl = cePaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -362,6 +407,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -369,6 +415,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 213
     Top = 195
@@ -378,6 +425,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     LookupControl = ceBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -386,6 +434,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -393,6 +442,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = BranchGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 149
@@ -402,6 +452,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     LookupControl = edBankId
     FormNameParam.Value = 'TBankForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -412,6 +463,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -420,6 +472,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 69
     Top = 184

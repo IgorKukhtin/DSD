@@ -67,6 +67,13 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object clCardSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+        DataBinding.FieldName = 'CardSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
+      end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
         DataBinding.FieldName = 'INN'
@@ -732,6 +739,15 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Card'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardSecond'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardSecond'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
