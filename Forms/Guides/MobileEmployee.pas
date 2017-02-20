@@ -67,6 +67,7 @@ type
     OpenChoiceFormMobileTariff: TOpenChoiceForm;
     colRegionName: TcxGridDBColumn;
     OpenChoiceFormRegion: TOpenChoiceForm;
+    isDiscard: TcxGridDBColumn;
   private
     { Private declarations }
   public

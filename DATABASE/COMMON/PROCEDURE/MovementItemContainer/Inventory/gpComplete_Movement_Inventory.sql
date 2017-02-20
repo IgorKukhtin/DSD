@@ -343,6 +343,13 @@ BEGIN
                                                 AND (_tmpItem.isPartionCount = TRUE OR _tmpItem.isPartionSumm = TRUE)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
+                                               -- Упаковка Мяса (тоже ПФ-ГП)
+                                               WHEN vbIsPartionDate_Unit = TRUE
+                                                AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
+                                                                                         , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                          )
+                                               -- Производство ПФ-ГП
                                                WHEN vbIsPartionDate_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                       , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция

@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BranchCode Integer, BranchName TVarChar, UnitCode Integer, UnitName TVarChar
              , MobileTariffId Integer, MobileTariffName TVarChar
              , RegionId Integer, RegionName TVarChar
-             , isErased Boolean
+             , isDiscard Boolean
+             , isErased  Boolean
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -58,10 +59,14 @@ BEGIN
            , Object_Region.Id                  AS RegionId
            , Object_Region.ValueData           AS RegionName 
 
+           , ObjectBoolean_Discard.ValueData   AS isDiscard
            , Object_MobileEmployee.isErased    AS isErased
            
        FROM Object AS Object_MobileEmployee
-       
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Discard
+                                    ON ObjectBoolean_Discard.ObjectId = Object_MobileEmployee.Id 
+                                   AND ObjectBoolean_Discard.DescId = zc_ObjectBoolean_MobileEmployee_Discard  ()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_Limit
                                   ON ObjectFloat_Limit.ObjectId = Object_MobileEmployee.Id 
                                  AND ObjectFloat_Limit.DescId = zc_ObjectFloat_MobileEmployee_Limit()

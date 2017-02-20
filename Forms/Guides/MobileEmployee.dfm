@@ -90,6 +90,14 @@ object MobileEmployeeForm: TMobileEmployeeForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object isDiscard: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083#1102#1095#1077#1085
+        DataBinding.FieldName = 'isDiscard'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object colCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'

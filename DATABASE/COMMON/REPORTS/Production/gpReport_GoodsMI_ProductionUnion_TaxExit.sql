@@ -57,9 +57,9 @@ BEGIN
                         AND MIContainer.Amount <> 0
                         AND (MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
                               -- !!!захардкодил!!!
-                          OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
+                          /*OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
                           AND MIContainer.AnalyzerId             = 951601 -- ЦЕХ упаковки мясо
-                            ))
+                            )*/)
                       )
          -- расходы п/ф ГП - что б отловить партии которых нет в tmpMI_WorkProgress_in
        , tmpMI_WorkProgress_find AS
@@ -161,11 +161,21 @@ BEGIN
                            INNER JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                                  ON ObjectLink_ReceiptChild_Goods.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                 AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
-                                                AND ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
+                                                AND ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId -- !!!т.е. товар - тот же самый!!!
                            INNER JOIN ObjectFloat AS ObjectFloat_Value_child
                                                   ON ObjectFloat_Value_child.ObjectId = ObjectLink_ReceiptChild_Receipt.ObjectId
                                                  AND ObjectFloat_Value_child.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                  AND ObjectFloat_Value_child.ValueData <> 0
+
+                        /*LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                             ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
+                                            AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId*/
+
+                      /*WHERE ObjectLink_ReceiptChild_Goods.ChildObjectId = ObjectLink_Receipt_Goods_parent.ChildObjectId
+                         OR (inFromId = 951601 -- ЦЕХ упаковки мясо
+                             AND Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                            )*/
                       GROUP BY tmpMI_WorkProgress_out.GoodsId
                              , tmpMI_WorkProgress_out.PartionGoodsId
                              , MIContainer.ObjectIntId_Analyzer
@@ -291,7 +301,11 @@ BEGIN
 
          , tmpResult.Amount_WorkProgress_in :: TFloat   AS Amount_WorkProgress_in
          , tmpResult.CuterCount :: TFloat               AS CuterCount
-         , tmpResult.RealWeight :: TFloat               AS RealWeight
+         , CASE WHEN inFromId = 951601 -- ЦЕХ упаковки мясо
+                     AND COALESCE (tmpResult.RealWeight, 0) = 0
+                     THEN tmpResult.Amount_WorkProgress_in
+                ELSE tmpResult.RealWeight
+           END :: TFloat               AS RealWeight
          , tmpResult.Amount_GP_in_calc :: TFloat        AS Amount_GP_in_calc
          , tmpResult.Amount_GP_in :: TFloat             AS Amount_GP_in
          , tmpResult.AmountReceipt_out :: TFloat        AS AmountReceipt_out
