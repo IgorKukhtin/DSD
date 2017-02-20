@@ -1,34 +1,40 @@
 inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1087#1088#1086#1076#1072#1078
   ClientHeight = 491
-  ClientWidth = 675
+  ClientWidth = 745
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.AddOnFormRefresh.SelfList = 'Sale'
   AddOnFormData.AddOnFormRefresh.DataSet = MasterCDS
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Sale
-  ExplicitWidth = 691
+  ExplicitWidth = 761
   ExplicitHeight = 529
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 675
+    Width = 745
     Height = 434
     TabOrder = 3
-    ExplicitWidth = 675
+    ExplicitWidth = 745
     ExplicitHeight = 434
     ClientRectBottom = 434
-    ClientRectRight = 675
+    ClientRectRight = 745
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 675
+      ExplicitWidth = 745
       ExplicitHeight = 434
       inherited cxGrid: TcxGrid
-        Width = 675
+        Width = 745
         Height = 434
-        ExplicitWidth = 675
+        ExplicitWidth = 745
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummSale
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -44,6 +50,11 @@ inherited SaleJournalForm: TSaleJournalForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = colUnitName
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colTotalSummSale
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -103,6 +114,14 @@ inherited SaleJournalForm: TSaleJournalForm
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object colTotalSummSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'TotalSummSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
@@ -185,8 +204,8 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 675
-    ExplicitWidth = 675
+    Width = 745
+    ExplicitWidth = 745
   end
   inherited ActionList: TActionList
     Left = 55

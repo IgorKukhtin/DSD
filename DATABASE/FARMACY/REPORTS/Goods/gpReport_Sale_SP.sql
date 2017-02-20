@@ -49,6 +49,15 @@ RETURNS TABLE (UnitName       TVarChar
              , PartnerMedical_FullName         TVarChar
              , PartnerMedical_JuridicalAddress TVarChar
              , PartnerMedical_Phone            TVarChar
+            
+             , PartnerMedical_OKPO             TVarChar
+             , PartnerMedical_AccounterName    TVarChar
+             , PartnerMedical_INN              TVarChar
+             , PartnerMedical_NumberVAT        TVarChar
+             , PartnerMedical_BankAccount      TVarChar
+             , PartnerMedical_BankName         TVarChar
+             , PartnerMedical_MFO              TVarChar
+
              , MedicFIO TVarChar
              )
 AS
@@ -244,6 +253,14 @@ BEGIN
            , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
            , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
            , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
+           , ObjectHistory_PartnerMedicalDetails.OKPO              AS PartnerMedical_OKPO
+           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
+           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
+           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
+           , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
+           , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
+           , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO
+
            , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
 
         FROM tmpMI AS tmpData
@@ -274,6 +291,11 @@ BEGIN
  
              LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
                                      AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
+             LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
+                                      ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                     AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+
         ORDER BY Object_Unit.ValueData
                , Object_PartnerMedical.ValueData
                , Object_Goods.ValueData 

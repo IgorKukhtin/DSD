@@ -10,6 +10,7 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
       , Object_Status.ValueData                                        AS StatusName
       , COALESCE(MovementFloat_TotalCount.ValueData,0)::TFloat         AS TotalCount
       , COALESCE(MovementFloat_TotalSumm.ValueData,0)::TFloat          AS TotalSumm
+      , COALESCE(MovementFloat_TotalSummSale.ValueData,0)::TFloat      AS TotalSummSale
       , COALESCE(MovementFloat_TotalSummPrimeCost.ValueData,0)::TFloat AS TotalSummPrimeCost
       , MovementLinkObject_Unit.ObjectId                               AS UnitId
       , Object_Unit.ValueData                                          AS UnitName
@@ -37,15 +38,19 @@ CREATE OR REPLACE VIEW Movement_Sale_View AS
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                ON MovementFloat_TotalCount.MovementId = Movement.Id
                                AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+        LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                               AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
                                    
         LEFT JOIN MovementFloat AS MovementFloat_TotalSummPrimeCost
-                                ON MovementFloat_TotalSummPrimeCost.MovementId =  Movement.Id
+                                ON MovementFloat_TotalSummPrimeCost.MovementId = Movement.Id
                                AND MovementFloat_TotalSummPrimeCost.DescId = zc_MovementFloat_TotalSummPrimeCost()
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit

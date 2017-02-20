@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , StatusName TVarChar
              , TotalCount TFloat
              , TotalSumm TFloat
+             , TotalSummSale TFloat
              , TotalSummPrimeCost TFloat
              , UnitId Integer
              , UnitName TVarChar
@@ -79,6 +80,7 @@ BEGIN
           , Movement_Sale.StatusName
           , Movement_Sale.TotalCount
           , Movement_Sale.TotalSumm
+          , Movement_Sale.TotalSummSale
           , Movement_Sale.TotalSummPrimeCost
           , Movement_Sale.UnitId
           , Movement_Sale.UnitName

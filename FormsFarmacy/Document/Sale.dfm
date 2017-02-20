@@ -1200,8 +1200,8 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 407
-    Top = 224
+    Left = 399
+    Top = 240
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
