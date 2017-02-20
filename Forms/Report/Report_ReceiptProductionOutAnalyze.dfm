@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -439,7 +439,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
             Width = 70
           end
           object CuterCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1082#1091#1090#1077#1088#1086#1074
+            Caption = #1050#1086#1083'. '#1082#1091#1090#1090#1077#1088#1086#1074
             DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1338,27 +1338,33 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'/'#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
@@ -1378,6 +1384,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1385,6 +1392,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1393,6 +1401,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -1400,11 +1409,13 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1088#1072#1089#1093#1086#1076' '#1089#1099#1088#1100#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_Reserve: TdsdPrintAction
       Category = 'DSDLib'
@@ -1413,27 +1424,33 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085'/'#1060#1072#1082#1090' '#1079#1072#1087#1072#1089' '#1094#1077#1085
@@ -1452,6 +1469,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1459,6 +1477,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1467,6 +1486,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -1474,11 +1494,13 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1079#1072#1087#1072#1089' '#1094#1077#1085
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1055#1083#1072#1085' '#1080' '#1060#1072#1082#1090' '#1079#1072#1087#1072#1089' '#1094#1077#1085
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object actPrint_TaxReal: TdsdPrintAction
       Category = 'DSDLib'
@@ -1487,27 +1509,33 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.Name = 'id'
           FromParam.Value = Null
           FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.ComponentItem = 'Id'
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deStart
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end
         item
           FromParam.Value = 42186d
           FromParam.Component = deEnd
           FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = Null
+          ToParam.Value = 'NULL'
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
       Caption = #1040#1085#1072#1083#1080#1079' '#1074#1099#1093#1086#1076#1086#1074' '#1043#1055
@@ -1526,6 +1554,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1533,6 +1562,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1541,6 +1571,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'isPartionGoods'
@@ -1548,11 +1579,13 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = cbPartionGoods
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1040#1085#1072#1083#1080#1079')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1080' '#1087#1088#1086#1094#1077#1085#1090' '#1074#1099#1093#1086#1076#1072' ('#1040#1085#1072#1083#1080#1079')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -1563,6 +1596,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
       FormName = 'TReport_ReceiptProductionOutAnalyzeDialogForm'
       FormNameParam.Value = 'TReport_ReceiptProductionOutAnalyzeDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -1570,6 +1604,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -1577,6 +1612,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromUnitId'
@@ -1584,6 +1620,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = FromUnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FromUnitName'
@@ -1592,6 +1629,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToUnitId'
@@ -1599,6 +1637,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = ToUnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ToUnitName'
@@ -1607,6 +1646,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId_1'
@@ -1614,6 +1654,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = PriceList_1_Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceList_1_Name'
@@ -1622,6 +1663,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId_2'
@@ -1629,6 +1671,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = PriceList_2_Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceList_2_Name'
@@ -1637,6 +1680,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId_3'
@@ -1644,6 +1688,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = PriceList_3_Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceList_3_Name'
@@ -1651,6 +1696,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = PriceList_3_Guides
           ComponentItem = 'TextValue'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceListId_sale'
@@ -1658,6 +1704,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = PriceList_sale_Guides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PriceList_sale_Name'
@@ -1666,6 +1713,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupId'
@@ -1673,6 +1721,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsGroupName'
@@ -1681,6 +1730,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1712,6 +1762,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1719,6 +1770,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitFromId'
@@ -1726,6 +1778,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = FromUnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inUnitToId'
@@ -1733,6 +1786,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = ToUnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGoodsGroupId'
@@ -1740,6 +1794,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_1'
@@ -1747,6 +1802,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = PriceList_1_Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_2'
@@ -1754,6 +1810,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = PriceList_2_Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_3'
@@ -1761,6 +1818,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = PriceList_3_Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId_sale'
@@ -1768,6 +1826,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = PriceList_sale_Guides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPartionGoods'
@@ -1775,6 +1834,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         Component = cbPartionGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 152
@@ -1886,6 +1946,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1896,6 +1957,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1904,6 +1966,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 976
     Top = 32
@@ -1913,6 +1976,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edFromUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1923,6 +1987,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1931,6 +1996,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 408
   end
@@ -1939,6 +2005,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edToUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1949,6 +2016,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1957,6 +2025,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 464
     Top = 24
@@ -1966,6 +2035,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edPriceList_1
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1976,6 +2046,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1984,24 +2055,28 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -2009,6 +2084,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 636
     Top = 65528
@@ -2018,6 +2094,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edPriceList_2
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2028,6 +2105,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2036,24 +2114,28 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -2061,6 +2143,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 644
     Top = 40
@@ -2070,6 +2153,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edPriceList_3
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2080,6 +2164,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2088,24 +2173,28 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -2113,6 +2202,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 836
     Top = 16
@@ -2122,6 +2212,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
     LookupControl = edPriceList_sale
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2132,6 +2223,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2140,24 +2232,28 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceWithVAT'
         Value = 'False'
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = ''
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -2165,6 +2261,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 828
     Top = 48

@@ -703,20 +703,73 @@ BEGIN
                -- Êîë-âî
      || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
                -- Öåíà ñ ÍÄÑ
-     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1.2 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1.2 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar 
+     || ';' || CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3)) :: TVarChar 
      || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
      || ';1' -- Êîýôôèöèåíò
      || ';' || COALESCE (Object_Measure.ValueData, '')
                -- Öåíà áåç ÍÄÑ
-     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3)) ELSE CAST (1 * MIFloat_Price.ValueData AS NUMERIC (16, 3)) END :: TVarChar
+     || ';' || CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+               AS NUMERIC (16, 3)) :: TVarChar
                -- Ñóììà áåç ÍÄÑ
-     || ';' || CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END :: TVarChar
+     || ';' || CAST
+              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
                -- Ñóììà ñ ÍÄÑ
-     || ';' || COALESCE (MIFloat_Summ.ValueData, 0) :: TVarChar
+     || ';' || CAST
+              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
                -- ÍÄÑ
-     || ';' || (COALESCE (MIFloat_Summ.ValueData, 0)
-              - CASE WHEN MIFloat_CountForPrice.ValueData > 1 THEN CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)) ELSE CAST (1 * MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)) END
-               ) :: TVarChar
+    || ';' || (CAST
+              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
+             - CAST
+              (CAST (MIFloat_Price.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
+                   * CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN 1 + MIFloat_ChangePercent.ValueData / 100
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                                              THEN 1 + vbChangePercent / 100
+                          ELSE 1
+                     END
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
+              ) :: TVarChar
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -730,9 +783,9 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                          ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-             LEFT JOIN MovementItemFloat AS MIFloat_Summ
-                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
              LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = MovementItem.ObjectId
                                           AND tmpGoodsByGoodsKind.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId

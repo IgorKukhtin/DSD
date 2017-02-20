@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
 RETURNS VOID
 AS
 $BODY$
+  DECLARE vbTmp Integer;
 BEGIN
      -- Проверка
      IF EXISTS (SELECT SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) FROM _tmpItem /*WHERE MovementDescId = zc_Movement_ProfitLossService()*/ HAVING SUM (OperSumm + COALESCE (OperSumm_Diff, 0)) <> 0)
@@ -389,10 +390,13 @@ BEGIN
                 HAVING COUNT (*) > 1
                )
      THEN
-         RAISE EXCEPTION 'Ошибка.Для формы оплаты <%> невозможно автоматически определить контрагента:%<%>%или%<%>'
+         vbTmp:= -1;
+         /*RAISE EXCEPTION 'Ошибка.Для формы оплаты <%> невозможно автоматически определить контрагента:%<%>%или%<%>'
                        , lfGet_Object_ValueData (zc_Enum_PaidKind_SecondForm())
                        , CHR (13)
-                       , lfGet_Object_ValueData ((SELECT MAX (ObjectLink.ObjectId)
+                       , lfGet_Object_ValueData ((SELECT tmp.ObjectId
+                                                  FROM
+                                                 (SELECT MAX (ObjectLink.ObjectId) AS ObjectId
                                                   FROM ObjectLink
                                                        INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
                                                   WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
@@ -404,10 +408,14 @@ BEGIN
                                                                                     )
                                                   GROUP BY ObjectLink.ChildObjectId
                                                   HAVING COUNT (*) > 1
+                                                 ) AS tmp
+                                                 LIMIT 1
                                                 ))
                        , CHR (13)
                        , CHR (13)
-                       , lfGet_Object_ValueData ((SELECT MIN (ObjectLink.ObjectId)
+                       , lfGet_Object_ValueData ((SELECT tmp.ObjectId
+                                                  FROM
+                                                 (SELECT MIN (ObjectLink.ObjectId) AS ObjectId
                                                   FROM ObjectLink
                                                        INNER JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE
                                                   WHERE ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
@@ -419,8 +427,10 @@ BEGIN
                                                                                     )
                                                   GROUP BY ObjectLink.ChildObjectId
                                                   HAVING COUNT (*) > 1
+                                                 ) AS tmp
+                                                 LIMIT 1
                                                 ))
-                        ;
+                        ;*/
      END IF;
 
 
@@ -588,10 +598,10 @@ BEGIN
                                                                             , inObjectId_5        := _tmpItem.PartionMovementId
                                                                             , inDescId_6          := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE zc_ContainerLinkObject_Currency() END
                                                                             , inObjectId_6        := CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis() THEN NULL ELSE _tmpItem.CurrencyId END
-                                                                            , inDescId_7          := CASE WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END END -- and <> наши компании
-                                                                            , inObjectId_7        := CASE WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END END END -- and <> наши компании
-                                                                            , inDescId_8          := CASE WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END END -- and <> наши компании
-                                                                            , inObjectId_8        := CASE WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END END -- and <> наши компании
+                                                                            , inDescId_7          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Partner() ELSE NULL END END -- and <> наши компании
+                                                                            , inObjectId_7        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198, 3528808) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() /*ГСМ*/ THEN 0 ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN CASE WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() THEN (SELECT (ObjectLink.ObjectId) FROM ObjectLink JOIN Object ON Object.Id = ObjectLink.ObjectId AND Object.isErased = FALSE WHERE ObjectLink.ChildObjectId = _tmpItem.ObjectId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()) ELSE _tmpItem.ObjectId END ELSE NULL END END END -- and <> наши компании
+                                                                            , inDescId_8          := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN NULL WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN zc_ContainerLinkObject_Branch() ELSE NULL END END -- and <> наши компании
+                                                                            , inObjectId_8        := CASE WHEN inMovementId = 4955377 /*vbTmp = -1*/ THEN 0    WHEN /*inMovementId IN (3470198) OR*/ (_tmpItem.BranchId_Balance = 0 AND _tmpItem.ObjectId IN (9400, 9401)) /*Золотий Екватор ТОВ*/ THEN NULL ELSE CASE WHEN _tmpItem.PaidKindId = zc_Enum_PaidKind_SecondForm() AND _tmpItem.AccountDirectionId <> zc_Enum_AccountDirection_30200() THEN _tmpItem.BranchId_Balance ELSE NULL END END -- and <> наши компании
                                                                              )
                                        END;
      -- 2.2. определяется ContainerId для проводок суммового учета - Суммовой учет в валюте

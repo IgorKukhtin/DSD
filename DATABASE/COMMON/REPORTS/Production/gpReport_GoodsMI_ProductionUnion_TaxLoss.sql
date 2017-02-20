@@ -25,6 +25,18 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
 AS
 $BODY$
 BEGIN
+    -- Заменили параметр
+    IF inToId = 8458 -- Склад База ГП
+       AND inFromId = 951601 -- ЦЕХ упаковки мясо 
+    THEN inToId:= 8439; --  Участок мясного сырья
+    END IF;
+
+
+    -- таблица
+    CREATE TEMP TABLE _tmpUnit_TaxLoss_report (UnitId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpUnit_TaxLoss_report (UnitId)
+       SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS tmp;
+
 
     -- Результат
     RETURN QUERY
@@ -79,9 +91,10 @@ BEGIN
 
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                        AND MIContainer.WhereObjectId_Analyzer = inToId
+                        -- AND MIContainer.WhereObjectId_Analyzer = inToId
+                        AND MIContainer.WhereObjectId_Analyzer IN (SELECT _tmpUnit_TaxLoss_report.UnitId FROM _tmpUnit_TaxLoss_report)
                         AND MIContainer.ObjectExtId_Analyzer = inFromId
-                        AND MIContainer.ObjectIntId_Analyzer > 0
+                        AND (MIContainer.ObjectIntId_Analyzer > 0 OR inToId = 8439) --  Участок мясного сырья
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
                         AND MIContainer.Amount <> 0
@@ -124,7 +137,8 @@ BEGIN
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.WhereObjectId_Analyzer = inFromId
-                        AND MIContainer.ObjectExtId_Analyzer = inToId
+                        -- AND MIContainer.ObjectExtId_Analyzer = inToId
+                        AND MIContainer.ObjectExtId_Analyzer IN (SELECT _tmpUnit_TaxLoss_report.UnitId FROM _tmpUnit_TaxLoss_report)
                         AND MIContainer.ObjectIntId_Analyzer > 0
                         AND MIContainer.MovementDescId = zc_Movement_Send()
                         AND MIContainer.Amount <> 0

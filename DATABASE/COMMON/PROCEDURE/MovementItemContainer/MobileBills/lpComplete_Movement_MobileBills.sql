@@ -417,6 +417,20 @@ BEGIN
        ;
 
 
+     -- 5.0. ФИНИШ - если это "последний" документ - на основании него update - Discard
+     IF COALESCE ((SELECT MAX (Movement.OperDate) FROM Movement WHERE Movement.DescId = zc_Movement_MobileBills() AND Movement.StatusId = zc_Enum_Status_Complete()), zc_DateStart())
+        <= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+     THEN
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_MobileEmployee_Discard(), Object_MobileEmployee.Id, CASE WHEN MovementItem.ObjectId > 0 THEN FALSE ELSE TRUE END)
+         FROM Object AS Object_MobileEmployee
+              LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = FALSE
+                                    AND MovementItem.ObjectId   = Object_MobileEmployee.Id
+         WHERE Object_MobileEmployee.DescId = zc_Object_MobileEmployee();
+
+     END IF;
+
      -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
