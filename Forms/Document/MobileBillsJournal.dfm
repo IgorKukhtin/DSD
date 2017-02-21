@@ -368,8 +368,14 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <
         item
-          Name = 'inContractId'
+          Name = 'inOperdate'
           Value = Null
+          Component = deStart
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = '149099'
           MultiSelectSeparator = ','
         end>
     end
@@ -397,9 +403,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel.  '#1056#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077 +
-        #1085#1090' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
@@ -513,6 +517,14 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -545,6 +557,11 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     end
     object bbLoadXML: TdxBarButton
       Action = mactLoadXML
+      Category = 0
+    end
+    object bbLoadExcel: TdxBarButton
+      Action = actLoadExcel
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel'
       Category = 0
     end
   end
@@ -647,6 +664,11 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -768,7 +790,9 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TPersonalServiceForm;zc_Object_ImportSetting_PersonalService'
+        Value = 
+          'TMobileBillsJournalForm;zc_Object_ImportSetting_MobileBillsJourn' +
+          'al'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

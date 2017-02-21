@@ -49,6 +49,7 @@ type
     spGetImportSetting: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;
     actLoadExcel: TMultiAction;
+    bbLoadExcel: TdxBarButton;
   private
     { Private declarations }
   public
