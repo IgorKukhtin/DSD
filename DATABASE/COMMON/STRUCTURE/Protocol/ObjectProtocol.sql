@@ -26,6 +26,7 @@ CREATE TABLE ObjectProtocol(
 CREATE INDEX idx_ObjectProtocol_ObjectId ON ObjectProtocol (ObjectId);
 CREATE INDEX idx_ObjectProtocol_UserId ON ObjectProtocol (UserId);
 CREATE INDEX idx_ObjectProtocol_OperDate ON ObjectProtocol (OperDate);
+CREATE INDEX idx_ObjectProtocol_ObjectId_OperDate ON ObjectProtocol (ObjectId, OperDate);
 
 
 /*-------------------------------------------------------------------------------*/
