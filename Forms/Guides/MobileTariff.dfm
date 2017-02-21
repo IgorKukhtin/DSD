@@ -77,13 +77,28 @@ object MobileTariffForm: TMobileTariffForm
         Options.Editing = False
         Width = 184
       end
+      object colContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 63
+      end
       object colContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 99
+      end
+      object colJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 99
       end
       object colMonthly: TcxGridDBColumn
         Caption = #1040#1073#1086#1085#1087#1083#1072#1090#1072

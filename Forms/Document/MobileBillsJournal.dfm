@@ -5,7 +5,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 570
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -358,6 +358,52 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
       InfoAfterExecute = #1044#1072#1085#1085#1099#1093' '#1080#1079' XML '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' XML'
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1044#1072#1085#1085#1099#1093' '#1080#1079' XML'
+    end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inContractId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSetting
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSetting
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actLoadExcel: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel.  '#1056#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077 +
+        #1085#1090' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
+      ImageIndex = 41
     end
   end
   inherited MasterDS: TDataSource
@@ -712,5 +758,37 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     PackSize = 1
     Left = 704
     Top = 48
+  end
+  object spGetImportSetting: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPersonalServiceForm;zc_Object_ImportSetting_PersonalService'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 880
+    Top = 184
   end
 end
