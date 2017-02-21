@@ -20,10 +20,13 @@ RETURNS TABLE (Id           Integer
 AS 
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbPersonalId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
+
+      vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
       -- Результат
       RETURN QUERY
@@ -35,18 +38,45 @@ BEGIN
                              WHERE ObjectProtocol.OperDate > inSyncDateIn
                              GROUP BY ObjectProtocol.ObjectId
                             )
+           , tmpGoodsListSale AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                                       , COUNT(ObjectLink_GoodsListSale_Goods.ChildObjectId) AS GoodsCount
+                                  FROM Object AS Object_GoodsListSale
+                                       JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
+                                                       ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                                      AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                                      AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
+                                       JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                                       ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                                      AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                                      AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
+                                       JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                       ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
+                                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                                      AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                                  WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                                  GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                 )
         SELECT Object_Goods.Id
              , Object_Goods.ObjectCode
              , Object_Goods.ValueData
-             , CAST(0.0 AS TFloat) AS Weight
+             , ObjectFloat_Goods_Weight.ValueData AS Weight
              , CAST(0.0 AS TFloat) AS Remains
              , CAST(0.0 AS TFloat) AS Forecast
-             , CAST(0 AS Integer)  AS GoodsGroupId
-             , CAST(0 AS Integer)  AS MeasureId
+             , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
+             , ObjectLink_Goods_Measure.ChildObjectId    AS MeasureId
              , Object_Goods.isErased
-             , (NOT Object_Goods.isErased) AS isSync
+             , EXISTS(SELECT 1 FROM tmpGoodsListSale WHERE tmpGoodsListSale.GoodsId = Object_Goods.Id) AS isSync
         FROM Object AS Object_Goods
              JOIN tmpProtocol ON tmpProtocol.GoodsId = Object_Goods.Id
+             LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                   ON ObjectFloat_Goods_Weight.ObjectId = Object_Goods.Id
+                                  AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
         WHERE Object_Goods.DescId = zc_Object_Goods();
 
 END; 
