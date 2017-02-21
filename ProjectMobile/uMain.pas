@@ -92,16 +92,20 @@ type
     lThursdayCount: TLabel;
     lSundayCount: TLabel;
     ImageViewer1: TImageViewer;
-    tiPartner: TTabItem;
+    tiPartners: TTabItem;
     lwPartner: TListView;
     Panel4: TPanel;
     sbBacktoVisit: TSpeedButton;
-    bsPartner: TBindSourceDB;
-    blPartner: TBindingsList;
-    LinkFillControlToField1: TLinkFillControlToField;
     Panel5: TPanel;
     lDayInfo: TLabel;
     Label10: TLabel;
+    bsPartner: TBindSourceDB;
+    blPartner: TBindingsList;
+    LinkFillControlToField1: TLinkFillControlToField;
+    tiPartnerInfo: TTabItem;
+    Panel6: TPanel;
+    SpeedButton1: TSpeedButton;
+    Label11: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure sbReloginClick(Sender: TObject);
@@ -217,7 +221,7 @@ end;
 procedure TfrmMain.sbMondayClick(Sender: TObject);
 begin
   ShowPartners(TSpeedButton(Sender).Tag, TSpeedButton(Sender).Text);
-  tcMain.ActiveTab := tiPartner;
+  tcMain.ActiveTab := tiPartners;
 end;
 
 procedure TfrmMain.sbReloginClick(Sender: TObject);
@@ -282,9 +286,11 @@ var
   DaysCount : array[1..7] of integer;
   Schedule : string;
 begin
-  with DM.tblObject_Partner do
+  with DM.qryPartner do
   begin
-    Open;
+    DM.qryPartner.Open('select J.VALUEDATA Name, P.ADDRESS, P.GPS, P.SCHEDULE from OBJECT_PARTNER P ' +
+      'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
+      'where P.ISERASED = 0');
 
     First;
     while not EOF do
@@ -304,6 +310,7 @@ begin
 
       Next;
     end;
+    Close;
   end;
 
   Num := 1;
@@ -385,7 +392,9 @@ procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 begin
   lDayInfo.Text := 'ЬРаиагв: ' + Caption;
   DM.qryPartner.Close;
-  DM.qryPartner.Open();
+  DM.qryPartner.Open('select J.VALUEDATA Name, P.ADDRESS, P.GPS, P.SCHEDULE from OBJECT_PARTNER P ' +
+   'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
+   'where lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t'' and P.ISERASED = 0');
 end;
 
 function TfrmMain.GetImage(const AImageName: string): TBitmap;

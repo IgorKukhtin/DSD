@@ -157,21 +157,10 @@ type
     tblObject_PriceListItemsPrice: TFloatField;
     tblObject_ConstPaidKindId_First: TIntegerField;
     qryPartner: TFDQuery;
-    qryPartnerId: TIntegerField;
-    qryPartnerObjectCode: TIntegerField;
-    qryPartnerValueData: TStringField;
     qryPartnerAddress: TStringField;
     qryPartnerGPS: TStringField;
-    qryPartnerSchedule: TStringField;
-    qryPartnerDebtSum: TFloatField;
-    qryPartnerOverSum: TFloatField;
-    qryPartnerOverDays: TIntegerField;
-    qryPartnerPrepareDayCount: TIntegerField;
-    qryPartnerJuridicalId: TIntegerField;
-    qryPartnerRouteId: TIntegerField;
-    qryPartnerContractId: TIntegerField;
-    qryPartnerPriceListId: TIntegerField;
-    qryPartnerPriceListId_ret: TIntegerField;
+    qryPartnerName: TStringField;
+    qryPartnerSCHEDULE: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -593,6 +582,7 @@ begin
     GetConfigurationInfo;
 
     GetDictionaries('Partner');
+    GetDictionaries('Juridical');
 
     conMain.Commit;
     Result := true;
@@ -649,6 +639,12 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Partner';
       CurDictTable := tblObject_Partner;
+    end
+    else
+    if AName = 'Juridical' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Juridical';
+      CurDictTable := tblObject_Juridical;
     end;
 
     if GetStoredProc.StoredProcName = '' then

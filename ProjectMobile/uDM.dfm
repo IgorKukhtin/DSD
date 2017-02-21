@@ -464,15 +464,9 @@ object DM: TDM
       'select * from Object_Partner')
     Left = 40
     Top = 224
-    object qryPartnerId: TIntegerField
-      FieldName = 'Id'
-    end
-    object qryPartnerObjectCode: TIntegerField
-      FieldName = 'ObjectCode'
-    end
-    object qryPartnerValueData: TStringField
-      FieldName = 'ValueData'
-      Size = 255
+    object qryPartnerName: TStringField
+      FieldName = 'Name'
+      Size = 250
     end
     object qryPartnerAddress: TStringField
       FieldName = 'Address'
@@ -482,36 +476,8 @@ object DM: TDM
       FieldName = 'GPS'
       Size = 255
     end
-    object qryPartnerSchedule: TStringField
-      FieldName = 'Schedule'
-      Size = 255
-    end
-    object qryPartnerDebtSum: TFloatField
-      FieldName = 'DebtSum'
-    end
-    object qryPartnerOverSum: TFloatField
-      FieldName = 'OverSum'
-    end
-    object qryPartnerOverDays: TIntegerField
-      FieldName = 'OverDays'
-    end
-    object qryPartnerPrepareDayCount: TIntegerField
-      FieldName = 'PrepareDayCount'
-    end
-    object qryPartnerJuridicalId: TIntegerField
-      FieldName = 'JuridicalId'
-    end
-    object qryPartnerRouteId: TIntegerField
-      FieldName = 'RouteId'
-    end
-    object qryPartnerContractId: TIntegerField
-      FieldName = 'ContractId'
-    end
-    object qryPartnerPriceListId: TIntegerField
-      FieldName = 'PriceListId'
-    end
-    object qryPartnerPriceListId_ret: TIntegerField
-      FieldName = 'PriceListId_ret'
+    object qryPartnerSCHEDULE: TStringField
+      FieldName = 'SCHEDULE'
     end
   end
 end
