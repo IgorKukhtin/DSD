@@ -1,0 +1,814 @@
+object frmMain: TfrmMain
+  Left = 0
+  Top = 0
+  ClientHeight = 571
+  ClientWidth = 350
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object tcMain: TTabControl
+    Align = Client
+    Size.Width = 350.000000000000000000
+    Size.Height = 571.000000000000000000
+    Size.PlatformDefault = False
+    TabIndex = 4
+    TabOrder = 69
+    TabPosition = None
+    OnChange = tcMainChange
+    object tiStart: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'tiStart'
+      object LoginPanel: TPanel
+        Align = Contents
+        Size.Width = 350.000000000000000000
+        Size.Height = 571.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'LoginPanelStyle1'
+        TabOrder = 0
+        object LoginScaledLayout: TScaledLayout
+          Align = Contents
+          OriginalWidth = 350.000000000000000000
+          OriginalHeight = 571.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 571.000000000000000000
+          Size.PlatformDefault = False
+          object Layout1: TLayout
+            Align = Top
+            Position.Y = 93.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 60.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            object LoginEdit: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Align = Center
+              TabOrder = 0
+              Text = #1040#1076#1084#1080#1085
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 28.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.HorzAlign = Center
+              Size.Width = 321.000000000000000000
+              Size.Height = 43.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+            end
+          end
+          object Layout2: TLayout
+            Align = Top
+            Position.Y = 67.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 26.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+            object Label2: TLabel
+              Align = HorzCenter
+              Anchors = [akTop, akRight, akBottom]
+              StyledSettings = [Family, Style]
+              Position.X = 19.000000000000000000
+              Size.Width = 312.000000000000000000
+              Size.Height = 26.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = xFF005078
+              Text = 'Login'
+            end
+          end
+          object Layout3: TLayout
+            Align = Top
+            Position.Y = 153.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 8
+            object PasswordLabel: TLabel
+              Align = HorzCenter
+              StyledSettings = [Family, Style]
+              Position.X = 16.000000000000000000
+              Size.Width = 318.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = xFF005078
+              Text = 'Password'
+            end
+          end
+          object Layout4: TLayout
+            Align = Top
+            Position.Y = 178.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 60.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 5
+            object PasswordEdit: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Align = Center
+              TabOrder = 0
+              Password = True
+              Text = 'qsxqsxw1'
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 28.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.HorzAlign = Center
+              Size.Width = 321.000000000000000000
+              Size.Height = 43.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+            end
+          end
+          object Layout5: TLayout
+            Align = Top
+            Position.Y = 348.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 104.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 9
+            object LogInButton: TButton
+              Align = Center
+              StyledSettings = []
+              Size.Width = 219.000000000000000000
+              Size.Height = 72.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = 'Log In'
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 24.000000000000000000
+              TextSettings.FontColor = xFF005078
+              OnClick = LogInButtonClick
+            end
+          end
+          object Panel1: TPanel
+            Align = Top
+            Size.Width = 350.000000000000000000
+            Size.Height = 67.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'Panel1Style1'
+            TabOrder = 10
+            object Label3: TLabel
+              Align = Top
+              StyledSettings = []
+              Size.Width = 350.000000000000000000
+              Size.Height = 42.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = claRed
+              TextSettings.HorzAlign = Center
+              TextSettings.VertAlign = Trailing
+              TextSettings.WordWrap = False
+              Text = 'Alan'
+            end
+            object Label4: TLabel
+              Align = Top
+              StyledSettings = []
+              Position.Y = 42.000000000000000000
+              Size.Width = 350.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.HorzAlign = Center
+              Text = 'Mobile edition'
+            end
+          end
+          object aiCheck: TAniIndicator
+            Position.X = 140.000000000000000000
+            Position.Y = 370.000000000000000000
+            Visible = False
+          end
+          object WebServerLayout1: TLayout
+            Align = Top
+            Position.Y = 238.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 7
+            object WebServerLabel: TLabel
+              Align = HorzCenter
+              StyledSettings = [Family, Style]
+              Position.X = 16.000000000000000000
+              Size.Width = 318.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = xFF005078
+              Text = 'WebServer'
+            end
+          end
+          object WebServerLayout2: TLayout
+            Align = Top
+            Position.Y = 263.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 60.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 4
+            object WebServerEdit: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Align = Center
+              TabOrder = 0
+              Text = 'http://project-vds.vds.colocall.com/project/index.php'
+              TextSettings.Font.Family = 'Times New Roman'
+              TextSettings.Font.Size = 28.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.HorzAlign = Center
+              Size.Width = 321.000000000000000000
+              Size.Height = 43.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+            end
+          end
+          object SyncLayout: TLayout
+            Align = Top
+            Position.Y = 323.000000000000000000
+            Size.Width = 350.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 6
+            object SyncCheckBox: TCheckBox
+              Align = HorzCenter
+              StyledSettings = [Family, Style]
+              Position.X = 16.000000000000000000
+              Size.Width = 318.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = ' '#1057#1080#1085#1093#1088#1086#1085#1080#1079#1080#1088#1086#1074#1072#1090#1100#1089#1103' '#1087#1088#1080' '#1083#1086#1075#1080#1085#1077
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = xFF005078
+            end
+          end
+        end
+      end
+    end
+    object tiMain: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'tiMain'
+      object Panel2: TPanel
+        Align = MostTop
+        Size.Width = 350.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object ImageViewer1: TImageViewer
+          Align = Left
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          ShowScrollBars = False
+        end
+      end
+      object Layout21: TLayout
+        Align = Top
+        Position.Y = 50.000000000000000000
+        Size.Width = 350.000000000000000000
+        Size.Height = 130.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 11
+        object Layout7: TLayout
+          Align = Left
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 10
+          object sbHandBook: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            object Image1: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label1: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+            end
+          end
+        end
+        object Layout8: TLayout
+          Align = Right
+          Position.X = 175.000000000000000000
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          object sbVisit: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            OnClick = sbVisitClick
+            object Image2: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label5: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1042#1080#1079#1080#1090#1099
+            end
+          end
+        end
+      end
+      object Layout23: TLayout
+        Align = Top
+        Position.Y = 310.000000000000000000
+        Size.Width = 350.000000000000000000
+        Size.Height = 130.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 10
+        object Layout10: TLayout
+          Align = Left
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 10
+          object sbSync: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            object Image3: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label8: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1057#1080#1085#1093#1088#1086#1085#1080#1079#1072#1094#1080#1103
+            end
+          end
+        end
+        object Layout6: TLayout
+          Align = Right
+          Position.X = 175.000000000000000000
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          object sbRelogin: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            OnClick = sbReloginClick
+            object Image4: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label9: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1042#1099#1093#1086#1076
+            end
+          end
+        end
+      end
+      object Layout22: TLayout
+        Align = Top
+        Position.Y = 180.000000000000000000
+        Size.Width = 350.000000000000000000
+        Size.Height = 130.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        object Layout13: TLayout
+          Align = Left
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 10
+          object sbInfo: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            object Image5: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label6: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103
+            end
+          end
+        end
+        object Layout14: TLayout
+          Align = Right
+          Position.X = 175.000000000000000000
+          Size.Width = 175.000000000000000000
+          Size.Height = 130.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          object sbReport: TSpeedButton
+            Align = Client
+            Size.Width = 175.000000000000000000
+            Size.Height = 130.000000000000000000
+            Size.PlatformDefault = False
+            object Image6: TImage
+              MultiResBitmap = <
+                item
+                end>
+              Align = Client
+              HitTest = False
+              Size.Width = 175.000000000000000000
+              Size.Height = 110.000000000000000000
+              Size.PlatformDefault = False
+            end
+            object Label7: TLabel
+              Align = Bottom
+              Position.Y = 110.000000000000000000
+              Size.Width = 175.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = #1054#1090#1095#1077#1090#1099
+            end
+          end
+        end
+      end
+    end
+    object tiVisit: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'tiVisit'
+      object Panel3: TPanel
+        Align = MostTop
+        Size.Width = 350.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object sbBack: TSpeedButton
+          Align = Left
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Back'
+          OnClick = sbBackClick
+        end
+      end
+      object VertScrollBox1: TVertScrollBox
+        Align = Client
+        Size.Width = 350.000000000000000000
+        Size.Height = 521.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object sbMonday: TSpeedButton
+          Tag = 1
+          Align = Top
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lMondayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbTuesday: TSpeedButton
+          Tag = 2
+          Align = Top
+          Position.Y = 55.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1042#1090#1086#1088#1085#1080#1082
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lTuesdayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbWednesday: TSpeedButton
+          Tag = 3
+          Align = Top
+          Position.Y = 110.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1057#1088#1077#1076#1072
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lWednesdayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbThursday: TSpeedButton
+          Tag = 4
+          Align = Top
+          Position.Y = 165.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1063#1077#1090#1074#1077#1088#1075
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lThursdayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbFriday: TSpeedButton
+          Tag = 5
+          Align = Top
+          Position.Y = 220.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1055#1103#1090#1085#1080#1094#1072
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lFridayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbSaturday: TSpeedButton
+          Tag = 6
+          Align = Top
+          Position.Y = 275.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1057#1091#1073#1073#1086#1090#1072
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lSaturdayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbSunday: TSpeedButton
+          Tag = 7
+          Align = Top
+          Position.Y = 330.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lSundayCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+        object sbAllDays: TSpeedButton
+          Tag = 8
+          Align = Top
+          Position.Y = 385.000000000000000000
+          Size.Width = 350.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1042#1089#1077' '#1058#1058
+          TextSettings.HorzAlign = Leading
+          OnClick = sbMondayClick
+          object lAllDaysCount: TLabel
+            Align = Right
+            Position.X = 295.000000000000000000
+            Size.Width = 55.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+      end
+    end
+    object tiPartners: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object lwPartner: TListView
+        ItemAppearanceClassName = 'TCustomizeItemObjects'
+        ItemEditAppearanceClassName = 'TCustomizeItemObjects'
+        HeaderAppearanceClassName = 'TCustomizeItemObjects'
+        FooterAppearanceClassName = 'TListHeaderObjects'
+        Align = Client
+        Size.Width = 350.000000000000000000
+        Size.Height = 496.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        ItemAppearance.ItemHeight = 80
+        ItemAppearanceObjects.ItemObjects.Text.Font.Style = [fsBold]
+        ItemAppearanceObjects.ItemObjects.Text.Height = 40.000000000000000000
+        ItemAppearanceObjects.ItemObjects.Detail.TextAlign = Center
+        ItemAppearanceObjects.ItemObjects.Detail.Height = 40.000000000000000000
+        ItemAppearanceObjects.ItemObjects.Detail.Visible = True
+        ItemAppearanceObjects.ItemObjects.Detail.PlaceOffset.Y = 40.000000000000000000
+        StyleLookup = 'ListView1Style1'
+      end
+      object Panel4: TPanel
+        Align = MostTop
+        Size.Width = 350.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object sbBacktoVisit: TSpeedButton
+          Align = Left
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Back'
+          OnClick = sbBacktoVisitClick
+        end
+        object Label10: TLabel
+          Align = Client
+          Margins.Left = 10.000000000000000000
+          Size.Width = 290.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1058#1086#1088#1075#1086#1074#1099#1077' '#1090#1086#1095#1082#1080
+        end
+      end
+      object Panel5: TPanel
+        Align = Top
+        Position.Y = 50.000000000000000000
+        Size.Width = 350.000000000000000000
+        Size.Height = 25.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object lDayInfo: TLabel
+          Align = Client
+          Margins.Left = 10.000000000000000000
+          Size.Width = 340.000000000000000000
+          Size.Height = 25.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1052#1072#1088#1096#1088#1091#1090
+        end
+      end
+    end
+    object tiPartnerInfo: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'tiPartnerInfo'
+      object Panel6: TPanel
+        Align = MostTop
+        Size.Width = 350.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object SpeedButton1: TSpeedButton
+          Align = Left
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Back'
+          OnClick = sbBacktoVisitClick
+        end
+        object Label11: TLabel
+          Align = Client
+          Margins.Left = 10.000000000000000000
+          Size.Width = 290.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Text = #1058#1086#1088#1075#1086#1074#1099#1077' '#1090#1086#1095#1082#1080
+        end
+      end
+    end
+  end
+  object bsPartner: TBindSourceDB
+    DataSet = DM.qryPartner
+    ScopeMappings = <>
+    Left = 272
+    Top = 200
+  end
+  object blPartner: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 276
+    Top = 133
+    object LinkFillControlToField1: TLinkFillControlToField
+      Category = 'Quick Bindings'
+      Control = lwPartner
+      Track = True
+      FillDataSource = bsPartner
+      FillDisplayFieldName = 'Name'
+      AutoFill = True
+      FillExpressions = <
+        item
+          SourceMemberName = 'Address'
+          ControlMemberName = 'Detail'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+  end
+end

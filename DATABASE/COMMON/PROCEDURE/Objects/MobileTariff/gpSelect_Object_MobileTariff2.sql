@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CostMinutes TFloat
              , CostInet TFloat
              , Comment TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -45,7 +46,12 @@ BEGIN
            , ObjectString_Comment.ValueData        AS Comment 
          
            , Object_Contract.Id                    AS ContractId
+           , Object_Contract.ObjectCode            AS ContractCode
            , Object_Contract.ValueData             AS ContractName 
+
+           , Object_Juridical.Id                   AS JuridicalId
+           , Object_Juridical.ObjectCode           AS JuridicalCode
+           , Object_Juridical.ValueData            AS JuridicalName
            
            , Object_MobileTariff.isErased          AS isErased
            
@@ -82,6 +88,11 @@ BEGIN
                                 AND ObjectLink_MobileTariff_Contract.DescId = zc_ObjectLink_MobileTariff_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_MobileTariff_Contract.ChildObjectId                               
 
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                 ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId                               
+
      WHERE Object_MobileTariff.DescId = zc_Object_MobileTariff()
        AND (Object_MobileTariff.isErased = inShowAll OR inShowAll = True)
 ;
@@ -93,6 +104,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.02.17         *
  05.10.16         * parce
  23.09.16         *
 */

@@ -65,6 +65,8 @@ type
     colCode: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     actInsert: TdsdInsertUpdateAction;
+    colContractCode: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
