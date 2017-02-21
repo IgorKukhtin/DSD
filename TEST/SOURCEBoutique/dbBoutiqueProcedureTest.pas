@@ -10,6 +10,7 @@ type
     procedure CreateDefault;
     procedure CreateProtocol;
     procedure CreateObjectTools;
+    procedure CreareSystem;
   end;
 
 type
@@ -73,6 +74,11 @@ const
   CommonProcedurePath = '..\DATABASE\Boutique\PROCEDURE\';
 
   { TdbProcedureTest }
+
+procedure TdbProcedureTest.CreareSystem;
+begin
+ DirectoryLoad(CommonProcedurePath + 'System\');
+end;
 
 procedure TdbProcedureTest.CreateDefault;
 begin

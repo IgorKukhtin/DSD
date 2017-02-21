@@ -1,4 +1,4 @@
-DROP FUNCTION gpExecSql(tvarchar, TVarChar);
+DROP FUNCTION IF EXISTS gpExecSql(tvarchar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpExecSql(IN SqlText tvarchar, IN Session TVarChar) 
 RETURNS TABLE(test INTEGER, true1 boolean, false1 boolean--, TVarChar1 TVarChar, Date1 TDateTime, float1 TFloat, text1 TBlob
