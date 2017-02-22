@@ -65,7 +65,6 @@ ALTER FUNCTION lpInsert_Object_GoodsByGoodsKind (Integer, Integer, Integer)  OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
  06.07.13                                        *
 */
 
