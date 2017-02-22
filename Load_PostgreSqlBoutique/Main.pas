@@ -59,6 +59,7 @@ type
     cbGoodsSize: TCheckBox;
     cbKassa: TCheckBox;
     cbValuta: TCheckBox;
+    cbPeriod: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -123,6 +124,7 @@ type
     procedure pLoadGuide_GoodsSize;
     procedure pLoadGuide_Kassa;
     procedure pLoadGuide_Valuta;
+    procedure pLoadGuide_Period;
 
 
 
@@ -584,6 +586,7 @@ begin
      if not fStop then pLoadGuide_GoodsSize;
      if not fStop then pLoadGuide_Kassa;
      if not fStop then pLoadGuide_Valuta;
+     if not fStop then pLoadGuide_Period;
 
 
      //
@@ -1344,6 +1347,69 @@ begin
      //
      myDisabledCB(cbMeasure);
 end;
+procedure TMainForm.pLoadGuide_Period;
+begin
+    if (not cbPeriod.Checked)or(not cbPeriod.Enabled) then exit;
+    try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.Period add Id_Postgres integer null;');
+    finally
+
+    end;
+
+     //
+     myEnabledCB(cbPeriod);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Period.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Period.PeriodName as ObjectName');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Period.Erased as Erased');
+        Add('     , Period.Id_Postgres');
+        Add('from dba.Period');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Period';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Period set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPeriod);
+end;
+
 procedure TMainForm.pLoadGuide_Valuta;
 begin
     if (not cbValuta.Checked)or(not cbValuta.Enabled) then exit;

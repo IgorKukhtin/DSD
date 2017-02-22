@@ -63,6 +63,7 @@ type
     procedure CreateKassa;
     procedure CreateValuta;
     procedure CreateMember;
+    procedure CreatePeriod;
   end;
 
 implementation
@@ -215,6 +216,11 @@ end;
 procedure TdbObjectProcedureTest.CreateMember;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Member\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePeriod;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Period\');
 end;
 
 procedure TdbObjectProcedureTest.CreateValuta;

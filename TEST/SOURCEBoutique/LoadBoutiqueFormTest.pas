@@ -71,6 +71,7 @@ type
     procedure LoadKassaFormTest;
     procedure LoadValutaFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadPeriodFormTest;
 
 
     //    procedure LoadMemberFormTest;
@@ -519,6 +520,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPeriodFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodEditForm');
 end;
 
 //procedure TLoadFormTest.LoadKindFormTest;
