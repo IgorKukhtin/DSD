@@ -64,6 +64,7 @@ type
     procedure CreateValuta;
     procedure CreateMember;
     procedure CreatePeriod;
+    procedure CreateDiscount;
   end;
 
 implementation
@@ -156,6 +157,11 @@ end;
 procedure TdbObjectProcedureTest.CreateCountryBrand;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\CountryBrand\');
+end;
+
+procedure TdbObjectProcedureTest.CreateDiscount;
+begin
+ DirectoryLoad(CommonProcedurePath + 'OBJECTS\Discount\');
 end;
 
 procedure TdbObjectProcedureTest.CreateFabrika;

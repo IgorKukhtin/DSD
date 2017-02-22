@@ -334,6 +334,36 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 14
     end
+    object cbGoodsGroup: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 209
+      Width = 162
+      Height = 17
+      Caption = '1.13. '#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 15
+    end
+    object cbDiscount: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 225
+      Width = 226
+      Height = 17
+      Caption = '1.14. '#1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 16
+    end
   end
   object DocumentPanel: TPanel
     Left = 948

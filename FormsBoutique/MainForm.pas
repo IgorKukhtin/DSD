@@ -60,6 +60,8 @@ type
     N16: TMenuItem;
     actLineFabrica: TdsdOpenForm;
     N17: TMenuItem;
+    actDiscount: TdsdOpenForm;
+    N18: TMenuItem;
   private
     { Private declarations }
   public

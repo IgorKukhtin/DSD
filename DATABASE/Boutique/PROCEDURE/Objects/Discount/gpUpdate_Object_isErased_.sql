@@ -1,8 +1,8 @@
--- Function: gpUpdate_Object_isErased_LineFabrica (Integer, TVarChar)
+-- Function: gpUpdate_Object_isErased_Discount (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_LineFabrica (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Discount (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_LineFabrica(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Discount(
     IN inObjectId Integer, 
     IN inSession  TVarChar
 )
@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_LineFabrica());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Discount());
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);

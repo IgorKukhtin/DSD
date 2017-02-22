@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_Measure()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Measure (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Measure (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Measure(
     IN inIsShowAll   Boolean,            --  признак показать удаленные да / нет 

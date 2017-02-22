@@ -195,6 +195,9 @@ CREATE OR REPLACE FUNCTION zc_Object_Period() RETURNS Integer AS $BODY$BEGIN RET
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Period', 'Период' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Period');
 
+CREATE OR REPLACE FUNCTION zc_Object_Discount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Discount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Discount', 'Названия накопительных скидок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Discount');
 
 
 
