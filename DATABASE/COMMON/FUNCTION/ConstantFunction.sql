@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION zc_DateStart_PartionGoods() RETURNS TDateTime AS $BOD
 
 CREATE OR REPLACE FUNCTION zc_DateStart_ObjectCostOnUnit() RETURNS TDateTime AS $BODY$BEGIN RETURN ('01.10.2010'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_DateZero() RETURNS TDateTime AS $BODY$BEGIN RETURN ('01.01.1990'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION zc_BarCodePref_Object() RETURNS TVarChar AS $BODY$BEGIN RETURN ('20100'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_BarCodePref_Movement() RETURNS TVarChar AS $BODY$BEGIN RETURN ('20200'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_BarCodePref_MI() RETURNS TVarChar AS $BODY$BEGIN RETURN ('20300'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -84,7 +86,8 @@ CREATE OR REPLACE FUNCTION zc_DateEnd_Role_CashReplace() RETURNS TDateTime AS $B
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Ярошенко Р.Ф.
+ 23.02.17                                                                         *zc_DateZero
  29.09.15                                                        *zc_Color_Goods_Additional,zc_Color_Goods_Alternative 
  07.05.14                                        * add rem zc_PriceList_Bread
  20.10.13                                        * add rem zc_Juridical_Basis
