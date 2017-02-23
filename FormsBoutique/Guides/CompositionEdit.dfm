@@ -57,7 +57,7 @@ object CompositionEditForm: TCompositionEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 4
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -73,7 +73,7 @@ object CompositionEditForm: TCompositionEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
+    TabOrder = 1
     Width = 273
   end
   object ActionList: TActionList
