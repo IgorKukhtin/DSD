@@ -37,8 +37,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 664
-    ExplicitWidth = 1121
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -110,8 +108,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 396
-    ExplicitHeight = 664
     object cbAllGuide: TCheckBox
       Tag = 1
       Left = 15
@@ -255,7 +251,6 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '1.7. '#1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -324,6 +319,51 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 13
     end
+    object cbPeriod: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 193
+      Width = 122
+      Height = 17
+      Caption = '1.12. '#1055#1077#1088#1080#1086#1076
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 14
+    end
+    object cbGoodsGroup: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 209
+      Width = 162
+      Height = 17
+      Caption = '1.13. '#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 15
+    end
+    object cbDiscount: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 225
+      Width = 226
+      Height = 17
+      Caption = '1.14. '#1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 16
+    end
   end
   object DocumentPanel: TPanel
     Left = 948
@@ -334,8 +374,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitLeft = 661
-    ExplicitHeight = 664
     object Label1: TLabel
       Left = 6
       Top = 22

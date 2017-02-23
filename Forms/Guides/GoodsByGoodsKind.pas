@@ -32,6 +32,7 @@ type
     ReceiptChoiceForm: TOpenChoiceForm;
     ReceiptCode: TcxGridDBColumn;
     colId: TcxGridDBColumn;
+    clChangePercentAmount: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -32,7 +32,7 @@ BEGIN
    END IF;
 
    -- проверка уникальности дл€ свойства <Ќаименование Valuta>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Valuta(), inName); 
+--   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Valuta(), inName); 
    -- проверка уникальности дл€ свойства < од Valuta>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Valuta(), Code_max);
 

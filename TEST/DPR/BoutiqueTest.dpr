@@ -100,6 +100,12 @@ uses
   Member in '..\..\FormsBoutique\Guides\Member.pas' {MemberForm: TParentForm},
   MemberEdit in '..\..\FormsBoutique\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
 
+  Period in '..\..\FormsBoutique\Guides\Period.pas' {PeriodForm: TParentForm},
+  PeriodEdit in '..\..\FormsBoutique\Guides\PeriodEdit.pas' {PeriodEditForm: TParentForm},
+
+  Discount in '..\..\FormsBoutique\Guides\Discount.pas' {DiscountForm: TParentForm},
+  DiscountEdit in '..\..\FormsBoutique\Guides\DiscountEdit.pas' {DiscountEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

@@ -124,7 +124,7 @@ inherited MainForm: TMainForm
     object actBrand: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1041#1088#1077#1085#1076
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
       FormName = 'TBrandForm'
       FormNameParam.Value = 'TBrandForm'
       FormNameParam.DataType = ftString
@@ -138,6 +138,17 @@ inherited MainForm: TMainForm
       Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
       FormName = 'TFabrikaForm'
       FormNameParam.Value = 'TFabrikaForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLineFabrica: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+      FormName = 'TLineFabricaForm'
+      FormNameParam.Value = 'TLineFabricaForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -209,6 +220,28 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPeriod: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1077#1088#1080#1086#1076
+      FormName = 'TPeriodForm'
+      FormNameParam.Value = 'TPeriodForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actDiscount: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+      FormName = 'TDiscountForm'
+      FormNameParam.Value = 'TDiscountForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -258,6 +291,9 @@ inherited MainForm: TMainForm
       object N9: TMenuItem
         Action = actFabrika
       end
+      object N17: TMenuItem
+        Action = actLineFabrica
+      end
       object N10: TMenuItem
         Action = actGoodsInfo
       end
@@ -270,6 +306,9 @@ inherited MainForm: TMainForm
       object N12: TMenuItem
         Action = actGoodsGroup
       end
+      object N16: TMenuItem
+        Action = actPeriod
+      end
       object N13: TMenuItem
         Action = actKassa
       end
@@ -278,6 +317,9 @@ inherited MainForm: TMainForm
       end
       object N15: TMenuItem
         Action = actMember
+      end
+      object N18: TMenuItem
+        Action = actDiscount
       end
     end
     inherited miService: TMenuItem

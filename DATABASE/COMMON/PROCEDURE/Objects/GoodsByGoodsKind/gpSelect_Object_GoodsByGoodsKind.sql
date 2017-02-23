@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , MeasureName TVarChar
              , Weight TFloat
-             , WeightPackage TFloat, WeightTotal TFloat
+             , WeightPackage TFloat, WeightTotal TFloat, ChangePercentAmount TFloat
              , isOrder Boolean, isScaleCeh Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
@@ -55,6 +55,7 @@ BEGIN
 
            , COALESCE (ObjectFloat_WeightPackage.ValueData,0)::TFloat  AS WeightPackage
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)  ::TFloat  AS WeightTotal
+           , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0)  ::TFloat  AS ChangePercentAmount
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
 
@@ -78,7 +79,11 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
                                  ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                 AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
-
+                                                         
+           LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                 ON ObjectFloat_ChangePercentAmount.ObjectId = Object_GoodsByGoodsKind_View.Id 
+                                AND ObjectFloat_ChangePercentAmount.DescId = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                                                                
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                    ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id 
                                   AND ObjectBoolean_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order()
@@ -163,7 +168,8 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+              Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 22.02.17        * add ChangePercentAmount
  08.12.16        * add isScaleCeh
  27.10.16        * add zc_ObjectLink_GoodsByGoodsKind_Receipt
  26.07.16        *

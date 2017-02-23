@@ -1,7 +1,7 @@
-object LineFabricaEditForm: TLineFabricaEditForm
+object PeriodEditForm: TPeriodEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1080#1085#1080#1102' '#1082#1086#1083#1083#1077#1082#1094#1080#1080'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1077#1088#1080#1086#1076'>'
   ClientHeight = 200
   ClientWidth = 295
   Color = clBtnFace
@@ -61,7 +61,7 @@ object LineFabricaEditForm: TLineFabricaEditForm
     Width = 273
   end
   object ActionList: TActionList
-    Left = 176
+    Left = 152
     Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -93,7 +93,7 @@ object LineFabricaEditForm: TLineFabricaEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_LineFabrica'
+    StoredProcName = 'gpInsertUpdate_Object_Period'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -136,7 +136,7 @@ object LineFabricaEditForm: TLineFabricaEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_LineFabrica'
+    StoredProcName = 'gpGet_Object_Period'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -163,8 +163,8 @@ object LineFabricaEditForm: TLineFabricaEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 8
+    Left = 184
+    Top = 16
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -178,7 +178,7 @@ object LineFabricaEditForm: TLineFabricaEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 176
+    Left = 160
     Top = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

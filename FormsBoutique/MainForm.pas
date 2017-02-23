@@ -56,6 +56,12 @@ type
     N14: TMenuItem;
     actMember: TdsdOpenForm;
     N15: TMenuItem;
+    actPeriod: TdsdOpenForm;
+    N16: TMenuItem;
+    actLineFabrica: TdsdOpenForm;
+    N17: TMenuItem;
+    actDiscount: TdsdOpenForm;
+    N18: TMenuItem;
   private
     { Private declarations }
   public

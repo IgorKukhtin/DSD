@@ -27,6 +27,7 @@ BEGIN
    
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsGroup(), inName);
+/*
    -- проверка уникальность <Наименование> для !!!одноq!! <Группа для состава товара>
    IF TRIM (inName) <> '' AND COALESCE (inParentId, 0) <> 0 
    THEN
@@ -43,7 +44,7 @@ BEGIN
            RAISE EXCEPTION 'Ошибка. Группа для состава товара <%> уже установлена у <%>.', TRIM (inName), lfGet_Object_ValueData (inParentId);
        END IF;
    END IF;
-
+*/
 
    -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), vbCode_calc);
