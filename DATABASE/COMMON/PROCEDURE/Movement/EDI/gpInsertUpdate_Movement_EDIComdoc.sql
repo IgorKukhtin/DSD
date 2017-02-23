@@ -203,6 +203,7 @@ BEGIN
 
      -- обнулили <Кол-во у покуп.>, т.к. будем кол-ва суммировать
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), MovementItem.Id, 0)
      FROM MovementItem
      WHERE MovementItem.MovementId = vbMovementId
        AND MovementItem.DescId     = zc_MI_Master()
