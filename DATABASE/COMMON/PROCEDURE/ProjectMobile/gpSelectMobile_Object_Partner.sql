@@ -34,7 +34,7 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       -- Определяем сотрудника для пользователя
-      vbPersonalId := (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+      vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
       -- Результат
       IF vbPersonalId IS NOT NULL 

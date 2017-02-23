@@ -21,23 +21,36 @@ BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
       -- Результат
-      RETURN QUERY
-        WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS MeasureId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                             FROM ObjectProtocol
-                                  JOIN Object AS Object_Measure
-                                              ON Object_Measure.Id = ObjectProtocol.ObjectId
-                                             AND Object_Measure.DescId = zc_Object_Measure() 
-                             WHERE ObjectProtocol.OperDate > inSyncDateIn
-                             GROUP BY ObjectProtocol.ObjectId
-                            )
-        SELECT Object_Measure.Id
-             , Object_Measure.ObjectCode
-             , Object_Measure.ValueData
-             , Object_Measure.isErased
-             , (NOT Object_Measure.isErased) AS isSync
-        FROM Object AS Object_Measure
-             JOIN tmpProtocol ON tmpProtocol.MeasureId = Object_Measure.Id
-        WHERE Object_Measure.DescId = zc_Object_Measure();
+      IF inSyncDateIn > zc_DateZero()
+      THEN
+           RETURN QUERY
+             WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS MeasureId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                                  FROM ObjectProtocol
+                                       JOIN Object AS Object_Measure
+                                                   ON Object_Measure.Id = ObjectProtocol.ObjectId
+                                                  AND Object_Measure.DescId = zc_Object_Measure() 
+                                  WHERE ObjectProtocol.OperDate > inSyncDateIn
+                                  GROUP BY ObjectProtocol.ObjectId
+                                 )
+             SELECT Object_Measure.Id
+                  , Object_Measure.ObjectCode
+                  , Object_Measure.ValueData
+                  , Object_Measure.isErased
+                  , (NOT Object_Measure.isErased) AS isSync
+             FROM Object AS Object_Measure
+                  JOIN tmpProtocol ON tmpProtocol.MeasureId = Object_Measure.Id
+             WHERE Object_Measure.DescId = zc_Object_Measure();
+      ELSE
+           RETURN QUERY
+             SELECT Object_Measure.Id
+                  , Object_Measure.ObjectCode
+                  , Object_Measure.ValueData
+                  , Object_Measure.isErased
+                  , CAST(true AS Boolean) AS isSync
+             FROM Object AS Object_Measure
+             WHERE Object_Measure.DescId = zc_Object_Measure()
+               AND (NOT Object_Measure.isErased);
+      END IF;
 
 END; 
 $BODY$

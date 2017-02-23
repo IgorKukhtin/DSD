@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_GoodsByGoodsKind (Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
@@ -10,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindSubId      Integer  , -- Виды товаров
     IN inReceiptId           Integer  , -- Рецептуры
     IN inWeightPackage       TFloat   , -- вес пакета
-    IN inWeightTotal         TFloat   , -- вес в упаковки
+    IN inWeightTotal         TFloat   , -- вес в упаковки  
+    IN inChangePercentAmount TFloat   , -- % скидки для кол-ва
    -- IN inIsOrder             Boolean  , -- используется в заявках
 
     IN inSession             TVarChar 
@@ -68,7 +70,9 @@ BEGIN
    -- сохранили свойство <вес пакета>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightPackage(), ioId, inWeightPackage);
    -- сохранили свойство <вес в упаковки>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTotal(), ioId, inWeightTotal);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightTotal(), ioId, inWeightTotal); 
+   -- сохранили свойство <вес в упаковки>                                                                                                                              
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount(), ioId, inChangePercentAmount);
    -- сохранили свойство <используется в заявках>
    --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_Order(), ioId, inIsOrder);
 
@@ -83,7 +87,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 22.02.17         * ChangePercentAmount
  27.10.16         * Receipt
  26.07.16         *
  23.02.16         * dell inIsOrder - сохраняется в др. процке, разделение прав
