@@ -19,9 +19,9 @@ $BODY$
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
-      vbUserId := lpGetUserBySession (inSession);
+      vbUserId:= lpGetUserBySession (inSession);
 
-      vbPersonalId := (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+      vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
 
       -- Результат
       IF vbPersonalId IS NOT NULL 
