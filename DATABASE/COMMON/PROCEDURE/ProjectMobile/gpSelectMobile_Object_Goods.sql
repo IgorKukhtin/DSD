@@ -31,6 +31,26 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
+           CREATE TEMP TABLE tmpGoodsListSale ON COMMIT DROP
+           AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                    , COUNT(ObjectLink_GoodsListSale_Goods.ChildObjectId) AS GoodsCount
+               FROM Object AS Object_GoodsListSale
+                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
+                                    ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                   AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                   AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
+                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                    ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                   AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                   AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
+                    JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
+                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                   AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+               WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+               GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
+              );
+           
            IF inSyncDateIn > zc_DateZero()
            THEN
                 RETURN QUERY
@@ -42,24 +62,6 @@ BEGIN
                                        WHERE ObjectProtocol.OperDate > inSyncDateIn
                                        GROUP BY ObjectProtocol.ObjectId
                                       )
-                     , tmpGoodsListSale AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                                                 , COUNT(ObjectLink_GoodsListSale_Goods.ChildObjectId) AS GoodsCount
-                                            FROM Object AS Object_GoodsListSale
-                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
-                                                                 ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                                                AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                                                AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
-                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                                                 ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                                                AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                                                AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                                                 JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                                AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                            WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-                                            GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
-                                           )
                   SELECT Object_Goods.Id
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData
@@ -84,24 +86,6 @@ BEGIN
                   WHERE Object_Goods.DescId = zc_Object_Goods();
            ELSE
                 RETURN QUERY
-                  WITH tmpGoodsListSale AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                                                 , COUNT(ObjectLink_GoodsListSale_Goods.ChildObjectId) AS GoodsCount
-                                            FROM Object AS Object_GoodsListSale
-                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
-                                                                 ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                                                AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                                                AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
-                                                 JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                                                 ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                                                AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                                                AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                                                 JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                                AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                            WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-                                            GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
-                                           )
                   SELECT Object_Goods.Id
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData

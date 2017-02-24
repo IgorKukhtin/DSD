@@ -10,7 +10,8 @@ RETURNS TABLE (Id              Integer
              , ObjectCode      Integer  -- Код
              , ValueData       TVarChar -- Название
              , Address         TVarChar -- Адрес точки доставки
-             , GPS             TVarChar -- GPS координаты точки доставки
+             , GPSN            TFloat   -- GPS координаты точки доставки (широта)
+             , GPSE            TFloat   -- GPS координаты точки доставки (долгота)
              , Schedule        TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
              , DebtSum         TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
              , OverSum         TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
@@ -39,95 +40,88 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
-           RETURN QUERY
-             WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS PartnerId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                                  FROM ObjectProtocol
-                                       JOIN Object AS Object_Partner
-                                                   ON Object_Partner.Id = ObjectProtocol.ObjectId
-                                                  AND Object_Partner.DescId = zc_Object_Partner() 
-                                  WHERE ObjectProtocol.OperDate > inSyncDateIn
-                                    -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-                                    AND 1=0
-                                  GROUP BY ObjectProtocol.ObjectId
-                                 )
-             SELECT Object_Partner.Id
-                  , Object_Partner.ObjectCode
-                  , Object_Partner.ValueData
-                  , CAST('' AS TVarChar) AS Address
-                  , CAST('' AS TVarChar) AS GPS
-                    -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-                  , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0
-                              THEN 't;f;t;f;t;f;f;'
-                         ELSE ''
-                    END :: TVarChar AS Schedule
-                  , CAST(0.0 AS TFloat)  AS DebtSum
-                  , CAST(0.0 AS TFloat)  AS OverSum
-                  , CAST(0 AS Integer)   AS OverDays
-                  , CAST(0 AS Integer)   AS PrepareDayCount
-                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                  , CAST(0 AS Integer)   AS RouteId
-                  , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                  , CAST(0 AS Integer)   AS PriceListId
-                  , CAST(0 AS Integer)   AS PriceListId_ret
-                  , Object_Partner.isErased
-                  , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isSync
-             FROM Object AS Object_Partner
-                  -- !!!LEFT - ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-                  LEFT JOIN tmpProtocol ON tmpProtocol.PartnerId = Object_Partner.Id
-                  LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
-                                       ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
-                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                      AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                       ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                  LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-             WHERE Object_Partner.DescId = zc_Object_Partner()
-               -- !!!ВСЁ - ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-               AND ObjectLink_Partner_PersonalTrade.ChildObjectId > 0
-            UNION
-             SELECT *
-             FROM
-            (SELECT Object_Partner.Id
-                  , Object_Partner.ObjectCode
-                  , Object_Partner.ValueData
-                  , CAST('' AS TVarChar) AS Address
-                  , CAST('' AS TVarChar) AS GPS
-                    -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-                  , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0
-                              THEN 't;f;t;f;t;f;f;'
-                         ELSE ''
-                    END :: TVarChar AS Schedule
-                  , CAST(0.0 AS TFloat)  AS DebtSum
-                  , CAST(0.0 AS TFloat)  AS OverSum
-                  , CAST(0 AS Integer)   AS OverDays
-                  , CAST(0 AS Integer)   AS PrepareDayCount
-                  , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                  , CAST(0 AS Integer)   AS RouteId
-                  , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                  , CAST(0 AS Integer)   AS PriceListId
-                  , CAST(0 AS Integer)   AS PriceListId_ret
-                  , Object_Partner.isErased
-                  , CASE WHEN ObjectLink_Partner_PersonalTrade.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isSync
-             FROM Object AS Object_Partner
-                  -- !!!LEFT - ВРЕМЕННО - ДЛЯ ТЕСТА!!!
-                  LEFT JOIN tmpProtocol ON tmpProtocol.PartnerId = Object_Partner.Id
-                  LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade 
-                                       ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_Partner.Id
-                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                      AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                  LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                       ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
-                                      AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                  LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                       ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-             WHERE Object_Partner.DescId = zc_Object_Partner()
-               AND ObjectLink_Partner_PersonalTrade.ChildObjectId IS NULL
-             LIMIT 10) AS tmp
-            ;
+           CREATE TEMP TABLE tmpPartner ON COMMIT DROP
+           AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+              );
+
+           IF inSyncDateIn > zc_DateZero()
+           THEN
+                RETURN QUERY
+                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS PartnerId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                                       FROM ObjectProtocol
+                                            JOIN Object AS Object_Partner
+                                                        ON Object_Partner.Id = ObjectProtocol.ObjectId
+                                                       AND Object_Partner.DescId = zc_Object_Partner() 
+                                       WHERE ObjectProtocol.OperDate > inSyncDateIn
+                                       GROUP BY ObjectProtocol.ObjectId
+                                      )
+                  SELECT Object_Partner.Id
+                       , Object_Partner.ObjectCode
+                       , Object_Partner.ValueData
+                       , CAST('' AS TVarChar) AS Address
+                         -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
+                       , CAST(50.426527 AS TFloat) AS GPSN
+                       , CAST(30.563033 AS TFloat) AS GPSE
+                         -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
+                       , CASE WHEN EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id)
+                                   THEN 't;f;t;f;t;f;f;'
+                              ELSE ''
+                         END :: TVarChar AS Schedule
+                       , CAST(0.0 AS TFloat)  AS DebtSum
+                       , CAST(0.0 AS TFloat)  AS OverSum
+                       , CAST(0 AS Integer)   AS OverDays
+                       , CAST(0 AS Integer)   AS PrepareDayCount
+                       , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                       , CAST(0 AS Integer)   AS RouteId
+                       , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                       , CAST(0 AS Integer)   AS PriceListId
+                       , CAST(0 AS Integer)   AS PriceListId_ret
+                       , Object_Partner.isErased
+                       , EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id) AS isSync
+                  FROM Object AS Object_Partner
+                       JOIN tmpProtocol ON tmpProtocol.PartnerId = Object_Partner.Id
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                            ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                            ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                  WHERE Object_Partner.DescId = zc_Object_Partner();
+           ELSE
+                RETURN QUERY
+                  SELECT Object_Partner.Id
+                       , Object_Partner.ObjectCode
+                       , Object_Partner.ValueData
+                       , CAST('' AS TVarChar) AS Address
+                         -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
+                       , CAST(50.426527 AS TFloat) AS GPSN
+                       , CAST(30.563033 AS TFloat) AS GPSE
+                         -- !!!ВРЕМЕННО - ДЛЯ ТЕСТА!!!
+                       , CAST('t;f;t;f;t;f;f;' AS TVarChar) AS Schedule
+                       , CAST(0.0 AS TFloat)  AS DebtSum
+                       , CAST(0.0 AS TFloat)  AS OverSum
+                       , CAST(0 AS Integer)   AS OverDays
+                       , CAST(0 AS Integer)   AS PrepareDayCount
+                       , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                       , CAST(0 AS Integer)   AS RouteId
+                       , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                       , CAST(0 AS Integer)   AS PriceListId
+                       , CAST(0 AS Integer)   AS PriceListId_ret
+                       , Object_Partner.isErased
+                       , CAST(true AS Boolean) AS isSync
+                  FROM Object AS Object_Partner
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                            ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                            ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                  WHERE Object_Partner.DescId = zc_Object_Partner()
+                    AND EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id);
+           END IF;
       END IF;
 
 END; 
@@ -141,4 +135,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin()) WHERE isSync = TRUE
+-- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin())

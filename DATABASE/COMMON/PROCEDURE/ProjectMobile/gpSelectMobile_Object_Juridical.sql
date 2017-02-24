@@ -30,26 +30,28 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
+           CREATE TEMP TABLE tmpJuridical ON COMMIT DROP
+           AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                    JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                   AND ObjectLink_Partner_Juridical.ChildObjectId IS NOT NULL
+               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+              );
+           
            IF inSyncDateIn > zc_DateZero()
            THEN
                 RETURN QUERY
-                  WITH tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                        FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                             JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                             ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                            AND ObjectLink_Partner_Juridical.ChildObjectId IS NOT NULL
-                                        WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                       )    
-                    , tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS JuridicalId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                                      FROM ObjectProtocol
-                                           JOIN Object AS Object_Juridical
-                                                       ON Object_Juridical.Id = ObjectProtocol.ObjectId
-                                                      AND Object_Juridical.DescId = zc_Object_Juridical() 
-                                      WHERE ObjectProtocol.OperDate > inSyncDateIn
-                                      GROUP BY ObjectProtocol.ObjectId
-                                     )
+                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS JuridicalId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                                       FROM ObjectProtocol
+                                            JOIN Object AS Object_Juridical
+                                                        ON Object_Juridical.Id = ObjectProtocol.ObjectId
+                                                       AND Object_Juridical.DescId = zc_Object_Juridical() 
+                                       WHERE ObjectProtocol.OperDate > inSyncDateIn
+                                       GROUP BY ObjectProtocol.ObjectId
+                                      )
                   SELECT Object_Juridical.Id
                        , Object_Juridical.ObjectCode
                        , Object_Juridical.ValueData
@@ -67,15 +69,6 @@ BEGIN
                   WHERE Object_Juridical.DescId = zc_Object_Juridical();
            ELSE
                 RETURN QUERY
-                  WITH tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                                        FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                             JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                             ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                            AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                                            AND ObjectLink_Partner_Juridical.ChildObjectId IS NOT NULL
-                                        WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                       )    
                   SELECT Object_Juridical.Id
                        , Object_Juridical.ObjectCode
                        , Object_Juridical.ValueData
