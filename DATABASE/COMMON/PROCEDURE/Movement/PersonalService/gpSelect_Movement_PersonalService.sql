@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
              , TotalSummCard TFloat, TotalSummCardSecond TFloat,TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
-             , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
+             , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
+             , TotalSummChild TFloat, TotalSummChildRecalc TFloat, TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
              , TotalSummTransport TFloat, TotalSummTransportAdd TFloat, TotalSummTransportAddLong TFloat, TotalSummTransportTaxi TFloat, TotalSummPhone TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
@@ -87,7 +88,11 @@ BEGIN
            , MovementFloat_TotalSummNalogRecalc.ValueData AS TotalSummNalogRecalc
            , MovementFloat_TotalSummSocialIn.ValueData    AS TotalSummSocialIn
            , MovementFloat_TotalSummSocialAdd.ValueData   AS TotalSummSocialAdd
-           , MovementFloat_TotalSummChild.ValueData       AS TotalSummChild
+
+           , MovementFloat_TotalSummChild.ValueData            AS TotalSummChild
+           , MovementFloat_TotalSummChildRecalc.ValueData      AS TotalSummChildRecalc
+           , MovementFloat_TotalSummMinusExt.ValueData         AS TotalSummMinusExt
+           , MovementFloat_TotalSummMinusExtRecalc.ValueData   AS TotalSummMinusExtRecalc
 
            , MovementFloat_TotalSummTransport.ValueData        AS TotalSummTransport
            , MovementFloat_TotalSummTransportAdd.ValueData     AS TotalSummTransportAdd
@@ -174,6 +179,16 @@ BEGIN
                                     ON MovementFloat_TotalSummChild.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChildRecalc
+                                    ON MovementFloat_TotalSummChildRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummChildRecalc.DescId = zc_MovementFloat_TotalSummChildRecalc()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinusExt
+                                    ON MovementFloat_TotalSummMinusExt.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummMinusExt.DescId = zc_MovementFloat_TotalSummMinusExt()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinusExtRecalc
+                                    ON MovementFloat_TotalSummMinusExtRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummMinusExtRecalc.DescId = zc_MovementFloat_TotalSummMinusExtRecalc()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransport
                                     ON MovementFloat_TotalSummTransport.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummTransport.DescId = zc_MovementFloat_TotalSummTransport()
@@ -218,6 +233,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.02.17         *
  20.02.17         * add CardSecond
  07.10.16         * add inJuridicalBasisId
  21.06.16         *

@@ -213,7 +213,8 @@ BEGIN
                                                                   , inSummHoliday        := 0
                                                                   , inSummSocialIn       := 0
                                                                   , inSummSocialAdd      := 0
-                                                                  , inSummChild          := 0
+                                                                  , inSummChildRecalc    := 0
+                                                                  , inSummMinusExtRecalc := 0
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
                                                                   , inUnitId             := _tmpMI_Recalc.UnitId
@@ -310,6 +311,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.02.17         *
  22.05.15                                        * all
  04.01.15                                        *
 */

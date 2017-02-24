@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Intege
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -20,7 +21,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummHoliday         TFloat    , -- Сумма отпускные    
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChild           TFloat    , -- Сумма алименты (удержание)
+    IN inSummChildRecalc     TFloat    , -- Сумма алименты (удержание)
+    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторонними юр.л. для распределения
     
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
@@ -49,7 +51,8 @@ BEGIN
                                                      , inSummHoliday        := inSummHoliday
                                                      , inSummSocialIn       := inSummSocialIn
                                                      , inSummSocialAdd      := inSummSocialAdd
-                                                     , inSummChild          := inSummChild
+                                                     , inSummChildRecalc    := inSummChildRecalc
+                                                     , inSummMinusExtRecalc := inSummMinusExtRecalc
                                                      , inComment            := inComment
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
