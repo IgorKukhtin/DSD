@@ -25,32 +25,45 @@ var
 
 implementation
 
+uses
+  uMain;
+
 // uses FMX.Platform, System.UITypes;
 Procedure Screen_Cursor_crHourGlass;
 begin
-{$IFDEF VER230}
-Platform.SetCursor(nil, crHourGlass);
-{$ENDIF}
+{$IFDEF ANDROID}
+  frmMain.aiWait.Visible := true;
+  frmMain.aiWait.Enabled := true;
+{$ELSE}
+  {$IFDEF VER230}
+    Platform.SetCursor(nil, crHourGlass);
+  {$ENDIF}
 
-{$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
-Glbl_Cursor := crHourGlass;
+  {$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
+    Glbl_Cursor := crHourGlass;
 
-if TPlatformServices.Current.SupportsPlatformService(IFMXCursorService, IInterface(CursorService)) then
-  CursorService.SetCursor(Glbl_Cursor);
+    if TPlatformServices.Current.SupportsPlatformService(IFMXCursorService, IInterface(CursorService)) then
+      CursorService.SetCursor(Glbl_Cursor);
+  {$ENDIF}
 {$ENDIF}
 end;
 
 Procedure Screen_Cursor_crDefault;
 begin
-{$IFDEF VER230}
-Platform.SetCursor(nil, crDefault);
-{$ENDIF}
+{$IFDEF ANDROID}
+  frmMain.aiWait.Visible := false;
+  frmMain.aiWait.Enabled := false;
+{$ELSE}
+  {$IFDEF VER230}
+    Platform.SetCursor(nil, crDefault);
+  {$ENDIF}
 
-{$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
-Glbl_Cursor := crDefault;
+  {$IF (Defined(VER240)) or (Defined(VER250)) or (Defined(VER260)) or (Defined(VER270)) or (Defined(VER280)) or (Defined(VER290)) or (Defined(VER300))  }
+    Glbl_Cursor := crDefault;
 
-if TPlatformServices.Current.SupportsPlatformService(IFMXCursorService, IInterface(CursorService)) then
-  CursorService.SetCursor(Glbl_Cursor);
+    if TPlatformServices.Current.SupportsPlatformService(IFMXCursorService, IInterface(CursorService)) then
+      CursorService.SetCursor(Glbl_Cursor);
+  {$ENDIF}
 {$ENDIF}
 end;
 

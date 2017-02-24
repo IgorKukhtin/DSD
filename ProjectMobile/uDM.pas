@@ -3,14 +3,14 @@
 interface
 
 uses
-  System.SysUtils, System.Classes, Generics.Collections, FireDAC.Stan.Intf,
+  FMX.Forms, System.SysUtils, System.Classes, Generics.Collections, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs;
+  FMX.Dialogs, uProgress;
 
 CONST
   DataBaseFileName = 'aMobile.sdb';
@@ -71,7 +71,6 @@ type
     tblObject_PartnerObjectCode: TIntegerField;
     tblObject_PartnerValueData: TStringField;
     tblObject_PartnerAddress: TStringField;
-    tblObject_PartnerGPS: TStringField;
     tblObject_PartnerSchedule: TStringField;
     tblObject_PartnerDebtSum: TFloatField;
     tblObject_PartnerOverSum: TFloatField;
@@ -158,9 +157,13 @@ type
     tblObject_ConstPaidKindId_First: TIntegerField;
     qryPartner: TFDQuery;
     qryPartnerAddress: TStringField;
-    qryPartnerGPS: TStringField;
     qryPartnerName: TStringField;
     qryPartnerSCHEDULE: TStringField;
+    qryPartnerId: TIntegerField;
+    tblObject_PartnerGPSN: TFloatField;
+    tblObject_PartnerGPSE: TFloatField;
+    qryPartnerGPSN: TFloatField;
+    qryPartnerGPSE: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -191,7 +194,7 @@ var
 implementation
 
 uses
-  System.IOUtils;
+  System.IOUtils, CursorUtils;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
@@ -578,16 +581,33 @@ begin
   end;
 
   conMain.StartTransaction;
+
+  Screen_Cursor_crHourGlass;
   try
     GetConfigurationInfo;
 
     GetDictionaries('Partner');
     GetDictionaries('Juridical');
+    GetDictionaries('Route');
+    GetDictionaries('GoodsGroup');
+    GetDictionaries('Goods');
+    GetDictionaries('GoodsKind');
+    GetDictionaries('Measure');
+    GetDictionaries('GoodsLinkGoodsKind');
+    GetDictionaries('Contract');
+    GetDictionaries('PriceList');
+    GetDictionaries('PriceListItems');
 
     conMain.Commit;
+    Screen_Cursor_crDefault;
     Result := true;
   except
-    conMain.Rollback;
+    on E : Exception do
+    begin
+      conMain.Rollback;
+      Screen_Cursor_crDefault;
+      ShowMessage(E.Message);
+    end;
   end;
 end;
 
@@ -613,6 +633,8 @@ begin
 
       for x := 0 to GetStoredProc.DataSet.Fields.Count - 1 do
         tblObject_Const.Fields[ x ].Value := GetStoredProc.DataSet.Fields[ x ].Value;
+
+      tblObject_Const.FieldByName('SYNCDATEIN').AsDateTime := Date();
 
       tblObject_Const.Post;
     except
@@ -645,6 +667,60 @@ begin
     begin
       GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Juridical';
       CurDictTable := tblObject_Juridical;
+    end
+    else
+    if AName = 'Route' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Route';
+      CurDictTable := tblObject_Route;
+    end
+    else
+    if AName = 'GoodsGroup' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsGroup';
+      CurDictTable := tblObject_GoodsGroup;
+    end
+    else
+    if AName = 'Goods' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Goods';
+      CurDictTable := tblObject_Goods;
+    end
+    else
+    if AName = 'GoodsKind' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsKind';
+      CurDictTable := tblObject_GoodsKind;
+    end
+    else
+    if AName = 'Measure' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Measure';
+      CurDictTable := tblObject_Measure;
+    end
+    else
+    if AName = 'GoodsLinkGoodsKind' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsLinkGoodsKind';
+      CurDictTable := tblObject_GoodsLinkGoodsKind;
+    end
+    else
+    if AName = 'Contract' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_Contract';
+      CurDictTable := tblObject_Contract;
+    end
+    else
+    if AName = 'PriceList' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceList';
+      CurDictTable := tblObject_PriceList;
+    end
+    else
+    if AName = 'PriceListItems' then
+    begin
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_PriceListItems';
+      CurDictTable := tblObject_PriceListItems;
     end;
 
     if GetStoredProc.StoredProcName = '' then

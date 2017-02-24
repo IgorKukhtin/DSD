@@ -152,9 +152,11 @@ object DM: TDM
       FieldName = 'Address'
       Size = 255
     end
-    object tblObject_PartnerGPS: TStringField
-      FieldName = 'GPS'
-      Size = 255
+    object tblObject_PartnerGPSN: TFloatField
+      FieldName = 'GPSN'
+    end
+    object tblObject_PartnerGPSE: TFloatField
+      FieldName = 'GPSE'
     end
     object tblObject_PartnerSchedule: TStringField
       FieldName = 'Schedule'
@@ -464,6 +466,9 @@ object DM: TDM
       'select * from Object_Partner')
     Left = 40
     Top = 224
+    object qryPartnerId: TIntegerField
+      FieldName = 'Id'
+    end
     object qryPartnerName: TStringField
       FieldName = 'Name'
       Size = 250
@@ -472,12 +477,14 @@ object DM: TDM
       FieldName = 'Address'
       Size = 255
     end
-    object qryPartnerGPS: TStringField
-      FieldName = 'GPS'
-      Size = 255
-    end
     object qryPartnerSCHEDULE: TStringField
       FieldName = 'SCHEDULE'
+    end
+    object qryPartnerGPSN: TFloatField
+      FieldName = 'GPSN'
+    end
+    object qryPartnerGPSE: TFloatField
+      FieldName = 'GPSE'
     end
   end
 end
