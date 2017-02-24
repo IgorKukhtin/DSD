@@ -62,12 +62,12 @@ BEGIN
                   SELECT Object_Contract.Id                                                                                                                                                                       
                        , Object_Contract.ObjectCode                                                                                                                                                             
                        , Object_Contract.ValueData                                                                                                                                                              
-                       , CAST('' AS TVarChar) AS ContractTagName                                                                                                                                                
-                       , CAST('' AS TVarChar) AS InfoMoneyName                                                                                                                                                  
-                       , CAST('' AS TVarChar) AS Comment                                                                                                                                                        
-                       , CAST(0  AS Integer) AS PaidKindId                                                                                                                                                      
-                       , CAST(CURRENT_DATE AS TDateTime) AS StartDate                                                                                                                                           
-                       , CAST(CURRENT_DATE AS TDateTime) AS EndDate                                                                                                                                             
+                       , Object_ContractTag.ValueData               AS ContractTagName
+                       , Object_InfoMoney.ValueData                 AS InfoMoneyName
+                       , ObjectString_Contract_Comment.ValueData    AS Comment
+                       , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId
+                       , ObjectDate_Contract_Start.ValueData        AS StartDate
+                       , ObjectDate_Contract_End.ValueData          AS EndDate                                                                                                                                             
                        , CAST(0.0 AS TFloat) AS ChangePercent                                                                                                                                                   
                        , CAST(0.0 AS TFloat) AS DelayDayCalendar                                                                                                                                                
                        , CAST(0.0 AS TFloat) AS DelayDayBank                                                                                                                                                    
@@ -75,24 +75,64 @@ BEGIN
                        , EXISTS(SELECT 1 FROM tmpContract WHERE tmpContract.ContractId = Object_Contract.Id) AS isSync
                   FROM Object AS Object_Contract                                                                                                                                                             
                        JOIN tmpProtocol ON tmpProtocol.ContractId = Object_Contract.Id
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                            ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                       LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                            ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                       LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+                       LEFT JOIN ObjectString AS ObjectString_Contract_Comment
+                                              ON ObjectString_Contract_Comment.ObjectId = Object_Contract.Id
+                                             AND ObjectString_Contract_Comment.DescId = zc_ObjectString_Contract_Comment()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                            ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                       LEFT JOIN ObjectDate AS ObjectDate_Contract_Start
+                                            ON ObjectDate_Contract_Start.ObjectId = Object_Contract.Id
+                                           AND ObjectDate_Contract_Start.DescId = zc_ObjectDate_Contract_Start()
+                       LEFT JOIN ObjectDate AS ObjectDate_Contract_End
+                                            ON ObjectDate_Contract_End.ObjectId = Object_Contract.Id
+                                           AND ObjectDate_Contract_End.DescId = zc_ObjectDate_Contract_End()
                   WHERE Object_Contract.DescId = zc_Object_Contract();
            ELSE
                 RETURN QUERY
                   SELECT Object_Contract.Id                                                                                                                                                                       
                        , Object_Contract.ObjectCode                                                                                                                                                             
                        , Object_Contract.ValueData                                                                                                                                                              
-                       , CAST('' AS TVarChar) AS ContractTagName                                                                                                                                                
-                       , CAST('' AS TVarChar) AS InfoMoneyName                                                                                                                                                  
-                       , CAST('' AS TVarChar) AS Comment                                                                                                                                                        
-                       , CAST(0  AS Integer) AS PaidKindId                                                                                                                                                      
-                       , CAST(CURRENT_DATE AS TDateTime) AS StartDate                                                                                                                                           
-                       , CAST(CURRENT_DATE AS TDateTime) AS EndDate                                                                                                                                             
+                       , Object_ContractTag.ValueData               AS ContractTagName
+                       , Object_InfoMoney.ValueData                 AS InfoMoneyName
+                       , ObjectString_Contract_Comment.ValueData    AS Comment
+                       , ObjectLink_Contract_PaidKind.ChildObjectId AS PaidKindId                                                                                                                                                      
+                       , ObjectDate_Contract_Start.ValueData        AS StartDate
+                       , ObjectDate_Contract_End.ValueData          AS EndDate                                                                                                                                             
                        , CAST(0.0 AS TFloat) AS ChangePercent                                                                                                                                                   
                        , CAST(0.0 AS TFloat) AS DelayDayCalendar                                                                                                                                                
                        , CAST(0.0 AS TFloat) AS DelayDayBank                                                                                                                                                    
                        , Object_Contract.isErased                                                                                                                                                               
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_Contract                                                                                                                                                             
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                            ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                       LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                            ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                       LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+                       LEFT JOIN ObjectString AS ObjectString_Contract_Comment
+                                              ON ObjectString_Contract_Comment.ObjectId = Object_Contract.Id
+                                             AND ObjectString_Contract_Comment.DescId = zc_ObjectString_Contract_Comment()
+                       LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                            ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                       LEFT JOIN ObjectDate AS ObjectDate_Contract_Start
+                                            ON ObjectDate_Contract_Start.ObjectId = Object_Contract.Id
+                                           AND ObjectDate_Contract_Start.DescId = zc_ObjectDate_Contract_Start()
+                       LEFT JOIN ObjectDate AS ObjectDate_Contract_End
+                                            ON ObjectDate_Contract_End.ObjectId = Object_Contract.Id
+                                           AND ObjectDate_Contract_End.DescId = zc_ObjectDate_Contract_End()
                   WHERE Object_Contract.DescId = zc_Object_Contract()
                     AND EXISTS(SELECT 1 FROM tmpContract WHERE tmpContract.ContractId = Object_Contract.Id);
            END IF;
