@@ -68,6 +68,7 @@ BEGIN
            , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond
            , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog 
            , MovementFloat_TotalSummChild.ValueData      AS TotalSummChild
+           , MovementFloat_TotalSummMinusExt.ValueData   AS TotalSummMinusExt
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0)
@@ -131,18 +132,21 @@ BEGIN
                                     ON MovementFloat_TotalSummNalog.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummNalog.DescId = zc_MovementFloat_TotalSummNalog()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinus
-                                    ON MovementFloat_TotalSummMinus.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummMinus.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummMinus.DescId = zc_MovementFloat_TotalSummMinus()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
-                                    ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
-                                    ON MovementFloat_TotalSummHoliday.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummHoliday.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
-                                    ON MovementFloat_TotalSummChild.MovementId =  Movement.Id
+                                    ON MovementFloat_TotalSummChild.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinusExt
+                                    ON MovementFloat_TotalSummMinusExt.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummMinusExt.DescId = zc_MovementFloat_TotalSummMinusExt()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummTransport
                                     ON MovementFloat_TotalSummTransport.MovementId =  Movement.Id
@@ -291,7 +295,8 @@ BEGIN
 --            , MIFloat_SummAdd.ValueData        AS SummAdd
 --            , MIFloat_SummSocialIn.ValueData   AS SummSocialIn
 --            , MIFloat_SummSocialAdd.ValueData  AS SummSocialAdd
-            , MIFloat_SummChild.ValueData      AS SummChild
+            , MIFloat_SummChild.ValueData        AS SummChild
+            , MIFloat_SummMinusExt.ValueData     AS SummMinusExt
 
             , MIFloat_SummTransportAdd.ValueData AS SummTransportAdd
             , MIFloat_SummTransport.ValueData    AS SummTransport
@@ -354,6 +359,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                         ON MIFloat_SummChild.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
+                                        ON MIFloat_SummMinusExt.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -393,6 +401,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalService_Print (Integer,TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.02.17         *
  20.04.16         * Holiday
  16.12.15         * add Member...
  25.05.15         *
