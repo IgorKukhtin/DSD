@@ -27,6 +27,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , MovementPartionGoods_InvNumber TVarChar
              , AssetToCode Integer, AssetToName TVarChar
              , AssetToGroupName TVarChar
+             , PartnerCode Integer, PartnerName TVarChar
              , StorageName TVarChar
              , UnitCode Integer, UnitName TVarChar
 
@@ -349,13 +350,16 @@ BEGIN
         , ObjectFloat_Weight.ValueData   AS Weight
 
         , CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer)              AS PartionGoodsId
-        , COALESCE (Object_PartionGoods.ValueData, '') :: TVarChar AS PartionGoodsName
+        , COALESCE (ObjectString_Asset_InvNumber.ValueData, '') :: TVarChar AS PartionGoodsName
         , COALESCE(ObjectDate_PartionGoods_Value.ValueData,Null) ::TDateTime AS PartionGoodsDate   --дата ввода в эксплуатацию
         , zfCalc_PartionMovementName (Movement_PartionGoods.DescId, MovementDesc_PartionGoods.ItemName, Movement_PartionGoods.InvNumber, Movement_PartionGoods.OperDate) AS MovementPartionGoods_InvNumber
 
         , Object_AssetTo.ObjectCode      AS AssetToCode
         , Object_AssetTo.ValueData       AS AssetToName
         , Object_AssetToGroup.ValueData  AS AssetToGroupName
+
+        , Object_Partner.ObjectCode      AS PartnerCode
+        , Object_Partner.ValueData       AS PartnerName
 
         , Object_Storage.ValueData       AS StorageName
         , Object_Unit.ObjectCode         AS UnitCode
@@ -746,6 +750,10 @@ BEGIN
                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+        LEFT JOIN ObjectString AS ObjectString_Asset_InvNumber ON ObjectString_Asset_InvNumber.ObjectId = Object_Goods.Id
+                                                              AND ObjectString_Asset_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+
+
         LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -778,6 +786,13 @@ BEGIN
 
          LEFT JOIN Movement AS Movement_PartionGoods ON Movement_PartionGoods.Id = Object_PartionGoods.ObjectCode
          LEFT JOIN MovementDesc AS MovementDesc_PartionGoods ON MovementDesc_PartionGoods.Id = Movement_PartionGoods.DescId
+
+         LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement_PartionGoods.Id
+                                                 AND MLO_From.DescId = zc_MovementLinkObject_From()
+         LEFT JOIN MovementItem AS MI_From ON MI_From.MovementId = Movement_PartionGoods.Id
+                                          AND MI_From.DescId = zc_MI_Master()
+                                          AND Movement_PartionGoods.DescId = zc_Movement_Service()
+        LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (MI_From.ObjectId, MLO_From.ObjectId)
 
         LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMIContainer_group.AccountId
 

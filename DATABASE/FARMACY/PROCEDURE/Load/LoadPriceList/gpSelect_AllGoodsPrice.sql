@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_AllGoodsPrice (Integer, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
-    --IN inGoodsCode     Integer    -- поиск товаров
+    -- IN inGoodsCode     Integer    -- поиск товаров
     IN inUnitId        Integer     -- Подразделение
   , IN inUnitId_to     Integer     -- Подразделение (с которым есть сравнение цен)
   , IN inMinPercent    TFloat      -- Минимальный % для подразделений, у которых категория переоценки не установлена
@@ -11,36 +11,36 @@ CREATE OR REPLACE FUNCTION gpSelect_AllGoodsPrice(
   , IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (
-    Id                  Integer,    --ИД товара  !!!ВСЕГДА СЕТИ, не так как в других запросах!!!
-    Id_retail           Integer,    --ИД товара  !!!ВСЕГДА НБ, не так как в дргих запросах!!!
-    Code                Integer,    --Код товара
-    GoodsName           TVarChar,   --Наименование товара
-    LastPrice           TFloat,     --Текущая цена
-    LastPrice_to        TFloat,     --Текущая цена - inUnitId_to
+    Id                  Integer,    -- ИД товара  !!!ВСЕГДА СЕТИ, не так как в других запросах!!!
+    Id_retail           Integer,    -- ИД товара  !!!ВСЕГДА НБ, не так как в дргих запросах!!!
+    Code                Integer,    -- Код товара
+    GoodsName           TVarChar,   -- Наименование товара
+    LastPrice           TFloat,     -- Текущая цена
+    LastPrice_to        TFloat,     -- Текущая цена - inUnitId_to
     RemainsCount        TFloat,     -- Остаток
     RemainsCount_to     TFloat,     -- Остаток - Подразделение (с которым есть сравнение цен)
-    NDS                 TFloat,     --ставка НДС
-    NewPrice            TFloat,     --Новая цена
+    NDS                 TFloat,     -- ставка НДС
+    NewPrice            TFloat,     -- Новая цена
     PriceFix_Goods      TFloat  ,   -- фиксированная цена сети
-    MinMarginPercent    TFloat,     --минимальный % отклонения
-    PriceDiff           TFloat,     --% отклонения
-    PriceDiff_to        TFloat,     --% отклонения - inUnitId_to
-    ExpirationDate      TDateTime,  --Срок годности
-    JuridicalId         Integer,    --Поставщик Id
-    JuridicalName       TVarChar,   --Поставщик
-    Juridical_Price     TFloat,     --Цена у поставщика
-    MarginPercent       TFloat,     --% наценки по точке
-    Juridical_GoodsName TVarChar,   --Наименование у поставщика
-    ProducerName        TVarChar,   --производитель
+    MinMarginPercent    TFloat,     -- минимальный % отклонения
+    PriceDiff           TFloat,     -- % отклонения
+    PriceDiff_to        TFloat,     -- % отклонения - inUnitId_to
+    ExpirationDate      TDateTime,  -- Срок годности
+    JuridicalId         Integer,    -- Поставщик Id
+    JuridicalName       TVarChar,   -- Поставщик
+    Juridical_Price     TFloat,     -- Цена у поставщика
+    MarginPercent       TFloat,     -- % наценки по точке
+    Juridical_GoodsName TVarChar,   -- Наименование у поставщика
+    ProducerName        TVarChar,   -- производитель
     ContractId          Integer,    -- договор Ид
     ContractName        TVarChar,   -- договор
     Juridical_Percent   TFloat,     -- % Корректировки наценки Поставщика
     Contract_Percent    TFloat,     -- % Корректировки наценки Договора
-    SumReprice          TFloat,     --сумма переоценки
-    MidPriceSale        TFloat,     --средняя цена остатка
-    MidPriceDiff        TFloat,     --отклонение от средняя цена остатка
-    MinExpirationDate   TDateTime,  --Минимальный срок годности препарата на точке
-    MinExpirationDate_to TDateTime, --Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
+    SumReprice          TFloat,     -- сумма переоценки
+    MidPriceSale        TFloat,     -- средняя цена остатка
+    MidPriceDiff        TFloat,     -- отклонение от средняя цена остатка
+    MinExpirationDate   TDateTime,  -- Минимальный срок годности препарата на точке
+    MinExpirationDate_to TDateTime, -- Минимальный срок годности препарата на точке  - Подразделение (с которым есть сравнение цен)
     isOneJuridical      Boolean ,   -- один поставщик (да/нет)
     isPriceFix          Boolean ,   -- фиксированная цена точки
     isIncome            Boolean ,   -- приход сегодня

@@ -211,6 +211,8 @@ type
     CountSendOnPrice_10500_Weight: TcxGridDBColumn;
     CountSendOnPrice_10500: TcxGridDBColumn;
     PartionGoodsDate: TcxGridDBColumn;
+    PartnerCode: TcxGridDBColumn;
+    PartnerName: TcxGridDBColumn;
   private
   public
   end;

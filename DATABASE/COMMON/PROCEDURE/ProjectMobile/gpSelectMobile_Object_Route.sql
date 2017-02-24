@@ -26,19 +26,21 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
+           CREATE TEMP TABLE tmpRoute ON COMMIT DROP
+           AS (SELECT ObjectLink_Partner_Route.ChildObjectId AS RouteId
+               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                    JOIN ObjectLink AS ObjectLink_Partner_Route
+                                    ON ObjectLink_Partner_Route.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                   AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
+               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                 AND ObjectLink_Partner_Route.ChildObjectId IS NOT NULL
+              );
+
            IF inSyncDateIn > zc_DateZero()
            THEN
                 RETURN QUERY
-                  WITH tmpRoute AS (SELECT ObjectLink_Partner_Route.ChildObjectId AS RouteId
-                                    FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                         JOIN ObjectLink AS ObjectLink_Partner_Route
-                                                         ON ObjectLink_Partner_Route.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                        AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-                                    WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                      AND ObjectLink_Partner_Route.ChildObjectId IS NOT NULL
-                                   )
-                     , tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS RouteId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS RouteId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
                                        FROM ObjectProtocol
                                             JOIN Object AS Object_Route
                                                         ON Object_Route.Id = ObjectProtocol.ObjectId
@@ -56,15 +58,6 @@ BEGIN
                   WHERE Object_Route.DescId = zc_Object_Route();
            ELSE
                 RETURN QUERY
-                  WITH tmpRoute AS (SELECT ObjectLink_Partner_Route.ChildObjectId AS RouteId
-                                    FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                         JOIN ObjectLink AS ObjectLink_Partner_Route
-                                                         ON ObjectLink_Partner_Route.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                        AND ObjectLink_Partner_Route.DescId = zc_ObjectLink_Partner_Route()
-                                    WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                      AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                      AND ObjectLink_Partner_Route.ChildObjectId IS NOT NULL
-                                   )
                   SELECT Object_Route.Id
                        , Object_Route.ObjectCode
                        , Object_Route.ValueData

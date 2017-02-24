@@ -65,7 +65,14 @@ BEGIN
                       SELECT ABS (inUnitId) :: Integer  AS UnitId
                      UNION
                       SELECT ObjectBoolean_Over.ObjectId  AS UnitId
-                      FROM ObjectBoolean AS ObjectBoolean_Over
+                      FROM ObjectBoolean AS ObjectBoolean_Over    
+                             INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                   ON ObjectLink_Unit_Juridical.ObjectId = ObjectBoolean_Over.ObjectId
+                                                  AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                             INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                   ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                  AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                       WHERE ObjectBoolean_Over.DescId = zc_ObjectBoolean_Unit_Over()
                         AND ObjectBoolean_Over.ValueData = TRUE;
  
@@ -75,41 +82,25 @@ BEGIN
     -- Таблица
     CREATE TEMP TABLE tmpSoldOneDay (UnitId Integer, GoodsId Integer, NumberDay Integer, SoldCount TFloat, PRIMARY KEY (GoodsId, UnitId, NumberDay)) ON COMMIT DROP;
     INSERT INTO tmpSoldOneDay (UnitId, GoodsId, NumberDay, SoldCount)
-                             SELECT MovementLinkObject_Unit.ObjectId AS UnitId
-                                  , MovementItem.ObjectId AS GoodsId
-                                  , inPeriod - DATE_PART ('DAY', inStartDate - Movement.OperDate) AS NumberDay
-                                  , SUM (ROUND (CASE WHEN COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE THEN MovementItem.Amount ELSE 0 END, 1)) AS SoldCount
-                             FROM Movement 
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                  INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
+                         SELECT MIContainer.WhereObjectId_analyzer        AS UnitId
+                              , MIContainer.ObjectId_analyzer AS GoodsId  
+                              , inPeriod - DATE_PART ('DAY', inStartDate - MIContainer.OperDate) AS NumberDay   
+                              , SUM (ROUND (CASE WHEN COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END, 1)) AS SoldCount
+                         FROM tmpUnit 
+                             INNER JOIN MovementItemContainer AS MIContainer
+                                                              ON MIContainer.WhereObjectId_analyzer = tmpUnit.UnitId 
+                                                             AND MIContainer.MovementDescId = zc_Movement_Check()
+                                                             AND MIContainer.DescId = zc_MIContainer_Count()   
+                                                             AND MIContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate :: Date - inPeriod) 
+                                                             AND MIContainer.OperDate < DATE_TRUNC ('DAY', inStartDate :: Date)   
 
-                                  INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
-                                                        ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_Unit.ObjectId
-                                                       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                                  INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                        ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                       AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                       AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-
-                                  LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
-                                                                  ON MovementBoolean_NotMCS.MovementId = Movement.Id
-                                                                 AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
-
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                         AND MovementItem.isErased = FALSE
-                                                         AND MovementItem.Amount > 0
-                                                         AND (MovementItem.ObjectId = inGoodsId OR inGoodsId = 0)
-                             WHERE Movement.StatusId = zc_Enum_Status_Complete()
-                              -- AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId <= 0)
-                               AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate :: Date - inPeriod)
-                               AND Movement.OperDate <  DATE_TRUNC ('DAY', inStartDate :: Date)
-                               AND Movement.DescId = zc_Movement_Check()
-                             GROUP BY MovementLinkObject_Unit.ObjectId, 
-                                      MovementItem.ObjectId, 
-                                      DATE_PART('DAY', inStartDate - Movement.OperDate)
-                            ;
+                             LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                                             ON MovementBoolean_NotMCS.MovementId = MIContainer.MovementId
+                                                            AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+                          GROUP BY MIContainer.WhereObjectId_analyzer
+                                , MIContainer.ObjectId_analyzer   
+                                , DATE_PART ('DAY', inStartDate - MIContainer.OperDate)
+                         ;
 
      --!!!!!!!!!!!!!!!!!!!!!
      ANALYZE tmpSoldOneDay;
@@ -129,7 +120,28 @@ BEGIN
                          GROUP BY S1.UnitId,
                                   S1.GoodsId,
                                   S1.NumberDay
-                        )
+                        )      
+   /*, tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId      AS UnitId
+                       , Price_Goods.ChildObjectId                AS GoodsId
+                    FROM tmpUnit
+                       LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
+                                            ON ObjectLink_Price_Unit.ChildObjectId = tmpUnit.UnitId
+                                           AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()  
+                       INNER JOIN ObjectLink AS Price_Goods
+                                             ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                            AND (Price_Goods.ChildObjectId = inGoodsId OR inGoodsId = 0)                             
+                       LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                               ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                       LEFT JOIN ObjectBoolean AS MCS_isClose
+                                               ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()  
+                       
+                   WHERE COALESCE(MCS_NotRecalc.ValueData,False) = FALSE 
+                     AND COALESCE(MCS_isClose.ValueData,False) = FALSE
+                  ) 
+          */                                
       SELECT MAX (tmpResult.SoldCount)::TFloat AS MCSValue -- Неснижаемый товарный запас
            , tmpResult.GoodsId
            , tmpResult.UnitId
@@ -137,11 +149,9 @@ BEGIN
            , Object_Goods.ValueData  AS GoodsName
       FROM tmpResult
           LEFT OUTER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
-          LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                            ON Object_Price.GoodsId = tmpResult.GoodsId
-                                           AND Object_Price.UnitId = tmpResult.UnitId  
-      WHERE COALESCE (Object_Price.MCSNotRecalc, FALSE) = FALSE
-        AND COALESCE (Object_Price.MCSIsClose, FALSE) = FALSE
+          /*INNER JOIN tmpPrice AS Object_Price
+                              ON Object_Price.GoodsId = tmpResult.GoodsId
+                             AND Object_Price.UnitId = tmpResult.UnitId  */
       GROUP BY tmpResult.GoodsId, tmpResult.UnitId
              , Object_Goods.ObjectCode
              , Object_Goods.ValueData
@@ -158,4 +168,4 @@ $BODY$
  09.06.16         *
 */
 
--- SELECT * FROM gpSelect_RecalcMCS (inUnitId:= -1 * 183292, inGoodsId := 0, inPeriod:= 30, inDay:= 5, inStartDate:= '01.06.2016', inSession := '3'); -- Аптека_1 пр_Правды_6
+-- SELECT * FROM gpSelect_RecalcMCS (inUnitId:= 377610 , inGoodsId := 0, inPeriod:= 30, inDay:= 5, inStartDate:= '01.02.2017', inSession := '3') --where goodscode = 1014; -- Аптека_1 пр_Правды_6

@@ -733,6 +733,22 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         Options.Editing = False
         Width = 55
       end
+      object PartnerCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1086#1089#1090'.'
+        DataBinding.FieldName = 'PartnerCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object PartnerName: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+        DataBinding.FieldName = 'PartnerName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object AssetToCode: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1076#1083#1103' '#1054#1057')'
         DataBinding.FieldName = 'AssetToCode'

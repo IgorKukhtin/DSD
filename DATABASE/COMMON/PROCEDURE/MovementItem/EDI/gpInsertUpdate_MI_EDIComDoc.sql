@@ -17,7 +17,9 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbGoodsId Integer;
    DECLARE vbGoodsKindId Integer;
-   DECLARE vbAmount TFloat;
+   DECLARE vbAmount      TFloat;
+   DECLARE vbAmountPartner TFloat;
+   DECLARE vbSummPartner TFloat;
 
    DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
@@ -42,6 +44,10 @@ BEGIN
 
      -- Определяется <Количество по заявке> из документа EDI
      vbAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = vbMovementItemId), 0);
+     -- Определяется <Кол-во у покуп.> из документа EDI, !!!т.к. будем кол-ва суммировать!!!
+     vbAmountPartner:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = vbMovementItemId AND DescId = zc_MIFloat_AmountPartner()), 0);
+     -- Определяется <Сумма> из документа EDI
+     vbSummPartner:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = vbMovementItemId AND DescId = zc_MIFloat_Summ()), 0);
 
      -- Находим vbGoodsId и vbGoodsKindId
      SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
@@ -66,12 +72,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GLNCode(), vbMovementItemId, inGLNCode);
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GoodsName(), vbMovementItemId, inGoodsName);
 
-     -- Кол-во у покуп.
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), vbMovementItemId, inAmountPartner);
+     -- Кол-во у покуп. - !!!будем суммировать!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), vbMovementItemId, COALESCE (inAmountPartner, 0) + COALESCE (vbAmountPartner, 0));
      -- Цена
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPricePartner);
-     -- Сумма
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), vbMovementItemId, inSummPartner);
+     -- Сумма - !!!будем суммировать!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), vbMovementItemId, COALESCE (inSummPartner, 0) + COALESCE (vbSummPartner, 0));
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbMovementItemId, vbGoodsKindId);
