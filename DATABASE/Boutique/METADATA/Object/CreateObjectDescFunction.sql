@@ -199,6 +199,10 @@ CREATE OR REPLACE FUNCTION zc_Object_Discount() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Discount', 'Названия накопительных скидок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Discount');
 
+CREATE OR REPLACE FUNCTION zc_Object_DiscountTools() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_DiscountTools'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_DiscountTools', 'Настройка процентов по накопительным скидкам' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DiscountTools');
+
 
 
 /*-------------------------------------------------------------------------------

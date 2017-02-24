@@ -106,6 +106,9 @@ uses
   Discount in '..\..\FormsBoutique\Guides\Discount.pas' {DiscountForm: TParentForm},
   DiscountEdit in '..\..\FormsBoutique\Guides\DiscountEdit.pas' {DiscountEditForm: TParentForm},
 
+  DiscountTools in '..\..\FormsBoutique\Guides\DiscountTools.pas' {DiscountToolsForm: TParentForm},
+  DiscountToolsEdit in '..\..\FormsBoutique\Guides\DiscountToolsEdit.pas' {DiscountToolsEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

@@ -242,6 +242,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actDiscountTools: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1087#1088#1086#1094#1077#1085#1090#1086#1074' '#1087#1086' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1084' '#1089#1082#1080#1076#1082#1072#1084
+      FormName = 'TDiscountToolsForm'
+      FormNameParam.Value = 'TDiscountToolsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -320,6 +331,9 @@ inherited MainForm: TMainForm
       end
       object N18: TMenuItem
         Action = actDiscount
+      end
+      object N19: TMenuItem
+        Action = actDiscountTools
       end
     end
     inherited miService: TMenuItem

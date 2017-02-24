@@ -62,6 +62,7 @@ type
     cbPeriod: TCheckBox;
     cbGoodsGroup: TCheckBox;
     cbDiscount: TCheckBox;
+    cbDiscountTools: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -129,6 +130,7 @@ type
     procedure pLoadGuide_Period;
     procedure pLoadGuide_GoodsGroup;
     procedure pLoadGuide_Discount;
+    procedure pLoadGuide_DiscountTools;
 
 
 
@@ -598,6 +600,8 @@ begin
       cbId_Postgres.Enabled:=True;
      End;
      if not fStop then pLoadGuide_Discount;
+     if not fStop then pLoadGuide_DiscountTools;
+
 
 
 
@@ -658,11 +662,32 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
+      fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
+      fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Composition set Id_Postgres = null');
+      fExecSqFromQuery('update dba.CountryBrand set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Brand set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Fabrika set Id_Postgres = null');
+      fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
+      fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null');
+      fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Kassa set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Valuta set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Period set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
+      fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
+
+
+
+//      fExecSqFromQuery('update dba. set Id_Postgres = null');
+//     if not fStop then pLoadGuide_DiscountTools;
+
+
 //     fExecSqFromQuery('update dba.Goods set Id_Postgres = null,Id_Postgres_Fuel = null,Id_Postgres_TicketFuel = null');
 //     fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
-     fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
-     fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
-
+//     fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
+//     fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
 //     fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
 //     fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
 //     fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
@@ -957,7 +982,6 @@ begin
 end;
 
 procedure TMainForm.pLoadGuide_Discount;
-var KindDiscount_pg:  Integer;
 begin
 if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
 
@@ -979,6 +1003,7 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Discount.isErased as Erased');
         Add('     , Discount.Id_Postgres');
+        Add('     , KindDiscount');
         Add('from dba.Discount');
         Add('order by ObjectId');
         Open;
@@ -995,7 +1020,7 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inKindDiscount',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inKindDiscount',ftFloat,ptInput, 0);
 
         //
         while not EOF do
@@ -1004,23 +1029,11 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
              if fStop then begin exit;end;
              //
 
-             fOpenSqToQuery (' select OS_Discount_KindDiscount.ValueData  AS KindDiscount'
-
-                           +' from Object'
-                           +'         LEFT JOIN ObjectFloat AS OS_Discount_KindDiscount'
-                           +'                  ON OS_Discount_KindDiscount.ObjectId = Object.Id'
-                           +'                 AND OS_Discount_KindDiscount.DescId = zc_ObjectFloat_Discount_KindDiscount()'
-                           +' where Object.Id='+inttostr(FieldByName('Id_Postgres').AsInteger));
-
-
-
-             KindDiscount_pg:=toSqlQuery.FieldByName('KindDiscount').AsInteger;
-
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inKindDiscount').Value:=KindDiscount_pg;
+             toStoredProc.Params.ParamByName('inKindDiscount').Value:=FieldByName('KindDiscount').AsInteger;
 
 
              if not myExecToStoredProc then;
@@ -1038,6 +1051,84 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
      end;
      //
      myDisabledCB(cbDiscount);
+end;
+
+procedure TMainForm.pLoadGuide_DiscountTools;
+begin
+     if (not cbDiscountTools.Checked)or(not cbDiscountTools.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.DiscountTools add Id_Postgres integer null;');
+    finally
+
+    end;
+     //
+     myEnabledCB(cbDiscountTools);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select DiscountTools.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     --, DiscountTools.DiscountName as ObjectName');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , DiscountTools.isErased as Erased');
+        Add('     , DiscountTools.Id_Postgres');
+        Add('     , DiscountTools_parent.Id_Postgres as ParentId_Postgres');
+        Add('     , DiscountTools.DiscountId as DiscountId');
+        Add('     , DiscountTools.StartSumm as StartSumm');
+        Add('     , DiscountTools.EndSumm as EndSumm');
+        Add('     , DiscountTools.DiscountTax as DiscountTax');
+        Add('from dba.DiscountTools');
+        Add('     left outer join dba.Discount as DiscountTools_parent on DiscountTools_parent.Id = DiscountTools.DiscountId');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_DiscountTools';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+//        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+//        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inStartSumm',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inEndSumm',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiscountId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+//             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+//             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inStartSumm').Value:=FieldByName('StartSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inEndSumm').Value:=FieldByName('EndSumm').AsFloat;
+             toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
+             toStoredProc.Params.ParamByName('inDiscountId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.DiscountTools set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbDiscountTools);
 end;
 
 procedure TMainForm.pLoadGuide_Fabrika;

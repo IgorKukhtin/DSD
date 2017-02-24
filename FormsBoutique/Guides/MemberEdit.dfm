@@ -34,7 +34,7 @@ object MemberEditForm: TMemberEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +44,7 @@ object MemberEditForm: TMemberEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 5
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -57,7 +57,7 @@ object MemberEditForm: TMemberEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 6
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -73,19 +73,19 @@ object MemberEditForm: TMemberEditForm
   object edComment: TcxTextEdit
     Left = 10
     Top = 168
-    TabOrder = 8
+    TabOrder = 2
     Width = 273
   end
   object edINN: TcxTextEdit
     Left = 10
     Top = 122
-    TabOrder = 9
+    TabOrder = 1
     Width = 273
   end
   object edEMail: TcxTextEdit
     Left = 10
     Top = 213
-    TabOrder = 10
+    TabOrder = 3
     Width = 273
   end
   object cxLabel5: TcxLabel
