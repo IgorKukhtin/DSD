@@ -66,6 +66,7 @@ type
     procedure CreatePeriod;
     procedure CreateDiscount;
     procedure CreateDiscountTools;
+    procedure CreatePartner;
   end;
 
 implementation
@@ -228,6 +229,11 @@ end;
 procedure TdbObjectProcedureTest.CreateMember;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Member\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePartner;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Partner\');
 end;
 
 procedure TdbObjectProcedureTest.CreatePeriod;

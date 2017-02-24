@@ -7,12 +7,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_CompositionGroup(
     IN inSession  TVarChar
 )
 RETURNS VOID
-  AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_CompositionGroup());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);

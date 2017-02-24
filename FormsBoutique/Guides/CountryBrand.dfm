@@ -178,15 +178,16 @@ object CountryBrandForm: TCountryBrandForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True

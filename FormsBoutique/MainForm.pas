@@ -64,6 +64,8 @@ type
     N18: TMenuItem;
     actDiscountTools: TdsdOpenForm;
     N19: TMenuItem;
+    actPartner: TdsdOpenForm;
+    c1: TMenuItem;
   private
     { Private declarations }
   public

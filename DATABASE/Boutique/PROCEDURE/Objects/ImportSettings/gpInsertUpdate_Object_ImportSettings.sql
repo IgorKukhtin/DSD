@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettings(
   AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode_max Integer;  
    DECLARE vbStartTime TDateTime;  
    DECLARE vbEndTime TDateTime;  
 BEGIN
@@ -35,16 +35,16 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession); 
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_ImportSettings());
-   -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   vbCode_max:= lfGet_ObjectCode (inCode, zc_Object_ImportSettings());
+   -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_max := NULL; ELSE vbCode_max := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportSettings(), inName);
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ImportSettings(), vbCode_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ImportSettings(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportSettings(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportSettings(), vbCode_max, inName);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettings_Juridical(), ioId, inJuridicalId);

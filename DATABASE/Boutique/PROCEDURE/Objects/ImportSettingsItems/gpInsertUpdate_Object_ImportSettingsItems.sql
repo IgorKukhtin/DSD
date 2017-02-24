@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportSettingsItems(
   AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode_max Integer;  
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры

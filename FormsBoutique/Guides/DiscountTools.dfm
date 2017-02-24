@@ -196,7 +196,7 @@ object DiscountToolsForm: TDiscountToolsForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -204,7 +204,7 @@ object DiscountToolsForm: TDiscountToolsForm
         end
         item
           Visible = True
-          ItemName = 'bbProtocolOpenForm'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
@@ -414,7 +414,7 @@ object DiscountToolsForm: TDiscountToolsForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'DiscountName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','

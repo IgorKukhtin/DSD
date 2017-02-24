@@ -13,6 +13,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_DiscountTools());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
    PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
