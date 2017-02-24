@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountTools (Integer,  TFloat, TFloat, TTFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountTools(
- INOUT ioId           Integer,       -- ключ объекта <Единица измерения>
-    IN inStartSumm    TFloat,        --
-    IN inEndSumm      TFloat,        --
-    IN inDiscountTax  TFloat,        -- 
-    IN inDiscountId   Integer,       -- Связь на объект
+ INOUT ioId           Integer,       -- ключ объекта 
+    IN inStartSumm    TFloat,        -- Начальная сумма скидки
+    IN inEndSumm      TFloat,        -- Конечная сумма скидки
+    IN inDiscountTax  TFloat,        -- Процент скидки
+    IN inDiscountId   Integer,       -- Связь Названия накопительных скидок
     IN inSession      TVarChar       -- сессия пользователя
 )
   RETURNS integer
@@ -32,7 +32,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_DiscountTools(), 0, '');
    
-   -- сохранили связь с <>
+   -- сохранили связь с <Названия накопительных скидок>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_DiscountTools_Discount(), ioId, inDiscountId);
 
    -- сохранили свойства

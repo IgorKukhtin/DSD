@@ -3,27 +3,27 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer,Integer,TVarChar,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
- INOUT ioId                       Integer   ,    -- ключ объекта <руппа  товара> 
-    IN inCode                     Integer   ,    -- Код объекта <руппа  товара>
-    IN inName                     TVarChar  ,    -- Название объекта <руппа  товара>
-    IN inParentId                 Integer   ,    -- ключ объекта <Группа  товара> 
-    IN inSession                  TVarChar       -- сессия пользователя
+ INOUT ioId                       Integer   ,    -- Ключ объекта <Группа товара> 
+    IN inCode                     Integer   ,    -- Код объекта <Группа товара>
+    IN inName                     TVarChar  ,    -- Название объекта <Группа товара>
+    IN inParentId                 Integer   ,    -- ключ объекта <Группа товара> 
+    IN inSession                  TVarChar       -- сессия пользователя  
 )
- RETURNS Integer
-  AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_max Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsGroup());
-   --vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_GoodsGroup()); 
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_GoodsGroup()); 
    
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_GoodsGroup(), inName);
@@ -46,11 +46,11 @@ BEGIN
    END IF;
 */
 
-   -- проверка прав уникальности для свойства <Код >
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), vbCode_calc);
+   -- проверка прав уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_GoodsGroup(), vbCode_max, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsGroup_Parent(), ioId, inParentId);
 

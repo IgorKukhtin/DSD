@@ -3,45 +3,39 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Fabrika (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Fabrika(
- INOUT ioId           Integer,       -- ключ объекта <Fabrika>
-    IN inCode         Integer,       -- свойство <Код Fabrika>
-    IN inName         TVarChar,      -- главное Название Fabrika
-    IN inSession      TVarChar       -- сессия пользователя
-)
-  RETURNS integer
-  AS
+ INOUT ioId           Integer,       -- Ключ объекта <Фабрика производитель>             
+    IN inCode         Integer,       -- Код объекта <Фабрика производитель>              
+    IN inName         TVarChar,      -- Название объекта <Фабрика производитель>         
+    IN inSession      TVarChar       -- сессия пользователя                      
+)                                    
+RETURNS integer
+AS
 $BODY$
-  DECLARE UserId Integer;
-  DECLARE Code_max Integer;
+  DECLARE vbUserId Integer;
+  DECLARE vbCode_max Integer;
 
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Fabrika());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
-   -- Если код не установлен, определяем его каи последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN
-       SELECT COALESCE( MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Fabrika();
-   ELSE
-       Code_max := inCode;
-   END IF;
-
+   -- Если код не установлен, определяем его как последний+1
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_Fabrika()); 
+   
    -- проверка уникальности для свойства <Наименование Fabrika>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Fabrika(), inName); 
    -- проверка уникальности для свойства <Код Fabrika>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Fabrika(), Code_max);
-
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Fabrika(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Fabrika(), Code_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Fabrika(), vbCode_max, inName);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$

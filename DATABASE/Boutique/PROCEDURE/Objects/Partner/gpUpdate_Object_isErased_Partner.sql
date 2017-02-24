@@ -1,8 +1,8 @@
--- Function: gpUpdate_Object_isErased_Brand (Integer, TVarChar)
+-- Function: gpUpdate_Object_isErased_Partner (Integer, TVarChar) 
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Brand (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Partner (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Brand(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Partner(
     IN inObjectId Integer, 
     IN inSession  TVarChar
 )
@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Brand());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Partner());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
@@ -25,5 +25,5 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
-19.02.17                                                          *
+17.02.17                                                          *
 */

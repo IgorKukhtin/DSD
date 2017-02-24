@@ -3,31 +3,32 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Composition (Integer,Integer,TVarChar,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Composition(
- INOUT ioId                       Integer   ,    -- ключ объекта <Состав товара> 
+ INOUT ioId                       Integer   ,    -- Ключ объекта <Состав товара> 
     IN inCode                     Integer   ,    -- Код объекта <Состав товара>
     IN inName                     TVarChar  ,    -- Название объекта <Состав товара>
     IN inCompositionGroupId       Integer   ,    -- ключ объекта <Группа для состава товара> 
     IN inSession                  TVarChar       -- сессия пользователя
 )
- RETURNS Integer
-  AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode_max Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Composition());
-   --vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Composition()); 
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_Composition()); 
    
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Composition(), inName);
-   -- проверка уникальность <Наименование> для !!!одноq!! <Группа для состава товара>
+
+   -- проверка уникальность <Наименование> для !!!одной!! <Группа для состава товара>
    IF TRIM (inName) <> '' AND COALESCE (inCompositionGroupId, 0) <> 0 
    THEN
        IF EXISTS (SELECT Object.Id
@@ -45,12 +46,13 @@ BEGIN
    END IF;
 
 
-   -- проверка прав уникальности для свойства <Код >
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), vbCode_calc);
+   -- проверка прав уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Composition(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Composition(), vbCode_calc, inName);
-   -- сохранили связь с <>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Composition(), vbCode_max, inName);
+
+   -- сохранили связь с <Группа для состава товара>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Composition_CompositionGroup(), ioId, inCompositionGroupId);
 
    -- сохранили протокол
