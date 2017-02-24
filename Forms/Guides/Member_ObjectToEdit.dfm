@@ -3,7 +3,7 @@
   ClientHeight = 476
   ClientWidth = 287
   ExplicitWidth = 293
-  ExplicitHeight = 504
+  ExplicitHeight = 501
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -35,7 +35,6 @@
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 369
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 60
@@ -126,7 +125,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 12
+        TabOrder = 11
         Width = 273
       end
       object cxLabel9: TcxLabel
@@ -160,7 +159,7 @@
         StyleFocused.LookAndFeel.NativeStyle = False
         StyleHot.LookAndFeel.Kind = lfOffice11
         StyleHot.LookAndFeel.NativeStyle = False
-        TabOrder = 14
+        TabOrder = 13
         Width = 273
       end
       object cxLabel10: TcxLabel
@@ -177,7 +176,7 @@
       object cxLabel11: TcxLabel
         Left = 7
         Top = 236
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055'  - '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
       end
       object ceCardChild: TcxTextEdit
         Left = 7
@@ -189,7 +188,6 @@
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitHeight = 369
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4

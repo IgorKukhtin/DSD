@@ -383,7 +383,7 @@ BEGIN
              , ObjectLink_Personal_PersonalServiceList.ChildObjectId AS PersonalServiceListId
 
                -- ‘илиал Ѕаланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
-             , _tmpItem.BranchId_Balance
+             , _tmpItem.BranchId_ProfitLoss AS BranchId_Balance
                -- ‘илиал ќѕи”: не используетс€ !!!в кассе и р/счете - делать аналогично!!!
              , 0 AS BranchId_ProfitLoss
 

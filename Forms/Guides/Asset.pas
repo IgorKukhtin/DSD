@@ -61,6 +61,8 @@ type
     clPassportNumber: TcxGridDBColumn;
     clRelease: TcxGridDBColumn;
     clMakerName: TcxGridDBColumn;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
