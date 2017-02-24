@@ -38,6 +38,8 @@ BEGIN
    
         FROM tmpData;
 
+     -- RAISE EXCEPTION '<%>  <%>', (select PhoneNum from  _tmpItem), (select TotalSumm from  _tmpItem );
+
      -- даные - моб.номера
      CREATE TEMP TABLE _tmpMobileEmployee (Id Integer, PhoneNum TVarChar, PersonalId Integer, MobileTariffId Integer, MobileLimit TFloat, DutyLimit TFloat, Navigator TFloat, Monthly TFloat, ContractId Integer) ON COMMIT DROP;
      INSERT INTO _tmpMobileEmployee (Id, PhoneNum, PersonalId, MobileTariffId, MobileLimit, DutyLimit, Navigator, Monthly, ContractId)

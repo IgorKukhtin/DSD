@@ -181,11 +181,11 @@ BEGIN
          INSERT INTO tmpSend  (GoodsId, UnitId, Amount) 
                         SELECT MI_Send.ObjectId                 AS GoodsId
                              , MovementLinkObject_Unit.ObjectId AS UnitId
-                             , SUM (CASE WHEN (MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId)
-                                               OR
-                                              (MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId)
-                                         THEN (MI_Send.Amount) 
-                                         ELSE 0 
+                             , SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From() AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                         THEN -1 * MI_Send.Amount
+                                         WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() AND MovementLinkObject_Unit.ObjectId <> inUnitId
+                                         THEN  1 * MI_Send.Amount
+                                         ELSE 0
                                     END) ::TFloat  AS Amount--_From
                              --, SUM (CASE WHEN MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To() THEN (MI_Send.Amount) ELSE 0 END) ::TFloat    AS Amount_To
 
@@ -228,11 +228,10 @@ BEGIN
                               , tmp.UnitId
                               --, tmp.RemainsStart + COALESCE (tmpSend.Amount, 0) AS RemainsStart
                               
-                              , CASE WHEN inisAssortment = TRUE 
-                                     THEN CASE WHEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) > inAssortment THEN (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)) - inAssortment
-                                               ELSE 0
-                                          END
-                                     ELSE (tmp.RemainsStart + COALESCE (tmpSend.Amount, 0))
+                              , tmp.RemainsStart + COALESCE (tmpSend.Amount, 0)
+                              - CASE WHEN inisAssortment = TRUE AND tmp.UnitId = inUnitId
+                                          THEN inAssortment
+                                     ELSE 0
                                 END                                             AS RemainsStart
                               , tmp.RemainsStart                                AS RemainsStart_save
                               , tmp.MinExpirationDate
@@ -241,11 +240,10 @@ BEGIN
                         UNION
                          SELECT tmpSend.GoodsId
                               , tmpSend.UnitId
-                              , CASE WHEN inisAssortment = TRUE 
-                                     THEN CASE WHEN COALESCE (tmpSend.Amount, 0) > inAssortment THEN COALESCE (tmpSend.Amount, 0) - inAssortment 
-                                               ELSE 0
-                                          END
-                                     ELSE  COALESCE (tmpSend.Amount, 0)
+                              , COALESCE (tmpSend.Amount, 0)
+                              - CASE WHEN inisAssortment = TRUE AND tmpSend.UnitId = inUnitId
+                                     THEN inAssortment 
+                                     ELSE 0
                                 END                          AS RemainsStart
                               , 0                            AS RemainsStart_save
                               , NULL                         AS MinExpirationDate
@@ -700,9 +698,5 @@ $BODY$
 --SELECT * FROM gpReport_RemainsOverGoods (inUnitId:= 183292, inStartDate:= '12.01.2017' ::TDateTime, inPeriod:= 30::tfloat, inDay:= 28::tfloat,inAssortment:=1::tfloat, inisAssortment:=False, inSession:= '3'::TVarChar);  -- Аптека_1 пр_Правды_6
 
 /*
-select * from gpReport_RemainsOverGoods
-(inUnitId := 183292 , inStartDate := ('18.11.2016')::TDateTime ,
- inPeriod := 30 ::tfloat, inDay := 12 ::tfloat, inAssortment := 1 ::tfloat, 
- inisMCS := 'False' ::boolean, inisInMCS := 'False'::boolean , inisRecal := 'False'::boolean , inisAssortment := 'False' ::boolean,
- inSession := '3'::TVarChar);
+SELECT * FROM gpReport_RemainsOverGoods(inUnitId := 183288 , inStartDate := ('23.02.2017')::TDateTime , inPeriod := 30 , inDay := 30 , inAssortment := 1 , inisMCS := 'False' , inisInMCS := 'True' , inisRecal := 'False' , inisAssortment := 'False' ,  inSession := '3')
 */

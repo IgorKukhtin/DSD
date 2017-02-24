@@ -27,7 +27,6 @@ object AssetForm: TAssetForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 365
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -205,17 +204,13 @@ object AssetForm: TAssetForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -224,6 +219,18 @@ object AssetForm: TAssetForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -260,6 +267,7 @@ object AssetForm: TAssetForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -273,10 +281,10 @@ object AssetForm: TAssetForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -382,7 +390,6 @@ object AssetForm: TAssetForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -395,7 +402,7 @@ object AssetForm: TAssetForm
       ShortCut = 16472
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Asset'
     DataSet = ClientDataSet
     DataSets = <
