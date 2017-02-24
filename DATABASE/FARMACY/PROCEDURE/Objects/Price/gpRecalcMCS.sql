@@ -52,24 +52,54 @@ BEGIN
         NumberOfDay      Integer not null,
         SoldCount        TFloat  not null,
         primary key(GoodsId,NumberOfDay)
-    ) ON COMMIT DROP;
+    ) ON COMMIT DROP;   
+    
+    --
+    CREATE TEMP TABLE tmpPrice  (UnitId Integer, GoodsId Integer, MCSValue TFloat, PercentMarkup TFloat, isTop Boolean, Fix Boolean) ON COMMIT DROP;  
+    INSERT INTO tmpPrice (UnitId, GoodsId, PercentMarkup, isTop, Fix)  
+                    SELECT ObjectLink_Price_Unit.ChildObjectId    AS UnitId
+                       , Price_Goods.ChildObjectId                AS GoodsId     
+                       , MCS_Value.ValueData                      AS MCSValue
+                       , COALESCE(Price_PercentMarkup.ValueData, 0) ::TFloat AS PercentMarkup
+                       , COALESCE(Price_Top.ValueData,False)      AS isTop        
+                       , COALESCE(Price_Fix.ValueData,False)      AS Fix  
+                    FROM ObjectLink AS ObjectLink_Price_Unit
+                       INNER JOIN ObjectLink AS Price_Goods
+                                             ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                            AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                       LEFT JOIN ObjectBoolean AS MCS_NotRecalc
+                                               ON MCS_NotRecalc.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_NotRecalc.DescId = zc_ObjectBoolean_Price_MCSNotRecalc()
+                       LEFT JOIN ObjectBoolean AS MCS_isClose
+                                               ON MCS_isClose.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND MCS_isClose.DescId = zc_ObjectBoolean_Price_MCSIsClose()  
+                       LEFT JOIN ObjectFloat AS Price_PercentMarkup
+                                             ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                            AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()  
+                       LEFT JOIN ObjectFloat AS MCS_Value
+                                             ON MCS_Value.ObjectId = Object_Price.Id
+                                            AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()                                          
+                       LEFT JOIN ObjectBoolean AS Price_Fix
+                                               ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND Price_Fix.DescId = zc_ObjectBoolean_Price_Fix()
+                       LEFT JOIN ObjectBoolean AS Price_Top
+                                               ON Price_Top.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                              AND Price_Top.DescId = zc_ObjectBoolean_Price_Top()
+                   WHERE ObjectLink_Price_Unit.ChildObjectId = inUnitId
+                     AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()   
+                     AND COALESCE(MCS_NotRecalc.ValueData,False) = FALSE 
+                     AND COALESCE(MCS_isClose.ValueData,False) = FALSE;
+    
     --залили пустографку для продаж по дням
     INSERT INTO tmp_SoldGoodsOneDay(GoodsId,NumberOfDay,SoldCount) 
     SELECT Object_Goods.ID, NumberDay,0 
-    from 
-        tmp_AllDayCount
+    FROM tmp_AllDayCount
         CROSS JOIN Object_Goods_View AS Object_Goods
-        LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                          ON Object_Price.GoodsId = Object_Goods.Id
-                                         AND Object_Price.UnitId = inUnitId 
-    WHERE 
-        Object_Goods.IsErased = FALSE
-        AND
-        Object_Goods.ObjectId = vbObjectId
-        AND
-        COALESCE(Object_Price.MCSNotRecalc,FALSE) = FALSE
-        AND
-        COALESCE(Object_Price.MCSIsClose,FALSE) = FALSE;
+        INNER JOIN tmpPrice AS Object_Price
+                            ON Object_Price.GoodsId = Object_Goods.Id
+                           AND Object_Price.UnitId = inUnitId 
+    WHERE Object_Goods.IsErased = FALSE
+      AND Object_Goods.ObjectId = vbObjectId;
 
     --Таблица для продаж
     CREATE TEMP TABLE tmp_OneDaySold(
@@ -89,32 +119,22 @@ BEGIN
     vbCounter := 1;
     --заливаем продажу на каждый день за inPeriod дней
     INSERT INTO tmp_OneDaySold(GoodsId,DayCount,Sold)
-    SELECT 
-        MovementItem_Check.GoodsId,
-        inPeriod - DATE_PART('day', CURRENT_DATE - Movement_Check.OperDate) AS Period,
-        sum(round(MovementItem_Check.Amount,1))    AS Amount
-    from 
-        Movement_Check_View AS Movement_Check
-        INNER JOIN MovementItem_Check_View AS MovementItem_Check
-                                           ON MovementItem_Check.MovementId = Movement_Check.Id
-                                          AND MovementItem_Check.isErased = False
-                                          AND MovementItem_Check.Amount > 0
-        INNER JOIN Object_Goods_View AS Object_Goods
-                                     ON Object_Goods.Id = MovementItem_Check.GoodsId
-                                    AND Object_Goods.isErased = False 
-    WHERE
-        Movement_Check.StatusId = zc_Enum_Status_Complete()
-        AND
-        Movement_Check.UnitId = inUnitId
-        AND
-        DATE_TRUNC('day', Movement_Check.OperDate) >= DATE_TRUNC('day', CURRENT_DATE - inPeriod - 1)
-        AND
-        DATE_TRUNC('day', Movement_Check.OperDate) <= DATE_TRUNC('day', CURRENT_DATE - 1)
-        AND
-        COALESCE(Movement_Check.NotMCS,FALSE) = FALSE
-    GROUP BY 
-        MovementItem_Check.GoodsId, 
-        DATE_PART('day', CURRENT_DATE - Movement_Check.OperDate);
+           SELECT MIContainer.ObjectId_analyzer AS GoodsId  
+                , inPeriod - DATE_PART ('DAY', CURRENT_DATE - MIContainer.OperDate) AS Period   
+                , SUM (round(COALESCE (-1 * MIContainer.Amount, 0),1))    AS Amount
+           FROM MovementItemContainer AS MIContainer   
+               LEFT OUTER JOIN MovementBoolean AS MovementBoolean_NotMCS
+                                               ON MovementBoolean_NotMCS.MovementId = MIContainer.MovementId
+                                              AND MovementBoolean_NotMCS.DescId = zc_MovementBoolean_NotMCS()
+           WHERE MIContainer.WhereObjectId_analyzer = inUnitId
+             AND MIContainer.MovementDescId = zc_Movement_Check()
+             AND MIContainer.DescId = zc_MIContainer_Count()   
+             AND MIContainer.OperDate >= DATE_TRUNC('day', CURRENT_DATE - inPeriod - 1)
+             AND MIContainer.OperDate < DATE_TRUNC('day', CURRENT_DATE - 1)   
+             AND COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE
+           GROUP BY MIContainer.ObjectId_analyzer   
+                  , DATE_PART ('DAY', inStartDate - MIContainer.OperDate) ;
+       
         
     UPDATE tmp_SoldGoodsOneDay AS DST SET 
         SoldCount = SRC.Sold
@@ -156,21 +176,16 @@ BEGIN
                                         inSession      := inSession)
     FROM 
         tmp_ResultSet
-        LEFT OUTER JOIN Object_Price_View AS Object_Price
-                                          ON Object_Price.GoodsId = tmp_ResultSet.GoodsId
-                                         AND Object_Price.UnitId = inUnitId 
-    WHERE 
-        COALESCE(Object_Price.MCSNotRecalc,FALSE) = FALSE
-        AND
-        COALESCE(Object_Price.MCSIsClose,FALSE) = FALSE
+        INNER JOIN tmpPrice AS Object_Price
+                            ON Object_Price.GoodsId = tmp_ResultSet.GoodsId
+                           AND Object_Price.UnitId = inUnitId 
     GROUP BY
         tmp_ResultSet.GoodsId,
         Object_Price.MCSValue,
         Object_Price.isTop,
         Object_Price.PercentMarkup,
         Object_Price.Fix
-    HAVING
-        COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
+    HAVING  COALESCE(MAX(Sold),0)::TFloat <> COALESCE(Object_Price.MCSValue,0);
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -179,7 +194,8 @@ ALTER FUNCTION gpRecalcMCS(Integer, Integer, Integer, TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  
+ 24.02.17         *
  04.07.16         * add PercentMarkup
  29.08.15                                                         *
  */
