@@ -35,21 +35,23 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
+           CREATE TEMP TABLE tmpContract ON COMMIT DROP
+           AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId                                                                                                                         
+               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade                                                                                                                                      
+                    JOIN ObjectLink AS ObjectLink_Partner_Juridical                                                                                                                                        
+                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId                                                                                   
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()                                                                                             
+                    JOIN ObjectLink AS ObjectLink_Contract_Juridical                                                                                                                                    
+                                    ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId             
+                                   AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()                                                                                        
+               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()                                                                                                    
+              );
+            
            IF inSyncDateIn > zc_DateZero()
            THEN
                 RETURN QUERY
-                  WITH tmpContract AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId                                                                                                                         
-                                       FROM ObjectLink AS ObjectLink_Partner_PersonalTrade                                                                                                                                      
-                                            JOIN ObjectLink AS ObjectLink_Partner_Juridical                                                                                                                                        
-                                                            ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId                                                                                   
-                                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()                                                                                             
-                                            JOIN ObjectLink AS ObjectLink_Contract_Juridical                                                                                                                                    
-                                                            ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId             
-                                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()                                                                                        
-                                       WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                         AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()                                                                                                    
-                                      )
-                     , tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS ContractId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
+                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS ContractId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
                                        FROM ObjectProtocol                                                                                                                                                                      
                                             JOIN Object AS Object_Contract                                                                                                                                                         
                                                         ON Object_Contract.Id = ObjectProtocol.ObjectId
@@ -76,17 +78,6 @@ BEGIN
                   WHERE Object_Contract.DescId = zc_Object_Contract();
            ELSE
                 RETURN QUERY
-                  WITH tmpContract AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId                                                                                                                         
-                                       FROM ObjectLink AS ObjectLink_Partner_PersonalTrade                                                                                                                                      
-                                            JOIN ObjectLink AS ObjectLink_Partner_Juridical                                                                                                                                        
-                                                            ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId                                                                                   
-                                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()                                                                                             
-                                            JOIN ObjectLink AS ObjectLink_Contract_Juridical                                                                                                                                    
-                                                            ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId             
-                                                           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()                                                                                        
-                                       WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                         AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()                                                                                                    
-                                      )                                                                                                                                                                                          
                   SELECT Object_Contract.Id                                                                                                                                                                       
                        , Object_Contract.ObjectCode                                                                                                                                                             
                        , Object_Contract.ValueData                                                                                                                                                              

@@ -29,6 +29,40 @@ BEGIN
       
       IF vbPersonalId IS NOT NULL 
       THEN
+           CREATE TEMP TABLE tmpPriceList ON COMMIT DROP
+           AS (SELECT DISTINCT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
+                                      , ObjectLink_Contract_PriceList.ChildObjectId
+                                      , ObjectLink_Juridical_PriceList.ChildObjectId
+                                      , zc_PriceList_Basis()) AS PriceListId
+                             , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
+                                      , ObjectLink_Juridical_PriceListPrior.ChildObjectId
+                                      , zc_PriceList_BasisPrior()) AS PriceListPriorId
+               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                                         ON ObjectLink_Partner_PriceList.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                        AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                    LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
+                                         ON ObjectLink_Partner_PriceListPrior.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                        AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
+                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                         ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
+                                         ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                        AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                                         ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                        AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                    LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
+                                         ON ObjectLink_Juridical_PriceListPrior.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                        AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
+               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+              );
+                
            IF inSyncDateIn > zc_DateZero()
            THEN
                 RETURN QUERY
@@ -40,38 +74,6 @@ BEGIN
                                        WHERE ObjectProtocol.OperDate > inSyncDateIn
                                        GROUP BY ObjectProtocol.ObjectId                                                                  
                                       )
-                     , tmpPriceList AS (SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
-                                                      , ObjectLink_Contract_PriceList.ChildObjectId
-                                                      , ObjectLink_Juridical_PriceList.ChildObjectId
-                                                      , zc_PriceList_Basis()) AS PriceListId
-                                             , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
-                                                      , ObjectLink_Juridical_PriceListPrior.ChildObjectId
-                                                      , zc_PriceList_BasisPrior()) AS PriceListPriorId
-                                        FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                                                                  ON ObjectLink_Partner_PriceList.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
-                                                                  ON ObjectLink_Partner_PriceListPrior.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                  ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                                  ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                                                                  ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                                 AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                                                  ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
-                                                                  ON ObjectLink_Juridical_PriceListPrior.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
-                                        WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                       )
                   SELECT Object_PriceList.Id                                                                                             
                        , Object_PriceList.ObjectCode                                                                                     
                        , Object_PriceList.ValueData                                                                                      
@@ -90,38 +92,6 @@ BEGIN
                   WHERE Object_PriceList.DescId = zc_Object_PriceList();
            ELSE
                 RETURN QUERY
-                  WITH tmpPriceList AS (SELECT COALESCE(ObjectLink_Partner_PriceList.ChildObjectId
-                                                      , ObjectLink_Contract_PriceList.ChildObjectId
-                                                      , ObjectLink_Juridical_PriceList.ChildObjectId
-                                                      , zc_PriceList_Basis()) AS PriceListId
-                                             , COALESCE(ObjectLink_Partner_PriceListPrior.ChildObjectId
-                                                      , ObjectLink_Juridical_PriceListPrior.ChildObjectId
-                                                      , zc_PriceList_BasisPrior()) AS PriceListPriorId
-                                        FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                                                                  ON ObjectLink_Partner_PriceList.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
-                                                                  ON ObjectLink_Partner_PriceListPrior.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                  ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                                                  ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Contract_PriceList
-                                                                  ON ObjectLink_Contract_PriceList.ObjectId = ObjectLink_Contract_Juridical.ObjectId
-                                                                 AND ObjectLink_Contract_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                                                                  ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                                             LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPrior
-                                                                  ON ObjectLink_Juridical_PriceListPrior.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                 AND ObjectLink_Juridical_PriceListPrior.DescId = zc_ObjectLink_Juridical_PriceListPrior()
-                                        WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                                          AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                       )
                   SELECT Object_PriceList.Id                                                                                             
                        , Object_PriceList.ObjectCode                                                                                     
                        , Object_PriceList.ValueData                                                                                      
