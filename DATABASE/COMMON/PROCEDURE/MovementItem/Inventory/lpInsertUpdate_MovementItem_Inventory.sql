@@ -25,6 +25,44 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+      -- !!!Проверка что элемент один!!!
+      IF EXISTS (SELECT 1
+                 FROM MovementItem
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                       ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                      LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                 ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                      LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                   ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                  AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.ObjectId = inGoodsId
+                   AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0)            = COALESCE (inGoodsKindId, 0)
+                   AND COALESCE (MILinkObject_GoodsKindComplete.ObjectId, 0)    = COALESCE (inGoodsKindCompleteId, 0)
+                   AND COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) = COALESCE (inPartionGoodsDate, zc_DateStart())
+                   AND COALESCE (MIString_PartionGoods.ValueData, '')           = COALESCE (inPartionGoods, '')
+                   AND MovementItem.isErased = FALSE
+                   AND MovementItem.Amount <> 0
+                   AND MovementItem.Id <> COALESCE (ioId, 0)
+                )
+      THEN
+          RAISE EXCEPTION 'Ошибка.В документе <Инвентаризация> № <%> за <%> уже введена партия <% % % % %> другим пользователем.Обновите данные и повторите действие через 25 сек.'
+                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
+                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                         , lfGet_Object_ValueData (inGoodsId)
+                         , lfGet_Object_ValueData (inGoodsKindId)
+                         , lfGet_Object_ValueData (inGoodsKindCompleteId)
+                         , (SELECT CASE WHEN inPartionGoodsDate > zc_DateStart() THEN zfConvert_DateToString (inPartionGoodsDate) ELSE '' END)
+                         , (SELECT CASE WHEN inPartionGoods <> '' THEN inPartionGoods ELSE '' END)
+                          ;
+      END IF;
+
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 

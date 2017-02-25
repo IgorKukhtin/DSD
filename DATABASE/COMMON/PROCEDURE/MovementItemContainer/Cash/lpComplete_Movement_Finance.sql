@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_Finance (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -142,7 +142,7 @@ BEGIN
      -- Проверка - AccountDirectionId
      /*IF EXISTS (SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В проводке не определена Направление счета : <%> <%> <%> <%>'
+         RAISE EXCEPTION 'Ошибка.В проводке не определено Направление счета : <%> <%> <%> <%>'
                        , lfGet_Object_ValueData ((SELECT _tmpItem.UnitId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1))
                        , (SELECT _tmpItem.OperSumm FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1)
                        , (SELECT _tmpItem.MovementItemId FROM _tmpItem WHERE _tmpItem.ObjectId <> 0 AND _tmpItem.AccountDirectionId = 0 ORDER BY ABS (OperSumm) DESC LIMIT 1)
@@ -281,7 +281,7 @@ BEGIN
 
                                                       ELSE _tmpItem.ProfitLossDirectionId
                                                  END
-                       , ObjectId = CASE WHEN _tmpItem.ObjectId <> 0 
+                       , ObjectId = CASE WHEN _tmpItem.ObjectId <> 0
                                               THEN _tmpItem.ObjectId -- если уже был определен
 
                                          WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()) -- Общефирменные + Товары
@@ -336,7 +336,7 @@ BEGIN
 
                                                         ELSE NULL -- !!!Ошибка!!!
                                                    END
-                                         ELSE 
+                                         ELSE
                                     lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := CASE WHEN _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
                                                                                                           THEN zc_Enum_ProfitLossGroup_60000() -- Амортизация
                                                                                                      ELSE _tmpItem.ProfitLossGroupId
@@ -605,7 +605,7 @@ BEGIN
                                                                              )
                                        END;
      -- 2.2. определяется ContainerId для проводок суммового учета - Суммовой учет в валюте
-     UPDATE _tmpItem SET 
+     UPDATE _tmpItem SET
                 ContainerId_Currency = CASE WHEN COALESCE (_tmpItem.CurrencyId, zc_Enum_Currency_Basis()) = zc_Enum_Currency_Basis()
                                               OR _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
                                                  THEN 0
@@ -810,7 +810,7 @@ BEGIN
                                                         AND _tmpItem_BankAccount.ContainerId_Diff = 0
        WHERE _tmpItem.ContainerId_Diff <> 0
       UNION ALL
-       -- это !!!одна!!! проводка для "забалансового" Валютного счета 
+       -- это !!!одна!!! проводка для "забалансового" Валютного счета
        SELECT 0, zc_MIContainer_SummCurrency() AS DescId, _tmpItem.MovementDescId, inMovementId, _tmpItem.MovementItemId
             , _tmpItem.ContainerId_Currency
             , 0                                   AS AccountId
