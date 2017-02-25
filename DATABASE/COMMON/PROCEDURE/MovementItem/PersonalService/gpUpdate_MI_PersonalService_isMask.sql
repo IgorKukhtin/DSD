@@ -28,7 +28,7 @@ BEGIN
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
              , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummMinus TFloat, SummAdd TFloat
-             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat) ON COMMIT DROP;
+             , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat) ON COMMIT DROP;
        
        WITH tmpMI AS (SELECT MAX (MovementItem.Id)                     AS MovementItemId
                            , MovementItem.ObjectId                     AS PersonalId
@@ -55,7 +55,7 @@ BEGIN
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
                            , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummNalogRecalc, SummMinus, SummAdd
-                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChild)
+                           , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
                  , COALESCE (MIBoolean_Main.ValueData, FALSE) :: Boolean   AS isMain
@@ -74,7 +74,8 @@ BEGIN
                  , COALESCE (MIFloat_SummHoliday.ValueData, 0):: TFloat     AS SummHoliday
                  , COALESCE (MIFloat_SummSocialIn.ValueData, 0):: TFloat    AS SummSocialIn
                  , COALESCE (MIFloat_SummSocialAdd.ValueData, 0):: TFloat   AS SummSocialAdd
-                 , COALESCE (MIFloat_SummChild.ValueData, 0):: TFloat       AS SummChild
+                 , COALESCE (MIFloat_SummChildRecalc.ValueData, 0):: TFloat AS SummChildRecalc
+                 , COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0):: TFloat AS SummMinusExtRecalc
             FROM MovementItem 
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
@@ -126,9 +127,15 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                              ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
-                 LEFT JOIN MovementItemFloat AS MIFloat_SummChild
-                                             ON MIFloat_SummChild.MovementItemId = MovementItem.Id
-                                            AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
+                                             ON MIFloat_SummChildRecalc.MovementItemId = tmpAll.MovementItemId
+                                            AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
+                                             ON MIFloat_SummMinusExtRecalc.MovementItemId = tmpAll.MovementItemId
+                                            AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
+
                  LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                               AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -154,7 +161,8 @@ BEGIN
                                                         , inSummHoliday        := SummHoliday
                                                         , inSummSocialIn       := SummSocialIn
                                                         , inSummSocialAdd      := SummSocialAdd
-                                                        , inSummChild          := SummChild
+                                                        , inSummChildRecalc    := SummChildRecalc
+                                                        , inSummMinusExtRecalc := SummMinusExtRecalc
                                                         , inComment            := 'копирование из другой ведомости'
                                                         , inInfoMoneyId        := InfoMoneyId
                                                         , inUnitId             := UnitId
@@ -174,6 +182,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.02.17         *
  20.02.17         * add SummCardSecondRecalc
  20.04.16         * inSummHoliday
  23.05.15                                        *

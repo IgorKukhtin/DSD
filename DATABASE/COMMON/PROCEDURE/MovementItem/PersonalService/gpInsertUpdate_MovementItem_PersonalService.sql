@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -30,7 +31,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummHoliday         TFloat    , -- Сумма отпускные
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChild           TFloat    , -- Сумма алименты (удержание)    
+    IN inSummChildRecalc     TFloat    , -- Сумма алименты (удержание) (ввод) 
+    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторонними юр.л. для распределения
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -64,7 +66,8 @@ BEGIN
                                                      , inSummHoliday        := inSummHoliday
                                                      , inSummSocialIn       := inSummSocialIn
                                                      , inSummSocialAdd      := inSummSocialAdd
-                                                     , inSummChild          := inSummChild
+                                                     , inSummChildRecalc    := inSummChildRecalc
+                                                     , inSummMinusExtRecalc := inSummMinusExtRecalc
                                                      , inComment            := inComment
                                                      , inInfoMoneyId        := inInfoMoneyId
                                                      , inUnitId             := inUnitId
@@ -85,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.02.17         *
  20.04.16         * inSummHoliday
  08.05.15         * add PersonalServiceList
  14.09.14                                        * add outAmountToPay
