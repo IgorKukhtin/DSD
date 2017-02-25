@@ -34,9 +34,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_MainName() RE
 INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_MainName','‘»Œ ‰ËÂÍÚÓ‡' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_MainName());
 
-CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryStringDesc WHERE Code = 'zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
-SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch','π ÙËÎË‡Î‡' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_InvNumberBranch());
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
