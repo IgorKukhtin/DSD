@@ -134,6 +134,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChildRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummMinusExt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummMinusExtRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -240,6 +255,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummChildRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummMinusExt
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalSummMinusExtRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -494,6 +524,33 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colTotalSummChildRecalc: TcxGridDBColumn
+            Caption = #1040#1083#1080#1084#1077#1085#1090#1099' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummChildRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colTotalSummMinusExt: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1084#1080' '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'TotalSummMinusExt'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colTotalSummMinusExtRecalc: TcxGridDBColumn
+            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1089#1090#1086#1088#1086#1085#1085#1080#1084#1080' '#1102#1088'.'#1083'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'.'
+            DataBinding.FieldName = 'TotalSummMinusExtRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 113
           end
           object colisAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080

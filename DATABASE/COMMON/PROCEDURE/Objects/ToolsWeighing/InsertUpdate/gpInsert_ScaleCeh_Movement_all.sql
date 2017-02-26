@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsert_ScaleCeh_Movement_all(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inOperDate            TDateTime , -- Дата документа
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (MovementId_begin    Integer
               )
 AS
@@ -31,7 +31,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- 
+     --
      CREATE TEMP TABLE _tmpScale_receipt (GoodsId_from Integer, GoodsId_to Integer) ON COMMIT DROP;
 
      -- проверка
@@ -86,7 +86,7 @@ BEGIN
                       );
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0 
+     IF vbMovementDescId = zc_Movement_Send() AND (vbGoodsId_ReWork > 0
                                                 /*OR (-- если такие "От кого"
                                                   (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
                                                   IN (SELECT 8451 -- Цех Упаковки
@@ -439,7 +439,7 @@ BEGIN
                            AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
                         ) AS tmpIncome ON 1 = 1
                        ;
- 
+
      END IF;
 
      -- сформировали список для "виртуальный" Master для расход на производство
@@ -759,7 +759,7 @@ BEGIN
 
      -- добавили расход на производство
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE
-     THEN 
+     THEN
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                  := tmp.MovementItemId
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
@@ -804,7 +804,7 @@ BEGIN
                           SELECT MAX (MovementItem.Id) AS MovementItemId
                                , MovementItem.ObjectId AS GoodsId
                           FROM MovementItem
-                          WHERE MovementItem.MovementId = vbMovementId_begin -- 
+                          WHERE MovementItem.MovementId = vbMovementId_begin --
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                           GROUP BY MovementItem.ObjectId
@@ -814,7 +814,7 @@ BEGIN
      END IF;
      -- добавили расход на переработку
      IF vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
-     THEN 
+     THEN
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child (ioId                  := 0
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId

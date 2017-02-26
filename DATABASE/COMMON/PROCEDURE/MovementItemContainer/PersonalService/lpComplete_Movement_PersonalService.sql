@@ -14,7 +14,7 @@ BEGIN
      -- таблица - по документам, для lpComplete_Movement_PersonalService_Recalc
      CREATE TEMP TABLE _tmpMovement_Recalc (MovementId Integer, StatusId Integer, PersonalServiceListId Integer, PaidKindId Integer, ServiceDate TDateTime) ON COMMIT DROP;
      -- таблица - по элементам, для lpComplete_Movement_PersonalService_Recalc
-     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummNalogRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Recalc (MovementId_from Integer, MovementItemId_from Integer, PersonalServiceListId_from Integer, MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer, ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummNalogRecalc TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
 
 
      -- Проверка - других быть не должно
@@ -168,13 +168,13 @@ BEGIN
      END IF;
 
 
-     -- распределение !!!если это БН!!! - <Сумма на карточку (БН) для распределения> + <Сумма налогов - удержания с сотрудника для распределения> 
+     -- распределение !!!если это БН!!! - <На карточку БН (ввод) - 1ф> + <На карточку БН (ввод) - 2ф> + <Налоги - удержания (ввод)> + <Алименты - удержание (ввод)> + <Удержания сторон. юр.л. (ввод)>
      IF EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
                      INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
-                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
-                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId = zc_ObjectLink_PersonalServiceList_PaidKind()
-                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MovementLinkObject_PersonalServiceList.ObjectId
+                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
                 WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                   AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
                )

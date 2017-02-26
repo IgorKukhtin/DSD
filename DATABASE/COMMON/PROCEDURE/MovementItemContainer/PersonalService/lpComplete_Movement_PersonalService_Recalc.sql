@@ -45,11 +45,11 @@ BEGIN
 
 
      -- формируются данные по элементам для переноса данных
-     WITH -- Все документы из которых будем переносить сумму zc_MIFloat_SummCardRecalc + zc_MIFloat_SummNalogRecalc, по идее таких документов 2
+     WITH -- Все документы из которых будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummChildRecalc + SummMinusExtRecalc, по идее таких документов 2
           tmpMovement_from AS (SELECT _tmpMovement_Recalc.MovementId, _tmpMovement_Recalc.ServiceDate, _tmpMovement_Recalc.PersonalServiceListId
                                FROM _tmpMovement_Recalc
                                WHERE _tmpMovement_Recalc.PaidKindId = zc_Enum_PaidKind_FirstForm() -- обязательно БН
-                                AND  (_tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete()     -- или проведенный (т.к. будет обнуление всех zc_MIFloat_SummCard + zc_MIFloat_SummNalog)
+                                AND  (_tmpMovement_Recalc.StatusId = zc_Enum_Status_Complete()     -- или проведенный (т.к. будет обнуление всех SummCard + SummNalog + SummChild + SummMinusExt)
                                    OR _tmpMovement_Recalc.MovementId = inMovementId)               -- или текущий
                               )
           -- элементы с суммой для переноса
@@ -63,7 +63,10 @@ BEGIN
                               , COALESCE (MILinkObject_InfoMoney.ObjectId, 0)           AS InfoMoneyId
                               , COALESCE (MILinkObject_PersonalServiceList.ObjectId, 0) AS PersonalServiceListId_to -- !!!в какую ведедомость будем переносить, иначе перенесем в текущий MovementItemId!!!
                               , COALESCE (MIFloat_SummCardRecalc.ValueData, 0)          AS SummCardRecalc
+                              , COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)    AS SummCardSecondRecalc
                               , COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)         AS SummNalogRecalc
+                              , COALESCE (MIFloat_SummChildRecalc.ValueData, 0)         AS SummChildRecalc
+                              , COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)      AS SummMinusExtRecalc
                          FROM tmpMovement_from
                               INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement_from.MovementId
                                                      AND MovementItem.DescId = zc_MI_Master()
@@ -71,9 +74,18 @@ BEGIN
                               LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
                                                           ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                          ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
                               LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
                                                           ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
+                                                          ON MIFloat_SummChildRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
+                                                          ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
@@ -87,13 +99,17 @@ BEGIN
                                                                ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                                               AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList()
                          -- т.е. есть что переносить
-                         WHERE MIFloat_SummCardRecalc.ValueData <> 0 OR MIFloat_SummNalogRecalc.ValueData <> 0
+                         WHERE MIFloat_SummCardRecalc.ValueData       <> 0
+                            OR MIFloat_SummCardSecondRecalc.ValueData <> 0
+                            OR MIFloat_SummNalogRecalc.ValueData      <> 0
+                            OR MIFloat_SummChildRecalc.ValueData      <> 0
+                            OR MIFloat_SummMinusExtRecalc.ValueData   <> 0
                         )
 
-          -- Все документы в которые будем переносить сумму zc_MIFloat_SummCardRecalc + zc_MIFloat_SummNalogRecalc (здесь нет документов в которых сумма "останется")
+          -- Все документы в которые будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummChildRecalc + SummMinusExtRecalc (здесь нет документов в которых сумма "останется")
         , tmpMovement_to AS (SELECT MovementId, PersonalServiceListId, StatusId FROM _tmpMovement_Recalc WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm() AND EXISTS (SELECT 1 FROM tmpMI_from))
 
-            -- Все элементы по которым будем искать куда переносить сумму zc_MIFloat_SummCardRecalc + zc_MIFloat_SummNalogRecalc
+            -- Все элементы по которым будем искать куда переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummChildRecalc + SummMinusExtRecalc
           , tmpMI_to_all AS (SELECT tmpMovement_to.PersonalServiceListId          AS PersonalServiceListId
                                   , tmpMovement_to.MovementId                     AS MovementId
                                   , MovementItem.Id                               AS MovementItemId
@@ -113,7 +129,7 @@ BEGIN
                                                                    ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                             )
-                -- находим документы и элементы в которые перенесем сумму zc_MIFloat_SummCardRecalc + zc_MIFloat_SummNalogRecalc
+                -- находим документы и элементы в которые перенесем сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummChildRecalc + SummMinusExtRecalc
               , tmpMI_to AS (SELECT tmpMI_from.MovementId     AS MovementId_from
                                   , tmpMI_from.MovementItemId AS MovementItemId_from
                                   , COALESCE (tmpMovement_to.MovementId, COALESCE (tmpMovement_to_UnComplete.MovementId, 0)) AS MovementId_to
@@ -135,7 +151,7 @@ BEGIN
                                                         AND tmpMI_to_all.PersonalServiceListId = tmpMI_from.PersonalServiceListId_to
                             )
      -- данные что куда переносим
-     INSERT INTO _tmpMI_Recalc (MovementId_from, MovementItemId_from, PersonalServiceListId_from, MovementId_to, MovementItemId_to, PersonalServiceListId_to, ServiceDate, UnitId, PersonalId, PositionId, InfoMoneyId, SummCardRecalc, SummNalogRecalc, isMovementComplete)
+     INSERT INTO _tmpMI_Recalc (MovementId_from, MovementItemId_from, PersonalServiceListId_from, MovementId_to, MovementItemId_to, PersonalServiceListId_to, ServiceDate, UnitId, PersonalId, PositionId, InfoMoneyId, SummCardRecalc, SummCardSecondRecalc, SummNalogRecalc, SummChildRecalc, SummMinusExtRecalc, isMovementComplete)
        SELECT tmpMI_from.MovementId            AS MovementId_from
             , tmpMI_from.MovementItemId        AS MovementItemId_from
             , tmpMI_from.PersonalServiceListId AS PersonalServiceListId_from
@@ -148,7 +164,10 @@ BEGIN
             , tmpMI_from.PositionId
             , tmpMI_from.InfoMoneyId
             , tmpMI_from.SummCardRecalc
+            , tmpMI_from.SummCardSecondRecalc
             , tmpMI_from.SummNalogRecalc
+            , tmpMI_from.SummChildRecalc
+            , tmpMI_from.SummMinusExtRecalc
             , CASE WHEN tmpMI_to.MovementItemId_to IS NULL AND tmpMovement_to.StatusId = zc_Enum_Status_Complete() THEN TRUE ELSE FALSE END AS isMovementComplete
        FROM tmpMI_from
             -- из списка берется только один
@@ -213,7 +232,8 @@ BEGIN
                                                                   , inSummHoliday        := 0
                                                                   , inSummSocialIn       := 0
                                                                   , inSummSocialAdd      := 0
-                                                                  , inSummChild          := 0
+                                                                  , inSummChildRecalc    := 0
+                                                                  , inSummMinusExtRecalc := 0
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
                                                                   , inUnitId             := _tmpMI_Recalc.UnitId
@@ -239,9 +259,12 @@ BEGIN
      -- END IF;
 
 
-     -- сначала обнуляется у всех свойства <zc_MIFloat_SummCard> + <zc_MIFloat_SummNalog>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItem.Id, 0)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(), MovementItem.Id, 0)
+     -- сначала обнуляется у всех свойства <zc_MIFloat_SummCard> + <zc_MIFloat_SummCardSecond> + <zc_MIFloat_SummNalog> + <zc_MIFloat_SummChild> + <zc_MIFloat_SummMinusExt>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(),       MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecond(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(),      MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(),      MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExt(),   MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItem.Id, CASE WHEN _tmpMovement_Recalc.PaidKindId = zc_Enum_PaidKind_FirstForm() THEN MILinkObject_PersonalServiceList.ObjectId ELSE NULL END)
      FROM _tmpMovement_Recalc
           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement_Recalc.MovementId AND MovementItem.DescId = zc_MI_Master()
@@ -249,16 +272,22 @@ BEGIN
                                            ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
                                           AND MILinkObject_PersonalServiceList.DescId = zc_MILinkObject_PersonalServiceList();
 
-     -- сохранили свойства <zc_MIFloat_SummCard> + <zc_MIFloat_SummNalog>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_to, SummCardRecalc)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(), MovementItemId_to, SummNalogRecalc)
+     -- сохранили свойства <zc_MIFloat_SummCard> + <zc_MIFloat_SummCardSecond> + <zc_MIFloat_SummNalog> + <zc_MIFloat_SummChild> + <zc_MIFloat_SummMinusExt>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(),       MovementItemId_to, SummCardRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecond(), MovementItemId_to, SummCardSecondRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(),      MovementItemId_to, SummNalogRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(),      MovementItemId_to, SummChildRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExt(),   MovementItemId_to, SummMinusExtRecalc)
            -- , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalServiceList(), MovementItemId_to, PersonalServiceListId_from)
-     FROM (SELECT _tmpMI_Recalc.MovementItemId_to, /*_tmpMI_Recalc.PersonalServiceListId_from,*/ SUM (_tmpMI_Recalc.SummCardRecalc) AS SummCardRecalc, SUM (_tmpMI_Recalc.SummNalogRecalc) AS SummNalogRecalc FROM _tmpMI_Recalc GROUP BY _tmpMI_Recalc.MovementItemId_to /*, _tmpMI_Recalc.PersonalServiceListId_from*/) AS _tmpMI_Recalc
+     FROM (SELECT _tmpMI_Recalc.MovementItemId_to, /*_tmpMI_Recalc.PersonalServiceListId_from,*/ SUM (_tmpMI_Recalc.SummCardRecalc) AS SummCardRecalc, SUM (_tmpMI_Recalc.SummCardSecondRecalc) AS SummCardSecondRecalc, SUM (_tmpMI_Recalc.SummNalogRecalc) AS SummNalogRecalc, SUM (_tmpMI_Recalc.SummChildRecalc) AS SummChildRecalc, SUM (_tmpMI_Recalc.SummMinusExtRecalc) AS SummMinusExtRecalc FROM _tmpMI_Recalc GROUP BY _tmpMI_Recalc.MovementItemId_to /*, _tmpMI_Recalc.PersonalServiceListId_from*/) AS _tmpMI_Recalc
      WHERE MovementItemId_to <> 0;
 
      -- для остальных переносится в текущий MovementItemId
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(), MovementItemId_from, SummCardRecalc)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(), MovementItemId_from, SummNalogRecalc)
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCard(),       MovementItemId_from, SummCardRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecond(), MovementItemId_from, SummCardSecondRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummNalog(),      MovementItemId_from, SummNalogRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChild(),      MovementItemId_from, SummChildRecalc)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExt(),   MovementItemId_from, SummMinusExtRecalc)
      FROM _tmpMI_Recalc
      WHERE MovementItemId_to = 0;
 
@@ -310,6 +339,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.02.17         *
  22.05.15                                        * all
  04.01.15                                        *
 */
