@@ -10,28 +10,28 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoneyGroup(
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_calc Integer;   
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_max Integer;   
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoneyGroup());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1
-   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoneyGroup());
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_InfoMoneyGroup());
 
 
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyGroup(), inName);
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyGroup(), Code_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyGroup(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyGroup(), Code_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyGroup(), vbCode_max, inName);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

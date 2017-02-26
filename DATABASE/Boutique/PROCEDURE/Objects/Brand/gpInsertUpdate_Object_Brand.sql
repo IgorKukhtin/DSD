@@ -24,7 +24,7 @@ BEGIN
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- ≈сли код не установлен, определ€ем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_Composition()); 
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_Brand()); 
 
    -- проверка уникальности дл€ свойства <Ќаименование Ѕренда>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Brand(), inName); 
