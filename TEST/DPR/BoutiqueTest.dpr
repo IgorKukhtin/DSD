@@ -112,6 +112,9 @@ uses
   Partner in '..\..\FormsBoutique\Guides\Partner.pas' {PartnerForm: TParentForm},
   PartnerEdit in '..\..\FormsBoutique\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
 
+  JuridicalGroup in '..\..\FormsBoutique\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
+  JuridicalGroupEdit in '..\..\FormsBoutique\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

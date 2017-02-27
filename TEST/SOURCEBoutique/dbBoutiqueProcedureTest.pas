@@ -67,6 +67,7 @@ type
     procedure CreateDiscount;
     procedure CreateDiscountTools;
     procedure CreatePartner;
+    procedure CreateJuridicalGroup;
   end;
 
 implementation
@@ -209,6 +210,11 @@ end;
 procedure TdbObjectProcedureTest.CreateInfoMoneyGroup;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoneyGroup\');
+end;
+
+procedure TdbObjectProcedureTest.CreateJuridicalGroup;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\JuridicalGroup\');
 end;
 
 procedure TdbObjectProcedureTest.CreateKassa;

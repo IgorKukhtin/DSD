@@ -66,6 +66,8 @@ type
     N19: TMenuItem;
     actPartner: TdsdOpenForm;
     c1: TMenuItem;
+    actJuridicalGroup: TdsdOpenForm;
+    N32: TMenuItem;
   private
     { Private declarations }
   public

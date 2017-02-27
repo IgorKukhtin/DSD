@@ -70,8 +70,8 @@ end;
 
 procedure TdbMetaDataTest.CreateObjectCostFunction;
 begin
-  ExecFile(MetadataPath + 'ObjectCost\CreateObjectCostDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'ObjectCost\CreateObjectCostLinkDescFunction.sql', ZQuery);
+//  ExecFile(MetadataPath + 'ObjectCost\CreateObjectCostDescFunction.sql', ZQuery);
+//  ExecFile(MetadataPath + 'ObjectCost\CreateObjectCostLinkDescFunction.sql', ZQuery);
 end;
 
 

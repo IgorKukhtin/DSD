@@ -690,6 +690,8 @@ begin
       fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
+
 
 
 

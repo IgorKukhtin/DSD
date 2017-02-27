@@ -28,7 +28,7 @@ BEGIN
                                      AND UserRole_Role.ObjectId = Object.Id
                       JOIN ObjectLink AS UserRole_User
                                       ON UserRole_User.descId = zc_ObjectLink_UserRole_User()
-                                     AND UserRole_User.childObjectId = UserId
+                                     AND UserRole_User.childObjectId = vbUserId
                                      AND UserRole_User.ObjectId = Object.Id
                  WHERE Object.descId = zc_Object_UserRole()
                 )

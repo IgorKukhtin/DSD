@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 339
+  ExplicitHeight = 338
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -264,6 +264,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJuridicalGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+      FormName = 'TJuridicalGroupForm'
+      FormNameParam.Value = 'TJuridicalGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -348,6 +359,9 @@ inherited MainForm: TMainForm
       end
       object c1: TMenuItem
         Action = actPartner
+      end
+      object N32: TMenuItem
+        Action = actJuridicalGroup
       end
     end
     inherited miService: TMenuItem
