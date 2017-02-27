@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, uProgress;
+  FMX.Dialogs;
 
 CONST
   DataBaseFileName = 'aMobile.sdb';
@@ -164,6 +164,18 @@ type
     tblObject_PartnerGPSE: TFloatField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
+    qryPriceList: TFDQuery;
+    qryGoods: TFDQuery;
+    qryPriceListId: TIntegerField;
+    qryPriceListValueData: TStringField;
+    qryGoodsId: TIntegerField;
+    qryGoodsGoodsName: TStringField;
+    qryGoodsweight: TFloatField;
+    qryGoodsPrice: TFloatField;
+    qryGoodsEndDate: TDateTimeField;
+    qryGoodsGroupName: TStringField;
+    qryGoodsMeasureName: TStringField;
+    qryGoodsOBJECTCODE: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -180,7 +192,7 @@ type
     function CheckStructure: Boolean;
     function CreateDataBase: Boolean;
 
-    function SynchronizeWithMainDatabase : boolean;
+    function SynchronizeWithMainDatabase : string;
     procedure GetConfigurationInfo;
     procedure GetDictionaries(AName : string);
 
@@ -251,8 +263,8 @@ begin
 end;
 
 procedure TStructure.MakeIndex(ATable: TFDTable);
-var
-  IndexName: String;
+{var
+  IndexName: String;}
 begin
   {???
   IndexName := 'PK_' + ATable.TableName;
@@ -564,9 +576,9 @@ begin
   FConnected := Connect;
 end;
 
-function TDM.SynchronizeWithMainDatabase : boolean;
+function TDM.SynchronizeWithMainDatabase : string;
 begin
-  Result := false;
+  Result := '';
 
   tblObject_Const.Open;
   if tblObject_Const.RecordCount = 1 then
@@ -582,7 +594,6 @@ begin
 
   conMain.StartTransaction;
 
-  Screen_Cursor_crHourGlass;
   try
     GetConfigurationInfo;
 
@@ -600,13 +611,11 @@ begin
 
     conMain.Commit;
     Screen_Cursor_crDefault;
-    Result := true;
   except
     on E : Exception do
     begin
       conMain.Rollback;
-      Screen_Cursor_crDefault;
-      ShowMessage(E.Message);
+      Result := E.Message;
     end;
   end;
 end;

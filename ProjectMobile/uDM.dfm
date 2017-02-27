@@ -487,4 +487,52 @@ object DM: TDM
       FieldName = 'GPSE'
     end
   end
+  object qryPriceList: TFDQuery
+    Connection = conMain
+    SQL.Strings = (
+      'select * from Object_Partner')
+    Left = 40
+    Top = 280
+    object qryPriceListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryPriceListValueData: TStringField
+      FieldName = 'ValueData'
+      Size = 255
+    end
+  end
+  object qryGoods: TFDQuery
+    Connection = conMain
+    SQL.Strings = (
+      'select * from Object_Partner')
+    Left = 40
+    Top = 344
+    object qryGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qryGoodsGoodsName: TStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object qryGoodsweight: TFloatField
+      FieldName = 'weight'
+    end
+    object qryGoodsPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object qryGoodsEndDate: TDateTimeField
+      FieldName = 'EndDate'
+    end
+    object qryGoodsGroupName: TStringField
+      FieldName = 'GroupName'
+      Size = 255
+    end
+    object qryGoodsMeasureName: TStringField
+      FieldName = 'MeasureName'
+      Size = 255
+    end
+    object qryGoodsOBJECTCODE: TIntegerField
+      FieldName = 'OBJECTCODE'
+    end
+  end
 end

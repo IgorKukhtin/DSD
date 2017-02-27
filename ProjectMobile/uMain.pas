@@ -19,7 +19,8 @@ uses
   FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.ScrollBox,
   FMX.Platform, FMX.TMSWebGMaps, System.Math.Vectors, FMX.TMSWebGMapsGeocoding,
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
-  FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus
+  FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
+  FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -32,6 +33,11 @@ const
   LongitudeRatio = '70.158308514';
 
 type
+  TFormStackItem = record
+    PageIndex: Integer;
+    Data: TObject;
+  end;
+
   TfrmMain = class(TForm)
     tcMain: TTabControl;
     tiStart: TTabItem;
@@ -66,7 +72,7 @@ type
     lButton3: TLayout;
     lButton4: TLayout;
     lButton6: TLayout;
-    tiVisit: TTabItem;
+    tiRoutes: TTabItem;
     VertScrollBox1: TVertScrollBox;
     tiPartners: TTabItem;
     lwPartner: TListView;
@@ -74,7 +80,7 @@ type
     sbBack: TSpeedButton;
     Panel5: TPanel;
     lDayInfo: TLabel;
-    Label10: TLabel;
+    lCaption: TLabel;
     bsPartner: TBindSourceDB;
     blPartner: TBindingsList;
     LinkFillControlToField1: TLinkFillControlToField;
@@ -131,14 +137,52 @@ type
     Image8: TImage;
     ppPartner: TPopup;
     lbPartnerMenu: TListBox;
-    ListBoxItem1: TListBoxItem;
-    ListBoxItem2: TListBoxItem;
-    ListBoxItem3: TListBoxItem;
-    ListBoxItem4: TListBoxItem;
+    ibiNewPartner: TListBoxItem;
+    lbiSummery: TListBoxItem;
+    lbiShowAllOnMap: TListBoxItem;
+    lbiReports: TListBoxItem;
+    tiMap: TTabItem;
+    gmPartnerInfo: TGestureManager;
+    acMain: TActionList;
+    ChangePartnerInfoLeft: TChangeTabAction;
+    ChangePartnerInfoRight: TChangeTabAction;
+    ChangeMainPage: TChangeTabAction;
+    tiHandbook: TTabItem;
+    VertScrollBox2: TVertScrollBox;
+    bPriceList: TButton;
+    sbMain: TStyleBook;
+    bRoute: TButton;
+    bPartners: TButton;
+    tiPriceList: TTabItem;
+    lwPriceList: TListView;
+    ImageList1: TImageList;
+    bsPriceList: TBindSourceDB;
+    LinkFillControlToField2: TLinkFillControlToField;
+    Image9: TImage;
+    tiPriceListItems: TTabItem;
+    lwGoods: TListView;
+    bsGoods: TBindSourceDB;
+    LinkFillControlToField3: TLinkFillControlToField;
+    pGoodsInfo: TPopup;
+    Panel2: TPanel;
+    lGoodsName: TLabel;
+    Label10: TLabel;
+    lGoodsCode: TLabel;
+    lGoodsCategory: TLabel;
+    Label13: TLabel;
+    lGoodsGroup: TLabel;
+    Label15: TLabel;
+    lGoodsType: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
+    lGoodsWeight: TLabel;
+    Label20: TLabel;
+    lGoodsDateEnd: TLabel;
+    Label22: TLabel;
+    lGoodsPrice: TLabel;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
-    procedure tcMainChange(Sender: TObject);
     procedure bVisitClick(Sender: TObject);
     procedure sbBackClick(Sender: TObject);
     procedure LinkFillControlToField1FillingListItem(Sender: TObject;
@@ -154,8 +198,26 @@ type
     procedure tcPartnerInfoChange(Sender: TObject);
     procedure sbPartnerMenuClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormFocusChanged(Sender: TObject);
+    procedure lbiShowAllOnMapClick(Sender: TObject);
+    procedure ChangePartnerInfoLeftUpdate(Sender: TObject);
+    procedure ChangePartnerInfoRightUpdate(Sender: TObject);
+    procedure ChangeMainPageUpdate(Sender: TObject);
+    procedure bHandBookClick(Sender: TObject);
+    procedure bRouteClick(Sender: TObject);
+    procedure bPartnersClick(Sender: TObject);
+    procedure bPriceListClick(Sender: TObject);
+    procedure lwPriceListItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure LinkFillControlToField2FilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
+    procedure lwGoodsItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure LinkFillControlToField3FilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
   private
     { Private declarations }
+    FFormsStack: TStack<TFormStackItem>;
     FMapLoaded: Boolean;
     FWebGMap: TTMSFMXWebGMaps;
     FKBBounds: TRectF;
@@ -163,14 +225,13 @@ type
     FCurCoordinatesSet : boolean;
     FCurCoordinates: TLocationCoord2D;
 
-    procedure lbPartnerMenuItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
-
     procedure UpdateKBBounds;
     procedure RestorePosition;
     function PrependIfNotEmpty(const Prefix, Subject: string): string;
     function GetAddress(const Latitude, Longitude: Double): string;
-    function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
+    //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
+    procedure WebGMapAllPartnerDownloadFinish(Sender: TObject);
     procedure WebGMapMarkerDragEnd(Sender: TObject; MarkerTitle: string;
       IdMarker: Integer; Latitude, Longitude: Double);
 
@@ -179,8 +240,11 @@ type
     procedure GetVistDays;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo(PartnerId : integer);
-
-    function GetImage(const AImageName: string): TBitmap;
+    procedure ShowAllPartnersOnMap;
+    procedure ShowPriceLists;
+    procedure ShowPriceListItems(PriceListId : integer);
+    procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
+    function ReturnPriorForm(const OmitOnChange: Boolean = False): TObject;
   public
     { Public declarations }
   end;
@@ -207,20 +271,27 @@ begin
     ScreenService.SetScreenOrientation(OrientSet);
   end;
   {$ENDIF}
+  FFormsStack:= TStack<TFormStackItem>.Create;
   FCurCoordinatesSet := false;
-  tcMain.ActiveTab := tiStart;
-  tcMainChange(tcMain);
+  SwitchToForm(tiStart, nil);
+  ChangeMainPageUpdate(tcMain);
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  lbPartnerMenu := nil;
+  FFormsStack.Free;
 end;
 
-procedure TfrmMain.lbPartnerMenuItemClick(const Sender: TCustomListBox; const Item: TListBoxItem);
+procedure TfrmMain.FormFocusChanged(Sender: TObject);
 begin
+  UpdateKBBounds;
+end;
+
+procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
+begin
+  SwitchToForm(tiMap, nil);
+
   ppPartner.IsOpen := False;
-  ShowMessage(Item.Text);
 end;
 
 procedure TfrmMain.FormResize(Sender: TObject);
@@ -239,6 +310,18 @@ begin
   (AEditor.CurrentObject as TListViewItem).Tag := DM.qryPartner.FieldByName('id').AsInteger;
 end;
 
+procedure TfrmMain.LinkFillControlToField2FilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+begin
+  (AEditor.CurrentObject as TListViewItem).Tag := DM.qryPriceList.FieldByName('id').AsInteger;
+end;
+
+procedure TfrmMain.LinkFillControlToField3FilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+begin
+  (AEditor.CurrentObject as TListViewItem).Tag := DM.qryGoods.FieldByName('id').AsInteger;
+end;
+
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
@@ -248,7 +331,9 @@ begin
 
   if assigned(gc_User) then  { Проверяем только с данными из локальной БД }
   begin
-    if true{(LoginEdit.Text = gc_User.Login) or (PasswordEdit.Text = gc_User.Password)} then
+    {$IFNDEF NotCheckLogin}
+    if (LoginEdit.Text = gc_User.Login) or (PasswordEdit.Text = gc_User.Password) then
+    {$ENDIF}
     begin
       LoginOk := true;
     end
@@ -269,15 +354,21 @@ begin
 
       ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
-      Wait(False);
-
       if ErrorMessage = '' then
       begin
-        DM.SynchronizeWithMainDatabase;
-        LoginOk := true;
+        ErrorMessage := DM.SynchronizeWithMainDatabase;
+
+        Wait(False);
+
+        if ErrorMessage = '' then
+          LoginOk := true
+        else
+          ShowMessage(ErrorMessage);
       end
       else
       begin
+        Wait(False);
+
         if LoginOk then
           ShowMessage('Ошибка синхронизации (' + ErrorMessage + '). Робота будет продолжена с локальными данными')
         else
@@ -294,40 +385,41 @@ begin
   end;
 
   if LoginOk then
-    tcMain.ActiveTab := tiMain;
+    SwitchToForm(tiMain, nil);
+end;
+
+procedure TfrmMain.lwGoodsItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  DM.qryGoods.Locate('Id', (lwPriceList.Selected as TListViewItem).Tag);
+
+  lGoodsName.Text := DM.qryGoods.FieldByName('GoodsName').AsString;
+  lGoodsCode.Text := DM.qryGoods.FieldByName('OBJECTCODE').AsString;
+  lGoodsCategory.Text := '-';
+  lGoodsGroup.Text := DM.qryGoods.FieldByName('GroupName').AsString;
+  lGoodsType.Text := '-';
+  lGoodsWeight.Text := DM.qryGoods.FieldByName('weight').AsString + ' ' + DM.qryGoods.FieldByName('MeasureName').AsString;
+  lGoodsDateEnd.Text := DM.qryGoods.FieldByName('EndDate').AsString;
+  lGoodsPrice.Text := DM.qryGoods.FieldByName('Price').AsString;
+
+  pGoodsInfo.IsOpen := true;
 end;
 
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  tcMain.ActiveTab := tiPartnerInfo;
+  SwitchToForm(tiPartnerInfo, nil);
+end;
+
+procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  SwitchToForm(tiPriceListItems, nil);
 end;
 
 procedure TfrmMain.sbBackClick(Sender: TObject);
 begin
-  if tcMain.ActiveTab = tiVisit then
-  begin
-    tcMain.ActiveTab := tiMain;
-    exit;
-  end;
-
-  if tcMain.ActiveTab = tiPartners then
-  begin
-    tcMain.ActiveTab := tiVisit;
-    exit;
-  end;
-
-  if tcMain.ActiveTab = tiPartnerInfo then
-  begin
-    tcMain.ActiveTab := tiPartners;
-    exit;
-  end;
-
-  if tcMain.ActiveTab = tiSync then
-  begin
-    tcMain.ActiveTab := tiMain;
-    exit;
-  end;
+  ReturnPriorForm;
 end;
 
 procedure TfrmMain.sbPartnerMenuClick(Sender: TObject);
@@ -336,78 +428,60 @@ var
 begin
   FP := sbPartnerMenu.LocalToAbsolute(FP);
 
-  with ppPartner.PlacementRectangle do
+  {with ppPartner.PlacementRectangle do
   begin
    Top := 10;
    Bottom := Top + ppPartner.Height;
    Left := FP.X - 190;
    Right := Left + ppPartner.Width;
-  end;
+  end;}
   ppPartner.IsOpen := true;
   lbPartnerMenu.ItemIndex := -1;
 end;
 
+procedure TfrmMain.bHandBookClick(Sender: TObject);
+begin
+  SwitchToForm(tiHandbook, nil);
+end;
+
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
-  ShowPartners(TSpeedButton(Sender).Tag, TSpeedButton(Sender).Text);
-  tcMain.ActiveTab := tiPartners;
+  ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
+  SwitchToForm(tiPartners, nil);
+end;
+
+procedure TfrmMain.bPartnersClick(Sender: TObject);
+begin
+  ShowPartners(8, 'Все ТТ');
+  SwitchToForm(tiPartners, nil);
+end;
+
+procedure TfrmMain.bPriceListClick(Sender: TObject);
+begin
+  SwitchToForm(tiPriceList, nil);
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
 begin
-  tcMain.ActiveTab := tiStart;
+  ReturnPriorForm;
+end;
+
+procedure TfrmMain.bRouteClick(Sender: TObject);
+begin
+  SwitchToForm(tiRoutes, nil);
 end;
 
 procedure TfrmMain.bVisitClick(Sender: TObject);
 begin
-  tcMain.ActiveTab := tiVisit;
-end;
-
-procedure TfrmMain.tcMainChange(Sender: TObject);
-begin
-  if Assigned(FWebGMap) then
-  try
-    FWebGMap.Visible := False;
-    FreeAndNil(FWebGMap);
-  except
-    // buggy piece of shit
-  end;
-
-  if tcMain.ActiveTab = tiStart then
-    pBack.Visible := false
-  else
-  begin
-    pBack.Visible := true;
-    if tcMain.ActiveTab = tiMain then
-    begin
-      imLogo.Visible := true;
-      sbBack.Visible := false;
-    end
-    else
-    begin
-      imLogo.Visible := false;
-      sbBack.Visible := true;
-    end;
-  end;
-
-  if tcMain.ActiveTab = tiPartners then
-    sbPartnerMenu.Visible := true
-  else
-    sbPartnerMenu.Visible := false;
-
-  if tcMain.ActiveTab = tiStart then
-    CheckDataBase;
-
-  if tcMain.ActiveTab = tiVisit then
-    GetVistDays;
-
-  if tcMain.ActiveTab = tiPartnerInfo then
-    ShowPartnerInfo((lwPartner.Selected as TListViewItem).Tag)
+  SwitchToForm(tiRoutes, nil);
 end;
 
 procedure TfrmMain.tcPartnerInfoChange(Sender: TObject);
 begin
-  //
+  if tcPartnerInfo.ActiveTab = tiInfo then
+    FWebGMap.Visible := true
+  else
+    FWebGMap.Visible := false;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
@@ -488,7 +562,7 @@ begin
     Result :=  FormatFloat('0.000000', Latitude)+'N '+FormatFloat('0.000000', Longitude)+'E';
   end;
 end;
-
+{
 function TfrmMain.GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
 begin
   try
@@ -504,7 +578,7 @@ begin
     Result := False;
   end;
 end;
-
+}
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
 begin
   if not FMapLoaded then
@@ -513,6 +587,33 @@ begin
         with FWebGMap.Markers.Add(FWebGMap.CurrentLocation.Latitude, FWebGMap.CurrentLocation.Longitude, GetAddress(FWebGMap.CurrentLocation.Latitude, FWebGMap.CurrentLocation.Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
           MapLabel.Text := Title;
       FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
+      FMapLoaded := True;
+    end;
+end;
+
+procedure TfrmMain.WebGMapAllPartnerDownloadFinish(Sender: TObject);
+begin
+  if not FMapLoaded then
+    begin
+      FWebGMap.Markers.Clear;
+
+      with DM.qryPartner do
+      begin
+        DisableConstraints;
+        First;
+
+        while not EOF do
+        begin
+          with FWebGMap.Markers.Add(FieldByName('GPSN').AsFloat, FieldByName('GPSE').AsFloat, GetAddress(FieldByName('GPSN').AsFloat, FieldByName('GPSE').AsFloat), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
+            MapLabel.Text := Title;
+
+          Next;
+        end;
+        FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
+
+        EnableConstraints;
+      end;
+
       FMapLoaded := True;
     end;
 end;
@@ -538,6 +639,81 @@ begin
     Screen_Cursor_crDefault;
 
   Application.ProcessMessages;
+end;
+
+procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
+begin
+  if Assigned(FWebGMap) then
+  try
+    FWebGMap.Visible := False;
+    FreeAndNil(FWebGMap);
+  except
+    // buggy piece of shit
+  end;
+
+  if tcMain.ActiveTab = tiStart then
+    pBack.Visible := false
+  else
+  begin
+    pBack.Visible := true;
+    if tcMain.ActiveTab = tiMain then
+    begin
+      imLogo.Visible := true;
+      sbBack.Visible := false;
+    end
+    else
+    begin
+      imLogo.Visible := false;
+      sbBack.Visible := true;
+    end;
+
+    if tcMain.ActiveTab = tiRoutes then
+      lCaption.Text := 'Маршруты';
+    if (tcMain.ActiveTab = tiPartners) or (tcMain.ActiveTab =  tiPartnerInfo) then
+      lCaption.Text := 'Торговые точки';
+    if tcMain.ActiveTab = tiHandbook then
+      lCaption.Text := 'Справочники';
+  end;
+
+
+  if tcMain.ActiveTab = tiPartners then
+    sbPartnerMenu.Visible := true
+  else
+    sbPartnerMenu.Visible := false;
+
+  if tcMain.ActiveTab = tiStart then
+    CheckDataBase;
+
+  if tcMain.ActiveTab = tiRoutes then
+    GetVistDays;
+
+  if tcMain.ActiveTab = tiPartnerInfo then
+    ShowPartnerInfo((lwPartner.Selected as TListViewItem).Tag);
+
+  if tcMain.ActiveTab = tiMap then
+    ShowAllPartnersonMap;
+
+  if tcMain.ActiveTab = tiPriceList then
+    ShowPriceLists;
+
+  if tcMain.ActiveTab = tiPriceListItems then
+    ShowPriceListItems((lwPriceList.Selected as TListViewItem).Tag);
+end;
+
+procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
+begin
+  if tcPartnerInfo.TabIndex < tcPartnerInfo.TabCount - 1 then
+    ChangePartnerInfoLeft.Tab := tcPartnerInfo.Tabs[tcPartnerInfo.TabIndex + 1]
+  else
+    ChangePartnerInfoLeft.Tab := nil;
+end;
+
+procedure TfrmMain.ChangePartnerInfoRightUpdate(Sender: TObject);
+begin
+  if tcPartnerInfo.TabIndex > 0 then
+    ChangePartnerInfoRight.Tab := tcPartnerInfo.Tabs[tcPartnerInfo.TabIndex - 1]
+  else
+    ChangePartnerInfoRight.Tab := nil;
 end;
 
 procedure TfrmMain.CheckDataBase;
@@ -670,7 +846,6 @@ begin
     bSunday.Visible := true;
     bSunday.Text := '  ' + IntToStr(Num) + '. Воскресенье';
     lSundayCount.Text := IntToStr(DaysCount[7]);
-    inc(Num);
   end
   else
     bSunday.Visible := false;
@@ -686,14 +861,11 @@ var
   LastLocation: JLocation;
   LocManagerObj: JObject;
   LocationManager: JLocationManager;
-  Geocoder: JGeocoder;
-  Address: JAddress;
-  AddressList: JList;
   {$ENDIF}
 begin
   {$IFDEF ANDROID}
   //запрашиваем сервис Location
-  LocManagerObj := SharedActivityContext.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
+  LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
   if Assigned(LocManagerObj) then
   begin
     //получаем LocationManager
@@ -763,28 +935,68 @@ begin
   FWebGMap.Align := TAlignLayout.Client;
   FWebGMap.MapOptions.ZoomMap := 18;
   FWebGMap.Parent := pMap;
+
   tcPartnerInfo.ActiveTab := tiInfo;
 end;
 
-
-
-function TfrmMain.GetImage(const AImageName: string): TBitmap;
-var
-  StyleObject: TFmxObject;
-  Image: TImage;
+procedure TfrmMain.ShowAllPartnersOnMap;
 begin
-  {StyleObject := ImageBook.Style.FindStyleResource(AImageName);
-  if (StyleObject <> nil) and (StyleObject is TImage) then
-  begin
-    try
-      Image := StyleObject as TImage;
-      Result := Image.Bitmap;
-    except
-      Result := nil;
-    end;
-  end
+  FMapLoaded := False;
+
+  FWebGMap := TTMSFMXWebGMaps.Create(Self);
+  FWebGMap.OnDownloadFinish := WebGMapAllPartnerDownloadFinish;
+  FWebGMap.OnMarkerDragEnd := WebGMapMarkerDragEnd;
+  FWebGMap.Align := TAlignLayout.Client;
+  FWebGMap.MapOptions.ZoomMap := 18;
+  FWebGMap.Parent := tiMap;
+end;
+
+procedure TfrmMain.ShowPriceLists;
+begin
+  DM.qryPriceList.Open('select ID, VALUEDATA from OBJECT_PRICELIST where ISERASED = 0');
+end;
+
+procedure TfrmMain.ShowPriceListItems(PriceListId : integer);
+begin
+  DM.qryGoods.Open('select G.ID, G.VALUEDATA GoodsName, G.WEIGHT, G.OBJECTCODE, PLI.PRICE, PLI.ENDDATE, ' +
+    'GG.VALUEDATA GroupName, M.VALUEDATA MeasureName from OBJECT_GOODS G ' +
+    'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
+    'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
+    'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + IntToStr(PriceListId));
+end;
+
+
+procedure TfrmMain.SwitchToForm(const TabItem: TTabItem; const Data: TObject);
+var
+  Item: TFormStackItem;
+begin
+  Item.PageIndex := tcMain.ActiveTab.Index;
+  Item.Data := Data;
+  FFormsStack.Push(Item);
+  tcMain.ActiveTab := TabItem;
+end;
+
+function TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean): TObject;
+var
+  Item: TFormStackItem;
+  OnChange: TNotifyEvent;
+begin
+  if FFormsStack.Count > 0 then
+    begin
+      Item:= FFormsStack.Pop;
+
+      OnChange := tcMain.OnChange;
+      if OmitOnChange then tcMain.OnChange := nil;
+      try
+        tcMain.ActiveTab:= tcMain.Tabs[Item.PageIndex];
+      finally
+        tcMain.OnChange := OnChange;
+      end;
+
+      Result:= Item.Data;
+    end
   else
-    Result := nil; }
+    raise Exception.Create('Forms stack underflow');
 end;
 
 end.
