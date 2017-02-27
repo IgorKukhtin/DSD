@@ -1,10 +1,11 @@
-inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
-  Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
+inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
+  Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1085#1072' '#1072#1087#1090#1077#1082#1091'>'
   ClientHeight = 557
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1082
-  ExplicitHeight = 595
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -250,6 +251,14 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 230
+          end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1023,9 +1032,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1995,7 +2001,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     Top = 192
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_RemainsOverGoods'
+    StoredProcName = 'gpReport_RemainsOverGoods_To'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -2081,6 +2087,15 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Component = cbAssortment
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTo'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inisTo'
+        DataType = ftBoolean
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 80
@@ -2995,5 +3010,17 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     SummaryItemList = <>
     Left = 880
     Top = 312
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inisTo'
+        Value = ''
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 288
+    Top = 448
   end
 end

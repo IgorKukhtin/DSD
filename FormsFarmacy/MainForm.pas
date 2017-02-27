@@ -342,6 +342,8 @@ type
     actMemberSP: TdsdOpenForm;
     N41: TMenuItem;
     N129: TMenuItem;
+    actReport_RemainsOverGoods_To: TdsdOpenForm;
+    N130: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
