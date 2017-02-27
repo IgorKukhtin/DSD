@@ -22,13 +22,15 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
    vbUserId:= lpGetUserBySession (inSession);
 
-   select coalesce(vbName,'')|| coalesce('-'||valuedata,'') into vbName from object where id = inBrandId;
+   select coalesce(vbName,'')|| coalesce(valuedata,'') into vbName from object where id = inBrandId;
    select coalesce(vbName,'')|| coalesce('-'||valuedata,'') into vbName from object where id = inPeriodId;
    select coalesce(vbName,'')|| coalesce('-'||inPeriodYear::integer::Tvarchar,'') into vbName;
 
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (vbCode_max, 0) = 0 THEN vbCode_max := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (0, zc_Object_Measure()); 
+   vbCode_max:=lfGet_ObjectCode (vbCode_max, zc_Object_Partner()); 
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode_max, vbName);
@@ -55,7 +57,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
-20.02.17                                                           *
+27.02.17                                                           *
 
 */
 
