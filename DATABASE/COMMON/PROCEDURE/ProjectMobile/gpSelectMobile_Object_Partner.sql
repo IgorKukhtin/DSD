@@ -47,7 +47,7 @@ BEGIN
                  AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
               );
 
-           IF inSyncDateIn > zc_DateZero()
+           IF inSyncDateIn > zc_DateStart()
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS PartnerId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
@@ -135,4 +135,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_Partner(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())

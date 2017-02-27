@@ -50,7 +50,7 @@ BEGIN
                GROUP BY ObjectLink_GoodsByGoodsKind_Goods.ObjectId
               );
              
-           IF inSyncDateIn > zc_DateZero()
+           IF inSyncDateIn > zc_DateStart()
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsByGoodsKindId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
@@ -105,4 +105,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_GoodsLinkGoodsKind(inSyncDateIn := CURRENT_TIMESTAMP - Interval '10 day', inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_GoodsLinkGoodsKind(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
