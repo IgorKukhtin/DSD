@@ -380,6 +380,22 @@ object MainForm: TMainForm
       TabOrder = 17
       WordWrap = True
     end
+    object cbPartner: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 265
+      Width = 178
+      Height = 24
+      Caption = '1.16. '#1055#1086'c'#1090#1072#1074#1097#1080#1082#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 18
+      WordWrap = True
+    end
   end
   object DocumentPanel: TPanel
     Left = 948
