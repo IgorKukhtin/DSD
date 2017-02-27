@@ -74,7 +74,7 @@ type
     procedure LoadPeriodFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiscountToolsFormTest;
-
+    procedure LoadPartnerFormTest;
 
     //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
@@ -538,6 +538,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartnerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 end;
 
 procedure TLoadFormTest.LoadPeriodFormTest;

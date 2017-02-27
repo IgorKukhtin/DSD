@@ -288,6 +288,14 @@
 				<Form>DiscountToolsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Partner.pas">
+				<Form>PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PartnerEdit.pas">
+				<Form>PartnerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
 				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>

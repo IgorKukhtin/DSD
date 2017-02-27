@@ -222,7 +222,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
     Top = 56
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
+    Left = 96
     Top = 104
   end
   object GoodsGroupGuides: TdsdGuides
@@ -251,7 +251,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
+    Left = 240
     Top = 101
   end
 end
