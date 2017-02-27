@@ -14,27 +14,25 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
   RETURNS integer 
   AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_calc Integer; 
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_max Integer; 
 BEGIN
-   -- !!! это временно !!!
-   -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId = zc_Object_InfoMoney());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoney());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его каи последний+1
-   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
    
    -- !!! проверка прав уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), Code_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), vbCode_max);
 
    -- сохранили объект
-   ioId := lpInsertUpdate_Object( ioId, zc_Object_InfoMoney(), Code_calc, inName);
+   ioId := lpInsertUpdate_Object( ioId, zc_Object_InfoMoney(), vbCode_max, inName);
    -- сохранили связь с <Группы управленческих назначений>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyGroup(), ioId, inInfoMoneyGroupId);
    -- сохранили связь с <Управленческие назначения>
@@ -44,7 +42,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_InfoMoney_ProfitLoss(), ioId, inisProfitLoss);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -57,7 +55,7 @@ END;$BODY$
  28.08.15         * add inisProfitLoss
  18.04.14                                        * rem !!! это временно !!!
  21.09.13                                        * !!! это временно !!!
- 21.06.13          *  Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());               
+ 21.06.13          *  vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());               
  16.06.13                                        * rem lpCheckUnique_Object_ValueData
 */
 

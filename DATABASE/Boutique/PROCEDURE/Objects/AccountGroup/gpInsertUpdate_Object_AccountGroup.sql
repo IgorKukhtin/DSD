@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_AccountGroup(
 RETURNS Integer 
   AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_calc Integer;   
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_max Integer;   
  
 BEGIN
    -- !!! это временно !!!
@@ -20,21 +20,21 @@ BEGIN
  
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AccountGroup());
-   UserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Если код не установлен, определяем его как последний+1
-   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_AccountGroup()); 
+   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_AccountGroup()); 
    
    -- проверка уникальности для свойства <Наименование Группы управленческих счетов>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_AccountGroup(), inName);
    -- проверка уникальности для свойства <Код Группы управленческих счетов>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_AccountGroup(), Code_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_AccountGroup(), vbCode_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_AccountGroup(), Code_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_AccountGroup(), vbCode_max, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -47,7 +47,7 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
  18.04.14                                        * rem !!! это временно !!!
  25.08.13                                        * !!! это временно !!!
- 21.06.13          * zc_Enum_Process_InsertUpdate_Object_AccountGroup(); Code_calc:=lpGet_ObjectCode (inCode, zc_Object_User());
+ 21.06.13          * zc_Enum_Process_InsertUpdate_Object_AccountGroup(); vbCode_max:=lpGet_ObjectCode (inCode, zc_Object_User());
  17.06.13          *
 */
 
