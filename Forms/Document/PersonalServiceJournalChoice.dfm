@@ -4,7 +4,6 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
   ClientWidth = 913
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -140
   ExplicitWidth = 929
   ExplicitHeight = 569
   PixelsPerInch = 96
@@ -179,7 +178,7 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
             Width = 80
           end
           object colTotalSummCard: TcxGridDBColumn
-            Caption = #1050#1072#1088#1090#1086#1095#1082#1072' '#1041#1053
+            Caption = #1050#1072#1088#1090#1072' '#1041#1053' - 1'#1092
             DataBinding.FieldName = 'TotalSummCard'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2

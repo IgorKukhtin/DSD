@@ -4,7 +4,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitLeft = -255
-  ExplicitTop = -133
   ExplicitWidth = 1044
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -391,7 +390,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
             Width = 80
           end
           object SummNalog: TcxGridDBColumn
-            Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103' '#1053#1072#1083#1086#1075#1080
+            Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
             DataBinding.FieldName = 'SummNalog'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

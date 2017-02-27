@@ -5,7 +5,7 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 574
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -405,9 +405,8 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' Excel?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099' '#1091#1089#1087#1077#1096#1085#1086
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel ()'
-      ImageIndex = 41
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' Excel'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' Excel'
     end
   end
   inherited MasterDS: TDataSource
@@ -561,7 +560,6 @@ inherited MobileBillsJournalForm: TMobileBillsJournalForm
     end
     object bbLoadExcel: TdxBarButton
       Action = actLoadExcel
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' Excel'
       Category = 0
     end
   end
