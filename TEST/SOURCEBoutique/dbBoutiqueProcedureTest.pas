@@ -70,6 +70,7 @@ type
     procedure CreateJuridicalGroup;
     procedure CreateJuridical;
     procedure CreateUnit;
+    procedure CreateCity;
   end;
 
 implementation
@@ -144,6 +145,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Account\');
 end;
 
+procedure TdbObjectProcedureTest.CreateCity;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\City\');
+end;
+
 procedure TdbObjectProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
@@ -151,12 +157,12 @@ end;
 
 procedure TdbObjectProcedureTest.CreateComposition;
 begin
-DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCompositionGroup;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCountryBrand;

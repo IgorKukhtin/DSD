@@ -121,6 +121,9 @@ uses
   Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
   UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
 
+  City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
+  CityEdit in '..\..\FormsBoutique\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

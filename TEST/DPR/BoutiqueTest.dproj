@@ -320,6 +320,14 @@
 				<Form>UnitsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\City.pas">
+				<Form>CityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CityEdit.pas">
+				<Form>CityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
 				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>

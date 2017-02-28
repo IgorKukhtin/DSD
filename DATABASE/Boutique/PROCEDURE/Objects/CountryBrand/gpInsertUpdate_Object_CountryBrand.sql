@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_CountryBrand (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar)
+-- Function: gpInsertUpdate_Object_CountryBrand (Integer, Integer, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CountryBrand (Integer, Integer, TVarChar, TVarChar);
 
@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CountryBrand(
     IN inName         TVarChar,      -- Название объекта <Страна производитель>
     IN inSession      TVarChar       -- сессия пользователя
 )
-  RETURNS integer 
-  AS
+RETURNS integer 
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE Code_max Integer;
