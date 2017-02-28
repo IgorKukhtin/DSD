@@ -118,6 +118,9 @@ uses
   Juridical in '..\..\FormsBoutique\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsBoutique\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
 
+  Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
+  UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

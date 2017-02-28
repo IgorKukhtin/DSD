@@ -69,6 +69,7 @@ type
     procedure CreatePartner;
     procedure CreateJuridicalGroup;
     procedure CreateJuridical;
+    procedure CreateUnit;
   end;
 
 implementation
@@ -251,6 +252,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePeriod;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Period\');
+end;
+
+procedure TdbObjectProcedureTest.CreateUnit;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Unit\');
 end;
 
 procedure TdbObjectProcedureTest.CreateValuta;

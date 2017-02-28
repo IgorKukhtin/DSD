@@ -70,6 +70,8 @@ type
     N32: TMenuItem;
     actJuridical: TdsdOpenForm;
     N33: TMenuItem;
+    actUnit: TdsdOpenForm;
+    N34: TMenuItem;
   private
     { Private declarations }
   public

@@ -77,8 +77,9 @@ type
     procedure LoadPartnerFormTest;
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
+    procedure LoadUnitFormTest;
 
-    //    procedure LoadMemberFormTest;
+//    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
 //    procedure LoadOrderSheduleFormTest;
 //    procedure LoadOrderInternalFormTest;
@@ -1336,6 +1337,14 @@ begin
 //  }
 end;
 
+
+procedure TLoadFormTest.LoadUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+end;
 
 procedure TLoadFormTest.LoadValutaFormTest;
 begin
