@@ -77,8 +77,8 @@ BEGIN
                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                        , CAST(0 AS Integer)   AS RouteId
                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
-                       , ObjectLink_Partner_PriceListPrior.ChildObjectId AS PriceListId_ret
+                       , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
+                       , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_BasisPrior()) AS PriceListId_ret
                        , Object_Partner.isErased
                        , EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id) AS isSync
                   FROM Object AS Object_Partner
@@ -117,8 +117,8 @@ BEGIN
                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                        , CAST(0 AS Integer)   AS RouteId
                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
-                       , ObjectLink_Partner_PriceListPrior.ChildObjectId AS PriceListId_ret
+                       , COALESCE (ObjectLink_Partner_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
+                       , COALESCE (ObjectLink_Partner_PriceListPrior.ChildObjectId, zc_PriceList_BasisPrior()) AS PriceListId_ret
                        , Object_Partner.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_Partner
