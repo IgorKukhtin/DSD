@@ -61,7 +61,7 @@ BEGIN
                   SELECT Object_Partner.Id
                        , Object_Partner.ObjectCode
                        , Object_Partner.ValueData
-                       , CAST('' AS TVarChar) AS Address
+                       , ObjectString_Partner_Address.ValueData AS Address
                          -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!!
                        , CAST(50.426527 AS TFloat) AS GPSN
                        , CAST(30.563033 AS TFloat) AS GPSE
@@ -77,8 +77,8 @@ BEGIN
                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                        , CAST(0 AS Integer)   AS RouteId
                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , CAST(0 AS Integer)   AS PriceListId
-                       , CAST(0 AS Integer)   AS PriceListId_ret
+                       , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
+                       , ObjectLink_Partner_PriceListPrior.ChildObjectId AS PriceListId_ret
                        , Object_Partner.isErased
                        , EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id) AS isSync
                   FROM Object AS Object_Partner
@@ -89,13 +89,22 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                             ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                       LEFT JOIN ObjectString AS ObjectString_Partner_Address
+                                              ON ObjectString_Partner_Address.ObjectId = Object_Partner.Id
+                                             AND ObjectString_Partner_Address.DescId = zc_ObjectString_Partner_Address()
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                                            ON ObjectLink_Partner_PriceList.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
+                                            ON ObjectLink_Partner_PriceListPrior.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
                   WHERE Object_Partner.DescId = zc_Object_Partner();
            ELSE
                 RETURN QUERY
                   SELECT Object_Partner.Id
                        , Object_Partner.ObjectCode
                        , Object_Partner.ValueData
-                       , CAST('' AS TVarChar) AS Address
+                       , ObjectString_Partner_Address.ValueData AS Address
                          -- !!!¬–≈Ã≈ÕÕŒ - ƒÀﬂ “≈—“¿!!!
                        , CAST(50.426527 AS TFloat) AS GPSN
                        , CAST(30.563033 AS TFloat) AS GPSE
@@ -108,8 +117,8 @@ BEGIN
                        , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                        , CAST(0 AS Integer)   AS RouteId
                        , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , CAST(0 AS Integer)   AS PriceListId
-                       , CAST(0 AS Integer)   AS PriceListId_ret
+                       , ObjectLink_Partner_PriceList.ChildObjectId AS PriceListId
+                       , ObjectLink_Partner_PriceListPrior.ChildObjectId AS PriceListId_ret
                        , Object_Partner.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_Partner
@@ -119,6 +128,15 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                             ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                       LEFT JOIN ObjectString AS ObjectString_Partner_Address
+                                              ON ObjectString_Partner_Address.ObjectId = Object_Partner.Id
+                                             AND ObjectString_Partner_Address.DescId = zc_ObjectString_Partner_Address()
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                                            ON ObjectLink_Partner_PriceList.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                       LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPrior
+                                            ON ObjectLink_Partner_PriceListPrior.ObjectId = Object_Partner.Id
+                                           AND ObjectLink_Partner_PriceListPrior.DescId = zc_ObjectLink_Partner_PriceListPrior()
                   WHERE Object_Partner.DescId = zc_Object_Partner()
                     AND EXISTS(SELECT 1 FROM tmpPartner WHERE tmpPartner.PartnerId = Object_Partner.Id);
            END IF;
