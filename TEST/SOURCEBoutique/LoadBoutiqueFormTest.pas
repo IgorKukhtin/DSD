@@ -76,6 +76,7 @@ type
     procedure LoadDiscountToolsFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadJuridicalGroupFormTest;
+    procedure LoadJuridicalFormTest;
 
     //    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
@@ -280,6 +281,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeEditForm');
+end;
+
+procedure TLoadFormTest.LoadJuridicalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;

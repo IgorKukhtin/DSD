@@ -115,6 +115,9 @@ uses
   JuridicalGroup in '..\..\FormsBoutique\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   JuridicalGroupEdit in '..\..\FormsBoutique\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
 
+  Juridical in '..\..\FormsBoutique\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  JuridicalEdit in '..\..\FormsBoutique\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
