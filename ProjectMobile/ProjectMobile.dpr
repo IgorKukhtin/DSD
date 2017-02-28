@@ -7,9 +7,7 @@ uses
   uMain in 'uMain.pas' {frmMain},
   uConstants in 'uConstants.pas',
   uDM in 'uDM.pas' {DM: TDataModule},
-  Authentication in 'Common\Authentication.pas',
-  Google.Maps in 'Google.Maps.pas',
-  uProgress in 'uProgress.pas' {frmProgress};
+  Authentication in 'Common\Authentication.pas';
 
 {$R *.res}
 

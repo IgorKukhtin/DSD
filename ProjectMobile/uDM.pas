@@ -177,7 +177,6 @@ type
     qryGoodsMeasureName: TStringField;
     qryGoodsOBJECTCODE: TIntegerField;
     tblMovement_OrderExternal: TFDTable;
-    tblMovement_OrderExternalId: TIntegerField;
     tblMovement_OrderExternalGUID: TStringField;
     tblMovement_OrderExternalInvNumber: TStringField;
     tblMovement_OrderExternalOperDate: TDateTimeField;
@@ -222,6 +221,17 @@ type
     tblMovementItem_StoreRealGoodsKindId: TIntegerField;
     tblMovementItem_StoreRealAmount: TFloatField;
     tblMovementItem_StoreRealPrice: TFloatField;
+    qryOrderItems: TFDQuery;
+    qryOrderItemsGoodsID: TIntegerField;
+    qryOrderItemsKindID: TIntegerField;
+    qryOrderItemsName: TWideStringField;
+    qryOrderItemsFullInfo: TWideStringField;
+    qryPartnerCONTRACTID: TIntegerField;
+    qryPartnerContractName: TWideStringField;
+    qryPartnerimAddress: TLargeintField;
+    qryPartnerimContract: TLargeintField;
+    qryPartnerPRICELISTID: TIntegerField;
+    tblMovement_OrderExternalId: TAutoIncField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -312,6 +322,8 @@ procedure TStructure.MakeIndex(ATable: TFDTable);
 {var
   IndexName: String;}
 begin
+
+
   {???
   IndexName := 'PK_' + ATable.TableName;
   if (ATable.IndexDefs.Count = 0) then

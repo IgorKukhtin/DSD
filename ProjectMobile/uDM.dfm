@@ -486,6 +486,21 @@ object DM: TDM
     object qryPartnerGPSE: TFloatField
       FieldName = 'GPSE'
     end
+    object qryPartnerCONTRACTID: TIntegerField
+      FieldName = 'CONTRACTID'
+    end
+    object qryPartnerContractName: TWideStringField
+      FieldName = 'ContractName'
+    end
+    object qryPartnerimAddress: TLargeintField
+      FieldName = 'imAddress'
+    end
+    object qryPartnerimContract: TLargeintField
+      FieldName = 'imContract'
+    end
+    object qryPartnerPRICELISTID: TIntegerField
+      FieldName = 'PRICELISTID'
+    end
   end
   object qryPriceList: TFDQuery
     Connection = conMain
@@ -537,10 +552,14 @@ object DM: TDM
   end
   object tblMovement_OrderExternal: TFDTable
     Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
+    TableName = 'Movement_OrderExternal'
     Left = 464
     Top = 144
-    object tblMovement_OrderExternalId: TIntegerField
+    object tblMovement_OrderExternalId: TAutoIncField
       FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
     end
     object tblMovement_OrderExternalGUID: TStringField
       FieldName = 'GUID'
@@ -592,6 +611,8 @@ object DM: TDM
   end
   object tblMovementItem_OrderExternal: TFDTable
     Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_OrderExternal'
+    TableName = 'MovementItem_OrderExternal'
     Left = 464
     Top = 208
     object tblMovementItem_OrderExternalId: TIntegerField
@@ -622,6 +643,8 @@ object DM: TDM
   end
   object tblMovement_StoreReal: TFDTable
     Connection = conMain
+    UpdateOptions.UpdateTableName = 'Movement_StoreReal'
+    TableName = 'Movement_StoreReal'
     Left = 464
     Top = 264
     object tblMovement_StoreRealId: TIntegerField
@@ -662,6 +685,8 @@ object DM: TDM
   end
   object tblMovementItem_StoreReal: TFDTable
     Connection = conMain
+    UpdateOptions.UpdateTableName = 'MovementItem_StoreReal'
+    TableName = 'MovementItem_StoreReal'
     Left = 464
     Top = 328
     object tblMovementItem_StoreRealId: TIntegerField
@@ -685,6 +710,41 @@ object DM: TDM
     end
     object tblMovementItem_StoreRealPrice: TFloatField
       FieldName = 'Price'
+    end
+  end
+  object qryOrderItems: TFDQuery
+    FilterOptions = [foCaseInsensitive]
+    Connection = conMain
+    SQL.Strings = (
+      
+        'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA || '#39' ('#39' || GK.VAL' +
+        'UEDATA || '#39')'#39' Name, G.ID || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA |' +
+        '| '#39' ('#39' || GK.VALUEDATA || '#39');'#39' || PI.PRICE FullInfo from OBJECT_' +
+        'GOODS G JOIN OBJECT_GOODSLINKGOODSKIND GLK ON GLK.GOODSID = G.ID' +
+        ' JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISER' +
+        'ASED = 0 JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and ' +
+        'PI.PRICELISTID = :PRICELISTID WHERE G.ISERASED = 0 order by Name')
+    Left = 40
+    Top = 408
+    ParamData = <
+      item
+        Name = 'PRICELISTID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    object qryOrderItemsGoodsID: TIntegerField
+      FieldName = 'GoodsID'
+    end
+    object qryOrderItemsKindID: TIntegerField
+      FieldName = 'KindID'
+    end
+    object qryOrderItemsFullInfo: TWideStringField
+      FieldName = 'FullInfo'
+      Size = 100
+    end
+    object qryOrderItemsName: TWideStringField
+      FieldName = 'Name'
+      Size = 500
     end
   end
 end

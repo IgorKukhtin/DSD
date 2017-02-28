@@ -20,7 +20,8 @@ uses
   FMX.Platform, FMX.TMSWebGMaps, System.Math.Vectors, FMX.TMSWebGMapsGeocoding,
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
-  FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList
+  FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
+  FMX.Grid.Style
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -33,6 +34,15 @@ const
   LongitudeRatio = '70.158308514';
 
 type
+  TOrderItemActionType = (otAdd, otDelete);
+
+  TOrderItem = record
+    GoodsName : string;
+    Count : integer;
+    ActionType : TOrderItemActionType;
+    Price : currency;
+  end;
+
   TFormStackItem = record
     PageIndex: Integer;
     Data: TObject;
@@ -75,15 +85,12 @@ type
     tiRoutes: TTabItem;
     VertScrollBox1: TVertScrollBox;
     tiPartners: TTabItem;
-    lwPartner: TListView;
     pBack: TPanel;
     sbBack: TSpeedButton;
     Panel5: TPanel;
     lDayInfo: TLabel;
     lCaption: TLabel;
-    bsPartner: TBindSourceDB;
-    blPartner: TBindingsList;
-    LinkFillControlToField1: TLinkFillControlToField;
+    blMain: TBindingsList;
     tiPartnerInfo: TTabItem;
     Panel7: TPanel;
     Memo1: TMemo;
@@ -155,14 +162,13 @@ type
     bPartners: TButton;
     tiPriceList: TTabItem;
     lwPriceList: TListView;
-    ImageList1: TImageList;
+    ilOrder: TImageList;
     bsPriceList: TBindSourceDB;
     LinkFillControlToField2: TLinkFillControlToField;
     Image9: TImage;
     tiPriceListItems: TTabItem;
     lwGoods: TListView;
     bsGoods: TBindSourceDB;
-    LinkFillControlToField3: TLinkFillControlToField;
     pGoodsInfo: TPopup;
     Panel2: TPanel;
     lGoodsName: TLabel;
@@ -180,13 +186,41 @@ type
     lGoodsDateEnd: TLabel;
     Label22: TLabel;
     lGoodsPrice: TLabel;
+    pPartnerActions: TPanel;
+    bOrderExternal: TButton;
+    bStartVisit: TButton;
+    tiOrderExternal: TTabItem;
+    VertScrollBox3: TVertScrollBox;
+    sgOrderExternal: TStringGrid;
+    gcName: TStringColumn;
+    gcTotalPrice: TCurrencyColumn;
+    gcButton: TGlyphColumn;
+    tiOrderItems: TTabItem;
+    gcCount: TCurrencyColumn;
+    Panel3: TPanel;
+    bCancelOI: TButton;
+    bSaveOI: TButton;
+    Panel4: TPanel;
+    lwOrderItems: TListView;
+    lwPartner: TListView;
+    LinkListControlToField1: TLinkListControlToField;
+    bsPartner: TBindSourceDB;
+    LinkListControlToField2: TLinkListControlToField;
+    ilPartners: TImageList;
+    BindSourceDB1: TBindSourceDB;
+    LinkFillControlToField1: TLinkFillControlToField;
+    gcGoodsId: TStringColumn;
+    gcKindId: TStringColumn;
+    gcPrice: TStringColumn;
+    Panel6: TPanel;
+    lTotalPrice: TLabel;
+    Panel8: TPanel;
+    bSaveOrderExternal: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
     procedure bVisitClick(Sender: TObject);
     procedure sbBackClick(Sender: TObject);
-    procedure LinkFillControlToField1FillingListItem(Sender: TObject;
-      const AEditor: IBindListEditorItem);
     procedure lwPartnerItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure FormVirtualKeyboardShown(Sender: TObject;
@@ -209,12 +243,28 @@ type
     procedure bPriceListClick(Sender: TObject);
     procedure lwPriceListItemClick(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure LinkFillControlToField2FilledListItem(Sender: TObject;
-      const AEditor: IBindListEditorItem);
     procedure lwGoodsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure LinkFillControlToField3FilledListItem(Sender: TObject;
+    procedure bOrderExternalClick(Sender: TObject);
+    procedure ImageColumn1Tap(Sender: TObject; const Point: TPointF);
+    procedure sgOrderExternalSelectCell(Sender: TObject; const ACol,
+      ARow: Integer; var CanSelect: Boolean);
+    procedure lwOrderItemsItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwOrderItemsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwOrderItemsFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure bCancelOIClick(Sender: TObject);
+    procedure ListView1ItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure LinkFillControlToField2FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
+    procedure bSaveOIClick(Sender: TObject);
+    procedure sgOrderExternalEditingDone(Sender: TObject; const ACol,
+      ARow: Integer);
+    procedure Action1Execute(Sender: TObject);
+    procedure bSaveOrderExternalClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -224,6 +274,12 @@ type
     FNeedOffset: Boolean;
     FCurCoordinatesSet : boolean;
     FCurCoordinates: TLocationCoord2D;
+
+    FCheckedOI: TList<String>;
+
+    procedure BackResult(const AResult: TModalResult);
+    procedure ShowGoods(AValue : string);
+    procedure ShowAddedRow;
 
     procedure UpdateKBBounds;
     procedure RestorePosition;
@@ -239,10 +295,11 @@ type
     procedure CheckDataBase;
     procedure GetVistDays;
     procedure ShowPartners(Day : integer; Caption : string);
-    procedure ShowPartnerInfo(PartnerId : integer);
+    procedure ShowPartnerInfo;
     procedure ShowAllPartnersOnMap;
     procedure ShowPriceLists;
     procedure ShowPriceListItems(PriceListId : integer);
+    procedure RecalculateTotalPrice;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     function ReturnPriorForm(const OmitOnChange: Boolean = False): TObject;
   public
@@ -258,11 +315,11 @@ uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils;
 
 {$R *.fmx}
-
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
+  r : integer;
 begin
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
@@ -272,6 +329,7 @@ begin
   end;
   {$ENDIF}
   FFormsStack:= TStack<TFormStackItem>.Create;
+  FCheckedOI := TList<String>.Create;
   FCurCoordinatesSet := false;
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
@@ -280,6 +338,7 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   FFormsStack.Free;
+  FCheckedOI.Free;
 end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
@@ -304,22 +363,16 @@ begin
   lButton6.Width := frmMain.Width div 2;
 end;
 
-procedure TfrmMain.LinkFillControlToField1FillingListItem(Sender: TObject;
-  const AEditor: IBindListEditorItem);
-begin
-  (AEditor.CurrentObject as TListViewItem).Tag := DM.qryPartner.FieldByName('id').AsInteger;
-end;
-
 procedure TfrmMain.LinkFillControlToField2FilledListItem(Sender: TObject;
   const AEditor: IBindListEditorItem);
 begin
   (AEditor.CurrentObject as TListViewItem).Tag := DM.qryPriceList.FieldByName('id').AsInteger;
 end;
 
-procedure TfrmMain.LinkFillControlToField3FilledListItem(Sender: TObject;
-  const AEditor: IBindListEditorItem);
+procedure TfrmMain.ListView1ItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
 begin
-  (AEditor.CurrentObject as TListViewItem).Tag := DM.qryGoods.FieldByName('id').AsInteger;
+  SwitchToForm(tiPartnerInfo, nil);
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -331,8 +384,10 @@ begin
 
   if assigned(gc_User) then  { Проверяем только с данными из локальной БД }
   begin
-    {$IFNDEF NotCheckLogin}
+    {$IFDEF NotCheckLogin}
     if (LoginEdit.Text = gc_User.Login) or (PasswordEdit.Text = gc_User.Password) then
+    {$ELSE}
+    if true then
     {$ENDIF}
     begin
       LoginOk := true;
@@ -391,8 +446,6 @@ end;
 procedure TfrmMain.lwGoodsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  DM.qryGoods.Locate('Id', (lwPriceList.Selected as TListViewItem).Tag);
-
   lGoodsName.Text := DM.qryGoods.FieldByName('GoodsName').AsString;
   lGoodsCode.Text := DM.qryGoods.FieldByName('OBJECTCODE').AsString;
   lGoodsCategory.Text := '-';
@@ -403,6 +456,40 @@ begin
   lGoodsPrice.Text := DM.qryGoods.FieldByName('Price').AsString;
 
   pGoodsInfo.IsOpen := true;
+end;
+
+procedure TfrmMain.lwOrderItemsFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
+procedure TfrmMain.lwOrderItemsItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  if AItem.Objects.AccessoryObject.Visible then
+  begin
+    AItem.Objects.AccessoryObject.Visible := False;
+    FCheckedOI.Remove(AItem.Detail);
+  end
+  else
+  begin
+    AItem.Objects.AccessoryObject.Visible := True;
+    FCheckedOI.Add(AItem.Detail);
+  end;
+end;
+
+procedure TfrmMain.lwOrderItemsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  // In order for text to be truncated properly, shorten text object
+  AItem.Objects.TextObject.Width := AItem.Objects.TextObject.Width - (5 + AItem.Objects.AccessoryObject.Width);
+  // Restore checked state when device is rotated.
+  // When listview is resized because of rotation, accessory properties will be reset to default values
+  AItem.Objects.AccessoryObject.Visible := FCheckedOI.Contains(AItem.Detail);
 end;
 
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
@@ -417,9 +504,25 @@ begin
   SwitchToForm(tiPriceListItems, nil);
 end;
 
+procedure TfrmMain.Action1Execute(Sender: TObject);
+begin
+ //
+end;
+
+procedure TfrmMain.BackResult(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+    ReturnPriorForm;
+end;
+
 procedure TfrmMain.sbBackClick(Sender: TObject);
 begin
-  ReturnPriorForm;
+  if tcMain.ActiveTab = tiOrderExternal then
+    MessageDlg('Удалить эту заявку?',
+               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
+               BackResult)
+  else
+    ReturnPriorForm;
 end;
 
 procedure TfrmMain.sbPartnerMenuClick(Sender: TObject);
@@ -439,8 +542,87 @@ begin
   lbPartnerMenu.ItemIndex := -1;
 end;
 
+procedure TfrmMain.ShowGoods(AValue : string);
+var
+  ArrValue : TArray<string>;
+begin
+  ArrValue := AValue.Split([';']);
+
+  sgOrderExternal.Cells[0, sgOrderExternal.RowCount - 1] := ArrValue[0]; // GoodsId
+  sgOrderExternal.Cells[1, sgOrderExternal.RowCount - 1] := ArrValue[1]; // KindId
+  sgOrderExternal.Cells[2, sgOrderExternal.RowCount - 1] := ArrValue[3]; // цена
+  sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := ArrValue[2]; // название товара
+  sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '1'; // количество по умолчанию
+  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := ArrValue[3]; // общая цена
+  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '1'; // кнопка удалить
+end;
+
+procedure TfrmMain.ShowAddedRow;
+begin
+  sgOrderExternal.Cells[0, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[1, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[2, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '0';
+end;
+
+procedure TfrmMain.sgOrderExternalEditingDone(Sender: TObject; const ACol,
+  ARow: Integer);
+begin
+  if sgOrderExternal.Col = 4 then { количество товаров }
+  begin
+    sgOrderExternal.Cells[5, sgOrderExternal.Row] := CurrToStr((StrToInt(sgOrderExternal.Cells[4, sgOrderExternal.Row]) * StrToCurr(sgOrderExternal.Cells[2, sgOrderExternal.Row])));
+
+    RecalculateTotalPrice;
+  end;
+end;
+
+procedure TfrmMain.sgOrderExternalSelectCell(Sender: TObject; const ACol,
+  ARow: Integer; var CanSelect: Boolean);
+var
+  i : integer;
+begin
+  if ACol = 6 then {button column}
+  begin
+    if ARow = sgOrderExternal.RowCount - 1 then {add new goods}
+    begin
+      DM.qryOrderItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
+      DM.qryOrderItems.Open;
+      SwitchToForm(tiOrderItems, nil);
+    end
+    else
+    begin {remove goods}
+      for i := ARow + 1 to sgOrderExternal.RowCount - 1 do
+      begin
+        sgOrderExternal.Cells[0, i - 1] := sgOrderExternal.Cells[0, i];
+        sgOrderExternal.Cells[1, i - 1] := sgOrderExternal.Cells[1, i];
+        sgOrderExternal.Cells[2, i - 1] := sgOrderExternal.Cells[2, i];
+        sgOrderExternal.Cells[3, i - 1] := sgOrderExternal.Cells[3, i];
+        sgOrderExternal.Cells[4, i - 1] := sgOrderExternal.Cells[4, i];
+        sgOrderExternal.Cells[5, i - 1] := sgOrderExternal.Cells[5, i];
+        sgOrderExternal.Cells[6, i - 1] := sgOrderExternal.Cells[6, i];
+      end;
+
+      sgOrderExternal.RowCount := sgOrderExternal.RowCount - 1;
+    end;
+
+    CanSelect := false;
+  end;
+end;
+
+procedure TfrmMain.bCancelOIClick(Sender: TObject);
+begin
+  FCheckedOI.Clear;
+  DM.qryOrderItems.Close;
+
+  ReturnPriorForm;
+end;
+
 procedure TfrmMain.bHandBookClick(Sender: TObject);
 begin
+  pPartnerActions.Visible := false;
   SwitchToForm(tiHandbook, nil);
 end;
 
@@ -448,6 +630,15 @@ procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
   SwitchToForm(tiPartners, nil);
+end;
+
+procedure TfrmMain.bOrderExternalClick(Sender: TObject);
+begin
+  sgOrderExternal.RowCount := 1;
+  ShowAddedRow;
+  RecalculateTotalPrice;
+
+  SwitchToForm(tiOrderExternal, nil);
 end;
 
 procedure TfrmMain.bPartnersClick(Sender: TObject);
@@ -471,8 +662,65 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
+procedure TfrmMain.bSaveOIClick(Sender: TObject);
+var
+  i : integer;
+begin
+  for i := 0 to FCheckedOI.Count - 1 do
+  begin
+    ShowGoods(FCheckedOI[i]);
+    sgOrderExternal.RowCount := sgOrderExternal.RowCount + 1;
+  end;
+  ShowAddedRow;
+  RecalculateTotalPrice;
+
+  FCheckedOI.Clear;
+  ReturnPriorForm;
+end;
+
+procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
+var
+  GlobalOrderId : TGUID;
+  MovementId : integer;
+begin
+  { Generate alias for opened database }
+  CreateGUID(GlobalOrderId);
+
+  DM.conMain.StartTransaction;
+  try
+    DM.tblMovement_OrderExternal.Open;
+
+    DM.tblMovement_OrderExternal.Append;
+
+    DM.tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalOrderId);
+    DM.tblMovement_OrderExternalOperDate.AsDateTime := Now();
+    DM.tblMovement_OrderExternalPartnerId.AsInteger := DM.qryPartnerId.AsInteger;
+    DM.tblMovement_OrderExternalContractId.AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
+    DM.tblMovement_OrderExternalPriceListId.AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
+    DM.tblMovement_OrderExternalInsertDate.AsDateTime := Now();
+
+    DM.tblMovement_OrderExternal.Post;
+
+    MovementId := DM.tblMovement_OrderExternalId.AsInteger;
+
+
+
+    DM.conMain.Commit;
+  except
+    on E : Exception do
+    begin
+      DM.conMain.Rollback;
+      ShowMessage(E.Message);
+    end;
+  end;
+
+
+
+end;
+
 procedure TfrmMain.bVisitClick(Sender: TObject);
 begin
+  pPartnerActions.Visible := true;
   SwitchToForm(tiRoutes, nil);
 end;
 
@@ -651,7 +899,8 @@ begin
     // buggy piece of shit
   end;
 
-  if tcMain.ActiveTab = tiStart then
+  { настройка панели возврата }
+  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiOrderItems) then
     pBack.Visible := false
   else
   begin
@@ -673,6 +922,8 @@ begin
       lCaption.Text := 'Торговые точки';
     if tcMain.ActiveTab = tiHandbook then
       lCaption.Text := 'Справочники';
+    if tcMain.ActiveTab = tiOrderExternal then
+      lCaption.Text := 'Заявки сторонние';
   end;
 
 
@@ -688,7 +939,7 @@ begin
     GetVistDays;
 
   if tcMain.ActiveTab = tiPartnerInfo then
-    ShowPartnerInfo((lwPartner.Selected as TListViewItem).Tag);
+    ShowPartnerInfo;
 
   if tcMain.ActiveTab = tiMap then
     ShowAllPartnersonMap;
@@ -754,9 +1005,10 @@ begin
 
   with DM.qryPartner do
   begin
-    DM.qryPartner.Open('select P.ID, J.VALUEDATA Name, P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE from OBJECT_PARTNER P ' +
+    DM.qryPartner.Open('select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, 0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
       'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
-      'where P.ISERASED = 0');
+      'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0');
 
     First;
     while not EOF do
@@ -853,6 +1105,11 @@ begin
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
+procedure TfrmMain.ImageColumn1Tap(Sender: TObject; const Point: TPointF);
+begin
+  ShowMessage('Test');
+end;
+
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
@@ -896,8 +1153,10 @@ begin
   lDayInfo.Text := 'МАРШРУТ: ' + Caption;
   DM.qryPartner.Close;
 
-  sQuery := 'select P.Id, J.VALUEDATA Name, P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE from OBJECT_PARTNER P ' +
-    'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 where P.ISERASED = 0';
+  sQuery := 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, 0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
+    'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
+    'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0';
 
   if Day < 8 then
     sQuery := sQuery + ' and lower(substr(P.SCHEDULE, ' + IntToStr(2 * Day - 1) + ', 1)) = ''t''';
@@ -918,11 +1177,10 @@ begin
   DM.qryPartner.Open(sQuery);
 end;
 
-procedure TfrmMain.ShowPartnerInfo(PartnerId : integer);
+procedure TfrmMain.ShowPartnerInfo;
 var
   Coordinates: TLocationCoord2D;
 begin
-  DM.qryPartner.Locate('Id', PartnerId);
   Coordinates := TLocationCoord2D.Create(DM.qryPartner.FieldByName('GPSN').AsFloat, DM.qryPartner.FieldByName('GPSE').AsFloat);
 
   FMapLoaded := False;
@@ -963,6 +1221,18 @@ begin
     'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
     'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + IntToStr(PriceListId));
+end;
+
+procedure TfrmMain.RecalculateTotalPrice;
+var
+ i : integer;
+ TotalPrice : Currency;
+begin
+  TotalPrice := 0;
+  for i := 0 to sgOrderExternal.RowCount - 2 do
+    TotalPrice := TotalPrice + StrToCurr(sgOrderExternal.Cells[5, i]);
+
+  lTotalPrice.Text := 'Общая стоимость : ' + CurrToStr(TotalPrice);
 end;
 
 
