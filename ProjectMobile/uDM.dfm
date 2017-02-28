@@ -2,7 +2,7 @@ object DM: TDM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   Height = 518
-  Width = 454
+  Width = 722
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
     Left = 40
     Top = 97
@@ -533,6 +533,158 @@ object DM: TDM
     end
     object qryGoodsOBJECTCODE: TIntegerField
       FieldName = 'OBJECTCODE'
+    end
+  end
+  object tblMovement_OrderExternal: TFDTable
+    Connection = conMain
+    Left = 464
+    Top = 144
+    object tblMovement_OrderExternalId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovement_OrderExternalGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovement_OrderExternalInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_OrderExternalOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_OrderExternalStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_OrderExternalPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblMovement_OrderExternalPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object tblMovement_OrderExternalContractId: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object tblMovement_OrderExternalPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object tblMovement_OrderExternalPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object tblMovement_OrderExternalVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object tblMovement_OrderExternalChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object tblMovement_OrderExternalTotalCountKg: TFloatField
+      FieldName = 'TotalCountKg'
+    end
+    object tblMovement_OrderExternalTotalSumm: TFloatField
+      FieldName = 'TotalSumm'
+    end
+    object tblMovement_OrderExternalInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
+    object tblMovement_OrderExternalisSync: TBooleanField
+      FieldName = 'isSync'
+    end
+  end
+  object tblMovementItem_OrderExternal: TFDTable
+    Connection = conMain
+    Left = 464
+    Top = 208
+    object tblMovementItem_OrderExternalId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovementItem_OrderExternalMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_OrderExternalGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovementItem_OrderExternalGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tblMovementItem_OrderExternalGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object tblMovementItem_OrderExternalChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object tblMovementItem_OrderExternalAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object tblMovementItem_OrderExternalPrice: TFloatField
+      FieldName = 'Price'
+    end
+  end
+  object tblMovement_StoreReal: TFDTable
+    Connection = conMain
+    Left = 464
+    Top = 264
+    object tblMovement_StoreRealId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovement_StoreRealGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovement_StoreRealInvNumber: TStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object tblMovement_StoreRealOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object tblMovement_StoreRealStatusId: TIntegerField
+      FieldName = 'StatusId'
+    end
+    object tblMovement_StoreRealPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblMovement_StoreRealPriceListId: TIntegerField
+      FieldName = 'PriceListId'
+    end
+    object tblMovement_StoreRealPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object tblMovement_StoreRealVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
+    object tblMovement_StoreRealTotalCountKg: TFloatField
+      FieldName = 'TotalCountKg'
+    end
+    object tblMovement_StoreRealTotalSumm: TFloatField
+      FieldName = 'TotalSumm'
+    end
+  end
+  object tblMovementItem_StoreReal: TFDTable
+    Connection = conMain
+    Left = 464
+    Top = 328
+    object tblMovementItem_StoreRealId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tblMovementItem_StoreRealMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblMovementItem_StoreRealGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovementItem_StoreRealGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tblMovementItem_StoreRealGoodsKindId: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object tblMovementItem_StoreRealAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object tblMovementItem_StoreRealPrice: TFloatField
+      FieldName = 'Price'
     end
   end
 end
