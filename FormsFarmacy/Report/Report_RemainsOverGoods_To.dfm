@@ -1,17 +1,17 @@
 inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1085#1072' '#1072#1087#1090#1077#1082#1091'>'
-  ClientHeight = 557
+  ClientHeight = 566
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1082
-  ExplicitHeight = 596
+  ExplicitHeight = 605
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
     Width = 1066
-    Height = 476
+    Height = 485
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
@@ -20,7 +20,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     ExplicitTop = 81
     ExplicitWidth = 1066
     ExplicitHeight = 476
-    ClientRectBottom = 476
+    ClientRectBottom = 485
     ClientRectRight = 1066
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
@@ -31,7 +31,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
         Width = 1066
-        Height = 215
+        Height = 224
         ExplicitWidth = 1066
         ExplicitHeight = 215
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -254,9 +254,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
           object clUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 230
           end
           object clGoodsGroupName: TcxGridDBColumn
@@ -389,7 +391,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object AmountSend: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'AmountSend'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -418,7 +420,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 74
           end
           object Amount_Over: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Amount_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -428,7 +430,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 75
           end
           object Summa_Over: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
+            Caption = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Summa_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -450,7 +452,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object RemainsMCS_result: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1088#1072#1089#1093#1086#1076
+            Caption = #1048#1058#1054#1043#1054' '#1082#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044
             DataBinding.FieldName = 'RemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -461,7 +463,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object SummaRemainsMCS_result: TcxGridDBColumn
-            Caption = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076
+            Caption = #1048#1058#1054#1043#1054' '#1089#1091#1084#1084#1072' '#1055#1056#1048#1061#1054#1044
             DataBinding.FieldName = 'SummaRemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -637,12 +639,13 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 220
+        Top = 229
         Width = 1066
         Height = 232
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitTop = 220
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -848,7 +851,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 80
           end
           object chAmountSend: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
+            Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
             DataBinding.FieldName = 'AmountSend'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -868,7 +871,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 100
           end
           object chRemainsMCS_result: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044
+            Caption = #1050#1086#1083'-'#1074#1086' '#1056#1040#1057#1061#1054#1044
             DataBinding.FieldName = 'RemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -879,7 +882,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object chSummaRemainsMCS_result: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1056#1048#1061#1054#1044
+            Caption = #1057#1091#1084#1084#1072' '#1056#1040#1057#1061#1054#1044
             DataBinding.FieldName = 'SummaRemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -966,17 +969,18 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 112
           end
           object chAmount_Over: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044' ('#1076#1086#1082')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1056#1040#1057#1061#1054#1044' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Amount_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object chSumma_Over: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
+            Caption = #1057#1091#1084#1084#1072' '#1056#1040#1057#1061#1054#1044' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Summa_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -987,7 +991,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object chAmount_OverDiff: TcxGridDBColumn
-            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1087#1088#1080#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1072' '#1088#1072#1089#1093#1086#1076' '#1089' '#1076#1086#1082#1091#1084'.'
             DataBinding.FieldName = 'Amount_OverDiff'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1022,23 +1026,26 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 215
+        Top = 224
         Width = 1066
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 215
       end
     end
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
+      ExplicitHeight = 452
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
         Width = 1066
-        Height = 452
+        Height = 461
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 452
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1284,7 +1291,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 100
           end
           object cxRemainsMCS_result: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044
+            Caption = #1050#1086#1083'-'#1074#1086' '#1056#1040#1057#1061#1054#1044
             DataBinding.FieldName = 'RemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1295,7 +1302,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object cxSummaRemainsMCS_result: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1055#1056#1048#1061#1054#1044
+            Caption = #1057#1091#1084#1084#1072' '#1056#1040#1057#1061#1054#1044
             DataBinding.FieldName = 'SummaRemainsMCS_result'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1374,7 +1381,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 100
           end
           object cxAmount_Over: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1055#1056#1048#1061#1054#1044' ('#1076#1086#1082')'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1056#1040#1057#1061#1054#1044' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Amount_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1384,7 +1391,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
             Width = 70
           end
           object cxSumma_Over: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076' ('#1076#1086#1082')'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1093#1086#1076' ('#1076#1086#1082')'
             DataBinding.FieldName = 'Summa_Over'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1554,7 +1561,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Left = 718
     Top = 29
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081
+    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082#1080'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
     TabOrder = 8
     Width = 149
   end
@@ -1562,7 +1569,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Left = 867
     Top = 29
     Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082#1080'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+    Caption = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1081
     TabOrder = 9
     Width = 152
   end
@@ -1795,11 +1802,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSetErased_Over
-      StoredProcList = <
-        item
-          StoredProc = spSetErased_Over
-        end>
+      StoredProcList = <>
       Caption = 'actSetErased_Over'
       ImageIndex = 41
       QuestionBeforeExecute = #1056#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
@@ -1843,9 +1846,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
-        item
-          Action = actSetErased_Over
-        end
         item
           Action = macOver
         end
@@ -2484,7 +2484,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       end>
     PackSize = 1
     Left = 880
-    Top = 168
+    Top = 200
   end
   object spOver: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Over_Auto'
@@ -2496,8 +2496,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inUnitId'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = DataSetDocs
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2512,7 +2512,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2520,7 +2520,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inAmount'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'RemainsMCS_result'
         DataType = ftFloat
         ParamType = ptInput
@@ -2529,7 +2529,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inRemains'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'RemainsStart'
         DataType = ftFloat
         ParamType = ptInput
@@ -2538,7 +2538,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inAmountSend'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'AmountSend'
         DataType = ftFloat
         ParamType = ptInput
@@ -2547,7 +2547,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inPrice'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
@@ -2556,7 +2556,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inMCS'
         Value = 30.000000000000000000
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'MCSValue'
         DataType = ftFloat
         ParamType = ptInput
@@ -2588,8 +2588,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1000
-    Left = 816
-    Top = 168
+    Left = 760
+    Top = 192
   end
   object spOverChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Child_Over_Auto'
@@ -2925,8 +2925,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inFromId'
         Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Component = DataSetDocs
+        ComponentItem = 'UnitId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2941,7 +2941,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inGoodsId'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2949,7 +2949,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inAmount'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'Amount_Over'
         DataType = ftFloat
         ParamType = ptInput
@@ -2958,7 +2958,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       item
         Name = 'inPrice_from'
         Value = Null
-        Component = MasterCDS
+        Component = DataSetDocs
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
