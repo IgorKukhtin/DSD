@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Inventory_BarCode(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BarCode TVarChar
+             , Amount Tfloat 
               )
 AS
 $BODY$
@@ -18,7 +19,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       SELECT NULL :: TVarChar AS BarCode;
+       SELECT NULL :: TVarChar AS BarCode
+            , 0    :: Tfloat   AS Amount;
   
 END;
 $BODY$

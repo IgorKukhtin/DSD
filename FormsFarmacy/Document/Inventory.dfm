@@ -22,9 +22,8 @@ inherited InventoryForm: TInventoryForm
       inherited cxGrid: TcxGrid
         Width = 898
         Height = 557
-        ExplicitTop = 83
         ExplicitWidth = 898
-        ExplicitHeight = 474
+        ExplicitHeight = 557
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -435,8 +434,6 @@ inherited InventoryForm: TInventoryForm
         Height = 474
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 0
-        ExplicitHeight = 557
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -716,6 +713,13 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 180
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090'. '#1086#1089#1090#1072#1090#1086#1082' ('#1090#1077#1082'.'#1087#1086#1083#1100#1079'.)'
+            DataBinding.FieldName = 'Amount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1373,8 +1377,8 @@ inherited InventoryForm: TInventoryForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 5
       end>
-    Left = 622
-    Top = 313
+    Left = 774
+    Top = 329
   end
   inherited PopupMenu: TPopupMenu
     Left = 568
@@ -2178,14 +2182,14 @@ inherited InventoryForm: TInventoryForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 640
-    Top = 107
+    Top = 155
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 584
-    Top = 107
+    Left = 568
+    Top = 155
   end
   object dsdDBViewAddOn1: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2204,10 +2208,13 @@ inherited InventoryForm: TInventoryForm
     ColumnEnterList = <
       item
         Column = BarCode
+      end
+      item
+        Column = Amount
       end>
     SummaryItemList = <>
-    Left = 504
-    Top = 112
+    Left = 528
+    Top = 104
   end
   object spSelectBarCode: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Inventory_BarCode'
@@ -2246,6 +2253,8 @@ inherited InventoryForm: TInventoryForm
       item
         Name = 'inAmountUser'
         Value = '1'
+        Component = ClientDataSet
+        ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

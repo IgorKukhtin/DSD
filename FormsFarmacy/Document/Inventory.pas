@@ -97,6 +97,7 @@ type
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
     spInsert_MI_Inventory: TdsdStoredProc;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public
