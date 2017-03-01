@@ -79,6 +79,7 @@ type
     procedure LoadJuridicalFormTest;
     procedure LoadUnitFormTest;
     procedure LoadCityFormTest;
+    procedure LoadClientFormTest;
 
 
 //    procedure LoadMemberFormTest;
@@ -220,6 +221,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCityForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
+end;
+
+procedure TLoadFormTest.LoadClientFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TClientEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TClientEditForm');
 end;
 
 procedure TLoadFormTest.LoadCompositionFormTest;

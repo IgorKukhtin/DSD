@@ -1,1 +1,1 @@
- DROP DATABASE Boutique;
+ DROP DATABASE IF EXISTS Boutique;

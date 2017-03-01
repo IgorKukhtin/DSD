@@ -18,13 +18,12 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST ('' as TVarChar)  AS InternalCode
-           , CAST ('' as TVarChar)  AS InternalName
-       FROM Object
-       WHERE Object.DescId = zc_Object_Measure();
+             0 :: Integer                              AS Id
+           , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
+           , '' :: TVarChar                            AS Name
+           , '' :: TVarChar                            AS InternalCode
+           , '' :: TVarChar                            AS InternalName
+            ;
    ELSE
        RETURN QUERY
        SELECT

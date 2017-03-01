@@ -1,4 +1,4 @@
-unit Member;
+unit Client;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TMemberForm = class(TParentForm)
+  TClientForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -56,13 +56,10 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    INN: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    EMail: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -74,6 +71,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMemberForm);
+  RegisterClass(TClientForm);
 
 end.

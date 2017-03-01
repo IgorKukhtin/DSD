@@ -71,6 +71,7 @@ type
     procedure CreateJuridical;
     procedure CreateUnit;
     procedure CreateCity;
+    procedure CreateClient;
   end;
 
 implementation
@@ -148,6 +149,11 @@ end;
 procedure TdbObjectProcedureTest.CreateCity;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\City\');
+end;
+
+procedure TdbObjectProcedureTest.CreateClient;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Client\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCOMMON;

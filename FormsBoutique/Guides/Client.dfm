@@ -1,7 +1,7 @@
-object JuridicalForm: TJuridicalForm
+object ClientForm: TClientForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
   ClientHeight = 376
   ClientWidth = 722
   Color = clBtnFace
@@ -26,7 +26,6 @@ object JuridicalForm: TJuridicalForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 660
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -58,55 +57,6 @@ object JuridicalForm: TJuridicalForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 226
-      end
-      object clisCorporate: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1075#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'isCorporate'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 130
-      end
-      object clFullName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086' '#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'FullName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 196
-      end
-      object clAddress: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089
-        DataBinding.FieldName = 'Address'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 168
-      end
-      object clOKPO: TcxGridDBColumn
-        Caption = #1054#1050#1055#1054
-        DataBinding.FieldName = 'OKPO'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 106
-      end
-      object clINN: TcxGridDBColumn
-        Caption = #1048#1053#1053
-        DataBinding.FieldName = 'INN'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 100
-      end
-      object clJuridicalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
-        DataBinding.FieldName = 'JuridicalGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 121
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -316,8 +266,8 @@ object JuridicalForm: TJuridicalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TJuridicalEditForm'
-      FormNameParam.Value = 'TJuridicalEditForm'
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -338,8 +288,8 @@ object JuridicalForm: TJuridicalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TJuridicalEditForm'
-      FormNameParam.Value = 'TJuridicalEditForm'
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -473,7 +423,7 @@ object JuridicalForm: TJuridicalForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
+    StoredProcName = 'gpSelect_Object_Client'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -493,7 +443,7 @@ object JuridicalForm: TJuridicalForm
     Top = 128
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Juridical'
+    StoredProcName = 'gpUpdate_Object_isErased_Client'
     DataSets = <>
     OutputType = otResult
     Params = <

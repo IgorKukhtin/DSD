@@ -124,6 +124,10 @@ uses
   City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
   CityEdit in '..\..\FormsBoutique\Guides\CityEdit.pas' {CityEditForm: TParentForm},
 
+  Client in '..\..\FormsBoutique\Guides\Client.pas' {ClientForm: TParentForm},
+  ClientEdit in '..\..\FormsBoutique\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
+
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

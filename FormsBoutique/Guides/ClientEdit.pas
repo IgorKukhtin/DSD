@@ -1,4 +1,4 @@
-unit JuridicalEdit;
+unit ClientEdit;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TJuridicalEditForm = class(TParentForm)
+  TClientEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -41,14 +41,13 @@ type
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     edAddress: TcxTextEdit;
-    edFullName: TcxTextEdit;
+    edDiscountCard: TcxTextEdit;
     edOKPO: TcxTextEdit;
     cxLabel5: TcxLabel;
-    cbisCorporate: TcxCheckBox;
     edINN: TcxTextEdit;
     cxLabel6: TcxLabel;
-    ceJuridicalGroup: TcxButtonEdit;
-    JuridicalGroupGuides: TdsdGuides;
+    ceCity: TcxButtonEdit;
+    CityGuides: TdsdGuides;
     cxLabel7: TcxLabel;
   private
     { Private declarations }
@@ -61,6 +60,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TJuridicalEditForm);
+  RegisterClass(TClientEditForm);
 
 end.
