@@ -197,7 +197,9 @@ begin
             CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
             if (execParamsMovement.ParamByName('OrderExternalId').asInteger<>0)
                and (rgGoodsKind.Items.Count>1)
-            then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger);
+            then CDS.Filter:= CDS.Filter +' and GoodsKindId = '+IntToStr(ParamsMI.ParamByName('GoodsKindId').AsInteger)
+                                         //+'   or GoodsKindId = 0)'
+                                         ;
 
             CDS.Filtered:=false;
             CDS.Filtered:=true;

@@ -312,14 +312,21 @@ BEGIN
         ;
   
        -- Goods_list - PriceId
-       UPDATE tmpGoods_list SET PriceId = Price_Goods.ObjectId
+       /*UPDATE tmpGoods_list SET PriceId = Price_Goods.ObjectId
        FROM ObjectLink AS Price_Goods, ObjectLink AS Price_Unit
        WHERE Price_Goods.ChildObjectId = tmpGoods_list.GoodsId
          AND Price_Goods.DescId        = zc_ObjectLink_Price_Goods()
          AND Price_Unit.ObjectId       = Price_Goods.ObjectId
          AND Price_Unit.ChildObjectId  = tmpGoods_list.UnitId
          AND Price_Unit.DescId         = zc_ObjectLink_Price_Unit();
+*/
 
+       UPDATE tmpGoods_list SET PriceId = tmpPrice.PriceId
+       FROM tmpPrice
+       WHERE tmpPrice.GoodsId = tmpGoods_list.GoodsId
+         AND tmpPrice.UnitId = tmpGoods_list.UnitId;
+
+         
        -- Goods_list - MCSValue
        UPDATE tmpGoods_list
               SET MCSValue = CASE WHEN (inisMCS = TRUE AND tmpGoods_list.UnitId = inUnitId) THEN COALESCE (tmpPrice.MCSValue, 0)

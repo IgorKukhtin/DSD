@@ -223,17 +223,17 @@ BEGIN
                                                                   , inMovementId         := _tmpMI_Recalc.MovementId_to
                                                                   , inPersonalId         := _tmpMI_Recalc.PersonalId
                                                                   , inIsMain             := MIBoolean_Main.ValueData
-                                                                  , inSummService        := 0
-                                                                  , inSummCardRecalc     := 0
-                                                                  , inSummCardSecondRecalc := 0
-                                                                  , inSummNalogRecalc    := 0
-                                                                  , inSummMinus          := 0
-                                                                  , inSummAdd            := 0
-                                                                  , inSummHoliday        := 0
-                                                                  , inSummSocialIn       := 0
-                                                                  , inSummSocialAdd      := 0
-                                                                  , inSummChildRecalc    := 0
-                                                                  , inSummMinusExtRecalc := 0
+                                                                  , inSummService        := 0 :: TFloat
+                                                                  , inSummCardRecalc     := 0 :: TFloat
+                                                                  , inSummCardSecondRecalc:= 0 :: TFloat
+                                                                  , inSummNalogRecalc    := 0 :: TFloat
+                                                                  , inSummMinus          := 0 :: TFloat
+                                                                  , inSummAdd            := 0 :: TFloat
+                                                                  , inSummHoliday        := 0 :: TFloat
+                                                                  , inSummSocialIn       := 0 :: TFloat
+                                                                  , inSummSocialAdd      := 0 :: TFloat
+                                                                  , inSummChildRecalc    := 0 :: TFloat
+                                                                  , inSummMinusExtRecalc := 0 :: TFloat
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
                                                                   , inUnitId             := _tmpMI_Recalc.UnitId
@@ -292,7 +292,7 @@ BEGIN
      WHERE MovementItemId_to = 0;
 
      -- пересчитали у всех Итоговые суммы
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (tmp.MovementId)
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (tmp.MovementId)
      FROM (SELECT _tmpMovement_Recalc.MovementId FROM _tmpMovement_Recalc UNION SELECT DISTINCT _tmpMI_Recalc.MovementId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.isMovementComplete = TRUE) AS tmp;
 
 

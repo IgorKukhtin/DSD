@@ -146,7 +146,6 @@ type
     tblObject_PriceListValueData: TStringField;
     tblObject_PriceListisErased: TBooleanField;
     tblObject_PriceListPriceWithVAT: TBooleanField;
-    tblObject_PriceListVATPercent: TBooleanField;
     tblObject_PriceListItems: TFDTable;
     tblObject_PriceListItemsId: TIntegerField;
     tblObject_PriceListItemsGoodsId: TIntegerField;
@@ -160,10 +159,19 @@ type
     qryPartnerName: TStringField;
     qryPartnerSCHEDULE: TStringField;
     qryPartnerId: TIntegerField;
-    tblObject_PartnerGPSN: TFloatField;
-    tblObject_PartnerGPSE: TFloatField;
+    qryPartnerCONTRACTID: TIntegerField;
+    qryPartnerContractName: TWideStringField;
+    qryPartnerimAddress: TLargeintField;
+    qryPartnerimContract: TLargeintField;
+    qryPartnerPRICELISTID: TIntegerField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
+    qryPartnerPaidKindId: TIntegerField;
+    qryPartnerChangePercent: TFloatField;
+    qryPartnerPriceWithVAT: TBooleanField;
+    qryPartnerVATPercent: TFloatField;
+    tblObject_PartnerGPSN: TFloatField;
+    tblObject_PartnerGPSE: TFloatField;
     qryPriceList: TFDQuery;
     qryGoods: TFDQuery;
     qryPriceListId: TIntegerField;
@@ -193,7 +201,6 @@ type
     tblMovement_OrderExternalInsertDate: TDateTimeField;
     tblMovement_OrderExternalisSync: TBooleanField;
     tblMovementItem_OrderExternal: TFDTable;
-    tblMovementItem_OrderExternalId: TIntegerField;
     tblMovementItem_OrderExternalMovementId: TIntegerField;
     tblMovementItem_OrderExternalGUID: TStringField;
     tblMovementItem_OrderExternalGoodsId: TIntegerField;
@@ -226,12 +233,19 @@ type
     qryOrderItemsKindID: TIntegerField;
     qryOrderItemsName: TWideStringField;
     qryOrderItemsFullInfo: TWideStringField;
-    qryPartnerCONTRACTID: TIntegerField;
-    qryPartnerContractName: TWideStringField;
-    qryPartnerimAddress: TLargeintField;
-    qryPartnerimContract: TLargeintField;
-    qryPartnerPRICELISTID: TIntegerField;
     tblMovement_OrderExternalId: TAutoIncField;
+    tblObject_PriceListVATPercent: TFloatField;
+    tblMovementItem_OrderExternalId: TAutoIncField;
+    tblObject_Partner_Photo: TFDTable;
+    IntegerField7: TIntegerField;
+    BooleanField1: TBooleanField;
+    tblObject_Partner_PhotoPartnerId: TIntegerField;
+    tblObject_Partner_PhotoId: TAutoIncField;
+    tblObject_Partner_PhotoPhoto: TBlobField;
+    tblObject_Partner_PhotoComment: TStringField;
+    qryPartnerPhotos: TFDQuery;
+    qryPartnerPhotosPhoto: TBlobField;
+    qryPartnerPhotosComment: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }

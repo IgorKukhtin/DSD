@@ -517,7 +517,7 @@ BEGIN
            , vbIsInfoMoney_30200 AS isInfoMoney_30200
 
            , CASE WHEN COALESCE (ObjectString_PlaceOf.ValueData, '') <> '' THEN COALESCE (ObjectString_PlaceOf.ValueData, '') 
-                  ELSE 'м.ƒнiпропетровськ' 
+                  ELSE '' -- 'м.ƒнiпро'
                   END  :: TVarChar   AS PlaceOf 
            , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName,2) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.‘илиалы 
            
@@ -595,7 +595,7 @@ BEGIN
                                  ON ObjectLink_Unit_Branch.ObjectId = Object_From.Id
                                 AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
             LEFT JOIN ObjectString AS ObjectString_PlaceOf
-                                   ON ObjectString_PlaceOf.ObjectId = ObjectLink_Unit_Branch.ChildObjectId
+                                   ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                                   AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()      
         LEFT JOIN ObjectLink AS ObjectLink_Branch_Personal
                              ON ObjectLink_Branch_Personal.ObjectId = ObjectLink_Unit_Branch.ChildObjectId

@@ -23,16 +23,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
    OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
    OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
     IN inSummService         TFloat    , -- Сумма начислено
-    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
-    IN inSummCardSecondRecalc  TFloat    , -- Сумма на карточку (БН) для распределения вторая форма 
-    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
+    IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
+    IN inSummCardSecondRecalc  TFloat  , -- Карта БН (ввод) - 2ф.
+    IN inSummNalogRecalc     TFloat    , -- Налоги - удержания (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
     IN inSummHoliday         TFloat    , -- Сумма отпускные
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChildRecalc     TFloat    , -- Сумма алименты (удержание) (ввод) 
-    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторонними юр.л. для распределения
+    IN inSummChildRecalc     TFloat    , -- Алименты - удержание (ввод)
+    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторон. юр.л. (ввод)
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
     IN inUnitId              Integer   , -- Подразделение
@@ -59,7 +59,7 @@ BEGIN
                                                      , inIsMain             := inIsMain
                                                      , inSummService        := inSummService
                                                      , inSummCardRecalc     := inSummCardRecalc
-                                                     , inSummCardSecondRecalc     := inSummCardSecondRecalc
+                                                     , inSummCardSecondRecalc:= inSummCardSecondRecalc
                                                      , inSummNalogRecalc    := inSummNalogRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd

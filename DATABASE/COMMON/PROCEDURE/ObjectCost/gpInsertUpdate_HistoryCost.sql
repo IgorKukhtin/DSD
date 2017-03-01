@@ -581,6 +581,10 @@ end if;
                  END
        ;
 
+-- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240);
+-- select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()
+DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (select Container.Id from Container where Container.ObjectId IN (select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()) union select CLO.ContainerId from ContainerLinkObject AS CLO where CLO.ObjectId IN (select CLO2.ObjectId from ContainerLinkObject AS CLO2 where CLO2.ContainerId IN (1270241, 1275307, 1270242, 1270239, 1270240) and CLO2.DescId = zc_ContainerLinkObject_Goods()) and CLO.DescId = zc_ContainerLinkObject_Goods());
+
      -- Ошибка !!! Recycled !!!
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (976442, 976754); -- 06.2016
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (10705, 295520); -- 06.2016

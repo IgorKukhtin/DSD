@@ -183,9 +183,12 @@ BEGIN
             , COALESCE (Object_PersonalServiceList.Id, 0)                   AS PersonalServiceListId
             , COALESCE (Object_PersonalServiceList.ValueData, ''::TVarChar) AS PersonalServiceListName
             
-            , tmpAll.Amount :: TFloat          AS Amount
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0)) :: TFloat AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
+            , tmpAll.Amount :: TFloat           AS Amount
+            , MIFloat_SummToPay.ValueData       AS AmountToPay
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+             - COALESCE (MIFloat_SummCard.ValueData, 0)
+             - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+              ) :: TFloat AS AmountCash
             , MIFloat_SummService.ValueData     AS SummService
             , MIFloat_SummCard.ValueData        AS SummCard
             , MIFloat_SummCardRecalc.ValueData  AS SummCardRecalc

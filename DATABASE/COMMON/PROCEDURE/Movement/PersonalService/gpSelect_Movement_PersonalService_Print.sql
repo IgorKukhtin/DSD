@@ -71,8 +71,8 @@ BEGIN
            , MovementFloat_TotalSummMinusExt.ValueData   AS TotalSummMinusExt
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
             - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
-            - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0)
-            - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummMinusExt.ValueData, 0)
              ) :: TFloat AS TotalSummCash
 
            , MovementFloat_TotalSummTransport.ValueData        AS TotalSummTransport
@@ -285,8 +285,13 @@ BEGIN
 
 --            , tmpAll.Amount :: TFloat          AS Amount
 --            , MIFloat_SummToPay.ValueData      AS AmountToPay
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (tmpMIContainer.SummNalog, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) :: TFloat AS AmountCash
-            , (COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/ + COALESCE (MIFloat_SummHoliday.ValueData, 0)) :: TFloat AS SummService
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0) /*- COALESCE (tmpMIContainer.SummNalog, 0)*/
+             - COALESCE (MIFloat_SummCard.ValueData, 0)
+             - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+              ) :: TFloat AS AmountCash
+            , (COALESCE (MIFloat_SummService.ValueData, 0) /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
+             + COALESCE (MIFloat_SummHoliday.ValueData, 0)
+              ) :: TFloat AS SummService
             , MIFloat_SummCard.ValueData       AS SummCard  
             , MIFloat_SummCardSecond.ValueData AS SummCardSecond
             , tmpMIContainer.SummNalog         AS SummNalog

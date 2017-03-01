@@ -25,7 +25,7 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
-  cxImageComboBox;
+  cxImageComboBox, cxSplitter;
 
 type
   TInventoryForm = class(TAncestorDocumentForm)
@@ -85,6 +85,17 @@ type
     bb: TdxBarButton;
     chNum: TcxGridDBColumn;
     chisLast: TcxGridDBColumn;
+    DataSource: TDataSource;
+    ClientDataSet: TClientDataSet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    BarCode: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelectBarCode: TdsdStoredProc;
+    actUpdateDataSource: TdsdUpdateDataSet;
+    actRefreshStart: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

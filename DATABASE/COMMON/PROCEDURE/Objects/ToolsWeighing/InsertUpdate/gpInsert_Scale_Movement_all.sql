@@ -1412,5 +1412,4 @@ from
 -- and MovementItem.Id = 41798151
 ) as tmp
 where tmp.Id =  MovementItem.Id
-
 */

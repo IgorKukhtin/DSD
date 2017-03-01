@@ -111,8 +111,11 @@ BEGIN
            , MovementDate_ServiceDate_Service.ValueData AS ServiceDate_Service
            , MovementString_Comment_Service.ValueData   AS Comment_Service
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
-           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummToPay_Service
-
+           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+             ) :: TFloat AS TotalSummToPay_Service
+           
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id 
                                    AND MovementItem.DescId = zc_MI_Master()
@@ -147,9 +150,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId =  Movement_PersonalService.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChild
-                                    ON MovementFloat_TotalSummChild.MovementId =  Movement_PersonalService.Id
-                                   AND MovementFloat_TotalSummChild.DescId = zc_MovementFloat_TotalSummChild()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
+                                    ON MovementFloat_TotalSummCardSecond.MovementId =  Movement_PersonalService.Id
+                                   AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
 
             LEFT JOIN MovementDate AS MovementDate_ServiceDate_Service
                                    ON MovementDate_ServiceDate_Service.MovementId = Movement_PersonalService.Id
@@ -174,4 +177,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Cash_Personal (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inCashId:= 14462, inJuridicalBasisId:=0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
