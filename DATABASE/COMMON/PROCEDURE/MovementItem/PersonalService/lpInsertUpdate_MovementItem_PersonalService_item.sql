@@ -1,9 +1,5 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService_item()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
@@ -12,17 +8,17 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inPersonalId          Integer   , -- Сотрудники
     IN inisMain              Boolean   , -- Основное место работы
     IN inSummService         TFloat    , -- Сумма начислено
-    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
-    IN inSummCardSecondRecalc    TFloat    , -- Сумма на карточку (БН) для распределения - вторая форма
-    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
+    IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
+    IN inSummCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф.
+    IN inSummNalogRecalc     TFloat    , -- Налоги - удержания с ЗП (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
     IN inSummAdd             TFloat    , -- Сумма премия
 
     IN inSummHoliday         TFloat    , -- Сумма отпускные    
     IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
     IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChildRecalc     TFloat    , -- Сумма алименты (удержание)
-    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторонними юр.л. для распределения
+    IN inSummChildRecalc     TFloat    , -- Алименты - удержание (ввод)
+    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторон. юр.л. (ввод)
     
     IN inComment             TVarChar  , -- 
     IN inInfoMoneyId         Integer   , -- Статьи назначения
@@ -44,7 +40,7 @@ BEGIN
                                                      , inIsMain             := inIsMain
                                                      , inSummService        := inSummService
                                                      , inSummCardRecalc     := inSummCardRecalc
-                                                     , inSummCardSecondRecalc     := inSummCardSecondRecalc
+                                                     , inSummCardSecondRecalc:= inSummCardSecondRecalc
                                                      , inSummNalogRecalc    := inSummNalogRecalc
                                                      , inSummMinus          := inSummMinus
                                                      , inSummAdd            := inSummAdd

@@ -311,7 +311,7 @@ BEGIN
                WHERE inisInMCS = FALSE
         ;
   
-       -- Goods_list - PriceId
+        -- Goods_list - PriceId
        UPDATE tmpGoods_list SET PriceId = Price_Goods.ObjectId
        FROM ObjectLink AS Price_Goods, ObjectLink AS Price_Unit
        WHERE Price_Goods.ChildObjectId = tmpGoods_list.GoodsId

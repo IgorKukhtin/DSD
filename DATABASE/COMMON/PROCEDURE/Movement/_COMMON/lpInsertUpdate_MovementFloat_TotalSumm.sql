@@ -28,20 +28,19 @@ $BODY$
   DECLARE vbOperSumm_PVAT_original TFloat;
   DECLARE vbOperSumm_Inventory TFloat;
 
-  DECLARE vbTotalSummToPay   TFloat;
-  DECLARE vbTotalSummService TFloat;
-  DECLARE vbTotalSummCard    TFloat;
-  DECLARE vbTotalSummCardSecond    TFloat;
-  DECLARE vbTotalSummNalog   TFloat;
-  DECLARE vbTotalSummMinus   TFloat;
-  DECLARE vbTotalSummAdd     TFloat;
-  DECLARE vbTotalSummCardRecalc  TFloat;
-  DECLARE vbTotalSummCardSecondRecalc  TFloat;
-  DECLARE vbTotalSummNalogRecalc TFloat;
-  DECLARE vbTotalSummSocialIn    TFloat;
-  DECLARE vbTotalSummSocialAdd   TFloat;
-  DECLARE vbTotalSummChild       TFloat;
-
+  DECLARE vbTotalSummToPay            TFloat;
+  DECLARE vbTotalSummService          TFloat;
+  DECLARE vbTotalSummCard             TFloat;
+  DECLARE vbTotalSummCardRecalc       TFloat;
+  DECLARE vbTotalSummCardSecondRecalc TFloat;
+  DECLARE vbTotalSummCardSecond       TFloat;
+  DECLARE vbTotalSummNalog            TFloat;
+  DECLARE vbTotalSummNalogRecalc      TFloat;
+  DECLARE vbTotalSummMinus            TFloat;
+  DECLARE vbTotalSummAdd              TFloat;
+  DECLARE vbTotalSummSocialIn         TFloat;
+  DECLARE vbTotalSummSocialAdd        TFloat;
+  DECLARE vbTotalSummChild            TFloat;
   DECLARE vbTotalSummChildRecalc      TFloat;
   DECLARE vbTotalSummMinusExt         TFloat;
   DECLARE vbTotalSummMinusExtRecalc   TFloat;
@@ -636,23 +635,23 @@ BEGIN
 
                              , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
 
-                             , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))   AS OperSumm_ToPay
-                             , SUM (COALESCE (MIFloat_SummService.ValueData, 0)) AS OperSumm_Service
-                             , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))    AS OperSumm_Card
+                             , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))         AS OperSumm_ToPay
+                             , SUM (COALESCE (MIFloat_SummService.ValueData, 0))       AS OperSumm_Service
+                             , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))          AS OperSumm_Card
                              , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))    AS OperSumm_CardSecond
-                             , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))   AS OperSumm_Nalog
-                             , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))   AS OperSumm_Minus
-                             , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))     AS OperSumm_Add
+                             , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))         AS OperSumm_Nalog
+                             , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))         AS OperSumm_Minus
+                             , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))           AS OperSumm_Add
 
-                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))   AS OperSumm_CardRecalc
+                             , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))         AS OperSumm_CardRecalc
                              , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0))   AS OperSumm_CardSecondRecalc
-                             , SUM (COALESCE (MIFloat_SummNalogRecalc.ValueData, 0))  AS OperSumm_NalogRecalc
-                             , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS OperSumm_SocialIn
-                             , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS OperSumm_SocialAdd
-                             , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS OperSumm_Child
-                             , SUM (COALESCE (MIFloat_SummChildRecalc.ValueData, 0))  AS OperSumm_ChildRecalc
-                             , SUM (COALESCE (MIFloat_SummMinusExt.ValueData, 0))         AS OperSumm_MinusExt
-                             , SUM (COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0))   AS OperSumm_MinusExtRecalc
+                             , SUM (COALESCE (MIFloat_SummNalogRecalc.ValueData, 0))        AS OperSumm_NalogRecalc
+                             , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))           AS OperSumm_SocialIn
+                             , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))          AS OperSumm_SocialAdd
+                             , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))              AS OperSumm_Child
+                             , SUM (COALESCE (MIFloat_SummChildRecalc.ValueData, 0))        AS OperSumm_ChildRecalc
+                             , SUM (COALESCE (MIFloat_SummMinusExt.ValueData, 0))           AS OperSumm_MinusExt
+                             , SUM (COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0))     AS OperSumm_MinusExtRecalc
 
                              , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))        AS OperSumm_Transport
                              , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))     AS OperSumm_TransportAdd
@@ -834,34 +833,36 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummToPay(), inMovementId, vbTotalSummToPay);
          -- Сохранили свойство <Итого Сумма начислено>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummService(), inMovementId, vbTotalSummService);
-         -- Сохранили свойство <Итого Сумма на карточку (БН)>
+
+         -- Сохранили свойство <Карта БН - 1ф.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCard(), inMovementId, vbTotalSummCard);
-         -- Сохранили свойство <Итого Сумма на карточку (БН) Ф2>
+         -- Сохранили свойство <Карта БН - 2ф.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardSecond(), inMovementId, vbTotalSummCardSecond);
-         -- Сохранили свойство <Итого Сумма налогов - удержания с сотрудника>
+         -- Сохранили свойство <Налоги - удержания с ЗП>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalog(), inMovementId, vbTotalSummNalog);
          -- Сохранили свойство <Итого Сумма удержания>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
          -- Сохранили свойство <Итого Сумма премия>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
-         -- Сохранили свойство <Итого Сумма на карточку (БН) для распределения>
+         -- Сохранили свойство <Карта БН (ввод) - 1ф.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardRecalc(), inMovementId, vbTotalSummCardRecalc);
-         -- Сохранили свойство <Итого Сумма на карточку (БН) для распределения Ф2>
+         -- Сохранили свойство <Карта БН (ввод) - 2ф.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCardSecondRecalc(), inMovementId, vbTotalSummCardSecondRecalc);
-         -- Сохранили свойство <Итого Сумма налогов - удержания с сотрудника для распределения>
+         -- Сохранили свойство <Налоги - удержания с ЗП (ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummNalogRecalc(), inMovementId, vbTotalSummNalogRecalc);
+
          -- Сохранили свойство <Итого Сумма соц выплаты (из зарплаты)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSocialIn(), inMovementId, vbTotalSummSocialIn);
          -- Сохранили свойство <Итого Сумма соц выплаты (доп. к зарплате)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummSocialAdd(), inMovementId, vbTotalSummSocialAdd);
-         -- Сохранили свойство <Итого Сумма алименты (удержание)>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChild(), inMovementId, vbTotalSummChild);
 
-         -- Сохранили свойство <Итого Сумма алименты (удержание) ввод>
+         -- Сохранили свойство <Алименты>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChild(), inMovementId, vbTotalSummChild);
+         -- Сохранили свойство <Алименты (ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChildRecalc(), inMovementId, vbTotalSummChildRecalc);
-         -- Сохранили свойство <Итого Сумма Удержания сторонними юр.л.>
+         -- Сохранили свойство < Удержания сторонними юр.л.>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinusExt(), inMovementId, vbTotalSummMinusExt);
-         -- Сохранили свойство <Итого Сумма Удержания сторонними юр.л. (ввод)>
+         -- Сохранили свойство < Удержания сторонними юр.л. (ввод) >
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinusExtRecalc(), inMovementId, vbTotalSummMinusExtRecalc);
 
          -- Сохранили свойство <Итого Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)>

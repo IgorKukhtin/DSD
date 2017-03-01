@@ -56,7 +56,7 @@ BEGIN
     
     --
     CREATE TEMP TABLE tmpPrice  (UnitId Integer, GoodsId Integer, MCSValue TFloat, PercentMarkup TFloat, isTop Boolean, Fix Boolean) ON COMMIT DROP;  
-    INSERT INTO tmpPrice (UnitId, GoodsId, PercentMarkup, isTop, Fix)  
+    INSERT INTO tmpPrice (UnitId, GoodsId, MCSValue, PercentMarkup, isTop, Fix)  
                     SELECT ObjectLink_Price_Unit.ChildObjectId    AS UnitId
                        , Price_Goods.ChildObjectId                AS GoodsId     
                        , MCS_Value.ValueData                      AS MCSValue
@@ -77,7 +77,7 @@ BEGIN
                                              ON Price_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
                                             AND Price_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()  
                        LEFT JOIN ObjectFloat AS MCS_Value
-                                             ON MCS_Value.ObjectId = Object_Price.Id
+                                             ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
                                             AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()                                          
                        LEFT JOIN ObjectBoolean AS Price_Fix
                                                ON Price_Fix.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -133,7 +133,8 @@ BEGIN
              AND MIContainer.OperDate < DATE_TRUNC('day', CURRENT_DATE - 1)   
              AND COALESCE (MovementBoolean_NotMCS.ValueData, FALSE) = FALSE
            GROUP BY MIContainer.ObjectId_analyzer   
-                  , DATE_PART ('DAY', inStartDate - MIContainer.OperDate) ;
+                  , DATE_PART ('DAY', CURRENT_DATE - MIContainer.OperDate)
+                   ;
        
         
     UPDATE tmp_SoldGoodsOneDay AS DST SET 

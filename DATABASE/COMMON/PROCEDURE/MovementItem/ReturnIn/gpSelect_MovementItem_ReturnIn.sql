@@ -706,6 +706,7 @@ BEGIN
                                   OR tmpMIPromo.GoodsKindId     = 0)
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpResult.GoodsId
                               AND (tmpPromo.GoodsKindId = tmpResult.GoodsKindId OR tmpPromo.GoodsKindId = 0)
+                              AND 1 = 0 -- !!!отключил!!!
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpResult.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpResult.GoodsKindId

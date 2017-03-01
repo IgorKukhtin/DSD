@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -431
   ExplicitWidth = 1237
   ExplicitHeight = 439
   PixelsPerInch = 96
@@ -577,10 +576,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Width = 1221
     ExplicitWidth = 1221
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 42736d
     end
     object cbIsServiceDate: TcxCheckBox
       Left = 405

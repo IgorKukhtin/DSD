@@ -95,13 +95,15 @@ BEGIN
                                                         , inIsMain             := COALESCE (gpSelect.IsMain, tmpPersonal.IsMain)
                                                         , inSummService        := COALESCE (gpSelect.SummService, 0)
                                                         , inSummCardRecalc     := COALESCE (inSummCardRecalc1, 0) + COALESCE (inSummCardRecalc2, 0)
+                                                        , inSummCardSecondRecalc:= 0
                                                         , inSummNalogRecalc    := COALESCE (inSummNalogRecalc, 0)
                                                         , inSummMinus          := COALESCE (gpSelect.SummMinus, 0)
                                                         , inSummAdd            := COALESCE (gpSelect.SummAdd, 0)
                                                         , inSummHoliday        := COALESCE (gpSelect.SummHoliday, 0)
                                                         , inSummSocialIn       := COALESCE (gpSelect.SummSocialIn, 0)
                                                         , inSummSocialAdd      := COALESCE (gpSelect.SummSocialAdd, 0)
-                                                        , inSummChild          := COALESCE (gpSelect.SummChild, 0)
+                                                        , inSummChildRecalc    := COALESCE (gpSelect.SummChildRecalc, 0)
+                                                        , inSummMinusExtRecalc := COALESCE (gpSelect.SummMinusExtRecalc, 0)
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
                                                         , inUnitId             := tmpPersonal.UnitId

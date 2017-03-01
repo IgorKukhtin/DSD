@@ -236,11 +236,11 @@ inherited PersonalServiceJournalChoiceForm: TPersonalServiceJournalChoiceForm
     ExplicitWidth = 913
     inherited deStart: TcxDateEdit
       Left = 103
-      EditValue = 42005d
+      EditValue = 42736d
       ExplicitLeft = 103
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited cxLabel2: TcxLabel
       Left = 198

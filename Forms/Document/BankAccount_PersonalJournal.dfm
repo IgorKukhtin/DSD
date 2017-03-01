@@ -5,7 +5,6 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 998
-  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -187,10 +186,10 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
     ExplicitWidth = 982
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited cxLabel1: TcxLabel
       Top = 7
@@ -224,12 +223,12 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
       Width = 200
     end
     object cxLabel27: TcxLabel
-      Left = 728
+      Left = 722
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
     end
     object edJuridicalBasis: TcxButtonEdit
-      Left = 827
+      Left = 800
       Top = 5
       Properties.Buttons = <
         item
@@ -238,7 +237,7 @@ inherited BankAccount_PersonalJournalForm: TBankAccount_PersonalJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 155
+      Width = 150
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

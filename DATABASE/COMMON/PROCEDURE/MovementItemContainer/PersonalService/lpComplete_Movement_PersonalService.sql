@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService (Integer, Integer);
 CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inUserId            Integer    -- Пользователь
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -123,7 +123,7 @@ BEGIN
                                                                                    AND Object_Personal.isErased = FALSE
                                                LEFT JOIN ObjectDate AS ObjectDate_DateOut
                                                                     ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
-                                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                                                                   AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()
                                                LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
                                                                     ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                                    AND ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
@@ -162,7 +162,7 @@ BEGIN
                                                      AND MILO_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
                 WHERE tmpMI.PersonalId                  <> tmpPersonal.PersonalId
                    OR tmpPersonal.PositionId            <> COALESCE (MILO_Position.ObjectId, 0)
-                   OR tmpPersonal.UnitId                <> COALESCE (MILO_Unit.ObjectId, 0) 
+                   OR tmpPersonal.UnitId                <> COALESCE (MILO_Unit.ObjectId, 0)
                    OR tmpPersonal.PersonalServiceListId <> COALESCE (MILO_PersonalServiceList.ObjectId, 0)
                ) AS tmp;
      END IF;
@@ -306,7 +306,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'В документе не определен <Сотрудник>. Проведение невозможно.';
      END IF;
-   
+
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
@@ -325,7 +325,79 @@ BEGIN
                          , AnalyzerId, ObjectIntId_Analyzer
                          , IsActive, IsMaster
                           )
-        -- 1.2.1. ОПиУ по ЗП
+        -- 1.2.1. ОПиУ по ЗП (кроме перевыставления и Учредителя)
+        WITH tmpMI_find AS (SELECT _tmpItem.*
+                                 , MIF.DescId    AS DescId_find
+                                 , MIF.ValueData AS OperSumm_find
+                            FROM _tmpItem
+                                 INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = _tmpItem.MovementItemId
+                                                                    AND MIF.DescId IN (zc_MIFloat_SummChild()
+                                                                                     , zc_MIFloat_SummMinusExt()
+                                                                                      )
+                            
+                            WHERE MIF.ValueData <> 0
+                           )
+           ,  tmpMI_re AS (SELECT tmpMI_find.*, -1 * tmpMI_find.OperSumm_find AS OperSumm_re
+                                , CASE WHEN tmpMI_find.DescId_find = zc_MIFloat_SummChild()    THEN zc_Enum_InfoMoney_60102() -- ЗП - Алименты
+                                       WHEN tmpMI_find.DescId_find = zc_MIFloat_SummMinusExt() THEN zc_Enum_InfoMoney_60104() -- ЗП - Удержания сторон. юр.л.
+                                  END AS InfoMoneyId_re
+                           FROM tmpMI_find
+                          UNION ALL
+                           SELECT tmpMI_find.*, 1 * tmpMI_find.OperSumm_find AS OperSumm_re
+                                , zc_Enum_InfoMoney_60101() AS InfoMoneyId_re -- ЗП - ЗП
+                           FROM tmpMI_find
+                          )
+        -- результат
+        SELECT tmpMI_re.MovementDescId
+             , tmpMI_re.OperDate
+             , tmpMI_re.ObjectId
+             , tmpMI_re.ObjectDescId
+             , tmpMI_re.OperSumm_re AS OperSumm
+             , tmpMI_re.MovementItemId
+
+             , 0 AS ContainerId                                                     -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения
+             , tmpMI_re.InfoMoneyGroupId
+               -- Управленческие назначения
+             , tmpMI_re.InfoMoneyDestinationId
+               -- Управленческие статьи назначения
+             , tmpMI_re.InfoMoneyId_re
+
+               -- Бизнес Баланс: из какой кассы будет выплачено
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: из какой кассы будет выплачено
+             , tmpMI_re.JuridicalId_Basis
+
+             , tmpMI_re.UnitId
+             , tmpMI_re.PositionId
+             , tmpMI_re.PersonalServiceListId
+
+               -- Филиал Баланс: всегда по подразделению !!!в кассе и р/счете - делать аналогично!!!
+             , tmpMI_re.BranchId_Balance
+               -- Филиал ОПиУ: не используется !!!в кассе и р/счете - делать аналогично!!!
+             , tmpMI_re.BranchId_ProfitLoss
+
+               -- Месяц начислений - есть
+             , tmpMI_re.ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , tmpMI_re.AnalyzerId           -- не надо, т.к. это обычная ЗП
+             , tmpMI_re.ObjectIntId_Analyzer -- надо, сохраним "оригинал"
+
+             , TRUE  AS IsActive -- всегда такая
+             , FALSE AS IsMaster
+        FROM tmpMI_re
+
+       UNION ALL
+        -- 1.2.1. ОПиУ по ЗП (кроме перевыставления и Учредителя)
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , 0 AS ObjectId
@@ -392,7 +464,7 @@ BEGIN
         WHERE ObjectLink_Unit_Contract.ChildObjectId IS NULL
           AND Object_ObjectTo.Id IS NULL
        UNION ALL
-         -- 1.2.2. Перевыставление затрат на Юр Лицо
+         -- 1.2.2. Перевыставление затрат на Юр Лицо - по ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, 0) AS ObjectId
@@ -462,7 +534,7 @@ BEGIN
           AND Object_ObjectTo.Id IS NULL
 
        UNION ALL
-         -- 1.2.3. Перевыставление затрат на Учредителя
+         -- 1.2.3. Перевыставление затрат на Учредителя - по ЗП
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
              , Object_ObjectTo.Id     AS ObjectId
@@ -760,7 +832,7 @@ BEGIN
                                          AND MIFloat_SummSocialIn.DescId = zc_MIFloat_SummSocialIn()
               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                           ON MIFloat_SummSocialAdd.MovementItemId = _tmpItem.MovementItemId
-                                         AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
+                                         AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
               LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60103() -- Заработная плата + Алименты
        ;
 */
@@ -774,7 +846,7 @@ BEGIN
                                 , inDescId     := zc_Movement_PersonalService()
                                 , inUserId     := inUserId
                                  );
-     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - НЕ надо "минус" <Сумма налогов - удержания с ЗП>
+     -- 6.1. ФИНИШ - пересчитали сумму к выплате (если есть "другие" расчеты) - ДА надо "минус" <Налоги - удержания с ЗП> И <Алименты - удержания> И <Удержания сторонними юр.л.> 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummToPay(), tmpMovement.MovementItemId, -1 * OperSumm
                                                                                                  + tmpMovement.SummSocialAdd
                                                                                                  - tmpMovement.SummTransport
@@ -782,6 +854,10 @@ BEGIN
                                                                                                  + tmpMovement.SummTransportAddLong
                                                                                                  + tmpMovement.SummTransportTaxi
                                                                                                  - tmpMovement.SummPhone
+
+                                                                                                 - tmpMovement.SummNalog
+                                                                                                 - tmpMovement.SummChild
+                                                                                                 - tmpMovement.SummMinusExt
                                               )
              -- Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummTransport()       , tmpMovement.MovementItemId, tmpMovement.SummTransport)
@@ -798,11 +874,23 @@ BEGIN
                                , _tmpItem.ObjectId
                                , _tmpItem.ObjectIntId_Analyzer
                                , COALESCE (_tmpItem.OperSumm, 0) AS OperSumm
-                               , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) as SummSocialAdd
+                               , COALESCE (MIFloat_SummSocialAdd.ValueData, 0) AS SummSocialAdd
+                               , COALESCE (MIFloat_SummNalog.ValueData, 0)     AS SummNalog
+                               , COALESCE (MIFloat_SummChild.ValueData, 0)     AS SummChild
+                               , COALESCE (MIFloat_SummMinusExt.ValueData, 0)  AS SummMinusExt
                          FROM MovementItem
                               LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                                           ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                                          AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
+                                                          ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummChild
+                                                          ON MIFloat_SummChild.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                              LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
+                                                          ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
                               LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = MovementItem.Id
                                                 AND _tmpItem.IsMaster       = TRUE
                          WHERE MovementItem.MovementId = inMovementId
@@ -823,6 +911,9 @@ BEGIN
            SELECT tmpMI.MovementItemId
                 , tmpMI.OperSumm
                 , tmpMI.SummSocialAdd
+                , tmpMI.SummNalog
+                , tmpMI.SummChild
+                , tmpMI.SummMinusExt
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransport        ELSE 0 END), 0) AS SummTransport
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAdd     ELSE 0 END), 0) AS SummTransportAdd
                 , COALESCE (SUM (CASE WHEN tmpMI.ObjectId = tmpMI.ObjectIntId_Analyzer THEN tmpMIContainer.SummTransportAddLong ELSE 0 END), 0) AS SummTransportAddLong
@@ -833,6 +924,9 @@ BEGIN
            GROUP BY tmpMI.MovementItemId
                   , tmpMI.OperSumm
                   , tmpMI.SummSocialAdd
+                  , tmpMI.SummNalog
+                  , tmpMI.SummChild
+                  , tmpMI.SummMinusExt
           ) AS tmpMovement
            ;
 

@@ -3,7 +3,6 @@ inherited Report_PersonalForm: TReport_PersonalForm
   ClientHeight = 555
   ClientWidth = 1028
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -255
   ExplicitWidth = 1044
   ExplicitHeight = 590
   PixelsPerInch = 96
@@ -539,14 +538,14 @@ inherited Report_PersonalForm: TReport_PersonalForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 60
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       ExplicitLeft = 60
     end
     inherited deEnd: TcxDateEdit
       Left = 60
       Top = 30
-      EditValue = 42005d
+      EditValue = 42736d
       Properties.SaveTime = False
       ExplicitLeft = 60
       ExplicitTop = 30

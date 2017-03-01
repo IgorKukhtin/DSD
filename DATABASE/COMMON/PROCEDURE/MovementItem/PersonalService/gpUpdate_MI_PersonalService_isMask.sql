@@ -154,7 +154,7 @@ BEGIN
                                                         , inisMain             := isMain
                                                         , inSummService        := SummService
                                                         , inSummCardRecalc     := SummCardRecalc
-                                                        , inSummCardSecondRecalc     := SummCardSecondRecalc
+                                                        , inSummCardSecondRecalc:= SummCardSecondRecalc
                                                         , inSummNalogRecalc    := SummNalogRecalc
                                                         , inSummMinus          := SummMinus
                                                         , inSummAdd            := SummAdd

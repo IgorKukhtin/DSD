@@ -1,48 +1,42 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalService()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
-
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPersonalId          Integer   , -- Сотрудники
-    IN inisMain              Boolean   , -- Основное место работы
-   OUT outAmount             TFloat    , -- ***Сумма (затраты)
-   OUT outAmountToPay        TFloat    , -- ***Сумма к выплате (итог)
-   OUT outAmountCash         TFloat    , -- ***Сумма к выплате из кассы
-   OUT outSummTransport      TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
-   OUT outSummTransportAdd   TFloat    , -- ***Сумма командировочные (доплата)
-   OUT outSummTransportAddLong TFloat  , -- ***Сумма дальнобойные (доплата, тоже командировочные)
-   OUT outSummTransportTaxi  TFloat    , -- ***Сумма на такси (доплата)
-   OUT outSummPhone          TFloat    , -- ***Сумма Моб.связь (удержание)
-    IN inSummService         TFloat    , -- Сумма начислено
-    IN inSummCardRecalc      TFloat    , -- Сумма на карточку (БН) для распределения
-    IN inSummCardSecondRecalc      TFloat    , -- Сумма на карточку (БН) для распределения - второая  форма 
-    IN inSummNalogRecalc     TFloat    , -- Сумма Налоги - удержания с ЗП для распределения
-    IN inSummMinus           TFloat    , -- Сумма удержания
-    IN inSummAdd             TFloat    , -- Сумма премия
+ INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId             Integer   , -- Ключ объекта <Документ>
+    IN inPersonalId             Integer   , -- Сотрудники
+    IN inisMain                 Boolean   , -- Основное место работы
+   OUT outAmount                TFloat    , -- ***Сумма (затраты)
+   OUT outAmountToPay           TFloat    , -- ***Сумма к выплате (итог)
+   OUT outAmountCash            TFloat    , -- ***Сумма к выплате из кассы
+   OUT outSummTransport         TFloat    , -- ***Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)
+   OUT outSummTransportAdd      TFloat    , -- ***Сумма командировочные (доплата)
+   OUT outSummTransportAddLong  TFloat    , -- ***Сумма дальнобойные (доплата, тоже командировочные)
+   OUT outSummTransportTaxi     TFloat    , -- ***Сумма на такси (доплата)
+   OUT outSummPhone             TFloat    , -- ***Сумма Моб.связь (удержание)
+    IN inSummService            TFloat    , -- Сумма начислено
+    IN inSummCardRecalc         TFloat    , -- Карта БН (ввод) - 1ф.
+    IN inSummCardSecondRecalc   TFloat    , -- Карта БН (ввод) - 2ф.
+    IN inSummNalogRecalc        TFloat    , -- Налоги - удержания с ЗП (ввод)
+    IN inSummMinus              TFloat    , -- Сумма удержания
+    IN inSummAdd                TFloat    , -- Сумма премия
 
-    IN inSummHoliday         TFloat    , -- Сумма отпускные    
-    IN inSummSocialIn        TFloat    , -- Сумма соц выплаты (из зарплаты)
-    IN inSummSocialAdd       TFloat    , -- Сумма соц выплаты (доп. зарплате)
-    IN inSummChildRecalc     TFloat    , -- Сумма алименты (удержание) (ввод)
-    IN inSummMinusExtRecalc  TFloat    , -- Удержания сторонними юр.л. для распределения
+    IN inSummHoliday            TFloat    , -- Сумма отпускные    
+    IN inSummSocialIn           TFloat    , -- Сумма соц выплаты (из зарплаты)
+    IN inSummSocialAdd          TFloat    , -- Сумма соц выплаты (доп. зарплате)
+    IN inSummChildRecalc        TFloat    , -- Алименты - удержание (ввод)
+    IN inSummMinusExtRecalc     TFloat    , -- Удержания сторон. юр.л. (ввод)
     
-    IN inComment             TVarChar  , -- 
-    IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUnitId              Integer   , -- Подразделение
-    IN inPositionId          Integer   , -- Должность
-    IN inMemberId            Integer   , -- Физ лицо (кому начисляют алименты)
-    IN inPersonalServiceListId   Integer   , -- Ведомость начисления
-    IN inUserId              Integer     -- пользователь
-)
-RETURNS RECORD AS
+    IN inComment                TVarChar  , -- 
+    IN inInfoMoneyId            Integer   , -- Статьи назначения
+    IN inUnitId                 Integer   , -- Подразделение
+    IN inPositionId             Integer   , -- Должность
+    IN inMemberId               Integer   , -- Физ лицо (кому начисляют алименты)
+    IN inPersonalServiceListId  Integer   , -- Ведомость начисления
+    IN inUserId                 Integer     -- пользователь
+)                               
+RETURNS RECORD AS               
 $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbAccessKeyId Integer;
@@ -88,11 +82,23 @@ BEGIN
      THEN
          IF inSummCardRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Карточка БН (ввод)> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 1ф.> заполняется только для Ведомости БН.';
+         END IF;
+         IF inSummCardSecondRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Карта БН (ввод) - 2ф.> заполняется только для Ведомости БН.';
          END IF;
          IF inSummNalogRecalc <> 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Поле <Налоги - удержания с ЗП (ввод)> заполняется только для Ведомости БН.';
+             RAISE EXCEPTION 'Ошибка.Поле <Налоги - удержания (ввод)> заполняется только для Ведомости БН.';
+         END IF;
+         IF inSummChildRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Алименты - удержание (ввод)> заполняется только для Ведомости БН.';
+         END IF;
+         IF inSummMinusExtRecalc <> 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Поле <Удержания сторон. юр.л. (ввод)> заполняется только для Ведомости БН.';
          END IF;
      END IF;
 
@@ -159,18 +165,22 @@ BEGIN
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0); -- - COALESCE (inSummSocialIn, 0);
      -- рассчитываем сумму к выплате
-     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummHoliday, 0)
+     outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummSocialAdd, 0)
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
-                      -- "минус" <Сумма налогов - удержания с ЗП>
+                      -- "минус" <Налоги - удержания с ЗП>
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummNalog()), 0)
+                      -- "минус" <Алименты - удержание>
+                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChild()), 0)
+                      -- "минус" <Удержания сторон. юр.л.>
+                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummMinusExt()), 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
      outAmountCash:= outAmountToPay
-                     -- "минус" <Сумма алименты>
-                   - COALESCE (inSummChildRecalc, 0)
-                     -- "минус" <Сумма на карточку (БН)>
+                     -- "минус" <Карта БН - 1ф.>
                    - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCard()), 0)
+                     -- "минус" <Карта БН - 2ф.>
+                   - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCardSecond()), 0)
                     ;
 
      -- определяется признак Создание/Корректировка

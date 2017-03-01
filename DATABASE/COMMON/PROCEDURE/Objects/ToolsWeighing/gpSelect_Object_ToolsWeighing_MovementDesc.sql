@@ -370,4 +370,4 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc (Integer, TVarChar) OW
 
 -- тест
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (TRUE, 201, zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (FALSE, 1, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (FALSE, 201, zfCalc_UserAdmin())

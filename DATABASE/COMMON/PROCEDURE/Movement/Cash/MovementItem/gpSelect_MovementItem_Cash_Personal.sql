@@ -15,8 +15,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , PositionId Integer, PositionName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , Amount TFloat
-             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
-             , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat
+             , SummService TFloat, SummToPay_cash TFloat, SummToPay TFloat, SummCard TFloat, SummCardSecond TFloat, SummNalog TFloat, SummMinus TFloat, SummAdd TFloat, SummHoliday TFloat
+             , SummSocialIn TFloat, SummSocialAdd TFloat, SummChild TFloat, SummMinusExt TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_current TFloat, Amount_avance TFloat, Amount_service TFloat
              , SummRemains TFloat
@@ -75,9 +75,13 @@ BEGIN
                                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
                      )
               , tmpParent AS (SELECT SUM (COALESCE (MIFloat_SummService.ValueData, 0))      AS SummService
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0) - COALESCE (MIFloat_SummCard.ValueData, 0) - COALESCE (MIFloat_SummChild.ValueData, 0)) AS SummToPay_cash
-                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0) - COALESCE (MIFloat_SummNalog.ValueData, 0)) AS SummToPay
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0)
+                                        - COALESCE (MIFloat_SummCard.ValueData, 0)
+                                        - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+                                         ) AS SummToPay_cash
+                                   , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))        AS SummToPay
                                    , SUM (COALESCE (MIFloat_SummCard.ValueData, 0))         AS SummCard
+                                   , SUM (COALESCE (MIFloat_SummCardSecond.ValueData, 0))   AS SummCardSecond
                                    , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))        AS SummNalog
                                    , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))        AS SummMinus
                                    , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))          AS SummAdd
@@ -85,6 +89,7 @@ BEGIN
                                    , SUM (COALESCE (MIFloat_SummSocialIn.ValueData, 0))     AS SummSocialIn
                                    , SUM (COALESCE (MIFloat_SummSocialAdd.ValueData, 0))    AS SummSocialAdd
                                    , SUM (COALESCE (MIFloat_SummChild.ValueData, 0))        AS SummChild
+                                   , SUM (COALESCE (MIFloat_SummMinusExt.ValueData, 0))     AS SummMinusExt
                                    , SUM (COALESCE (MIFloat_SummTransport.ValueData, 0))        AS SummTransport
                                    , SUM (COALESCE (MIFloat_SummTransportAdd.ValueData, 0))     AS SummTransportAdd
                                    , SUM (COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)) AS SummTransportAddLong
@@ -121,6 +126,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummCard
                                                                ON MIFloat_SummCard.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecond
+                                                               ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummNalog
                                                                ON MIFloat_SummNalog.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog()
@@ -144,6 +152,9 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummChild
                                                                ON MIFloat_SummChild.MovementItemId = MovementItem.Id
                                                               AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExt
+                                                               ON MIFloat_SummMinusExt.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummMinusExt.DescId = zc_MIFloat_SummMinusExt()
 
                                    LEFT JOIN MovementItemFloat AS MIFloat_SummTransport
                                                                ON MIFloat_SummTransport.MovementItemId = MovementItem.Id
@@ -239,6 +250,7 @@ BEGIN
                                    , tmpParent.SummToPay_cash
                                    , tmpParent.SummToPay
                                    , tmpParent.SummCard
+                                   , tmpParent.SummCardSecond
                                    , tmpParent.SummNalog
                                    , tmpParent.SummMinus
                                    , tmpParent.SummAdd
@@ -246,6 +258,7 @@ BEGIN
                                    , tmpParent.SummSocialIn
                                    , tmpParent.SummSocialAdd
                                    , tmpParent.SummChild
+                                   , tmpParent.SummMinusExt
                                    , tmpParent.SummTransport
                                    , tmpParent.SummTransportAdd
                                    , tmpParent.SummTransportAddLong
@@ -266,6 +279,7 @@ BEGIN
                                    , tmpService.SummToPay_cash
                                    , tmpService.SummToPay
                                    , tmpService.SummCard
+                                   , tmpService.SummCardSecond
                                    , tmpService.SummNalog
                                    , tmpService.SummMinus
                                    , tmpService.SummAdd
@@ -273,6 +287,7 @@ BEGIN
                                    , tmpService.SummSocialIn
                                    , tmpService.SummSocialAdd
                                    , tmpService.SummChild
+                                   , tmpService.SummMinusExt
                                    , tmpService.SummTransport
                                    , tmpService.SummTransportAdd
                                    , tmpService.SummTransportAddLong
@@ -316,6 +331,7 @@ BEGIN
             , tmpData.SummToPay_cash   :: TFloat AS SummToPay_cash
             , tmpData.SummToPay        :: TFloat AS SummToPay
             , tmpData.SummCard         :: TFloat AS SummCard
+            , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
             , tmpData.SummNalog        :: TFloat AS SummNalog
             , tmpData.SummMinus        :: TFloat AS SummMinus
             , tmpData.SummAdd          :: TFloat AS SummAdd
@@ -323,6 +339,7 @@ BEGIN
             , tmpData.SummSocialIn     :: TFloat AS SummSocialIn
             , tmpData.SummSocialAdd    :: TFloat AS SummSocialAdd
             , tmpData.SummChild        :: TFloat AS SummChild
+            , tmpData.SummMinusExt     :: TFloat AS SummMinusExt
             , tmpData.SummTransport        :: TFloat AS SummTransport
             , tmpData.SummTransportAdd     :: TFloat AS SummTransportAdd
             , tmpData.SummTransportAddLong :: TFloat AS SummTransportAddLong

@@ -4,7 +4,6 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -192
   ExplicitWidth = 981
   PixelsPerInch = 96
   TextHeight = 13
@@ -185,10 +184,10 @@ inherited Cash_PersonalJournalForm: TCash_PersonalJournalForm
     ExplicitWidth = 965
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42005d
+      EditValue = 42736d
     end
     inherited cxLabel1: TcxLabel
       Top = 7

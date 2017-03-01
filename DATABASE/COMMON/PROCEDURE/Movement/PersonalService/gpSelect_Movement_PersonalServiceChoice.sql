@@ -58,7 +58,10 @@ BEGIN
            , MovementDate_ServiceDate.ValueData         AS ServiceDate 
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementFloat_TotalSummToPay.ValueData     AS TotalSummToPay
-           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
+           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+             ) :: TFloat AS TotalSummCash
            , MovementFloat_TotalSummService .ValueData  AS TotalSummService 
            , MovementFloat_TotalSummCard.ValueData      AS TotalSummCard
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
@@ -110,6 +113,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummCard
                                     ON MovementFloat_TotalSummCard.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummCard.DescId = zc_MovementFloat_TotalSummCard()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCardSecond
+                                    ON MovementFloat_TotalSummCardSecond.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCardSecond.DescId = zc_MovementFloat_TotalSummCardSecond()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMinus
                                     ON MovementFloat_TotalSummMinus.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMinus.DescId = zc_MovementFloat_TotalSummMinus()

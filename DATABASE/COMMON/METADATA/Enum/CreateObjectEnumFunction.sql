@@ -767,6 +767,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_60101() RETURNS Integer AS $BODY$BE
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_60102() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_60102' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 60103 Заработная плата + Соц. выплаты
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_60103() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_60103' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 60104 Заработная плата + Удержания сторон. юр.л.
+CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_60104() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_60104' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 -- 70101 Капитальные инвестиции + Дома и сооружения
 CREATE OR REPLACE FUNCTION zc_Enum_InfoMoney_70101() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_InfoMoney_70101' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

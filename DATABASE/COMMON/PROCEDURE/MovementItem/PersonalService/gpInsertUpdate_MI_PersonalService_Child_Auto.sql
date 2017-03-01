@@ -186,13 +186,15 @@ BEGIN
                                                                     , inIsMain             := vbIsMain
                                                                     , inSummService        := 0 -- !!!потом зальем сумму!!!
                                                                     , inSummCardRecalc     := 0
+                                                                    , inSummCardSecondRecalc:= 0
                                                                     , inSummNalogRecalc    := 0
                                                                     , inSummMinus          := 0
                                                                     , inSummAdd            := 0
                                                                     , inSummHoliday        := 0
                                                                     , inSummSocialIn       := 0
                                                                     , inSummSocialAdd      := 0
-                                                                    , inSummChild          := 0
+                                                                    , inSummChildRecalc    := 0
+                                                                    , inSummMinusExtRecalc := 0
                                                                     , inComment            := ''
                                                                     , inInfoMoneyId        := vbInfoMoneyId_def
                                                                     , inUnitId             := inUnitId
@@ -285,18 +287,21 @@ BEGIN
                          );
 
        -- обновляем сумму мастера = итого по чайлд
-       PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := COALESCE(vbId_Master,0) ::Integer
+       PERFORM lpInsertUpdate_MovementItem_PersonalService (ioId                 := COALESCE (vbId_Master, 0) ::Integer
                                                           , inMovementId         := vbMovementId
                                                           , inPersonalId         := vbPersonalId
                                                           , inIsMain             := COALESCE(MIBoolean_Main.ValueData,FALSE) ::Boolean
                                                           , inSummService        := vbSummService ::TFloat
-                                                          , inSummCardRecalc     := COALESCE(MIFloat_SummCard.ValueData,0) ::TFloat--inSummCardRecalc
-                                                          , inSummMinus          := COALESCE(MIFloat_SummMinus.ValueData,0) ::TFloat
-                                                          , inSummAdd            := COALESCE(MIFloat_SummAdd.ValueData,0) ::TFloat
-                                                          , inSummHoliday        := COALESCE(MIFloat_SummHoliday.ValueData,0) ::TFloat
-                                                          , inSummSocialIn       := COALESCE(MIFloat_SummSocialIn.ValueData,0) ::TFloat
-                                                          , inSummSocialAdd      := COALESCE(MIFloat_SummSocialAdd.ValueData,0) ::TFloat
-                                                          , inSummChild          := COALESCE(MIFloat_SummChild.ValueData,0) ::TFloat
+                                                          , inSummCardRecalc     := COALESCE (MIFloat_SummCardRecalc.ValueData, 0)
+                                                          , inSummCardSecondRecalc:= COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)
+                                                          , inSummNalogRecalc    := COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)
+                                                          , inSummMinus          := COALESCE (MIFloat_SummMinus.ValueData, 0)
+                                                          , inSummAdd            := COALESCE (MIFloat_SummAdd.ValueData, 0)
+                                                          , inSummHoliday        := COALESCE (MIFloat_SummHoliday.ValueData, 0)
+                                                          , inSummSocialIn       := COALESCE (MIFloat_SummSocialIn.ValueData, 0)
+                                                          , inSummSocialAdd      := COALESCE (MIFloat_SummSocialAdd.ValueData, 0)
+                                                          , inSummChildRecalc    := COALESCE (MIFloat_SummChildRecalc.ValueData, 0)
+                                                          , inSummMinusExtRecalc := COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)
                                                           , inComment            := ''
                                                           , inInfoMoneyId        := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId             := inUnitId
@@ -306,9 +311,15 @@ BEGIN
                                                           , inUserId             := vbUserId
                                                           ) 
        FROM MovementItem 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummCard
-                                        ON MIFloat_SummCard.MovementItemId = MovementItem.Id
-                                       AND MIFloat_SummCard.DescId = zc_MIFloat_SummCard()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                        ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCardRecalc.DescId = zc_MIFloat_SummCardRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                        ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummNalogRecalc
+                                        ON MIFloat_SummNalogRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummNalogRecalc.DescId = zc_MIFloat_SummNalogRecalc()
             LEFT JOIN MovementItemFloat AS MIFloat_SummMinus
                                         ON MIFloat_SummMinus.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummMinus.DescId = zc_MIFloat_SummMinus()
@@ -324,9 +335,12 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummSocialAdd
                                         ON MIFloat_SummSocialAdd.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
-            LEFT JOIN MovementItemFloat AS MIFloat_SummChild
-                                        ON MIFloat_SummChild.MovementItemId = MovementItem.Id
-                                       AND MIFloat_SummChild.DescId = zc_MIFloat_SummChild()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
+                                        ON MIFloat_SummChildRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
+                                        ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()

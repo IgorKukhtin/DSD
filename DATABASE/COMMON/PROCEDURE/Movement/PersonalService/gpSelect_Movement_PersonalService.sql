@@ -73,8 +73,11 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
            , MovementDate_ServiceDate.ValueData         AS ServiceDate 
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0)) :: TFloat AS TotalSummToPay
-           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0) - COALESCE (MovementFloat_TotalSummNalog.ValueData, 0) - COALESCE (MovementFloat_TotalSummCard.ValueData, 0) - COALESCE (MovementFloat_TotalSummChild.ValueData, 0)) :: TFloat AS TotalSummCash
+           , MovementFloat_TotalSummToPay.ValueData     AS TotalSummToPay
+           , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCard.ValueData, 0)
+            - COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0)
+             ) :: TFloat AS TotalSummCash
            , MovementFloat_TotalSummService.ValueData    AS TotalSummService
            , MovementFloat_TotalSummCard.ValueData       AS TotalSummCard
            , MovementFloat_TotalSummCardSecond.ValueData AS TotalSummCardSecond

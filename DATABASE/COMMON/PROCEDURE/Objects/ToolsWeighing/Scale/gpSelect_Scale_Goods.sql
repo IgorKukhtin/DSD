@@ -108,7 +108,7 @@ BEGIN
                             SELECT inOrderExternalId AS MovementId WHERE vbRetailId = 0
                            )
           , tmpMI_Order2 AS (SELECT MovementItem.ObjectId                                                AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
                                  , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
                                  , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
                                  , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
@@ -145,7 +145,7 @@ BEGIN
                             FROM tmpMI_Order2
                            UNION ALL
                             SELECT Object_Goods.Id AS GoodsId
-                                 , CASE WHEN inIsGoodsComplete = FALSE THEN 0 ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
+                                 , CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId
                                  , 0 AS Amount
                                  , 0 AS Price
                                  , 0 AS CountForPrice
@@ -165,7 +165,7 @@ BEGIN
                               -- AND vbUserId = 5
                            )
        , tmpMI_Weighing AS (SELECT MovementItem.ObjectId                         AS GoodsId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId
                                  , MovementItem.Amount                           AS Amount
                                  , COALESCE (MIFloat_PromoMovement.ValueData, 0) AS MovementId_Promo
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
@@ -321,8 +321,8 @@ BEGIN
     -- 
     INSERT INTO _tmpWord_Goods (GoodsId, GoodsKindId_max, WordList) 
                             SELECT DISTINCT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                                 , ObjectLink_GoodsListSale_GoodsKind.ChildObjectId      AS GoodsKindId_max
-                                 , COALESCE (ObjectString_GoodsKind.ValueData, '')       AS WordList
+                                 , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main()) AS GoodsKindId_max
+                                 , COALESCE (ObjectString_GoodsKind.ValueData, zc_Enum_GoodsKind_Main() :: TVarChar)       AS WordList
                             FROM Object AS Object_GoodsListSale
                                  INNER JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
                                                        ON ObjectLink_GoodsListSale_Partner.ObjectId      = Object_GoodsListSale.Id
@@ -343,6 +343,7 @@ BEGIN
                                  LEFT JOIN ObjectString AS ObjectString_GoodsKind
                                                         ON ObjectString_GoodsKind.ObjectId = Object_GoodsListSale.Id
                                                        AND ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+                                                       AND ObjectString_GoodsKind.ValueData <> '0'
                             WHERE Object_GoodsListSale.DescId   = zc_Object_GoodsListSale()
                               AND Object_GoodsListSale.isErased = FALSE
                            ;
@@ -405,10 +406,10 @@ BEGIN
                            ) AS tmp
                             GROUP BY tmp.GoodsId
                            )
-    , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                                                 AS GoodsId
-                                 , STRING_AGG (COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) :: TVarChar, ',') AS GoodsKindId_List
-                                 , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')                          AS GoodsKindName_List
-                                 , ABS (MIN (COALESCE (CASE WHEN ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0))) AS GoodsKindId_max
+    , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                         AS GoodsId
+                                 , STRING_AGG (COALESCE (Object_GoodsKind.Id, 0) :: TVarChar, ',')         AS GoodsKindId_List
+                                 , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')  AS GoodsKindName_List
+                                 , ABS (MIN (COALESCE (CASE WHEN Object_GoodsKind.Id = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0))) AS GoodsKindId_max
                             FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                  INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -417,7 +418,7 @@ BEGIN
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
                                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
+                                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, zc_Enum_GoodsKind_Main())
                             WHERE ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
                               AND ObjectBoolean_ScaleCeh.ValueData = TRUE
                               AND inMovementId >= 0
@@ -426,9 +427,9 @@ BEGIN
       , tmpGoods AS (SELECT Object_Goods.Id                               AS GoodsId
                           , Object_Goods.ObjectCode                       AS GoodsCode
                           , Object_Goods.ValueData                        AS GoodsName
-                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindId_list,   tmpGoods_Return.WordList)           AS GoodsKindId_list
-                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindName_list, tmpGoods_Return.GoodsKindName_list) AS GoodsKindName_list
-                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindId_max,    tmpGoods_Return.GoodsKindId_max)    AS GoodsKindId_max
+                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindId_list,   COALESCE (tmpGoods_Return.WordList, Object_GoodsKind_Main.Id :: TVarChar))         AS GoodsKindId_list
+                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindName_list, COALESCE (tmpGoods_Return.GoodsKindName_list, Object_GoodsKind_Main.ValueData))    AS GoodsKindName_list
+                          , COALESCE (tmpGoods_ScaleCeh.GoodsKindId_max,    COALESCE (tmpGoods_Return.GoodsKindId_max, Object_GoodsKind_Main.Id))  AS GoodsKindId_max
                           , tmpInfoMoney.InfoMoneyId
                           , tmpInfoMoney.InfoMoneyDestinationId
                      FROM tmpInfoMoney
@@ -440,6 +441,7 @@ BEGIN
                                                      AND Object_Goods.ObjectCode <> 0
                           LEFT JOIN tmpGoods_ScaleCeh ON tmpGoods_ScaleCeh.GoodsId = Object_Goods.Id
                           LEFT JOIN tmpGoods_Return ON tmpGoods_Return.GoodsId = Object_Goods.Id
+                          LEFT JOIN Object AS Object_GoodsKind_Main ON Object_GoodsKind_Main.Id = zc_Enum_GoodsKind_Main()
                      WHERE tmpGoods_Return.GoodsId > 0 OR inMovementId >= 0 OR tmpInfoMoney.isTare = TRUE
                      
                     )
@@ -544,6 +546,18 @@ ALTER FUNCTION gpSelect_Scale_Goods (Boolean, TDateTime, Integer, Integer, Integ
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  30.11.15                                        *
  18.01.15                                        *
+*/
+
+/*
+-- update Object set ValueData = '978932' where Id in (
+-- select * from Object where Id in (
+
+-- select Id
+ select *
+from gpSelect_Object_ToolsWeighing (inSession := '5') as a
+where (namefull  like '%ScaleCeh_201 Movement%'  or namefull  like '%Scale_201 Movement%' )
+   and Name = 'GoodsKindWeighingGroupId'
+-- )
 */
 
 -- тест

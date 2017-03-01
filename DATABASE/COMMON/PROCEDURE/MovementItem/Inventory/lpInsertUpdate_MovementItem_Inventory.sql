@@ -26,7 +26,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
       -- !!!Проверка что элемент один!!!
-      IF EXISTS (SELECT 1
+     /* IF inAmount <> 0 AND inGoodsKindId <> 0
+     AND EXISTS (SELECT 1
                  FROM MovementItem
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -60,7 +61,7 @@ BEGIN
                          , (SELECT CASE WHEN inPartionGoodsDate > zc_DateStart() THEN zfConvert_DateToString (inPartionGoodsDate) ELSE '' END)
                          , (SELECT CASE WHEN inPartionGoods <> '' THEN inPartionGoods ELSE '' END)
                           ;
-      END IF;
+      END IF;*/
 
 
      -- определяется признак Создание/Корректировка
