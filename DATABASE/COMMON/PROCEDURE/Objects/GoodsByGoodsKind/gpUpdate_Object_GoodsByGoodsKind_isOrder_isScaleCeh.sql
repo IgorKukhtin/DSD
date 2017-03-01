@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS  gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh(
  INOUT ioId                  Integer  , -- ключ объекта <Товар>
