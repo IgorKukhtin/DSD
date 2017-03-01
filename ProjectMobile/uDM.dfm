@@ -2,7 +2,7 @@ object DM: TDM
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   Height = 518
-  Width = 722
+  Width = 971
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
     Left = 40
     Top = 97
@@ -43,8 +43,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Const'
     TableName = 'Object_Const'
-    Left = 184
-    Top = 144
+    Left = 584
+    Top = 120
     object tblObject_ConstPaidKindId_First: TIntegerField
       FieldName = 'PaidKindId_First'
     end
@@ -136,8 +136,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Partner'
     TableName = 'Object_Partner'
-    Left = 320
-    Top = 144
+    Left = 720
+    Top = 120
     object tblObject_PartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -197,8 +197,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Juridical'
     TableName = 'Object_Juridical'
-    Left = 184
-    Top = 264
+    Left = 584
+    Top = 240
     object tblObject_JuridicalId: TIntegerField
       FieldName = 'Id'
     end
@@ -229,8 +229,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Route'
     TableName = 'Object_Route'
-    Left = 184
-    Top = 384
+    Left = 584
+    Top = 360
     object tblObject_RouteId: TIntegerField
       FieldName = 'Id'
     end
@@ -249,8 +249,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsGroup'
     TableName = 'Object_GoodsGroup'
-    Left = 184
-    Top = 208
+    Left = 584
+    Top = 184
     object tblObject_GoodsGroupId: TIntegerField
       FieldName = 'Id'
     end
@@ -269,8 +269,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Goods'
     TableName = 'Object_Goods'
-    Left = 320
-    Top = 208
+    Left = 720
+    Top = 184
     object tblObject_GoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -304,8 +304,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsKind'
     TableName = 'Object_GoodsKind'
-    Left = 320
-    Top = 384
+    Left = 720
+    Top = 360
     object tblObject_GoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -324,8 +324,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Measure'
     TableName = 'Object_Measure'
-    Left = 184
-    Top = 448
+    Left = 584
+    Top = 424
     object tblObject_MeasureId: TIntegerField
       FieldName = 'Id'
     end
@@ -344,8 +344,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsLinkGoodsKind'
     TableName = 'Object_GoodsLinkGoodsKind'
-    Left = 320
-    Top = 448
+    Left = 720
+    Top = 424
     object tblObject_GoodsLinkGoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -363,8 +363,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Contract'
     TableName = 'Object_Contract'
-    Left = 184
-    Top = 328
+    Left = 584
+    Top = 304
     object tblObject_ContractId: TIntegerField
       FieldName = 'Id'
     end
@@ -413,8 +413,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_PriceList'
     TableName = 'Object_PriceList'
-    Left = 320
-    Top = 264
+    Left = 720
+    Top = 240
     object tblObject_PriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -431,7 +431,7 @@ object DM: TDM
     object tblObject_PriceListPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
-    object tblObject_PriceListVATPercent: TBooleanField
+    object tblObject_PriceListVATPercent: TFloatField
       FieldName = 'VATPercent'
     end
   end
@@ -439,8 +439,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_PriceListItems'
     TableName = 'Object_PriceListItems'
-    Left = 320
-    Top = 328
+    Left = 720
+    Top = 304
     object tblObject_PriceListItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -492,14 +492,26 @@ object DM: TDM
     object qryPartnerContractName: TWideStringField
       FieldName = 'ContractName'
     end
+    object qryPartnerPRICELISTID: TIntegerField
+      FieldName = 'PRICELISTID'
+    end
+    object qryPartnerPaidKindId: TIntegerField
+      FieldName = 'PaidKindId'
+    end
+    object qryPartnerChangePercent: TFloatField
+      FieldName = 'ChangePercent'
+    end
+    object qryPartnerPriceWithVAT: TBooleanField
+      FieldName = 'PriceWithVAT'
+    end
+    object qryPartnerVATPercent: TFloatField
+      FieldName = 'VATPercent'
+    end
     object qryPartnerimAddress: TLargeintField
       FieldName = 'imAddress'
     end
     object qryPartnerimContract: TLargeintField
       FieldName = 'imContract'
-    end
-    object qryPartnerPRICELISTID: TIntegerField
-      FieldName = 'PRICELISTID'
     end
   end
   object qryPriceList: TFDQuery
@@ -554,8 +566,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
     TableName = 'Movement_OrderExternal'
-    Left = 464
-    Top = 144
+    Left = 864
+    Top = 120
     object tblMovement_OrderExternalId: TAutoIncField
       FieldName = 'Id'
       ProviderFlags = [pfInWhere]
@@ -613,10 +625,11 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_OrderExternal'
     TableName = 'MovementItem_OrderExternal'
-    Left = 464
-    Top = 208
-    object tblMovementItem_OrderExternalId: TIntegerField
+    Left = 864
+    Top = 184
+    object tblMovementItem_OrderExternalId: TAutoIncField
       FieldName = 'Id'
+      ReadOnly = True
     end
     object tblMovementItem_OrderExternalMovementId: TIntegerField
       FieldName = 'MovementId'
@@ -645,8 +658,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Movement_StoreReal'
     TableName = 'Movement_StoreReal'
-    Left = 464
-    Top = 264
+    Left = 864
+    Top = 240
     object tblMovement_StoreRealId: TIntegerField
       FieldName = 'Id'
     end
@@ -687,8 +700,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'MovementItem_StoreReal'
     TableName = 'MovementItem_StoreReal'
-    Left = 464
-    Top = 328
+    Left = 864
+    Top = 304
     object tblMovementItem_StoreRealId: TIntegerField
       FieldName = 'Id'
     end
@@ -719,11 +732,13 @@ object DM: TDM
       
         'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA || '#39' ('#39' || GK.VAL' +
         'UEDATA || '#39')'#39' Name, G.ID || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA |' +
-        '| '#39' ('#39' || GK.VALUEDATA || '#39');'#39' || PI.PRICE FullInfo from OBJECT_' +
-        'GOODS G JOIN OBJECT_GOODSLINKGOODSKIND GLK ON GLK.GOODSID = G.ID' +
-        ' JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISER' +
-        'ASED = 0 JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and ' +
-        'PI.PRICELISTID = :PRICELISTID WHERE G.ISERASED = 0 order by Name')
+        '| '#39' ('#39' || GK.VALUEDATA || '#39');'#39' || PI.PRICE || '#39';'#39' || M.VALUEDATA' +
+        ' || '#39';'#39' || G.WEIGHT FullInfo from OBJECT_GOODS G JOIN OBJECT_GOO' +
+        'DSLINKGOODSKIND GLK ON GLK.GOODSID = G.ID JOIN OBJECT_GOODSKIND ' +
+        'GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 JOIN OBJECT_ME' +
+        'ASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 JOIN OBJECT_PRI' +
+        'CELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICEL' +
+        'ISTID WHERE G.ISERASED = 0 order by Name')
     Left = 40
     Top = 408
     ParamData = <
@@ -740,11 +755,64 @@ object DM: TDM
     end
     object qryOrderItemsFullInfo: TWideStringField
       FieldName = 'FullInfo'
-      Size = 100
+      Size = 1000
     end
     object qryOrderItemsName: TWideStringField
       FieldName = 'Name'
       Size = 500
+    end
+  end
+  object tblObject_Partner_Photo: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Object_Partner_Photo'
+    TableName = 'Object_Partner_Photo'
+    Left = 864
+    Top = 376
+    object tblObject_Partner_PhotoId: TAutoIncField
+      FieldName = 'Id'
+      ReadOnly = True
+    end
+    object tblObject_Partner_PhotoPartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object IntegerField7: TIntegerField
+      FieldName = 'ContractId'
+    end
+    object tblObject_Partner_PhotoPhoto: TBlobField
+      FieldName = 'Photo'
+    end
+    object tblObject_Partner_PhotoComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object BooleanField1: TBooleanField
+      FieldName = 'isErased'
+    end
+  end
+  object qryPartnerPhotos: TFDQuery
+    FilterOptions = [foCaseInsensitive]
+    Connection = conMain
+    SQL.Strings = (
+      
+        'select Photo, Comment from Object_Partner_Photo where PartnerId ' +
+        '= :PartnerId and ContractId = :ContractId and isErased = 0')
+    Left = 128
+    Top = 224
+    ParamData = <
+      item
+        Name = 'PARTNERID'
+        ParamType = ptInput
+      end
+      item
+        Name = 'CONTRACTID'
+        ParamType = ptInput
+      end>
+    object qryPartnerPhotosPhoto: TBlobField
+      FieldName = 'Photo'
+    end
+    object qryPartnerPhotosComment: TStringField
+      FieldName = 'Comment'
+      Size = 255
     end
   end
 end

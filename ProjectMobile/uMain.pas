@@ -21,7 +21,7 @@ uses
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
-  FMX.Grid.Style
+  FMX.Grid.Style, FMX.Media, FMX.Surfaces
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -216,6 +216,30 @@ type
     lTotalPrice: TLabel;
     Panel8: TPanel;
     bSaveOrderExternal: TButton;
+    Panel9: TPanel;
+    Label11: TLabel;
+    deOperDate: TDateEdit;
+    lTotalWeight: TLabel;
+    gcMeasure: TStringColumn;
+    gcWeight: TCurrencyColumn;
+    tiCamera: TTabItem;
+    Panel10: TPanel;
+    imgCameraPreview: TImage;
+    Panel17: TPanel;
+    lPlate: TLabel;
+    ePhotoComment: TEdit;
+    Panel11: TPanel;
+    tiPhotos: TTabItem;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    bAddedPhoto: TButton;
+    btnCapture: TButton;
+    btnSave: TButton;
+    ButtonClose: TButton;
+    lwPartnerPhotos: TListView;
+    Button1: TButton;
+    BindSourceDB2: TBindSourceDB;
+    LinkFillControlToField3: TLinkFillControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -263,8 +287,14 @@ type
     procedure bSaveOIClick(Sender: TObject);
     procedure sgOrderExternalEditingDone(Sender: TObject; const ACol,
       ARow: Integer);
-    procedure Action1Execute(Sender: TObject);
     procedure bSaveOrderExternalClick(Sender: TObject);
+    procedure sgOrderExternalDrawColumnHeader(Sender: TObject;
+      const Canvas: TCanvas; const Column: TColumn; const Bounds: TRectF);
+    procedure bAddedPhotoClick(Sender: TObject);
+    procedure btnCaptureClick(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
+    procedure ButtonCloseClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -276,6 +306,11 @@ type
     FCurCoordinates: TLocationCoord2D;
 
     FCheckedOI: TList<String>;
+    FOrderTotalCountKg : Currency;
+    FOrderTotalPrice : Currency;
+
+    FCameraZoomDistance: Integer;
+    CameraComponent : TCameraComponent;
 
     procedure BackResult(const AResult: TModalResult);
     procedure ShowGoods(AValue : string);
@@ -299,9 +334,17 @@ type
     procedure ShowAllPartnersOnMap;
     procedure ShowPriceLists;
     procedure ShowPriceListItems(PriceListId : integer);
-    procedure RecalculateTotalPrice;
+    procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     function ReturnPriorForm(const OmitOnChange: Boolean = False): TObject;
+
+
+    procedure PrepareCamera;
+    procedure CameraFree;
+    procedure ScaleImage(const Margins: Integer);
+    procedure GetImage;
+    procedure PlayAudio;
+    procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
   public
     { Public declarations }
   end;
@@ -315,12 +358,19 @@ uses
   uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils;
 
 {$R *.fmx}
+
+resourcestring
+  rstCapture = 'Capture';
+  rstReturn = 'Return';
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
   r : integer;
 begin
+  FormatSettings.DecimalSeparator := '.';
+
   {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
   begin
@@ -361,6 +411,8 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
+
+  gcName.Width := sgOrderExternal.Width - gcCount.Width - gcMeasure.Width - gcTotalPrice.Width - gcButton.Width - 10;
 end;
 
 procedure TfrmMain.LinkFillControlToField2FilledListItem(Sender: TObject;
@@ -504,11 +556,6 @@ begin
   SwitchToForm(tiPriceListItems, nil);
 end;
 
-procedure TfrmMain.Action1Execute(Sender: TObject);
-begin
- //
-end;
-
 procedure TfrmMain.BackResult(const AResult: TModalResult);
 begin
   if AResult = mrYes then
@@ -526,18 +573,7 @@ begin
 end;
 
 procedure TfrmMain.sbPartnerMenuClick(Sender: TObject);
-var
-  FP: TPointF;
 begin
-  FP := sbPartnerMenu.LocalToAbsolute(FP);
-
-  {with ppPartner.PlacementRectangle do
-  begin
-   Top := 10;
-   Bottom := Top + ppPartner.Height;
-   Left := FP.X - 190;
-   Right := Left + ppPartner.Width;
-  end;}
   ppPartner.IsOpen := true;
   lbPartnerMenu.ItemIndex := -1;
 end;
@@ -553,8 +589,10 @@ begin
   sgOrderExternal.Cells[2, sgOrderExternal.RowCount - 1] := ArrValue[3]; // цена
   sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := ArrValue[2]; // название товара
   sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '1'; // количество по умолчанию
-  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := ArrValue[3]; // общая цена
-  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '1'; // кнопка удалить
+  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := ArrValue[4]; // единица измерения
+  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := ArrValue[3]; // общая цена
+  sgOrderExternal.Cells[7, sgOrderExternal.RowCount - 1] := '1'; // кнопка удалить
+  sgOrderExternal.Cells[8, sgOrderExternal.RowCount - 1] := ArrValue[5]; // вес
 end;
 
 procedure TfrmMain.ShowAddedRow;
@@ -565,7 +603,22 @@ begin
   sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := '';
   sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '';
   sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '0';
+  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '';
+  sgOrderExternal.Cells[7, sgOrderExternal.RowCount - 1] := '0';
+  sgOrderExternal.Cells[8, sgOrderExternal.RowCount - 1] := '0';
+end;
+
+procedure TfrmMain.sgOrderExternalDrawColumnHeader(Sender: TObject;
+  const Canvas: TCanvas; const Column: TColumn; const Bounds: TRectF);
+begin
+  Canvas.Fill.Color := TAlphaColorRec.White;
+  Canvas.FillRect(Bounds, 0, 0, [], 1);
+  Canvas.Font.Size := 10;
+  Canvas.Fill.Color := TAlphaColorRec.Black;
+  if Column.Index = 4 then
+    Canvas.FillText(Bounds, Column.Header , False, 1, [] , TTextAlign.Center)
+  else
+    Canvas.FillText(Bounds, Column.Header , False, 1, [] , TTextAlign.Leading);
 end;
 
 procedure TfrmMain.sgOrderExternalEditingDone(Sender: TObject; const ACol,
@@ -573,18 +626,18 @@ procedure TfrmMain.sgOrderExternalEditingDone(Sender: TObject; const ACol,
 begin
   if sgOrderExternal.Col = 4 then { количество товаров }
   begin
-    sgOrderExternal.Cells[5, sgOrderExternal.Row] := CurrToStr((StrToInt(sgOrderExternal.Cells[4, sgOrderExternal.Row]) * StrToCurr(sgOrderExternal.Cells[2, sgOrderExternal.Row])));
+    sgOrderExternal.Cells[6, sgOrderExternal.Row] := CurrToStr((StrToIntDef(sgOrderExternal.Cells[4, sgOrderExternal.Row], 0) * StrToCurrDef(sgOrderExternal.Cells[2, sgOrderExternal.Row], 0)));
 
-    RecalculateTotalPrice;
+    RecalculateTotalPriceAndWeight;
   end;
 end;
 
 procedure TfrmMain.sgOrderExternalSelectCell(Sender: TObject; const ACol,
   ARow: Integer; var CanSelect: Boolean);
 var
-  i : integer;
+  i, j : integer;
 begin
-  if ACol = 6 then {button column}
+  if ACol = 7 then {button column}
   begin
     if ARow = sgOrderExternal.RowCount - 1 then {add new goods}
     begin
@@ -595,21 +648,21 @@ begin
     else
     begin {remove goods}
       for i := ARow + 1 to sgOrderExternal.RowCount - 1 do
-      begin
-        sgOrderExternal.Cells[0, i - 1] := sgOrderExternal.Cells[0, i];
-        sgOrderExternal.Cells[1, i - 1] := sgOrderExternal.Cells[1, i];
-        sgOrderExternal.Cells[2, i - 1] := sgOrderExternal.Cells[2, i];
-        sgOrderExternal.Cells[3, i - 1] := sgOrderExternal.Cells[3, i];
-        sgOrderExternal.Cells[4, i - 1] := sgOrderExternal.Cells[4, i];
-        sgOrderExternal.Cells[5, i - 1] := sgOrderExternal.Cells[5, i];
-        sgOrderExternal.Cells[6, i - 1] := sgOrderExternal.Cells[6, i];
-      end;
+        for j := 0 to sgOrderExternal.ColumnCount - 1 do
+          sgOrderExternal.Cells[j, i - 1] := sgOrderExternal.Cells[j, i];
 
       sgOrderExternal.RowCount := sgOrderExternal.RowCount - 1;
+
+      RecalculateTotalPriceAndWeight;
     end;
 
     CanSelect := false;
   end;
+end;
+
+procedure TfrmMain.bAddedPhotoClick(Sender: TObject);
+begin
+  SwitchToForm(tiCamera, nil);
 end;
 
 procedure TfrmMain.bCancelOIClick(Sender: TObject);
@@ -634,9 +687,13 @@ end;
 
 procedure TfrmMain.bOrderExternalClick(Sender: TObject);
 begin
+  if DM.qryPartnerPriceWithVAT.AsBoolean then
+    gcTotalPrice.Header := 'Цена (с НДС)'
+  else
+    gcTotalPrice.Header := 'Цена (без НДС)';
   sgOrderExternal.RowCount := 1;
   ShowAddedRow;
-  RecalculateTotalPrice;
+  RecalculateTotalPriceAndWeight;
 
   SwitchToForm(tiOrderExternal, nil);
 end;
@@ -672,7 +729,7 @@ begin
     sgOrderExternal.RowCount := sgOrderExternal.RowCount + 1;
   end;
   ShowAddedRow;
-  RecalculateTotalPrice;
+  RecalculateTotalPriceAndWeight;
 
   FCheckedOI.Clear;
   ReturnPriorForm;
@@ -680,11 +737,21 @@ end;
 
 procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
 var
-  GlobalOrderId : TGUID;
-  MovementId : integer;
+  GlobalId : TGUID;
+  i, MovementId, NewInvNumber : integer;
+  qryMaxInvNumber : TFDQuery;
 begin
-  { Generate alias for opened database }
-  CreateGUID(GlobalOrderId);
+  qryMaxInvNumber := TFDQuery.Create(nil);
+  try
+    qryMaxInvNumber.Connection := DM.conMain;
+    qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
+    if qryMaxInvNumber.RecordCount > 0 then
+      NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1
+    else
+      NewInvNumber := 1;
+  finally
+    FreeAndNil(qryMaxInvNumber);
+  end;
 
   DM.conMain.StartTransaction;
   try
@@ -692,20 +759,49 @@ begin
 
     DM.tblMovement_OrderExternal.Append;
 
-    DM.tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalOrderId);
-    DM.tblMovement_OrderExternalOperDate.AsDateTime := Now();
+    CreateGUID(GlobalId);
+    DM.tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+    DM.tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
+    DM.tblMovement_OrderExternalOperDate.AsDateTime := deOperDate.Date;
+    DM.tblMovement_OrderExternalStatusId.AsInteger := DM.tblObject_ConstStatusId_Complete.AsInteger;
     DM.tblMovement_OrderExternalPartnerId.AsInteger := DM.qryPartnerId.AsInteger;
+    DM.tblMovement_OrderExternalPaidKindId.AsInteger := DM.qryPartnerPaidKindId.AsInteger;
     DM.tblMovement_OrderExternalContractId.AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
     DM.tblMovement_OrderExternalPriceListId.AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
+    DM.tblMovement_OrderExternalPriceWithVAT.AsBoolean := DM.qryPartnerPriceWithVAT.AsBoolean;
+    DM.tblMovement_OrderExternalVATPercent.AsFloat := DM.qryPartnerVATPercent.AsFloat;
+    DM.tblMovement_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+    DM.tblMovement_OrderExternalTotalCountKg.AsFloat := FOrderTotalCountKg;
+    DM.tblMovement_OrderExternalTotalSumm.AsFloat := FOrderTotalPrice;
     DM.tblMovement_OrderExternalInsertDate.AsDateTime := Now();
+    DM.tblMovement_OrderExternalisSync.AsBoolean := false;
 
     DM.tblMovement_OrderExternal.Post;
 
     MovementId := DM.tblMovement_OrderExternalId.AsInteger;
 
+    DM.tblMovementItem_OrderExternal.Open;
 
+    for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
+    begin
+      DM.tblMovementItem_OrderExternal.Append;
+
+      DM.tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
+      CreateGUID(GlobalId);
+      DM.tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+      DM.tblMovementItem_OrderExternalGoodsId.AsInteger := StrToInt(sgOrderExternal.Cells[0, i]);
+      DM.tblMovementItem_OrderExternalGoodsKindId.AsInteger := StrToInt(sgOrderExternal.Cells[1, i]);
+      DM.tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+      DM.tblMovementItem_OrderExternalAmount.AsFloat := StrToFloat(sgOrderExternal.Cells[4, i]);
+      DM.tblMovementItem_OrderExternalPrice.AsFloat := StrToFloat(sgOrderExternal.Cells[2, i]);
+
+      DM.tblMovementItem_OrderExternal.Post;
+    end;
 
     DM.conMain.Commit;
+
+    ShowMessage('Сохранение заявки прошло успешно.');
+    ReturnPriorForm;
   except
     on E : Exception do
     begin
@@ -713,9 +809,95 @@ begin
       ShowMessage(E.Message);
     end;
   end;
+end;
 
+procedure TfrmMain.btnCaptureClick(Sender: TObject);
+begin
+  if CameraComponent.Active then
+  begin
+    CameraComponent.Active := False;
+    PlayAudio;
+    TSpeedButton(Sender).Text := rstReturn;
+    btnSave.Enabled := true;
+  end
+  else
+  begin
+    ScaleImage(0);
+    CameraComponent.Active := True;
+    TSpeedButton(Sender).Text := rstCapture;
+    btnSave.Enabled := false;
+  end;
+end;
 
+procedure TfrmMain.btnSaveClick(Sender: TObject);
+var
+  BlobStream : TMemoryStream;
+  Surf : TBitmapSurface;
+  qrySavePhoto : TFDQuery;
+begin
+  // Save displayed photo
+  try
+    BlobStream := TMemoryStream.Create;
+    aiWait.Visible := true;
+    aiWait.Enabled := true;
+    Application.ProcessMessages;
 
+    Surf := TBitmapSurface.Create;
+    try
+      Surf.Assign(imgCameraPreview.Bitmap);
+
+      if not TBitmapCodecManager.SaveToStream( BlobStream, Surf, '.jpg') then
+        raise EBitmapSavingFailed.Create('Error saving Bitmap to jpg');
+
+      BlobStream.Seek(0, 0);
+
+      qrySavePhoto := TFDQuery.Create(nil);
+      try
+        qrySavePhoto.Connection := DM.conMain;
+
+        qrySavePhoto.SQL.Text := 'Insert into Object_Partner_Photo (PartnerId, ContractId, Photo, Comment, isErased) Values (:PartnerId, :ContractId, :Photo, :Comment, :isErased)';
+        qrySavePhoto.Params[0].Value := DM.qryPartnerId.AsInteger;
+        qrySavePhoto.Params[1].Value := DM.qryPartnerCONTRACTID.AsInteger;
+        qrySavePhoto.Params[2].LoadFromStream(BlobStream, ftBlob);
+        qrySavePhoto.Params[3].Value := ePhotoComment.Text;
+        qrySavePhoto.Params[4].Value := 0;
+
+        qrySavePhoto.ExecSQL;
+
+        ShowMessage('Фото успешно сохранено');
+      finally
+        FreeAndNil(qrySavePhoto);
+      end;
+    finally
+      aiWait.Visible := false;
+      aiWait.Enabled := false;
+      Application.ProcessMessages;
+      FreeAndNil(BlobStream);
+      Surf.Free;
+    end;
+  Except
+    on E: Exception do
+      Showmessage(E.Message);
+  end;
+
+  CameraFree;
+  ReturnPriorForm;
+end;
+
+procedure TfrmMain.Button1Click(Sender: TObject);
+begin
+  DM.qryPartnerPhotos.Close;
+
+  DM.qryPartnerPhotos.ParamByName('PartnerId').AsInteger := DM.qryPartnerId.AsInteger;
+  DM.qryPartnerPhotos.ParamByName('ContractId').AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
+
+  DM.qryPartnerPhotos.Open;
+end;
+
+procedure TfrmMain.ButtonCloseClick(Sender: TObject);
+begin
+  CameraFree;
+  ReturnPriorForm;
 end;
 
 procedure TfrmMain.bVisitClick(Sender: TObject);
@@ -900,7 +1082,7 @@ begin
   end;
 
   { настройка панели возврата }
-  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiOrderItems) then
+  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiOrderItems) or (tcMain.ActiveTab = tiCamera)  then
     pBack.Visible := false
   else
   begin
@@ -949,6 +1131,9 @@ begin
 
   if tcMain.ActiveTab = tiPriceListItems then
     ShowPriceListItems((lwPriceList.Selected as TListViewItem).Tag);
+
+  if tcMain.ActiveTab = tiCamera then
+    PrepareCamera;
 end;
 
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
@@ -1006,8 +1191,10 @@ begin
   with DM.qryPartner do
   begin
     DM.qryPartner.Open('select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, 0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
-      'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
+      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+      '0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
+      'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
+      'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
       'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0');
 
     First;
@@ -1154,8 +1341,10 @@ begin
   DM.qryPartner.Close;
 
   sQuery := 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, 0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
+    '0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
     'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
+    'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
     'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0';
 
   if Day < 8 then
@@ -1223,16 +1412,32 @@ begin
     'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + IntToStr(PriceListId));
 end;
 
-procedure TfrmMain.RecalculateTotalPrice;
+procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
- TotalPrice : Currency;
 begin
-  TotalPrice := 0;
-  for i := 0 to sgOrderExternal.RowCount - 2 do
-    TotalPrice := TotalPrice + StrToCurr(sgOrderExternal.Cells[5, i]);
+  FOrderTotalPrice := 0;
+  for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
+  begin
+    if DM.qryPartnerPriceWithVAT.AsBoolean then
+      FOrderTotalPrice := FOrderTotalPrice + StrToCurrDef(sgOrderExternal.Cells[6, i], 0) * (100 + DM.qryPartnerChangePercent.AsCurrency) / 100
+    else
+      FOrderTotalPrice := FOrderTotalPrice + StrToCurrDef(sgOrderExternal.Cells[6, i], 0) *
+        ((100 + DM.qryPartnerChangePercent.AsCurrency) / 100) * ((100 + DM.qryPartnerVATPercent.AsCurrency) / 100);
+  end;
 
-  lTotalPrice.Text := 'Общая стоимость : ' + CurrToStr(TotalPrice);
+  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + CurrToStr(FOrderTotalPrice);
+
+  FOrderTotalCountKg := 0;
+  for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
+  begin
+    if StrToCurrDef(sgOrderExternal.Cells[8, i], 0) <> 0 then
+      FOrderTotalCountKg := FOrderTotalCountKg + StrToCurrDef(sgOrderExternal.Cells[8, i], 0) * StrToCurrDef(sgOrderExternal.Cells[4, i], 0)
+    else
+      FOrderTotalCountKg := FOrderTotalCountKg + StrToCurrDef(sgOrderExternal.Cells[4, i], 0);
+  end;
+
+  lTotalWeight.Text := 'Общий вес : ' + CurrToStr(FOrderTotalCountKg);
 end;
 
 
@@ -1267,6 +1472,80 @@ begin
     end
   else
     raise Exception.Create('Forms stack underflow');
+end;
+
+procedure TfrmMain.PrepareCamera;
+begin
+  FCameraZoomDistance := 0;
+
+  CameraComponent := TCameraComponent.Create(nil);
+  CameraComponent.OnSampleBufferReady := CameraComponentSampleBufferReady;
+  if CameraComponent.HasFlash then
+    CameraComponent.FlashMode := FMX.Media.TFlashMode.AutoFlash;
+  CameraComponent.Active := false;
+  btnCaptureClick(btnCapture);
+end;
+
+procedure TfrmMain.CameraFree;
+begin
+  try
+    if Assigned(CameraComponent) then
+    begin
+      CameraComponent.Active := False;
+      FreeAndNil(CameraComponent);
+    end;
+  except
+    On E: Exception do
+      Showmessage(E.Message);
+  end;
+end;
+
+procedure TfrmMain.GetImage;
+begin
+  CameraComponent.SampleBufferToBitmap(imgCameraPreview.Bitmap, True);
+end;
+
+procedure TfrmMain.ScaleImage(const Margins: Integer);
+begin
+  imgCameraPreview.Margins.Left := 5 + Margins;
+  imgCameraPreview.Margins.Right := 5 + Margins;
+  imgCameraPreview.Margins.Top := 5 + Margins;
+  imgCameraPreview.Margins.Bottom := 5 + Margins;
+end;
+
+procedure TfrmMain.PlayAudio;
+var
+  MediaPlayer: TMediaPlayer;
+  TmpFile: string;
+begin
+ { MediaPlayer := TMediaPlayer.Create(nil);
+  try
+    TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.3gp');
+    MediaPlayer.FileName := TmpFile;
+
+    if MediaPlayer.Media <> nil then
+      MediaPlayer.Play
+    else
+    begin
+      TmpFile := TPath.Combine(TPath.GetDocumentsPath, 'CameraClick.mp3');
+      MediaPlayer.FileName := TmpFile;
+      if MediaPlayer.Media <> nil then
+        MediaPlayer.Play
+    end;
+    sleep(1000);
+    MediaPlayer.Stop;
+    MediaPlayer.Clear;
+  finally
+    FreeAndNil(MediaPlayer);
+  end; }
+end;
+
+procedure TfrmMain.CameraComponentSampleBufferReady
+  (Sender: TObject; const ATime: TMediaTime);
+begin
+  TThread.Synchronize(TThread.CurrentThread, GetImage);
+  if (imgCameraPreview.Width = 0) or (imgCameraPreview.Height = 0) then
+    Showmessage('Image is zero!');
 end;
 
 end.
