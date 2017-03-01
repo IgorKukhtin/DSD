@@ -20,11 +20,11 @@ inherited InventoryForm: TInventoryForm
       ExplicitWidth = 898
       ExplicitHeight = 557
       inherited cxGrid: TcxGrid
-        Top = 83
         Width = 898
-        Height = 474
+        Height = 557
+        ExplicitTop = 83
         ExplicitWidth = 898
-        ExplicitHeight = 557
+        ExplicitHeight = 474
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -424,161 +424,19 @@ inherited InventoryForm: TInventoryForm
           end
         end
       end
-      object cxGrid1: TcxGrid
-        Left = 0
-        Top = 0
-        Width = 898
-        Height = 75
-        Align = alTop
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        ExplicitWidth = 1001
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
-          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Inserting = False
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.HeaderHeight = 40
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object BarCode: TcxGridDBColumn
-            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1053#1072#1082#1083#1072#1076#1085#1072#1103'> '#1080#1083#1080' '#1074#1074#1086#1076' '#8470
-            DataBinding.FieldName = 'BarCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 180
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter1: TcxSplitter
-        Left = 0
-        Top = 75
-        Width = 898
-        Height = 8
-        HotZoneClassName = 'TcxXPTaskBarStyle'
-        HotZone.Visible = False
-        AlignSplitter = salTop
-        Control = cxGrid1
-        ExplicitLeft = -3
-        ExplicitTop = 69
-      end
     end
     object cxTabSheetChild: TcxTabSheet
       Caption = #1048#1089#1090#1086#1088#1080#1103
       ImageIndex = 2
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 0
+        Top = 83
         Width = 898
-        Height = 557
+        Height = 474
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 0
+        ExplicitHeight = 557
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -732,6 +590,147 @@ inherited InventoryForm: TInventoryForm
         object cxGridChildLevel: TcxGridLevel
           GridView = cxGridChildDBTableView
         end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 898
+        Height = 75
+        Align = alTop
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DataSource
+          DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object BarCode: TcxGridDBColumn
+            Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <'#1058#1086#1074#1072#1088'>'
+            DataBinding.FieldName = 'BarCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 180
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 75
+        Width = 898
+        Height = 8
+        HotZoneClassName = 'TcxXPTaskBarStyle'
+        HotZone.Visible = False
+        AlignSplitter = salTop
+        Control = cxGrid1
       end
     end
   end
@@ -1158,13 +1157,16 @@ inherited InventoryForm: TInventoryForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSelectBarCode
+      StoredProc = spInsert_MI_Inventory
       StoredProcList = <
         item
-          StoredProc = spSelectBarCode
+          StoredProc = spInsert_MI_Inventory
         end
         item
-          StoredProc = spSelect
+          StoredProc = spSelect_MI_Child
+        end
+        item
+          StoredProc = spSelectBarCode
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
@@ -2208,7 +2210,7 @@ inherited InventoryForm: TInventoryForm
     Top = 112
   end
   object spSelectBarCode: TdsdStoredProc
-    StoredProcName = 'gpSelect_Inventory_BarCode'
+    StoredProcName = 'gpSelect_MI_Inventory_BarCode'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -2218,5 +2220,38 @@ inherited InventoryForm: TInventoryForm
     PackSize = 1
     Left = 432
     Top = 104
+  end
+  object spInsert_MI_Inventory: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_Inventory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BarCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountUser'
+        Value = '1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 123
   end
 end

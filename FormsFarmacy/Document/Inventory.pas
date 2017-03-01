@@ -87,15 +87,16 @@ type
     chisLast: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    spSelectBarCode: TdsdStoredProc;
+    actUpdateDataSource: TdsdUpdateDataSet;
+    actRefreshStart: TdsdDataSetRefresh;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     BarCode: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    spSelectBarCode: TdsdStoredProc;
-    actUpdateDataSource: TdsdUpdateDataSet;
-    actRefreshStart: TdsdDataSetRefresh;
+    spInsert_MI_Inventory: TdsdStoredProc;
   private
     { Private declarations }
   public

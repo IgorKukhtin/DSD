@@ -1,8 +1,8 @@
--- Function: gpSelect_Inventory_BarCode()
+-- Function: gpSelect_MI_Inventory_BarCode()
 
-DROP FUNCTION IF EXISTS gpSelect_Inventory_BarCode (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Inventory_BarCode (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Inventory_BarCode(
+CREATE OR REPLACE FUNCTION gpSelect_MI_Inventory_BarCode(
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (BarCode TVarChar
@@ -31,4 +31,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Inventory_BarCode (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Inventory_BarCode (inSession:= zfCalc_UserAdmin())
