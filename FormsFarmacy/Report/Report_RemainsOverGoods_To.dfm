@@ -19,7 +19,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Properties.Options = [pcoGradient, pcoGradientClientArea, pcoRedrawOnResize, pcoSort]
     ExplicitTop = 81
     ExplicitWidth = 1066
-    ExplicitHeight = 476
+    ExplicitHeight = 485
     ClientRectBottom = 485
     ClientRectRight = 1066
     ClientRectTop = 24
@@ -28,12 +28,12 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       TabVisible = True
       ExplicitTop = 24
       ExplicitWidth = 1066
-      ExplicitHeight = 452
+      ExplicitHeight = 461
       inherited cxGrid: TcxGrid
         Width = 1066
         Height = 224
         ExplicitWidth = 1066
-        ExplicitHeight = 215
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -645,7 +645,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 220
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -1031,13 +1030,11 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 215
       end
     end
     object cxTabSheetTotal: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 2
-      ExplicitHeight = 452
       object cxGridTotal: TcxGrid
         Left = 0
         Top = 0
@@ -1045,7 +1042,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Height = 461
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 452
         object cxGridTotalDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TotalDS
@@ -1802,10 +1798,16 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProcList = <>
+      StoredProc = spSetErased_Over
+      StoredProcList = <
+        item
+          StoredProc = spSetErased_Over
+        end>
       Caption = 'actSetErased_Over'
       ImageIndex = 41
-      QuestionBeforeExecute = #1056#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      QuestionBeforeExecute = 
+        #1055#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084' '#1088#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077 +
+        #1085#1080#1103' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
     end
     object actOverChild: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1847,17 +1849,17 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
       MoveParams = <>
       ActionList = <
         item
-          Action = macOver
+          Action = actSetErased_Over
         end
         item
-          Action = macOverChild
+          Action = macOver
         end>
       QuestionBeforeExecute = 
-        #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>.  '#1056 +
-        #1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1073#1091#1076#1077#1090' '#1091#1076#1072#1083#1077#1085'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
-      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'> '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>'
-      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>'
+        #1055#1086' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084' '#1088#1072#1085#1077#1077' '#1089#1086#1079#1076#1072#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077 +
+        #1085#1080#1103' '#1073#1091#1076#1091#1090' '#1091#1076#1072#1083#1077#1085#1099'. '#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'> '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>'
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074'>'
       ImageIndex = 30
       WithoutNext = True
     end
@@ -1868,7 +1870,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         item
           Action = actOver
         end>
-      View = cxGridDBTableView
+      DataSource = DataSourceDocs
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081'>'
       ImageIndex = 41
     end
@@ -2199,6 +2201,8 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     object bbSendOver: TdxBarButton
       Action = macSendOver
       Category = 0
+      Enabled = False
+      Visible = ivNever
     end
     object bbOpenUnitForm: TdxBarButton
       Action = actOpenUnitForm
@@ -2460,7 +2464,7 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Top = 224
   end
   object spSetErased_Over: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Over_Report'
+    StoredProcName = 'gpSetErased_Movement_Over_List_Report'
     DataSets = <
       item
       end>
@@ -2487,17 +2491,25 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
     Top = 200
   end
   object spOver: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Over_Auto'
+    StoredProcName = 'gpInsertUpdate_MI_Over_List_Auto'
     DataSets = <
       item
       end>
     OutputType = otMultiExecute
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'inUnitFromId'
         Value = ''
         Component = DataSetDocs
         ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitToId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2527,10 +2539,19 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRemains'
+        Name = 'inRemainsFrom'
         Value = Null
         Component = DataSetDocs
-        ComponentItem = 'RemainsStart'
+        ComponentItem = 'RemainsStartFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemainsTo'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'RemainsStartTo'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2545,19 +2566,37 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPrice'
+        Name = 'inPriceFrom'
         Value = Null
         Component = DataSetDocs
-        ComponentItem = 'Price'
+        ComponentItem = 'PriceFrom'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCS'
+        Name = 'inPriceTo'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'PriceTo'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSFrom'
         Value = 30.000000000000000000
         Component = DataSetDocs
-        ComponentItem = 'MCSValue'
+        ComponentItem = 'MCSValueFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCSValueTo'
+        Value = Null
+        Component = DataSetDocs
+        ComponentItem = 'MCSValueTo'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2575,15 +2614,6 @@ inherited Report_RemainsOverGoods_ToForm: TReport_RemainsOverGoods_ToForm
         Value = Null
         Component = cbTerm
         DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMinExpirationDate'
-        Value = 12.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'MinExpirationDate'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
