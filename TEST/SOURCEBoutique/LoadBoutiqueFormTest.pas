@@ -74,9 +74,14 @@ type
     procedure LoadPeriodFormTest;
     procedure LoadDiscountFormTest;
     procedure LoadDiscountToolsFormTest;
+    procedure LoadPartnerFormTest;
+    procedure LoadJuridicalGroupFormTest;
+    procedure LoadJuridicalFormTest;
+    procedure LoadUnitFormTest;
+    procedure LoadCityFormTest;
 
 
-    //    procedure LoadMemberFormTest;
+//    procedure LoadMemberFormTest;
 //    procedure LoadKindFormTest;
 //    procedure LoadOrderSheduleFormTest;
 //    procedure LoadOrderInternalFormTest;
@@ -209,6 +214,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBrandEditForm');
 end;
 
+procedure TLoadFormTest.LoadCityFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
+end;
+
 procedure TLoadFormTest.LoadCompositionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCompositionForm'));
@@ -279,6 +292,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsSizeEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsSizeEditForm');
+end;
+
+procedure TLoadFormTest.LoadJuridicalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
+end;
+
+procedure TLoadFormTest.LoadJuridicalGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalGroupEditForm');
 end;
 
 procedure TLoadFormTest.LoadKassaFormTest;
@@ -538,6 +567,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartnerFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 end;
 
 procedure TLoadFormTest.LoadPeriodFormTest;
@@ -1310,6 +1347,14 @@ begin
 //  }
 end;
 
+
+procedure TLoadFormTest.LoadUnitFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+end;
 
 procedure TLoadFormTest.LoadValutaFormTest;
 begin

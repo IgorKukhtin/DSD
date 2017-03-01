@@ -22,8 +22,8 @@ type
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
-    procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
-    function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
+    //procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
+    //function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
     procedure SetIsFillOutParams(const Value: Boolean);
     function GetisChanged: boolean;
   protected
@@ -774,7 +774,7 @@ function TdsdParam.GetDisplayName: string;
 begin
   result := Name
 end;
-
+{
 function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
 begin
   if DataSet.Active then begin
@@ -791,7 +791,7 @@ begin
     end;
   end;
 end;
-
+}
 function TdsdParam.GetisChanged: boolean;
 begin
   Result := varToStr(FOldValue) <> VarToStr(Value)
@@ -983,7 +983,7 @@ begin
      FComponent := Value;
   end
 end;
-
+{
 procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
 begin
@@ -1014,7 +1014,7 @@ begin
       raise Exception.Create('У дата сета "' + Component.Name + '" нет поля "' + FieldName + '"');
   end;
 end;
-
+}
 procedure TdsdParam.SetIsFillOutParams(const Value: Boolean);
 begin
   FIsFillOutParams := Value;
@@ -1029,7 +1029,7 @@ var
   IntValue: Integer;
   Int64Value: Int64;
   FloatValue: Extended;
-  Done: Boolean;
+  //Done: Boolean;
   DateTimeValue: TDateTime;
   function MyStrToDateTime(AStrDate: String): TDateTime;
   begin

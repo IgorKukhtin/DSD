@@ -9,7 +9,17 @@ uses
   Data.Win.ADODB, Vcl.StdCtrls, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.Samples.Gauges, Vcl.ExtCtrls, System.Classes,
   Vcl.Grids, Vcl.DBGrids, DBTables, dxSkinsCore, dxSkinsDefaultPainters,
-  IdBaseComponent, IdComponent, IdIPWatch;
+  IdBaseComponent, IdComponent, IdIPWatch, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TMainForm = class(TForm)
@@ -63,6 +73,8 @@ type
     cbGoodsGroup: TCheckBox;
     cbDiscount: TCheckBox;
     cbDiscountTools: TCheckBox;
+    cbPartner: TCheckBox;
+    cbUnit: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -131,6 +143,9 @@ type
     procedure pLoadGuide_GoodsGroup;
     procedure pLoadGuide_Discount;
     procedure pLoadGuide_DiscountTools;
+    procedure pLoadGuide_Partner;
+    procedure pLoadGuide_Unit;
+
 
 
 
@@ -601,6 +616,8 @@ begin
      End;
      if not fStop then pLoadGuide_Discount;
      if not fStop then pLoadGuide_DiscountTools;
+     if not fStop then pLoadGuide_Partner;
+     if not fStop then pLoadGuide_Unit;
 
 
 
@@ -677,6 +694,8 @@ begin
       fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
+
 
 
 
@@ -1602,6 +1621,84 @@ begin
      //
      myDisabledCB(cbMeasure);
 end;
+procedure TMainForm.pLoadGuide_Partner;
+begin
+if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
+    finally
+
+    end;
+     //
+     myEnabledCB(cbPartner);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Partner.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Partner.Erased as Erased');
+        Add('     , Partner.Id_Postgres');
+        Add('     , Partner.BrandID');
+        Add('     , Partner.FabrikaID');
+        Add('     , Partner.PeriodID');
+        Add('     , Partner.PeriodYear');
+        Add('     , Partner_parent_brand.Id_Postgres as ParentId_Postgres_brand');
+        Add('     , Partner_parent_fabrika.Id_Postgres as ParentId_Postgres_fabrika');
+        Add('     , Partner_parent_Period.Id_Postgres as ParentId_Postgres_Period');
+        Add('from dba.Unit as    Partner');
+        Add(' left outer join dba.Brand as Partner_parent_brand on Partner_parent_brand.Id =  Partner.BrandID');
+        Add(' left outer join dba.Fabrika as Partner_parent_fabrika on Partner_parent_fabrika.Id =  Partner.FabrikaID');
+        Add(' left outer join dba.Period as Partner_parent_Period on Partner_parent_Period.Id =  Partner.PeriodID');
+        Add('where KindUnit = zc_kuIncome()');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Partner';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inBrandId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inFabrikaId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPeriodYear',ftFloat,ptInput, 0);
+        //
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBrandId').Value:=FieldByName('ParentId_Postgres_brand').AsFloat;
+             toStoredProc.Params.ParamByName('inFabrikaId').Value:=FieldByName('ParentId_Postgres_fabrika').AsFloat;
+             toStoredProc.Params.ParamByName('inPeriodId').Value:=FieldByName('ParentId_Postgres_Period').AsFloat;
+             toStoredProc.Params.ParamByName('inPeriodYear').Value:=FieldByName('PeriodYear').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPartner);
+end;
+
 procedure TMainForm.pLoadGuide_Period;
 begin
     if (not cbPeriod.Checked)or(not cbPeriod.Enabled) then exit;
@@ -1663,6 +1760,71 @@ begin
      end;
      //
      myDisabledCB(cbPeriod);
+end;
+
+procedure TMainForm.pLoadGuide_Unit;
+begin
+if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
+    finally
+
+    end;
+     //
+     myEnabledCB(cbUnit);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Unit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Unit.UnitName as ObjectName');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Unit.Erased as Erased');
+        Add('     , Unit.Id_Postgres');
+        Add('from dba.Unit');
+        Add('where KindUnit =  zc_kuUnit()');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Unit';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('Id_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbUnit);
 end;
 
 procedure TMainForm.pLoadGuide_Valuta;

@@ -67,6 +67,10 @@ type
     procedure CreateDiscount;
     procedure CreateDiscountTools;
     procedure CreatePartner;
+    procedure CreateJuridicalGroup;
+    procedure CreateJuridical;
+    procedure CreateUnit;
+    procedure CreateCity;
   end;
 
 implementation
@@ -141,6 +145,11 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Account\');
 end;
 
+procedure TdbObjectProcedureTest.CreateCity;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\City\');
+end;
+
 procedure TdbObjectProcedureTest.CreateCOMMON;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
@@ -148,12 +157,12 @@ end;
 
 procedure TdbObjectProcedureTest.CreateComposition;
 begin
-DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Composition\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCompositionGroup;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\CompositionGroup\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCountryBrand;
@@ -211,6 +220,16 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\InfoMoneyGroup\');
 end;
 
+procedure TdbObjectProcedureTest.CreateJuridical;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Juridical\');
+end;
+
+procedure TdbObjectProcedureTest.CreateJuridicalGroup;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\JuridicalGroup\');
+end;
+
 procedure TdbObjectProcedureTest.CreateKassa;
 begin
    DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
@@ -239,6 +258,11 @@ end;
 procedure TdbObjectProcedureTest.CreatePeriod;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Period\');
+end;
+
+procedure TdbObjectProcedureTest.CreateUnit;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Unit\');
 end;
 
 procedure TdbObjectProcedureTest.CreateValuta;

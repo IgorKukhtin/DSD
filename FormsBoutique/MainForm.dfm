@@ -264,6 +264,50 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJuridicalGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+      FormName = 'TJuridicalGroupForm'
+      FormNameParam.Value = 'TJuridicalGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actJuridical: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      FormName = 'TJuridicalForm'
+      FormNameParam.Value = 'TJuridicalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUnit: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      FormName = 'TUnitForm'
+      FormNameParam.Value = 'TUnitForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCity: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+      FormName = 'TCityForm'
+      FormNameParam.Value = 'TCityForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -348,6 +392,18 @@ inherited MainForm: TMainForm
       end
       object c1: TMenuItem
         Action = actPartner
+      end
+      object N32: TMenuItem
+        Action = actJuridicalGroup
+      end
+      object N33: TMenuItem
+        Action = actJuridical
+      end
+      object N34: TMenuItem
+        Action = actUnit
+      end
+      object N35: TMenuItem
+        Action = actCity
       end
     end
     inherited miService: TMenuItem

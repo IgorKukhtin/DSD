@@ -109,6 +109,21 @@ uses
   DiscountTools in '..\..\FormsBoutique\Guides\DiscountTools.pas' {DiscountToolsForm: TParentForm},
   DiscountToolsEdit in '..\..\FormsBoutique\Guides\DiscountToolsEdit.pas' {DiscountToolsEditForm: TParentForm},
 
+  Partner in '..\..\FormsBoutique\Guides\Partner.pas' {PartnerForm: TParentForm},
+  PartnerEdit in '..\..\FormsBoutique\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+
+  JuridicalGroup in '..\..\FormsBoutique\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
+  JuridicalGroupEdit in '..\..\FormsBoutique\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
+
+  Juridical in '..\..\FormsBoutique\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  JuridicalEdit in '..\..\FormsBoutique\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+
+  Units in '..\..\FormsBoutique\Guides\Units.pas' {UnitsForm: TParentForm},
+  UnitEdit in '..\..\FormsBoutique\Guides\UnitEdit.pas' {UnitsEditForm: TParentForm},
+
+  City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
+  CityEdit in '..\..\FormsBoutique\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

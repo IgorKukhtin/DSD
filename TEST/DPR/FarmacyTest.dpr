@@ -497,7 +497,8 @@ uses
   MedicSPEdit in '..\..\FormsFarmacy\Guides\MedicSPEdit.pas' {MedicSPEditForm: TParentForm},
   MedicSP in '..\..\FormsFarmacy\Guides\MedicSP.pas' {MedicSPForm: TParentForm},
   MemberSPEdit in '..\..\FormsFarmacy\Guides\MemberSPEdit.pas' {MemberSPEditForm: TParentForm},
-  MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm};
+  MemberSP in '..\..\FormsFarmacy\Guides\MemberSP.pas' {MemberSPForm: TParentForm},
+  Report_RemainsOverGoods_To in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_To.pas' {Report_RemainsOverGoods_ToForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -32,7 +32,7 @@ BEGIN
        SELECT 
              Object_Partner.Id                  AS Id
            , Object_Partner.ObjectCode          AS Code
-           , Object_Partner.ValueData           AS Name
+           ,  Cast(coalesce(Object_Brand.ValueData,'') ||coalesce('-'||Object_Period.ValueData,'') ||coalesce('-'||ObjectFloat_PeriodYear.ValueData::integer::Tvarchar,'') AS Tvarchar) AS Name
            , Object_Brand.ValueData             AS BrandName    
            , Object_Fabrika.ValueData           AS FabrikaName       
            , Object_Period.ValueData            AS PeriodName

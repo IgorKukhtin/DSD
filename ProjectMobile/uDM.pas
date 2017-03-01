@@ -10,7 +10,7 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
-  FMX.Dialogs, uProgress;
+  FMX.Dialogs;
 
 CONST
   DataBaseFileName = 'aMobile.sdb';
@@ -164,6 +164,74 @@ type
     tblObject_PartnerGPSE: TFloatField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
+    qryPriceList: TFDQuery;
+    qryGoods: TFDQuery;
+    qryPriceListId: TIntegerField;
+    qryPriceListValueData: TStringField;
+    qryGoodsId: TIntegerField;
+    qryGoodsGoodsName: TStringField;
+    qryGoodsweight: TFloatField;
+    qryGoodsPrice: TFloatField;
+    qryGoodsEndDate: TDateTimeField;
+    qryGoodsGroupName: TStringField;
+    qryGoodsMeasureName: TStringField;
+    qryGoodsOBJECTCODE: TIntegerField;
+    tblMovement_OrderExternal: TFDTable;
+    tblMovement_OrderExternalGUID: TStringField;
+    tblMovement_OrderExternalInvNumber: TStringField;
+    tblMovement_OrderExternalOperDate: TDateTimeField;
+    tblMovement_OrderExternalStatusId: TIntegerField;
+    tblMovement_OrderExternalPartnerId: TIntegerField;
+    tblMovement_OrderExternalPaidKindId: TIntegerField;
+    tblMovement_OrderExternalContractId: TIntegerField;
+    tblMovement_OrderExternalPriceListId: TIntegerField;
+    tblMovement_OrderExternalPriceWithVAT: TBooleanField;
+    tblMovement_OrderExternalVATPercent: TFloatField;
+    tblMovement_OrderExternalChangePercent: TFloatField;
+    tblMovement_OrderExternalTotalCountKg: TFloatField;
+    tblMovement_OrderExternalTotalSumm: TFloatField;
+    tblMovement_OrderExternalInsertDate: TDateTimeField;
+    tblMovement_OrderExternalisSync: TBooleanField;
+    tblMovementItem_OrderExternal: TFDTable;
+    tblMovementItem_OrderExternalId: TIntegerField;
+    tblMovementItem_OrderExternalMovementId: TIntegerField;
+    tblMovementItem_OrderExternalGUID: TStringField;
+    tblMovementItem_OrderExternalGoodsId: TIntegerField;
+    tblMovementItem_OrderExternalGoodsKindId: TIntegerField;
+    tblMovementItem_OrderExternalChangePercent: TFloatField;
+    tblMovementItem_OrderExternalAmount: TFloatField;
+    tblMovementItem_OrderExternalPrice: TFloatField;
+    tblMovement_StoreReal: TFDTable;
+    tblMovement_StoreRealId: TIntegerField;
+    tblMovement_StoreRealGUID: TStringField;
+    tblMovement_StoreRealInvNumber: TStringField;
+    tblMovement_StoreRealOperDate: TDateTimeField;
+    tblMovement_StoreRealStatusId: TIntegerField;
+    tblMovement_StoreRealPartnerId: TIntegerField;
+    tblMovement_StoreRealPriceListId: TIntegerField;
+    tblMovement_StoreRealPriceWithVAT: TBooleanField;
+    tblMovement_StoreRealVATPercent: TFloatField;
+    tblMovement_StoreRealTotalCountKg: TFloatField;
+    tblMovement_StoreRealTotalSumm: TFloatField;
+    tblMovementItem_StoreReal: TFDTable;
+    tblMovementItem_StoreRealId: TIntegerField;
+    tblMovementItem_StoreRealMovementId: TIntegerField;
+    tblMovementItem_StoreRealGUID: TStringField;
+    tblMovementItem_StoreRealGoodsId: TIntegerField;
+    tblMovementItem_StoreRealGoodsKindId: TIntegerField;
+    tblMovementItem_StoreRealAmount: TFloatField;
+    tblMovementItem_StoreRealPrice: TFloatField;
+    qryOrderItems: TFDQuery;
+    qryOrderItemsGoodsID: TIntegerField;
+    qryOrderItemsKindID: TIntegerField;
+    qryOrderItemsName: TWideStringField;
+    qryOrderItemsFullInfo: TWideStringField;
+    qryPartnerCONTRACTID: TIntegerField;
+    qryPartnerContractName: TWideStringField;
+    qryPartnerimAddress: TLargeintField;
+    qryPartnerimContract: TLargeintField;
+    qryPartnerPRICELISTID: TIntegerField;
+    tblMovement_OrderExternalId: TAutoIncField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -180,7 +248,7 @@ type
     function CheckStructure: Boolean;
     function CreateDataBase: Boolean;
 
-    function SynchronizeWithMainDatabase : boolean;
+    function SynchronizeWithMainDatabase : string;
     procedure GetConfigurationInfo;
     procedure GetDictionaries(AName : string);
 
@@ -251,9 +319,11 @@ begin
 end;
 
 procedure TStructure.MakeIndex(ATable: TFDTable);
-var
-  IndexName: String;
+{var
+  IndexName: String;}
 begin
+
+
   {???
   IndexName := 'PK_' + ATable.TableName;
   if (ATable.IndexDefs.Count = 0) then
@@ -564,9 +634,9 @@ begin
   FConnected := Connect;
 end;
 
-function TDM.SynchronizeWithMainDatabase : boolean;
+function TDM.SynchronizeWithMainDatabase : string;
 begin
-  Result := false;
+  Result := '';
 
   tblObject_Const.Open;
   if tblObject_Const.RecordCount = 1 then
@@ -582,7 +652,6 @@ begin
 
   conMain.StartTransaction;
 
-  Screen_Cursor_crHourGlass;
   try
     GetConfigurationInfo;
 
@@ -600,13 +669,11 @@ begin
 
     conMain.Commit;
     Screen_Cursor_crDefault;
-    Result := true;
   except
     on E : Exception do
     begin
       conMain.Rollback;
-      Screen_Cursor_crDefault;
-      ShowMessage(E.Message);
+      Result := E.Message;
     end;
   end;
 end;
