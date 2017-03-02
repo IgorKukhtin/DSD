@@ -1,4 +1,4 @@
-unit Valuta;
+unit Currency;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TValutaForm = class(TParentForm)
+  TCurrencyForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -71,6 +71,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TValutaForm);
+  RegisterClass(TCurrencyForm);
 
 end.

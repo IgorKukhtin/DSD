@@ -22,7 +22,7 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer    AS Id
-           , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
+           , NEXTVAL ('Object_Client_seq') :: Integer AS Code
            , '' :: TVarChar  AS Name
            , '' :: TVarChar  AS DiscountCard             
            ,  0 :: TFloat     AS DiscountTax              

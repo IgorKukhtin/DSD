@@ -248,12 +248,12 @@
 				<Form>KassaEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\Valuta.pas">
-				<Form>ValutaForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\Currency.pas">
+				<Form>CurrencyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Guides\ValutaEdit.pas">
-				<Form>ValutaEditForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Guides\CurrencyEdit.pas">
+				<Form>CurrencyEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Member.pas">

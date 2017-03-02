@@ -1,8 +1,8 @@
-﻿-- Function: gpSelect_Object_Valuta()
+﻿-- Function: gpSelect_Object_Currency()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Valuta (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Currency (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Valuta(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Currency(
     IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
     IN inSession     TVarChar            -- сессия пользователя
    
@@ -12,7 +12,7 @@ AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Valuta());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Currency());
 
 
    -- результат
@@ -22,7 +22,7 @@ BEGIN
            , Object.ValueData                   AS Name
            , Object.isErased                    AS isErased
        FROM Object
-       WHERE Object.DescId = zc_Object_Valuta()
+       WHERE Object.DescId = zc_Object_Currency()
          AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
        ;
 
@@ -34,8 +34,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+02.03.17                                                         *
 20.02.17                                                         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Valuta (inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Currency (inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

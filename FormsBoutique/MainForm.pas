@@ -52,7 +52,7 @@ type
     N12: TMenuItem;
     actKassa: TdsdOpenForm;
     N13: TMenuItem;
-    actValuta: TdsdOpenForm;
+    actCurrency: TdsdOpenForm;
     N14: TMenuItem;
     actMember: TdsdOpenForm;
     N15: TMenuItem;

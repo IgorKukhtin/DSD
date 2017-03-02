@@ -94,8 +94,8 @@ uses
   Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
   KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
 
-  Valuta in '..\..\FormsBoutique\Guides\Valuta.pas' {ValutaForm: TParentForm},
-  ValutaEdit in '..\..\FormsBoutique\Guides\ValutaEdit.pas' {ValutaEditForm: TParentForm},
+  Currency in '..\..\FormsBoutique\Guides\Currency.pas' {CurrencyForm: TParentForm},
+  CurrencyEdit in '..\..\FormsBoutique\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
 
   Member in '..\..\FormsBoutique\Guides\Member.pas' {MemberForm: TParentForm},
   MemberEdit in '..\..\FormsBoutique\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},

@@ -198,12 +198,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actValuta: TdsdOpenForm
+    object actCurrency: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1042#1072#1083#1102#1090#1072
-      FormName = 'TValutaForm'
-      FormNameParam.Value = 'TValutaForm'
+      FormName = 'TCurrencyForm'
+      FormNameParam.Value = 'TCurrencyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -390,7 +390,7 @@ inherited MainForm: TMainForm
         Action = actKassa
       end
       object N14: TMenuItem
-        Action = actValuta
+        Action = actCurrency
       end
       object N15: TMenuItem
         Action = actMember

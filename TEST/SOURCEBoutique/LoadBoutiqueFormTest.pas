@@ -69,7 +69,7 @@ type
     procedure LoadGoodsSizeFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadKassaFormTest;
-    procedure LoadValutaFormTest;
+    procedure LoadCurrencyFormTest;
     procedure LoadMemberFormTest;
     procedure LoadPeriodFormTest;
     procedure LoadDiscountFormTest;
@@ -1365,12 +1365,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 end;
 
-procedure TLoadFormTest.LoadValutaFormTest;
+procedure TLoadFormTest.LoadCurrencyFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TValutaForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TValutaForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TValutaEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TValutaEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
 end;
 
 initialization

@@ -61,7 +61,7 @@ type
     procedure CreateGoodsSize;
     procedure CreateGoodsGroup;
     procedure CreateKassa;
-    procedure CreateValuta;
+    procedure CreateCurrency;
     procedure CreateMember;
     procedure CreatePeriod;
     procedure CreateDiscount;
@@ -271,9 +271,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Unit\');
 end;
 
-procedure TdbObjectProcedureTest.CreateValuta;
+procedure TdbObjectProcedureTest.CreateCurrency;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Valuta\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Currency\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettings;
