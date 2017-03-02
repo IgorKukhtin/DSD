@@ -75,6 +75,7 @@ type
     cbDiscountTools: TCheckBox;
     cbPartner: TCheckBox;
     cbUnit: TCheckBox;
+    cbLabel: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -145,6 +146,7 @@ type
     procedure pLoadGuide_DiscountTools;
     procedure pLoadGuide_Partner;
     procedure pLoadGuide_Unit;
+    procedure pLoadGuide_Label;
 
 
 
@@ -618,6 +620,8 @@ begin
      if not fStop then pLoadGuide_DiscountTools;
      if not fStop then pLoadGuide_Partner;
      if not fStop then pLoadGuide_Unit;
+     if not fStop then pLoadGuide_Label;
+
 
 
 
@@ -1473,6 +1477,77 @@ begin
      end;
      //
      myDisabledCB(cbKassa);
+end;
+
+procedure TMainForm.pLoadGuide_Label;
+begin
+      if (not cbLabel.Checked)or(not cbLabel.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba. Goods add Id_Postgres integer null;');
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.GoodsProperty add Id_pg_label integer null;');
+
+    finally
+
+    end;
+
+     //
+     myEnabledCB(cbLabel);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select  0 as ObjectCode');
+        Add(', goods_group.goodsName AS ObjectName');
+        Add(', max (Id_pg_label) as id_pg');
+        Add(', zc_erasedDel() as zc_erasedDel');
+        Add(', 0 as Erased');
+        Add(' from GoodsProperty');
+        Add(' join goods on goods.Id = GoodsProperty.goodsId');
+        Add(' join goods as goods_group on goods_group.Id = goods.ParentId');
+        Add('group by  goods_group.goodsName');
+
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Label';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLabelGroupId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inLabelGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbLabel);
 end;
 
 procedure TMainForm.pLoadGuide_LineFabrica;
