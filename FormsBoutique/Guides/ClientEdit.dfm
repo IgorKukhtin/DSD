@@ -2,8 +2,8 @@ object ClientEditForm: TClientEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
-  ClientHeight = 394
-  ClientWidth = 295
+  ClientHeight = 497
+  ClientWidth = 294
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,96 +17,96 @@ object ClientEditForm: TClientEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 10
-    Top = 72
+    Left = 8
+    Top = 69
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 10
-    Top = 54
+    Left = 8
+    Top = 52
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 353
+    Left = 37
+    Top = 457
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 6
+    TabOrder = 12
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 353
+    Left = 168
+    Top = 457
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 7
+    TabOrder = 13
   end
   object cxLabel2: TcxLabel
-    Left = 10
+    Left = 8
     Top = 8
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit
-    Left = 10
-    Top = 30
+    Left = 8
+    Top = 24
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 8
+    TabOrder = 14
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 10
-    Top = 95
+    Left = 8
+    Top = 99
     Caption = #1053#1086#1084#1077#1088' '#1082#1072#1088#1090#1099
   end
   object cxLabel4: TcxLabel
-    Left = 10
-    Top = 167
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089
+    Left = 8
+    Top = 229
+    Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
-    Left = 10
-    Top = 185
-    TabOrder = 2
+    Left = 8
+    Top = 251
+    TabOrder = 6
     Width = 273
   end
   object edDiscountCard: TcxTextEdit
-    Left = 10
-    Top = 113
+    Left = 8
+    Top = 117
     TabOrder = 1
-    Width = 273
+    Width = 135
   end
-  object edOKPO: TcxTextEdit
-    Left = 10
-    Top = 224
-    TabOrder = 3
-    Width = 273
+  object edPhoneMobile: TcxTextEdit
+    Left = 8
+    Top = 295
+    TabOrder = 7
+    Width = 135
   end
   object cxLabel5: TcxLabel
-    Left = 10
-    Top = 209
-    Caption = #1054#1050#1055#1054
+    Left = 8
+    Top = 278
+    Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085
   end
-  object edINN: TcxTextEdit
-    Left = 10
-    Top = 265
-    TabOrder = 4
-    Width = 273
+  object edPhone: TcxTextEdit
+    Left = 144
+    Top = 295
+    TabOrder = 8
+    Width = 133
   end
   object cxLabel6: TcxLabel
-    Left = 10
-    Top = 250
-    Caption = #1048#1053#1053
+    Left = 144
+    Top = 278
+    Caption = #1058#1077#1083#1077#1092#1086#1085
   end
   object ceCity: TcxButtonEdit
-    Left = 10
-    Top = 310
+    Left = 8
+    Top = 205
     Properties.Buttons = <
       item
         Default = True
@@ -116,13 +116,91 @@ object ClientEditForm: TClientEditForm
     Width = 273
   end
   object cxLabel7: TcxLabel
-    Left = 10
-    Top = 291
-    Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+    Left = 8
+    Top = 189
+    Caption = #1043#1086#1088#1086#1076
+  end
+  object edDiscountTax: TcxCurrencyEdit
+    Left = 8
+    Top = 166
+    EditValue = '0'
+    Properties.DecimalPlaces = 1
+    Properties.DisplayFormat = '0.0 %'
+    TabOrder = 3
+    Width = 135
+  end
+  object cxLabel8: TcxLabel
+    Left = 8
+    Top = 142
+    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+  end
+  object cxLabel9: TcxLabel
+    Left = 148
+    Top = 142
+    Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1076#1086#1087'.'
+  end
+  object edDiscountTaxTwo: TcxCurrencyEdit
+    Left = 148
+    Top = 166
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 1
+    Properties.DisplayFormat = '0.0 %'
+    TabOrder = 4
+    Width = 133
+  end
+  object edHappyDate: TcxDateEdit
+    Left = 148
+    Top = 117
+    EditValue = 42796d
+    TabOrder = 2
+    Width = 133
+  end
+  object cxLabel10: TcxLabel
+    Left = 144
+    Top = 99
+    Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
+  end
+  object cxLabel11: TcxLabel
+    Left = 8
+    Top = 320
+    Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
+  end
+  object edMail: TcxTextEdit
+    Left = 8
+    Top = 337
+    TabOrder = 9
+    Width = 273
+  end
+  object cxLabel12: TcxLabel
+    Left = 8
+    Top = 399
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edComment: TcxTextEdit
+    Left = 8
+    Top = 417
+    TabOrder = 11
+    Width = 273
+  end
+  object ceDiscountKind: TcxButtonEdit
+    Left = 8
+    Top = 377
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 273
+  end
+  object cxLabel13: TcxLabel
+    Left = 8
+    Top = 359
+    Caption = #1042#1080#1076#1099' '#1089#1082#1080#1076#1086#1082
   end
   object ActionList: TActionList
-    Left = 184
-    Top = 56
+    Left = 166
+    Top = 321
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -166,6 +244,13 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCode'
+        Value = 0
+        Component = edCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inName'
         Value = ''
         Component = edName
@@ -182,10 +267,18 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inFullName'
+        Name = 'inDiscountTax'
         Value = Null
-        Component = edDiscountCard
-        DataType = ftString
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTaxTwo'
+        Value = Null
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -198,17 +291,41 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOKPO'
+        Name = 'inHappyDate'
+        Value = 'NULL'
+        Component = edHappyDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhoneMobile'
         Value = Null
-        Component = edOKPO
+        Component = edPhoneMobile
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inINN'
+        Name = 'inPhone'
         Value = Null
-        Component = edINN
+        Component = edPhone
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMail'
+        Value = Null
+        Component = edMail
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -220,10 +337,18 @@ object ClientEditForm: TClientEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountKindId'
+        Value = Null
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 48
+    Left = 86
+    Top = 233
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -233,8 +358,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 8
+    Left = 70
+    Top = 177
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Client'
@@ -250,6 +375,12 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Code'
+        Value = 0
+        Component = edCode
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Name'
         Value = ''
         Component = edName
@@ -257,23 +388,31 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Code'
-        Value = 0.000000000000000000
-        Component = edCode
-        DataType = ftUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isCorporate'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FullName'
+        Name = 'DiscountCard'
         Value = Null
         Component = edDiscountCard
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTax'
+        Value = Null
+        Component = edDiscountTax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountTaxTwo'
+        Value = Null
+        Component = edDiscountTaxTwo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'HappyDate'
+        Value = 'NULL'
+        Component = edHappyDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -284,15 +423,31 @@ object ClientEditForm: TClientEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OKPO'
+        Name = 'PhoneMobile'
         Value = Null
-        Component = edOKPO
+        Component = edPhoneMobile
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'INN'
+        Name = 'Phone'
         Value = Null
-        Component = edINN
+        Component = edPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Mail'
+        Value = Null
+        Component = edMail
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -307,11 +462,27 @@ object ClientEditForm: TClientEditForm
         Value = Null
         Component = CityGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountKindId'
+        Value = Null
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DiscountKindName'
+        Value = Null
+        Component = DiscountKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 184
-    Top = 8
+    Left = 150
+    Top = 177
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -325,12 +496,12 @@ object ClientEditForm: TClientEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 184
-    Top = 104
+    Left = 102
+    Top = 337
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 104
+    Left = 78
+    Top = 281
   end
   object CityGuides: TdsdGuides
     KeyField = 'Id'
@@ -358,7 +529,36 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 293
+    Left = 60
+    Top = 329
+  end
+  object DiscountKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceDiscountKind
+    FormNameParam.Value = 'TDiscountKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDiscountKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DiscountKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 148
+    Top = 379
   end
 end

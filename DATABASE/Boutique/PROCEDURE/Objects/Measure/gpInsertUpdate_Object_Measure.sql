@@ -19,9 +19,13 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
    vbUserId:= lpGetUserBySession (inSession);
-  
+
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Measure_seq'); END IF; 
+
    -- проверка уникальности для свойства <Наименование Единицы измерения>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); 
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), inCode, inName);
@@ -42,6 +46,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+02.03.17                                                          *
 16.02.17                                                          *
 */
 

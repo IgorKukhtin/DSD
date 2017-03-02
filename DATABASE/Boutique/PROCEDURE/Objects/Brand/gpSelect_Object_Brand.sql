@@ -1,13 +1,13 @@
-﻿-- Function: gpSelect_Object_Brand()
+﻿-- Function: gpSelect_Object_Brand (Boolean, TVarChar);
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Brand (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Brand (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Brand(
     IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
     IN inSession     TVarChar            -- сессия пользователя
    
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CountryBrandName TVarChar, isErased boolean)
 AS
 $BODY$
 BEGIN
@@ -17,13 +17,21 @@ BEGIN
 
    -- результат
    RETURN QUERY
-      SELECT Object.Id                          AS Id
-           , Object.ObjectCode                  AS Code
-           , Object.ValueData                   AS Name
-           , Object.isErased                    AS isErased
-       FROM Object
-       WHERE Object.DescId = zc_Object_Brand()
-         AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+       SELECT
+             Object_Brand.Id                      AS Id
+           , Object_Brand.ObjectCode              AS Code
+           , Object_Brand.ValueData               AS Name
+           , Object_CountryBrand.ValueData        AS CountryBrandName
+           , Object_Brand.isErased                      AS isErased
+       FROM Object AS Object_Brand
+
+            LEFT JOIN ObjectLink AS Object_Brand_CountryBrand
+                                 ON Object_Brand_CountryBrand.ObjectId = Object_Brand.Id
+                                AND Object_Brand_CountryBrand.DescId = zc_ObjectLink_Brand_CountryBrand()
+            LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = Object_Brand_CountryBrand.ChildObjectId
+      
+       WHERE Object_Brand.DescId = zc_Object_Brand()
+         AND (Object_Brand.isErased = FALSE OR inIsShowAll = TRUE)
        ;
 
 END;
@@ -34,7 +42,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
- 19.02.17                                                         *
+02.03.17                                                         *
+19.02.17                                                         *
 */
 
 -- тест

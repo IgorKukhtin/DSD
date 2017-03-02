@@ -26,6 +26,7 @@ object ClientForm: TClientForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -57,6 +58,131 @@ object ClientForm: TClientForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Width = 226
+      end
+      object clDiscountKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' '#1089#1082#1080#1076#1086#1082
+        DataBinding.FieldName = 'DiscountKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clDiscountCard: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1082#1072#1088#1090#1099
+        DataBinding.FieldName = 'DiscountCard'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
+      object clHappyDate: TcxGridDBColumn
+        Caption = #1044#1077#1085#1100' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'HappyDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 81
+      end
+      object clDiscountTax: TcxGridDBColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'DiscountTax'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 68
+      end
+      object clDiscountTaxTwo: TcxGridDBColumn
+        Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086
+        DataBinding.FieldName = 'DiscountTaxTwo'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 119
+      end
+      object clTotalCount: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clTotalSumm: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072
+        DataBinding.FieldName = 'TotalSumm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clTotalSummDiscount: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+        DataBinding.FieldName = 'TotalSummDiscount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clTotalSummPay: TcxGridDBColumn
+        Caption = #1048#1090#1086#1075#1086' '#1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'TotalSummPay'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clLastCount: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        DataBinding.FieldName = 'LastCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 124
+      end
+      object clLastSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1080
+        DataBinding.FieldName = 'LastSumm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 122
+      end
+      object clLastSummDiscount: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1074' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1087#1086#1082#1091#1087#1082#1077
+        DataBinding.FieldName = 'LastSummDiscount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 125
+      end
+      object clLastDate: TcxGridDBColumn
+        Caption = #1055#1086#1089#1083#1077#1076#1085#1103#1103' '#1076#1072#1090#1072' '#1087#1086#1082#1091#1087#1082#1080
+        DataBinding.FieldName = 'LastDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 92
+      end
+      object clCityName: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'CityName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clAddress: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089
+        DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clPhoneMobile: TcxGridDBColumn
+        Caption = #1052#1086#1073#1080#1083#1100#1085#1099#1081' '#1090#1077#1083#1077#1092#1086#1085
+        DataBinding.FieldName = 'PhoneMobile'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 88
+      end
+      object clPhone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085
+        DataBinding.FieldName = 'Phone'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
+      object clMail: TcxGridDBColumn
+        Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1095#1090#1072
+        DataBinding.FieldName = 'Mail'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

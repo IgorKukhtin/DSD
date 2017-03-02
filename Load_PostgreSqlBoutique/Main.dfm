@@ -472,8 +472,8 @@ object MainForm: TMainForm
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=Sybase'
+      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
+      'User ID=Administrator;Data Source=Sybase'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 136
@@ -545,8 +545,8 @@ object MainForm: TMainForm
   end
   object fromFlADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=Sybase'
+      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
+      'User ID=Administrator;Data Source=Sybase'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 136

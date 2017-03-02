@@ -60,6 +60,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    clCountryBrandName: TcxGridDBColumn;
   private
     { Private declarations }
   public

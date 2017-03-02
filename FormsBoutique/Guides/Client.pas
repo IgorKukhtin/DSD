@@ -60,6 +60,25 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    clDiscountCard: TcxGridDBColumn;
+    clDiscountTax: TcxGridDBColumn;
+    clDiscountTaxTwo: TcxGridDBColumn;
+    clTotalCount: TcxGridDBColumn;
+    clTotalSumm: TcxGridDBColumn;
+    clTotalSummDiscount: TcxGridDBColumn;
+    clTotalSummPay: TcxGridDBColumn;
+    clLastCount: TcxGridDBColumn;
+    clLastSumm: TcxGridDBColumn;
+    clLastSummDiscount: TcxGridDBColumn;
+    clLastDate: TcxGridDBColumn;
+    clAddress: TcxGridDBColumn;
+    clHappyDate: TcxGridDBColumn;
+    clPhoneMobile: TcxGridDBColumn;
+    clPhone: TcxGridDBColumn;
+    clMail: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clCityName: TcxGridDBColumn;
+    clDiscountKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

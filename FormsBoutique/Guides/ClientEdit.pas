@@ -19,7 +19,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit,
+  cxCalendar;
 
 type
   TClientEditForm = class(TParentForm)
@@ -42,13 +43,26 @@ type
     cxLabel4: TcxLabel;
     edAddress: TcxTextEdit;
     edDiscountCard: TcxTextEdit;
-    edOKPO: TcxTextEdit;
+    edPhoneMobile: TcxTextEdit;
     cxLabel5: TcxLabel;
-    edINN: TcxTextEdit;
+    edPhone: TcxTextEdit;
     cxLabel6: TcxLabel;
     ceCity: TcxButtonEdit;
     CityGuides: TdsdGuides;
     cxLabel7: TcxLabel;
+    edDiscountTax: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    edDiscountTaxTwo: TcxCurrencyEdit;
+    edHappyDate: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    edMail: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    edComment: TcxTextEdit;
+    ceDiscountKind: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    DiscountKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

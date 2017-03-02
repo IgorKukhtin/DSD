@@ -74,6 +74,8 @@ type
     N34: TMenuItem;
     actCity: TdsdOpenForm;
     N35: TMenuItem;
+    actClient: TdsdOpenForm;
+    N36: TMenuItem;
   private
     { Private declarations }
   public

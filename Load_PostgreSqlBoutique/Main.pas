@@ -758,13 +758,15 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Brand.Id as ObjectId');
+         Add('select Brand.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Brand.BrandName as ObjectName');
         Add('     , zc_erasedDel() as zc_erasedDel');
         Add('     , Brand.Erased as Erased');
         Add('     , Brand.Id_Postgres');
+        Add('     , Brand_parent.Id_Postgres as ParentId_Postgres');
         Add('from dba.Brand');
+        Add('     left outer join dba.CountryBrand as Brand_parent on Brand_parent.Id = Brand.CountryBrandId');
         Add('order by ObjectId');
         Open;
         //
@@ -780,6 +782,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCountryBrandId',ftInteger,ptInput, 0);
+
         //
         while not EOF do
         begin
@@ -789,6 +793,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inCountryBrandId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
