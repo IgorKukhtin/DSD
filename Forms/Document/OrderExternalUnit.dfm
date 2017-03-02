@@ -12,17 +12,17 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     Height = 233
     ExplicitTop = 166
     ExplicitWidth = 1031
-    ExplicitHeight = 502
+    ExplicitHeight = 233
     ClientRectBottom = 233
     ClientRectRight = 1031
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1031
-      ExplicitHeight = 478
+      ExplicitHeight = 209
       inherited cxGrid: TcxGrid
         Width = 1031
         Height = 209
         ExplicitWidth = 1031
-        ExplicitHeight = 478
+        ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -187,6 +187,7 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object MeasureName: TcxGridDBColumn [5]
