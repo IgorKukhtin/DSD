@@ -1,4 +1,4 @@
-object ValutaEditForm: TValutaEditForm
+object CurrencyEditForm: TCurrencyEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1072#1083#1102#1090#1072'>'
@@ -93,7 +93,7 @@ object ValutaEditForm: TValutaEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Valuta'
+    StoredProcName = 'gpInsertUpdate_Object_Currency'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -136,7 +136,7 @@ object ValutaEditForm: TValutaEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Valuta'
+    StoredProcName = 'gpGet_Object_Currency'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -1,4 +1,4 @@
-object ValutaForm: TValutaForm
+object CurrencyForm: TCurrencyForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1072#1083#1102#1090#1072'>'
@@ -267,8 +267,8 @@ object ValutaForm: TValutaForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TValutaEditForm'
-      FormNameParam.Value = 'TValutaEditForm'
+      FormName = 'TCurrencyEditForm'
+      FormNameParam.Value = 'TCurrencyEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -289,8 +289,8 @@ object ValutaForm: TValutaForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TValutaEditForm'
-      FormNameParam.Value = 'TValutaEditForm'
+      FormName = 'TCurrencyEditForm'
+      FormNameParam.Value = 'TCurrencyEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -424,7 +424,7 @@ object ValutaForm: TValutaForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Valuta'
+    StoredProcName = 'gpSelect_Object_Currency'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -444,7 +444,7 @@ object ValutaForm: TValutaForm
     Top = 128
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Valuta'
+    StoredProcName = 'gpUpdate_Object_isErased_Currency'
     DataSets = <>
     OutputType = otResult
     Params = <

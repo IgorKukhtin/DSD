@@ -1,4 +1,4 @@
-unit ValutaEdit;
+unit CurrencyEdit;
 
 interface
 
@@ -21,7 +21,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TValutaEditForm = class(TParentForm)
+  TCurrencyEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -48,6 +48,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TValutaEditForm);
+  RegisterClass(TCurrencyEditForm);
 
 end.

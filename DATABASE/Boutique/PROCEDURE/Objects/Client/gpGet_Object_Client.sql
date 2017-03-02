@@ -16,34 +16,28 @@ BEGIN
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
   PERFORM lpGetUserBySession (inSession);
 
- -- пытаемся найти код
-   IF inId <> 0 AND COALESCE (vbCode_max, 0) = 0 THEN vbCode_max := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = inId); END IF;
-
 
   IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST ('' as TVarChar)  AS DiscountCard             
-           , CAST (0 as TFloat)     AS DiscountTax              
-           , CAST (0 as TFloat)     AS DiscountTaxTwo                                   
-           , CAST ('' as TVarChar)  AS Address                  
-           , CAST (now() as TDateTime) AS HappyDate                
-           , CAST ('' as TVarChar)  AS PhoneMobile              
-           , CAST ('' as TVarChar)  AS Phone                    
-           , CAST ('' as TVarChar)  AS Mail                     
-           , CAST ('' as TVarChar)  AS Comment                  
-           , CAST (0 as Integer)    AS CityId                   
-           , CAST ('' as TVarChar)  AS CityName                 
-           , CAST (0 as Integer)    AS DiscountKindId           
-           , CAST ('' as TVarChar)  AS DiscountKindName         
-           
-
-       FROM Object
-       WHERE Object.DescId = zc_Object_Client();
+              0 :: Integer    AS Id
+           , NEXTVAL ('Object_Client_seq') :: Integer AS Code
+           , '' :: TVarChar  AS Name
+           , '' :: TVarChar  AS DiscountCard             
+           ,  0 :: TFloat     AS DiscountTax              
+           ,  0 :: TFloat     AS DiscountTaxTwo                                   
+           , '' :: TVarChar  AS Address                  
+           , now() :: TDateTime AS HappyDate                
+           , '' :: TVarChar  AS PhoneMobile              
+           , '' :: TVarChar  AS Phone                    
+           , '' :: TVarChar  AS Mail                     
+           , '' :: TVarChar  AS Comment                  
+           ,  0 :: Integer    AS CityId                   
+           , '' :: TVarChar  AS CityName                 
+           ,  0 :: Integer    AS DiscountKindId           
+           , '' :: TVarChar  AS DiscountKindName         
+       ;
    ELSE
        RETURN QUERY
        SELECT 
@@ -126,6 +120,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+02.03.17                                                          *
 28.02.17                                                          *
  
 */

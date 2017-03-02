@@ -243,6 +243,10 @@ type
     MainAmountIncome: TcxGridDBColumn;
     MainPriceSaleIncome: TcxGridDBColumn;
     MainNDS: TcxGridDBColumn;
+    Panel1: TPanel;
+    ceScaner: TcxCurrencyEdit;
+    lbScaner: TLabel;
+    MainId: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -289,7 +293,8 @@ type
     procedure actSetConfirmedKind_CompleteExecute(Sender: TObject);
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
-    procedure ParentFormDestroy(Sender: TObject); //***10.08.16
+    procedure ParentFormDestroy(Sender: TObject);
+    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16
   private
     FSoldRegim: boolean;
     fShift: Boolean;
@@ -1141,6 +1146,22 @@ procedure TMainCashForm.ceAmountKeyDown(Sender: TObject; var Key: Word;
 begin
   if Key=VK_Return then
      actInsertUpdateCheckItems.Execute
+end;
+
+procedure TMainCashForm.ceScanerKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+ if Key = #13 then
+ begin
+   RemainsCDS.AfterScroll := nil;
+   RemainsCDS.DisableConstraints;
+  if  RemainsCDS.Locate('Id', StrToInt(Copy(ceScaner.Text,4, 9)), []) then
+   lbScaner.Caption:='найдено ' + ceScaner.Text else
+   lbScaner.Caption:='не найдено ' + ceScaner.Text;
+   ceScaner.Text:='';
+   RemainsCDS.EnableConstraints;
+   RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+ end;
 end;
 
 procedure TMainCashForm.actCheckConnectionExecute(Sender: TObject);

@@ -247,7 +247,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             DataBinding.FieldName = 'isOrder'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object clisScaleCeh: TcxGridDBColumn
@@ -255,7 +254,6 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             DataBinding.FieldName = 'isScaleCeh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 90
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -361,6 +359,9 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spUpdate_isParam
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -731,6 +732,57 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
       end>
     PackSize = 1
     Left = 304
+    Top = 112
+  end
+  object spUpdate_isParam: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_GoodsByGoodsKind_isOrder_isScaleCeh'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisOrder'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isOrder'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisScaleCeh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isScaleCeh'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
     Top = 112
   end
 end

@@ -1,4 +1,4 @@
-unit Valuta;
+unit Client;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TValutaForm = class(TParentForm)
+  TClientForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -60,6 +60,25 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    clDiscountCard: TcxGridDBColumn;
+    clDiscountTax: TcxGridDBColumn;
+    clDiscountTaxTwo: TcxGridDBColumn;
+    clTotalCount: TcxGridDBColumn;
+    clTotalSumm: TcxGridDBColumn;
+    clTotalSummDiscount: TcxGridDBColumn;
+    clTotalSummPay: TcxGridDBColumn;
+    clLastCount: TcxGridDBColumn;
+    clLastSumm: TcxGridDBColumn;
+    clLastSummDiscount: TcxGridDBColumn;
+    clLastDate: TcxGridDBColumn;
+    clAddress: TcxGridDBColumn;
+    clHappyDate: TcxGridDBColumn;
+    clPhoneMobile: TcxGridDBColumn;
+    clPhone: TcxGridDBColumn;
+    clMail: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clCityName: TcxGridDBColumn;
+    clDiscountKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -71,6 +90,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TValutaForm);
+  RegisterClass(TClientForm);
 
 end.

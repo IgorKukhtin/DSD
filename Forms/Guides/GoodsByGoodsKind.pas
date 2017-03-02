@@ -33,6 +33,7 @@ type
     ReceiptCode: TcxGridDBColumn;
     colId: TcxGridDBColumn;
     clChangePercentAmount: TcxGridDBColumn;
+    spUpdate_isParam: TdsdStoredProc;
   private
     { Private declarations }
   public

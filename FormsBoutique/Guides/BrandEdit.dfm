@@ -2,7 +2,7 @@ object BrandEditForm: TBrandEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1041#1088#1077#1085#1076'>'
-  ClientHeight = 200
+  ClientHeight = 210
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object BrandEditForm: TBrandEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 144
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object BrandEditForm: TBrandEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 144
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,6 +59,22 @@ object BrandEditForm: TBrandEditForm
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
+  end
+  object ceCountryBrand: TcxButtonEdit
+    Left = 10
+    Top = 118
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 100
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 152
@@ -119,6 +135,14 @@ object BrandEditForm: TBrandEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountryBrandId'
+        Value = Null
+        Component = CountryBrandGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -161,6 +185,21 @@ object BrandEditForm: TBrandEditForm
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryBrandId'
+        Value = Null
+        Component = CountryBrandGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryBrandName'
+        Value = Null
+        Component = CountryBrandGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -184,5 +223,34 @@ object BrandEditForm: TBrandEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 104
+  end
+  object CountryBrandGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCountryBrand
+    FormNameParam.Value = 'TCountryBrandForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCountryBrandForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CountryBrandGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CountryBrandGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 221
+    Top = 119
   end
 end

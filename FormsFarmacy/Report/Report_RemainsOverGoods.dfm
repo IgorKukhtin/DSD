@@ -4,7 +4,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
   ClientWidth = 1066
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1082
-  ExplicitHeight = 595
+  ExplicitHeight = 596
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

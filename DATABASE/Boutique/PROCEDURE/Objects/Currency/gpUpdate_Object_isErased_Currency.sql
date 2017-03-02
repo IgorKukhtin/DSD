@@ -1,8 +1,8 @@
--- Function: gpUpdate_Object_isErased_Valuta (Integer, TVarChar)
+-- Function: gpUpdate_Object_isErased_Currency (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Valuta (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_Currency (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Valuta(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_isErased_Currency(
     IN inObjectId Integer, 
     IN inSession  TVarChar
 )
@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Valuta());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_isErased_Currency());
    vbUserId:= lpGetUserBySession (inSession);
 
    -- изменили
@@ -25,5 +25,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+02.03.17                                                          *
 19.02.17                                                          *
 */

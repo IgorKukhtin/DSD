@@ -61,7 +61,7 @@ type
     procedure CreateGoodsSize;
     procedure CreateGoodsGroup;
     procedure CreateKassa;
-    procedure CreateValuta;
+    procedure CreateCurrency;
     procedure CreateMember;
     procedure CreatePeriod;
     procedure CreateDiscount;
@@ -71,6 +71,7 @@ type
     procedure CreateJuridical;
     procedure CreateUnit;
     procedure CreateCity;
+    procedure CreateClient;
   end;
 
 implementation
@@ -148,6 +149,11 @@ end;
 procedure TdbObjectProcedureTest.CreateCity;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\City\');
+end;
+
+procedure TdbObjectProcedureTest.CreateClient;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Client\');
 end;
 
 procedure TdbObjectProcedureTest.CreateCOMMON;
@@ -265,9 +271,9 @@ begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Unit\');
 end;
 
-procedure TdbObjectProcedureTest.CreateValuta;
+procedure TdbObjectProcedureTest.CreateCurrency;
 begin
-  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Valuta\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Currency\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettings;

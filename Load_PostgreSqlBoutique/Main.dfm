@@ -412,6 +412,22 @@ object MainForm: TMainForm
       TabOrder = 19
       WordWrap = True
     end
+    object cbLabel: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 302
+      Width = 178
+      Height = 24
+      Caption = '1.18. '#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 20
+      WordWrap = True
+    end
   end
   object DocumentPanel: TPanel
     Left = 948
@@ -472,11 +488,11 @@ object MainForm: TMainForm
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=Sybase'
+      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
+      'User ID=Administrator;Data Source=Sybase'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 136
+    Left = 137
     Top = 96
   end
   object fromQuery: TADOQuery
@@ -531,7 +547,6 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect
     HostName = 'localhost'
@@ -545,8 +560,8 @@ object MainForm: TMainForm
   end
   object fromFlADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=Sybase'
+      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
+      'User ID=Administrator;Data Source=Sybase'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 136

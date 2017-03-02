@@ -198,12 +198,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actValuta: TdsdOpenForm
+    object actCurrency: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1042#1072#1083#1102#1090#1072
-      FormName = 'TValutaForm'
-      FormNameParam.Value = 'TValutaForm'
+      FormName = 'TCurrencyForm'
+      FormNameParam.Value = 'TCurrencyForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -308,6 +308,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actClient: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+      FormName = 'TClientForm'
+      FormNameParam.Value = 'TClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -379,7 +390,7 @@ inherited MainForm: TMainForm
         Action = actKassa
       end
       object N14: TMenuItem
-        Action = actValuta
+        Action = actCurrency
       end
       object N15: TMenuItem
         Action = actMember
@@ -404,6 +415,9 @@ inherited MainForm: TMainForm
       end
       object N35: TMenuItem
         Action = actCity
+      end
+      object N36: TMenuItem
+        Action = actClient
       end
     end
     inherited miService: TMenuItem

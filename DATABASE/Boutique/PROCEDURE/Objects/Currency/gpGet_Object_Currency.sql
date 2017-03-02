@@ -1,9 +1,9 @@
-﻿-- Function: gpGet_Object_Valuta()
+﻿-- Function: gpGet_Object_Currency()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Valuta (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Currency (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Object_Valuta(
-    IN inId          Integer,       -- Valuta
+CREATE OR REPLACE FUNCTION gpGet_Object_Currency(
+    IN inId          Integer,       -- Currency
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) 
@@ -12,17 +12,17 @@ $BODY$
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Valuta());
+  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Currency());
 
   IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
+              0 :: Integer    AS Id
+           , NEXTVAL ('Object_Currency_seq') :: Integer AS Code
+           , '' :: TVarChar  AS Name
        FROM Object
-       WHERE Object.DescId = zc_Object_Valuta();
+       WHERE Object.DescId = zc_Object_Currency();
    ELSE
        RETURN QUERY
        SELECT
@@ -42,8 +42,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+02.03.17                                                          *
 20.02.17                                                          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Valuta (1,'2')
+-- SELECT * FROM gpSelect_Currency (1,'2')

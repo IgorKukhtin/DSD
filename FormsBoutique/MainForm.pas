@@ -52,7 +52,7 @@ type
     N12: TMenuItem;
     actKassa: TdsdOpenForm;
     N13: TMenuItem;
-    actValuta: TdsdOpenForm;
+    actCurrency: TdsdOpenForm;
     N14: TMenuItem;
     actMember: TdsdOpenForm;
     N15: TMenuItem;
@@ -74,6 +74,8 @@ type
     N34: TMenuItem;
     actCity: TdsdOpenForm;
     N35: TMenuItem;
+    actClient: TdsdOpenForm;
+    N36: TMenuItem;
   private
     { Private declarations }
   public

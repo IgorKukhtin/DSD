@@ -94,8 +94,8 @@ uses
   Kassa in '..\..\FormsBoutique\Guides\Kassa.pas' {KassaForm: TParentForm},
   KassaEdit in '..\..\FormsBoutique\Guides\KassaEdit.pas' {KassaEditForm: TParentForm},
 
-  Valuta in '..\..\FormsBoutique\Guides\Valuta.pas' {ValutaForm: TParentForm},
-  ValutaEdit in '..\..\FormsBoutique\Guides\ValutaEdit.pas' {ValutaEditForm: TParentForm},
+  Currency in '..\..\FormsBoutique\Guides\Currency.pas' {CurrencyForm: TParentForm},
+  CurrencyEdit in '..\..\FormsBoutique\Guides\CurrencyEdit.pas' {CurrencyEditForm: TParentForm},
 
   Member in '..\..\FormsBoutique\Guides\Member.pas' {MemberForm: TParentForm},
   MemberEdit in '..\..\FormsBoutique\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
@@ -123,6 +123,10 @@ uses
 
   City in '..\..\FormsBoutique\Guides\City.pas' {CityForm: TParentForm},
   CityEdit in '..\..\FormsBoutique\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+
+  Client in '..\..\FormsBoutique\Guides\Client.pas' {ClientForm: TParentForm},
+  ClientEdit in '..\..\FormsBoutique\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
+
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
