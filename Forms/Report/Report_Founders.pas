@@ -70,6 +70,7 @@ type
     bbExecuteDialog: TdxBarButton;
     cbisDate: TcxCheckBox;
     OperDate: TcxGridDBColumn;
+    GroupId: TcxGridDBColumn;
   private
     { Private declarations }
   public

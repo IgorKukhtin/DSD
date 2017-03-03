@@ -89,6 +89,12 @@ type
     Summ_branch: TcxGridDBColumn;
     isRePrice: TcxGridDBColumn;
     isInv: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
