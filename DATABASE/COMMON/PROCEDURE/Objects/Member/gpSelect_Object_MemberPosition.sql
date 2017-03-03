@@ -21,16 +21,17 @@ BEGIN
 
    -- Результат
    RETURN QUERY 
-   with tmpPersonal AS (SELECT DISTINCT
-                               Object_Personal.PersonalId
+   with tmpPersonal AS (SELECT Object_Personal.PersonalId
                              , Object_Personal.MemberId
                              , Object_Personal.PositionId
                              , Object_Personal.PositionName
+                               --  № п/п
+                             , ROW_NUMBER() OVER (PARTITION BY Object_Personal.MemberId ORDER BY Object_Personal.PersonalId DESC) AS Ord
                         FROM Object_Personal_View AS Object_Personal
-                        WHERE Object_Personal.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/)
+                        -- WHERE Object_Personal.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/ UNION SELECT 8466 /*водитель*/ WHERE inPositionId = 81178 /*экспедитор*/)
                           -- AND (Object_Personal.isErased = FALSE OR (Object_Personal.isErased = TRUE AND inIsShowAll = TRUE))
-                          AND Object_Personal.isErased = FALSE
-                        )
+                        WHERE Object_Personal.isErased = FALSE
+                       )
                    
      SELECT 
            Object_Member.Id         AS Id
@@ -54,6 +55,7 @@ BEGIN
 
      FROM Object AS Object_Member
           INNER JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id
+                                AND tmpPersonal.Ord      = 1 -- !!!только первый!!!
          
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
@@ -109,6 +111,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_MemberPosition (8466, FALSE, zfCalc_UserAdmin()) order by 3
---SELECT * FROM gpSelect_Object_MemberPosition (8466, TRUE, zfCalc_UserAdmin())  order by 3
-
---select * from gpSelect_Object_MemberPosition(inPositionId := 81178 , inIsShowAll := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Object_MemberPosition (8466, TRUE, zfCalc_UserAdmin())  order by 3
+-- SELECT * FROM gpSelect_Object_MemberPosition (81178, TRUE, zfCalc_UserAdmin())  order by 3
