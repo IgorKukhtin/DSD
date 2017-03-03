@@ -223,7 +223,7 @@ inherited MainForm: TMainForm
     object actPeriod: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1077#1088#1080#1086#1076
+      Caption = #1057#1077#1079#1086#1085
       FormName = 'TPeriodForm'
       FormNameParam.Value = 'TPeriodForm'
       FormNameParam.DataType = ftString
