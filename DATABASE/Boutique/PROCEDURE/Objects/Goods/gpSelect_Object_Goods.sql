@@ -16,6 +16,7 @@ RETURNS TABLE (
            , GoodsInfoName        TVarChar
            , LineFabricaName      TVarChar
            , LabelName            TVarChar
+           , GroupNameFull        TVarChar
            , isErased             boolean
  ) 
 AS
@@ -32,16 +33,17 @@ BEGIN
      -- Результат
      RETURN QUERY 
        SELECT 
-             Object_Goods.Id               AS Id
-           , Object_Goods.ObjectCode       AS Code
-           , Object_Goods.ValueData        AS Name
-           , Object_GoodsGroup.ValueData   AS GoodsGroupName
-           , Object_Measure.ValueData      AS MeasureName    
-           , Object_Composition.ValueData  AS CompositionName
-           , Object_GoodsInfo.ValueData    AS GoodsInfoName
-           , Object_LineFabrica.ValueData  AS LineFabricaName
-           , Object_Label.ValueData        AS LabelName
-           , Object_Goods.isErased         AS isErased
+             Object_Goods.Id                AS Id
+           , Object_Goods.ObjectCode        AS Code
+           , Object_Goods.ValueData         AS Name
+           , Object_GoodsGroup.ValueData    AS GoodsGroupName
+           , Object_Measure.ValueData       AS MeasureName    
+           , Object_Composition.ValueData   AS CompositionName
+           , Object_GoodsInfo.ValueData     AS GoodsInfoName
+           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_Label.ValueData         AS LabelName
+           , Object_GroupNameFull.ValueData As GroupNameFull
+           , Object_Goods.isErased          AS isErased
            
        FROM Object AS Object_Goods
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -73,6 +75,10 @@ BEGIN
                                  ON ObjectLink_Goods_Label.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
             LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
+
+           LEFT JOIN ObjectString AS Object_GroupNameFull
+                                  ON Object_GroupNameFull.ObjectId = Object_Goods.Id
+                                 AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
      WHERE Object_Goods.DescId = zc_Object_Goods()
               AND (Object_Goods.isErased = FALSE OR inIsShowAll = TRUE)

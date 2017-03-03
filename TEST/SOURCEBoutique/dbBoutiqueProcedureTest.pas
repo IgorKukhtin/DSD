@@ -73,6 +73,7 @@ type
     procedure CreateCity;
     procedure CreateClient;
     procedure CreateLabel;
+    procedure CreateGoods;
   end;
 
 implementation
@@ -190,6 +191,11 @@ end;
 procedure TdbObjectProcedureTest.CreateFabrika;
 begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');
+end;
+
+procedure TdbObjectProcedureTest.CreateGoods;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Goods\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoodsGroup;

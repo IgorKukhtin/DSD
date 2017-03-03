@@ -81,6 +81,8 @@ type
     procedure LoadCityFormTest;
     procedure LoadClientFormTest;
     procedure LoadLabelFormTest;
+    procedure LoadGoodsFormTest;
+
 
 
 //    procedure LoadMemberFormTest;
@@ -278,6 +280,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFabrikaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFabrikaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFabrikaEditForm');
+end;
+
+procedure TLoadFormTest.LoadGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
