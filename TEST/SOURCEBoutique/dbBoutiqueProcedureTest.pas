@@ -72,6 +72,8 @@ type
     procedure CreateUnit;
     procedure CreateCity;
     procedure CreateClient;
+    procedure CreateLabel;
+    procedure CreateGoods;
   end;
 
 implementation
@@ -191,6 +193,11 @@ begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');
 end;
 
+procedure TdbObjectProcedureTest.CreateGoods;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Goods\');
+end;
+
 procedure TdbObjectProcedureTest.CreateGoodsGroup;
 begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsGroup\');
@@ -239,6 +246,11 @@ end;
 procedure TdbObjectProcedureTest.CreateKassa;
 begin
    DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
+end;
+
+procedure TdbObjectProcedureTest.CreateLabel;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Label\');
 end;
 
 procedure TdbObjectProcedureTest.CreateLineFabrica;

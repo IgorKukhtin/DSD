@@ -127,9 +127,16 @@ uses
   Client in '..\..\FormsBoutique\Guides\Client.pas' {ClientForm: TParentForm},
   ClientEdit in '..\..\FormsBoutique\Guides\ClientEdit.pas' {ClientEditForm: TParentForm},
 
+  Labels in '..\..\FormsBoutique\Guides\Labels.pas' {LabelForm: TParentForm},
+  LabelEdit in '..\..\FormsBoutique\Guides\LabelEdit.pas' {LabelEditForm: TParentForm},
+
+  Goods in '..\..\FormsBoutique\Guides\Goods.pas' {GoodsForm: TParentForm},
+  GoodsEdit in '..\..\FormsBoutique\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},
+
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
 //  UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},

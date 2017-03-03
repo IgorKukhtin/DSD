@@ -80,6 +80,9 @@ type
     procedure LoadUnitFormTest;
     procedure LoadCityFormTest;
     procedure LoadClientFormTest;
+    procedure LoadLabelFormTest;
+    procedure LoadGoodsFormTest;
+
 
 
 //    procedure LoadMemberFormTest;
@@ -279,6 +282,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFabrikaEditForm');
 end;
 
+procedure TLoadFormTest.LoadGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+end;
+
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));
@@ -325,6 +336,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TKassaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TKassaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TKassaEditForm');
+end;
+
+procedure TLoadFormTest.LoadLabelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLabelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLabelEditForm');
 end;
 
 procedure TLoadFormTest.LoadLineFabricaFormTest;

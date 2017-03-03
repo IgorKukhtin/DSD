@@ -129,11 +129,11 @@ BEGIN
                                             AND MIFloat_SummSocialAdd.DescId = zc_MIFloat_SummSocialAdd()                                     
 
                  LEFT JOIN MovementItemFloat AS MIFloat_SummChildRecalc
-                                             ON MIFloat_SummChildRecalc.MovementItemId = tmpAll.MovementItemId
+                                             ON MIFloat_SummChildRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummChildRecalc.DescId = zc_MIFloat_SummChildRecalc()
 
                  LEFT JOIN MovementItemFloat AS MIFloat_SummMinusExtRecalc
-                                             ON MIFloat_SummMinusExtRecalc.MovementItemId = tmpAll.MovementItemId
+                                             ON MIFloat_SummMinusExtRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummMinusExtRecalc.DescId = zc_MIFloat_SummMinusExtRecalc()
 
                  LEFT JOIN MovementItemBoolean AS MIBoolean_Main
@@ -174,6 +174,13 @@ BEGIN
                                                    
      FROM tmpMI
     ;
+
+if inSession = '5'
+then
+    RAISE EXCEPTION 'admin - Net Prav';
+end if;
+
+
 
 END;
 $BODY$

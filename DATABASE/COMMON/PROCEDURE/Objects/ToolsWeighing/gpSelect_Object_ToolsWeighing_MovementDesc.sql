@@ -118,7 +118,9 @@ BEGIN
             , CASE WHEN tmp.isTransport_link   = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
 
             , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode = 201 -- если Обвалка
-                        THEN 'Упаковка'
+                        THEN 'после Шприцевания' -- 'Упаковка'
+                   -- WHEN (tmp.FromId IN ('951601', '981821') OR tmp.ToId IN ('951601', '981821')) AND inBranchCode = 201 -- если Обвалка
+                   --      THEN 'Упаковка / на Шприцевание'
                    WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar, zc_Movement_ProductionSeparate() :: TVarChar)
                         THEN 'Производство'
                    ELSE MovementDesc.ItemName
