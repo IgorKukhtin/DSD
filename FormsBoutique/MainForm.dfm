@@ -223,7 +223,7 @@ inherited MainForm: TMainForm
     object actPeriod: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1055#1077#1088#1080#1086#1076
+      Caption = #1057#1077#1079#1086#1085
       FormName = 'TPeriodForm'
       FormNameParam.Value = 'TPeriodForm'
       FormNameParam.DataType = ftString
@@ -314,6 +314,28 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
       FormName = 'TClientForm'
       FormNameParam.Value = 'TClientForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLabel: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+      FormName = 'TLabelForm'
+      FormNameParam.Value = 'TLabelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoods: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -418,6 +440,12 @@ inherited MainForm: TMainForm
       end
       object N36: TMenuItem
         Action = actClient
+      end
+      object N37: TMenuItem
+        Action = actLabel
+      end
+      object N38: TMenuItem
+        Action = actGoods
       end
     end
     inherited miService: TMenuItem

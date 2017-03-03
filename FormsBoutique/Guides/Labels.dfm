@@ -1,7 +1,7 @@
-object PeriodForm: TPeriodForm
+object LabelForm: TLabelForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1077#1079#1086#1085'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072'>'
   ClientHeight = 376
   ClientWidth = 403
   Color = clBtnFace
@@ -267,8 +267,8 @@ object PeriodForm: TPeriodForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPeriodEditForm'
-      FormNameParam.Value = 'TPeriodEditForm'
+      FormName = 'TLabelEditForm'
+      FormNameParam.Value = 'TLabelEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -289,8 +289,8 @@ object PeriodForm: TPeriodForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPeriodEditForm'
-      FormNameParam.Value = 'TPeriodEditForm'
+      FormName = 'TLabelEditForm'
+      FormNameParam.Value = 'TLabelEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -424,7 +424,7 @@ object PeriodForm: TPeriodForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Period'
+    StoredProcName = 'gpSelect_Object_Label'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -444,7 +444,7 @@ object PeriodForm: TPeriodForm
     Top = 128
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Period'
+    StoredProcName = 'gpUpdate_Object_isErased_Label'
     DataSets = <>
     OutputType = otResult
     Params = <

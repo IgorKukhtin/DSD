@@ -1,9 +1,9 @@
-object PeriodForm: TPeriodForm
+object GoodsForm: TGoodsForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1077#1079#1086#1085'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1074#1072#1088#1099'>'
   ClientHeight = 376
-  ClientWidth = 403
+  ClientWidth = 774
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object PeriodForm: TPeriodForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 403
+    Width = 774
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 608
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -39,7 +40,6 @@ object PeriodForm: TPeriodForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -49,7 +49,7 @@ object PeriodForm: TPeriodForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 90
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -57,7 +57,41 @@ object PeriodForm: TPeriodForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 243
+        Width = 275
+      end
+      object clGoodsGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+        DataBinding.FieldName = 'GoodsGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 144
+      end
+      object clMeasureName: TcxGridDBColumn
+        Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        DataBinding.FieldName = 'MeasureName'
+      end
+      object clCompositionName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'CompositionName'
+      end
+      object clGoodsInfoName: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsInfoName'
+        Width = 80
+      end
+      object clLineFabricaName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+        DataBinding.FieldName = 'LineFabricaName'
+      end
+      object clLabelName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        DataBinding.FieldName = 'LabelName'
+        Width = 95
+      end
+      object clGroupNameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'GroupNameFull'
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -267,8 +301,8 @@ object PeriodForm: TPeriodForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPeriodEditForm'
-      FormNameParam.Value = 'TPeriodEditForm'
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -289,8 +323,8 @@ object PeriodForm: TPeriodForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPeriodEditForm'
-      FormNameParam.Value = 'TPeriodEditForm'
+      FormName = 'TGoodsEditForm'
+      FormNameParam.Value = 'TGoodsEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -424,7 +458,7 @@ object PeriodForm: TPeriodForm
     end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Period'
+    StoredProcName = 'gpSelect_Object_Goods'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -444,7 +478,7 @@ object PeriodForm: TPeriodForm
     Top = 128
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_Period'
+    StoredProcName = 'gpUpdate_Object_isErased_Goods'
     DataSets = <>
     OutputType = otResult
     Params = <

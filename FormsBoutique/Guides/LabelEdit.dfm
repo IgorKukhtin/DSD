@@ -1,8 +1,8 @@
-object PeriodEditForm: TPeriodEditForm
+object LabelEditForm: TLabelEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1077#1079#1086#1085'>'
-  ClientHeight = 200
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072'>'
+  ClientHeight = 177
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,23 +28,23 @@ object PeriodEditForm: TPeriodEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 41
-    Top = 144
+    Left = 40
+    Top = 127
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 185
-    Top = 144
+    Left = 184
+    Top = 127
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 4
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -93,7 +93,7 @@ object PeriodEditForm: TPeriodEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Period'
+    StoredProcName = 'gpInsertUpdate_Object_Label'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -136,7 +136,7 @@ object PeriodEditForm: TPeriodEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Period'
+    StoredProcName = 'gpGet_Object_Label'
     DataSets = <>
     OutputType = otResult
     Params = <

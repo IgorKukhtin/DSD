@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 666
   KeyPreview = True
   ExplicitWidth = 682
-  ExplicitHeight = 230
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1946,9 +1946,6 @@ inherited MainForm: TMainForm
       object N62: TMenuItem
         Action = actReportSoldParamsFormOpen
       end
-      object N122: TMenuItem
-        Action = actReportPromoParams
-      end
       object N68: TMenuItem
         Action = actReasonDifferences
       end
@@ -2038,15 +2035,6 @@ inherited MainForm: TMainForm
       end
       object N72: TMenuItem
         Action = actRepriceJournal
-      end
-      object N70: TMenuItem
-        Caption = '-'
-      end
-      object N65: TMenuItem
-        Action = actPromo
-      end
-      object N128: TMenuItem
-        Action = actPromoUnit
       end
       object N33: TMenuItem
         Caption = '-'
@@ -2145,12 +2133,6 @@ inherited MainForm: TMainForm
       object miReportMovementCheckFarmForm: TMenuItem
         Action = actReportMovementCheckFarmForm
       end
-      object miReport_MovementCheck_Cross: TMenuItem
-        Action = actReport_MovementCheck_Cross
-      end
-      object miReport_MovementCheckFarm_Cross: TMenuItem
-        Action = actReport_MovementCheckFarm_Cross
-      end
       object N106: TMenuItem
         Action = actReport_MovementCheckErrorForm
       end
@@ -2159,12 +2141,6 @@ inherited MainForm: TMainForm
       end
       object N51: TMenuItem
         Action = actReportMovementIncomeFarmForm
-      end
-      object N108: TMenuItem
-        Action = actReport_MovementIncome_Promo
-      end
-      object N109: TMenuItem
-        Action = actReport_MovementCheck_Promo
       end
       object miReport_GoodsPartionMoveForm: TMenuItem
         Action = actReport_GoodsPartionMoveForm
@@ -2186,9 +2162,6 @@ inherited MainForm: TMainForm
       end
       object N104: TMenuItem
         Action = actReport_MovementCheckUnLiquid
-      end
-      object N110: TMenuItem
-        Action = actReport_CheckPromo
       end
       object miReport_RemainsOverGoods: TMenuItem
         Action = actReport_RemainsOverGoods
@@ -2232,6 +2205,39 @@ inherited MainForm: TMainForm
       end
       object N123: TMenuItem
         Action = actReport_MinPrice_onGoods
+      end
+    end
+    object N131: TMenuItem [7]
+      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      object miReport_MovementCheck_Cross: TMenuItem
+        Action = actReport_MovementCheck_Cross
+      end
+      object miReport_MovementCheckFarm_Cross: TMenuItem
+        Action = actReport_MovementCheckFarm_Cross
+      end
+      object N108: TMenuItem
+        Action = actReport_MovementIncome_Promo
+      end
+      object N109: TMenuItem
+        Action = actReport_MovementCheck_Promo
+      end
+      object N110: TMenuItem
+        Action = actReport_CheckPromo
+      end
+      object N132: TMenuItem
+        Caption = '-'
+      end
+      object N65: TMenuItem
+        Action = actPromo
+      end
+      object N128: TMenuItem
+        Action = actPromoUnit
+      end
+      object N133: TMenuItem
+        Caption = '-'
+      end
+      object N122: TMenuItem
+        Action = actReportPromoParams
       end
     end
     inherited miService: TMenuItem

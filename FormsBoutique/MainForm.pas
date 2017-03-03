@@ -76,6 +76,10 @@ type
     N35: TMenuItem;
     actClient: TdsdOpenForm;
     N36: TMenuItem;
+    actLabel: TdsdOpenForm;
+    N37: TMenuItem;
+    actGoods: TdsdOpenForm;
+    N38: TMenuItem;
   private
     { Private declarations }
   public

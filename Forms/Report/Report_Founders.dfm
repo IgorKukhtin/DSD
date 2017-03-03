@@ -364,6 +364,12 @@ inherited Report_FoundersForm: TReport_FoundersForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object GroupId: TcxGridDBColumn
+            DataBinding.FieldName = 'GroupId'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
+          end
         end
       end
     end
@@ -559,9 +565,9 @@ inherited Report_FoundersForm: TReport_FoundersForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDItems'
           IndexFieldNames = 'FounderName;GroupName;MoneyPlaceName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -569,16 +575,19 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object dsdPrintRealAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -590,9 +599,9 @@ inherited Report_FoundersForm: TReport_FoundersForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = MasterCDS
           UserName = 'frxDBDItems'
           IndexFieldNames = 'FounderName;GroupName;MoneyPlaceName'
+          GridView = cxGridDBTableView
         end>
       Params = <
         item
@@ -600,16 +609,19 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' - '#1076#1077#1090#1072#1083#1100#1085#1099#1081
       ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1091#1095#1088#1077#1076#1080#1090#1077#1083#1103#1084' - '#1076#1077#1090#1072#1083#1100#1085#1099#1081
       ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
@@ -618,54 +630,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -673,6 +694,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'IncomeDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -680,6 +702,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -687,6 +710,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -694,6 +718,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -701,6 +726,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -708,6 +734,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -715,6 +742,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -725,54 +753,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -780,6 +817,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'ReturnOutDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -787,6 +825,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -794,6 +833,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -801,6 +841,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -808,6 +849,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -815,6 +857,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -822,6 +865,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -831,54 +875,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -886,6 +939,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'SaleDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -893,6 +947,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -900,6 +955,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -907,6 +963,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -914,6 +971,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -921,6 +979,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -928,6 +987,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -940,6 +1000,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TReport_FoundersDialogForm'
       FormNameParam.Value = 'TReport_FoundersDialogForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
@@ -947,6 +1008,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
@@ -954,6 +1016,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
@@ -962,6 +1025,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -970,6 +1034,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupId'
@@ -977,6 +1042,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = InfoMoneyGroupGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyGroupName'
@@ -985,6 +1051,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationId'
@@ -992,6 +1059,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = InfoMoneyDestinationGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyDestinationName'
@@ -1000,6 +1068,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
@@ -1007,6 +1076,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = InfoMoneyGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1015,6 +1085,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'inisDate'
@@ -1022,6 +1093,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = cbisDate
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1034,54 +1106,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1089,6 +1170,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'ReturnInDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1096,6 +1178,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1103,6 +1186,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1110,6 +1194,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1117,6 +1202,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1124,6 +1210,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1131,6 +1218,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1141,54 +1229,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1196,6 +1293,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'MoneyDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1203,6 +1301,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1210,6 +1309,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1217,6 +1317,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1224,6 +1325,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1231,6 +1333,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1238,6 +1341,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1248,54 +1352,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1303,6 +1416,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'ServiceDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1310,6 +1424,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1317,6 +1432,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1324,6 +1440,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1331,6 +1448,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1338,6 +1456,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1345,6 +1464,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1355,54 +1475,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1410,6 +1539,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'SendDebtDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1417,6 +1547,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1424,6 +1555,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1431,6 +1563,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1438,6 +1571,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1445,6 +1579,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1452,6 +1587,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1462,54 +1598,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1517,6 +1662,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'OtherDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1524,6 +1670,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1531,6 +1678,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1538,6 +1686,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1545,6 +1694,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1552,6 +1702,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1559,6 +1710,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1569,54 +1721,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1624,6 +1785,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'SaleRealDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1631,6 +1793,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1638,6 +1801,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1645,6 +1809,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1652,6 +1817,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1659,6 +1825,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1666,6 +1833,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1676,54 +1844,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1731,6 +1908,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'ReturnInRealDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1738,6 +1916,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1745,6 +1924,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1752,6 +1932,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1759,6 +1940,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1766,6 +1948,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1773,6 +1956,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1783,54 +1967,63 @@ inherited Report_FoundersForm: TReport_FoundersForm
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'StartDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'AccountId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindId'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'DescSet'
@@ -1838,6 +2031,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = FormParams
           ComponentItem = 'TransferDebtDesc'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'AccountName'
@@ -1845,6 +2039,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'AccountName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'JuridicalName'
@@ -1852,6 +2047,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PartnerName'
@@ -1859,6 +2055,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
@@ -1866,6 +2063,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'ContractNumber'
@@ -1873,6 +2071,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'ContractNumber'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'PaidKindName'
@@ -1880,6 +2079,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1900,6 +2100,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1907,6 +2108,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
@@ -1914,6 +2116,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -1921,6 +2124,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyGroupId'
@@ -1928,6 +2132,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = InfoMoneyGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyDestinationId'
@@ -1935,6 +2140,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDate'
@@ -1942,6 +2148,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = cbisDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 184
@@ -2063,6 +2270,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
     LookupControl = ceInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2073,6 +2281,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2081,6 +2290,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 824
     Top = 65533
@@ -2090,6 +2300,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestinationForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2100,6 +2311,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2108,6 +2320,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 536
     Top = 37
@@ -2117,6 +2330,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
     LookupControl = ceInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2125,6 +2339,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2132,6 +2347,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 824
     Top = 29
@@ -2141,6 +2357,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2150,6 +2367,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValueAll'
@@ -2158,6 +2376,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 552
   end
@@ -2172,6 +2391,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'IncomeDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
@@ -2179,6 +2399,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'ReturnOutDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
@@ -2186,6 +2407,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'SaleDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
@@ -2193,6 +2415,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'ReturnInDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
@@ -2200,6 +2423,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'MoneyDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
@@ -2207,6 +2431,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'ServiceDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
@@ -2214,6 +2439,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'SendDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
@@ -2221,6 +2447,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'OtherDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
@@ -2228,6 +2455,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'SaleRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
@@ -2235,6 +2463,7 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'ReturnInRealDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
@@ -2242,10 +2471,11 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Component = FormParams
         ComponentItem = 'TransferDebtDesc'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 232
+    Left = 352
+    Top = 264
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -2253,56 +2483,67 @@ inherited Report_FoundersForm: TReport_FoundersForm
         Name = 'IncomeDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnOutDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MoneyDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ServiceDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SendDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OtherDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SaleRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ReturnInRealDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TransferDebtDesc'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 232

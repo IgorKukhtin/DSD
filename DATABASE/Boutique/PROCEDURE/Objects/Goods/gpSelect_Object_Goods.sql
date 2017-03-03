@@ -11,16 +11,15 @@ RETURNS TABLE (
            , Code                 Integer
            , Name                 TVarChar
            , GoodsGroupName       TVarChar
-           , CountryBrandName     TVarChar
            , MeasureName          TVarChar
-           , GoodsSizeName        TVarChar
-           , ValutaName           TVarChar
            , CompositionName      TVarChar
            , GoodsInfoName        TVarChar
            , LineFabricaName      TVarChar
+           , LabelName            TVarChar
+           , GroupNameFull        TVarChar
            , isErased             boolean
  ) 
-  AS
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -34,18 +33,17 @@ BEGIN
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
        SELECT 
-             Object_Goods.Id               AS Id
-           , Object_Goods.ObjectCode       AS Code
-           , Object_Goods.ValueData        AS Name
-           , Object_GoodsGroup.ValueData   AS GoodsGroupName
-           , Object_CountryBrand.ValueData AS CountryBrandName
-           , Object_Measure.ValueData      AS MeasureName    
-           , Object_GoodsSize.ValueData    AS GoodsSizeName
-           , Object_Valuta.ValueData       AS ValutaName
-           , Object_Composition.ValueData  AS CompositionName
-           , Object_GoodsInfo.ValueData    AS GoodsInfoName
-           , Object_LineFabrica.ValueData  AS LineFabricaName
-           , Object_Goods.isErased         AS isErased
+             Object_Goods.Id                AS Id
+           , Object_Goods.ObjectCode        AS Code
+           , Object_Goods.ValueData         AS Name
+           , Object_GoodsGroup.ValueData    AS GoodsGroupName
+           , Object_Measure.ValueData       AS MeasureName    
+           , Object_Composition.ValueData   AS CompositionName
+           , Object_GoodsInfo.ValueData     AS GoodsInfoName
+           , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_Label.ValueData         AS LabelName
+           , Object_GroupNameFull.ValueData As GroupNameFull
+           , Object_Goods.isErased          AS isErased
            
        FROM Object AS Object_Goods
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -53,26 +51,10 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_CountryBrand
-                                 ON ObjectLink_Goods_CountryBrand.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_CountryBrand.DescId = zc_ObjectLink_Goods_CountryBrand()
-            LEFT JOIN Object AS Object_CountryBrand ON Object_CountryBrand.Id = ObjectLink_Goods_CountryBrand.ChildObjectId
-
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsSize
-                                 ON ObjectLink_Goods_GoodsSize.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_GoodsSize.DescId = zc_ObjectLink_Goods_GoodsSize()
-            LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = ObjectLink_Goods_GoodsSize.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Valuta
-                                 ON ObjectLink_Goods_Valuta.ObjectId = Object_Goods.Id
-                                AND ObjectLink_Goods_Valuta.DescId = zc_ObjectLink_Goods_Valuta()
-            LEFT JOIN Object AS Object_Valuta ON Object_Valuta.Id = ObjectLink_Goods_Valuta.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Composition
                                  ON ObjectLink_Goods_Composition.ObjectId = Object_Goods.Id
@@ -89,6 +71,14 @@ BEGIN
                                 AND ObjectLink_Goods_LineFabrica.DescId = zc_ObjectLink_Goods_LineFabrica()
             LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = ObjectLink_Goods_LineFabrica.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Label
+                                 ON ObjectLink_Goods_Label.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
+
+           LEFT JOIN ObjectString AS Object_GroupNameFull
+                                  ON Object_GroupNameFull.ObjectId = Object_Goods.Id
+                                 AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
      WHERE Object_Goods.DescId = zc_Object_Goods()
               AND (Object_Goods.isErased = FALSE OR inIsShowAll = TRUE)
@@ -103,6 +93,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    œÓÎˇÚ˚ÍËÌ ¿.¿.
+03.03.17                                                           *
 24.02.17                                                           *
 */
 

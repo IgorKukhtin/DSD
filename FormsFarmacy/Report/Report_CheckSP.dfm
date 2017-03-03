@@ -784,7 +784,7 @@ inherited Report_CheckSPForm: TReport_CheckSPForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 112
-    Top = 32
+    Top = 56
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
