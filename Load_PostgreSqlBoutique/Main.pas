@@ -73,6 +73,7 @@ type
     fromQuery_two: TQuery;
     fromQueryDate: TQuery;
     fromQueryDate_recalc: TQuery;
+    cbGoods: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -144,6 +145,7 @@ type
     procedure pLoadGuide_Partner;
     procedure pLoadGuide_Unit;
     procedure pLoadGuide_Label;
+    procedure pLoadGuide_Goods;
 
 
 
@@ -609,6 +611,7 @@ begin
      if not fStop then pLoadGuide_Partner;
      if not fStop then pLoadGuide_Unit;
      if not fStop then pLoadGuide_Label;
+     if not fStop then pLoadGuide_Goods;
 
 
 
@@ -640,8 +643,6 @@ begin
      //
      fStop:=true;
 end;
-
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
@@ -651,8 +652,6 @@ var tmpDate1,tmpDate2:TDateTime;
 begin
  
 end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2,tmpDate3:TDateTime;
@@ -665,34 +664,43 @@ begin
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
+      if (not cbMeasure.Checked) then
       fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
+      if (not cbCompositionGroup.Checked) then
       fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
+      if (not cbComposition.Checked) then
       fExecSqFromQuery('update dba.Composition set Id_Postgres = null');
+      if (not cbCountryBrand.Checked) then
       fExecSqFromQuery('update dba.CountryBrand set Id_Postgres = null');
+      if (not cbBrand.Checked) then
       fExecSqFromQuery('update dba.Brand set Id_Postgres = null');
+      if (not cbFabrika.Checked) then
       fExecSqFromQuery('update dba.Fabrika set Id_Postgres = null');
+      if (not cbLineFabrica.Checked) then
       fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
+      if (not cbGoodsInfo.Checked) then
       fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null');
+      if (not cbGoodsSize.Checked) then
       fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null');
+      if (not cbKassa.Checked) then
       fExecSqFromQuery('update dba.Kassa set Id_Postgres = null');
+      if (not cbValuta.Checked) then
       fExecSqFromQuery('update dba.Valuta set Id_Postgres = null');
+      if (not cbPeriod.Checked) then
       fExecSqFromQuery('update dba.Period set Id_Postgres = null');
+      if (not cbGoodsGroup.Checked) then
       fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
+      if (not cbDiscount.Checked) then
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
+      if (not cbDiscountTools.Checked) then
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
+      if (not cbUnit.Checked) then
       fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
+      if (not cbLabel.Checked) then
+      fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
 
-
-
-
-//      fExecSqFromQuery('update dba. set Id_Postgres = null');
-//     if not fStop then pLoadGuide_DiscountTools;
 
 
 //     fExecSqFromQuery('update dba.Goods set Id_Postgres = null,Id_Postgres_Fuel = null,Id_Postgres_TicketFuel = null');
@@ -1210,6 +1218,11 @@ begin
      myDisabledCB(cbFabrika);
 end;
 
+procedure TMainForm.pLoadGuide_Goods;
+begin
+
+end;
+
 procedure TMainForm.pLoadGuide_GoodsGroup;
 begin
     if (not cbGoodsGroup.Checked)or(not cbGoodsGroup.Enabled) then exit;
@@ -1472,7 +1485,7 @@ begin
       if (not cbLabel.Checked)or(not cbLabel.Enabled) then exit;
      try
      if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba. Goods add Id_Postgres integer null;');
+      fExecSqFromQuery('alter table dba.Goods add Id_Postgres integer null;');
      if cbId_Postgres.Checked then
       fExecSqFromQuery('alter table dba.GoodsProperty add Id_pg_label integer null;');
 
@@ -1963,10 +1976,6 @@ end.
 
 
 {
--- dblog -t D:\Database\Alan\v9ProfiMeating_log D:\Database\Alan\v9ProfiMeating.db
---
--- !!!! в базе сибасе надо создать ключи !!!
---
 alter table dba.GoodsProperty_Detail add Id1_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id2_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id3_Postgres integer null;
@@ -1989,42 +1998,6 @@ alter table dba.GoodsProperty_Detail add Id19_pg integer null;
 alter table dba.GoodsProperty_Detail add Id20_pg integer null;
 alter table dba.GoodsProperty_Detail add Id21_Postgres integer null;
 
-create table dba.GoodsProperty_Postgres (Id integer not null, Name_PG TVarCharMedium not null, Id_Postgres integer null);
-insert into dba.GoodsProperty_Postgres (Id, Name_PG)
-  select 1, 'АТБ' union all       // +fIsClient_ATB *** GoodsCodeScaner
-  select 2, 'Киев ОК' union all   // +fIsClient_OK  *** GoodsCodeScaner_byKievOK
-  select 3, 'Метро' union all     // +fIsClient_Metro  fIsClient_MetroTwo *** GoodsCodeScaner_byMetro
-  select 4, 'Алан' union all      //                  *** GoodsCodeScaner_byMain
-  select 5, 'Фоззи' union all     // +fIsClient_Fozzi fIsClient_FozziM  *** GoodsCodeScaner_byFozzi
-  select 6, 'Кишени' union all    // +fIsClient_Kisheni *** GoodsCodeScaner_byKisheni
-  select 7, 'Виват' union all     // +fIsClient_Vivat *** GoodsCodeScaner_byVivat
-  select 8, 'Билла' union all     // +fIsClient_Billa *** GoodsCodeScaner_byBilla
-  select 9, 'Билла-2' union all   // fIsClient_BillaTwo *** Code_byBillaTwo
-  select 10, 'Амстор' union all     // +fIsClient_Amstor *** GoodsCodeScaner_byAmstor
-  select 11, 'Омега' union all     // ***fIsClient_Omega *** GoodsCodeScaner_byOmega
-  select 12, 'Восторг' union all   // ***fIsClient_Vostorg *** GoodsCodeScaner_byVostorg
-  select 13, 'Ашан' union all      // +fIsClient_Ashan *** GoodsCodeScaner_byAshan
-  select 14, 'Реал' union all      // +fIsClient_Real  *** GoodsCodeScaner_byReal
-  select 15, 'ЖД' union all        // ***fIsClient_GD  *** GoodsName_GD
-  -- select 16, 'Таврия' union all    // fIsClient_Tavriya *** Code_byTavriya
-  select 17, 'Адвентис' union all  // fIsClient_Adventis *** GoodsCodeScaner_byAdventis
-  select 18, 'Край'               // fIsClient_Kray *** Code_byKray
-  ;                               // ------
-                                  // fIsClient_Furshet
-                                  // fIsClient_Obgora
-
-insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
-  select 19, 'ВЭД Eng', 300422
-
-insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
-  select 20, 'ВЭД Рус', 300423
-
-insert into dba.GoodsProperty_Postgres (Id, Name_PG,Id_Postgres)
-  select 21, 'Кишени-Кулинария', 420377 // +fIsClient_KisheniContract *** GoodsCodeScaner_byKisheni
-
-
-
-update dba.GoodsProperty_Postgres set Id = 21 where Id_Postgres = 420377
 
 alter table dba.GoodsProperty_Kachestvo add Id_pg1 integer null;
 alter table dba.GoodsProperty_Kachestvo add Id_pg2 integer null;
@@ -2065,189 +2038,3 @@ ok
 
 }
 
-
-{
-select 1 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_ATB(Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 2 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_OK(Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 3 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where (fIsClient_Metro(Unit .Id) = zc_rvYes() or fIsClient_MetroTwo(Unit .Id) = zc_rvYes()) and OKPO <> ''
-group by OKPO
-
-union all
-select 4 as myId -- Алан
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where (fIsClient_Furshet(Unit .Id) = zc_rvYes() or fIsClient_Obgora(Unit .Id) = zc_rvYes()or fIsClient_Tavriya(Unit .Id) = zc_rvYes()) and OKPO <> ''
-group by OKPO
-
-union all
-select 5 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where (fIsClient_Fozzi(Unit .Id) = zc_rvYes() or fIsClient_FozziM(Unit .Id) = zc_rvYes()) and OKPO <> ''
-group by OKPO
-
-union all
-
-select 6 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Kisheni(Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 7 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Vivat (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-
-union all
-select 8 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Billa (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-
-union all
-select 10 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Amstor (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-
-union all
-select 11 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Omega (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-
-union all
-select 12 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Vostorg (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 13 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Ashan (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 14 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Real (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 15 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_GD (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
--- union all select 16 as myId fIsClient_Tavriya
-
-union all
-select 17 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Adventis (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-union all
-select 18 as myId
-     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
-     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
-from Unit
-     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
-                                                          and Information1.OKPO <> ''
-     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
-where fIsClient_Kray (Unit .Id) = zc_rvYes() and OKPO <> ''
-group by OKPO
-
-order by 1
-}
