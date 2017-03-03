@@ -30,9 +30,6 @@ type
     GuidePanel: TPanel;
     cbAllGuide: TCheckBox;
     Gauge: TGauge;
-    fromADOConnection: TADOConnection;
-    fromQuery: TADOQuery;
-    fromSqlQuery: TADOQuery;
     StopButton: TButton;
     CloseButton: TButton;
     cbMeasure: TCheckBox;
@@ -48,15 +45,9 @@ type
     OKCompleteDocumentButton: TButton;
     toStoredProc: TdsdStoredProc;
     toStoredProc_two: TdsdStoredProc;
-    fromQuery_two: TADOQuery;
     toZConnection: TZConnection;
-    fromFlADOConnection: TADOConnection;
-    fromFlQuery: TADOQuery;
-    fromFlSqlQuery: TADOQuery;
     toStoredProc_three: TdsdStoredProc;
     toSqlQuery_two: TZQuery;
-    fromQueryDate: TADOQuery;
-    fromQueryDate_recalc: TADOQuery;
     cbCompositionGroup: TCheckBox;
     cbId_Postgres: TCheckBox;
     cbNullId_Postgres: TCheckBox;
@@ -76,6 +67,12 @@ type
     cbPartner: TCheckBox;
     cbUnit: TCheckBox;
     cbLabel: TCheckBox;
+    Database1: TDatabase;
+    fromQuery: TQuery;
+    fromSqlQuery: TQuery;
+    fromQuery_two: TQuery;
+    fromQueryDate: TQuery;
+    fromQueryDate_recalc: TQuery;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -114,7 +111,7 @@ type
 
     function fOpenSqFromQuery (mySql:String):Boolean;
     function fExecSqFromQuery (mySql:String):Boolean;
-    function fExecFlSqFromQuery (mySql:String):Boolean;
+
 
     function fGetSession:String;
     function fOpenSqToQuery (mySql:String):Boolean;
@@ -219,16 +216,7 @@ begin
      end;
      Result:=true;
 end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.fExecFlSqFromQuery(mySql:String):Boolean;
-begin
-     with fromFlSqlQuery,Sql do begin
-        Clear;
-        Add(mySql);
-        try ExecSql except ShowMessage('fExecFlSqFromQuery'+#10+#13+mySql);Result:=false;exit;end;
-     end;
-     Result:=true;
-end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fOpenSqToQuery (mySql:String):Boolean;
 begin
@@ -589,7 +577,7 @@ begin
      tmpDate1:=NOw;
 
      //!!!FLOAT!!!
-     DataSource.DataSet:=fromFlQuery;
+//     DataSource.DataSet:=fromFlQuery;
 
      if not fStop then DataSource.DataSet:=fromQuery;
      //!!!end FLOAT!!!
@@ -634,7 +622,7 @@ begin
      OKCompleteDocumentButton.Enabled:=true;
      //
      toZConnection.Connected:=false;
-     if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then Database1.Connected:=False;;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -1498,15 +1486,15 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select  0 as ObjectCode');
-        Add(', goods_group.goodsName AS ObjectName');
-        Add(', max (Id_pg_label) as id_pg');
-        Add(', zc_erasedDel() as zc_erasedDel');
-        Add(', 0 as Erased');
+        Add(' select 0 as ObjectCode');
+        Add('    , goods_group.goodsName AS ObjectName');
+        Add('    , max (Id_pg_label) as id_pg');
+        Add('    , zc_erasedDel() as zc_erasedDel');
+        Add('    , 0 as Erased');
         Add(' from GoodsProperty');
         Add(' join goods on goods.Id = GoodsProperty.goodsId');
         Add(' join goods as goods_group on goods_group.Id = goods.ParentId');
-        Add('group by  goods_group.goodsName');
+        Add(' group by  goods_group.goodsName');
 
         Open;
         //
@@ -1522,23 +1510,23 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inLabelGroupId',ftInteger,ptInput, 0);
+
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('id_pg').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inLabelGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (1=0)or(FieldByName('id_pg').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select id from dba.goods where goodsName = '+FieldByName('ObjectName').AsString+'  )');
              //
              Next;
              Application.ProcessMessages;

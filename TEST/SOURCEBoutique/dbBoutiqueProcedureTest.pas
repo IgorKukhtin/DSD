@@ -72,6 +72,7 @@ type
     procedure CreateUnit;
     procedure CreateCity;
     procedure CreateClient;
+    procedure CreateLabel;
   end;
 
 implementation
@@ -239,6 +240,11 @@ end;
 procedure TdbObjectProcedureTest.CreateKassa;
 begin
    DirectoryLoad(CommonProcedurePath + 'OBJECTS\Kassa\');
+end;
+
+procedure TdbObjectProcedureTest.CreateLabel;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Label\');
 end;
 
 procedure TdbObjectProcedureTest.CreateLineFabrica;

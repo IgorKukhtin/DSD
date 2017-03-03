@@ -482,33 +482,8 @@ object MainForm: TMainForm
     end
   end
   object DataSource: TDataSource
-    DataSet = fromQuery
     Left = 24
     Top = 48
-  end
-  object fromADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
-      'User ID=Administrator;Data Source=Sybase'
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 137
-    Top = 96
-  end
-  object fromQuery: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 248
-    Top = 96
-  end
-  object fromSqlQuery: TADOQuery
-    Connection = fromADOConnection
-    Parameters = <>
-    Left = 344
-    Top = 96
   end
   object toSqlQuery: TZQuery
     Connection = toZConnection
@@ -534,15 +509,6 @@ object MainForm: TMainForm
     Left = 24
     Top = 152
   end
-  object fromQuery_two: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 248
-    Top = 160
-  end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
@@ -557,30 +523,6 @@ object MainForm: TMainForm
     Protocol = 'postgresql-9'
     Left = 56
     Top = 272
-  end
-  object fromFlADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=4kppaint;Persist Security Info=True;' +
-      'User ID=Administrator;Data Source=Sybase'
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 136
-    Top = 24
-  end
-  object fromFlQuery: TADOQuery
-    Connection = fromFlADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 248
-    Top = 16
-  end
-  object fromFlSqlQuery: TADOQuery
-    Connection = fromFlADOConnection
-    Parameters = <>
-    Left = 344
-    Top = 14
   end
   object toStoredProc_three: TdsdStoredProc
     DataSets = <>
@@ -599,22 +541,43 @@ object MainForm: TMainForm
     Left = 56
     Top = 368
   end
-  object fromQueryDate: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 248
-    Top = 224
+  object Database1: TDatabase
+    AliasName = 'Sybase'
+    DatabaseName = 'Sybase'
+    KeepConnection = False
+    LoginPrompt = False
+    SessionName = 'Default'
+    Left = 175
+    Top = 31
   end
-  object fromQueryDate_recalc: TADOQuery
-    Connection = fromADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Goods where HasChildren<>-1 order by 1 desc')
-    Left = 248
-    Top = 280
+  object fromQuery: TQuery
+    DatabaseName = 'Sybase'
+    SessionName = 'Default'
+    Left = 450
+    Top = 97
+  end
+  object fromSqlQuery: TQuery
+    DatabaseName = 'Sybase'
+    SessionName = 'Default'
+    Left = 562
+    Top = 99
+  end
+  object fromQuery_two: TQuery
+    DatabaseName = 'Sybase'
+    SessionName = 'Default'
+    Left = 452
+    Top = 160
+  end
+  object fromQueryDate: TQuery
+    DatabaseName = 'Sybase'
+    SessionName = 'Default'
+    Left = 455
+    Top = 228
+  end
+  object fromQueryDate_recalc: TQuery
+    DatabaseName = 'Sybase'
+    SessionName = 'Default'
+    Left = 457
+    Top = 287
   end
 end
