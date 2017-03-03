@@ -12,6 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , Comment TVarChar
              , isOfficial Boolean
+             , BankId Integer, BankName TVarChar
+             , BankSecondId Integer, BankSecondName TVarChar
+             , BankChildId Integer, BankChildName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , StartSummerDate TDateTime, EndSummerDate TDateTime
              , SummerFuel TFloat, WinterFuel TFloat, Reparation TFloat, LimitMoney TFloat, LimitDistance TFloat
@@ -110,6 +113,13 @@ BEGIN
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
  
+         , Object_Bank.Id               AS BankId
+         , Object_Bank.ValueData        AS BankName
+         , Object_BankSecond.Id         AS BankSecondId
+         , Object_BankSecond.ValueData  AS BankSecondName
+         , Object_BankChild.Id          AS BankChildId
+         , Object_BankChild.ValueData   AS BankChildName
+
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyCode
          , Object_InfoMoney_View.InfoMoneyName
@@ -239,7 +249,22 @@ BEGIN
          LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
          LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
-                              
+                         
+         LEFT JOIN ObjectLink AS ObjectLink_Member_Bank
+                              ON ObjectLink_Member_Bank.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_Bank.DescId = zc_ObjectLink_Member_Bank()
+         LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Member_Bank.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecond
+                              ON ObjectLink_Member_BankSecond.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
+         LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankChild
+                              ON ObjectLink_Member_BankChild.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankChild.DescId = zc_ObjectLink_Member_BankChild()
+         LEFT JOIN Object AS Object_BankChild ON Object_BankChild.Id = ObjectLink_Member_BankChild.ChildObjectId
+     
      WHERE Object_Member.DescId = zc_Object_Member()
        AND (Object_Member.isErased = FALSE
             OR (Object_Member.isErased = TRUE AND inIsShowAll = TRUE)
@@ -262,6 +287,14 @@ BEGIN
            , CAST ('' as TVarChar)  AS CardChild
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
+
+           , CAST (0 as Integer)    AS BankId
+           , CAST ('' as TVarChar)  AS BankName 
+           , CAST (0 as Integer)    AS BankSecondId
+           , CAST ('' as TVarChar)  AS BankSecondName 
+           , CAST (0 as Integer)    AS BankChildId
+           , CAST ('' as TVarChar)  AS BankChildName 
+
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
            , CAST ('' as TVarChar)  AS InfoMoneyName   
@@ -306,6 +339,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond
  02.02.17         * add ObjectTo
  25.03.16         * add Card

@@ -1,9 +1,9 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 455
-  ClientWidth = 287
-  ExplicitWidth = 293
-  ExplicitHeight = 480
+  ClientWidth = 294
+  ExplicitWidth = 300
+  ExplicitHeight = 483
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -23,18 +23,20 @@
   object cxPageControl1: TcxPageControl [2]
     Left = 0
     Top = 0
-    Width = 287
+    Width = 294
     Height = 409
     Align = alTop
     TabOrder = 0
     Properties.ActivePage = tsCommon
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 287
     ClientRectBottom = 409
-    ClientRectRight = 287
+    ClientRectRight = 294
     ClientRectTop = 24
     object tsCommon: TcxTabSheet
       Caption = #1054#1073#1097#1080#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
+      ExplicitWidth = 313
       object edMeasureName: TcxTextEdit
         Left = 7
         Top = 60
@@ -54,35 +56,37 @@
       object cxLabel10: TcxLabel
         Left = 7
         Top = 249
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        Hint = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'.'#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
       end
       object ceCardChild: TcxTextEdit
         Left = 7
         Top = 267
         TabOrder = 12
-        Width = 273
+        Width = 151
       end
       object cxLabel9: TcxLabel
         Left = 7
         Top = 204
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1060'2'
       end
       object ceCardSecond: TcxTextEdit
         Left = 7
         Top = 222
         TabOrder = 6
-        Width = 273
+        Width = 151
       end
       object cxLabel8: TcxLabel
         Left = 7
-        Top = 162
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
+        Top = 161
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1060'1'
       end
       object ceCard: TcxTextEdit
         Left = 7
         Top = 177
         TabOrder = 14
-        Width = 273
+        Text = '1234 5678 9092 2345'
+        Width = 151
       end
       object ceCode: TcxCurrencyEdit
         Left = 7
@@ -150,10 +154,62 @@
         TabOrder = 10
         Width = 273
       end
+      object cxLabel11: TcxLabel
+        Left = 164
+        Top = 161
+        Caption = #1041#1072#1085#1082' '#1060'1'
+      end
+      object ceBank: TcxButtonEdit
+        Left = 164
+        Top = 177
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 20
+        Width = 116
+      end
+      object cxLabel12: TcxLabel
+        Left = 164
+        Top = 204
+        Caption = #1041#1072#1085#1082' '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+      end
+      object ceBankSecond: TcxButtonEdit
+        Left = 164
+        Top = 222
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 22
+        Width = 116
+      end
+      object cxLabel13: TcxLabel
+        Left = 164
+        Top = 249
+        Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
+      end
+      object ceBankChild: TcxButtonEdit
+        Left = 164
+        Top = 267
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 24
+        Width = 116
+      end
     end
     object tsContact: TcxTabSheet
       Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
+      ExplicitWidth = 287
       object cxLabel5: TcxLabel
         Left = 7
         Top = 4
@@ -180,8 +236,8 @@
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 179
-    Top = 263
+    Left = 227
+    Top = 351
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 48
@@ -189,8 +245,8 @@
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 239
-    Top = 286
+    Left = 119
+    Top = 30
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -211,8 +267,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 216
-    Top = 215
+    Left = 80
+    Top = 31
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Member'
@@ -293,6 +349,30 @@
         Value = ''
         Component = ceComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankSecondId'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankChildId'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -394,6 +474,51 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankSecondId'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankSecondName'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankChildId'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankChildName'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Top = 136
   end
@@ -488,7 +613,97 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 295
+    Left = 128
+    Top = 319
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 224
+    Top = 191
+  end
+  object BankSecondGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankSecond
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankSecondGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 248
+    Top = 231
+  end
+  object BankChildGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankChild
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankChildGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 232
+    Top = 287
   end
 end
