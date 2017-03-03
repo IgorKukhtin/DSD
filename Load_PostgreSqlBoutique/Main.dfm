@@ -542,8 +542,8 @@ object MainForm: TMainForm
     Top = 368
   end
   object Database1: TDatabase
-    AliasName = 'Sybase'
-    DatabaseName = 'Sybase'
+    AliasName = 'tProfiManagerDS'
+    DatabaseName = 'tProfiManagerDS'
     KeepConnection = False
     LoginPrompt = False
     SessionName = 'Default'
@@ -551,31 +551,31 @@ object MainForm: TMainForm
     Top = 31
   end
   object fromQuery: TQuery
-    DatabaseName = 'Sybase'
+    DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
     Left = 450
     Top = 97
   end
   object fromSqlQuery: TQuery
-    DatabaseName = 'Sybase'
+    DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
     Left = 562
     Top = 99
   end
   object fromQuery_two: TQuery
-    DatabaseName = 'Sybase'
+    DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
     Left = 452
     Top = 160
   end
   object fromQueryDate: TQuery
-    DatabaseName = 'Sybase'
+    DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
-    Left = 455
+    Left = 456
     Top = 228
   end
   object fromQueryDate_recalc: TQuery
-    DatabaseName = 'Sybase'
+    DatabaseName = 'tProfiManagerDS'
     SessionName = 'Default'
     Left = 457
     Top = 287

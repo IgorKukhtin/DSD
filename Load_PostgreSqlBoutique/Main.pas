@@ -1526,7 +1526,7 @@ begin
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('id_pg').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select id from dba.goods where goodsName = '+FieldByName('ObjectName').AsString+'  )');
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select id from dba.goods where goodsName = '''+FieldByName('ObjectName').AsString+'''  )');
              //
              Next;
              Application.ProcessMessages;
