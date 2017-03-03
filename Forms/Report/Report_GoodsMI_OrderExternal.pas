@@ -85,6 +85,8 @@ type
     bbExecuteDialog: TdxBarButton;
     actPrint_byProductionDozakaz: TdsdPrintAction;
     bbPrint_Dozakaz: TdxBarButton;
+    actPrint_byType_Group: TdsdPrintAction;
+    bbPrint_byType_Group: TdxBarButton;
   private
     { Private declarations }
   public

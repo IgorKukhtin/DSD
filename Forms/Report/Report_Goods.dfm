@@ -1190,6 +1190,67 @@ inherited Report_GoodsForm: TReport_GoodsForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = '0'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1293,6 +1354,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbSumm_branch'
         end
         item
@@ -1329,6 +1398,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = actOpenDocument
       Category = 0
     end
   end
@@ -1476,5 +1549,87 @@ inherited Report_GoodsForm: TReport_GoodsForm
         MultiSelectSeparator = ','
       end>
     Left = 792
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 200
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 120
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 120
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 296
+    Top = 200
   end
 end
