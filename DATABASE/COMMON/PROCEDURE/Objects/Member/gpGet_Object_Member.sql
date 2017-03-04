@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
             , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
             , Comment TVarChar
             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+            , BankId Integer, BankName TVarChar
+            , BankSecondId Integer, BankSecondName TVarChar
+            , BankChildId Integer, BankChildName TVarChar
             , isOfficial Boolean) AS
 $BODY$
 BEGIN
@@ -35,7 +38,15 @@ BEGIN
            , CAST (0 as Integer)    AS InfoMoneyId
            , CAST (0 as Integer)    AS InfoMoneyCode
            , CAST ('' as TVarChar)  AS InfoMoneyName   
-           , CAST ('' as TVarChar)  AS InfoMoneyName_all       
+           , CAST ('' as TVarChar)  AS InfoMoneyName_all  
+
+           , CAST (0 as Integer)    AS BankId
+           , CAST ('' as TVarChar)  AS BankName 
+           , CAST (0 as Integer)    AS BankSecondId
+           , CAST ('' as TVarChar)  AS BankSecondName 
+           , CAST (0 as Integer)    AS BankChildId
+           , CAST ('' as TVarChar)  AS BankChildName 
+     
            , FALSE AS isOfficial;
    ELSE
        RETURN QUERY 
@@ -54,7 +65,14 @@ BEGIN
          , Object_InfoMoney_View.InfoMoneyId
          , Object_InfoMoney_View.InfoMoneyCode
          , Object_InfoMoney_View.InfoMoneyName
-         , Object_InfoMoney_View.InfoMoneyName_all 
+         , Object_InfoMoney_View.InfoMoneyName_all
+
+         , Object_Bank.Id               AS BankId
+         , Object_Bank.ValueData        AS BankName
+         , Object_BankSecond.Id         AS BankSecondId
+         , Object_BankSecond.ValueData  AS BankSecondName
+         , Object_BankChild.Id          AS BankChildId
+         , Object_BankChild.ValueData   AS BankChildName
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
 
@@ -89,6 +107,21 @@ BEGIN
                               AND ObjectLink_Member_InfoMoney.DescId = zc_ObjectLink_Member_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Member_InfoMoney.ChildObjectId
     
+          LEFT JOIN ObjectLink AS ObjectLink_Member_Bank
+                               ON ObjectLink_Member_Bank.ObjectId = Object_Member.Id
+                              AND ObjectLink_Member_Bank.DescId = zc_ObjectLink_Member_Bank()
+          LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Member_Bank.ChildObjectId
+ 
+          LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecond
+                               ON ObjectLink_Member_BankSecond.ObjectId = Object_Member.Id
+                              AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
+          LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Member_BankChild
+                               ON ObjectLink_Member_BankChild.ObjectId = Object_Member.Id
+                              AND ObjectLink_Member_BankChild.DescId = zc_ObjectLink_Member_BankChild()
+          LEFT JOIN Object AS Object_BankChild ON Object_BankChild.Id = ObjectLink_Member_BankChild.ChildObjectId
+
      WHERE Object_Member.Id = inId;
      
    END IF;
@@ -100,6 +133,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond
  19.02.15         * add InfoMoney
  12.09.14                                        * add isOfficial
