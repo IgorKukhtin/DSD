@@ -27,8 +27,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitHeight = 494
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -214,10 +212,10 @@ object MemberForm: TMemberForm
   object cxLabel6: TcxLabel
     Left = 241
     Top = 77
-    Caption = #1041#1072#1085#1082':'
+    Caption = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084':'
   end
   object edBank: TcxButtonEdit
-    Left = 279
+    Left = 340
     Top = 76
     Properties.Buttons = <
       item
@@ -226,7 +224,7 @@ object MemberForm: TMemberForm
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 194
+    Width = 151
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -324,6 +322,7 @@ object MemberForm: TMemberForm
           ItemName = 'bbRefresh'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -332,7 +331,6 @@ object MemberForm: TMemberForm
           ItemName = 'bbUpdateIsOfficial'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -743,9 +741,10 @@ object MemberForm: TMemberForm
         item
           Action = actRefresh
         end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1041#1072#1085#1082' ('#1060'2)> '#1076#1083#1103' '#1042#1057#1045#1061' ?'
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
-      ImageIndex = 77
+      ImageIndex = 48
     end
     object macUpdateBankSecond: TMultiAction
       Category = 'DSDLib'
@@ -769,9 +768,10 @@ object MemberForm: TMemberForm
         item
           Action = actRefresh
         end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1041#1072#1085#1082' ('#1060'1)> '#1076#1083#1103' '#1042#1057#1045#1061' ?'
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
-      ImageIndex = 76
+      ImageIndex = 47
     end
     object macUpdateBank: TMultiAction
       Category = 'DSDLib'

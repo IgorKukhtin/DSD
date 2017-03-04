@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_ver2(
     IN inCashSessionId TVarChar,   -- Сессия кассового места
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer,
+RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsName TVarChar, GoodsCode Integer,
                Remains TFloat, Price TFloat, Reserved TFloat, MCSValue TFloat,
                AlternativeGroupId Integer, NDS TFloat,
                isFirst boolean, isSecond boolean, Color_calc Integer,
@@ -174,6 +174,7 @@ BEGIN
                               )   
         SELECT 
             Goods.Id,
+            ObjectLink_Main.ChildObjectId AS GoodsId_main,
             Object_GoodsGroup.ValueData  AS GoodsGroupName,
             Goods.ValueData,
             Goods.ObjectCode,
@@ -197,7 +198,7 @@ BEGIN
             CashSessionSnapShot
             JOIN OBJECT AS Goods ON Goods.Id = CashSessionSnapShot.ObjectId
             LEFT OUTER JOIN ObjectLink AS Link_Goods_AlternativeGroup
-                                       ON Goods.Id = Link_Goods_AlternativeGroup.ObjectId
+                                       ON Link_Goods_AlternativeGroup.ObjectId = Goods.Id
                                       AND Link_Goods_AlternativeGroup.DescId = zc_ObjectLink_Goods_AlternativeGroup()
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                        ON ObjectLink_Goods_NDSKind.ObjectId = Goods.Id
@@ -215,6 +216,11 @@ BEGIN
             LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Goods.Id  
             LEFT JOIN tmpIncome ON tmpIncome.GoodsId = Goods.Id 
 
+            -- получается GoodsMainId
+            LEFT JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = Goods.Id
+                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+            LEFT JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                    AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
             -- условия хранения
             LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                  ON ObjectLink_Goods_ConditionsKeep.ObjectId = Goods.Id

@@ -17,7 +17,6 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
             , isOfficial Boolean) AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Member());
 

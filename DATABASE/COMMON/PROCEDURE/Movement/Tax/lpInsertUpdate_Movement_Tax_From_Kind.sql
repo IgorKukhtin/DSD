@@ -146,18 +146,18 @@ BEGIN
              END AS OperDate
 
            , CASE -- будет с 1-ого числа месяца
-                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                  WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary, COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0)) = 0
                     OR DATE_TRUNC ('MONTH', Movement.OperDate) = DATE_TRUNC ('MONTH', Movement.OperDate + INTERVAL '1 DAY')
                        THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END)
                   -- будет с 1-ого + 15дней
-                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
-                       THEN DATE_TRUNC ('MONTH', Movement.OperDate) + ((ObjectFloat_Juridical_DayTaxSummary.ValueData + 0) :: TVarChar || ' DAY') :: INTERVAL
+                  WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary, COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0)) > 0
+                       THEN DATE_TRUNC ('MONTH', Movement.OperDate) + ((COALESCE (ObjectFloat_Contract_DayTaxSummary, ObjectFloat_Juridical_DayTaxSummary.ValueData) + 0) :: TVarChar || ' DAY') :: INTERVAL
              END AS StartDate
            , CASE -- будет до последнего числа месяца
-                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) = 0
+                  WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary, COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0)) = 0
                        THEN DATE_TRUNC ('MONTH', CASE WHEN Movement.DescId = zc_Movement_Tax() THEN Movement.OperDate ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) END) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                   -- будет до числа в документе (это или 15-ое или 31 число, т.е. важно что б документ был последним днем)
-                  WHEN COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0) > 0
+                  WHEN COALESCE (ObjectFloat_Contract_DayTaxSummary, COALESCE (ObjectFloat_Juridical_DayTaxSummary.ValueData, 0)) > 0
                        THEN Movement.OperDate
              END AS EndDate
 
@@ -233,6 +233,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_DayTaxSummary
                                  ON ObjectFloat_Juridical_DayTaxSummary.ObjectId = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END
                                 AND ObjectFloat_Juridical_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
+           LEFT JOIN ObjectFloat AS ObjectFloat_Contract_DayTaxSummary
+                                 ON ObjectFloat_Contract_DayTaxSummary.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
+                                AND ObjectFloat_Contract_DayTaxSummary.DescId = zc_ObjectFloat_Contract_DayTaxSummary()
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                 ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
