@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Contract()
+-- Function: gpInsertUpdate_Object_Contract_ContractStateKind()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract_ContractStateKind (Integer, Integer, TVarChar);
 

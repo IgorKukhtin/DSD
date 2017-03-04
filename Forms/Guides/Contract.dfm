@@ -576,6 +576,18 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 58
       end
+      object clDayTaxSummary: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1057#1074#1086#1076#1085#1086#1081' '#1053#1053
+        DataBinding.FieldName = 'DayTaxSummary'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.#;-,0.#; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053' (0 = 1 '#1084#1077#1089#1103#1094')'
+        Options.Editing = False
+        Width = 87
+      end
       object clIsStandart: TcxGridDBColumn
         Caption = #1058#1080#1087#1086#1074#1086#1081
         DataBinding.FieldName = 'isStandart'
