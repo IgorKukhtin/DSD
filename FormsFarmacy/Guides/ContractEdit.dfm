@@ -58,19 +58,20 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 168
   end
   object cxLabel3: TcxLabel [8]
-    Left = 8
-    Top = 162
+    Left = 182
+    Top = 159
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
-    Left = 8
+    Left = 182
     Top = 179
     TabOrder = 7
-    Width = 339
+    Width = 165
   end
   object cxLabel5: TcxLabel [10]
     Left = 182
@@ -85,6 +86,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 165
   end
@@ -142,6 +144,23 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 19
     Width = 165
   end
+  object cxLabel10: TcxLabel [20]
+    Left = 8
+    Top = 159
+    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072'('#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090')'
+  end
+  object ceGroupMemberSP: TcxButtonEdit [21]
+    Left = 8
+    Top = 179
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 168
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 73
@@ -155,8 +174,8 @@ inherited ContractEditForm: TContractEditForm
     Top = 8
   end
   inherited FormParams: TdsdFormParams
-    Left = 168
-    Top = 141
+    Left = 280
+    Top = 13
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -201,6 +220,14 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGroupMemberSPId'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inDeferment'
         Value = 0.000000000000000000
         Component = ceDeferment
@@ -239,8 +266,8 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 274
-    Top = 177
+    Left = 298
+    Top = 185
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -292,6 +319,21 @@ inherited ContractEditForm: TContractEditForm
         Name = 'JuridicalName'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPid'
+        Value = Null
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GroupMemberSPName'
+        Value = Null
+        Component = GroupMemberSPGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -359,8 +401,8 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 68
+    Left = 80
+    Top = 76
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -388,7 +430,36 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 202
+    Left = 226
     Top = 68
+  end
+  object GroupMemberSPGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGroupMemberSP
+    FormNameParam.Value = 'TGroupMemberSPForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGroupMemberSPForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GroupMemberSPGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 164
   end
 end
