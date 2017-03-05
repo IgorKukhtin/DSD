@@ -27,6 +27,7 @@ object Member_ObjectToForm: TMember_ObjectToForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -104,6 +105,51 @@ object Member_ObjectToForm: TMember_ObjectToForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 115
+      end
+      object BankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' ('#1060'1)'
+        DataBinding.FieldName = 'BankName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceBankForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object BankSecondName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' ('#1060'2)'
+        DataBinding.FieldName = 'BankSecondName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceBankSecondForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object BankChildName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078'.)'
+        DataBinding.FieldName = 'BankChildName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceBankChildForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
@@ -209,6 +255,24 @@ object Member_ObjectToForm: TMember_ObjectToForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel6: TcxLabel
+    Left = 241
+    Top = 77
+    Caption = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1089#1077#1084':'
+  end
+  object edBank: TcxButtonEdit
+    Left = 340
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Text = #1042#1099#1073#1077#1088#1080#1090#1077' '#1073#1072#1085#1082
+    Width = 151
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -305,12 +369,41 @@ object Member_ObjectToForm: TMember_ObjectToForm
           ItemName = 'bbRefresh'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbUpdateIsOfficial'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateBankAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankSecondAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
         end
         item
           Visible = True
@@ -392,6 +485,28 @@ object Member_ObjectToForm: TMember_ObjectToForm
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
       Category = 0
+    end
+    object bbUpdateBankAll: TdxBarButton
+      Action = macUpdateBankAll
+      Category = 0
+    end
+    object bbBankSecondAll: TdxBarButton
+      Action = macUpdateBankSecondAll
+      Category = 0
+    end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edBank
     end
   end
   object ActionList: TActionList
@@ -666,6 +781,165 @@ object Member_ObjectToForm: TMember_ObjectToForm
         end>
       isShowModal = True
     end
+    object actChoiceBankChildForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BankChildChoiceForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankChildId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankChildName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceBankSecondForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BankSecondChoiceForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankSecondId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankSecondName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceBankForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'BankChoiceForm'
+      FormName = 'TBankForm'
+      FormNameParam.Value = 'TBankForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BankName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateBankSecond: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateBankSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdateBankSecond
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
+    end
+    object actUpdateBank: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateBank
+      StoredProcList = <
+        item
+          StoredProc = spUpdateBank
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1073#1072#1085#1082' '#1060'1'
+    end
+    object macUpdateBankSecond: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateBankSecond
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
+      ImageIndex = 77
+    end
+    object macUpdateBank: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateBank
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
+      ImageIndex = 76
+    end
+    object macUpdateBankSecondAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateBankSecond
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1041#1072#1085#1082' ('#1060'2)> '#1076#1083#1103' '#1042#1057#1045#1061' ?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'2)'
+      ImageIndex = 48
+    end
+    object macUpdateBankAll: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateBank
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1085#1072#1095#1077#1085#1080#1077' <'#1041#1072#1085#1082' ('#1060'1)> '#1076#1083#1103' '#1042#1057#1045#1061' ?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1041#1072#1085#1082' ('#1060'1)'
+      ImageIndex = 47
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -803,6 +1077,24 @@ object Member_ObjectToForm: TMember_ObjectToForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCardSecond'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardSecond'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCardChild'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CardChild'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ClientDataSet
@@ -824,6 +1116,30 @@ object Member_ObjectToForm: TMember_ObjectToForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'ObjectToId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankSecondId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankSecondId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankChildId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankChildId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -856,5 +1172,116 @@ object Member_ObjectToForm: TMember_ObjectToForm
     PackSize = 1
     Left = 232
     Top = 379
+  end
+  object spUpdateBank: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_Banks'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectLink_Member_Bank'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankName'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 267
+  end
+  object spUpdateBankSecond: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Member_Banks'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectLink_Member_BankSecond'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankSecondName'
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 576
+    Top = 315
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 352
+    Top = 80
   end
 end

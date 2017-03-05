@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit,
+  cxLabel;
 
 type
   TMember_ObjectToForm = class(TParentForm)
@@ -79,6 +80,24 @@ type
     isDateOut: TcxGridDBColumn;
     OpenChoiceFormPersonalUnion: TOpenChoiceForm;
     clDescName: TcxGridDBColumn;
+    actChoiceBankChildForm: TOpenChoiceForm;
+    actChoiceBankSecondForm: TOpenChoiceForm;
+    actChoiceBankForm: TOpenChoiceForm;
+    spUpdateBank: TdsdStoredProc;
+    spUpdateBankSecond: TdsdStoredProc;
+    actUpdateBankSecond: TdsdExecStoredProc;
+    actUpdateBank: TdsdExecStoredProc;
+    macUpdateBankSecond: TMultiAction;
+    macUpdateBank: TMultiAction;
+    macUpdateBankSecondAll: TMultiAction;
+    macUpdateBankAll: TMultiAction;
+    bbUpdateBankAll: TdxBarButton;
+    bbBankSecondAll: TdxBarButton;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    cxLabel6: TcxLabel;
+    edBank: TcxButtonEdit;
+    BankGuides: TdsdGuides;
   private
     { Private declarations }
   public

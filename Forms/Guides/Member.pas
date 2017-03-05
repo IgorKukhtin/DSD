@@ -97,6 +97,9 @@ type
     spUpdateBankSecond: TdsdStoredProc;
     macUpdateBankSecondAll: TMultiAction;
     macUpdateBankAll: TMultiAction;
+    actChoiceBankForm: TOpenChoiceForm;
+    actChoiceBankSecondForm: TOpenChoiceForm;
+    actChoiceBankChildForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
