@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
+               GroupMemberSPId Integer, GroupMemberSPName TVarChar,
                Deferment Integer, Percent TFloat,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
@@ -31,6 +32,10 @@ BEGIN
            
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
+
+           , CAST (0 as Integer)   AS GroupMemberSPId
+           , CAST ('' as TVarChar) AS GroupMemberSPName
+
            , 0                     AS Deferment
            , CAST (0 AS TFloat)    AS Percent
 
@@ -53,6 +58,10 @@ BEGIN
                      
            , Object_Contract_View.JuridicalId
            , Object_Contract_View.JuridicalName 
+
+           , Object_Contract_View.GroupMemberSPId
+           , Object_Contract_View.GroupMemberSPName 
+
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
 

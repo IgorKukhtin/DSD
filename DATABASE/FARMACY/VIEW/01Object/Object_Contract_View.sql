@@ -22,6 +22,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                      
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName 
+
+           , Object_GroupMemberSP.Id         AS GroupMemberSPId
+           , Object_GroupMemberSP.ValueData  AS GroupMemberSPName
+
            , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
            , ObjectFloat_Percent.ValueData   ::Tfloat  AS Percent
 
@@ -40,7 +44,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                 ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
                                AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId           
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId   
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
+                                ON ObjectLink_Contract_GroupMemberSP.ObjectId = Object_Contract.Id
+                               AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
+           LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = ObjectLink_Contract_GroupMemberSP.ChildObjectId             
 
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id
@@ -63,6 +72,7 @@ ALTER TABLE Object_Contract_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.03.17         * GroupMemberSP
  08.12.16         * add PercentCorr
  25.12.14                        * 
 */

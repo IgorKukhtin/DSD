@@ -44,6 +44,15 @@ type
     ceCardSecond: TcxTextEdit;
     cxLabel11: TcxLabel;
     ceCardChild: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    ceBank: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    ceBankSecond: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    ceBankChild: TcxButtonEdit;
+    BankGuides: TdsdGuides;
+    BankSecondGuides: TdsdGuides;
+    BankChildGuides: TdsdGuides;
   private
     { Private declarations }
   public

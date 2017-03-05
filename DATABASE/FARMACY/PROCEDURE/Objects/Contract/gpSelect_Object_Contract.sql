@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar, Percent_Juridical TFloat,
+               JuridicalId Integer, JuridicalName TVarChar,
+               GroupMemberSPId Integer, GroupMemberSPName TVarChar,
+               Percent_Juridical TFloat,
                Deferment Integer, Percent TFloat, 
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
@@ -30,7 +32,11 @@ BEGIN
                      
            , Object_Contract_View.JuridicalId
            , Object_Contract_View.JuridicalName 
-           , ObjectFloat_Percent.ValueData      AS Percent_Juridical
+
+           , Object_Contract_View.GroupMemberSPId
+           , Object_Contract_View.GroupMemberSPName 
+
+           , ObjectFloat_Percent.ValueData  AS Percent_Juridical
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
 
