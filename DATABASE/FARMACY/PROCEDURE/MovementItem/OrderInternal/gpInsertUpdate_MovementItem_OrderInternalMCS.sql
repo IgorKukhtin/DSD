@@ -140,7 +140,7 @@ BEGIN
                                                               AND MovementBoolean_isAuto.ValueData  = TRUE
                              WHERE Movement.DescId = zc_Movement_Send()
                                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                  AND Movement.OperDate >= CURRENT_DATE AND Movement.OperDate < CURRENT_DATE + INTERVAL '1 DAY'
+                                  AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                              GROUP BY MovementItem.ObjectId
                             )
    , tmpMI_OrderExternal AS (SELECT MI_OrderExternal.ObjectId                AS GoodsId

@@ -1,26 +1,26 @@
--- Function: gpInsertUpdate_Movement_BankStatementItemLoad()                                   
+-- Function: gpInsertUpdate_Movement_BankStatementItemLoad()
 
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,  
-                                                 TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, 
+DROP FUNCTION IF EXISTS
+   gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,
+                                                 TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                  TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankStatementItemLoad(
     IN inDocNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inBankAccountMain     TVarChar  , -- Расчетный счет
-    IN inBankMFOMain         TVarChar  , -- МФО 
+    IN inBankMFOMain         TVarChar  , -- МФО
     IN inOKPO                TVarChar  , -- ОКПО
     IN inJuridicalName       TVarChar  , -- Юр. лицо
     IN inBankAccount         TVarChar  , -- Расчетный счет
-    IN inBankMFO             TVarChar  , -- МФО 
-    IN inBankName            TVarChar  , -- Название банка 
-    IN inCurrencyCode        TVarChar  , -- Код валюты 
-    IN inCurrencyName        TVarChar  , -- Название валюты 
-    IN inAmount              TFloat    , -- Сумма операции 
+    IN inBankMFO             TVarChar  , -- МФО
+    IN inBankName            TVarChar  , -- Название банка
+    IN inCurrencyCode        TVarChar  , -- Код валюты
+    IN inCurrencyName        TVarChar  , -- Название валюты
+    IN inAmount              TFloat    , -- Сумма операции
     IN inComment             TVarChar  , -- Комментарии
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -38,103 +38,107 @@ $BODY$
    DECLARE vbCurrencyPartnerValue TFloat;
    DECLARE vbParPartnerValue TFloat;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
-
-
-   -- 1. Найти счет от кого и кому в справочнике счетов. 
-   vbMainBankAccountId:= (SELECT View_BankAccount.Id
-                          FROM Object_BankAccount_View AS View_BankAccount
-                          WHERE View_BankAccount.Name = TRIM (inBankAccountMain)
-                            AND View_BankAccount.isCorporate = true
-order by 1 limit 1
-                         );
-
-   -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
-   IF COALESCE (vbMainBankAccountId, 0) = 0  THEN
-      RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', TRIM (inBankAccountMain), chr(13);
-   END IF;
-
-   -- 3. Если OKPO пустой, значит это внутренние операции по банку, в таком случае надо взять OKPO из главного расчетного счета
-
-   IF COALESCE(inOKPO, '') = '' THEN
-      SELECT ObjectHistory_JuridicalDetails_ViewByDate.OKPO INTO inOKPO 
-        FROM Object_BankAccount_View
-        JOIN ObjectLink AS ObjectLink_Bank_Juridical
-                        ON ObjectLink_Bank_Juridical.ObjectId = Object_BankAccount_View.BankId
-                       AND ObjectLink_Bank_Juridical.DescId = zc_ObjectLink_Bank_Juridical()
-
-        JOIN ObjectHistory_JuridicalDetails_ViewByDate 
-          ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = ObjectLink_Bank_Juridical.ChildObjectId
-         AND inOperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND inOperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate
-       WHERE Object_BankAccount_View.NAME = inBankAccountMain; 
-   END IF;
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
+ 
+ 
+    -- 1. Найти счет от кого и кому в справочнике счетов.
+    vbMainBankAccountId:= (SELECT View_BankAccount.Id
+                           FROM Object_BankAccount_View AS View_BankAccount
+                           WHERE View_BankAccount.Name        = TRIM (inBankAccountMain)
+                             AND View_BankAccount.isCorporate = TRUE
+                           ORDER BY 1
+                           LIMIT 1 -- ???надо бы исправить???
+                          );
+ 
+    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+    IF COALESCE (vbMainBankAccountId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', TRIM (inBankAccountMain), chr(13);
+    END IF;
+ 
+ 
+    -- 3. Если OKPO пустой, значит это внутренние операции по банку, в таком случае надо взять OKPO из главного расчетного счета
+    IF COALESCE (inOKPO, '') = ''
+    THEN
+        --
+        SELECT ObjectHistory_JuridicalDetails_ViewByDate.OKPO INTO inOKPO
+          FROM Object_BankAccount_View
+          JOIN ObjectLink AS ObjectLink_Bank_Juridical
+                          ON ObjectLink_Bank_Juridical.ObjectId = Object_BankAccount_View.BankId
+                         AND ObjectLink_Bank_Juridical.DescId = zc_ObjectLink_Bank_Juridical()
   
-   SELECT Object_Currency_View.Id INTO vbCurrencyId
-     FROM Object_Currency_View 
-    WHERE Object_Currency_View.Code = zfConvert_StringToNumber(inCurrencyCode) OR InternalName = inCurrencyName;
-
-   IF COALESCE(vbCurrencyId, 0) = 0 THEN
-      SELECT Object_BankAccount_View.CurrencyId INTO vbCurrencyId 
-      FROM Object_BankAccount_View WHERE Object_BankAccount_View.Id = vbMainBankAccountId;
-   END IF;
-
-   -- 4. Если такой валюты нет, то выдать сообщение об ошибке и прервать выполнение загрузки
-   IF COALESCE(vbCurrencyId, 0) = 0  THEN
-      RAISE EXCEPTION 'Валюта "%" "%" не определена в справочнике валют.% Дальнейшая загрузка не возможна', inCurrencyCode, inCurrencyName, chr(13);
-   END IF;
-
---  5. Найди документ zc_Movement_BankStatement по дате и расчетному счету. 
-   SELECT Movement.Id INTO vbMovementId 
-     FROM Movement
-     JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.ObjectId = vbMainBankAccountId
-      AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
+          JOIN ObjectHistory_JuridicalDetails_ViewByDate
+            ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = ObjectLink_Bank_Juridical.ChildObjectId
+           AND inOperDate >= ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND inOperDate < ObjectHistory_JuridicalDetails_ViewByDate.EndDate
+         WHERE Object_BankAccount_View.NAME = inBankAccountMain;
+    END IF;
+ 
+    -- нашли
+    vbCurrencyId:= (SELECT View_Currency.Id FROM Object_Currency_View AS View_Currency WHERE View_Currency.Code = zfConvert_StringToNumber (inCurrencyCode) OR View_Currency.InternalName = inCurrencyName);
+    -- нашли
+    IF COALESCE(vbCurrencyId, 0) = 0 THEN
+       vbCurrencyId:= (SELECT View_BankAccount.CurrencyId FROM Object_BankAccount_View AS View_BankAccount WHERE View_BankAccount.Id = vbMainBankAccountId);
+    END IF;
+ 
+ 
+    -- 4. Если такой валюты нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+    IF COALESCE(vbCurrencyId, 0) = 0  THEN
+       RAISE EXCEPTION 'Валюта "%" "%" не определена в справочнике валют.% Дальнейшая загрузка не возможна', inCurrencyCode, inCurrencyName, chr(13);
+    END IF;
+ 
+ 
+    --  5. Найди документ zc_Movement_BankStatement по дате и расчетному счету.
+    SELECT Movement.Id INTO vbMovementId
+    FROM Movement
+         JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                AND MovementLinkObject.ObjectId   = vbMainBankAccountId
+                                AND MovementLinkObject.DescId     = zc_MovementLinkObject_BankAccount()
     WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement() AND Movement.StatusId = zc_Enum_Status_UnComplete();
-
-
-    IF COALESCE(vbMovementId, 0) = 0 THEN
-       -- 5. Если такого документа нет - создать его
-       -- сохранили <Документ>
-       vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_BankStatement(), NEXTVAL ('Movement_BankStatement_seq') :: TVarChar, inOperDate, NULL);              
+    --
+    IF COALESCE (vbMovementId, 0) = 0 THEN
+       -- Если такого документа нет - создать его
+       vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_BankStatement(), NEXTVAL ('Movement_BankStatement_seq') :: TVarChar, inOperDate, NULL);
+       --
        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_BankAccount(), vbMovementId, vbMainBankAccountId);
     END IF;
 
-    --6. Найти документ zc_Movement_BankStatementItem номеру, комментарию, ОКПО и р/c
-    
-    SELECT Movement.Id INTO vbMovementItemId 
-     FROM Movement
-     JOIN MovementString AS MovementString_OKPO
-       ON MovementString_OKPO.MovementId =  Movement.Id
-      AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
-     JOIN MovementString AS MovementString_BankAccount
-     
-  ON MovementString_BankAccount.MovementId =  Movement.Id
-      AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
-     JOIN MovementString AS MovementString_Comment
-       ON MovementString_Comment.MovementId =  Movement.Id
-      AND MovementString_Comment.DescId = zc_MovementString_Comment()
-    WHERE Movement.ParentId = vbMovementId 
-      AND Movement.DescId = zc_Movement_BankStatementItem() 
-      AND Movement.InvNumber = inDocNumber
-      AND MovementString_OKPO.ValueData = inOKPO
-      AND MovementString_BankAccount.ValueData = inBankAccount
-      AND MovementString_Comment.ValueData = inComment;
 
+    -- 6. Найти документ zc_Movement_BankStatementItem номеру, комментарию, ОКПО и р/c
+    SELECT Movement.Id INTO vbMovementItemId
+    FROM Movement
+         JOIN MovementString AS MovementString_OKPO
+                             ON MovementString_OKPO.MovementId =  Movement.Id
+                            AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+         JOIN MovementString AS MovementString_BankAccount
+                             ON MovementString_BankAccount.MovementId =  Movement.Id
+                            AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
+         JOIN MovementString AS MovementString_Comment
+                             ON MovementString_Comment.MovementId =  Movement.Id
+                            AND MovementString_Comment.DescId = zc_MovementString_Comment()
+    WHERE Movement.ParentId                    = vbMovementId
+      AND Movement.DescId                      = zc_Movement_BankStatementItem()
+      AND Movement.InvNumber                   = inDocNumber
+      AND MovementString_OKPO.ValueData        = inOKPO
+      AND MovementString_BankAccount.ValueData = inBankAccount
+      AND MovementString_Comment.ValueData     = inComment;
+    --
     IF COALESCE(vbMovementItemId, 0) = 0 THEN
-       -- 7. Если такого документа нет - создать его
-       -- сохранили <Документ>
-       vbMovementItemId := lpInsertUpdate_Movement (0, zc_Movement_BankStatementItem(), inDocNumber, inOperDate, vbMovementId);              
+       -- Если такого документа нет - создать его
+       vbMovementItemId := lpInsertUpdate_Movement (0, zc_Movement_BankStatementItem(), inDocNumber, inOperDate, vbMovementId);
     END IF;
 
     -- Если валюта оличается от базовой, то сделаем ряд расчетов
     IF vbCurrencyId <> zc_Enum_Currency_Basis() THEN
        SELECT Amount, ParValue, Amount, ParValue
-                 INTO vbCurrencyValue, vbParValue
-                    , vbCurrencyPartnerValue, vbParPartnerValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= vbCurrencyId,  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+              INTO vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
+       FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= vbCurrencyId,  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+       --
        vbAmountCurrency:= inAmount;
+       --
        inAmount := CAST (inAmount * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
     END IF;
+
 
     -- сохранили свойство <Сумма операции>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), vbMovementItemId, inAmount);
@@ -166,36 +170,68 @@ order by 1 limit 1
      -- Номинал для расчета суммы операции
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), vbMovementItemId, vbParPartnerValue);
 
-    -- Вычитываем свойство Юр. лица
-    SELECT ObjectId INTO vbJuridicalId FROM MovementLinkObject  
-     WHERE DescId = zc_MovementLinkObject_Juridical() AND MovementId = vbMovementItemId;
 
+    -- нашли свойство Юр. лица
+    vbJuridicalId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Juridical() AND MLO.MovementId = vbMovementItemId);
+    -- сначала поиск черезе карту - Алименты
+    IF COALESCE(vbJuridicalId, 0) = 0
+    THEN
+        vbJuridicalId:= (WITH tmpCardChild_all AS (SELECT OS.ValueData, OS.ObjectId AS MemberId FROM ObjectString AS OS WHERE OS.DescId = zc_ObjectString_Member_CardChild() AND ValueData <> '')
+                            , tmpCardChild AS (SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 1) AS ValueData FROM tmpCardChild_all
+                                             UNION
+                                               SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 2) AS ValueData FROM tmpCardChild_all
+                                             UNION
+                                               SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 3) AS ValueData FROM tmpCardChild_all
+                                             UNION
+                                               SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 4) AS ValueData FROM tmpCardChild_all
+                                             UNION
+                                               SELECT tmpCardChild_all.MemberId, zfCalc_Word_Split (inValue:= tmpCardChild_all.ValueData, inSep:= ',', inIndex:= 4) AS ValueData FROM tmpCardChild_all
+                                              )
+                            , tmpMember AS (SELECT tmpCardChild.MemberId
+                                            FROM tmpCardChild
+                                            WHERE tmpCardChild.ValueData <> '' AND inComment LIKE '%' || tmpCardChild.ValueData || '%'
+                                            LIMIT 1 -- на всякий случай
+                                           )
+                         SELECT tmpMember.MemberId FROM tmpMember
+                         -- SELECT tmp.PersonalId FROM gpGet_Object_Member ((SELECT tmpMember.MemberId FROM tmpMember), inSession) AS tmp
+                        );
+        -- если нашли, УП статья будет такой
+        IF vbJuridicalId > 0
+        THEN
+            -- Заработная плата + Алименты
+            vbInfoMoneyId:= zc_Enum_InfoMoney_60102();
+            -- сохранили связь с <Сотрудник> хотя и называется <Юр. лицо>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementItemId, vbJuridicalId);
+        END IF;
+    END IF;
 
-
-    IF COALESCE(vbJuridicalId, 0) = 0 THEN
+    -- дальше поиск уже черз ОКПО
+    IF COALESCE(vbJuridicalId, 0) = 0
+    THEN
        -- Пытаемся найти расчетный счет ТОЛЬКО ВО ВНУТРЕННИХ ФИРМАХ!!!
        SELECT Object_BankAccount_View.JuridicalId INTO vbJuridicalId
-         FROM Object_BankAccount_View 
-         JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                            ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 
-                           AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                           AND ObjectBoolean_isCorporate.ValueData = TRUE
-         WHERE Object_BankAccount_View.Name = inBankAccount;
+       FROM Object_BankAccount_View
+            JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                               ON ObjectBoolean_isCorporate.ObjectId  = Object_BankAccount_View.JuridicalId
+                              AND ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
+                              AND ObjectBoolean_isCorporate.ValueData = TRUE
+       WHERE Object_BankAccount_View.Name = inBankAccount;
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- Пытаемся найти юр. лицо по OKPO
          SELECT ObjectHistory.ObjectId INTO vbJuridicalId
-           FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-           JOIN ObjectHistory ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
-          WHERE ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
-            AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
-            AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate;
-        END IF;
-    
-        IF COALESCE(vbJuridicalId, 0) <> 0 THEN
+         FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+              JOIN ObjectHistory ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
+         WHERE ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+           AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
+           AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate;
+       END IF;
+
+       IF COALESCE(vbJuridicalId, 0) <> 0 THEN
            -- сохранили связь с <Юр. лицо>
            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementItemId, vbJuridicalId);
-        END IF;
+       END IF;
+
     END IF;
 
 
@@ -204,33 +240,19 @@ order by 1 limit 1
     -- находим свойство <УП статья назначения>
     -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
-    --
-    CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
 
-    -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
-    SELECT MAX (View_Contract.ContractId) INTO vbContractId
-    FROM _tmpContract_find AS View_Contract
-         INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-                                         AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                                         AND inAmount > 0
-         INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                  ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
-                                 AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
-                                 AND ObjectBoolean_Default.ValueData = TRUE
-    WHERE View_Contract.JuridicalId = vbJuridicalId
-      AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-      AND View_Contract.isErased = FALSE
-      AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
-
-    -- 1.2. находим свойство <Договор> "по умолчанию" для inAmount < 0
-    IF COALESCE (vbContractId, 0) = 0
+    -- если НЕ Заработная плата + Алименты
+    IF COALESCE (vbInfoMoneyId, 0) <> zc_Enum_InfoMoney_60102()
     THEN
+
+        CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
+    
+        -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
         SELECT MAX (View_Contract.ContractId) INTO vbContractId
         FROM _tmpContract_find AS View_Contract
              INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-                                             AND (InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
-                                                  OR InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500())) -- Общефирменные + Маркетинг
-                                             AND inAmount < 0
+                                             AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                             AND inAmount > 0
              INNER JOIN ObjectBoolean AS ObjectBoolean_Default
                                       ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
                                      AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
@@ -239,103 +261,124 @@ order by 1 limit 1
           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
           AND View_Contract.isErased = FALSE
           AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
-    END IF;
-
-    -- 1.3. находим свойство <Договор> "по умолчанию" для остальных
-    IF COALESCE (vbContractId, 0) = 0
-    THEN
-        SELECT MAX (View_Contract.ContractId) INTO vbContractId
-        FROM _tmpContract_find AS View_Contract
-             INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
-                                             AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                                             AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
-                                             AND InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
-             INNER JOIN ObjectBoolean AS ObjectBoolean_Default
-                                      ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
-                                     AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
-                                     AND ObjectBoolean_Default.ValueData = TRUE
-        WHERE View_Contract.JuridicalId = vbJuridicalId
-          AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-          AND View_Contract.isErased = FALSE
-          AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
-    END IF;
-
-    -- 1.4. Находим <УП статья назначения> !!!всегда!!! у Договора
-    IF vbContractId <> 0
-    THEN
-        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
-    END IF;
-
-
-    -- если не нашли, будем определять свойство <Договор>
-    IF COALESCE (vbContractId, 0) = 0 AND COALESCE (vbJuridicalId, 0) <> 0
-    THEN 
-        -- Находим <Договор> у Юр. Лица !!!в зависимоти от ...!!
-        SELECT MAX (COALESCE (View_Contract.ContractId, View_Contract_next.ContractId)) INTO vbContractId
-        FROM (SELECT zc_Enum_InfoMoney_30101()         AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
-                   , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
-              FROM Object_InfoMoney_View
-              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
-                AND inAmount > 0
-             UNION ALL
-              SELECT 0 AS InfoMoneyId
-                   , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
-              FROM Object_InfoMoney_View
-              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
-                AND inAmount < 0
-             UNION ALL
-              SELECT Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId
-                   , 0 AS InfoMoneyId_Next
-              FROM Object_InfoMoney_View
-              WHERE InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
-                AND inAmount < 0
-             ) AS tmpInfoMoney
-             LEFT JOIN _tmpContract_find AS View_Contract
-                                            ON View_Contract.JuridicalId = vbJuridicalId
-                                           AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
-                                           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                           AND View_Contract.isErased = FALSE
-                                           AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
-             LEFT JOIN _tmpContract_find AS View_Contract_next
-                                            ON View_Contract_next.JuridicalId = vbJuridicalId
-                                           AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
-                                           AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                           AND View_Contract_next.isErased = FALSE
-                                           AND View_Contract_next.PaidKindId = zc_Enum_PaidKind_FirstForm()
-                                           AND View_Contract.JuridicalId IS NULL
-        ;
-        -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+    
+        -- 1.2. находим свойство <Договор> "по умолчанию" для inAmount < 0
         IF COALESCE (vbContractId, 0) = 0
-        THEN 
+        THEN
             SELECT MAX (View_Contract.ContractId) INTO vbContractId
             FROM _tmpContract_find AS View_Contract
+                 INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                                 AND (InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                                                      OR InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500())) -- Общефирменные + Маркетинг
+                                                 AND inAmount < 0
+                 INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                          ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                                         AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                         AND ObjectBoolean_Default.ValueData = TRUE
             WHERE View_Contract.JuridicalId = vbJuridicalId
               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
               AND View_Contract.isErased = FALSE
               AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
         END IF;
-
-        -- Находим <УП статья назначения> !!!всегда!!! у Договора
-        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
-        -- !!!Но если это расход денег, тогда меняем <УП статья назначения> на "Бонусы за продукцию"
-        IF vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
-           AND inAmount < 0
+    
+        -- 1.3. находим свойство <Договор> "по умолчанию" для остальных
+        IF COALESCE (vbContractId, 0) = 0
         THEN
-            vbInfoMoneyId:= zc_Enum_InfoMoney_21501(); -- Бонусы за продукцию
+            SELECT MAX (View_Contract.ContractId) INTO vbContractId
+            FROM _tmpContract_find AS View_Contract
+                 INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                                 AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                                 AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                                                 AND InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
+                 INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                          ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                                         AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                         AND ObjectBoolean_Default.ValueData = TRUE
+            WHERE View_Contract.JuridicalId = vbJuridicalId
+              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+              AND View_Contract.isErased = FALSE
+              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
         END IF;
+    
+        -- 1.4. Находим <УП статья назначения> !!!всегда!!! у Договора
+        IF vbContractId <> 0
+        THEN
+            SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
+        END IF;
+    
+    
+        -- если не нашли, будем определять свойство <Договор>
+        IF COALESCE (vbContractId, 0) = 0 AND COALESCE (vbJuridicalId, 0) <> 0
+        THEN
+            -- Находим <Договор> у Юр. Лица !!!в зависимоти от ...!!
+            SELECT MAX (COALESCE (View_Contract.ContractId, View_Contract_next.ContractId)) INTO vbContractId
+            FROM (SELECT zc_Enum_InfoMoney_30101()         AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
+                       , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
+                  FROM Object_InfoMoney_View
+                  WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                    AND inAmount > 0
+                 UNION ALL
+                  SELECT 0 AS InfoMoneyId
+                       , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
+                  FROM Object_InfoMoney_View
+                  WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                    AND inAmount < 0
+                 UNION ALL
+                  SELECT Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId
+                       , 0 AS InfoMoneyId_Next
+                  FROM Object_InfoMoney_View
+                  WHERE InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
+                    AND inAmount < 0
+                 ) AS tmpInfoMoney
+                 LEFT JOIN _tmpContract_find AS View_Contract
+                                                ON View_Contract.JuridicalId = vbJuridicalId
+                                               AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
+                                               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                               AND View_Contract.isErased = FALSE
+                                               AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                 LEFT JOIN _tmpContract_find AS View_Contract_next
+                                                ON View_Contract_next.JuridicalId = vbJuridicalId
+                                               AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
+                                               AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                               AND View_Contract_next.isErased = FALSE
+                                               AND View_Contract_next.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                                               AND View_Contract.JuridicalId IS NULL
+            ;
+            -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+            IF COALESCE (vbContractId, 0) = 0
+            THEN
+                SELECT MAX (View_Contract.ContractId) INTO vbContractId
+                FROM _tmpContract_find AS View_Contract
+                WHERE View_Contract.JuridicalId = vbJuridicalId
+                  AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                  AND View_Contract.isErased = FALSE
+                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
+            END IF;
+    
+            -- Находим <УП статья назначения> !!!всегда!!! у Договора
+            SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
+            -- !!!Но если это расход денег, тогда меняем <УП статья назначения> на "Бонусы за продукцию"
+            IF vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+               AND inAmount < 0
+            THEN
+                vbInfoMoneyId:= zc_Enum_InfoMoney_21501(); -- Бонусы за продукцию
+            END IF;
+    
+        END IF; -- если не нашли, будем определять свойство <Договор>
 
-    END IF; -- если не нашли, будем определять свойство <Договор>
+    END IF; -- если НЕ Заработная плата + Алименты
+
 
     IF COALESCE (vbContractId, 0) <> 0 THEN
        -- сохранили связь с <Договор>
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);     
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);
     END IF;
     IF COALESCE (vbInfoMoneyId, 0) <> 0 THEN
        -- сохранили связь с <УП статья назначения>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
     END IF;
 
-   
+
 /*   -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
   */

@@ -2036,8 +2036,8 @@ begin
     try
       if not gc_User.Local then
       Begin
-        spDelete_CashSession.Execute;
         actRefreshAllExecute(nil);
+        spDelete_CashSession.Execute;
       End
       else
       begin

@@ -225,6 +225,22 @@ BEGIN
                                  , FALSE AS isTare
                             FROM tmpMI_Weighing AS tmpMI
                            )
+                , tmpChangePercentAmount AS
+                           (SELECT tmpMI.GoodsId
+                                 , tmpMI.GoodsKindId
+                                 , ObjectFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
+                            FROM (SELECT DISTINCT tmpMI.GoodsId, tmpMI.GoodsKindId FROM tmpMI) AS tmpMI
+                                 INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                       ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpMI.GoodsId
+                                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                      ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                     AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                                       ON ObjectFloat_ChangePercentAmount.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                      AND ObjectFloat_ChangePercentAmount.DescId   = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                            WHERE COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = tmpMI.GoodsKindId
+                           )
        -- Результат - по заявке
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , Object_Goods.Id             AS GoodsId
@@ -239,7 +255,13 @@ BEGIN
             , Object_GoodsKind.ValueData  AS GoodsKindName_max
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
-            , CASE WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1 ELSE 0 END :: TFloat AS ChangePercentAmount
+            , CASE WHEN Object_Measure.Id = zc_Measure_Kg()
+                        THEN CASE WHEN inIsGoodsComplete = FALSE
+                                       THEN COALESCE (tmpChangePercentAmount.ChangePercentAmount, 0)
+                                  ELSE 1
+                             END
+                   ELSE 0
+              END :: TFloat AS ChangePercentAmount
             , tmpMI.Amount_Order :: TFloat    AS Amount_Order
             , (tmpMI.Amount_Order * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN 1 WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat    AS Amount_OrderWeight
             , tmpMI.Amount_Weighing :: TFloat AS Amount_Weighing
@@ -293,7 +315,10 @@ BEGIN
                     , tmpMI.isTare
             ) AS tmpMI
 
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
+            LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpMI.GoodsId
+                                            AND tmpChangePercentAmount.GoodsKindId = tmpMI.GoodsKindId
+
+            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -409,7 +434,7 @@ BEGIN
     , tmpGoods_ScaleCeh AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                         AS GoodsId
                                  , STRING_AGG (COALESCE (Object_GoodsKind.Id, 0) :: TVarChar, ',')         AS GoodsKindId_List
                                  , STRING_AGG (COALESCE (Object_GoodsKind.ValueData, '') ::TVarChar, ',')  AS GoodsKindName_List
-                                 , ABS (MIN (COALESCE (CASE WHEN Object_GoodsKind.Id = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0))) AS GoodsKindId_max
+                                 , ABS (MIN (COALESCE (CASE WHEN Object_GoodsKind.Id = zc_GoodsKind_Basis() THEN -1 ELSE 1 END * Object_GoodsKind.Id, 0))) AS GoodsKindId_max
                             FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
                                  INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
@@ -482,6 +507,18 @@ BEGIN
                                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
                      )
+      , tmpChangePercentAmount AS
+                     (SELECT tmpGoods.GoodsId
+                           , MAX (COALESCE (ObjectFloat_ChangePercentAmount.ValueData, 0)) AS ChangePercentAmount
+                      FROM tmpGoods
+                           INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                 ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercentAmount
+                                                 ON ObjectFloat_ChangePercentAmount.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                AND ObjectFloat_ChangePercentAmount.DescId   = zc_ObjectFloat_GoodsByGoodsKind_ChangePercentAmount()
+                      GROUP BY  tmpGoods.GoodsId
+                     )
        -- Результат
        SELECT ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.GoodsId            AS GoodsId
@@ -497,7 +534,13 @@ BEGIN
             , Object_Measure.Id           AS MeasureId
             , Object_Measure.ValueData    AS MeasureName
             , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30300() THEN 0 -- Доходы + Переработка
-                   WHEN Object_Measure.Id = zc_Measure_Kg() THEN 1
+                   WHEN Object_Measure.Id = zc_Measure_Kg()
+                        THEN CASE WHEN inIsGoodsComplete = FALSE -- AND zc_Movement_Sale() = (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementDesc())
+                                       THEN COALESCE (tmpChangePercentAmount.ChangePercentAmount, 0)
+                                  WHEN inIsGoodsComplete = FALSE
+                                       THEN 0
+                                  ELSE 1
+                             END
                    ELSE 0
               END :: TFloat AS ChangePercentAmount
             , 0 :: TFloat AS Amount_Order
@@ -526,6 +569,8 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
             LEFT JOIN Object AS Object_GoodsKind_max ON Object_GoodsKind_max.Id = tmpGoods.GoodsKindId_max :: Integer
+
+            LEFT JOIN tmpChangePercentAmount ON tmpChangePercentAmount.GoodsId     = tmpGoods.GoodsId
 
             LEFT JOIN tmpPrice1 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
             LEFT JOIN tmpPrice2 AS lfObjectHistory_PriceListItem_Return ON lfObjectHistory_PriceListItem_Return.GoodsId = tmpGoods.GoodsId

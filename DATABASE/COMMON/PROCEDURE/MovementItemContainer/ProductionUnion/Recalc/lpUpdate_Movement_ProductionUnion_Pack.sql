@@ -60,7 +60,22 @@ BEGIN
                                    , MIContainer.OperDate
                                    , MIContainer.isActive
                            UNION ALL
-                            -- плюс zc_Enum_AnalyzerId_ReWork
+                            -- плюс Производство как перемещение
+                            SELECT MIContainer.ContainerId
+                                 , MIContainer.OperDate
+                                 , zc_MI_Master() AS DescId_mi
+                                 , SUM (MIContainer.Amount) AS OperCount
+                            FROM MovementItemContainer AS MIContainer 
+                            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.DescId                 = zc_MIContainer_Count()
+                              AND MIContainer.WhereObjectId_Analyzer = inUnitId
+                              AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- От кого пришло
+                              AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                              AND MIContainer.isActive               = TRUE
+                            GROUP BY MIContainer.ContainerId
+                                   , MIContainer.OperDate
+                           UNION ALL
+                            -- минус Переработка zc_Enum_AnalyzerId_ReWork
                             SELECT MIContainer.ContainerId
                                  , MIContainer.OperDate
                                  , zc_MI_Master() AS DescId_mi
@@ -69,7 +84,7 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.AnalyzerId             <> inUnitId -- zc_Enum_AnalyzerId_ReWork() -- 
+                              AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- Кому ушло
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                               AND MIContainer.isActive               = FALSE
                             GROUP BY MIContainer.ContainerId
@@ -854,7 +869,8 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.09.2016', inEndDate:= '24.09.2016', inUnitId:= 8451, inUserId:= zc_Enum_Process_Auto_Pack())
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
