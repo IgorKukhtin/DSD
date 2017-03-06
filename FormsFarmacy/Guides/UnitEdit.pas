@@ -45,6 +45,8 @@ type
     cxLabel8: TcxLabel;
     edEndServiceNigth: TcxDateEdit;
     edStartServiceNigth: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    edAddress: TcxTextEdit;
   private
     { Private declarations }
   public

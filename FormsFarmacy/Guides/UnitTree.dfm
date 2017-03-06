@@ -3,7 +3,7 @@ object UnitTreeForm: TUnitTreeForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 403
-  ClientWidth = 843
+  ClientWidth = 868
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -66,10 +66,11 @@ object UnitTreeForm: TUnitTreeForm
   object cxGrid: TcxGrid
     Left = 321
     Top = 26
-    Width = 522
+    Width = 547
     Height = 377
     Align = alClient
     TabOrder = 6
+    ExplicitWidth = 522
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -85,7 +86,6 @@ object UnitTreeForm: TUnitTreeForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
@@ -177,6 +177,12 @@ object UnitTreeForm: TUnitTreeForm
         HeaderHint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052
         Options.Editing = False
         Width = 89
+      end
+      object colAddress: TcxGridDBColumn
+        Caption = #1040#1076#1088#1077#1089
+        DataBinding.FieldName = 'Address'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel

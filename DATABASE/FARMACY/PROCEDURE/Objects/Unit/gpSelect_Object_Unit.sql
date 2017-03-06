@@ -5,7 +5,9 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Unit(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, ParentName TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Address TVarChar
+             , ParentId Integer, ParentName TVarChar
              , JuridicalName TVarChar, MarginCategoryName TVarChar, isLeaf boolean, isErased boolean
              , RouteId integer, RouteName TVarChar
              , RouteSortingId integer, RouteSortingName TVarChar
@@ -35,6 +37,7 @@ BEGIN
         Object_Unit.Id                                     AS Id
       , Object_Unit.ObjectCode                             AS Code
       , Object_Unit.ValueData                              AS Name
+      , ObjectString_Unit_Address.ValueData                AS Address
 
       , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
@@ -59,7 +62,7 @@ BEGIN
       , COALESCE(ObjectBoolean_Over.ValueData, False)        AS isOver
       , COALESCE(ObjectBoolean_UploadBadm.ValueData, False)  AS isUploadBadm
       , COALESCE(ObjectBoolean_MarginCategory.ValueData, False)  AS isMarginCategory
-      , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer AS Num_byReportBadm
+      , COALESCE(tmpByBadm.Num_byReportBadm, Null) ::Integer     AS Num_byReportBadm
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -80,6 +83,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
+
+        LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                               ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
@@ -124,6 +131,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.03.17         * add Address
  31.01.17         * add isMarginCategory
  16.01.17         * add isUploadBadm
  13.10.16         * add isOver

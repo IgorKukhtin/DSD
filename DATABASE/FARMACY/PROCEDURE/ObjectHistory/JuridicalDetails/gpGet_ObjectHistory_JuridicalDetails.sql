@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_JuridicalDetails(
 )
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
-               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar)
+               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar,
+               MainName TVarChar, Reestr TVarChar, Decision TVarChar, DecisionDate TDateTime
+               )
 AS
 $BODY$
 BEGIN
@@ -33,6 +35,11 @@ BEGIN
            , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData                   AS AccounterName
            , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
            , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+
+           , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
+           , ObjectHistoryString_JuridicalDetails_Reestr.ValueData                          AS Reestr
+           , ObjectHistoryString_JuridicalDetails_Decision.ValueData                        AS Decision
+           , ObjectHistoryDate_JuridicalDetails_Decision.ValueData                          AS DecisionDate
 
        FROM ObjectHistory_JuridicalDetails
   FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty
@@ -61,8 +68,22 @@ BEGIN
         AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Phone
          ON ObjectHistoryString_JuridicalDetails_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone();
+        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone()
 
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_MainName
+         ON ObjectHistoryString_JuridicalDetails_MainName.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_MainName.DescId = zc_ObjectHistoryString_JuridicalDetails_MainName()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Reestr
+         ON ObjectHistoryString_JuridicalDetails_Reestr.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_Reestr.DescId = zc_ObjectHistoryString_JuridicalDetails_Reestr()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Decision
+         ON ObjectHistoryString_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_Decision.DescId = zc_ObjectHistoryString_JuridicalDetails_Decision()
+
+  LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_JuridicalDetails_Decision
+         ON ObjectHistoryDate_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryDate_JuridicalDetails_Decision.DescId = zc_ObjectHistoryDate_JuridicalDetails_Decision()
+;
 
 
 END;
@@ -75,6 +96,7 @@ ALTER FUNCTION gpGet_ObjectHistory_JuridicalDetails (Integer, TDateTime, TVarCha
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 06.03.17         *
  04.07.14         *
 */
 

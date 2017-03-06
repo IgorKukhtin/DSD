@@ -160,6 +160,20 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 128
           end
+          object Contract_StartDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'Contract_StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
@@ -348,6 +362,46 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 155
           end
+          object MainName: TcxGridDBColumn
+            Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072' ('#1057#1043')'
+            DataBinding.FieldName = 'MainName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Reestr: TcxGridDBColumn
+            Caption = #1042#1080#1090#1103#1075' '#1079' '#1088#1077#1108#1089#1090#1088#1091' '#1087#1083#1072#1090#1085#1080#1082#1110#1074' '#1055#1044#1042' ('#1057#1043')'
+            DataBinding.FieldName = 'Reestr'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object Decision: TcxGridDBColumn
+            Caption = #8470' '#1088#1110#1096#1077#1085#1085#1103' '#1087#1088#1086' '#1074#1080#1076#1072#1095#1091' '#1083#1110#1094#1077#1085#1079#1110#1111' ('#1057#1043')'
+            DataBinding.FieldName = 'Decision'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
+          object DecisionDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1110#1096#1077#1085#1085#1103' '#1087#1088#1086' '#1074#1080#1076#1072#1095#1091' '#1083#1110#1094#1077#1085#1079#1110#1111' ('#1057#1043')'
+            DataBinding.FieldName = 'DecisionDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1077#1083#1077#1092#1086#1085' ('#1057#1091#1073#8217#1108#1082#1090' '#1075#1086#1089#1087#1086#1076#1072#1088#1102#1074#1072#1085#1085#1103')'
+            Options.Editing = False
+            Width = 155
+          end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1057#1043')'
             DataBinding.FieldName = 'BankName'
@@ -484,6 +538,12 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object Unit_Address: TcxGridDBColumn
+            Caption = #1040#1076#1088#1077#1089' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'Unit_Address'
+            Visible = False
+            Width = 80
           end
         end
       end
@@ -779,7 +839,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'UnitName;HospitalName;OperDate;GoodsName'
+          IndexFieldNames = 'UnitName;HospitalName;ContractName;OperDate;GoodsName'
           GridView = cxGridDBTableView
         end>
       Params = <

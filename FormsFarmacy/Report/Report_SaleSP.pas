@@ -50,6 +50,9 @@ type
     cbGroupMemberSP: TcxCheckBox;
     actRefresh1: TdsdDataSetRefresh;
     MedicFIO: TcxGridDBColumn;
+    Contract_StartDate: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    Unit_Address: TcxGridDBColumn;
   private
     { Private declarations }
   public

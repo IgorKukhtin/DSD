@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 261
+  ClientHeight = 290
   ClientWidth = 488
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 84
-    Top = 227
+    Left = 72
+    Top = 255
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -37,8 +37,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 278
-    Top = 227
+    Left = 266
+    Top = 255
     Width = 75
     Height = 25
     Action = FormClose
@@ -147,12 +147,12 @@
     Caption = #1053#1072#1095'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
   end
   object cxLabel8: TcxLabel
-    Left = 364
+    Left = 367
     Top = 156
     Caption = #1054#1082#1086#1085'. '#1085#1086#1095'. '#1089#1084#1077#1085#1099
   end
   object edEndServiceNigth: TcxDateEdit
-    Left = 361
+    Left = 364
     Top = 175
     Properties.ArrowsForYear = False
     Properties.AssignedValues.EditFormat = True
@@ -176,9 +176,20 @@
     TabOrder = 20
     Width = 100
   end
+  object cxLabel9: TcxLabel
+    Left = 15
+    Top = 203
+    Caption = #1040#1076#1088#1077#1089
+  end
+  object edAddress: TcxTextEdit
+    Left = 15
+    Top = 220
+    TabOrder = 22
+    Width = 449
+  end
   object ActionList: TActionList
-    Left = 208
-    Top = 208
+    Left = 196
+    Top = 236
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -224,12 +235,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -237,6 +250,15 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAddress'
+        Value = Null
+        Component = edAddress
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTaxService'
@@ -244,6 +266,7 @@
         Component = ceTaxService
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTaxServiceNigth'
@@ -251,6 +274,7 @@
         Component = ceTaxServiceNigth
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartServiceNigth'
@@ -258,12 +282,15 @@
         Component = edStartServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndServiceNigth'
+        Value = 'NULL'
         Component = edEndServiceNigth
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisRepriceAuto'
@@ -271,6 +298,7 @@
         Component = cbRepriceAuto
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inParentId'
@@ -278,6 +306,7 @@
         Component = ParentGuides
         ComponentItem = 'ParentId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
@@ -285,6 +314,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMarginCategoryId'
@@ -292,13 +322,11 @@
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Value = Null
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 200
+    Left = 372
+    Top = 228
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -306,9 +334,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
-    Left = 248
-    Top = 208
+    Left = 236
+    Top = 236
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -321,23 +350,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentId'
         Value = ''
         Component = ParentGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ParentName'
@@ -345,12 +378,14 @@
         Component = ParentGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -358,12 +393,14 @@
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MarginCategoryId'
         Value = Null
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MarginCategoryName'
@@ -371,45 +408,60 @@
         Component = MarginCategoryGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxService'
         Value = Null
         Component = ceTaxService
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TaxServiceNigth'
         Value = Null
         Component = ceTaxServiceNigth
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartServiceNigth'
+        Value = 'NULL'
         Component = edStartServiceNigth
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndServiceNigth'
         Value = 'NULL'
         Component = edEndServiceNigth
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isRepriceAuto'
         Value = Null
         Component = cbRepriceAuto
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Address'
+        Value = Null
+        Component = edAddress
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 176
-    Top = 208
+    Left = 164
+    Top = 236
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -419,6 +471,7 @@
         Component = ParentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -427,6 +480,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 64
@@ -436,6 +490,7 @@
     LookupControl = ceJuridical
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -445,6 +500,7 @@
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -453,6 +509,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 48
@@ -462,6 +519,7 @@
     LookupControl = edMarginCategory
     FormNameParam.Value = 'TMarginCategoryForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMarginCategoryForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -471,6 +529,7 @@
         Component = MarginCategoryGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -479,6 +538,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 104
