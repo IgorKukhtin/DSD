@@ -175,9 +175,35 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101() -- Заработная плата
     WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
       AND Object_PersonalServiceList.isErased = FALSE
-      /*AND Object_PersonalServiceList.Id IN (293716 -- Ведомость карточки БН Фидо
-                                          , 413454 -- Ведомость карточки БН Пиреус
-                                           )*/
+    -- Физ Лица
+    UNION ALL
+     SELECT Object_Member.Id       
+          , Object_Member.ObjectCode     
+          , Object_Member.ValueData
+          , ObjectDesc.ItemName
+          , Object_Member.isErased
+          , Object_InfoMoney_View.InfoMoneyId
+          , Object_InfoMoney_View.InfoMoneyCode
+          , Object_InfoMoney_View.InfoMoneyGroupName
+          , Object_InfoMoney_View.InfoMoneyDestinationName
+          , Object_InfoMoney_View.InfoMoneyName
+          , Object_InfoMoney_View.InfoMoneyName_all
+          , NULL::Integer AS PaidKindId
+          , ''::TVarChar  AS PaidKindName
+          , NULL::Integer AS ContractId
+          , NULL::Integer AS ContractCode
+          , ''::TVarChar  AS ContractNumber
+          , NULL::Integer AS ContractStateKindCode
+          , NULL::TDateTime AS StartDate
+          , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
+          , ''::TVarChar AS ContractKindName
+          , ''::TVarChar AS OKPO
+     FROM Object AS Object_Member
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60104() -- Удержания сторон. юр.л.
+    WHERE Object_Member.DescId = zc_Object_Member()
+      AND Object_Member.isErased = FALSE
     ;
 
 END;

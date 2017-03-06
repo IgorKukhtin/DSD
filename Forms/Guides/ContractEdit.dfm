@@ -108,16 +108,16 @@ inherited ContractEditForm: TContractEditForm
     Width = 103
   end
   object edEndDate: TcxDateEdit [14]
-    Left = 241
+    Left = 239
     Top = 119
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 12
-    Width = 103
+    Width = 105
   end
   object cxLabel6: TcxLabel [15]
-    Left = 241
+    Left = 239
     Top = 101
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
@@ -632,7 +632,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 47
-    Width = 217
+    Width = 101
   end
   object ceBankAccount: TcxButtonEdit [48]
     Left = 16
@@ -821,7 +821,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 74
+    TabOrder = 73
     Width = 162
   end
   object cxLabel32: TcxLabel [71]
@@ -840,6 +840,21 @@ inherited ContractEditForm: TContractEditForm
     Properties.ReadOnly = True
     TabOrder = 76
     Width = 80
+  end
+  object edDayTaxSummary: TcxCurrencyEdit [73]
+    Left = 239
+    Top = 80
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 77
+    Width = 105
+  end
+  object cxLabel33: TcxLabel [74]
+    Left = 239
+    Top = 63
+    Caption = #1050#1086#1083'. '#1076#1085'. '#1089#1074#1086#1076#1085'. '#1053#1053
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -882,12 +897,14 @@ inherited ContractEditForm: TContractEditForm
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -895,6 +912,7 @@ inherited ContractEditForm: TContractEditForm
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -917,12 +935,14 @@ inherited ContractEditForm: TContractEditForm
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -930,6 +950,7 @@ inherited ContractEditForm: TContractEditForm
           Component = ContractConditionCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -953,12 +974,14 @@ inherited ContractEditForm: TContractEditForm
       FormName = 'TBonusKindForm'
       FormNameParam.Value = 'TBonusKindForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'key'
           Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -966,6 +989,7 @@ inherited ContractEditForm: TContractEditForm
           Component = ContractConditionCDS
           ComponentItem = 'BonusKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1150,12 +1174,14 @@ inherited ContractEditForm: TContractEditForm
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = 'TContractChoiceForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Key'
           Value = Null
           Component = ContractConditionCDS
           ComponentItem = 'ContractSendId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -1163,6 +1189,7 @@ inherited ContractEditForm: TContractEditForm
           Component = ContractConditionCDS
           ComponentItem = 'ContractSendName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalId'
@@ -1170,6 +1197,7 @@ inherited ContractEditForm: TContractEditForm
           Component = JuridicalGuides
           ComponentItem = 'Key'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
@@ -1177,6 +1205,7 @@ inherited ContractEditForm: TContractEditForm
           Component = JuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -1186,12 +1215,14 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'Id'
         Value = Null
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -1199,6 +1230,7 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 488
     Top = 423
@@ -1212,12 +1244,14 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -1225,6 +1259,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberArchive'
@@ -1232,6 +1267,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edInvNumberArchive
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -1239,6 +1275,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountExternal'
@@ -1246,6 +1283,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edBankAccountExternal
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inGLNCode'
@@ -1253,6 +1291,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inTerm'
@@ -1260,6 +1299,15 @@ inherited ContractEditForm: TContractEditForm
         Component = edTerm
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDayTaxSummary'
+        Value = Null
+        Component = edDayTaxSummary
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSigningDate'
@@ -1267,6 +1315,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edSigningDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
@@ -1274,6 +1323,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
@@ -1281,12 +1331,14 @@ inherited ContractEditForm: TContractEditForm
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalBasisId'
@@ -1294,6 +1346,7 @@ inherited ContractEditForm: TContractEditForm
         Component = MainJuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalDocumentId'
@@ -1301,42 +1354,49 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalDocumentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractKindId'
         Value = ''
         Component = ContractKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = ''
         Component = PaidKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalId'
         Value = ''
         Component = PersonalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalTradeId'
         Value = ''
         Component = PersonalTradeGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalCollationId'
         Value = ''
         Component = PersonalCollationGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalSigningId'
@@ -1344,36 +1404,42 @@ inherited ContractEditForm: TContractEditForm
         Component = PersonalSigningGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankAccountId'
         Value = ''
         Component = BankAccountGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractTagId'
         Value = ''
         Component = ContractTagGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inAreaContractId'
         Value = ''
         Component = AreaContractGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractArticleId'
         Value = ''
         Component = ContractArticleGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractStateKindId'
         Value = ''
         Component = ContractStateKindGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractTermKindId'
@@ -1381,6 +1447,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractTermKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCurrencyId'
@@ -1388,12 +1455,14 @@ inherited ContractEditForm: TContractEditForm
         Component = CurrencyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBankId'
         Value = ''
         Component = BankGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisDefault'
@@ -1401,6 +1470,7 @@ inherited ContractEditForm: TContractEditForm
         Component = cbisDefault
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisStandart'
@@ -1408,6 +1478,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ceisStandart
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisPersonal'
@@ -1415,6 +1486,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ceisPersonal
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inisUnique'
@@ -1422,6 +1494,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ceIsUnique
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListId'
@@ -1429,6 +1502,7 @@ inherited ContractEditForm: TContractEditForm
         Component = dsdPriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPriceListPromoId'
@@ -1436,6 +1510,7 @@ inherited ContractEditForm: TContractEditForm
         Component = dsdPriceListPromoGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartPromo'
@@ -1443,6 +1518,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edStartPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InEndPromo'
@@ -1450,6 +1526,7 @@ inherited ContractEditForm: TContractEditForm
         Component = edEndPromo
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 592
     Top = 420
@@ -1463,47 +1540,55 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberArchive'
         Value = ''
         Component = edInvNumberArchive
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SigningDate'
         Value = 0d
         Component = edSigningDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartDate'
         Value = 0d
         Component = edStartDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
         Value = 0d
         Component = edEndDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PaidKindName'
@@ -1511,12 +1596,14 @@ inherited ContractEditForm: TContractEditForm
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -1524,12 +1611,14 @@ inherited ContractEditForm: TContractEditForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractKindId'
         Value = ''
         Component = ContractKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractKindName'
@@ -1537,12 +1626,14 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalId'
         Value = ''
         Component = PersonalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalName'
@@ -1550,12 +1641,14 @@ inherited ContractEditForm: TContractEditForm
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeId'
         Value = ''
         Component = PersonalTradeGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalTradeName'
@@ -1563,12 +1656,14 @@ inherited ContractEditForm: TContractEditForm
         Component = PersonalTradeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalCollationId'
         Value = ''
         Component = PersonalCollationGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalCollationName'
@@ -1576,12 +1671,14 @@ inherited ContractEditForm: TContractEditForm
         Component = PersonalCollationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalSigningId'
         Value = Null
         Component = PersonalSigningGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalSigningName'
@@ -1589,12 +1686,14 @@ inherited ContractEditForm: TContractEditForm
         Component = PersonalSigningGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountId'
         Value = ''
         Component = BankAccountGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountName'
@@ -1602,12 +1701,14 @@ inherited ContractEditForm: TContractEditForm
         Component = BankAccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagId'
         Value = ''
         Component = ContractTagGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTagName'
@@ -1615,12 +1716,14 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractTagGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AreaContractId'
         Value = ''
         Component = AreaContractGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AreaContractName'
@@ -1628,12 +1731,14 @@ inherited ContractEditForm: TContractEditForm
         Component = AreaContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractArticleId'
         Value = ''
         Component = ContractArticleGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractArticleName'
@@ -1641,12 +1746,14 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractArticleGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractStateKindId'
         Value = ''
         Component = ContractStateKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractStateKindName'
@@ -1654,30 +1761,35 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractStateKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankAccountExternal'
         Value = ''
         Component = edBankAccountExternal
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GLNCode'
         Value = ''
         Component = edGLNCode
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisId'
         Value = ''
         Component = MainJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
@@ -1685,12 +1797,14 @@ inherited ContractEditForm: TContractEditForm
         Component = MainJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalDocumentId'
         Value = Null
         Component = JuridicalDocumentGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalDocumentName'
@@ -1698,12 +1812,14 @@ inherited ContractEditForm: TContractEditForm
         Component = JuridicalDocumentGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankId'
         Value = ''
         Component = BankGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BankName'
@@ -1711,36 +1827,42 @@ inherited ContractEditForm: TContractEditForm
         Component = BankGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isDefault'
         Value = 'False'
         Component = cbisDefault
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isStandart'
         Value = 'False'
         Component = ceisStandart
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isPersonal'
         Value = 'False'
         Component = ceisPersonal
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isUnique'
         Value = 'False'
         Component = ceIsUnique
         DataType = ftBoolean
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListId'
         Value = Null
         Component = dsdPriceListGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListName'
@@ -1748,12 +1870,14 @@ inherited ContractEditForm: TContractEditForm
         Component = dsdPriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListPromoId'
         Value = Null
         Component = dsdPriceListPromoGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PriceListPromoName'
@@ -1761,24 +1885,28 @@ inherited ContractEditForm: TContractEditForm
         Component = dsdPriceListPromoGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'StartPromo'
         Value = 'NULL'
         Component = edStartPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndPromo'
         Value = 'NULL'
         Component = edEndPromo
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyId'
         Value = Null
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsPropertyName'
@@ -1786,18 +1914,21 @@ inherited ContractEditForm: TContractEditForm
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Term'
         Value = Null
         Component = edTerm
         DataType = ftFloat
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTermKindId'
         Value = Null
         Component = ContractTermKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ContractTermKindName'
@@ -1805,12 +1936,14 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractTermKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyId'
         Value = Null
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
@@ -1818,6 +1951,14 @@ inherited ContractEditForm: TContractEditForm
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DayTaxSummary'
+        Value = Null
+        Component = edDayTaxSummary
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 632
     Top = 395
@@ -1827,6 +1968,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1837,6 +1979,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1845,15 +1988,17 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 213
-    Top = 185
+    Left = 197
+    Top = 217
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1864,6 +2009,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1872,6 +2018,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 46
     Top = 218
@@ -1881,6 +2028,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edContractKind
     FormNameParam.Value = 'TContractKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1891,6 +2039,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1899,10 +2048,12 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
         Value = 0
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 257
@@ -1912,6 +2063,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edPersonal
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1922,6 +2074,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1930,6 +2083,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 351
@@ -1939,6 +2093,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edAreaContract
     FormNameParam.Value = 'TAreaContractForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAreaContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1949,6 +2104,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1957,6 +2113,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 245
     Top = 349
@@ -1966,6 +2123,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edContractArticle
     FormNameParam.Value = 'TContractArticleForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractArticleForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1976,6 +2134,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1984,6 +2143,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 304
@@ -1993,6 +2153,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edContractStateKind
     FormNameParam.Value = 'TContractStateKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractStateKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2003,6 +2164,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2011,6 +2173,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 364
     Top = 267
@@ -2020,6 +2183,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2030,6 +2194,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2038,6 +2203,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 64
     Top = 194
@@ -2065,6 +2231,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inComment'
@@ -2073,6 +2240,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inValue'
@@ -2081,6 +2249,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Value'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
@@ -2088,6 +2257,7 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractConditionKindId'
@@ -2095,6 +2265,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inBonusKindId'
@@ -2102,6 +2273,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
@@ -2109,6 +2281,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inContractSendId'
@@ -2116,6 +2289,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'ContractSendId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 736
@@ -2135,6 +2309,7 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 402
@@ -2304,6 +2479,7 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 496
@@ -2334,6 +2510,7 @@ inherited ContractEditForm: TContractEditForm
         Name = 'ioid'
         Value = Null
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'indocumentname'
@@ -2342,6 +2519,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontractid'
@@ -2349,6 +2527,7 @@ inherited ContractEditForm: TContractEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'incontractdocumentdata'
@@ -2357,6 +2536,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Data'
         DataType = ftBlob
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448
@@ -2373,16 +2553,18 @@ inherited ContractEditForm: TContractEditForm
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 584
-    Top = 232
+    Left = 640
+    Top = 224
   end
   object MainJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMainJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2393,6 +2575,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2401,6 +2584,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 232
     Top = 500
@@ -2416,6 +2600,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 504
@@ -2458,6 +2643,7 @@ inherited ContractEditForm: TContractEditForm
         Component = DocumentCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 648
@@ -2472,12 +2658,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inContractStateKindCode'
         Value = 2
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = ''
         Component = ContractStateKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2485,6 +2673,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractStateKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 768
@@ -2499,12 +2688,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inContractStateKindCode'
         Value = 1
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = ''
         Component = ContractStateKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2512,6 +2703,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractStateKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 768
@@ -2526,12 +2718,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inContractStateKindCode'
         Value = 3
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = ''
         Component = ContractStateKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2539,6 +2733,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractStateKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 768
@@ -2553,12 +2748,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inContractStateKindCode'
         Value = 4
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = ''
         Component = ContractStateKindGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2566,6 +2763,7 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractStateKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 768
@@ -2576,6 +2774,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edBankId
     FormNameParam.Value = 'TBankForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2586,6 +2785,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2594,6 +2794,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 474
@@ -2603,6 +2804,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edPersonalTrade
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2613,6 +2815,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2621,6 +2824,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 348
     Top = 368
@@ -2630,6 +2834,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edPersonalCollation
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2640,6 +2845,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2648,6 +2854,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 395
@@ -2657,6 +2864,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccountForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBankAccountForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2667,6 +2875,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2675,6 +2884,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 59
     Top = 504
@@ -2684,6 +2894,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edContractTag
     FormNameParam.Value = 'TContractTagForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractTagForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2694,6 +2905,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2702,8 +2914,9 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 344
+    Left = 376
     Top = 47
   end
   object JuridicalDocumentGuides: TdsdGuides
@@ -2711,6 +2924,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = edJuridicalDocument
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2721,6 +2935,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2729,6 +2944,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 269
     Top = 225
@@ -2738,6 +2954,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = cePriceList
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2748,6 +2965,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2756,6 +2974,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 249
     Top = 554
@@ -2765,6 +2984,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = cePriceListPromo
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2775,6 +2995,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2783,6 +3004,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 472
     Top = 522
@@ -2792,6 +3014,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = ceGoodsProperty
     FormNameParam.Value = 'TGoodsPropertyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2802,6 +3025,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2810,15 +3034,17 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 592
+    Left = 144
+    Top = 584
   end
   object ContractTermKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractTermKind
     FormNameParam.Value = 'TContractTermKindForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TContractTermKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -2829,6 +3055,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2837,15 +3064,17 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 154
+    Left = 176
+    Top = 146
   end
   object PersonalSigningGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalSigning
     FormNameParam.Value = 'TPersonal_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2856,6 +3085,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2864,6 +3094,7 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 80
     Top = 443
@@ -2873,6 +3104,7 @@ inherited ContractEditForm: TContractEditForm
     LookupControl = ceCurrency
     FormNameParam.Value = 'TCurrencyForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2881,6 +3113,7 @@ inherited ContractEditForm: TContractEditForm
         Value = ''
         Component = CurrencyGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -2888,6 +3121,7 @@ inherited ContractEditForm: TContractEditForm
         Component = CurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 146

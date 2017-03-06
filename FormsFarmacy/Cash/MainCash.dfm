@@ -12,7 +12,7 @@ inherited MainCashForm: TMainCashForm
   AddOnFormData.Params = FormParams
   AddOnFormData.AddOnFormRefresh.SelfList = 'MainCheck'
   ExplicitWidth = 883
-  ExplicitHeight = 454
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   object BottomPanel: TPanel [0]
@@ -216,8 +216,6 @@ inherited MainCashForm: TMainCashForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 35
-    ExplicitHeight = 181
     object MainGrid: TcxGrid
       Left = 0
       Top = 0
@@ -225,7 +223,6 @@ inherited MainCashForm: TMainCashForm
       Height = 127
       Align = alClient
       TabOrder = 0
-      ExplicitHeight = 148
       object MainGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = MainGridDBTableViewFocusedRecordChanged
@@ -247,9 +244,6 @@ inherited MainCashForm: TMainCashForm
         OptionsView.HeaderHeight = 30
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object MainId: TcxGridDBColumn
-          DataBinding.FieldName = 'Id'
-        end
         object MainColName: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'GoodsName'
@@ -591,6 +585,11 @@ inherited MainCashForm: TMainCashForm
           HeaderAlignmentVert = vaCenter
           Width = 40
         end
+        object GoodsId_main: TcxGridDBColumn
+          DataBinding.FieldName = 'GoodsId_main'
+          Visible = False
+          Width = 76
+        end
       end
       object MainGridLevel: TcxGridLevel
         GridView = MainGridDBTableView
@@ -603,7 +602,6 @@ inherited MainCashForm: TMainCashForm
       Height = 33
       Align = alBottom
       TabOrder = 1
-      ExplicitTop = 148
       object ShapeState: TShape
         Left = 751
         Top = 13
@@ -826,7 +824,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 3
     Visible = False
-    ExplicitTop = 0
     object Label1: TLabel
       Left = 1
       Top = 1
@@ -900,7 +897,6 @@ inherited MainCashForm: TMainCashForm
     ParentBackground = False
     TabOrder = 4
     Visible = False
-    ExplicitTop = 17
     object Label3: TLabel
       Left = 1
       Top = 1
@@ -974,9 +970,9 @@ inherited MainCashForm: TMainCashForm
     object lbScaner: TLabel
       Left = 185
       Top = 2
-      Width = 72
+      Width = 68
       Height = 13
-      Caption = #1087#1086#1080#1089#1082' '#1087#1086' '#1082#1086#1076#1091
+      Caption = #1087#1086#1080#1089#1082' '#1087#1086' '#1064'/'#1050
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clGray
       Font.Height = -11
@@ -2084,8 +2080,8 @@ inherited MainCashForm: TMainCashForm
     Enabled = False
     Interval = 360000
     OnTimer = TimerSaveAllTimer
-    Left = 32
-    Top = 40
+    Left = 80
+    Top = 24
   end
   object TimerMoneyInCash: TTimer
     Enabled = False

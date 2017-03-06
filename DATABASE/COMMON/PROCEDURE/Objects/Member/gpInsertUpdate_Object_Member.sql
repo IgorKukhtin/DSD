@@ -1,14 +1,9 @@
 -- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
- INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
+ INOUT ioId	             Integer   ,    -- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
     IN inIsOfficial          Boolean   ,    -- Оформлен официально
@@ -18,6 +13,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inCardSecond          TVarChar  ,    -- № карточного счета ЗП - вторая форма
     IN inCardChild           TVarChar  ,    -- № карточного счета ЗП - - алименты (удержание)
     IN inComment             TVarChar  ,    -- Примечание 
+    IN inBankId              Integer   ,    --
+    IN inBankSecondId        Integer   ,    --
+    IN inBankChildId         Integer   ,    --
     IN inInfoMoneyId         Integer   ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -84,6 +82,14 @@ BEGIN
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_InfoMoney(), ioId, inInfoMoneyId);
 
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Bank(), ioId, inBankId);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankSecond(), ioId, inBankSecondId);
+    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankChild(), ioId, inBankChildId);
+
+
    -- синхронизируем <Физические лица> и <Сотрудники>
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
@@ -93,12 +99,11 @@ BEGIN
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond,inCardChild
  25.03.16         * add Card
  19.02.15         * add inInfoMoneyId

@@ -5,7 +5,7 @@ inherited MainForm: TMainForm
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 261
+  ExplicitHeight = 257
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -1131,8 +1131,8 @@ inherited MainForm: TMainForm
     object actProductionUnionTechSiryo: TdsdOpenForm [67]
       Category = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
       MoveParams = <>
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1059#1087#1072#1082#1086#1074#1082#1080' '#1052
-      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1059#1087#1072#1082#1086#1074#1082#1080' '#1052
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1064#1087#1088#1080#1094'. '#1084#1103#1089#1086
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1094#1077#1093' '#1064#1087#1088#1080#1094'. '#1084#1103#1089#1086
       FormName = 'TProductionUnionTechJournalForm'
       FormNameParam.Value = 'TProductionUnionTechJournalForm'
       FormNameParam.DataType = ftString
@@ -1140,23 +1140,23 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'FromId'
-          Value = 951601
+          Value = 981821
           MultiSelectSeparator = ','
         end
         item
           Name = 'FromName'
-          Value = #1062#1045#1061' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1084#1103#1089#1086
+          Value = #1062#1045#1061' '#1096#1087#1088#1080#1094'. '#1084#1103#1089#1086
           DataType = ftString
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToId'
-          Value = 951601
+          Value = 981821
           MultiSelectSeparator = ','
         end
         item
           Name = 'ToName'
-          Value = #1062#1045#1061' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1084#1103#1089#1086
+          Value = #1062#1045#1061' '#1096#1087#1088#1080#1094'. '#1084#1103#1089#1086
           DataType = ftString
           MultiSelectSeparator = ','
         end>

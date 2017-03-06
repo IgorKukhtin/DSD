@@ -55,6 +55,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isUnique Boolean
              , isVat Boolean
 
+             , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
 
              , PriceListId Integer, PriceListName TVarChar
@@ -223,6 +224,7 @@ BEGIN
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        , COALESCE (ObjectBoolean_Vat.ValueData, False)      AS isVat
        
+       , ObjectFloat_DayTaxSummary.ValueData AS DayTaxSummary
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
        , ObjectDate_Document.ValueData AS DateDocument
        
@@ -248,6 +250,10 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
+                              ON ObjectFloat_DayTaxSummary.ObjectId = Object_Contract_View.ContractId
+                             AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Contract_DayTaxSummary()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DocumentCount
                               ON ObjectFloat_DocumentCount.ObjectId = Object_Contract_View.ContractId
@@ -421,6 +427,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.03.17         * DayTaxSummary
  13.04.16         * Currency
  05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,

@@ -46,6 +46,7 @@ RETURNS TABLE (UnitName       TVarChar
              , BankName           TVarChar
              , MFO                TVarChar
 
+             , PartnerMedical_JuridicalName    TVarChar
              , PartnerMedical_FullName         TVarChar
              , PartnerMedical_JuridicalAddress TVarChar
              , PartnerMedical_Phone            TVarChar
@@ -249,7 +250,8 @@ BEGIN
            , ObjectHistory_JuridicalDetails.Phone
            , tmpBankAccount.BankName ::TVarChar
            , tmpBankAccount.MFO      ::TVarChar
-
+ 
+           , Object_PartnerMedicalJuridical.ValueData              AS PartnerMedical_JuridicalName
            , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
            , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
            , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
@@ -281,6 +283,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
                                   ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
                                 AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+             LEFT JOIN Object AS Object_PartnerMedicalJuridical ON Object_PartnerMedicalJuridical.Id = ObjectLink_PartnerMedical_Juridical.ChildObjectId
 
              LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
                                     ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
@@ -295,6 +298,12 @@ BEGIN
              LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
                                       ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                      AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                  ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId--ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN Object AS Object_PartnerMedicalContract ON Object_PartnerMedicalContract.Id = ObjectLink_Contract_Juridical.ObjectId
+
 
         ORDER BY Object_Unit.ValueData
                , Object_PartnerMedical.ValueData

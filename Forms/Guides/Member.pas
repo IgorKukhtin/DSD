@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit;
+  DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
+  dsdGuides;
 
 type
   TMemberForm = class(TParentForm)
@@ -78,6 +79,27 @@ type
     PositionName: TcxGridDBColumn;
     isDateOut: TcxGridDBColumn;
     clCardSecond: TcxGridDBColumn;
+    BankChildName: TcxGridDBColumn;
+    BankName: TcxGridDBColumn;
+    BankSecondName: TcxGridDBColumn;
+    spUpdateBank: TdsdStoredProc;
+    cxLabel6: TcxLabel;
+    edBank: TcxButtonEdit;
+    BankGuides: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    actUpdateBank: TdsdExecStoredProc;
+    macUpdateBank: TMultiAction;
+    actUpdateBankSecond: TdsdExecStoredProc;
+    macUpdateBankSecond: TMultiAction;
+    bbUpdateBank: TdxBarButton;
+    bbUpdateBankSecond: TdxBarButton;
+    spUpdateBankSecond: TdsdStoredProc;
+    macUpdateBankSecondAll: TMultiAction;
+    macUpdateBankAll: TMultiAction;
+    actChoiceBankForm: TOpenChoiceForm;
+    actChoiceBankSecondForm: TOpenChoiceForm;
+    actChoiceBankChildForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

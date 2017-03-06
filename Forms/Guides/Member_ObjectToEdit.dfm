@@ -3,7 +3,7 @@
   ClientHeight = 476
   ClientWidth = 287
   ExplicitWidth = 293
-  ExplicitHeight = 501
+  ExplicitHeight = 504
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -54,13 +54,13 @@
       object cxLabel8: TcxLabel
         Left = 7
         Top = 161
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1087#1077#1088#1074#1072#1103' '#1092#1086#1088#1084#1072
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1060'1'
       end
       object ceCard: TcxTextEdit
         Left = 7
         Top = 176
         TabOrder = 15
-        Width = 273
+        Width = 151
       end
       object ceCode: TcxCurrencyEdit
         Left = 7
@@ -125,7 +125,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 11
+        TabOrder = 10
         Width = 273
       end
       object cxLabel9: TcxLabel
@@ -159,30 +159,81 @@
         StyleFocused.LookAndFeel.NativeStyle = False
         StyleHot.LookAndFeel.Kind = lfOffice11
         StyleHot.LookAndFeel.NativeStyle = False
-        TabOrder = 13
+        TabOrder = 12
         Width = 273
       end
       object cxLabel10: TcxLabel
         Left = 7
         Top = 199
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1047#1055' - '#1060'2'
       end
       object ceCardSecond: TcxTextEdit
         Left = 7
         Top = 214
         TabOrder = 18
-        Width = 273
+        Width = 151
       end
       object cxLabel11: TcxLabel
         Left = 7
         Top = 236
-        Caption = #8470' '#1082#1072#1088#1090#1086#1095#1085#1086#1075#1086' '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095'.'#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
       end
       object ceCardChild: TcxTextEdit
         Left = 7
         Top = 251
         TabOrder = 20
-        Width = 273
+        Width = 151
+      end
+      object cxLabel12: TcxLabel
+        Left = 164
+        Top = 161
+        Caption = #1041#1072#1085#1082' '#1060'1'
+      end
+      object ceBank: TcxButtonEdit
+        Left = 164
+        Top = 176
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 22
+        Width = 116
+      end
+      object cxLabel13: TcxLabel
+        Left = 164
+        Top = 199
+        Caption = #1041#1072#1085#1082' '#1074#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
+      end
+      object ceBankSecond: TcxButtonEdit
+        Left = 164
+        Top = 214
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 24
+        Width = 116
+      end
+      object cxLabel14: TcxLabel
+        Left = 164
+        Top = 236
+        Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
+      end
+      object ceBankChild: TcxButtonEdit
+        Left = 164
+        Top = 251
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 26
+        Width = 116
       end
     end
     object tsContact: TcxTabSheet
@@ -223,8 +274,8 @@
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 239
-    Top = 286
+    Left = 223
+    Top = 358
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -245,8 +296,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 240
-    Top = 207
+    Left = 120
+    Top = 31
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Member_All'
@@ -345,6 +396,30 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankSecondId'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBankChildId'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -436,6 +511,51 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankId'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankName'
+        Value = Null
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankSecondId'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankSecondName'
+        Value = Null
+        Component = BankSecondGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankChildid'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BankChildName'
+        Value = Null
+        Component = BankChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Top = 136
   end
@@ -469,8 +589,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 88
-    Top = 64
+    Left = 64
+    Top = 72
   end
   object spGetMemberContact: TdsdStoredProc
     StoredProcName = 'gpGet_Object_MemberContact'
@@ -561,5 +681,95 @@
       end>
     Left = 152
     Top = 366
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 208
+    Top = 191
+  end
+  object BankSecondGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankSecond
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankSecondGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankSecondGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 232
+    Top = 231
+  end
+  object BankChildGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankChild
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankChildGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 287
   end
 end

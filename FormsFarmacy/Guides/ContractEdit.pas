@@ -33,6 +33,9 @@ type
     edEndDate: TcxDateEdit;
     cxLabel9: TcxLabel;
     cePercent: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
+    ceGroupMemberSP: TcxButtonEdit;
+    GroupMemberSPGuides: TdsdGuides;
   private
     { Private declarations }
   public

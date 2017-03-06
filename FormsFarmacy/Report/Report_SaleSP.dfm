@@ -368,6 +368,15 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 155
           end
+          object PartnerMedical_JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1052#1077#1076'. '#1091#1095#1088#1077#1078#1076'.)'
+            DataBinding.FieldName = 'PartnerMedical_JuridicalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 155
+          end
           object PartnerMedical_FullName: TcxGridDBColumn
             Caption = #1052#1077#1076#1080#1094#1080#1085#1089#1082#1086#1077' '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' ('#1087#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077')'
             DataBinding.FieldName = 'PartnerMedical_FullName'

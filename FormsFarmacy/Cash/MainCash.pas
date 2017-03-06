@@ -246,7 +246,7 @@ type
     Panel1: TPanel;
     ceScaner: TcxCurrencyEdit;
     lbScaner: TLabel;
-    MainId: TcxGridDBColumn;
+    GoodsId_main: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -296,6 +296,7 @@ type
     procedure ParentFormDestroy(Sender: TObject);
     procedure ceScanerKeyPress(Sender: TObject; var Key: Char); //***10.08.16
   private
+    isScaner: Boolean;
     FSoldRegim: boolean;
     fShift: Boolean;
     FTotalSumm: Currency;
@@ -626,7 +627,9 @@ begin
     InsertUpdateBillCheckItems;
   end;
   SoldRegim := true;
-  ActiveControl := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 //проверили что есть остаток
@@ -920,7 +923,9 @@ end;
 
 procedure TMainCashForm.actSetFocusExecute(Sender: TObject);
 begin
-  ActiveControl := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 procedure TMainCashForm.actSetConfirmedKind_CompleteExecute(Sender: TObject);
@@ -1112,7 +1117,9 @@ begin
   SoldRegim:= not SoldRegim;
   ceAmount.Enabled := false;
   lcName.Text := '';
-  Activecontrol := lcName;
+  if isScaner = true
+  then ActiveControl := ceScaner
+  else ActiveControl := lcName;
 end;
 
 procedure TMainCashForm.actSpecExecute(Sender: TObject);
@@ -1149,19 +1156,46 @@ begin
 end;
 
 procedure TMainCashForm.ceScanerKeyPress(Sender: TObject; var Key: Char);
+var isFind : Boolean;
+    Key2 : Word;
 begin
-  inherited;
- if Key = #13 then
- begin
-   RemainsCDS.AfterScroll := nil;
-   RemainsCDS.DisableConstraints;
-  if  RemainsCDS.Locate('Id', StrToInt(Copy(ceScaner.Text,4, 9)), []) then
-   lbScaner.Caption:='найдено ' + ceScaner.Text else
-   lbScaner.Caption:='не найдено ' + ceScaner.Text;
-   ceScaner.Text:='';
-   RemainsCDS.EnableConstraints;
-   RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
- end;
+   isFind:= false;
+   isScaner:= true;
+   //
+   if Key = #13 then
+   begin
+       try
+           StrToInt(Copy(ceScaner.Text,4, 9));
+           //
+           RemainsCDS.AfterScroll := nil;
+           RemainsCDS.DisableConstraints;
+           //нашли
+           isFind:= RemainsCDS.Locate('GoodsId_main', StrToInt(Copy(ceScaner.Text,4, 9)), []);
+           //еще проверили что равно...
+           isFind:= (isFind) and (RemainsCDS.FieldByName('GoodsId_main').AsInteger = StrToInt(Copy(ceScaner.Text,4, 9)));
+           //
+           if isFind
+           then lbScaner.Caption:='найдено ' + ceScaner.Text
+           else lbScaner.Caption:='не найдено ' + ceScaner.Text;
+           //
+           ceScaner.Text:='';
+       except
+            lbScaner.Caption:='Ошибка в Ш/К';
+       end;
+       //
+       RemainsCDS.EnableConstraints;
+       RemainsCDS.AfterScroll := RemainsCDSAfterScroll;
+   end;
+
+   if isFind = true then
+   begin
+        isScaner:=true;
+        //
+        lcName.Text:= RemainsCDS.FieldByName('GoodsName').AsString;
+        Key2:= VK_Return;
+        lcNameKeyDown(Self, Key2, []);
+    end;
+
 end;
 
 procedure TMainCashForm.actCheckConnectionExecute(Sender: TObject);
@@ -1197,6 +1231,7 @@ var
 begin
   inherited;
 
+  isScaner:= false;
   //для
   // создаем мутексы если не созданы
   MutexDBF := CreateMutex(nil, false, 'farmacycashMutexDBF');
@@ -1867,6 +1902,7 @@ procedure TMainCashForm.lcNameEnter(Sender: TObject);
 begin
   inherited;
   SourceClientDataSet := nil;
+  isScaner:= false;
 end;
 
 procedure TMainCashForm.lcNameExit(Sender: TObject);
@@ -1978,6 +2014,7 @@ begin
   End;
   CalcTotalSumm;
   ceAmount.Value := 0;
+  isScaner:=false;
   ActiveControl := lcName;
 end;
 
@@ -1999,8 +2036,8 @@ begin
     try
       if not gc_User.Local then
       Begin
-        spDelete_CashSession.Execute;
         actRefreshAllExecute(nil);
+        spDelete_CashSession.Execute;
       End
       else
       begin
@@ -2031,7 +2068,11 @@ end;
 procedure TMainCashForm.ParentFormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key=VK_Tab) and (CheckGrid.IsFocused) then ActiveControl:=lcName;
+  if (Key=VK_Tab) and (CheckGrid.IsFocused)
+  then if isScaner = true
+       then ActiveControl := ceScaner
+       else ActiveControl := lcName;
+
   if (Key = VK_ADD) or ((Key = VK_Return) AND (ssShift in Shift)) then
   Begin
     Key := 0;

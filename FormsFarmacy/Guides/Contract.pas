@@ -25,6 +25,7 @@ type
     spUpdate_Contract_isReport: TdsdStoredProc;
     actUpdateisReport: TdsdExecStoredProc;
     bbUpdateisReport: TdxBarButton;
+    GroupMemberSPName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
              , Comment TVarChar, BankAccountExternal TVarChar, GLNCode TVarChar
-             , Term TFloat
+             , Term TFloat, DayTaxSummary TFloat
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              
              , ContractKindId Integer, ContractKindName TVarChar
@@ -66,7 +66,9 @@ BEGIN
            , '' :: TVarChar  AS Comment
            , '' :: TVarChar  AS BankAccountExternal
            , '' :: TVarChar  AS GLNCode
+
            , CAST (0 as Tfloat)        AS Term
+           , CAST (0 as Tfloat)        AS DayTaxSummary 
 
            , CURRENT_DATE :: TDateTime AS SigningDate
            , CURRENT_DATE :: TDateTime AS StartDate
@@ -159,7 +161,8 @@ BEGIN
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
            , ObjectString_GLNCode.ValueData          AS GLNCode
            , ObjectFloat_Term.ValueData              AS Term
-                      
+           , ObjectFloat_DayTaxSummary.ValueData     AS DayTaxSummary                      
+
            , ObjectDate_Signing.ValueData AS SigningDate
            , ObjectDate_Start.ValueData   AS StartDate -- Object_Contract_View.StartDate
            , ObjectDate_End.ValueData     AS EndDate   -- Object_Contract_View.EndDate
@@ -265,6 +268,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_GLNCode
                                    ON ObjectString_GLNCode.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_GLNCode.DescId = zc_objectString_Contract_GLNCode()                                  
+    
+            LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
+                                  ON ObjectFloat_DayTaxSummary.ObjectId = Object_Contract_View.ContractId
+                                 AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Contract_DayTaxSummary()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Term
                                   ON ObjectFloat_Term.ObjectId = Object_Contract_View.ContractId
@@ -382,6 +389,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.03.17         * DayTaxSummary
  20.01.16         *
  05.05.15         * add GoodsProperty
  12.02.15         * add StartPromo, EndPromo,

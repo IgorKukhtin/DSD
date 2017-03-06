@@ -168,6 +168,8 @@ type
     cxLabel32: TcxLabel;
     ceCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    edDayTaxSummary: TcxCurrencyEdit;
+    cxLabel33: TcxLabel;
   private
     { Private declarations }
   public
