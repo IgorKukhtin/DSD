@@ -1,16 +1,19 @@
--- Function: gpSelectMobile_Object_GoodsLinkGoodsKind (TDateTime, TVarChar)
+-- Function: gpSelectMobile_Object_GoodsByGoodsKind (TDateTime, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelectMobile_Object_GoodsLinkGoodsKind (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelectMobile_Object_GoodsByGoodsKind (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelectMobile_Object_GoodsLinkGoodsKind (
+CREATE OR REPLACE FUNCTION gpSelectMobile_Object_GoodsByGoodsKind (
     IN inSyncDateIn TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id          Integer
-             , GoodsId     Integer  -- Товар
-             , GoodsKindId Integer  -- Вид товара
-             , isErased    Boolean  -- Удаленный ли элемент
-             , isSync      Boolean  -- Синхронизируется (да/нет)
+RETURNS TABLE (Id            Integer
+             , GoodsId       Integer  -- Товар
+             , GoodsKindId   Integer  -- Вид товара
+             , AmountRemains TFloat   -- Остаток на центральном складе
+             , AmountIncome  TFloat   -- Прогноз прихода на центральный склад
+             , isErased      Boolean  -- Удаленный ли элемент
+             , isSync        Boolean  -- Синхронизируется (да/нет)
               )
 AS 
 $BODY$
@@ -64,6 +67,8 @@ BEGIN
                   SELECT Object_GoodsByGoodsKind.Id
                        , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                        , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId 
+                       , CAST(0.0 AS TFloat)                                 AS AmountRemains
+                       , CAST(0.0 AS TFloat)                                 AS AmountIncome 
                        , Object_GoodsByGoodsKind.isErased
                        , EXISTS(SELECT 1 FROM tmpGoodsByGoodsKind WHERE tmpGoodsByGoodsKind.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id) AS isSync
                   FROM Object AS Object_GoodsByGoodsKind
@@ -80,6 +85,8 @@ BEGIN
                   SELECT Object_GoodsByGoodsKind.Id
                        , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
                        , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId 
+                       , CAST(0.0 AS TFloat)                                 AS AmountRemains
+                       , CAST(0.0 AS TFloat)                                 AS AmountIncome 
                        , Object_GoodsByGoodsKind.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_GoodsByGoodsKind
@@ -105,4 +112,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelectMobile_Object_GoodsLinkGoodsKind(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelectMobile_Object_GoodsByGoodsKind(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
