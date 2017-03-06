@@ -12,27 +12,22 @@ RETURNS integer
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbCode_max Integer;
-
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Fabrika());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_Fabrika()); 
-   
+    -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Fabrika_seq'); END IF; 
+ 
    -- проверка уникальности для свойства <Наименование Fabrika>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Fabrika(), inName); 
    -- проверка уникальности для свойства <Код Fabrika>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Fabrika(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Fabrika(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Fabrika(), vbCode_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Fabrika(), inCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

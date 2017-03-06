@@ -154,11 +154,11 @@ object AccountForm: TAccountForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 48
     Top = 104
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
@@ -338,7 +338,7 @@ object AccountForm: TAccountForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -389,19 +389,19 @@ object AccountForm: TAccountForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'TextValueAll'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountName_All'
           DataType = ftString
         end>
@@ -412,10 +412,10 @@ object AccountForm: TAccountForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Account'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 56
@@ -456,7 +456,7 @@ object AccountForm: TAccountForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

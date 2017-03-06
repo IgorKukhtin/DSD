@@ -4,8 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_CountryBrand (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CountryBrand(
     IN inIsShowAll   Boolean,            --  признак показать удаленные да / нет 
-    IN inSession     TVarChar            -- сессия пользователя
-   
+    IN inSession     TVarChar            -- сессия пользователя   
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean)
 AS

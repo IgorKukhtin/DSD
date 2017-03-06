@@ -59,3 +59,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DiscountKind_Not(), inDescId:= zc_Object_DiscountKind(), inCode:= 2, inName:= 'Нет скидки' , inEnumName:= 'zc_Enum_DiscountKind_Not');
 
 END $$;
+
+DO $$
+BEGIN
+
+
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_GlobalConst_ConnectParam(),  inDescId:= zc_Object_GlobalConst(), inCode:= 1, inName:= 'http://localhost/boutique/index.php', inEnumName:= 'zc_Enum_GlobalConst_ConnectParam');
+
+END $$;

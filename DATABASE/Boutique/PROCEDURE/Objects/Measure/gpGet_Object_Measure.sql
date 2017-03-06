@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Measure(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, InternalCode TVarChar, InternalName TVarChar) 
-  AS
+AS
 $BODY$
 BEGIN
 
@@ -18,7 +18,7 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             0 :: Integer                              AS Id
+              0 :: Integer                             AS Id
            , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
            , '' :: TVarChar                            AS Name
            , '' :: TVarChar                            AS InternalCode

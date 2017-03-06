@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar) 
-  AS
+AS
 $BODY$
 BEGIN
 
@@ -18,11 +18,11 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (0 as Integer)    AS GoodsGroupId
-           , CAST ('' as TVarChar)  AS GoodsGroupName
+             0 :: Integer                       AS Id
+           ,  NEXTVAL ('Object_GoodsGroup_seq') :: Integer AS Code
+           ,'' :: TVarChar                      AS Name
+           , 0 :: Integer                       AS GoodsGroupId
+           ,'' :: TVarChar                      AS GoodsGroupName
        FROM Object
        WHERE Object.DescId = zc_Object_GoodsGroup();
    ELSE
@@ -42,7 +42,7 @@ BEGIN
        WHERE Object_GoodsGroup.Id = inId;
 
 
-
+ 
 
    END IF;
 
@@ -55,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 20.02.17                                                          *
  
 */

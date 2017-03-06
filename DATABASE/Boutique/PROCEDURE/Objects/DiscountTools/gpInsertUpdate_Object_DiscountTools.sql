@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountTools(
     IN inDiscountId   Integer,       -- Связь Названия накопительных скидок
     IN inSession      TVarChar       -- сессия пользователя
 )
-  RETURNS integer
-  AS
+RETURNS integer
+AS
 $BODY$
   DECLARE UserId Integer;
   DECLARE Code_max Integer;

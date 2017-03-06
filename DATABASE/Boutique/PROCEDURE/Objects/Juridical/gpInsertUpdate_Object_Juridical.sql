@@ -1,9 +1,10 @@
--- Function: gpInsertUpdate_Object_Juridical (Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Юридические лица> 
+    IN inCode                     Integer   ,    -- Код объекта <Юридические лица>  
     IN inName                     TVarChar  ,    -- Название объекта <Юридические лица>
     IN inIsCorporate              Boolean   ,    -- Признак главное юридическое лицо (наша ли собственность это юр.лицо)
     IN inFullName                 TVarChar  ,    -- Юр. лицо полное название
@@ -17,18 +18,14 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_max Integer;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (vbCode_max, 0) = 0 THEN vbCode_max := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (vbCode_max, zc_Object_Juridical()); 
-   
+    -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Juridical_seq'); END IF; 
+  
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
 
@@ -51,10 +48,10 @@ BEGIN
 
 
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), vbCode_max, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), inCode, inName);
 
    -- сохранили Признак главное юридическое лицо (наша ли собственность это юр.лицо)
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
@@ -83,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+06.03.17                                                           *
 20.02.17                                                           *
 
 */

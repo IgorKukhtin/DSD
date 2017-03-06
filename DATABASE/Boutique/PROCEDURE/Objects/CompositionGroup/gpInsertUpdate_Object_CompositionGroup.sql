@@ -8,30 +8,25 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CompositionGroup(
     IN inName         TVarChar,      -- Название объекта <Группа для состава товара>
     IN inSession      TVarChar       -- сессия пользователя
 )
-  RETURNS integer 
-  AS
+RETURNS integer 
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_max Integer;
-
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Composition());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_CompositionGroup()); 
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_CompositionGroup_seq'); END IF; 
 
    -- проверка уникальности для свойства <Наименование >
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CompositionGroup(), inName);
    -- проверка уникальности для свойства <Код >
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CompositionGroup(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CompositionGroup(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_CompositionGroup(), vbCode_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_CompositionGroup(), inCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

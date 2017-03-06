@@ -26,7 +26,6 @@ BEGIN
    -- проверка уникальности для свойства <Наименование Единицы измерения>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Measure(), inName); 
 
-
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Measure(), inCode, inName);
    -- сохранили Международный код

@@ -8,31 +8,25 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_LineFabrica(
     IN inName         TVarChar,      -- Название объекта <Линия коллекции>
     IN inSession      TVarChar       -- сессия пользователя
 )
-  RETURNS integer
-  AS
+RETURNS integer
+AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbCode_max Integer;
-
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_LineFabrica());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_LineFabrica()); 
-
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_LineFabrica_seq'); END IF; 
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_LineFabrica(), inName); 
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_LineFabrica(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_LineFabrica(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_LineFabrica(), vbCode_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_LineFabrica(), inCode, inName);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -48,6 +42,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 22.02.17                                                          *
 */
 

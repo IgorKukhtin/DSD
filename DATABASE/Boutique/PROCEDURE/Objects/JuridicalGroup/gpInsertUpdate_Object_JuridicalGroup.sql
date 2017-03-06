@@ -12,19 +12,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
 RETURNS Integer
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbCode_max Integer;   
+   DECLARE vbUserId Integer; 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_JuridicalGroup());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (inCode, zc_Object_JuridicalGroup()); 
-   
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_JuridicalGroup_seq'); END IF;  
+ 
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
 
@@ -47,10 +43,10 @@ BEGIN
 
 
    -- проверка прав уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), vbCode_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalGroup(), vbCode_max, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_JuridicalGroup(), inCode, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
 
@@ -66,6 +62,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                           *
 27.02.17                                                           *
 
 */

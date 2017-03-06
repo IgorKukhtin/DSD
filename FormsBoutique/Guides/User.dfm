@@ -282,11 +282,11 @@ object UserForm: TUserForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 32
     Top = 72
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
@@ -534,7 +534,7 @@ object UserForm: TUserForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -592,7 +592,7 @@ object UserForm: TUserForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -600,14 +600,14 @@ object UserForm: TUserForm
         item
           Name = 'Code'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Code'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -615,7 +615,7 @@ object UserForm: TUserForm
         item
           Name = 'BranchName'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -623,7 +623,7 @@ object UserForm: TUserForm
         item
           Name = 'UnitName'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'UnitName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -631,7 +631,7 @@ object UserForm: TUserForm
         item
           Name = 'PositionName'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PositionName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -797,7 +797,7 @@ object UserForm: TUserForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -805,7 +805,7 @@ object UserForm: TUserForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -816,10 +816,10 @@ object UserForm: TUserForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
@@ -862,7 +862,7 @@ object UserForm: TUserForm
       item
         Name = 'inobjectid'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -916,7 +916,7 @@ object UserForm: TUserForm
       item
         Name = 'inuserid'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1003,7 +1003,7 @@ object UserForm: TUserForm
       item
         Name = 'inuserid'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1044,7 +1044,7 @@ object UserForm: TUserForm
       item
         Name = 'ioid'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -1052,7 +1052,7 @@ object UserForm: TUserForm
       item
         Name = 'inCode'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1060,7 +1060,7 @@ object UserForm: TUserForm
       item
         Name = 'inName'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
@@ -1069,7 +1069,7 @@ object UserForm: TUserForm
       item
         Name = 'inPassword'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'User_'
         DataType = ftString
         ParamType = ptInput
@@ -1078,7 +1078,7 @@ object UserForm: TUserForm
       item
         Name = 'inSign'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'UserSign'
         DataType = ftString
         ParamType = ptInput
@@ -1087,7 +1087,7 @@ object UserForm: TUserForm
       item
         Name = 'inSeal'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'UserSeal'
         DataType = ftString
         ParamType = ptInput
@@ -1096,7 +1096,7 @@ object UserForm: TUserForm
       item
         Name = 'inKey'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'UserKey'
         DataType = ftString
         ParamType = ptInput
@@ -1105,7 +1105,7 @@ object UserForm: TUserForm
       item
         Name = 'inMemberId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'MemberId'
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -18,11 +18,11 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (0 as Integer)    AS CompositionGroupId
-           , CAST ('' as TVarChar)  AS CompositionGroupName
+              0 :: Integer    AS Id
+           , NEXTVAL ('Object_Composition_seq') :: Integer AS Code
+           , '' :: TVarChar   AS Name
+           ,  0 :: Integer    AS CompositionGroupId
+           , '' :: TVarChar   AS CompositionGroupName
        FROM Object
        WHERE Object.DescId = zc_Object_Composition();
    ELSE

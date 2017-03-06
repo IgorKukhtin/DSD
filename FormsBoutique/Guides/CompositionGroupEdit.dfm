@@ -162,18 +162,6 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InternalCode'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InternalName'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160

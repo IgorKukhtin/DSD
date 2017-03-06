@@ -23,7 +23,7 @@ object PartnerEditForm: TPartnerEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 6
+    TabOrder = 5
   end
   object cxButton2: TcxButton
     Left = 184
@@ -158,6 +158,13 @@ object PartnerEditForm: TPartnerEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = edCode
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -313,7 +320,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBrandForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -342,7 +349,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TFabrikaForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -371,7 +378,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPeriodForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
