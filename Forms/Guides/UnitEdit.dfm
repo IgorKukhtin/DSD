@@ -157,7 +157,7 @@
   end
   object cbPartionDate: TcxCheckBox
     Left = 40
-    Top = 208
+    Top = 197
     Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
     TabOrder = 18
     Width = 157
@@ -316,6 +316,13 @@
     TabOrder = 37
     Width = 449
   end
+  object cbPartionGoodsKind: TcxCheckBox
+    Left = 40
+    Top = 219
+    Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082#1086#1074#1082#1080
+    TabOrder = 38
+    Width = 157
+  end
   object ActionList: TActionList
     Left = 16
     Top = 24
@@ -385,6 +392,14 @@
         Name = 'inisPartionDate'
         Value = 'False'
         Component = cbPartionDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartionGoodsKind'
+        Value = Null
+        Component = cbPartionGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -722,6 +737,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isPartionGoodsKind'
+        Value = Null
+        Component = cbPartionGoodsKind
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Address'
         Value = Null
         Component = edAddress
@@ -744,8 +766,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 176
+    Left = 96
+    Top = 112
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -891,8 +913,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 168
-    Top = 168
+    Left = 216
+    Top = 144
   end
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'

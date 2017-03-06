@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PersonalSheetWorkTimeId Integer, PersonalSheetWorkTimeName TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
                isErased boolean, isLeaf boolean,
-               isPartionDate boolean,
+               isPartionDate boolean, isPartionGoodsKind boolean,
                Address TVarChar
 ) AS
 $BODY$
@@ -82,6 +82,7 @@ BEGIN
            , CAST (NULL AS Boolean) AS isErased
            , CAST (NULL AS Boolean) AS isLeaf
            , CAST (FALSE AS Boolean) AS isPartionDate
+           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
            , CAST ('' as TVarChar)  AS Address
 ;
    ELSE
@@ -134,8 +135,9 @@ BEGIN
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
 
-           , ObjectBoolean_PartionDate.ValueData    AS isPartionDate
-           , ObjectString_Unit_Address.ValueData    AS Address
+           , ObjectBoolean_PartionDate.ValueData      AS isPartionDate
+           , ObjectBoolean_PartionGoodsKind.ValueData AS isPartionGoodsKind
+           , ObjectString_Unit_Address.ValueData      AS Address
 
        FROM Object_Unit_View
             LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
@@ -180,6 +182,10 @@ BEGIN
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind
+                                    ON ObjectBoolean_PartionGoodsKind.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionGoodsKind.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
                                  ON ObjectLink_Unit_SheetWorkTime.ObjectId = Object_Unit_View.Id
                                 AND ObjectLink_Unit_SheetWorkTime.DescId = zc_ObjectLink_Unit_SheetWorkTime()
@@ -198,6 +204,7 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.03.17         * add PartionGoodsKind
  16.11.16         * add SheetWorkTime
  26.07.16         *
  24.11.15         * add PersonalSheetWorkTime

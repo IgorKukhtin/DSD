@@ -81,6 +81,7 @@ type
     UnitCode_HistoryCost: TcxGridDBColumn;
     UnitName_HistoryCost: TcxGridDBColumn;
     ceAddress: TcxGridDBColumn;
+    isPartionGoodsKind: TcxGridDBColumn;
   private
     { Private declarations }
   public
