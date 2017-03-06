@@ -1,7 +1,7 @@
 object BrandEditForm: TBrandEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1041#1088#1077#1085#1076'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072'>'
   ClientHeight = 210
   ClientWidth = 295
   Color = clBtnFace
@@ -57,6 +57,7 @@ object BrandEditForm: TBrandEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -68,13 +69,14 @@ object BrandEditForm: TBrandEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 10
     Top = 100
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1057#1090#1088#1072#1085#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
   end
   object ActionList: TActionList
     Left = 152

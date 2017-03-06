@@ -1,5 +1,5 @@
 inherited MainForm: TMainForm
-  Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
+  Caption = 'Boutique'
   ClientHeight = 280
   ClientWidth = 666
   KeyPreview = True

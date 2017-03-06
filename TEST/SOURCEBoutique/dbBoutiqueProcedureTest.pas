@@ -74,6 +74,7 @@ type
     procedure CreateClient;
     procedure CreateLabel;
     procedure CreateGoods;
+    procedure CreateDiscountKind;
   end;
 
 implementation
@@ -183,14 +184,19 @@ begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Discount\');
 end;
 
+procedure TdbObjectProcedureTest.CreateDiscountKind;
+begin
+   DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountKind\');
+end;
+
 procedure TdbObjectProcedureTest.CreateDiscountTools;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountTools\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\DiscountTools\');
 end;
 
 procedure TdbObjectProcedureTest.CreateFabrika;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\Fabrika\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoods;
@@ -200,7 +206,7 @@ end;
 
 procedure TdbObjectProcedureTest.CreateGoodsGroup;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsGroup\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsGroup\');
 end;
 
 procedure TdbObjectProcedureTest.CreateGoodsInfo;

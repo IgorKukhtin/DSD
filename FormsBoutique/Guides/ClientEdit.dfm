@@ -57,6 +57,7 @@ object ClientEditForm: TClientEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 14
     Width = 273
   end
@@ -112,6 +113,7 @@ object ClientEditForm: TClientEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -190,6 +192,7 @@ object ClientEditForm: TClientEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 10
     Width = 273
   end

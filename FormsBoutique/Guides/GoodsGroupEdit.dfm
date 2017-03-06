@@ -57,6 +57,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -73,6 +74,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end

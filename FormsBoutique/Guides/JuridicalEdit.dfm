@@ -57,6 +57,7 @@ object JuridicalEditForm: TJuridicalEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
   end
@@ -119,6 +120,7 @@ object JuridicalEditForm: TJuridicalEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end

@@ -34,7 +34,7 @@ object MeasureEditForm: TMeasureEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 7
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +44,7 @@ object MeasureEditForm: TMeasureEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 8
+    TabOrder = 6
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -57,6 +57,7 @@ object MeasureEditForm: TMeasureEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
   end
@@ -73,13 +74,13 @@ object MeasureEditForm: TMeasureEditForm
   object edNameInt: TcxTextEdit
     Left = 10
     Top = 168
-    TabOrder = 6
+    TabOrder = 3
     Width = 273
   end
   object edCodeInt: TcxTextEdit
     Left = 10
     Top = 122
-    TabOrder = 5
+    TabOrder = 2
     Width = 273
   end
   object ActionList: TActionList

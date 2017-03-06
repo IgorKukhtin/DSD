@@ -133,6 +133,8 @@ uses
   Goods in '..\..\FormsBoutique\Guides\Goods.pas' {GoodsForm: TParentForm},
   GoodsEdit in '..\..\FormsBoutique\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
 
+  DiscountKind in '..\..\FormsBoutique\Guides\DiscountKind.pas' {DiscountKindForm: TParentForm},
+
 
 //  Box in '..\..\Forms\Box.pas' {BoxForm: TParentForm},
 //  BoxEdit in '..\..\Forms\BoxEdit.pas' {BoxEditForm: TParentForm},

@@ -57,6 +57,7 @@ object DiscountEditForm: TDiscountEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -65,12 +66,15 @@ object DiscountEditForm: TDiscountEditForm
     Top = 104
     Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
   end
-  object edKindDiscount: TcxCurrencyEdit
+  object ceDiscountKind: TcxButtonEdit
     Left = 10
-    Top = 127
-    EditValue = 0.000000000000000000
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
+    Top = 124
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end
@@ -135,9 +139,10 @@ object DiscountEditForm: TDiscountEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inKindDiscount'
+        Name = 'inDiscountKindId'
         Value = Null
-        Component = edKindDiscount
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -186,7 +191,6 @@ object DiscountEditForm: TDiscountEditForm
       item
         Name = 'KindDiscount'
         Value = Null
-        Component = edKindDiscount
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -211,5 +215,34 @@ object DiscountEditForm: TDiscountEditForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
     Top = 104
+  end
+  object DiscountKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceDiscountKind
+    FormNameParam.Value = 'TDiscountKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TDiscountKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DiscountKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DiscountKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 214
+    Top = 149
   end
 end

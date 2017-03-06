@@ -23,7 +23,7 @@ object PartnerEditForm: TPartnerEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 8
+    TabOrder = 6
   end
   object cxButton2: TcxButton
     Left = 184
@@ -48,7 +48,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 4
+    Properties.ReadOnly = True
+    TabOrder = 0
     Width = 273
   end
   object cxLabel4: TcxLabel
@@ -72,7 +73,7 @@ object PartnerEditForm: TPartnerEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 7
+    TabOrder = 3
     Width = 273
   end
   object ceFabrikaName: TcxButtonEdit
@@ -83,7 +84,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    Properties.ReadOnly = True
+    TabOrder = 1
     Width = 273
   end
   object cePeriodName: TcxButtonEdit
@@ -94,7 +96,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    Properties.ReadOnly = True
+    TabOrder = 2
     Width = 273
   end
   object edCode: TcxCurrencyEdit
@@ -218,6 +221,7 @@ object PartnerEditForm: TPartnerEditForm
       end
       item
         Name = 'Code'
+        Value = Null
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
@@ -280,8 +284,8 @@ object PartnerEditForm: TPartnerEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 48
+    Left = 240
+    Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

@@ -82,6 +82,8 @@ type
     procedure LoadClientFormTest;
     procedure LoadLabelFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadDiscountKindFormTest;
+
 
 
 
@@ -264,6 +266,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDiscountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountEditForm');
+end;
+
+procedure TLoadFormTest.LoadDiscountKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDiscountKindForm');
 end;
 
 procedure TLoadFormTest.LoadDiscountToolsFormTest;

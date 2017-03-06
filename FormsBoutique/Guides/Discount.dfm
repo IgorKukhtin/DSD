@@ -59,9 +59,9 @@ object DiscountForm: TDiscountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
-      object KindDiscount: TcxGridDBColumn
+      object clDiscountKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
-        DataBinding.FieldName = 'KindDiscount'
+        DataBinding.FieldName = 'DiscountKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
