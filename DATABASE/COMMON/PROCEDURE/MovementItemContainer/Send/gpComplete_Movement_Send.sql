@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inMovementId        Integer              , -- ключ Документа
     IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
-)                              
+)
 RETURNS VOID
 AS
 $BODY$
@@ -24,13 +24,13 @@ BEGIN
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Send());
      END IF;
 
-     -- Эти параметры нужны для 
+     -- Эти параметры нужны для
      vbMovementDescId:= zc_Movement_Send();
 
 
      -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = vbUserId AND View_UserRole.RoleId = zc_Enum_Role_Admin())
-     THEN 
+     THEN
           vbIsHistoryCost:= TRUE;
      ELSE
          -- !!! для остальных тоже нужны проводки с/с!!!
@@ -53,7 +53,7 @@ BEGIN
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId
                          , JuridicalId_basis_To, BusinessId_To
                          , UnitId_Item, StorageId_Item, PartionGoodsId_Item, UnitId_Partion, Price_Partion
-                         , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To
+                         , isPartionCount, isPartionSumm, isPartionDate_From, isPartionDate_To, isPartionGoodsKind_From, isPartionGoodsKind_To
                          , PartionGoodsId_From, PartionGoodsId_To)
         SELECT
               _tmp.MovementItemId
@@ -103,10 +103,12 @@ BEGIN
             , _tmp.isPartionSumm
             , _tmp.isPartionDate_From
             , _tmp.isPartionDate_To
+            , _tmp.isPartionGoodsKind_From
+            , _tmp.isPartionGoodsKind_To
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId_From
             , 0 AS PartionGoodsId_To
-        FROM 
+        FROM
              (SELECT
                     MovementItem.Id AS MovementItemId
                   , MovementItem.MovementId
@@ -119,7 +121,10 @@ BEGIN
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                   , MovementItem.ObjectId AS GoodsId
-                  , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                  , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
+                              THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                         ELSE 0
+                    END AS GoodsKindId
                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                   , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId_Item
                   , COALESCE (MILinkObject_Storage.ObjectId, 0) AS StorageId_Item
@@ -177,6 +182,8 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
                   , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS isPartionDate_From
                   , COALESCE (ObjectBoolean_PartionDate_To.ValueData, FALSE)   AS isPartionDate_To
+                  , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE) AS isPartionGoodsKind_From
+                  , COALESCE (ObjectBoolean_PartionGoodsKind_To.ValueData, TRUE)   AS isPartionGoodsKind_To
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -264,6 +271,14 @@ BEGIN
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_To
                                            ON ObjectBoolean_PartionDate_To.ObjectId = MovementLinkObject_To.ObjectId
                                           AND ObjectBoolean_PartionDate_To.DescId = zc_ObjectBoolean_Unit_PartionDate()
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_From
+                                           ON ObjectBoolean_PartionGoodsKind_From.ObjectId = MovementLinkObject_From.ObjectId
+                                          AND ObjectBoolean_PartionGoodsKind_From.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_To
+                                           ON ObjectBoolean_PartionGoodsKind_To.ObjectId = MovementLinkObject_To.ObjectId
+                                          AND ObjectBoolean_PartionGoodsKind_To.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
+
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
                                           AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
@@ -545,7 +560,7 @@ BEGIN
                                                                                     , inDescId         := zc_MIContainer_Summ()
                                                                                     , inMovementDescId := vbMovementDescId
                                                                                     , inMovementId     := MovementId
-                                                                                    , inMovementItemId := _tmpItem.MovementItemId 
+                                                                                    , inMovementItemId := _tmpItem.MovementItemId
                                                                                     , inParentId       := NULL
                                                                                     , inContainerId    := _tmpItemSumm.ContainerId_To
                                                                                     , inAccountId               := _tmpItemSumm.AccountId_To      -- счет есть всегда

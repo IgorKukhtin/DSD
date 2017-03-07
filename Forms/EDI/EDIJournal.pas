@@ -190,6 +190,10 @@ type
     ExecuteDialog: TExecuteDialog;
     MovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocolOpenForm: TdxBarButton;
+    actGridItemToExcel: TdsdGridToExcel;
+    actGridProtocolToExcel: TdsdGridToExcel;
+    bbGridItemToExcel: TdxBarButton;
+    bbGridProtocolToExcel: TdxBarButton;
   private
     { Private declarations }
   public

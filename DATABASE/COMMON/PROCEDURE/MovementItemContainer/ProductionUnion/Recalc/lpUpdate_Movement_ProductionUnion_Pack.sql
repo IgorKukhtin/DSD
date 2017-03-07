@@ -20,6 +20,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
+     -- if inUnitId =  951601  then return; end if;
+
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))
      THEN
          DELETE FROM _tmpResult;

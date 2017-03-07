@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbBranchId Integer;
   DECLARE vbAccountDirectionId Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
+  DECLARE vbIsPartionGoodsKind_Unit Boolean;
   DECLARE vbJuridicalId_Basis Integer;
   DECLARE vbBusinessId Integer;
   DECLARE vbUnitId_Car Integer;
@@ -69,7 +70,9 @@ BEGIN
                            WHEN Object_From.DescId = zc_Object_Member()
                                 THEN zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
                       END, 0) AS AccountDirectionId -- !!!не окончательное значение, т.к. еще может зависить от InfoMoneyDestinationId (Товара)!!!
-          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
+          , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)      AS isPartionDate_Unit
+          , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE)  AS isPartionGoodsKind_Unit
+
           , COALESCE (ObjectLink_ObjectFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
           , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)  AS BusinessId
 
@@ -82,7 +85,7 @@ BEGIN
             END AS PriceListId
 
             INTO vbMovementDescId, vbStatusId, vbOperDate
-               , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbJuridicalId_Basis, vbBusinessId
+               , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit, vbJuridicalId_Basis, vbBusinessId
                , vbUnitId_Car
                , vbPriceListId
      FROM Movement
@@ -101,6 +104,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_From
                                   ON ObjectBoolean_PartionDate_From.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_PartionDate_From.DescId = zc_ObjectBoolean_Unit_PartionDate()
+                                 AND Object_From.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_From
+                                  ON ObjectBoolean_PartionGoodsKind_From.ObjectId = MovementLinkObject_From.ObjectId
+                                 AND ObjectBoolean_PartionGoodsKind_From.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
                                  AND Object_From.DescId = zc_Object_Unit()
 
           LEFT JOIN ObjectLink AS ObjectLink_CarFrom_Unit
@@ -207,7 +214,7 @@ BEGIN
              , (_tmp.ContainerId) AS ContainerId_Goods -- !!!
              , _tmp.GoodsId
              , _tmp.GoodsKindId
-             , CASE WHEN _tmp.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN NULL ELSE _tmp.GoodsKindId_complete END
+             , CASE WHEN _tmp.GoodsKindId <> zc_GoodsKind_WorkProgress() THEN NULL ELSE _tmp.GoodsKindId_complete END AS GoodsKindId_complete
              , _tmp.AssetId
              , _tmp.PartionGoods
              , _tmp.PartionGoodsDate
@@ -237,7 +244,15 @@ BEGIN
              (SELECT MovementItem.Id AS MovementItemId
 
                    , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                          WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                           AND vbIsPartionGoodsKind_Unit = TRUE
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+
+                          ELSE 0
+                     END AS GoodsKindId
                    , COALESCE (MILinkObject_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_complete
 
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
@@ -344,10 +359,11 @@ BEGIN
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
                                                -- Упаковка Мяса (тоже ПФ-ГП)
-                                               WHEN vbIsPartionDate_Unit = TRUE
+                                               WHEN vbIsPartionDate_Unit      = TRUE
+                                                AND vbIsPartionGoodsKind_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
                                                     THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
-                                                                                         , inGoodsKindId_complete := _tmpItem.GoodsKindId_complete
+                                                                                         , inGoodsKindId_complete := CASE WHEN _tmpItem.GoodsKindId_complete = zc_GoodsKind_Basis() THEN  0 ELSE _tmpItem.GoodsKindId_complete END
                                                                                           )
                                                -- Производство ПФ-ГП
                                                WHEN vbIsPartionDate_Unit = TRUE
