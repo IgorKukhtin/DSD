@@ -29,9 +29,7 @@ BEGIN
            ,  0 :: Integer    AS PeriodId
            , '' :: TVarChar   AS PeriodName
            ,  0 :: TFloat     AS PeriodYear
-
-       FROM Object
-       WHERE Object.DescId = zc_Object_Partner();
+       ;
    ELSE
        RETURN QUERY
        SELECT 

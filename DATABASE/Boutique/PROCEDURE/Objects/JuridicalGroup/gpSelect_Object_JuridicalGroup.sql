@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalGroup(
     IN inIsShowAll   Boolean,       -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, JuridicalGroupName TVarChar, isErased boolean) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, JuridicalGroupName TVarChar, isErased boolean) 
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -24,6 +24,7 @@ BEGIN
              Object_JuridicalGroup.Id               AS Id
            , Object_JuridicalGroup.ObjectCode       AS Code
            , Object_JuridicalGroup.ValueData        AS Name
+           , Object_Parent.Id                       AS ParentId
            , Object_Parent.ValueData                AS JuridicalGroupName
            , Object_JuridicalGroup.isErased         AS isErased
            
@@ -46,6 +47,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+07.03.17                                                            *
 27.02.17                                                            *
 
         

@@ -23,8 +23,7 @@ BEGIN
            , '' :: TVarChar                             AS Name
            ,  0 :: Integer                              AS DiscountKindId
            , '' :: TVarChar                             AS DiscountKindName
-       FROM Object
-       WHERE Object.DescId = zc_Object_Discount();
+       ;
    ELSE
        RETURN QUERY
        SELECT

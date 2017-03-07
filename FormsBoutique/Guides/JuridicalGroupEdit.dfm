@@ -230,10 +230,10 @@ object JuridicalGroupEditForm: TJuridicalGroupEditForm
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridicalGroup
-    FormNameParam.Value = 'TJuridicalGroupForm'
+    FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalGroupForm'
+    FormName = 'TJuridicalGroup_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

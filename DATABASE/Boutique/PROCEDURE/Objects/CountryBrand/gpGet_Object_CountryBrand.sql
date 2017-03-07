@@ -21,8 +21,7 @@ BEGIN
               0 :: Integer     AS Id
            , NEXTVAL ('Object_CountryBrand_seq') :: Integer AS Code
            , '' :: TVarChar    AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_CountryBrand();
+       ;
    ELSE
        RETURN QUERY
        SELECT

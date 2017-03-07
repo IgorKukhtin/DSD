@@ -21,8 +21,7 @@ BEGIN
               0 :: Integer                             AS Id
            , NEXTVAL ('Object_Period_seq') :: Integer  AS Code
            , '' :: TVarChar                            AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_Period();
+       ;
    ELSE
        RETURN QUERY
        SELECT

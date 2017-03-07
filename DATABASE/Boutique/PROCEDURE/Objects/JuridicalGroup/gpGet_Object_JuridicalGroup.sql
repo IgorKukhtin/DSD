@@ -23,8 +23,7 @@ BEGIN
            , '' :: TVarChar                         AS Name
            ,  0 :: Integer                          AS JuridicalGroupId
            , '' :: TVarChar                         AS JuridicalGroupName
-       FROM Object
-       WHERE Object.DescId = zc_Object_JuridicalGroup();
+       ;
    ELSE
        RETURN QUERY
        SELECT 

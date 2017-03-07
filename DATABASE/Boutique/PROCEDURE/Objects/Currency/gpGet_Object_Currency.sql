@@ -21,8 +21,7 @@ BEGIN
               0 :: Integer    AS Id
            , NEXTVAL ('Object_Currency_seq') :: Integer AS Code
            , '' :: TVarChar  AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_Currency();
+       ;
    ELSE
        RETURN QUERY
        SELECT

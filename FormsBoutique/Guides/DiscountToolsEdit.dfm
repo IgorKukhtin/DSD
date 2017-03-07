@@ -63,7 +63,7 @@ object DiscountToolsEditForm: TDiscountToolsEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 0
     Width = 273
   end
