@@ -30,27 +30,41 @@ BEGIN
            AS (SELECT ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
                     , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
                     , COUNT(ObjectLink_Goods_GoodsGroup.ChildObjectId) AS GoodsGroupCount
-               FROM Object AS Object_GoodsListSale
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
-                                    ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                   AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                    ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                   AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                   AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+               FROM (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
+                     FROM Object AS Object_GoodsByGoodsKind
+                          JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                             ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
+                                            AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                            AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
+                          JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                          ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                         AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                         AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
+                     WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                     UNION
+                     SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
+                     FROM Object AS Object_GoodsListSale
+                          JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
+                                          ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
+                                         AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
+                                         AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
+                          JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
+                                          ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
+                                         AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
+                                         AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
+                          JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                          ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
+                                         AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                         AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                     WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
+                    ) AS GG
                     JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup 
-                                    ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                    ON ObjectLink_Goods_GoodsGroup.ObjectId = GG.GoodsId
                                    AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup() 
                                    AND ObjectLink_Goods_GoodsGroup.ChildObjectId IS NOT NULL
                     JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                      ON ObjectString_Goods_GroupNameFull.ObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                      ON ObjectString_Goods_GroupNameFull.ObjectId = GG.GoodsId
                                      AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull() 
-               WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
                GROUP BY ObjectLink_Goods_GoodsGroup.ChildObjectId
                       , ObjectString_Goods_GroupNameFull.ValueData
               );
@@ -68,7 +82,7 @@ BEGIN
                                       )
                   SELECT Object_GoodsGroup.Id
                        , Object_GoodsGroup.ObjectCode
-                       , tmpGoodsGroup.GoodsGroupNameFull AS ValueData
+                       , COALESCE (tmpGoodsGroup.GoodsGroupNameFull, CAST ('' AS TVarChar)) AS ValueData
                        , Object_GoodsGroup.isErased
                        , (tmpGoodsGroup.GoodsGroupId IS NOT NULL) AS isSync
                   FROM Object AS Object_GoodsGroup

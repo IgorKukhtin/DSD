@@ -23,8 +23,7 @@ BEGIN
            , '' :: TVarChar   AS Name
            ,  0 :: Integer    AS CompositionGroupId
            , '' :: TVarChar   AS CompositionGroupName
-       FROM Object
-       WHERE Object.DescId = zc_Object_Composition();
+       ;
    ELSE
        RETURN QUERY
        SELECT 

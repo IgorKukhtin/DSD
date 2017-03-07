@@ -21,8 +21,7 @@ BEGIN
               0 :: Integer     AS Id
            ,  NEXTVAL ('Object_CompositionGroup_seq') :: Integer AS Code
            , '' :: TVarChar    AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_CompositionGroup();
+       ;
    ELSE
        RETURN QUERY
        SELECT

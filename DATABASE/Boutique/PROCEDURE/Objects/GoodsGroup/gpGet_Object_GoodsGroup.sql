@@ -23,8 +23,7 @@ BEGIN
            ,'' :: TVarChar                      AS Name
            , 0 :: Integer                       AS GoodsGroupId
            ,'' :: TVarChar                      AS GoodsGroupName
-       FROM Object
-       WHERE Object.DescId = zc_Object_GoodsGroup();
+       ;
    ELSE
        RETURN QUERY
        SELECT 

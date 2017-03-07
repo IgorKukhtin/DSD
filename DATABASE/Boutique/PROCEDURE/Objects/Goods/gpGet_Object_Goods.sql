@@ -33,8 +33,7 @@ BEGIN
            , '' :: TVarChar                            AS LineFabricaName     
            ,  0 :: Integer                             AS LabalId             
            , '' :: TVarChar                            AS LabelName           
-
-            ;
+        ;
    ELSE
        RETURN QUERY
       SELECT 

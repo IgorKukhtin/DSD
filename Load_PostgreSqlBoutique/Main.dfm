@@ -529,13 +529,14 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
+    Connected = True
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect
     HostName = 'localhost'
     Port = 0
     Database = 'boutique'
     User = 'postgres'
-    Password = 'plans'
+    Password = 'postgres'
     Protocol = 'postgresql-9'
     Left = 56
     Top = 272

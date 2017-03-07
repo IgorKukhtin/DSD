@@ -185,7 +185,6 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         Name = 'Code'
         Value = 0.000000000000000000
         Component = edCode
-        DataType = ftUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -193,7 +192,6 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
         Value = Null
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -230,10 +228,10 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

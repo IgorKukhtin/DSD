@@ -23,7 +23,7 @@ object PartnerEditForm: TPartnerEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 5
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 184
@@ -70,9 +70,12 @@ object PartnerEditForm: TPartnerEditForm
   object edPeriodYear: TcxCurrencyEdit
     Left = 8
     Top = 193
-    EditValue = 0.000000000000000000
+    EditValue = '2000'
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.MaxLength = 4
+    Properties.MaxValue = 2090.000000000000000000
+    Properties.MinValue = 1990.000000000000000000
     TabOrder = 3
     Width = 273
   end

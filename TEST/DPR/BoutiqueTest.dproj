@@ -240,6 +240,10 @@
 				<Form>GoodsGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\GoodsGroup_Object.pas">
+				<Form>GoodsGroup_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Kassa.pas">
 				<Form>KassaForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -302,6 +306,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\JuridicalGroupEdit.pas">
 				<Form>JuridicalGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\JuridicalGroup_Object.pas">
+				<Form>JuridicalGroup_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\Juridical.pas">

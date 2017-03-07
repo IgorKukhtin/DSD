@@ -21,7 +21,7 @@ BEGIN
              0 :: Integer                              AS Id
            , NEXTVAL ('Object_Label_seq') :: Integer   AS Code
            , '' :: TVarChar                            AS Name
-            ;
+       ;
    ELSE
        RETURN QUERY
        SELECT

@@ -23,7 +23,7 @@ BEGIN
            , '' :: TVarChar                            AS Name
            , '' :: TVarChar                            AS InternalCode
            , '' :: TVarChar                            AS InternalName
-            ;
+       ;
    ELSE
        RETURN QUERY
        SELECT

@@ -24,8 +24,7 @@ BEGIN
            , '' :: TVarChar                            AS INN
            , '' :: TVarChar                            AS Comment
            , '' :: TVarChar                            AS EMail
-       FROM Object
-       WHERE Object.DescId = zc_Object_Member();
+       ;
    ELSE
        RETURN QUERY
        SELECT

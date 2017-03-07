@@ -21,8 +21,7 @@ BEGIN
               0 :: Integer                               AS Id
            , NEXTVAL ('Object_GoodsSize_seq') :: Integer AS Code
            , '' :: TVarChar                              AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_GoodsSize();
+       ;
    ELSE
        RETURN QUERY
        SELECT

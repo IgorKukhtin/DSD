@@ -1,4 +1,4 @@
-object GoodsGroupForm: TGoodsGroupForm
+object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
@@ -137,28 +137,7 @@ object GoodsGroupForm: TGoodsGroupForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -167,10 +146,6 @@ object GoodsGroupForm: TGoodsGroupForm
         item
           Visible = True
           ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
         end
         item
           Visible = True
@@ -256,7 +231,7 @@ object GoodsGroupForm: TGoodsGroupForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TGoodsGroupEditForm'
+      FormName = 'TGoodsGroup_ObjectEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
@@ -276,7 +251,7 @@ object GoodsGroupForm: TGoodsGroupForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TGoodsGroupEditForm'
+      FormName = 'TGoodsGroup_ObjectEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','

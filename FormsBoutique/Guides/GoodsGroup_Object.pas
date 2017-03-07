@@ -1,4 +1,4 @@
-unit GoodsGroup;
+unit GoodsGroup_Object;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TGoodsGroupForm = class(TParentForm)
+  TGoodsGroup_ObjectForm = class(TParentForm)
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -68,6 +68,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsGroupForm);
+  RegisterClass(TGoodsGroup_ObjectForm);
 
 end.

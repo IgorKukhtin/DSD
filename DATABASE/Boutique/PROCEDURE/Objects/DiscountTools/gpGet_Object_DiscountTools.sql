@@ -24,9 +24,7 @@ BEGIN
            , 0 :: TFloat     AS DiscountTax
            , 0 :: Integer    AS DiscountId
            ,'' :: TVarChar  AS DiscountName
-
-       FROM Object
-       WHERE Object.DescId = zc_Object_DiscountTools();
+       ;
    ELSE
        RETURN QUERY
        SELECT
