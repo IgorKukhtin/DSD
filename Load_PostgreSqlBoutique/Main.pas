@@ -520,7 +520,7 @@ begin
         Connected:=false;
         HostName:='localhost';
         User:='postgres';
-        Password:='plans';
+        Password:='postgres';
         try Connected:=true; except ShowMessage ('not Connected');end;
         //
         //if ParamCount = 2 then isGlobalLoad:=zc_rvYes else isGlobalLoad:=zc_rvNo;
@@ -1044,7 +1044,7 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inKindDiscount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
 
         //
         while not EOF do
@@ -1057,7 +1057,7 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inKindDiscount').Value:=FieldByName('KindDiscount').AsInteger;
+             toStoredProc.Params.ParamByName('inDiscountKindId').Value:=FieldByName('KindDiscount').AsInteger;
 
 
              if not myExecToStoredProc then;
@@ -1220,6 +1220,7 @@ end;
 
 procedure TMainForm.pLoadGuide_Goods;
 begin
+
 
 end;
 
@@ -1538,8 +1539,8 @@ begin
              if not myExecToStoredProc then ;//exit;
              if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-             if (1=0)or(FieldByName('id_pg').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select id from dba.goods where goodsName = '''+FieldByName('ObjectName').AsString+'''  )');
+//             if (1=0)or(FieldByName('id_pg').AsInteger=0)
+//             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select  GoodsProperty.Id from GoodsProperty join goods on goods.Id = GoodsProperty.goodsId join goods as goods_group on goods_group.Id = goods.ParentId where  goods_group.goodsName = '''+FieldByName('ObjectName').AsString+'''  )');
              //
              Next;
              Application.ProcessMessages;
@@ -1747,6 +1748,7 @@ if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBrandId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inFabrikaId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPeriodId',ftInteger,ptInput, 0);
