@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageComboBox, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -92,6 +92,14 @@ type
     ceOrderSummComment: TcxTextEdit;
     ceOrderTime: TcxTextEdit;
     cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    edMainName: TcxDBTextEdit;
+    cxLabel16: TcxLabel;
+    edReestr: TcxDBTextEdit;
+    cxLabel17: TcxLabel;
+    edDecision: TcxDBTextEdit;
+    cxLabel20: TcxLabel;
+    edDecisionDate: TcxDBTextEdit;
   private
     { Private declarations }
   public

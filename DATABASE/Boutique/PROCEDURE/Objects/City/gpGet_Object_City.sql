@@ -18,11 +18,10 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_City();
+             0 :: Integer                           AS Id
+           , NEXTVAL ('Object_City_seq') :: Integer AS Code
+           , '' :: TVarChar                         AS Name
+       ;
    ELSE
        RETURN QUERY
        SELECT
@@ -43,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.2017                                                           *
 28.02.2017                                                           *
 
 */

@@ -71,11 +71,11 @@ object AccountGroupForm: TAccountGroupForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 32
     Top = 112
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -256,7 +256,7 @@ object AccountGroupForm: TAccountGroupForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -299,13 +299,13 @@ object AccountGroupForm: TAccountGroupForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -323,10 +323,10 @@ object AccountGroupForm: TAccountGroupForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountGroup'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 112
@@ -338,16 +338,16 @@ object AccountGroupForm: TAccountGroupForm
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     OutputType = otResult
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

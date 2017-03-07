@@ -18,14 +18,13 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST ('' as TVarChar)  AS INN
-           , CAST ('' as TVarChar)  AS Comment
-           , CAST ('' as TVarChar)  AS EMail
-       FROM Object
-       WHERE Object.DescId = zc_Object_Member();
+              0 :: Integer                             AS Id
+           , NEXTVAL ('Object_Member_seq') :: Integer  AS Code
+           , '' :: TVarChar                            AS Name
+           , '' :: TVarChar                            AS INN
+           , '' :: TVarChar                            AS Comment
+           , '' :: TVarChar                            AS EMail
+       ;
    ELSE
        RETURN QUERY
        SELECT
@@ -59,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 20.02.17                                                          *
 */
 

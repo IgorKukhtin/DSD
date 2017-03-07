@@ -154,11 +154,11 @@ object Account_ObjectForm: TAccount_ObjectForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 48
     Top = 104
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
@@ -301,41 +301,41 @@ object Account_ObjectForm: TAccount_ObjectForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end
         item
           Name = 'TextValueAll'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountName_All'
           DataType = ftString
         end
         item
           Name = 'AccountGroupId'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountGroupId'
         end
         item
           Name = 'AccountGroupName'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountGroupName'
           DataType = ftString
         end
         item
           Name = 'AccountDirectionId'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountDirectionId'
         end
         item
           Name = 'AccountDirectionName'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
         end>
@@ -346,10 +346,10 @@ object Account_ObjectForm: TAccount_ObjectForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Account'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 56
@@ -392,7 +392,7 @@ object Account_ObjectForm: TAccount_ObjectForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

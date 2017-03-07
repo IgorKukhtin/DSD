@@ -23,7 +23,7 @@ object PartnerEditForm: TPartnerEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 8
+    TabOrder = 4
   end
   object cxButton2: TcxButton
     Left = 184
@@ -48,7 +48,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 4
+    Properties.ReadOnly = True
+    TabOrder = 0
     Width = 273
   end
   object cxLabel4: TcxLabel
@@ -69,10 +70,13 @@ object PartnerEditForm: TPartnerEditForm
   object edPeriodYear: TcxCurrencyEdit
     Left = 8
     Top = 193
-    EditValue = 0.000000000000000000
+    EditValue = '2000'
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 7
+    Properties.MaxLength = 4
+    Properties.MaxValue = 2090.000000000000000000
+    Properties.MinValue = 1990.000000000000000000
+    TabOrder = 3
     Width = 273
   end
   object ceFabrikaName: TcxButtonEdit
@@ -83,7 +87,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    Properties.ReadOnly = True
+    TabOrder = 1
     Width = 273
   end
   object cePeriodName: TcxButtonEdit
@@ -94,7 +99,8 @@ object PartnerEditForm: TPartnerEditForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    Properties.ReadOnly = True
+    TabOrder = 2
     Width = 273
   end
   object edCode: TcxCurrencyEdit
@@ -158,6 +164,13 @@ object PartnerEditForm: TPartnerEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCode'
+        Value = Null
+        Component = edCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBrandId'
         Value = Null
         Component = PartnerBrandGuides
@@ -218,6 +231,7 @@ object PartnerEditForm: TPartnerEditForm
       end
       item
         Name = 'Code'
+        Value = Null
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
@@ -280,8 +294,8 @@ object PartnerEditForm: TPartnerEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 48
+    Left = 240
+    Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -309,7 +323,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBrandForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -338,7 +352,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TFabrikaForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -367,7 +381,7 @@ object PartnerEditForm: TPartnerEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TPeriodForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

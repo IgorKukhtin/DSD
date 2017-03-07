@@ -3,11 +3,11 @@
 DROP FUNCTION IF EXISTS gpGet_Object_GoodsInfo (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsInfo(
-    IN inId          Integer,       -- 
+    IN inId          Integer,       -- Ключь <Описание товара>
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) 
-  AS
+AS
 $BODY$
 BEGIN
 
@@ -18,11 +18,10 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-       FROM Object
-       WHERE Object.DescId = zc_Object_GoodsInfo();
+              0 :: Integer     AS Id
+           , NEXTVAL ('Object_GoodsInfo_seq') :: Integer AS Code
+           , '' :: TVarChar    AS Name
+       ;
    ELSE
        RETURN QUERY
        SELECT
@@ -42,6 +41,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 19.02.17                                                          *
 */
 

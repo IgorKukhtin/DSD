@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupName TVarChar, isErased boolean) 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, GoodsGroupName TVarChar, isErased boolean) 
   AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -24,6 +24,7 @@ BEGIN
              Object_GoodsGroup.Id               AS Id
            , Object_GoodsGroup.ObjectCode       AS Code
            , Object_GoodsGroup.ValueData        AS Name
+           , Object_Parent.Id                   AS ParentId
            , Object_Parent.ValueData            AS GoodsGroupName
            , Object_GoodsGroup.isErased         AS isErased
            
@@ -46,6 +47,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+07.03.17                                                            *
 20.02.17                                                            *
 
         

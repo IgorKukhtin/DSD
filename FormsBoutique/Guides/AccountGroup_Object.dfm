@@ -71,11 +71,11 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 32
     Top = 112
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -209,13 +209,13 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
         end
         item
@@ -252,10 +252,10 @@ object AccountGroup_ObjectForm: TAccountGroup_ObjectForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountGroup'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 112

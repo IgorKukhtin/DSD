@@ -18,13 +18,12 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (0 as Integer)    AS JuridicalGroupId
-           , CAST ('' as TVarChar)  AS JuridicalGroupName
-       FROM Object
-       WHERE Object.DescId = zc_Object_JuridicalGroup();
+              0 :: Integer                          AS Id
+           , NEXTVAL ('Object_JuridicalGroup_seq') :: Integer AS Code
+           , '' :: TVarChar                         AS Name
+           ,  0 :: Integer                          AS JuridicalGroupId
+           , '' :: TVarChar                         AS JuridicalGroupName
+       ;
    ELSE
        RETURN QUERY
        SELECT 
@@ -40,10 +39,6 @@ BEGIN
             LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_JuridicalGroup_Parent.ChildObjectId
 
        WHERE Object_JuridicalGroup.Id = inId;
-
-
-
-
    END IF;
 
 END;
@@ -55,6 +50,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 27.02.17                                                          *
  
 */

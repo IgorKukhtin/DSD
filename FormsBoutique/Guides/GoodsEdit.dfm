@@ -57,6 +57,7 @@ object GoodsEditForm: TGoodsEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
   end
@@ -73,6 +74,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end
@@ -89,6 +91,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 273
   end
@@ -105,6 +108,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 273
   end
@@ -121,6 +125,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -137,6 +142,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -153,6 +159,7 @@ object GoodsEditForm: TGoodsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end
@@ -426,7 +433,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -455,7 +462,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMeasureForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -484,7 +491,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCompositionForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -513,7 +520,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsInfoForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -542,7 +549,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TLineFabricaForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -571,7 +578,7 @@ object GoodsEditForm: TGoodsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TLabelForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

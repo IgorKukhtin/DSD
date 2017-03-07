@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (UnitName       TVarChar
+             , Unit_Address   TVarChar
              , JuridicalName  TVarChar
              , HospitalName   TVarChar
              , InvNumberSP    TVarChar
@@ -43,6 +44,10 @@ RETURNS TABLE (UnitName       TVarChar
              , NumberVAT          TVarChar
              , BankAccount        TVarChar
              , Phone              TVarChar
+             , MainName           TVarChar
+             , Reestr             TVarChar
+             , Decision           TVarChar
+             , DecisionDate       TDateTime
              , BankName           TVarChar
              , MFO                TVarChar
 
@@ -50,7 +55,7 @@ RETURNS TABLE (UnitName       TVarChar
              , PartnerMedical_FullName         TVarChar
              , PartnerMedical_JuridicalAddress TVarChar
              , PartnerMedical_Phone            TVarChar
-            
+
              , PartnerMedical_OKPO             TVarChar
              , PartnerMedical_AccounterName    TVarChar
              , PartnerMedical_INN              TVarChar
@@ -60,6 +65,9 @@ RETURNS TABLE (UnitName       TVarChar
              , PartnerMedical_MFO              TVarChar
 
              , MedicFIO TVarChar
+
+             , ContractName       TVarChar
+             , Contract_StartDate TDateTime
              )
 AS
 $BODY$
@@ -71,21 +79,29 @@ BEGIN
     
     
     -- Таблицы
-    CREATE TEMP TABLE tmpUnit (UnitId Integer, JuridicalId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE tmpUnit (UnitId Integer, JuridicalId Integer, Address TVarChar) ON COMMIT DROP;
  
     IF (COALESCE (inJuridicalId,0) <> 0) OR (COALESCE (inUnitId,0) <> 0) THEN
-       INSERT INTO tmpUnit (UnitId, JuridicalId)
+       INSERT INTO tmpUnit (UnitId, JuridicalId, Address)
                   SELECT OL_Unit_Juridical.ObjectId       AS UnitId
                        , OL_Unit_Juridical.ChildObjectId  AS JuridicalId
+                       , ObjectString_Unit_Address.ValueData  AS Address
                   FROM ObjectLink AS OL_Unit_Juridical
+                       LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                              ON ObjectString_Unit_Address.ObjectId = OL_Unit_Juridical.ObjectId 
+                             AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
                   WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                     AND ((OL_Unit_Juridical.ChildObjectId = inJuridicalId AND COALESCE (inUnitId,0) = 0)
                           OR OL_Unit_Juridical.ObjectId = inUnitId);
     ELSE 
-       INSERT INTO tmpUnit (UnitId, JuridicalId)
+       INSERT INTO tmpUnit (UnitId, JuridicalId, Address)
                   SELECT OL_Unit_Juridical.ObjectId AS UnitId
                        , OL_Unit_Juridical.ChildObjectId  AS JuridicalId
+                       , ObjectString_Unit_Address.ValueData  AS Address
                   FROM ObjectLink AS OL_Unit_Juridical
+                       LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                              ON ObjectString_Unit_Address.ObjectId = OL_Unit_Juridical.ObjectId 
+                             AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
                   WHERE OL_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
     END IF;
 
@@ -96,6 +112,7 @@ BEGIN
              tmpSale AS (SELECT Movement_Sale.Id
                               , Movement_Sale.OperDate
                               , MovementLinkObject_Unit.ObjectId             AS UnitId
+                              , tmpUnit.Address 
                               , tmpUnit.JuridicalId                          AS JuridicalId
                               , MovementLinkObject_PartnerMedical.ObjectId   AS HospitalId
                               , MovementString_InvNumberSP.ValueData         AS InvNumberSP
@@ -148,8 +165,10 @@ BEGIN
                            AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
                         )
 
+
             -- выбираем продажи по товарам соц.проекта
-            ,  tmpMI AS (SELECT Movement_Sale.OperDate
+            ,  tmpMI AS (SELECT Movement_Sale.Id   AS MovementId
+                              , Movement_Sale.OperDate
                               , Movement_Sale.UnitId
                               , Movement_Sale.JuridicalId
                               , Movement_Sale.HospitalId
@@ -186,7 +205,8 @@ BEGIN
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementItemId = MI_Sale.Id
                                                              AND MIContainer.DescId = zc_MIContainer_Count() 
-                         GROUP BY Movement_Sale.UnitId
+                         GROUP BY Movement_Sale.Id
+                                , Movement_Sale.UnitId
                                 , Movement_Sale.JuridicalId
                                 , Movement_Sale.HospitalId
                                 , Movement_Sale.InvNumberSP
@@ -217,17 +237,110 @@ BEGIN
                                                     AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
                            WHERE Object_BankAccount.DescId = zc_object_BankAccount()
                            )
+       -- договора мед учреждений
+       , tmpContract AS (SELECT ObjectLink_PartnerMedical_Juridical.ObjectId        AS PartnerMedicalId
+                              , ObjectLink_PartnerMedical_Juridical.ChildObjectId   AS PartnerMedical_JuridicalId
+                              , COALESCE(ObjectLink_Contract_Juridical.ObjectId,0)            AS PartnerMedical_ContractId
+                              , COALESCE(ObjectLink_Contract_JuridicalBasis.ChildObjectId,0)  AS Contract_JuridicalBasisId
+                              , COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0)   AS Contract_GroupMemberSPId
+
+                         FROM ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                              LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                     ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                                    AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                              LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                     ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                    AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                              LEFT JOIN ObjectLink AS ObjectLink_Contract_GroupMemberSP
+                                     ON ObjectLink_Contract_GroupMemberSP.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                    AND ObjectLink_Contract_GroupMemberSP.DescId = zc_ObjectLink_Contract_GroupMemberSP()
+                         WHERE ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+                           AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                              OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0/* <> inGroupMemberSPId*/ AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                               )
+                        )
+
+ , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
+                          , tmpSale.OperDate
+                          , tmpSale.UnitId
+                          , tmpSale.Address
+                          , tmpSale.JuridicalId
+                          , tmpSale.HospitalId
+                          , tmpSale.InvNumberSP
+                          , tmpSale.MedicSPId
+                          , tmpSale.MemberSPId
+                          , tmpSale.OperDateSP
+                          , tmpSale.GroupMemberSPId
+
+                          , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
+                          , ObjectHistory_JuridicalDetails.JuridicalAddress
+                          , ObjectHistory_JuridicalDetails.OKPO
+                          , ObjectHistory_JuridicalDetails.AccounterName
+                          , ObjectHistory_JuridicalDetails.INN
+                          , ObjectHistory_JuridicalDetails.NumberVAT
+                          , ObjectHistory_JuridicalDetails.BankAccount
+                          , ObjectHistory_JuridicalDetails.Phone
+
+                          , ObjectHistory_JuridicalDetails.MainName
+                          , ObjectHistory_JuridicalDetails.Reestr
+                          , ObjectHistory_JuridicalDetails.Decision
+                          , ObjectHistory_JuridicalDetails.DecisionDate
+
+                          , tmpBankAccount.BankName ::TVarChar
+                          , tmpBankAccount.MFO      ::TVarChar
+
+                          , ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId     AS PartnerMedical_JuridicalId
+                          , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
+                          , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
+                          , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
+                          , ObjectHistory_PartnerMedicalDetails.OKPO              AS PartnerMedical_OKPO
+                          , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
+                          , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
+                          , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
+                          , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
+                          , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
+                          , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO
+                          , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
+                          , COALESCE(tmpContract.PartnerMedical_ContractId,0)     AS PartnerMedical_ContractId
+
+                     FROM tmpSale
+                       LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
+                              ON ObjectString_PartnerMedical_FIO.ObjectId = tmpSale.HospitalId
+                             AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()   
+                       
+                       LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
+                              ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmpSale.HospitalId
+                             AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
+
+                       LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
+                                            AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
+                                            AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
+
+                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSale.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
+                       LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
+ 
+                       LEFT JOIN tmpBankAccount 
+                              ON tmpBankAccount.JuridicalId = tmpSale.JuridicalId
+                             AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
+                       LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
+                              ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
+                             AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+       --where 1=0
+                    )
+
 
         -- результат
         SELECT Object_Unit.ValueData               AS UnitName
+             , tmpMovDetails.Address               AS Unit_Address
              , Object_Juridical.ValueData          AS JuridicalName
              , Object_PartnerMedical.ValueData     AS HospitalName
-             , tmpData.InvNumberSP
+             , tmpMovDetails.InvNumberSP
              , Object_MedicSP.ValueData            AS MedicSP
              , Object_MemberSP.ValueData           AS MemberSP
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
-             , tmpData.OperDateSP        :: TDateTime
-             , tmpData.OperDate          :: TDateTime
+             , tmpMovDetails.OperDateSP        :: TDateTime
+             , tmpMovDetails.OperDate          :: TDateTime
              , Object_Goods.ValueData              AS GoodsName
              , Object_Measure.ValueData            AS MeasureName
              , tmpData.ChangePercent     :: TFloat 
@@ -238,76 +351,65 @@ BEGIN
              
              , tmpData.SummSale          :: TFloat  AS SummaSP
              , tmpData.SummOriginal      :: TFloat
-             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,  Object_Goods.ValueData ) AS Integer) AS NumLine
+             , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,Object_Unit.ValueData, Object_Goods.ValueData ) AS Integer) AS NumLine
 
-           , ObjectHistory_JuridicalDetails.FullName AS JuridicalFullName
-           , ObjectHistory_JuridicalDetails.JuridicalAddress
-           , ObjectHistory_JuridicalDetails.OKPO
-           , ObjectHistory_JuridicalDetails.AccounterName
-           , ObjectHistory_JuridicalDetails.INN
-           , ObjectHistory_JuridicalDetails.NumberVAT
-           , ObjectHistory_JuridicalDetails.BankAccount
-           , ObjectHistory_JuridicalDetails.Phone
-           , tmpBankAccount.BankName ::TVarChar
-           , tmpBankAccount.MFO      ::TVarChar
+           , tmpMovDetails.JuridicalFullName
+           , tmpMovDetails.JuridicalAddress
+           , tmpMovDetails.OKPO
+           , tmpMovDetails.AccounterName
+           , tmpMovDetails.INN
+           , tmpMovDetails.NumberVAT
+           , tmpMovDetails.BankAccount
+           , tmpMovDetails.Phone
+           , tmpMovDetails.MainName
+           , tmpMovDetails.Reestr
+           , tmpMovDetails.Decision
+           , tmpMovDetails.DecisionDate
+
+           , tmpMovDetails.BankName ::TVarChar
+           , tmpMovDetails.MFO      ::TVarChar
  
-           , Object_PartnerMedicalJuridical.ValueData              AS PartnerMedical_JuridicalName
-           , ObjectHistory_PartnerMedicalDetails.FullName          AS PartnerMedical_FullName
-           , ObjectHistory_PartnerMedicalDetails.JuridicalAddress  AS PartnerMedical_JuridicalAddress
-           , ObjectHistory_PartnerMedicalDetails.Phone             AS PartnerMedical_Phone
-           , ObjectHistory_PartnerMedicalDetails.OKPO              AS PartnerMedical_OKPO
-           , ObjectHistory_PartnerMedicalDetails.AccounterName     AS PartnerMedical_AccounterName
-           , ObjectHistory_PartnerMedicalDetails.INN               AS PartnerMedical_INN
-           , ObjectHistory_PartnerMedicalDetails.NumberVAT         AS PartnerMedical_NumberVAT
-           , ObjectHistory_PartnerMedicalDetails.BankAccount       AS PartnerMedical_BankAccount
-           , tmpPartnerMedicalBankAccount.BankName                 AS PartnerMedical_BankName
-           , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO
+           , Object_PartnerMedicalJuridical.ValueData AS PartnerMedical_JuridicalName
+           , tmpMovDetails.PartnerMedical_FullName
+           , tmpMovDetails.PartnerMedical_JuridicalAddress
+           , tmpMovDetails.PartnerMedical_Phone
+           , tmpMovDetails.PartnerMedical_OKPO
+           , tmpMovDetails.PartnerMedical_AccounterName
+           , tmpMovDetails.PartnerMedical_INN
+           , tmpMovDetails.PartnerMedical_NumberVAT
+           , tmpMovDetails.PartnerMedical_BankAccount
+           , tmpMovDetails.PartnerMedical_BankName
+           , tmpMovDetails.PartnerMedical_MFO
+           , tmpMovDetails.MedicFIO
+           , Object_Contract.ValueData    AS ContractName
+           , ObjectDate_Start.ValueData   AS Contract_StartDate 
 
-           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
+        FROM tmpMovDetails
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovDetails.UnitId AND Object_Unit.DescId = zc_Object_Unit()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMovDetails.JuridicalId AND Object_Juridical.DescId = zc_Object_Juridical()
+             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpMovDetails.HospitalId  AND Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
+             LEFT JOIN Object AS Object_PartnerMedicalJuridical ON Object_PartnerMedicalJuridical.Id = tmpMovDetails.PartnerMedical_JuridicalId  AND Object_PartnerMedicalJuridical.DescId = zc_Object_PartnerMedical()
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMovDetails.PartnerMedical_ContractId  AND Object_Contract.DescId = zc_Object_Contract()
+             LEFT JOIN ObjectDate AS ObjectDate_Start
+                                     ON ObjectDate_Start.ObjectId = Object_Contract.Id
+                                    AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
 
-        FROM tmpMI AS tmpData
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId 
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId
-             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
-             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = tmpData.GroupMemberSPId
+             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = tmpMovDetails.GroupMemberSPId AND Object_GroupMemberSP.DescId = zc_Object_GroupMemberSP()
+             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpMovDetails.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
+             LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpMovDetails.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
 
-             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpData.MemberSPId
-             LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpData.MedicSPId
+             LEFT JOIN tmpMI AS tmpData ON tmpData.MovementId = tmpMovDetails.MovementId
 
+             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId AND Object_Goods.DescId = zc_Object_Goods()
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
 
-             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId
-             LEFT JOIN ObjectLink AS ObjectLink_PartnerMedical_Juridical 
-                                  ON ObjectLink_PartnerMedical_Juridical.ObjectId = Object_PartnerMedical.Id 
-                                AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
-             LEFT JOIN Object AS Object_PartnerMedicalJuridical ON Object_PartnerMedicalJuridical.Id = ObjectLink_PartnerMedical_Juridical.ChildObjectId
-
-             LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
-                                    ON ObjectString_PartnerMedical_FIO.ObjectId = Object_PartnerMedical.Id
-                                   AND ObjectString_PartnerMedical_FIO.DescId = zc_ObjectString_PartnerMedical_FIO()   
-
-             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := Object_Juridical.Id, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
-             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
- 
-             LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Object_Juridical.Id
-                                     AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
-
-             LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
-                                      ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
-                                     AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
-
-             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                  ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId--ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
-                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-             LEFT JOIN Object AS Object_PartnerMedicalContract ON Object_PartnerMedicalContract.Id = ObjectLink_Contract_Juridical.ObjectId
-
-
-        ORDER BY Object_Unit.ValueData
-               , Object_PartnerMedical.ValueData
-               , Object_Goods.ValueData 
+         ORDER BY Object_Unit.ValueData
+                , Object_PartnerMedical.ValueData
+                , ContractName
+                , Object_Goods.ValueData 
 ;
 
 END;
@@ -321,5 +423,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('29.12.2016')::TDateTime,  inSession := '3');
---select * from gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('20.12.2016')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 ,  inSession := '3');
+--select * from gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 3690580 , inisGroupMemberSP := 'True'::Boolean ,  inSession := '3'::TVarChar);

@@ -3,10 +3,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer,  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, Integer,  TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails 
+    (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
     IN inJuridicalId            Integer,    -- Юр. лицо
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
+    IN inDecisionDate           TDateTime,  -- Дата рішення про видачу ліцензії
     IN inBankId                 Integer,    -- Банк
     IN inFullName               TVarChar,   -- Юр. лицо полное наименование
     IN inJuridicalAddress	TVarChar,   -- Юридический адрес
@@ -16,6 +20,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inAccounterName	        TVarChar,   -- ФИО бухг.
     IN inBankAccount	        TVarChar,   -- р.счет
     IN inPhone      	        TVarChar,   -- телефон
+    IN inMainName     	        TVarChar,   -- ФИО директора
+    IN inReestr     	        TVarChar,   -- Витяг з реєстру платників ПДВ
+    IN inDecision     	        TVarChar,   -- № рішення про видачу ліцензії
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS integer AS
@@ -93,6 +100,15 @@ BEGIN
    -- телефон
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Phone(), ioId, inPhone);
 
+   -- 
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_MainName(), ioId, inMainName);
+   -- 
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Reestr(), ioId, inReestr);
+   -- 
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Decision(), ioId, inDecision);
+   -- 
+   PERFORM lpInsertUpdate_ObjectHistoryDate(zc_ObjectHistoryDate_JuridicalDetails_Decision(), ioId, inDecisionDate);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -101,6 +117,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.17         *
  04.07.14         *
-
 */

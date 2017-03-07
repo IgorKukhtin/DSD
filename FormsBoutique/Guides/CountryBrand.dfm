@@ -74,11 +74,11 @@ object CountryBrandForm: TCountryBrandForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 104
     Top = 128
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 32
@@ -298,7 +298,7 @@ object CountryBrandForm: TCountryBrandForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -347,7 +347,7 @@ object CountryBrandForm: TCountryBrandForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -355,7 +355,7 @@ object CountryBrandForm: TCountryBrandForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -388,7 +388,7 @@ object CountryBrandForm: TCountryBrandForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -396,7 +396,7 @@ object CountryBrandForm: TCountryBrandForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -426,10 +426,10 @@ object CountryBrandForm: TCountryBrandForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_CountryBrand'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -452,7 +452,7 @@ object CountryBrandForm: TCountryBrandForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

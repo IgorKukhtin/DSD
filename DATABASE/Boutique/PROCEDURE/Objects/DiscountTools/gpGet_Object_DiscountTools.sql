@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_DiscountTools(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, StartSumm TFloat, EndSumm TFloat, DiscountTax TFloat, DiscountId Integer, DiscountName TVarChar) 
-  AS
+AS
 $BODY$
 BEGIN
 
@@ -18,15 +18,13 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , CAST (0 as TFloat)     AS StartSumm
-           , CAST (0 as TFloat)     AS EndSumm
-           , CAST (0 as TFloat)     AS DiscountTax
-           , CAST (0 as Integer)    AS DiscountId
-           , CAST ('' as TVarChar)  AS DiscountName
-
-       FROM Object
-       WHERE Object.DescId = zc_Object_DiscountTools();
+             0 :: Integer    AS Id
+           , 0 :: TFloat     AS StartSumm
+           , 0 :: TFloat     AS EndSumm
+           , 0 :: TFloat     AS DiscountTax
+           , 0 :: Integer    AS DiscountId
+           ,'' :: TVarChar  AS DiscountName
+       ;
    ELSE
        RETURN QUERY
        SELECT
@@ -61,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 23.02.17                                                          *
 */
 

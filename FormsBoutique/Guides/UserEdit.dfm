@@ -58,6 +58,7 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -321,7 +322,7 @@
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -338,8 +339,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 85
-    Top = 173
+    Left = 109
+    Top = 133
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 237
@@ -357,7 +358,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 221
+    Left = 229
     Top = 136
   end
 end

@@ -48,6 +48,7 @@ object DiscountToolsEditForm: TDiscountToolsEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 3
     Width = 273
   end
@@ -62,6 +63,7 @@ object DiscountToolsEditForm: TDiscountToolsEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = False
     TabOrder = 0
     Width = 273
   end
@@ -261,7 +263,7 @@ object DiscountToolsEditForm: TDiscountToolsEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDiscountForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

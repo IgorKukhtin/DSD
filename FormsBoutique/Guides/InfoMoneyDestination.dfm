@@ -92,11 +92,11 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 56
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 64
@@ -286,7 +286,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -334,14 +334,14 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
         end>
@@ -362,10 +362,10 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_InfoMoneyDestination'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     PackSize = 1
@@ -384,7 +384,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

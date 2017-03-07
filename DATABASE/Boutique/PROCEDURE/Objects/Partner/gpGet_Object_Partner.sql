@@ -9,34 +9,27 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BrandId Integer, BrandName TVarChar, FabrikaId Integer, FabrikaName TVarChar, PeriodId Integer, PeriodName TVarChar, PeriodYear TFloat) 
 AS
 $BODY$
-DECLARE vbCode_max Integer;
+
 BEGIN
 
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
-  PERFORM lpGetUserBySession (inSession);
-
- -- пытаемся найти код
-   IF inId <> 0 AND COALESCE (vbCode_max, 0) = 0 THEN vbCode_max := (SELECT Object.ObjectCode FROM Object WHERE Object.Id = inId); END IF;
-
 
   IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)    AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (0 as Integer)    AS BrandId
-           , CAST ('' as TVarChar)  AS BrandName
-           , CAST (0 as Integer)    AS FabrikaId
-           , CAST ('' as TVarChar)  AS FabrikaName
-           , CAST (0 as Integer)    AS PeriodId
-           , CAST ('' as TVarChar)  AS PeriodName
-           , CAST (0 as TFloat)     AS PeriodYear
-
-       FROM Object
-       WHERE Object.DescId = zc_Object_Partner();
+              0 :: Integer    AS Id
+           , NEXTVAL ('Object_Measure_seq') :: Integer AS Code
+           , '' :: TVarChar   AS Name
+           ,  0 :: Integer    AS BrandId
+           , '' :: TVarChar   AS BrandName
+           ,  0 :: Integer    AS FabrikaId
+           , '' :: TVarChar   AS FabrikaName
+           ,  0 :: Integer    AS PeriodId
+           , '' :: TVarChar   AS PeriodName
+           ,  0 :: TFloat     AS PeriodYear
+       ;
    ELSE
        RETURN QUERY
        SELECT 
@@ -85,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 24.02.17                                                          *
  
 */

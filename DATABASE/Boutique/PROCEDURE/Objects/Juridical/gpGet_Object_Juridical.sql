@@ -18,18 +18,17 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)                 AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)               AS Name
-           , CAST (FALSE as Boolean)             AS isCorporate
-           , CAST ('' as TVarChar)               AS FullName
-           , CAST ('' as TVarChar)               AS Address
-           , CAST ('' as TVarChar)               AS OKPO
-           , CAST ('' as TVarChar)               AS INN
-           , CAST (0 as Integer)                 AS JuridicalGroupId
-           , CAST ('' as TVarChar)               AS JuridicalGroupName
-       FROM Object
-       WHERE Object.DescId = zc_Object_Juridical();
+               0 :: Integer                       AS Id
+           , NEXTVAL ('Object_Juridical_seq') :: Integer AS Code
+           , '' :: TVarChar                       AS Name
+           , FALSE :: Boolean                     AS isCorporate
+           , '' :: TVarChar                       AS FullName
+           , '' :: TVarChar                       AS Address
+           , '' :: TVarChar                       AS OKPO
+           , '' :: TVarChar                       AS INN
+           ,  0 :: Integer                        AS JuridicalGroupId
+           , '' :: TVarChar                       AS JuridicalGroupName
+       ;
    ELSE
        RETURN QUERY
        SELECT 

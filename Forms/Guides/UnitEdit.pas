@@ -84,6 +84,7 @@ type
     cxLabel17: TcxLabel;
     ceSheetWorkTime: TcxButtonEdit;
     SheetWorkTimeGuides: TdsdGuides;
+    cbPartionGoodsKind: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1,5 +1,5 @@
 inherited MainForm: TMainForm
-  Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
+  Caption = 'Boutique'
   ClientHeight = 280
   ClientWidth = 666
   KeyPreview = True
@@ -375,6 +375,12 @@ inherited MainForm: TMainForm
     Left = 272
     Top = 8
     inherited miGuides: TMenuItem
+      object N12: TMenuItem
+        Action = actGoodsGroup
+      end
+      object N38: TMenuItem
+        Action = actGoods
+      end
       object N4: TMenuItem
         Action = actCompositionGroup
       end
@@ -401,9 +407,6 @@ inherited MainForm: TMainForm
       end
       object N1: TMenuItem
         Action = actMeasure
-      end
-      object N12: TMenuItem
-        Action = actGoodsGroup
       end
       object N16: TMenuItem
         Action = actPeriod
@@ -443,9 +446,6 @@ inherited MainForm: TMainForm
       end
       object N37: TMenuItem
         Action = actLabel
-      end
-      object N38: TMenuItem
-        Action = actGoods
       end
     end
     inherited miService: TMenuItem

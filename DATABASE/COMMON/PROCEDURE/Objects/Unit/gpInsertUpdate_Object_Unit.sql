@@ -7,13 +7,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
     IN inCode                    Integer   , -- Код объекта <Подразделение>
     IN inName                    TVarChar  , -- Название объекта <Подразделение>
     IN inisPartionDate           Boolean   , -- Партии даты в учете
+    IN inisPartionGoodsKind      Boolean   , -- Партии по виду упаковки
     IN inParentId                Integer   , -- ссылка на подразделение
     IN inBranchId                Integer   , -- ссылка на филиал
     IN inBusinessId              Integer   , -- ссылка на бизнес
@@ -60,7 +61,6 @@ BEGIN
                           WHERE ObjectString_Unit_Address.ObjectId = ioId --8426  -- inUnitId 
                             AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address());
 
-
    -- сохранили
    vbOldId:= ioId;
    -- сохранили
@@ -68,8 +68,12 @@ BEGIN
 
    -- сохранили объект
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Unit(), vbCode_calc, inName, inAccessKeyId:= NULL);
+
    -- сохранили свойство <Партии даты в учете>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionDate(), ioId, inisPartionDate);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionGoodsKind(), ioId, inisPartionGoodsKind);
+
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Филиалы>
@@ -148,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.03.17         * add PartionGoodsKind
  16.11.16         * add inSheetWorkTimeId
  24.11.15         * add PersonalSheetWorkTime
  19.07.15         * add area

@@ -1,21 +1,15 @@
 inherited ObjectForm: TObjectForm
   Caption = #1054#1073#1098#1077#1082#1090#1099
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 583
-  ExplicitHeight = 335
+  ExplicitWidth = 591
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    ExplicitTop = 26
-    ExplicitHeight = 282
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
-        Width = 575
-        Height = 282
-        ExplicitWidth = 575
-        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
           Styles.Inactive = nil
@@ -60,6 +54,7 @@ inherited ObjectForm: TObjectForm
         Component = FormParams
         ComponentItem = 'ObjectDescId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 96
     Top = 56
@@ -78,6 +73,7 @@ inherited ObjectForm: TObjectForm
       item
         Name = 'ObjectDescId'
         Value = '0'
+        MultiSelectSeparator = ','
       end>
     Left = 184
     Top = 56

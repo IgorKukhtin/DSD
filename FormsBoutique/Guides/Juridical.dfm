@@ -123,11 +123,11 @@ object JuridicalForm: TJuridicalForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 56
     Top = 224
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 24
@@ -346,7 +346,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -395,7 +395,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -403,7 +403,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -436,7 +436,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -444,7 +444,7 @@ object JuridicalForm: TJuridicalForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -474,10 +474,10 @@ object JuridicalForm: TJuridicalForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -500,7 +500,7 @@ object JuridicalForm: TJuridicalForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

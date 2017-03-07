@@ -92,11 +92,11 @@ object MeasureForm: TMeasureForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 56
     Top = 224
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 24
@@ -315,7 +315,7 @@ object MeasureForm: TMeasureForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -364,7 +364,7 @@ object MeasureForm: TMeasureForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -372,7 +372,7 @@ object MeasureForm: TMeasureForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -405,7 +405,7 @@ object MeasureForm: TMeasureForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -413,7 +413,7 @@ object MeasureForm: TMeasureForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -443,10 +443,10 @@ object MeasureForm: TMeasureForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Measure'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -469,7 +469,7 @@ object MeasureForm: TMeasureForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

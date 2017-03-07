@@ -57,6 +57,7 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -160,18 +161,6 @@ object CompositionGroupEditForm: TCompositionGroupEditForm
         Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InternalCode'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InternalName'
-        Value = Null
-        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

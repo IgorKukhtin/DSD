@@ -34,7 +34,7 @@ object LabelEditForm: TLabelEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxButton2: TcxButton
     Left = 184
@@ -57,6 +57,7 @@ object LabelEditForm: TLabelEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end

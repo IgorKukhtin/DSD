@@ -57,6 +57,7 @@ object JuridicalGroupEditForm: TJuridicalGroupEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -73,6 +74,7 @@ object JuridicalGroupEditForm: TJuridicalGroupEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end
@@ -228,11 +230,11 @@ object JuridicalGroupEditForm: TJuridicalGroupEditForm
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridicalGroup
-    FormNameParam.Value = 'TJuridicalGroupForm'
+    FormNameParam.Value = 'TJuridicalGroup_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridicalGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    FormName = 'TJuridicalGroup_ObjectForm'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -44,7 +44,7 @@ object UnitForm: TUnitForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object ceParentName: TcxGridDBColumn
@@ -233,6 +233,13 @@ object UnitForm: TUnitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
+      end
+      object isPartionGoodsKind: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082#1086#1074#1082#1080
+        DataBinding.FieldName = 'isPartionGoodsKind'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 66
       end
       object UnitCode_HistoryCost: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086#1076#1088'. ('#1089'/'#1089' '#1074#1086#1079#1074#1088#1072#1090')'

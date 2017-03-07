@@ -59,6 +59,7 @@ type
     colisRepriceAuto: TcxGridDBColumn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    colAddress: TcxGridDBColumn;
   private
     { Private declarations }
   public

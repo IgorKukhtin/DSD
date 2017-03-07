@@ -59,9 +59,9 @@ object DiscountForm: TDiscountForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
-      object KindDiscount: TcxGridDBColumn
+      object clDiscountKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
-        DataBinding.FieldName = 'KindDiscount'
+        DataBinding.FieldName = 'DiscountKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -82,11 +82,11 @@ object DiscountForm: TDiscountForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 56
     Top = 224
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 24
@@ -305,7 +305,7 @@ object DiscountForm: TDiscountForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -354,7 +354,7 @@ object DiscountForm: TDiscountForm
         item
           Name = 'Key'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -362,7 +362,7 @@ object DiscountForm: TDiscountForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -395,7 +395,7 @@ object DiscountForm: TDiscountForm
         item
           Name = 'Id'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -403,7 +403,7 @@ object DiscountForm: TDiscountForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
@@ -433,10 +433,10 @@ object DiscountForm: TDiscountForm
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Discount'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -459,7 +459,7 @@ object DiscountForm: TDiscountForm
       item
         Name = 'inObjectId'
         Value = Null
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','

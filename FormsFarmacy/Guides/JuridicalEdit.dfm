@@ -1,10 +1,10 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   BorderStyle = bsSingle
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 333
+  ClientHeight = 360
   ClientWidth = 890
   ExplicitWidth = 896
-  ExplicitHeight = 361
+  ExplicitHeight = 388
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -58,30 +58,30 @@
     Left = 296
     Top = 0
     Width = 594
-    Height = 333
+    Height = 360
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitHeight = 312
+    ExplicitHeight = 333
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
       Width = 592
-      Height = 333
+      Height = 360
       Align = alClient
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 312
-      ClientRectBottom = 333
+      ExplicitHeight = 333
+      ClientRectBottom = 360
       ClientRectRight = 592
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitHeight = 288
+        ExplicitLeft = -3
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -169,8 +169,8 @@
           Caption = #1060#1048#1054' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1072
         end
         object edBank: TcxDBButtonEdit
-          Left = 16
-          Top = 202
+          Left = 352
+          Top = 223
           DataBinding.DataField = 'BankName'
           DataBinding.DataSource = JuridicalDetailsDS
           Properties.Buttons = <
@@ -185,8 +185,8 @@
           Width = 193
         end
         object cxLabel12: TcxLabel
-          Left = 16
-          Top = 182
+          Left = 352
+          Top = 203
           Caption = #1041#1072#1085#1082
           Visible = False
         end
@@ -212,10 +212,10 @@
           Left = 451
           Top = 0
           Width = 141
-          Height = 309
+          Height = 336
           Align = alRight
           TabOrder = 18
-          ExplicitHeight = 288
+          ExplicitHeight = 309
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -244,11 +244,64 @@
             GridView = JuridicalDetailsGridDBTableView
           end
         end
+        object cxLabel15: TcxLabel
+          Left = 16
+          Top = 182
+          Caption = #1060#1048#1054' '#1076#1080#1088#1077#1082#1090#1086#1088#1072
+        end
+        object edMainName: TcxDBTextEdit
+          Left = 16
+          Top = 202
+          DataBinding.DataField = 'MainName'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 20
+          Width = 193
+        end
+        object cxLabel16: TcxLabel
+          Left = 18
+          Top = 230
+          Caption = #1042#1080#1090#1103#1075' '#1079' '#1088#1077#1108#1089#1090#1088#1091' '#1087#1083#1072#1090#1085#1080#1082#1110#1074' '#1055#1044#1042
+        end
+        object edReestr: TcxDBTextEdit
+          Left = 18
+          Top = 250
+          DataBinding.DataField = 'Reestr'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 22
+          Width = 193
+        end
+        object cxLabel17: TcxLabel
+          Left = 18
+          Top = 278
+          Caption = ' '#9#8470' '#1088#1110#1096#1077#1085#1085#1103' '#1087#1088#1086' '#1074#1080#1076#1072#1095#1091' '#1083#1110#1094#1077#1085#1079#1110#1111
+        end
+        object edDecision: TcxDBTextEdit
+          Left = 18
+          Top = 298
+          DataBinding.DataField = 'Decision'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 24
+          Width = 193
+        end
+        object cxLabel20: TcxLabel
+          Left = 248
+          Top = 278
+          Caption = #1044#1072#1090#1072' '#1088#1110#1096#1077#1085#1085#1103' '#1087#1088#1086' '#1074#1080#1076#1072#1095#1091' '#1083#1110#1094#1077#1085#1079#1110#1111
+        end
+        object edDecisionDate: TcxDBTextEdit
+          Left = 248
+          Top = 298
+          ParentCustomHint = False
+          DataBinding.DataField = 'DecisionDate'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 26
+          Width = 193
+        end
       end
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 288
+        ExplicitHeight = 309
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -261,10 +314,10 @@
           Left = 0
           Top = 26
           Width = 667
-          Height = 283
+          Height = 310
           Align = alLeft
           TabOrder = 0
-          ExplicitHeight = 262
+          ExplicitHeight = 283
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -361,7 +414,7 @@
     Properties.AssignedValues.MinValue = True
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 17
+    TabOrder = 15
     Width = 166
   end
   object cxLabel4: TcxLabel [14]
@@ -374,7 +427,7 @@
     Top = 221
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 19
+    TabOrder = 17
     Width = 97
   end
   object cxLabel5: TcxLabel [16]
@@ -385,7 +438,7 @@
   object ceOrderSummComment: TcxTextEdit [17]
     Left = 111
     Top = 221
-    TabOrder = 21
+    TabOrder = 20
     Width = 167
   end
   object ceOrderTime: TcxTextEdit [18]
@@ -871,8 +924,8 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 368
-    Top = 264
+    Left = 448
+    Top = 176
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
@@ -1006,6 +1059,15 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inDecisionDate'
+        Value = 'NULL'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'DecisionDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBankId'
         Value = Null
         Component = JuridicalDetailsCDS
@@ -1081,6 +1143,33 @@
         Value = Null
         Component = JuridicalDetailsCDS
         ComponentItem = 'Phone'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMainName'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'MainName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReestr'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'Reestr'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDecision'
+        Value = Null
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'Decision'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

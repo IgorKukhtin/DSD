@@ -57,6 +57,7 @@ object ClientEditForm: TClientEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 14
     Width = 273
   end
@@ -112,6 +113,7 @@ object ClientEditForm: TClientEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 273
   end
@@ -152,6 +154,8 @@ object ClientEditForm: TClientEditForm
     Left = 148
     Top = 117
     EditValue = 42796d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 2
     Width = 133
   end
@@ -190,6 +194,7 @@ object ClientEditForm: TClientEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 10
     Width = 273
   end
@@ -510,7 +515,7 @@ object ClientEditForm: TClientEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCityForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -539,7 +544,7 @@ object ClientEditForm: TClientEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TDiscountKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -1,9 +1,10 @@
--- Function: gpInsertUpdate_Object_Partner (Integer, Integer, Integer, Integer, TFloat, TVarChar)
+-- Function: gpInsertUpdate_Object_Partner (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Поcтавщики> 
+    IN inCode                     Integer,       -- Код объекта <Поcтавщики>  
     IN inBrandId                  Integer   ,    -- ключ объекта <Торговая марка> 
     IN inFabrikaId                Integer   ,    -- ключ объекта <Фабрика производитель> 
     IN inPeriodId                 Integer   ,    -- ключ объекта <Период> 
@@ -14,9 +15,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_max Integer;
    DECLARE vbName TVarChar;
-
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
@@ -26,14 +25,11 @@ BEGIN
    select coalesce(vbName,'')|| coalesce('-'||valuedata,'') into vbName from object where id = inPeriodId;
    select coalesce(vbName,'')|| coalesce('-'||inPeriodYear::integer::Tvarchar,'') into vbName;
 
-   -- пытаемся найти код
-   IF ioId <> 0 AND COALESCE (vbCode_max, 0) = 0 THEN vbCode_max := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
-
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_max:=lfGet_ObjectCode (vbCode_max, zc_Object_Partner()); 
+   -- Нужен для загрузки из Sybase т.к. там код = 0 
+   IF inCode = 0 THEN  inCode := NEXTVAL ('Object_Partner_seq'); END IF; 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode_max, vbName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), inCode, vbName);
 
    -- сохранили связь с <Торговая марка>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Brand(), ioId, inBrandId);
@@ -57,6 +53,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+06.03.17                                                           *
 27.02.17                                                           *
 
 */

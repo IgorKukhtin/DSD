@@ -57,6 +57,7 @@ object MemberEditForm: TMemberEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end

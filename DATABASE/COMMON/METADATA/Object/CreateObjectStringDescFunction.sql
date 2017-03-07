@@ -526,10 +526,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_PartnerMedical_FIO() RETURNS Integer 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_PartnerMedical_FIO', zc_object_PartnerMedical(), 'ГлавВрач' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_PartnerMedical_FIO');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_Address() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Address'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_Address', zc_object_Unit(), 'Адрес аптеки' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_Address');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 06.03.17         * zc_ObjectString_Unit_Address
  16.02.17         * zc_ObjectString_PartnerMedical_FIO
  06.01.17         * zc_ObjectString_Goods_UKTZED
  19.12.16         * zc_ObjectString_Goods_Pack

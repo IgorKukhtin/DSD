@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                PartnerCode Integer, PartnerName TVarChar,
                UnitCode_HistoryCost Integer, UnitName_HistoryCost TVarChar,
                SheetWorkTimeId Integer, SheetWorkTimeName TVarChar,
-               isLeaf Boolean, isPartionDate Boolean,
+               isLeaf Boolean, isPartionDate Boolean, isPartionGoodsKind boolean,
                isErased Boolean,
                Address TVarChar
 ) AS
@@ -111,6 +111,7 @@ BEGIN
 
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
+           , COALESCE(ObjectBoolean_PartionGoodsKind.ValueData,FALSE) :: Boolean AS isPartionGoodsKind
 
            , Object_Unit_View.isErased
 
@@ -158,6 +159,9 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
                                     ON ObjectBoolean_PartionDate.ObjectId = Object_Unit_View.Id
                                    AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind
+                                    ON ObjectBoolean_PartionGoodsKind.ObjectId = Object_Unit_View.Id
+                                   AND ObjectBoolean_PartionGoodsKind.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Unit
                                  ON ObjectLink_Partner_Unit.ChildObjectId = Object_Unit_View.Id
@@ -238,6 +242,7 @@ BEGIN
 
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
+           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
        FROM Object as Object_Partner
@@ -308,6 +313,7 @@ BEGIN
 
            , TRUE AS isLeaf
            , FALSE AS isPartionDate
+           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
       ;
@@ -321,6 +327,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.03.17         * add isPartionGoodsKind
  16.11.16         * SheetWorkTime
  26.07.16         * Address
  03.07.15         * add ObjectLink_Unit_Route, ObjectLink_Unit_RouteSorting

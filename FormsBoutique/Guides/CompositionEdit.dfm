@@ -57,6 +57,7 @@ object CompositionEditForm: TCompositionEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 273
   end
@@ -73,6 +74,7 @@ object CompositionEditForm: TCompositionEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 1
     Width = 273
   end
@@ -232,7 +234,7 @@ object CompositionEditForm: TCompositionEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCompositionGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

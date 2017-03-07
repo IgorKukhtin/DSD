@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
     IN inId          Integer,       -- Подразделение 
     IN inSession     TVarChar       -- сессия пользователя 
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+               Address TVarChar,
                ParentId Integer, ParentName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar, 
                MarginCategoryId Integer, MarginCategoryName TVarChar,
@@ -27,6 +28,7 @@ BEGIN
              CAST (0 as Integer)   AS Id
            , lfGet_ObjectCode(0, zc_Object_Unit()) AS Code
            , CAST ('' as TVarChar) AS Name
+           , CAST ('' as TVarChar) AS Address
            
            , CAST (0 as Integer)   AS ParentId
            , CAST ('' as TVarChar) AS ParentName 
@@ -52,6 +54,7 @@ BEGIN
         Object_Unit.Id                                     AS Id
       , Object_Unit.ObjectCode                             AS Code
       , Object_Unit.ValueData                              AS Name
+      , ObjectString_Unit_Address.ValueData                AS Address
 
       , Object_Parent.Id                                   AS ParentId
       , Object_Parent.ValueData                            AS ParentName
@@ -92,6 +95,10 @@ BEGIN
                                 ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
 
+        LEFT JOIN ObjectString AS ObjectString_Unit_Address
+                               ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
+                              AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
         LEFT JOIN ObjectFloat AS ObjectFloat_TaxService
                               ON ObjectFloat_TaxService.ObjectId = Object_Unit.Id
                              AND ObjectFloat_TaxService.DescId = zc_ObjectFloat_Unit_TaxService()
@@ -127,6 +134,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.03.17         * add Address
  08.04.16         *
  24.02.16         * 
  27.06.14         *

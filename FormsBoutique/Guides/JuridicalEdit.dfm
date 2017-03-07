@@ -57,6 +57,7 @@ object JuridicalEditForm: TJuridicalEditForm
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
+    Properties.ReadOnly = True
     TabOrder = 9
     Width = 273
   end
@@ -112,13 +113,14 @@ object JuridicalEditForm: TJuridicalEditForm
     Caption = #1048#1053#1053
   end
   object ceJuridicalGroup: TcxButtonEdit
-    Left = 10
-    Top = 310
+    Left = 14
+    Top = 314
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 273
   end
@@ -170,6 +172,13 @@ object JuridicalEditForm: TJuridicalEditForm
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = Null
+        Component = edCode
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -347,7 +356,7 @@ object JuridicalEditForm: TJuridicalEditForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridicalGroupForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -1,4 +1,4 @@
-﻿-- Function: gpGet_Object_Unit()
+﻿-- Function: gpGet_Object_Unit(Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Object_Unit (Integer, TVarChar);
 
@@ -18,13 +18,12 @@ BEGIN
    THEN
        RETURN QUERY
        SELECT
-             CAST (0 as Integer)                 AS Id
-           , COALESCE(MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)               AS Name
-           , CAST (0 as Integer)                 AS JuridicalId
-           , CAST ('' as TVarChar)               AS JuridicalName
-       FROM Object
-       WHERE Object.DescId = zc_Object_Unit();
+              0 :: Integer                          AS Id
+           , NEXTVAL ('Object_Unit_seq') :: Integer AS Code
+           , '' :: TVarChar                         AS Name
+           ,  0 :: Integer                          AS JuridicalId
+           , '' :: TVarChar                         AS JuridicalName
+       ;
    ELSE
        RETURN QUERY
        SELECT 
@@ -52,6 +51,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+06.03.17                                                          *
 28.02.17                                                          *
  
 */
