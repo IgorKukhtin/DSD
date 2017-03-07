@@ -159,7 +159,7 @@
 
   function ClientDataSetFillDataSet($dataset)
   {
-     $res = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
+     $res = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
 
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса
@@ -198,7 +198,7 @@
   function ClientDataSetFillDataSetAutoWidth($dataset)
   {
 
-     $header = '<?xml version="1.0" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
+     $header = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  <DATAPACKET Version="2.0"><METADATA><FIELDS>';
 
      $fieldcount = pg_num_fields($dataset);
      // Информация о полях запроса

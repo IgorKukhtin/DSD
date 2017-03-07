@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_GoodsByGoodsKind (
 RETURNS TABLE (Id            Integer
              , GoodsId       Integer  -- Товар
              , GoodsKindId   Integer  -- Вид товара
-             , AmountRemains TFloat   -- Остаток на центральном складе
-             , AmountIncome  TFloat   -- Прогноз прихода на центральный склад
+             , Remains       TFloat   -- Остаток на центральном складе
+             , Forecast      TFloat   -- Прогноз прихода на центральный склад
              , isErased      Boolean  -- Удаленный ли элемент
              , isSync        Boolean  -- Синхронизируется (да/нет)
               )
@@ -19,41 +19,57 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-      vbPersonalId:= (SELECT PersonalId FROM gpGetMobile_Object_Const (inSession));
+      SELECT PersonalId, UnitId INTO vbPersonalId, vbUnitId FROM gpGetMobile_Object_Const (inSession);
 
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
-           CREATE TEMP TABLE tmpGoodsByGoodsKind ON COMMIT DROP
-           AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId AS GoodsByGoodsKindId
-                    , COUNT(ObjectLink_GoodsByGoodsKind_Goods.ObjectId) AS GoodsByGoodsKindCount
-               FROM Object AS Object_GoodsListSale
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
-                                    ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()
-                                   AND ObjectLink_GoodsListSale_Goods.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_GoodsListSale_Partner
-                                    ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
-                                   AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
-                                   AND ObjectLink_GoodsListSale_Partner.ChildObjectId IS NOT NULL
-                    JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                    ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                   AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+           CREATE TEMP TABLE tmpGoodsOrder ON COMMIT DROP
+           AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
+                    , COUNT (ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId) AS GoodsCount
+               FROM Object AS Object_GoodsByGoodsKind
+                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                    ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = ObjectLink_GoodsListSale_Goods.ChildObjectId
+                                    ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
                                    AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                   AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId IS NOT NULL
-               WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-               GROUP BY ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                   AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
+               WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+               GROUP BY ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
               );
-             
-           IF inSyncDateIn > zc_DateStart()
+
+           CREATE TEMP TABLE tmpRemains ON COMMIT DROP
+           AS (SELECT Container_Count.ObjectId                             AS GoodsId
+                    , COALESCE (ContainerLinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                    , CAST (SUM (Container_Count.Amount) AS TFloat)        AS Amount
+               FROM ContainerLinkObject AS ContainerLinkObject_Unit
+                    JOIN Container AS Container_Count 
+                                   ON Container_Count.Id = ContainerLinkObject_Unit.ContainerId 
+                                  AND Container_Count.DescId = zc_Container_Count() 
+                                  AND Container_Count.Amount > 0.0
+                    JOIN tmpGoodsOrder ON tmpGoodsOrder.GoodsId = Container_Count.ObjectId
+                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
+                                                  ON ContainerLinkObject_GoodsKind.ContainerId = ContainerLinkObject_Unit.ContainerId
+                                                 AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                    LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Account
+                                                  ON ContainerLinkObject_Account.ContainerId = ContainerLinkObject_Unit.ContainerId
+                                                 AND ContainerLinkObject_Account.DescId = zc_ContainerLinkObject_Account()
+               WHERE ContainerLinkObject_Unit.ObjectId = vbUnitId
+                 AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                 AND ContainerLinkObject_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+               GROUP BY Container_Count.ObjectId
+                      , COALESCE (ContainerLinkObject_GoodsKind.ObjectId, 0)
+              );
+
+           /*IF inSyncDateIn > zc_DateStart()
            THEN
                 RETURN QUERY
                   WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS GoodsByGoodsKindId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
@@ -65,40 +81,52 @@ BEGIN
                                        GROUP BY ObjectProtocol.ObjectId
                                       )
                   SELECT Object_GoodsByGoodsKind.Id
-                       , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
-                       , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId 
-                       , CAST(0.0 AS TFloat)                                 AS AmountRemains
-                       , CAST(0.0 AS TFloat)                                 AS AmountIncome 
+                       , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                       , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
+                       , COALESCE (tmpRemains.Amount, CAST(0.0 AS TFloat))                 AS Remains
+                       , CAST(0.0 AS TFloat)                                               AS Forecast
                        , Object_GoodsByGoodsKind.isErased
-                       , EXISTS(SELECT 1 FROM tmpGoodsByGoodsKind WHERE tmpGoodsByGoodsKind.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id) AS isSync
+                       , COALESCE(ObjectBoolean_GoodsByGoodsKind_Order.ValueData, false) AS isSync
                   FROM Object AS Object_GoodsByGoodsKind
                        JOIN tmpProtocol ON tmpProtocol.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id
-                       LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                            ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
-                                           AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                       LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                               ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
+                                              AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                       JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                       ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                      AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                       LEFT JOIN tmpRemains ON tmpRemains.GoodsId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                           AND tmpRemains.GoodsKindId = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0)
                   WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind();
-           ELSE
+           ELSE*/
                 RETURN QUERY
                   SELECT Object_GoodsByGoodsKind.Id
-                       , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
-                       , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId 
-                       , CAST(0.0 AS TFloat)                                 AS AmountRemains
-                       , CAST(0.0 AS TFloat)                                 AS AmountIncome 
+                       , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                       , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
+                       , COALESCE (tmpRemains.Amount, CAST(0.0 AS TFloat))                 AS Remains
+                       , CAST(0.0 AS TFloat)                                               AS Forecast 
                        , Object_GoodsByGoodsKind.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_GoodsByGoodsKind
-                       LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                            ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
-                                           AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                       JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                          ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
+                                         AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                         AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
+                       JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                       ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                      AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
                        LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                  WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
-                    AND EXISTS(SELECT 1 FROM tmpGoodsByGoodsKind WHERE tmpGoodsByGoodsKind.GoodsByGoodsKindId = Object_GoodsByGoodsKind.Id);
-           END IF;
+                       LEFT JOIN tmpRemains ON tmpRemains.GoodsId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+                                           AND tmpRemains.GoodsKindId = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0)
+                  WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind();
+           --END IF;
       END IF;
 
 END; 
