@@ -10,8 +10,6 @@ RETURNS TABLE (Id           Integer
              , ObjectCode   Integer  -- Код
              , ValueData    TVarChar -- Название
              , Weight       TFloat   -- Вес товара
-             , Remains      TFloat   -- Остаток товара|для склада Object_Const.UnitId - по данным "последней"  синхронизации
-             , Forecast     TFloat   -- Прогноз по поступлению - сколько прийдет на склад Object_Const.UnitId на основнии заказа или факта отгрузки на филиал - по данным "последней"  синхронизации
              , GoodsGroupId Integer  -- Группа товара
              , MeasureId    Integer  -- Единица измерения
              , isErased     Boolean  -- Удаленный ли элемент
@@ -31,9 +29,20 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
-           CREATE TEMP TABLE tmpGoodsListSale ON COMMIT DROP
-           AS (SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
-                    , COUNT(ObjectLink_GoodsListSale_Goods.ChildObjectId) AS GoodsCount
+           CREATE TEMP TABLE tmpGoods ON COMMIT DROP
+           AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
+               FROM Object AS Object_GoodsByGoodsKind
+                    JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                       ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                      AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
+                    JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                    ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                   AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                   AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId IS NOT NULL
+               WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+               UNION
+               SELECT ObjectLink_GoodsListSale_Goods.ChildObjectId AS GoodsId
                FROM Object AS Object_GoodsListSale
                     JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods 
                                     ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
@@ -48,7 +57,6 @@ BEGIN
                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                    AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                WHERE Object_GoodsListSale.DescId = zc_Object_GoodsListSale()
-               GROUP BY ObjectLink_GoodsListSale_Goods.ChildObjectId
               );
            
            IF inSyncDateIn > zc_DateStart()
@@ -66,12 +74,10 @@ BEGIN
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData
                        , ObjectFloat_Goods_Weight.ValueData AS Weight
-                       , CAST(0.0 AS TFloat) AS Remains
-                       , CAST(0.0 AS TFloat) AS Forecast
                        , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
                        , ObjectLink_Goods_Measure.ChildObjectId    AS MeasureId
                        , Object_Goods.isErased
-                       , EXISTS(SELECT 1 FROM tmpGoodsListSale WHERE tmpGoodsListSale.GoodsId = Object_Goods.Id) AS isSync
+                       , EXISTS(SELECT 1 FROM tmpGoods WHERE tmpGoods.GoodsId = Object_Goods.Id) AS isSync
                   FROM Object AS Object_Goods
                        JOIN tmpProtocol ON tmpProtocol.GoodsId = Object_Goods.Id
                        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
@@ -90,13 +96,12 @@ BEGIN
                        , Object_Goods.ObjectCode
                        , Object_Goods.ValueData
                        , ObjectFloat_Goods_Weight.ValueData AS Weight
-                       , CAST(0.0 AS TFloat) AS Remains
-                       , CAST(0.0 AS TFloat) AS Forecast
                        , ObjectLink_Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
                        , ObjectLink_Goods_Measure.ChildObjectId    AS MeasureId
                        , Object_Goods.isErased
                        , CAST(true AS Boolean) AS isSync
                   FROM Object AS Object_Goods
+                       JOIN tmpGoods ON tmpGoods.GoodsId = Object_Goods.Id
                        LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                              ON ObjectFloat_Goods_Weight.ObjectId = Object_Goods.Id
                                             AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
@@ -106,8 +111,7 @@ BEGIN
                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure() 
-                  WHERE Object_Goods.DescId = zc_Object_Goods()
-                    AND EXISTS(SELECT 1 FROM tmpGoodsListSale WHERE tmpGoodsListSale.GoodsId = Object_Goods.Id);
+                  WHERE Object_Goods.DescId = zc_Object_Goods();
            END IF;
       END IF;
 
