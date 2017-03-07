@@ -1312,5 +1312,5 @@ SELECT * FROM HistoryCost WHERE ('01.12.2016' BETWEEN StartDate AND EndDate) and
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2016', inEndDate:= '31.01.2016', inBranchId:= 8379, inItearationCount:= 1000, inInsert:= 12345, inDiffSumm:= 0.009, inSession:= '2') -- WHERE CalcSummCurrent <> CalcSummNext
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2017', inEndDate:= '31.01.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2017', inEndDate:= '28.02.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0, inSession:= '2')  WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2017', inEndDate:= '28.02.2017', inBranchId:= 0, inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') ORDER BY ABS (Price) DESC -- WHERE CalcSummCurrent <> CalcSummNext
