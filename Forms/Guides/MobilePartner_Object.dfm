@@ -25,6 +25,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -81,13 +82,6 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 117
-      end
-      object clSchedule: TcxGridDBColumn
-        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103
-        DataBinding.FieldName = 'Schedule'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 94
       end
       object clDebtSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
@@ -181,6 +175,62 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
+      end
+      object clSchedule: TcxGridDBColumn
+        Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103
+        DataBinding.FieldName = 'Schedule'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
+      end
+      object colValue1: TcxGridDBColumn
+        Caption = #1055#1085
+        DataBinding.FieldName = 'Value1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue2: TcxGridDBColumn
+        Caption = #1042#1090
+        DataBinding.FieldName = 'Value2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue3: TcxGridDBColumn
+        Caption = #1057#1088
+        DataBinding.FieldName = 'Value3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue4: TcxGridDBColumn
+        Caption = #1063#1090
+        DataBinding.FieldName = 'Value4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue5: TcxGridDBColumn
+        Caption = #1055#1090
+        DataBinding.FieldName = 'Value5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue6: TcxGridDBColumn
+        Caption = #1057#1073
+        DataBinding.FieldName = 'Value6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
+      object colValue7: TcxGridDBColumn
+        Caption = #1042#1089
+        DataBinding.FieldName = 'Value7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

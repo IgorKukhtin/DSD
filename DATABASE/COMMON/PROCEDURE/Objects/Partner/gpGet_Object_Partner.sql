@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                Address TVarChar, HouseNumber TVarChar, CaseNumber TVarChar, RoomNumber TVarChar,
                StreetId Integer, StreetName TVarChar,
                PrepareDayCount TFloat, DocumentDayCount TFloat,
+               GPSN TFloat, GPSE TFloat, 
 
                EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean,
 
@@ -37,8 +38,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
                PostalCode TVarChar, ProvinceCityName TVarChar, 
                CityName TVarChar, CityKindName TVarChar, CityKindId Integer,
                RegionName TVarChar, ProvinceName TVarChar,
-               StreetKindName TVarChar, StreetKindId Integer
-               
+               StreetKindName TVarChar, StreetKindId Integer,
+               Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean, 
+               Value5 Boolean, Value6 Boolean, Value7 Boolean          
                ) AS
 $BODY$
 BEGIN
@@ -73,6 +75,9 @@ BEGIN
            , CAST (0 as TFloat)  AS PrepareDayCount
            , CAST (0 as TFloat)  AS DocumentDayCount
            
+           , CAST (0 as TFloat)  AS GPSN
+           , CAST (0 as TFloat)  AS GPSE 
+
            , CAST (False AS Boolean) AS EdiOrdspr
            , CAST (False AS Boolean) AS EdiInvoice
            , CAST (False AS Boolean) AS EdiDesadv
@@ -123,7 +128,13 @@ BEGIN
            , CAST ('' as TVarChar)       AS StreetKindName
            , CAST (0 as Integer)         AS StreetKindId
            
-           
+           , False  AS Value1
+           , False  AS Value2
+           , False  AS Value3
+           , False  AS Value4
+           , False  AS Value5
+           , False  AS Value6
+           , False  AS Value7         
            ;
    ELSE
        RETURN QUERY 
@@ -149,6 +160,9 @@ BEGIN
 
            , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
            , Partner_DocumentDayCount.ValueData AS DocumentDayCount
+
+           , COALESCE (Partner_GPSN.ValueData,0) ::Tfloat  AS GPSN
+           , COALESCE (Partner_GPSE.ValueData,0) ::Tfloat  AS GPSE 
 
            , COALESCE (ObjectBoolean_EdiOrdspr.ValueData, CAST (False AS Boolean))     AS EdiOrdspr
            , COALESCE (ObjectBoolean_EdiInvoice.ValueData, CAST (False AS Boolean))    AS EdiInvoice
@@ -200,6 +214,14 @@ BEGIN
            , Object_Street_View.StreetKindName    AS StreetKindName
            , Object_Street_View.StreetKindId      AS StreetKindId
 
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 1) AS Boolean) END  ::Boolean   AS Value1
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 2) AS Boolean) END  ::Boolean   AS Value2
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 3) AS Boolean) END  ::Boolean   AS Value3
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 4) AS Boolean) END  ::Boolean   AS Value4
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 5) AS Boolean) END  ::Boolean   AS Value5
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 6) AS Boolean) END  ::Boolean   AS Value6
+           , CASE WHEN COALESCE(ObjectString_Schedule.ValueData,'') = '' THEN False ELSE CAST (zfCalc_Word_Split (inValue:= ObjectString_Schedule.ValueData, inSep:= ';', inIndex:= 7) AS Boolean) END  ::Boolean   AS Value7
+           
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -235,6 +257,10 @@ BEGIN
                                   ON ObjectString_RoomNumber.ObjectId = Object_Partner.Id
                                  AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
                                
+           LEFT JOIN ObjectString AS ObjectString_Schedule
+                                  ON ObjectString_Schedule.ObjectId = Object_Partner.Id
+                                 AND ObjectString_Schedule.DescId = zc_ObjectString_Partner_Schedule()
+
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
                                 AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()                                 
@@ -242,6 +268,13 @@ BEGIN
            LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
                                  ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
                                 AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()    
+
+           LEFT JOIN ObjectFloat AS Partner_GPSN 
+                                 ON Partner_GPSN.ObjectId = Object_Partner.Id
+                                AND Partner_GPSN.DescId = zc_ObjectFloat_Partner_GPSN()  
+           LEFT JOIN ObjectFloat AS Partner_GPSE
+                                 ON Partner_GPSE.ObjectId = Object_Partner.Id
+                                AND Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()  
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_EdiOrdspr
                                    ON ObjectBoolean_EdiOrdspr.ObjectId = Object_Partner.Id 
@@ -374,3 +407,4 @@ ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, Integer, TVarChar) OWNER 
 
 -- тест
 -- SELECT * FROM gpGet_Object_Partner (0, 0, 1, '2')
+--select * from gpGet_Object_Partner(inId := 212570 , inMaskId := 0 , inJuridicalId := 0 ,  inSession := '5');

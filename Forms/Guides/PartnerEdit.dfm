@@ -1,23 +1,23 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
-  ClientHeight = 462
+  ClientHeight = 487
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 487
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 427
-    Top = 424
+    Left = 439
+    Top = 457
     TabOrder = 2
-    ExplicitLeft = 427
-    ExplicitTop = 424
+    ExplicitLeft = 439
+    ExplicitTop = 457
   end
   inherited bbCancel: TcxButton
-    Left = 578
-    Top = 424
-    ExplicitLeft = 578
-    ExplicitTop = 424
+    Left = 590
+    Top = 457
+    ExplicitLeft = 590
+    ExplicitTop = 457
   end
   object edAddress: TcxTextEdit [2]
     Left = 158
@@ -531,9 +531,88 @@
     TabOrder = 70
     Width = 204
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 379
+  object cbValue1: TcxCheckBox [71]
+    Left = 473
     Top = 419
+    Caption = #1055#1085'.'
+    TabOrder = 71
+    Width = 39
+  end
+  object cbValue2: TcxCheckBox [72]
+    Left = 509
+    Top = 419
+    Caption = #1042#1090'.'
+    TabOrder = 72
+    Width = 38
+  end
+  object cbValue3: TcxCheckBox [73]
+    Left = 544
+    Top = 419
+    Caption = #1057#1088'.'
+    TabOrder = 73
+    Width = 39
+  end
+  object cbValue4: TcxCheckBox [74]
+    Left = 580
+    Top = 419
+    Caption = #1063#1090'.'
+    TabOrder = 74
+    Width = 40
+  end
+  object cbValue5: TcxCheckBox [75]
+    Left = 615
+    Top = 419
+    Caption = #1055#1090'.'
+    TabOrder = 75
+    Width = 39
+  end
+  object cbValue6: TcxCheckBox [76]
+    Left = 650
+    Top = 419
+    Caption = #1057#1073'.'
+    TabOrder = 76
+    Width = 39
+  end
+  object cbValue7: TcxCheckBox [77]
+    Left = 687
+    Top = 419
+    ParentCustomHint = False
+    Caption = #1042#1089'.'
+    TabOrder = 77
+    Width = 40
+  end
+  object cxLabel33: TcxLabel [78]
+    Left = 366
+    Top = 419
+    Caption = #1043#1088#1072#1092#1080#1082' '#1087#1086#1089#1077#1097#1077#1085#1080#1103':'
+  end
+  object cxLabel34: TcxLabel [79]
+    Left = 15
+    Top = 456
+    Caption = 'GPS ('#1096#1080#1088#1086#1090#1072')'
+  end
+  object edGPSN: TcxTextEdit [80]
+    Left = 89
+    Top = 455
+    Properties.ReadOnly = True
+    TabOrder = 80
+    Width = 92
+  end
+  object cxLabel35: TcxLabel [81]
+    Left = 187
+    Top = 456
+    Caption = 'GPS ('#1076#1086#1083#1075#1086#1090#1072')'
+  end
+  object edGPSE: TcxTextEdit [82]
+    Left = 261
+    Top = 455
+    Properties.ReadOnly = True
+    TabOrder = 82
+    Width = 92
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 419
+    Top = 339
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 8
@@ -898,9 +977,65 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = cbValue1
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = cbValue2
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = cbValue3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = cbValue4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue5'
+        Value = Null
+        Component = cbValue5
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = cbValue6
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = cbValue7
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 395
+    Left = 648
+    Top = 363
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Partner'
@@ -1298,9 +1433,72 @@
         Component = StreetKindGuides
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value1'
+        Value = Null
+        Component = cbValue1
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value2'
+        Value = Null
+        Component = cbValue2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value3'
+        Value = Null
+        Component = cbValue3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value4'
+        Value = Null
+        Component = cbValue4
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value5'
+        Value = Null
+        Component = cbValue5
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value6'
+        Value = Null
+        Component = cbValue6
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value7'
+        Value = Null
+        Component = cbValue7
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GPSE'
+        Value = Null
+        Component = edGPSE
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GPSN'
+        Value = Null
+        Component = edGPSN
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
-    Left = 528
-    Top = 400
+    Left = 520
+    Top = 352
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'

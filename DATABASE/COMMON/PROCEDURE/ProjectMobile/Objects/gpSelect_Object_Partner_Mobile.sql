@@ -30,6 +30,9 @@ RETURNS TABLE (Id              Integer
              , PriceListName_ret TVarChar  --
              , isErased        Boolean  -- Удаленный ли элемент
              , isSync          Boolean  -- Синхронизируется (да/нет)
+
+             , Value1 Boolean, Value2 Boolean, Value3 Boolean, Value4 Boolean
+             , Value5 Boolean, Value6 Boolean, Value7 Boolean
               )
 AS 
 $BODY$
@@ -65,6 +68,15 @@ BEGIN
                , Object_PriceList_Ret.ValueData AS PriceListName_ret
                , tmpMobilePartner.isErased
                , tmpMobilePartner.isSync
+
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 1) ::Boolean   AS Value1
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 2) ::Boolean   AS Value2
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 3) ::Boolean   AS Value3
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 4) ::Boolean   AS Value4
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 5) ::Boolean   AS Value5
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 6) ::Boolean   AS Value6
+               , zfCalc_Word_Split (inValue:= tmpMobilePartner.Schedule, inSep:= ';', inIndex:= 7) ::Boolean   AS Value7
+
           FROM gpSelectMobile_Object_Partner (zc_DateStart(), inSession) AS tmpMobilePartner
                LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMobilePartner.JuridicalId 
                LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMobilePartner.RouteId 

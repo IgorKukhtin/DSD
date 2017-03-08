@@ -99,6 +99,18 @@ type
     cxLabel32: TcxLabel;
     ceGoodsProperty: TcxButtonEdit;
     GoodsPropertyGuides: TdsdGuides;
+    cbValue1: TcxCheckBox;
+    cbValue2: TcxCheckBox;
+    cbValue3: TcxCheckBox;
+    cbValue4: TcxCheckBox;
+    cbValue5: TcxCheckBox;
+    cbValue6: TcxCheckBox;
+    cbValue7: TcxCheckBox;
+    cxLabel33: TcxLabel;
+    cxLabel34: TcxLabel;
+    edGPSN: TcxTextEdit;
+    cxLabel35: TcxLabel;
+    edGPSE: TcxTextEdit;
 
   private
     { Private declarations }

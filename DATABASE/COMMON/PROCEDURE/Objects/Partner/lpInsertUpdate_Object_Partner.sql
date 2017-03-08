@@ -23,7 +23,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        TDateTime, TDateTime, Integer);                                                       
 
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);     
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -33,6 +36,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inGLNCodeJuridical    TVarChar  ,    -- Код GLN - Покупатель
     IN inGLNCodeRetail       TVarChar  ,    -- Код GLN - Получатель
     IN inGLNCodeCorporate    TVarChar  ,    -- Код GLN - Поставщик
+    IN inSchedule            TVarChar  ,    -- График посещения
     
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
@@ -57,7 +61,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
     IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
     IN inStartPromo          TDateTime ,    -- Дата начала акции
     IN inEndPromo            TDateTime ,    -- Дата окончания акции     
-
+    
     IN inUserId              Integer        -- Пользователь
 )
   RETURNS Integer AS
@@ -94,6 +98,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeRetail(), ioId, inGLNCodeRetail);   
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCodeCorporate(), ioId, inGLNCodeCorporate);   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Schedule(), ioId, inSchedule);   
       
    -- сохранили свойство <За сколько дней принимается заказ>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount /*CASE WHEN vbIsInsert = TRUE AND COALESCE (inPrepareDayCount, 0) = 0 THEN 1 ELSE inPrepareDayCount END*/);
@@ -147,6 +153,7 @@ ALTER FUNCTION lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarCh
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.03.17         * add Schedule
  25.12.15         * add inGoodsPropertyId
  06.02.15         * add inEdiOrdspr, inEdiInvoice, inEdiDesadv
  22.11.14                                        * all
