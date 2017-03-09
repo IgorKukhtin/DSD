@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_GoodsByGoodsKind (
 RETURNS TABLE (Id            Integer
              , GoodsId       Integer  -- Товар
              , GoodsKindId   Integer  -- Вид товара
-             , Remains       TFloat   -- Остаток на центральном складе
-             , Forecast      TFloat   -- Прогноз прихода на центральный склад
+             , Remains       TFloat   -- Остаток на  складе vbUnitId
+             , Forecast      TFloat   -- Прогноз прихода на vbUnitId
              , isErased      Boolean  -- Удаленный ли элемент
              , isSync        Boolean  -- Синхронизируется (да/нет)
               )
@@ -25,32 +25,47 @@ BEGIN
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
+      -- Определили параметры
       SELECT PersonalId, UnitId INTO vbPersonalId, vbUnitId FROM gpGetMobile_Object_Const (inSession);
 
-      -- Результат
+
+      -- Только если Сотрудник был определен
       IF vbPersonalId IS NOT NULL
       THEN
+           -- Результат
            RETURN QUERY
-             WITH tmpGoodsOrder AS (SELECT DISTINCT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId AS GoodsId
-                                    FROM Object AS Object_GoodsByGoodsKind
-                                         JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
-                                                            ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId = Object_GoodsByGoodsKind.Id
-                                                           AND ObjectBoolean_GoodsByGoodsKind_Order.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
-                                                           AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData
-                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                                         ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
-                                                        AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                                        AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
-                                    WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
-                                   )
+             WITH -- все разрешенные Товар + Вид товара
+                  tmpGoodsOrder_all AS (SELECT Object_GoodsByGoodsKind.Id
+                                             , Object_GoodsByGoodsKind.isErased
+                                             , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                             , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                        FROM Object AS Object_GoodsByGoodsKind
+                                             JOIN ObjectBoolean AS ObjectBoolean_GoodsByGoodsKind_Order
+                                                                ON ObjectBoolean_GoodsByGoodsKind_Order.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                               AND ObjectBoolean_GoodsByGoodsKind_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order() 
+                                                               AND ObjectBoolean_GoodsByGoodsKind_Order.ValueData = TRUE -- условие что разрешен
+                                             JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                             ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                            AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
+                                             JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId > 0
+                                        WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
+                                       )
+                  -- сгруппировали Товар
+                , tmpGoodsOrder AS (SELECT DISTINCT tmpGoodsOrder_all.GoodsId FROM tmpGoodsOrder_all)
+                  -- остатки Товар + Вид товара
                 , tmpRemains AS (SELECT Container_Count.ObjectId                             AS GoodsId
                                       , COALESCE (ContainerLinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                      , CAST (SUM (Container_Count.Amount) AS TFloat)        AS Amount
+                                      , SUM (Container_Count.Amount)                         AS Amount
                                  FROM ContainerLinkObject AS ContainerLinkObject_Unit
                                       JOIN Container AS Container_Count 
-                                                     ON Container_Count.Id = ContainerLinkObject_Unit.ContainerId 
+                                                     ON Container_Count.Id     = ContainerLinkObject_Unit.ContainerId 
                                                     AND Container_Count.DescId = zc_Container_Count() 
                                                     AND Container_Count.Amount <> 0.0
+                                      -- Только для разрешенных товаров
                                       JOIN tmpGoodsOrder ON tmpGoodsOrder.GoodsId = Container_Count.ObjectId
                                       LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
                                                                     ON ContainerLinkObject_GoodsKind.ContainerId = ContainerLinkObject_Unit.ContainerId
@@ -65,25 +80,19 @@ BEGIN
                                         , COALESCE (ContainerLinkObject_GoodsKind.ObjectId, 0)
                                  HAVING SUM (Container_Count.Amount) <> 0.0
                                 )
-             SELECT Object_GoodsByGoodsKind.Id
-                  , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
-                  , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
-                  , COALESCE (tmpRemains.Amount, CAST(0.0 AS TFloat))                 AS Remains
-                  , CAST(0.0 AS TFloat)                                               AS Forecast 
-                  , Object_GoodsByGoodsKind.isErased
-                  , CAST(true AS Boolean) AS isSync
-             FROM Object AS Object_GoodsByGoodsKind
-                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                  ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = Object_GoodsByGoodsKind.Id
-                                 AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                 AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId > 0
-                  JOIN tmpGoodsOrder ON tmpGoodsOrder.GoodsId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId            
-                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object_GoodsByGoodsKind.Id
-                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                  LEFT JOIN tmpRemains ON tmpRemains.GoodsId = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
-                                      AND tmpRemains.GoodsKindId = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0)
-             WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind();
+             -- Результат
+             SELECT tmpGoodsOrder_all.Id
+                  , tmpGoodsOrder_all.GoodsId
+                  , tmpGoodsOrder_all.GoodsKindId 
+                  , COALESCE (tmpRemains.Amount, 0.0) :: TFloat AS Remains
+                  , 0 :: TFloat                                 AS Forecast 
+                  , tmpGoodsOrder_all.isErased
+                  , TRUE :: Boolean AS isSync
+             FROM tmpGoodsOrder_all
+                  LEFT JOIN tmpRemains ON tmpRemains.GoodsId     = tmpGoodsOrder_all.GoodsId
+                                      AND tmpRemains.GoodsKindId = tmpGoodsOrder_all.GoodsKindId
+            ;
+
       END IF;
 
 END; 
