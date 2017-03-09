@@ -368,6 +368,7 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                                         , inGLNCodeJuridical:= ''
                                         , inGLNCodeRetail   := ''
                                         , inGLNCodeCorporate:= ''
+                                        , inSchedule        := 'f;f;f;f;f;f;f'
                                         , inPrepareDayCount := 0
                                         , inDocumentDayCount:= 0
                                         , inEdiOrdspr       := FALSE

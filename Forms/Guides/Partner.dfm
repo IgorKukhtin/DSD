@@ -419,6 +419,62 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 62
       end
+      object colValue1: TcxGridDBColumn
+        Caption = #1055#1085
+        DataBinding.FieldName = 'Value1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue2: TcxGridDBColumn
+        Caption = #1042#1090
+        DataBinding.FieldName = 'Value2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue3: TcxGridDBColumn
+        Caption = #1057#1088
+        DataBinding.FieldName = 'Value3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue4: TcxGridDBColumn
+        Caption = #1063#1090
+        DataBinding.FieldName = 'Value4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue5: TcxGridDBColumn
+        Caption = #1055#1090
+        DataBinding.FieldName = 'Value5'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue6: TcxGridDBColumn
+        Caption = #1057#1073
+        DataBinding.FieldName = 'Value6'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
+      object colValue7: TcxGridDBColumn
+        Caption = #1042#1089
+        DataBinding.FieldName = 'Value7'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 25
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -428,6 +484,26 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
+      end
+      object GPSN: TcxGridDBColumn
+        Caption = 'GPS '#1096#1080#1088#1086#1090#1072
+        DataBinding.FieldName = 'GPSN'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.##;-0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GPSE: TcxGridDBColumn
+        Caption = 'GPS '#1076#1086#1083#1075#1086#1090#1072
+        DataBinding.FieldName = 'GPSE'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = '0.##;-0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object Id: TcxGridDBColumn
         Caption = #1050#1083#1102#1095'-2'

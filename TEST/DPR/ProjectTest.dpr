@@ -906,7 +906,8 @@ uses
   Report_MovementCheck_Cross in '..\..\FormsFarmacy\Report\Report_MovementCheck_Cross.pas' {Report_MovementCheck_CrossForm: TParentForm},
   OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

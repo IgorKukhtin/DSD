@@ -22,6 +22,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 339
+        ExplicitLeft = 24
+        ExplicitTop = -3
         ExplicitWidth = 1050
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView

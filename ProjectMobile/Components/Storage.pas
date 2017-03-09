@@ -288,7 +288,8 @@ begin
   FCriticalSection.Enter;
   try
     FSendList.Clear;
-    FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+    //FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+    FSendList.Add('XML=' + '<?xml version="1.1" encoding="UTF-8"?>' + pData);
     Logger.AddToLog(pData);
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;
@@ -300,7 +301,8 @@ begin
         for AttemptCount := 1 to AMaxAtempt do
         Begin
           try
-            idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(1251));
+            //idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(1251));
+            idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
             ok := true;
             break;
           except
@@ -373,11 +375,7 @@ begin
     // Определяем тип возвращаемого результата
     if Ok then
     Begin
-      try
-        ResStr := FReceiveStream.DataString;
-      except
-        ResStr := TEncoding.ANSI.GetString(FReceiveStream.Bytes);
-      end;
+      ResStr := StringReplace(TEncoding.UTF8.GetString(FReceiveStream.Bytes), #0, '', [rfReplaceAll]);
 
       ResultType := trim(Copy(ResStr, 1, ResultTypeLenght));
       isArchive := trim(lowercase(Copy(ResStr, ResultTypeLenght + 1, IsArchiveLenght))) = 't';

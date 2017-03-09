@@ -210,20 +210,20 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="img\remove.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>remove.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\res\drawable-small\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
             <DeployClass>Android_SplashImage426</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="..\INIT\init.php" Condition="'$(Config)'=='Release'">
-            <RemoteDir>ProjectMobile\</RemoteDir>
-            <RemoteName>init.php</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -294,6 +294,15 @@
         <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Release'">
             <RemoteDir>ProjectMobile\</RemoteDir>
             <RemoteName>init.php</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\remove.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>remove.png</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

@@ -123,6 +123,8 @@ type
     bbShowAll: TdxBarButton;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
+    GPSN: TcxGridDBColumn;
+    GPSE: TcxGridDBColumn;
   private
     { Private declarations }
   public

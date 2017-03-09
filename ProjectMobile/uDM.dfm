@@ -284,12 +284,6 @@ object DM: TDM
     object tblObject_GoodsWeight: TFloatField
       FieldName = 'Weight'
     end
-    object tblObject_GoodsRemains: TFloatField
-      FieldName = 'Remains'
-    end
-    object tblObject_GoodsForecast: TFloatField
-      FieldName = 'Forecast'
-    end
     object tblObject_GoodsGoodsGroupId: TIntegerField
       FieldName = 'GoodsGroupId'
     end
@@ -340,22 +334,28 @@ object DM: TDM
       FieldName = 'isErased'
     end
   end
-  object tblObject_GoodsLinkGoodsKind: TFDTable
+  object tblObject_GoodsByGoodsKind: TFDTable
     Connection = conMain
-    UpdateOptions.UpdateTableName = 'Object_GoodsLinkGoodsKind'
-    TableName = 'Object_GoodsLinkGoodsKind'
+    UpdateOptions.UpdateTableName = 'Object_GoodsByGoodsKind'
+    TableName = 'Object_GoodsByGoodsKind'
     Left = 720
     Top = 424
-    object tblObject_GoodsLinkGoodsKindId: TIntegerField
+    object tblObject_GoodsByGoodsKindId: TIntegerField
       FieldName = 'Id'
     end
-    object tblObject_GoodsLinkGoodsKindGoodsId: TIntegerField
+    object tblObject_GoodsByGoodsKindGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
-    object tblObject_GoodsLinkGoodsKindGoodsKindId: TIntegerField
+    object tblObject_GoodsByGoodsKindGoodsKindId: TIntegerField
       FieldName = 'GoodsKindId'
     end
-    object tblObject_GoodsLinkGoodsKindisErased: TBooleanField
+    object tblObject_GoodsByGoodsKindRemains: TFloatField
+      FieldName = 'Remains'
+    end
+    object tblObject_GoodsByGoodsKindForecast: TFloatField
+      FieldName = 'Forecast'
+    end
+    object tblObject_GoodsByGoodsKindisErased: TBooleanField
       FieldName = 'isErased'
     end
   end
@@ -730,15 +730,23 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       
-        'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA || '#39' ('#39' || GK.VAL' +
-        'UEDATA || '#39')'#39' Name, G.ID || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA |' +
-        '| '#39' ('#39' || GK.VALUEDATA || '#39');'#39' || PI.PRICE || '#39';'#39' || M.VALUEDATA' +
-        ' || '#39';'#39' || G.WEIGHT FullInfo from OBJECT_GOODS G JOIN OBJECT_GOO' +
-        'DSLINKGOODSKIND GLK ON GLK.GOODSID = G.ID JOIN OBJECT_GOODSKIND ' +
-        'GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 JOIN OBJECT_ME' +
-        'ASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 JOIN OBJECT_PRI' +
-        'CELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICEL' +
-        'ISTID WHERE G.ISERASED = 0 order by Name')
+        'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDAT' +
+        'A Kind, GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, G.ID || '#39';'#39' ' +
+        '|| GK.ID || '#39';'#39' || G.VALUEDATA || '#39';'#39' || GK.VALUEDATA || '#39';'#39' || ' +
+        'GLK.FORECAST || '#39';'#39' || GLK.REMAINS || '#39';'#39' || PI.PRICE || '#39';'#39' || ' +
+        'M.VALUEDATA || '#39';'#39' || G.WEIGHT FullInfo '
+      'from OBJECT_GOODS G '
+      
+        'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.I' +
+        'SERASED = 0 '
+      
+        'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERA' +
+        'SED = 0 '
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 '
+      
+        'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICEL' +
+        'ISTID = :PRICELISTID'
+      'WHERE G.ISERASED = 0 order by Name')
     Left = 40
     Top = 408
     ParamData = <
@@ -753,13 +761,27 @@ object DM: TDM
     object qryOrderItemsKindID: TIntegerField
       FieldName = 'KindID'
     end
+    object qryOrderItemsName: TStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object qryOrderItemsKind: TStringField
+      FieldName = 'Kind'
+      Size = 255
+    end
+    object qryOrderItemsMeasure: TStringField
+      FieldName = 'Measure'
+      Size = 100
+    end
+    object qryOrderItemsPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object qryOrderItemsRemains: TFloatField
+      FieldName = 'Remains'
+    end
     object qryOrderItemsFullInfo: TWideStringField
       FieldName = 'FullInfo'
       Size = 1000
-    end
-    object qryOrderItemsName: TWideStringField
-      FieldName = 'Name'
-      Size = 500
     end
   end
   object tblObject_Partner_Photo: TFDTable
@@ -767,7 +789,7 @@ object DM: TDM
     UpdateOptions.UpdateTableName = 'Object_Partner_Photo'
     TableName = 'Object_Partner_Photo'
     Left = 864
-    Top = 376
+    Top = 360
     object tblObject_Partner_PhotoId: TAutoIncField
       FieldName = 'Id'
       ReadOnly = True
@@ -813,6 +835,128 @@ object DM: TDM
     object qryPartnerPhotosComment: TStringField
       FieldName = 'Comment'
       Size = 255
+    end
+  end
+  object tblObject_GoodsListSale: TFDTable
+    Connection = conMain
+    UpdateOptions.UpdateTableName = 'Object_GoodsListSale'
+    TableName = 'Object_GoodsListSale'
+    Left = 864
+    Top = 424
+    object IntegerField1: TIntegerField
+      FieldName = 'Id'
+    end
+    object IntegerField2: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object IntegerField3: TIntegerField
+      FieldName = 'GoodsKindId'
+    end
+    object tblObject_GoodsListSalePartnerId: TIntegerField
+      FieldName = 'PartnerId'
+    end
+    object tblObject_GoodsListSaleAmountCalc: TFloatField
+      FieldName = 'AmountCalc'
+    end
+    object BooleanField2: TBooleanField
+      FieldName = 'isErased'
+    end
+  end
+  object cdsOrderItems: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 232
+    Top = 408
+    object cdsOrderItemsName: TStringField
+      FieldName = 'Name'
+      Size = 250
+    end
+    object cdsOrderItemsType: TStringField
+      FieldName = 'Type'
+      Size = 255
+    end
+    object cdsOrderItemsPrice: TFloatField
+      FieldName = 'Price'
+    end
+    object cdsOrderItemsRemains: TFloatField
+      FieldName = 'Remains'
+    end
+    object cdsOrderItemsForecast: TFloatField
+      FieldName = 'Forecast'
+    end
+    object cdsOrderItemsMeasure: TStringField
+      FieldName = 'Measure'
+      Size = 100
+    end
+    object cdsOrderItemsCount: TFloatField
+      FieldName = 'Count'
+    end
+    object cdsOrderItemsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsOrderItemsKindId: TIntegerField
+      FieldName = 'KindId'
+    end
+    object cdsOrderItemsDelImage: TBlobField
+      FieldName = 'DelImage'
+    end
+    object cdsOrderItemsWeight: TFloatField
+      FieldName = 'Weight'
+    end
+  end
+  object qryGoodsListSale: TFDQuery
+    FilterOptions = [foCaseInsensitive]
+    Connection = conMain
+    SQL.Strings = (
+      
+        'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA || '#39' ('#39' || GK.VAL' +
+        'UEDATA || '#39')'#39' Name, G.ID || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA |' +
+        '| '#39';'#39' || GK.VALUEDATA || '#39';'#39' || GLK.FORECAST || '#39';'#39' || GLK.REMAI' +
+        'NS || '#39';'#39' || PI.PRICE || '#39';'#39' || M.VALUEDATA || '#39';'#39' || G.WEIGHT F' +
+        'ullInfo '
+      'from OBJECT_GOODSLISTSALE GLS'
+      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID'
+      
+        'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERA' +
+        'SED = 0'
+      
+        'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.ID AND GLK' +
+        '.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0  '
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 '
+      
+        'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICEL' +
+        'ISTID = :PRICELISTID'
+      
+        'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by N' +
+        'ame')
+    Left = 136
+    Top = 408
+    ParamData = <
+      item
+        Name = 'PRICELISTID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'PARTNERID'
+        ParamType = ptInput
+      end>
+    object IntegerField4: TIntegerField
+      FieldName = 'GoodsID'
+    end
+    object IntegerField5: TIntegerField
+      FieldName = 'KindID'
+    end
+    object WideStringField1: TWideStringField
+      FieldName = 'FullInfo'
+      Size = 1000
+    end
+    object WideStringField2: TWideStringField
+      FieldName = 'Name'
+      Size = 500
     end
   end
 end

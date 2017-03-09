@@ -191,27 +191,16 @@ type
     bStartVisit: TButton;
     tiOrderExternal: TTabItem;
     VertScrollBox3: TVertScrollBox;
-    sgOrderExternal: TStringGrid;
-    gcName: TStringColumn;
-    gcTotalPrice: TCurrencyColumn;
-    gcButton: TGlyphColumn;
     tiOrderItems: TTabItem;
-    gcCount: TCurrencyColumn;
     Panel3: TPanel;
     bCancelOI: TButton;
     bSaveOI: TButton;
     Panel4: TPanel;
-    lwOrderItems: TListView;
     lwPartner: TListView;
     LinkListControlToField1: TLinkListControlToField;
     bsPartner: TBindSourceDB;
     LinkListControlToField2: TLinkListControlToField;
     ilPartners: TImageList;
-    BindSourceDB1: TBindSourceDB;
-    LinkFillControlToField1: TLinkFillControlToField;
-    gcGoodsId: TStringColumn;
-    gcKindId: TStringColumn;
-    gcPrice: TStringColumn;
     Panel6: TPanel;
     lTotalPrice: TLabel;
     Panel8: TPanel;
@@ -220,8 +209,6 @@ type
     Label11: TLabel;
     deOperDate: TDateEdit;
     lTotalWeight: TLabel;
-    gcMeasure: TStringColumn;
-    gcWeight: TCurrencyColumn;
     tiCamera: TTabItem;
     Panel10: TPanel;
     imgCameraPreview: TImage;
@@ -238,8 +225,63 @@ type
     ButtonClose: TButton;
     lwPartnerPhotos: TListView;
     Button1: TButton;
-    BindSourceDB2: TBindSourceDB;
+    bsPhoto: TBindSourceDB;
     LinkFillControlToField3: TLinkFillControlToField;
+    lwOrderExternal: TListView;
+    bsSelectedOrderItems: TBindSourceDB;
+    LinkListControlToField3: TLinkListControlToField;
+    Panel14: TPanel;
+    lOrderPrice: TLabel;
+    Label14: TLabel;
+    Label16: TLabel;
+    Label19: TLabel;
+    Label21: TLabel;
+    bAddOrderItem: TButton;
+    Image10: TImage;
+    ppEnterAmount: TPopup;
+    pEnterAmount: TPanel;
+    lAmount: TLabel;
+    b7: TButton;
+    b8: TButton;
+    b9: TButton;
+    b4: TButton;
+    b5: TButton;
+    b6: TButton;
+    b1: TButton;
+    b2: TButton;
+    b3: TButton;
+    b0: TButton;
+    bDot: TButton;
+    bEnterAmount: TButton;
+    bAddAmount: TButton;
+    bClearAmount: TButton;
+    lMeasure: TLabel;
+    lwOrderItems: TListView;
+    Popup1: TPopup;
+    Panel15: TPanel;
+    Label12: TLabel;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
+    Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
+    Button12: TButton;
+    Button13: TButton;
+    Button14: TButton;
+    Button15: TButton;
+    Label23: TLabel;
+    Panel16: TPanel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label27: TLabel;
+    BindSourceDB1: TBindSourceDB;
+    LinkFillControlToField1: TLinkFillControlToField;
+    bPlusMinus: TButton;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -271,8 +313,6 @@ type
       const AItem: TListViewItem);
     procedure bOrderExternalClick(Sender: TObject);
     procedure ImageColumn1Tap(Sender: TObject; const Point: TPointF);
-    procedure sgOrderExternalSelectCell(Sender: TObject; const ACol,
-      ARow: Integer; var CanSelect: Boolean);
     procedure lwOrderItemsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure lwOrderItemsUpdateObjects(const Sender: TObject;
@@ -285,16 +325,23 @@ type
     procedure LinkFillControlToField2FilledListItem(Sender: TObject;
       const AEditor: IBindListEditorItem);
     procedure bSaveOIClick(Sender: TObject);
-    procedure sgOrderExternalEditingDone(Sender: TObject; const ACol,
-      ARow: Integer);
     procedure bSaveOrderExternalClick(Sender: TObject);
-    procedure sgOrderExternalDrawColumnHeader(Sender: TObject;
-      const Canvas: TCanvas; const Column: TColumn; const Bounds: TRectF);
     procedure bAddedPhotoClick(Sender: TObject);
     procedure btnCaptureClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure ButtonCloseClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure bAddOrderItemClick(Sender: TObject);
+    procedure lwOrderExternalItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure b0Click(Sender: TObject);
+    procedure bClearAmountClick(Sender: TObject);
+    procedure bEnterAmountClick(Sender: TObject);
+    procedure bAddAmountClick(Sender: TObject);
+    procedure lwOrderExternalFilter(Sender: TObject; const AFilter,
+      AValue: string; var Accept: Boolean);
+    procedure bPlusMinusClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -314,7 +361,6 @@ type
 
     procedure BackResult(const AResult: TModalResult);
     procedure ShowGoods(AValue : string);
-    procedure ShowAddedRow;
 
     procedure UpdateKBBounds;
     procedure RestorePosition;
@@ -336,7 +382,7 @@ type
     procedure ShowPriceListItems(PriceListId : integer);
     procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
-    function ReturnPriorForm(const OmitOnChange: Boolean = False): TObject;
+    procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
 
 
     procedure PrepareCamera;
@@ -411,8 +457,6 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
-
-  gcName.Width := sgOrderExternal.Width - gcCount.Width - gcMeasure.Width - gcTotalPrice.Width - gcButton.Width - 10;
 end;
 
 procedure TfrmMain.LinkFillControlToField2FilledListItem(Sender: TObject;
@@ -510,6 +554,34 @@ begin
   pGoodsInfo.IsOpen := true;
 end;
 
+procedure TfrmMain.lwOrderExternalFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
+procedure TfrmMain.lwOrderExternalItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if ItemObject.Name = 'DeleteButton' then
+  begin
+    DM.cdsOrderItems.Delete;
+    RecalculateTotalPriceAndWeight;
+  end;
+
+  if ItemObject.Name = 'Count' then
+  begin
+    lAmount.Text := '0';
+    lMeasure.Text := DM.cdsOrderItemsMeasure.AsString;
+
+    ppEnterAmount.IsOpen := true;
+  end;
+end;
+
 procedure TfrmMain.lwOrderItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
@@ -522,26 +594,24 @@ end;
 procedure TfrmMain.lwOrderItemsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  if AItem.Objects.AccessoryObject.Visible then
+  if (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible then
   begin
-    AItem.Objects.AccessoryObject.Visible := False;
-    FCheckedOI.Remove(AItem.Detail);
+    (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := False;
+    FCheckedOI.Remove((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end
   else
   begin
-    AItem.Objects.AccessoryObject.Visible := True;
-    FCheckedOI.Add(AItem.Detail);
+    (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := True;
+    FCheckedOI.Add((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end;
 end;
 
 procedure TfrmMain.lwOrderItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  // In order for text to be truncated properly, shorten text object
-  AItem.Objects.TextObject.Width := AItem.Objects.TextObject.Width - (5 + AItem.Objects.AccessoryObject.Width);
   // Restore checked state when device is rotated.
   // When listview is resized because of rotation, accessory properties will be reset to default values
-  AItem.Objects.AccessoryObject.Visible := FCheckedOI.Contains(AItem.Detail);
+  (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedOI.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
 end;
 
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
@@ -554,6 +624,17 @@ procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   SwitchToForm(tiPriceListItems, nil);
+end;
+
+procedure TfrmMain.b0Click(Sender: TObject);
+begin
+  if lAmount.Text = '0' then
+    lAmount.Text := '';
+
+  if lAmount.Text = '-0' then
+    lAmount.Text := '-';
+
+  lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
 procedure TfrmMain.BackResult(const AResult: TModalResult);
@@ -584,85 +665,47 @@ var
 begin
   ArrValue := AValue.Split([';']);
 
-  sgOrderExternal.Cells[0, sgOrderExternal.RowCount - 1] := ArrValue[0]; // GoodsId
-  sgOrderExternal.Cells[1, sgOrderExternal.RowCount - 1] := ArrValue[1]; // KindId
-  sgOrderExternal.Cells[2, sgOrderExternal.RowCount - 1] := ArrValue[3]; // цена
-  sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := ArrValue[2]; // название товара
-  sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '1'; // количество по умолчанию
-  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := ArrValue[4]; // единица измерения
-  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := ArrValue[3]; // общая цена
-  sgOrderExternal.Cells[7, sgOrderExternal.RowCount - 1] := '1'; // кнопка удалить
-  sgOrderExternal.Cells[8, sgOrderExternal.RowCount - 1] := ArrValue[5]; // вес
+  DM.cdsOrderItems.Append;
+  DM.cdsOrderItemsGoodsId.AsString := ArrValue[0];   // GoodsId
+  DM.cdsOrderItemsKindId.AsString := ArrValue[1];    // KindId
+  DM.cdsOrderItemsName.AsString := ArrValue[2];      // название товара
+  DM.cdsOrderItemsType.AsString := ArrValue[3];      // вид товара
+  DM.cdsOrderItemsForecast.AsString := ArrValue[4];  // рекомендуемое количество
+  DM.cdsOrderItemsRemains.AsString := ArrValue[5];   // остаток товара
+  DM.cdsOrderItemsPrice.AsString := ArrValue[6];     // цена
+  DM.cdsOrderItemsMeasure.AsString := ArrValue[7];   // единица измерения
+  DM.cdsOrderItemsWeight.AsString := ArrValue[8];         // вес
+
+  DM.cdsOrderItemsCount.AsString := '0';             // количество по умолчанию
+  // кнопка удалить
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  DM.cdsOrderItemsDelImage.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
+  {$ELSE}
+  DM.cdsOrderItemsDelImage.LoadFromFile('remove.png');
+  {$ENDIF}
+  DM.cdsOrderItems.Post;
 end;
 
-procedure TfrmMain.ShowAddedRow;
+procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
-  sgOrderExternal.Cells[0, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[1, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[2, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[3, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[4, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[5, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[6, sgOrderExternal.RowCount - 1] := '';
-  sgOrderExternal.Cells[7, sgOrderExternal.RowCount - 1] := '0';
-  sgOrderExternal.Cells[8, sgOrderExternal.RowCount - 1] := '0';
-end;
+  DM.cdsOrderItems.Edit;
+  DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
+  DM.cdsOrderItems.Post;
 
-procedure TfrmMain.sgOrderExternalDrawColumnHeader(Sender: TObject;
-  const Canvas: TCanvas; const Column: TColumn; const Bounds: TRectF);
-begin
-  Canvas.Fill.Color := TAlphaColorRec.White;
-  Canvas.FillRect(Bounds, 0, 0, [], 1);
-  Canvas.Font.Size := 10;
-  Canvas.Fill.Color := TAlphaColorRec.Black;
-  if Column.Index = 4 then
-    Canvas.FillText(Bounds, Column.Header , False, 1, [] , TTextAlign.Center)
-  else
-    Canvas.FillText(Bounds, Column.Header , False, 1, [] , TTextAlign.Leading);
-end;
-
-procedure TfrmMain.sgOrderExternalEditingDone(Sender: TObject; const ACol,
-  ARow: Integer);
-begin
-  if sgOrderExternal.Col = 4 then { количество товаров }
-  begin
-    sgOrderExternal.Cells[6, sgOrderExternal.Row] := CurrToStr((StrToIntDef(sgOrderExternal.Cells[4, sgOrderExternal.Row], 0) * StrToCurrDef(sgOrderExternal.Cells[2, sgOrderExternal.Row], 0)));
-
-    RecalculateTotalPriceAndWeight;
-  end;
-end;
-
-procedure TfrmMain.sgOrderExternalSelectCell(Sender: TObject; const ACol,
-  ARow: Integer; var CanSelect: Boolean);
-var
-  i, j : integer;
-begin
-  if ACol = 7 then {button column}
-  begin
-    if ARow = sgOrderExternal.RowCount - 1 then {add new goods}
-    begin
-      DM.qryOrderItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
-      DM.qryOrderItems.Open;
-      SwitchToForm(tiOrderItems, nil);
-    end
-    else
-    begin {remove goods}
-      for i := ARow + 1 to sgOrderExternal.RowCount - 1 do
-        for j := 0 to sgOrderExternal.ColumnCount - 1 do
-          sgOrderExternal.Cells[j, i - 1] := sgOrderExternal.Cells[j, i];
-
-      sgOrderExternal.RowCount := sgOrderExternal.RowCount - 1;
-
-      RecalculateTotalPriceAndWeight;
-    end;
-
-    CanSelect := false;
-  end;
+  ppEnterAmount.IsOpen := false;
+  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bAddedPhotoClick(Sender: TObject);
 begin
   SwitchToForm(tiCamera, nil);
+end;
+
+procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
+begin
+  DM.qryOrderItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
+  DM.qryOrderItems.Open;
+  SwitchToForm(tiOrderItems, DM.qryOrderItems);
 end;
 
 procedure TfrmMain.bCancelOIClick(Sender: TObject);
@@ -671,6 +714,21 @@ begin
   DM.qryOrderItems.Close;
 
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bClearAmountClick(Sender: TObject);
+begin
+  lAmount.Text := '0';
+end;
+
+procedure TfrmMain.bEnterAmountClick(Sender: TObject);
+begin
+  DM.cdsOrderItems.Edit;
+  DM.cdsOrderItemsCount.AsFloat := StrToFloatDef(lAmount.Text, 0);
+  DM.cdsOrderItems.Post;
+
+  ppEnterAmount.IsOpen := false;
+  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bHandBookClick(Sender: TObject);
@@ -688,11 +746,25 @@ end;
 procedure TfrmMain.bOrderExternalClick(Sender: TObject);
 begin
   if DM.qryPartnerPriceWithVAT.AsBoolean then
-    gcTotalPrice.Header := 'Цена (с НДС)'
+    lOrderPrice.Text := 'Цена (с НДС)'
   else
-    gcTotalPrice.Header := 'Цена (без НДС)';
-  sgOrderExternal.RowCount := 1;
-  ShowAddedRow;
+    lOrderPrice.Text := 'Цена (без НДС)';
+
+  with DM.qryGoodsListSale do
+  begin
+    ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
+    ParamByName('PARTNERID').AsInteger := DM.qryPartner.FieldByName('ID').AsInteger;
+    Open;
+
+    First;
+    while not EOF do
+    begin
+      ShowGoods(FieldbyName('FullInfo ').AsString);
+
+      Next;
+    end;
+  end;
+
   RecalculateTotalPriceAndWeight;
 
   SwitchToForm(tiOrderExternal, nil);
@@ -702,6 +774,20 @@ procedure TfrmMain.bPartnersClick(Sender: TObject);
 begin
   ShowPartners(8, 'Все ТТ');
   SwitchToForm(tiPartners, nil);
+end;
+
+procedure TfrmMain.bPlusMinusClick(Sender: TObject);
+var
+  str : string;
+begin
+  if copy(lAmount.Text, 1, 1) = '-' then
+  begin
+    str := lAmount.Text;
+    delete(str, 1, 1);
+    lAmount.Text := str;
+  end
+  else
+    lAmount.Text := '-' + lAmount.Text;
 end;
 
 procedure TfrmMain.bPriceListClick(Sender: TObject);
@@ -724,11 +810,8 @@ var
   i : integer;
 begin
   for i := 0 to FCheckedOI.Count - 1 do
-  begin
     ShowGoods(FCheckedOI[i]);
-    sgOrderExternal.RowCount := sgOrderExternal.RowCount + 1;
-  end;
-  ShowAddedRow;
+
   RecalculateTotalPriceAndWeight;
 
   FCheckedOI.Clear;
@@ -782,20 +865,26 @@ begin
 
     DM.tblMovementItem_OrderExternal.Open;
 
-    for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
+    with DM.cdsOrderItems do
     begin
-      DM.tblMovementItem_OrderExternal.Append;
+      First;
+      while not EOF do
+      begin
+        DM.tblMovementItem_OrderExternal.Append;
 
-      DM.tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
-      CreateGUID(GlobalId);
-      DM.tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-      DM.tblMovementItem_OrderExternalGoodsId.AsInteger := StrToInt(sgOrderExternal.Cells[0, i]);
-      DM.tblMovementItem_OrderExternalGoodsKindId.AsInteger := StrToInt(sgOrderExternal.Cells[1, i]);
-      DM.tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
-      DM.tblMovementItem_OrderExternalAmount.AsFloat := StrToFloat(sgOrderExternal.Cells[4, i]);
-      DM.tblMovementItem_OrderExternalPrice.AsFloat := StrToFloat(sgOrderExternal.Cells[2, i]);
+        DM.tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
+        CreateGUID(GlobalId);
+        DM.tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+        DM.tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+        DM.tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+        DM.tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+        DM.tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
+        DM.tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
 
-      DM.tblMovementItem_OrderExternal.Post;
+        DM.tblMovementItem_OrderExternal.Post;
+
+        Next;
+      end;
     end;
 
     DM.conMain.Commit;
@@ -1416,28 +1505,36 @@ procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
 begin
+  DM.cdsOrderItems.DisableControls;
+
   FOrderTotalPrice := 0;
-  for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
+  FOrderTotalCountKg := 0;
+
+  DM.cdsOrderItems.First;
+  while not DM.cdsOrderItems.Eof do
   begin
     if DM.qryPartnerPriceWithVAT.AsBoolean then
-      FOrderTotalPrice := FOrderTotalPrice + StrToCurrDef(sgOrderExternal.Cells[6, i], 0) * (100 + DM.qryPartnerChangePercent.AsCurrency) / 100
+      FOrderTotalPrice := FOrderTotalPrice + DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
+        (100 + DM.qryPartnerChangePercent.AsCurrency) / 100
     else
-      FOrderTotalPrice := FOrderTotalPrice + StrToCurrDef(sgOrderExternal.Cells[6, i], 0) *
+      FOrderTotalPrice := FOrderTotalPrice + DM.cdsOrderItemsPrice.AsFloat * DM.cdsOrderItemsCount.AsFloat *
         ((100 + DM.qryPartnerChangePercent.AsCurrency) / 100) * ((100 + DM.qryPartnerVATPercent.AsCurrency) / 100);
-  end;
 
-  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + CurrToStr(FOrderTotalPrice);
-
-  FOrderTotalCountKg := 0;
-  for i := 0 to sgOrderExternal.RowCount - 2 do { last row is added button }
-  begin
-    if StrToCurrDef(sgOrderExternal.Cells[8, i], 0) <> 0 then
-      FOrderTotalCountKg := FOrderTotalCountKg + StrToCurrDef(sgOrderExternal.Cells[8, i], 0) * StrToCurrDef(sgOrderExternal.Cells[4, i], 0)
+    if FormatFloat('0.##', DM.cdsOrderItemsWeight.AsFloat) <> '0' then
+      FOrderTotalCountKg := FOrderTotalCountKg + DM.cdsOrderItemsWeight.AsFloat * DM.cdsOrderItemsCount.AsFloat
     else
-      FOrderTotalCountKg := FOrderTotalCountKg + StrToCurrDef(sgOrderExternal.Cells[4, i], 0);
+      FOrderTotalCountKg := FOrderTotalCountKg + DM.cdsOrderItemsCount.AsFloat;
+
+    DM.cdsOrderItems.Next;
   end;
 
-  lTotalWeight.Text := 'Общий вес : ' + CurrToStr(FOrderTotalCountKg);
+  DM.cdsOrderItems.EnableControls;
+
+  lTotalPrice.Text := 'Общая стоимость (с учетом НДС) : ' + FormatFloat('0.00', FOrderTotalPrice);
+
+
+
+  lTotalWeight.Text := 'Общий вес : ' + FormatFloat('0.00', FOrderTotalCountKg);
 end;
 
 
@@ -1451,7 +1548,7 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
-function TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean): TObject;
+procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
   Item: TFormStackItem;
   OnChange: TNotifyEvent;
@@ -1468,7 +1565,11 @@ begin
         tcMain.OnChange := OnChange;
       end;
 
-      Result:= Item.Data;
+      try
+        if Item.Data <> nil then
+          TFDQuery(Item.Data).Close;
+      except
+      end;
     end
   else
     raise Exception.Create('Forms stack underflow');

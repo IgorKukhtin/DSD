@@ -85,6 +85,7 @@ type
     procedure LoadMemberExternalFormTest;
     procedure LoadMobileTariffFormTest;
     procedure LoadMobileBillsFormTest;
+    procedure LoadMobileProjectFormTest;
     procedure LoadModelServiceFormTest;
     procedure LoadMovementFormTest;
     procedure LoadOrderIncomeFormTest;
@@ -2282,6 +2283,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileBillsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobileBillsJournalForm');
+end;
+
+procedure TLoadFormTest.LoadMobileProjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePartner_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobilePartner_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;

@@ -106,8 +106,6 @@ type
     tblObject_GoodsObjectCode: TIntegerField;
     tblObject_GoodsValueData: TStringField;
     tblObject_GoodsWeight: TFloatField;
-    tblObject_GoodsRemains: TFloatField;
-    tblObject_GoodsForecast: TFloatField;
     tblObject_GoodsGoodsGroupId: TIntegerField;
     tblObject_GoodsMeasureId: TIntegerField;
     tblObject_GoodsisErased: TBooleanField;
@@ -121,11 +119,11 @@ type
     tblObject_MeasureObjectCode: TIntegerField;
     tblObject_MeasureValueData: TStringField;
     tblObject_MeasureisErased: TBooleanField;
-    tblObject_GoodsLinkGoodsKind: TFDTable;
-    tblObject_GoodsLinkGoodsKindId: TIntegerField;
-    tblObject_GoodsLinkGoodsKindGoodsId: TIntegerField;
-    tblObject_GoodsLinkGoodsKindGoodsKindId: TIntegerField;
-    tblObject_GoodsLinkGoodsKindisErased: TBooleanField;
+    tblObject_GoodsByGoodsKind: TFDTable;
+    tblObject_GoodsByGoodsKindId: TIntegerField;
+    tblObject_GoodsByGoodsKindGoodsId: TIntegerField;
+    tblObject_GoodsByGoodsKindGoodsKindId: TIntegerField;
+    tblObject_GoodsByGoodsKindisErased: TBooleanField;
     tblObject_Contract: TFDTable;
     tblObject_ContractId: TIntegerField;
     tblObject_ContractObjectCode: TIntegerField;
@@ -231,7 +229,6 @@ type
     qryOrderItems: TFDQuery;
     qryOrderItemsGoodsID: TIntegerField;
     qryOrderItemsKindID: TIntegerField;
-    qryOrderItemsName: TWideStringField;
     qryOrderItemsFullInfo: TWideStringField;
     tblMovement_OrderExternalId: TAutoIncField;
     tblObject_PriceListVATPercent: TFloatField;
@@ -246,6 +243,37 @@ type
     qryPartnerPhotos: TFDQuery;
     qryPartnerPhotosPhoto: TBlobField;
     qryPartnerPhotosComment: TStringField;
+    tblObject_GoodsByGoodsKindRemains: TFloatField;
+    tblObject_GoodsByGoodsKindForecast: TFloatField;
+    tblObject_GoodsListSale: TFDTable;
+    IntegerField1: TIntegerField;
+    IntegerField2: TIntegerField;
+    IntegerField3: TIntegerField;
+    BooleanField2: TBooleanField;
+    tblObject_GoodsListSalePartnerId: TIntegerField;
+    tblObject_GoodsListSaleAmountCalc: TFloatField;
+    cdsOrderItems: TClientDataSet;
+    cdsOrderItemsName: TStringField;
+    cdsOrderItemsType: TStringField;
+    cdsOrderItemsPrice: TFloatField;
+    cdsOrderItemsRemains: TFloatField;
+    cdsOrderItemsForecast: TFloatField;
+    cdsOrderItemsCount: TFloatField;
+    cdsOrderItemsMeasure: TStringField;
+    qryGoodsListSale: TFDQuery;
+    IntegerField4: TIntegerField;
+    IntegerField5: TIntegerField;
+    WideStringField1: TWideStringField;
+    WideStringField2: TWideStringField;
+    cdsOrderItemsGoodsId: TIntegerField;
+    cdsOrderItemsKindId: TIntegerField;
+    cdsOrderItemsDelImage: TBlobField;
+    cdsOrderItemsWeight: TFloatField;
+    qryOrderItemsKind: TStringField;
+    qryOrderItemsMeasure: TStringField;
+    qryOrderItemsPrice: TFloatField;
+    qryOrderItemsRemains: TFloatField;
+    qryOrderItemsName: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -646,6 +674,9 @@ procedure TDM.DataModuleCreate(Sender: TObject);
 begin
   InitStructure;
   FConnected := Connect;
+
+  cdsOrderItems.CreateDataSet;
+  cdsOrderItems.Open;
 end;
 
 function TDM.SynchronizeWithMainDatabase : string;
@@ -676,7 +707,7 @@ begin
     GetDictionaries('Goods');
     GetDictionaries('GoodsKind');
     GetDictionaries('Measure');
-    GetDictionaries('GoodsLinkGoodsKind');
+    GetDictionaries('GoodsByGoodsKind');
     GetDictionaries('Contract');
     GetDictionaries('PriceList');
     GetDictionaries('PriceListItems');
@@ -696,6 +727,7 @@ procedure TDM.GetConfigurationInfo;
 var
   x : integer;
   GetStoredProc : TdsdStoredProc;
+  str, str1 : string;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -780,10 +812,10 @@ begin
       CurDictTable := tblObject_Measure;
     end
     else
-    if AName = 'GoodsLinkGoodsKind' then
+    if AName = 'GoodsByGoodsKind' then
     begin
-      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsLinkGoodsKind';
-      CurDictTable := tblObject_GoodsLinkGoodsKind;
+      GetStoredProc.StoredProcName := 'gpSelectMobile_Object_GoodsByGoodsKind';
+      CurDictTable := tblObject_GoodsByGoodsKind;
     end
     else
     if AName = 'Contract' then
