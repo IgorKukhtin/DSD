@@ -13,7 +13,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
@@ -25,13 +25,18 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     Height = 438
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 8
+    ExplicitLeft = -8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = ceName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
@@ -40,6 +45,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -86,6 +92,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clDebtSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'DebtSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -94,6 +102,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clOverSum: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1076#1086#1083#1075#1072' ('#1085#1072#1084')'
         DataBinding.FieldName = 'OverSum'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -102,6 +112,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clOverDays: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1089#1088#1086#1095#1082#1080' ('#1085#1072#1084')'
         DataBinding.FieldName = 'OverDays'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -110,6 +122,8 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       object clPrepareDayCount: TcxGridDBColumn
         Caption = #1047#1072' '#1089#1082#1086#1083#1100#1082#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1085#1080#1084#1072#1077#1090#1089#1103' '#1079#1072#1082#1072#1079
         DataBinding.FieldName = 'PrepareDayCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -129,6 +143,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 150
+      end
+      object ContractCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
       end
       object clContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -247,6 +269,23 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel3: TcxLabel
+    Left = 579
+    Top = 134
+    Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1072#1075#1077#1085#1090':'
+  end
+  object edPersonalTrade: TcxButtonEdit
+    Left = 668
+    Top = 133
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 6
+    Width = 247
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 40
@@ -330,6 +369,18 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -384,11 +435,42 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       Action = actShowAll
       Category = 0
     end
+    object dxBarControlContainerItem1: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel3
+    end
+    object dxBarControlContainerItem2: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edPersonalTrade
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 232
     Top = 144
+    object actRefreshStart: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_PersonalTrade
+      StoredProcList = <
+        item
+          StoredProc = spGet_PersonalTrade
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -491,6 +573,14 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       end>
     Params = <
       item
+        Name = 'inPersonalTradeId'
+        Value = Null
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisShowAll'
         Value = Null
         Component = actShowAll
@@ -538,6 +628,7 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
     RefreshAction = actRefresh
     ComponentList = <
       item
+        Component = PersonalTradeGuides
       end>
     Left = 288
     Top = 184
@@ -557,5 +648,59 @@ object MobilePartner_ObjectForm: TMobilePartner_ObjectForm
       end>
     Left = 384
     Top = 112
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    Key = '0'
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 703
+    Top = 136
+  end
+  object spGet_PersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpGetMobile_Object_Const'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'MemberId'
+        Value = '0'
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 152
   end
 end

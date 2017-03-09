@@ -22,8 +22,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       inherited cxGrid: TcxGrid
         Width = 1050
         Height = 339
-        ExplicitLeft = 24
-        ExplicitTop = -3
         ExplicitWidth = 1050
         ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1181,10 +1179,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     KeyField = 'Id'
     LookupControl = edPersonalTrade
     Key = '0'
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1204,8 +1202,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 615
-    Top = 65528
+    Left = 607
   end
   object spGet_PersonalTrade: TdsdStoredProc
     StoredProcName = 'gpGetMobile_Object_Const'
@@ -1213,7 +1210,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     OutputType = otResult
     Params = <
       item
-        Name = 'PersonalId'
+        Name = 'MemberId'
         Value = '0'
         Component = PersonalTradeGuides
         ComponentItem = 'Key'

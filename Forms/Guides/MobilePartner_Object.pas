@@ -23,7 +23,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel;
+  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit;
 
 type
   TMobilePartner_ObjectForm = class(TParentForm)
@@ -68,6 +68,14 @@ type
     clSchedule: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edPersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    spGet_PersonalTrade: TdsdStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    ContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

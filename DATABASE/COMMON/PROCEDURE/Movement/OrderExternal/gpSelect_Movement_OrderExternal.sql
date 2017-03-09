@@ -37,6 +37,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalTradeId Integer;
+   DECLARE vbPersonalId Integer;
    
    DECLARE vbIsUserOrder  Boolean;
 BEGIN
@@ -47,13 +48,16 @@ BEGIN
      -- определяется уровень доступа
      vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
 
-     vbPersonalTradeId:= (SELECT tmp.PersonalId FROM gpGetMobile_Object_Const (inSession) AS tmp);
+     SELECT tmp.MemberId, tmp.PersonalId
+     INTO vbPersonalTradeId, vbPersonalId     
+     FROM gpGetMobile_Object_Const (inSession) AS tmp;
+
      IF (COALESCE(inPersonalTradeId,0) <> 0 AND COALESCE(vbPersonalTradeId,0) <> inPersonalTradeId)
         THEN
             RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
      END IF;
 
---inPersonalTradeId:=0;
+     --inPersonalTradeId:=0;
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -72,7 +76,7 @@ BEGIN
         , tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
                          FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
                          WHERE ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId --301468 --
+                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId --301468 --
                          )
         , tmpMovement AS (SELECT tmp.Id, MovementLinkObject_From.ObjectId  AS FromId
                           FROM
