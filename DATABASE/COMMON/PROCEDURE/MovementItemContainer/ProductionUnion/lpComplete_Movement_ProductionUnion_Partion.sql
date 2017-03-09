@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer)
+ -- Function: lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion_Partion (Integer, Integer, Integer);
 
@@ -11,6 +11,7 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
+-- if  inFromId =  951601 then return; end if;
      -- таблица
      DELETE FROM _tmpItem_Partion;
      -- таблица
