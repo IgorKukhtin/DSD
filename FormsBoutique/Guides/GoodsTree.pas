@@ -1,4 +1,4 @@
-unit GoodsGroup;
+unit GoodsTree;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dsdAddOn, dxBarExtItems, cxCheckBox, cxSplitter;
 
 type
-  TGoodsGroupForm = class(TParentForm)
+  TGoodsTreeForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -55,11 +55,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clWeight: TcxGridDBColumn;
-    clGoodsGroup: TcxGridDBColumn;
-    clMeasure: TcxGridDBColumn;
-    clTradeMark: TcxGridDBColumn;
-    clInfoMoney: TcxGridDBColumn;
+    clGoodsTree: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;
@@ -68,10 +64,7 @@ type
     spTree: TdsdStoredProc;
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    clFuelName: TcxGridDBColumn;
     cxSplitter: TcxSplitter;
-    clGroupStatName: TcxGridDBColumn;
-    clGoodsTagName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
@@ -87,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsGroupForm);
+  RegisterClass(TGoodsTreeForm);
 
 end.

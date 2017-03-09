@@ -106,6 +106,7 @@ uses
   LabelEdit in '..\..\FormsBoutique\Guides\LabelEdit.pas' {LabelEditForm: TParentForm},
   Goods in '..\..\FormsBoutique\Guides\Goods.pas' {GoodsForm: TParentForm},
   GoodsEdit in '..\..\FormsBoutique\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  GoodsTree in '..\..\FormsBoutique\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
   DiscountKind in '..\..\FormsBoutique\Guides\DiscountKind.pas' {DiscountKindForm: TParentForm},
 
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},

@@ -333,9 +333,20 @@ inherited MainForm: TMainForm
     object actGoods: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
-      Caption = #1058#1086#1074#1072#1088#1099
+      Caption = #1058#1086#1074#1072#1088#1099' '#1089#1087#1080#1089#1086#1082
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsTree: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099
+      FormName = 'TGoodsTreeForm'
+      FormNameParam.Value = 'TGoodsTreeForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -377,6 +388,9 @@ inherited MainForm: TMainForm
     inherited miGuides: TMenuItem
       object N12: TMenuItem
         Action = actGoodsGroup
+      end
+      object N39: TMenuItem
+        Action = actGoodsTree
       end
       object N38: TMenuItem
         Action = actGoods

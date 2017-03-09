@@ -360,6 +360,10 @@
 				<Form>GoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\GoodsTree.pas">
+				<Form>GoodsTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\DiscountKind.pas">
 				<Form>DiscountKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>

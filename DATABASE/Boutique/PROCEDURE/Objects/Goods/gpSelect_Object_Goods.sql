@@ -10,6 +10,7 @@ RETURNS TABLE (
              Id                   Integer
            , Code                 Integer
            , Name                 TVarChar
+           , GoodsGroupId         Integer
            , GoodsGroupName       TVarChar
            , MeasureName          TVarChar
            , CompositionName      TVarChar
@@ -36,6 +37,7 @@ BEGIN
              Object_Goods.Id                AS Id
            , Object_Goods.ObjectCode        AS Code
            , Object_Goods.ValueData         AS Name
+           , Object_GoodsGroup.Id           AS GoodsGroupId
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName    
            , Object_Composition.ValueData   AS CompositionName
@@ -93,6 +95,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+09.03.17                                                           *
 03.03.17                                                           *
 24.02.17                                                           *
 */

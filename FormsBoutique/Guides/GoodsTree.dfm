@@ -1,4 +1,4 @@
-object GoodsGroupForm: TGoodsGroupForm
+object GoodsTreeForm: TGoodsTreeForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
@@ -54,58 +54,15 @@ object GoodsGroupForm: TGoodsGroupForm
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
-      object clGoodsGroup: TcxGridDBColumn
+      object clGoodsTree: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 93
       end
-      object clGroupStatName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1080
-        DataBinding.FieldName = 'GroupStatName'
-        HeaderAlignmentVert = vaCenter
-        Width = 87
-      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089
-        DataBinding.FieldName = 'Weight'
-        HeaderAlignmentVert = vaCenter
-        Width = 48
-      end
-      object clMeasure: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
-        HeaderAlignmentVert = vaCenter
-        Width = 44
-      end
-      object clFuelName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelName'
-        HeaderAlignmentVert = vaCenter
-        Width = 59
-      end
-      object clTradeMark: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        HeaderAlignmentVert = vaCenter
-        Width = 72
-      end
-      object clGoodsTagName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsTagName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clInfoMoney: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
@@ -375,10 +332,12 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -394,6 +353,7 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -401,6 +361,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -449,12 +410,14 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -498,6 +461,7 @@ object GoodsGroupForm: TGoodsGroupForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -505,6 +469,7 @@ object GoodsGroupForm: TGoodsGroupForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -513,6 +478,7 @@ object GoodsGroupForm: TGoodsGroupForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -531,6 +497,7 @@ object GoodsGroupForm: TGoodsGroupForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -551,6 +518,7 @@ object GoodsGroupForm: TGoodsGroupForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 320
@@ -575,7 +543,7 @@ object GoodsGroupForm: TGoodsGroupForm
     Top = 88
   end
   object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsGroup'
+    StoredProcName = 'gpSelect_Object_GoodsTree'
     DataSet = TreeDataSet
     DataSets = <
       item
