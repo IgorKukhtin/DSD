@@ -18,7 +18,7 @@ RETURNS TABLE (Id              Integer
              , DebtSum         TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
              , OverSum         TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
              , OverDays        Integer  -- Кол-во дней просрочки (нам)
-             , PrepareDayCount Integer  -- За сколько дней принимается заказ
+             , PrepareDayCount TFloat   -- За сколько дней принимается заказ
              , JuridicalId     Integer  -- Юридическое лицо
              , JuridicalName   TVarChar --
              , RouteId         Integer  -- Маршрут
@@ -68,7 +68,7 @@ BEGIN
                , tmpMobilePartner.DebtSum
                , tmpMobilePartner.OverSum
                , tmpMobilePartner.OverDays
-               , tmpMobilePartner.PrepareDayCount ::Integer
+               , tmpMobilePartner.PrepareDayCount 
                , Object_Juridical.Id            AS JuridicalId
                , Object_Juridical.ValueData     AS JuridicalName
                , Object_Route.Id                AS RouteId
