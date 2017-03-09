@@ -31,7 +31,7 @@ BEGIN
    --PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode);
+   --PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), inCode, inName);

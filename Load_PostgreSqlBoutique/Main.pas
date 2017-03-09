@@ -666,73 +666,44 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
-      if (not cbMeasure.Checked) then
+      if cbMeasure.Checked then
       fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
-      if (not cbCompositionGroup.Checked) then
+      if cbCompositionGroup.Checked then
       fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
-      if (not cbComposition.Checked) then
+      if cbComposition.Checked then
       fExecSqFromQuery('update dba.Composition set Id_Postgres = null');
-      if (not cbCountryBrand.Checked) then
+      if cbCountryBrand.Checked then
       fExecSqFromQuery('update dba.CountryBrand set Id_Postgres = null');
-      if (not cbBrand.Checked) then
+      if cbBrand.Checked then
       fExecSqFromQuery('update dba.Brand set Id_Postgres = null');
-      if (not cbFabrika.Checked) then
+      if cbFabrika.Checked then
       fExecSqFromQuery('update dba.Fabrika set Id_Postgres = null');
-      if (not cbLineFabrica.Checked) then
+      if cbLineFabrica.Checked then
       fExecSqFromQuery('update dba.LineFabrica set Id_Postgres = null');
-      if (not cbGoodsInfo.Checked) then
+      if cbGoodsInfo.Checked then
       fExecSqFromQuery('update dba.GoodsInfo set Id_Postgres = null');
-      if (not cbGoodsSize.Checked) then
+      if cbGoodsSize.Checked then
       fExecSqFromQuery('update dba.GoodsSize set Id_Postgres = null');
-      if (not cbKassa.Checked) then
+      if cbKassa.Checked then
       fExecSqFromQuery('update dba.Kassa set Id_Postgres = null');
-      if (not cbValuta.Checked) then
+      if cbValuta.Checked then
       fExecSqFromQuery('update dba.Valuta set Id_Postgres = null');
-      if (not cbPeriod.Checked) then
+      if cbPeriod.Checked then
       fExecSqFromQuery('update dba.Period set Id_Postgres = null');
-      if (not cbGoodsGroup.Checked) then
-      fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
-      if (not cbDiscount.Checked) then
+      if cbGoodsGroup.Checked then
+      fExecSqFromQuery('update dba.Goods set Id_Postgres = null where Goods.HasChildren <> zc_hsLeaf()');
+      if cbDiscount.Checked then
       fExecSqFromQuery('update dba.Discount set Id_Postgres = null');
-      if (not cbDiscountTools.Checked) then
+      if cbDiscountTools.Checked then
       fExecSqFromQuery('update dba.DiscountTools set Id_Postgres = null');
-      if (not cbUnit.Checked) then
-      fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
-      if (not cbLabel.Checked) then
+       if cbPartner.Checked then
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuIncome()');
+      if cbUnit.Checked then
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuUnit()');
+      if cbLabel.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
-
-
-
-//     fExecSqFromQuery('update dba.Goods set Id_Postgres = null,Id_Postgres_Fuel = null,Id_Postgres_TicketFuel = null');
-//     fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.CompositionGroup set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
-//     //  !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
-//     fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting=null,Id_Postgres_Business = null, Id_Postgres_Business_TWO = null, Id_Postgres_Business_Chapli = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
-//     fExecSqFromQuery('update dba._pgPersonal set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.PriceListItems_byHistory set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
-//     fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null'
-//                                                       +', Id8_Postgres = null, Id9_Postgres = null, Id10_Postgres = null, Id11_Postgres = null, Id12_Postgres = null, Id13_Postgres = null, Id14_Postgres = null');
-//     fExecSqFromQuery('update dba._pgInfoMoney set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
-//     fExecSqFromQuery('update dba._pgAccount set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
-//     fExecSqFromQuery('update dba._pgProfitLoss set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
-//     fExecSqFromQuery('update dba._pgUnit set Id_Postgres = null, Id_Postgres_Branch = null');
-//
-//     fExecSqFromQuery('update dba._pgRoute set RouteId_pg = null, FreightId_pg = null');
-//     fExecSqFromQuery('update dba._pgMember set GroupId_pg = null, MemberId_pg = null, PersonalId_pg = null, PositionId_pg = null');
-//     fExecSqFromQuery('update dba._pgCar set ModelId_pg = null, CarId_pg = null, MovementId_pg=null');
-//     fExecSqFromQuery('update dba._pgCardFuel set CardFuelId_pg = null');
-//
-//     fExecSqFromQuery('update dba._pgMemberSWT set GroupId_pg = null,MemberId_pg = null,PersonalId_pg = null,PositionId_pg = null,PositionLevelId_pg = null');
-//     fExecSqFromQuery('update dba._pgModelService set ModelServiceId_pg = null,ModelServiceItemMasterId_pg = null,ModelServiceItemChildId_pg = null');
-//     fExecSqFromQuery('update dba._pgStaffList set PositionId_pg = null,PositionLevelId_pg = null,StaffListSumm_MonthId_pg = null,StaffListSumm_DayId_pg = null,'+'StaffListSumm_PersonalId_pg = null, StaffListSumm_HoursPlanId_pg = null, StaffListSumm_HoursDayId_pg = null, StaffListSumm_HoursPlanConstId_pg = null, StaffListSumm_HoursDayConstId_pg = null, StaffListSumm_HoursOnDayId_pg = null, StaffListId_pg = null');
-//     fExecSqFromQuery('update dba._pgStaffListCost set ModelServiceId_pg = null,StaffListId_pg = null,StaffListCostId_pg = null');
-
+      if cbGoods.Checked then
+      fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -1053,11 +1024,13 @@ if (not cbDiscount.Checked)or(not cbDiscount.Enabled) then exit;
              if fStop then begin exit;end;
              //
 
+             fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_DiscountKind()  '
+                           +' and objectcode ='+inttostr(FieldByName('KindDiscount').AsInteger));
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inDiscountKindId').Value:=FieldByName('KindDiscount').AsInteger;
+             toStoredProc.Params.ParamByName('inDiscountKindId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
 
 
              if not myExecToStoredProc then;
@@ -1220,7 +1193,100 @@ end;
 
 procedure TMainForm.pLoadGuide_Goods;
 begin
+if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.GoodsProperty add Id_Pg_goods integer null;');
+    finally
 
+    end;
+     //
+     myEnabledCB(cbGoods);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select distinct');
+        Add('       GoodsProperty.CashCode as ObjectCode');
+        Add('     , GoodsName.GoodsName as ObjectName');
+        Add('     , zc_erasedDel()         as zc_erasedDel');
+        Add('     , GoodsProperty.Erased   as Erased');
+        Add('     , GoodsProperty.Id_Pg_Goods');
+        Add('     , GoodsProperty_parent_GoodsGroup.Id as GoodsGroupId');
+        Add('     , GoodsProperty.MeasureId');
+        Add('     , GoodsProperty.CompositionId');
+        Add('     , GoodsProperty.GoodsInfoId');
+        Add('     , GoodsProperty.LineFabricaId');
+        Add('     , GoodsProperty_parent_GoodsGroup.Id_Postgres as ParentId_Postgres_GoodsGroup');
+        Add('     , GoodsProperty_parent_measure.Id_Postgres as ParentId_Postgres_measure');
+        Add('     , GoodsProperty_parent_Composition.Id_Postgres as ParentId_Postgres_Composition');
+        Add('     , GoodsProperty_parent_GoodsInfo.Id_Postgres as ParentId_Postgres_GoodsInfo');
+        Add('     , GoodsProperty_parent_LineFabrica.Id_Postgres as ParentId_Postgres_LineFabrica');
+        Add('     , GoodsLabel.GoodsName as LabelName');
+        Add('from dba.GoodsProperty ');
+        Add(' left outer join dba.measure as GoodsProperty_parent_measure on GoodsProperty_parent_measure.id = GoodsProperty.MeasureId ');
+        Add(' left outer join dba.Composition as GoodsProperty_parent_Composition on GoodsProperty_parent_Composition.id = GoodsProperty.CompositionId');
+        Add(' left outer join dba.GoodsInfo as GoodsProperty_parent_GoodsInfo on GoodsProperty_parent_GoodsInfo.id = GoodsProperty.GoodsInfoId');
+        Add(' left outer join dba.LineFabrica as GoodsProperty_parent_LineFabrica on GoodsProperty_parent_LineFabrica.Id =  GoodsProperty.LineFabricaId');
+        Add(' left outer join dba.Goods as GoodsName  on GoodsName.Id = GoodsProperty.GoodsId');
+        Add(' left outer join dba.Goods as GoodsProperty_parent_GoodsGroup on GoodsProperty_parent_GoodsGroup.Id = GoodsName.ParentId');
+        Add(' left outer join dba.Goods as GoodsLabel on GoodsLabel.Id = GoodsName.ParentId');
+        Add('order by ObjectCode');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Goods';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCompositionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsInfoId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLineFabricaID',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inLabelId',ftInteger,ptInput, 0);
+
+        //
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+                          fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_Label()  '
+                           +' and ValueData = '''+FieldByName('LabelName').AsString+'''');
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Pg_Goods').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres_GoodsGroup').AsFloat;
+             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('ParentId_Postgres_Measure').AsFloat;
+             toStoredProc.Params.ParamByName('inCompositionId').Value:=FieldByName('ParentId_Postgres_Composition').AsFloat;
+             toStoredProc.Params.ParamByName('inGoodsInfoId').Value:=FieldByName('ParentId_Postgres_GoodsInfo').AsFloat;
+             toStoredProc.Params.ParamByName('inLineFabricaID').Value:=FieldByName('ParentId_Postgres_LineFabrica').AsFloat;
+             toStoredProc.Params.ParamByName('inLabelId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Pg_Goods').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where CashCode = '+FieldByName('ObjectCode').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoods);
 
 end;
 
