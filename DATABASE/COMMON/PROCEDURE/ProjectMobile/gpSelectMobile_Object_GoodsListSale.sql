@@ -19,6 +19,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPersonalId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbOperDate TDateTime;
+   DECLARE vbStoreRealId Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -29,6 +31,39 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL
       THEN
+           SELECT MAX (Movement_StoreReal.OperDate) AS OperDate
+             INTO vbOperDate
+           FROM Movement AS Movement_StoreReal
+                JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                        ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
+                                       AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                ON ObjectLink_Partner_PersonalTrade.ObjectId = MovementLinkObject_Partner.ObjectId
+                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                               AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+           WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
+             AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete();
+
+           IF FOUND 
+           THEN
+                SELECT MAX (Movement_StoreReal.Id) AS StoreRealId
+                  INTO vbStoreRealId
+                FROM Movement AS Movement_StoreReal
+                     JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                             ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
+                                            AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                     JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                     ON ObjectLink_Partner_PersonalTrade.ObjectId = MovementLinkObject_Partner.ObjectId
+                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                    AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
+                  AND Movement_StoreReal.OperDate = vbOperDate
+                  AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete();
+           END IF;  
+
+           vbStoreRealId:= COALESCE (vbStoreRealId, 0::Integer);
+           vbOperDate:= COALESCE (vbOperDate, DATE_TRUNC ('day', CURRENT_TIMESTAMP));
+
            RETURN QUERY
              SELECT Object_GoodsListSale.Id
                   , COALESCE (ObjectLink_GoodsListSale_Goods.ChildObjectId, 0)     AS GoodsId

@@ -92,8 +92,7 @@ type
     lCaption: TLabel;
     blMain: TBindingsList;
     tiPartnerInfo: TTabItem;
-    Panel7: TPanel;
-    Memo1: TMemo;
+    pPartnerInfo: TPanel;
     tiSync: TTabItem;
     imLogo: TImage;
     bSync: TButton;
@@ -164,7 +163,6 @@ type
     lwPriceList: TListView;
     ilOrder: TImageList;
     bsPriceList: TBindSourceDB;
-    LinkFillControlToField2: TLinkFillControlToField;
     Image9: TImage;
     tiPriceListItems: TTabItem;
     lwGoods: TListView;
@@ -220,21 +218,20 @@ type
     Panel12: TPanel;
     Panel13: TPanel;
     bAddedPhoto: TButton;
-    btnCapture: TButton;
-    btnSave: TButton;
-    ButtonClose: TButton;
+    bCapture: TButton;
+    bSavePartnerPhoto: TButton;
+    bClosePhoto: TButton;
     lwPartnerPhotos: TListView;
     Button1: TButton;
     bsPhoto: TBindSourceDB;
     LinkFillControlToField3: TLinkFillControlToField;
-    lwOrderExternal: TListView;
+    lwNewOrderExternal: TListView;
     bsSelectedOrderItems: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
     Panel14: TPanel;
     lOrderPrice: TLabel;
     Label14: TLabel;
     Label16: TLabel;
-    Label19: TLabel;
     Label21: TLabel;
     bAddOrderItem: TButton;
     Image10: TImage;
@@ -279,9 +276,18 @@ type
     Label24: TLabel;
     Label25: TLabel;
     Label27: TLabel;
-    BindSourceDB1: TBindSourceDB;
+    bsOrderItems: TBindSourceDB;
     LinkFillControlToField1: TLinkFillControlToField;
-    bPlusMinus: TButton;
+    bMinusAmount: TButton;
+    VertScrollBox4: TVertScrollBox;
+    Label19: TLabel;
+    Label28: TLabel;
+    lPartnerAddress: TLabel;
+    lPartnerName: TLabel;
+    tMapToImage: TTimer;
+    iPartnerMap: TImage;
+    lwOrderExternal: TListView;
+    LinkListControlToField4: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -295,7 +301,6 @@ type
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure bMondayClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure tcPartnerInfoChange(Sender: TObject);
     procedure sbPartnerMenuClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormFocusChanged(Sender: TObject);
@@ -320,37 +325,38 @@ type
     procedure lwOrderItemsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure bCancelOIClick(Sender: TObject);
-    procedure ListView1ItemClick(const Sender: TObject;
-      const AItem: TListViewItem);
-    procedure LinkFillControlToField2FilledListItem(Sender: TObject;
-      const AEditor: IBindListEditorItem);
     procedure bSaveOIClick(Sender: TObject);
     procedure bSaveOrderExternalClick(Sender: TObject);
     procedure bAddedPhotoClick(Sender: TObject);
-    procedure btnCaptureClick(Sender: TObject);
-    procedure btnSaveClick(Sender: TObject);
-    procedure ButtonCloseClick(Sender: TObject);
+    procedure bCaptureClick(Sender: TObject);
+    procedure bSavePartnerPhotoClick(Sender: TObject);
+    procedure bClosePhotoClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure bAddOrderItemClick(Sender: TObject);
-    procedure lwOrderExternalItemClickEx(const Sender: TObject;
+    procedure lwNewOrderExternalItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure b0Click(Sender: TObject);
     procedure bClearAmountClick(Sender: TObject);
     procedure bEnterAmountClick(Sender: TObject);
     procedure bAddAmountClick(Sender: TObject);
-    procedure lwOrderExternalFilter(Sender: TObject; const AFilter,
+    procedure lwNewOrderExternalFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
-    procedure bPlusMinusClick(Sender: TObject);
+    procedure bMinusAmountClick(Sender: TObject);
+    procedure tMapToImageTimer(Sender: TObject);
+    procedure iPartnerMapDblClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
+
+    FCurCoordinatesSet: boolean;
+    FCurCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
+    FMarkerList: TList<TLocationCoord2D>;
     FWebGMap: TTMSFMXWebGMaps;
+
     FKBBounds: TRectF;
     FNeedOffset: Boolean;
-    FCurCoordinatesSet : boolean;
-    FCurCoordinates: TLocationCoord2D;
 
     FCheckedOI: TList<String>;
     FOrderTotalCountKg : Currency;
@@ -360,26 +366,23 @@ type
     CameraComponent : TCameraComponent;
 
     procedure BackResult(const AResult: TModalResult);
-    procedure ShowGoods(AValue : string);
 
     procedure UpdateKBBounds;
     procedure RestorePosition;
     function PrependIfNotEmpty(const Prefix, Subject: string): string;
+
     function GetAddress(const Latitude, Longitude: Double): string;
     //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
-    procedure WebGMapAllPartnerDownloadFinish(Sender: TObject);
-    procedure WebGMapMarkerDragEnd(Sender: TObject; MarkerTitle: string;
-      IdMarker: Integer; Latitude, Longitude: Double);
+    procedure ShowBigMap;
 
     procedure Wait(AWait: Boolean);
     procedure CheckDataBase;
     procedure GetVistDays;
     procedure ShowPartners(Day : integer; Caption : string);
     procedure ShowPartnerInfo;
-    procedure ShowAllPartnersOnMap;
     procedure ShowPriceLists;
-    procedure ShowPriceListItems(PriceListId : integer);
+    procedure ShowPriceListItems;
     procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -391,6 +394,8 @@ type
     procedure GetImage;
     procedure PlayAudio;
     procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
+
+    function GetCurrentCoordinates : boolean;
   public
     { Public declarations }
   end;
@@ -424,7 +429,8 @@ begin
     ScreenService.SetScreenOrientation(OrientSet);
   end;
   {$ENDIF}
-  FFormsStack:= TStack<TFormStackItem>.Create;
+  FFormsStack := TStack<TFormStackItem>.Create;
+  FMarkerList := TList<TLocationCoord2D>.Create;
   FCheckedOI := TList<String>.Create;
   FCurCoordinatesSet := false;
   SwitchToForm(tiStart, nil);
@@ -434,6 +440,7 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
   FFormsStack.Free;
+  FMarkerList.Free;
   FCheckedOI.Free;
 end;
 
@@ -444,7 +451,25 @@ end;
 
 procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
 begin
-  SwitchToForm(tiMap, nil);
+  FMarkerList.Clear;
+
+  with DM.qryPartner do
+  begin
+    DisableConstraints;
+    First;
+
+    while not EOF do
+    begin
+       if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+         FMarkerList.Add(TLocationCoord2D.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat));
+
+      Next;
+    end;
+
+    EnableConstraints;
+  end;
+
+  ShowBigMap;
 
   ppPartner.IsOpen := False;
 end;
@@ -457,18 +482,6 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
-end;
-
-procedure TfrmMain.LinkFillControlToField2FilledListItem(Sender: TObject;
-  const AEditor: IBindListEditorItem);
-begin
-  (AEditor.CurrentObject as TListViewItem).Tag := DM.qryPriceList.FieldByName('id').AsInteger;
-end;
-
-procedure TfrmMain.ListView1ItemClick(const Sender: TObject;
-  const AItem: TListViewItem);
-begin
-  SwitchToForm(tiPartnerInfo, nil);
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -542,19 +555,19 @@ end;
 procedure TfrmMain.lwGoodsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  lGoodsName.Text := DM.qryGoods.FieldByName('GoodsName').AsString;
-  lGoodsCode.Text := DM.qryGoods.FieldByName('OBJECTCODE').AsString;
+  lGoodsName.Text := DM.qryGoodsGoodsName.AsString;
+  lGoodsCode.Text := DM.qryGoodsOBJECTCODE.AsString;
   lGoodsCategory.Text := '-';
-  lGoodsGroup.Text := DM.qryGoods.FieldByName('GroupName').AsString;
+  lGoodsGroup.Text := DM.qryGoodsGroupName.AsString;
   lGoodsType.Text := '-';
-  lGoodsWeight.Text := DM.qryGoods.FieldByName('weight').AsString + ' ' + DM.qryGoods.FieldByName('MeasureName').AsString;
-  lGoodsDateEnd.Text := DM.qryGoods.FieldByName('EndDate').AsString;
-  lGoodsPrice.Text := DM.qryGoods.FieldByName('Price').AsString;
+  lGoodsWeight.Text := DM.qryGoodsweight.AsString + ' ' + DM.qryGoodsMeasureName.AsString;
+  lGoodsDateEnd.Text := DM.qryGoodsEndDate.AsString;
+  lGoodsPrice.Text := DM.qryGoodsPrice.AsString;
 
   pGoodsInfo.IsOpen := true;
 end;
 
-procedure TfrmMain.lwOrderExternalFilter(Sender: TObject; const AFilter,
+procedure TfrmMain.lwNewOrderExternalFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
   if Trim(AFilter) <> '' then
@@ -563,17 +576,20 @@ begin
     Accept := true;
 end;
 
-procedure TfrmMain.lwOrderExternalItemClickEx(const Sender: TObject;
+procedure TfrmMain.lwNewOrderExternalItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
+  if ItemObject = nil then
+    exit;
+
   if ItemObject.Name = 'DeleteButton' then
   begin
     DM.cdsOrderItems.Delete;
     RecalculateTotalPriceAndWeight;
   end;
 
-  if ItemObject.Name = 'Count' then
+  if (ItemObject.Name = 'Count') or (ItemObject.Name = 'Measure') then
   begin
     lAmount.Text := '0';
     lMeasure.Text := DM.cdsOrderItemsMeasure.AsString;
@@ -617,13 +633,13 @@ end;
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  SwitchToForm(tiPartnerInfo, nil);
+  ShowPartnerInfo;
 end;
 
 procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  SwitchToForm(tiPriceListItems, nil);
+  ShowPriceListItems;
 end;
 
 procedure TfrmMain.b0Click(Sender: TObject);
@@ -657,43 +673,6 @@ procedure TfrmMain.sbPartnerMenuClick(Sender: TObject);
 begin
   ppPartner.IsOpen := true;
   lbPartnerMenu.ItemIndex := -1;
-end;
-
-procedure TfrmMain.ShowGoods(AValue : string);
-var
-  ArrValue : TArray<string>;
-begin
-  ArrValue := AValue.Split([';']);
-
-  DM.cdsOrderItems.Append;
-  DM.cdsOrderItemsGoodsId.AsString := ArrValue[0];   // GoodsId
-  DM.cdsOrderItemsKindId.AsString := ArrValue[1];    // KindId
-  DM.cdsOrderItemsName.AsString := ArrValue[2];      // название товара
-  DM.cdsOrderItemsType.AsString := ArrValue[3];      // вид товара
-  DM.cdsOrderItemsForecast.AsString := ArrValue[4];  // рекомендуемое количество
-  DM.cdsOrderItemsRemains.AsString := ArrValue[5];   // остаток товара
-  DM.cdsOrderItemsPrice.AsString := ArrValue[6];     // цена
-  DM.cdsOrderItemsMeasure.AsString := ArrValue[7];   // единица измерения
-  DM.cdsOrderItemsWeight.AsString := ArrValue[8];         // вес
-
-  DM.cdsOrderItemsCount.AsString := '0';             // количество по умолчанию
-  // кнопка удалить
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  DM.cdsOrderItemsDelImage.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
-  {$ELSE}
-  DM.cdsOrderItemsDelImage.LoadFromFile('remove.png');
-  {$ENDIF}
-  DM.cdsOrderItems.Post;
-end;
-
-procedure TfrmMain.bAddAmountClick(Sender: TObject);
-begin
-  DM.cdsOrderItems.Edit;
-  DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
-  DM.cdsOrderItems.Post;
-
-  ppEnterAmount.IsOpen := false;
-  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bAddedPhotoClick(Sender: TObject);
@@ -731,6 +710,29 @@ begin
   RecalculateTotalPriceAndWeight;
 end;
 
+procedure TfrmMain.bAddAmountClick(Sender: TObject);
+begin
+  DM.cdsOrderItems.Edit;
+  DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
+  DM.cdsOrderItems.Post;
+
+  ppEnterAmount.IsOpen := false;
+  RecalculateTotalPriceAndWeight;
+end;
+
+procedure TfrmMain.bMinusAmountClick(Sender: TObject);
+begin
+  DM.cdsOrderItems.Edit;
+  if DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
+    DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+  else
+    DM.cdsOrderItemsCount.AsFloat := 0;
+  DM.cdsOrderItems.Post;
+
+  ppEnterAmount.IsOpen := false;
+  RecalculateTotalPriceAndWeight;
+end;
+
 procedure TfrmMain.bHandBookClick(Sender: TObject);
 begin
   pPartnerActions.Visible := false;
@@ -740,7 +742,6 @@ end;
 procedure TfrmMain.bMondayClick(Sender: TObject);
 begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
-  SwitchToForm(tiPartners, nil);
 end;
 
 procedure TfrmMain.bOrderExternalClick(Sender: TObject);
@@ -750,20 +751,7 @@ begin
   else
     lOrderPrice.Text := 'Цена (без НДС)';
 
-  with DM.qryGoodsListSale do
-  begin
-    ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
-    ParamByName('PARTNERID').AsInteger := DM.qryPartner.FieldByName('ID').AsInteger;
-    Open;
-
-    First;
-    while not EOF do
-    begin
-      ShowGoods(FieldbyName('FullInfo ').AsString);
-
-      Next;
-    end;
-  end;
+  DM.DefaultOrderExternal;
 
   RecalculateTotalPriceAndWeight;
 
@@ -776,23 +764,9 @@ begin
   SwitchToForm(tiPartners, nil);
 end;
 
-procedure TfrmMain.bPlusMinusClick(Sender: TObject);
-var
-  str : string;
-begin
-  if copy(lAmount.Text, 1, 1) = '-' then
-  begin
-    str := lAmount.Text;
-    delete(str, 1, 1);
-    lAmount.Text := str;
-  end
-  else
-    lAmount.Text := '-' + lAmount.Text;
-end;
-
 procedure TfrmMain.bPriceListClick(Sender: TObject);
 begin
-  SwitchToForm(tiPriceList, nil);
+  ShowPriceLists;
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -810,7 +784,7 @@ var
   i : integer;
 begin
   for i := 0 to FCheckedOI.Count - 1 do
-    ShowGoods(FCheckedOI[i]);
+    DM.AddedGoodsToOrderExternal(FCheckedOI[i]);
 
   RecalculateTotalPriceAndWeight;
 
@@ -820,105 +794,36 @@ end;
 
 procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
 var
-  GlobalId : TGUID;
-  i, MovementId, NewInvNumber : integer;
-  qryMaxInvNumber : TFDQuery;
+  ErrMes : string;
 begin
-  qryMaxInvNumber := TFDQuery.Create(nil);
-  try
-    qryMaxInvNumber.Connection := DM.conMain;
-    qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
-    if qryMaxInvNumber.RecordCount > 0 then
-      NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1
-    else
-      NewInvNumber := 1;
-  finally
-    FreeAndNil(qryMaxInvNumber);
-  end;
-
-  DM.conMain.StartTransaction;
-  try
-    DM.tblMovement_OrderExternal.Open;
-
-    DM.tblMovement_OrderExternal.Append;
-
-    CreateGUID(GlobalId);
-    DM.tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-    DM.tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
-    DM.tblMovement_OrderExternalOperDate.AsDateTime := deOperDate.Date;
-    DM.tblMovement_OrderExternalStatusId.AsInteger := DM.tblObject_ConstStatusId_Complete.AsInteger;
-    DM.tblMovement_OrderExternalPartnerId.AsInteger := DM.qryPartnerId.AsInteger;
-    DM.tblMovement_OrderExternalPaidKindId.AsInteger := DM.qryPartnerPaidKindId.AsInteger;
-    DM.tblMovement_OrderExternalContractId.AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
-    DM.tblMovement_OrderExternalPriceListId.AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
-    DM.tblMovement_OrderExternalPriceWithVAT.AsBoolean := DM.qryPartnerPriceWithVAT.AsBoolean;
-    DM.tblMovement_OrderExternalVATPercent.AsFloat := DM.qryPartnerVATPercent.AsFloat;
-    DM.tblMovement_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
-    DM.tblMovement_OrderExternalTotalCountKg.AsFloat := FOrderTotalCountKg;
-    DM.tblMovement_OrderExternalTotalSumm.AsFloat := FOrderTotalPrice;
-    DM.tblMovement_OrderExternalInsertDate.AsDateTime := Now();
-    DM.tblMovement_OrderExternalisSync.AsBoolean := false;
-
-    DM.tblMovement_OrderExternal.Post;
-
-    MovementId := DM.tblMovement_OrderExternalId.AsInteger;
-
-    DM.tblMovementItem_OrderExternal.Open;
-
-    with DM.cdsOrderItems do
-    begin
-      First;
-      while not EOF do
-      begin
-        DM.tblMovementItem_OrderExternal.Append;
-
-        DM.tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
-        CreateGUID(GlobalId);
-        DM.tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-        DM.tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-        DM.tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
-        DM.tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
-        DM.tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
-        DM.tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
-
-        DM.tblMovementItem_OrderExternal.Post;
-
-        Next;
-      end;
-    end;
-
-    DM.conMain.Commit;
-
-    ShowMessage('Сохранение заявки прошло успешно.');
-    ReturnPriorForm;
-  except
-    on E : Exception do
-    begin
-      DM.conMain.Rollback;
-      ShowMessage(E.Message);
-    end;
-  end;
+   if DM.SaveOrderExternal(deOperDate.Date, FOrderTotalPrice, FOrderTotalCountKg, ErrMes) then
+   begin
+     ShowMessage('Сохранение заявки прошло успешно.');
+     ReturnPriorForm;
+   end
+   else
+     ShowMessage(ErrMes);
 end;
 
-procedure TfrmMain.btnCaptureClick(Sender: TObject);
+procedure TfrmMain.bCaptureClick(Sender: TObject);
 begin
   if CameraComponent.Active then
   begin
     CameraComponent.Active := False;
     PlayAudio;
     TSpeedButton(Sender).Text := rstReturn;
-    btnSave.Enabled := true;
+    bSavePartnerPhoto.Enabled := true;
   end
   else
   begin
     ScaleImage(0);
     CameraComponent.Active := True;
     TSpeedButton(Sender).Text := rstCapture;
-    btnSave.Enabled := false;
+    bSavePartnerPhoto.Enabled := false;
   end;
 end;
 
-procedure TfrmMain.btnSaveClick(Sender: TObject);
+procedure TfrmMain.bSavePartnerPhotoClick(Sender: TObject);
 var
   BlobStream : TMemoryStream;
   Surf : TBitmapSurface;
@@ -983,7 +888,7 @@ begin
   DM.qryPartnerPhotos.Open;
 end;
 
-procedure TfrmMain.ButtonCloseClick(Sender: TObject);
+procedure TfrmMain.bClosePhotoClick(Sender: TObject);
 begin
   CameraFree;
   ReturnPriorForm;
@@ -995,12 +900,14 @@ begin
   SwitchToForm(tiRoutes, nil);
 end;
 
-procedure TfrmMain.tcPartnerInfoChange(Sender: TObject);
+procedure TfrmMain.tMapToImageTimer(Sender: TObject);
 begin
-  if tcPartnerInfo.ActiveTab = tiInfo then
-    FWebGMap.Visible := true
-  else
-    FWebGMap.Visible := false;
+  tMapToImage.Enabled := false;
+
+  iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
+  FWebGMap.Visible := false;
+  FreeAndNil(FWebGMap);
+  iPartnerMap.Visible := true;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
@@ -1098,50 +1005,44 @@ begin
   end;
 end;
 }
+
 procedure TfrmMain.WebGMapDownloadFinish(Sender: TObject);
+var
+  i : integer;
 begin
   if not FMapLoaded then
-    begin
-      if FWebGMap.Markers.Count = 0 then
-        with FWebGMap.Markers.Add(FWebGMap.CurrentLocation.Latitude, FWebGMap.CurrentLocation.Longitude, GetAddress(FWebGMap.CurrentLocation.Latitude, FWebGMap.CurrentLocation.Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
-          MapLabel.Text := Title;
-      FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
-      FMapLoaded := True;
-    end;
-end;
+  begin
+    FWebGMap.Markers.Clear;
 
-procedure TfrmMain.WebGMapAllPartnerDownloadFinish(Sender: TObject);
-begin
-  if not FMapLoaded then
+    if FMarkerList.Count > 0 then
     begin
-      FWebGMap.Markers.Clear;
-
-      with DM.qryPartner do
+      for i := 0 to FMarkerList.Count - 1 do
       begin
-        DisableConstraints;
-        First;
-
-        while not EOF do
-        begin
-          with FWebGMap.Markers.Add(FieldByName('GPSN').AsFloat, FieldByName('GPSE').AsFloat, GetAddress(FieldByName('GPSN').AsFloat, FieldByName('GPSE').AsFloat), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
-            MapLabel.Text := Title;
-
-          Next;
-        end;
-        FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
-
-        EnableConstraints;
+        with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, GetAddress(FMarkerList[i].Latitude, FMarkerList[i].Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
+          MapLabel.Text := Title;
       end;
 
-      FMapLoaded := True;
+      FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
     end;
+
+    FMapLoaded := True;
+
+    if tcMain.ActiveTab = tiPartnerInfo then
+      tMapToImage.Enabled := true;
+  end;
 end;
 
-procedure TfrmMain.WebGMapMarkerDragEnd(Sender: TObject; MarkerTitle: string;
-  IdMarker: Integer; Latitude, Longitude: Double);
+procedure TfrmMain.ShowBigMap;
 begin
-  FWebGMap.Markers[IdMarker].Title := GetAddress(Latitude, Longitude);
-  FWebGMap.Markers[IdMarker].MapLabel.Text := FWebGMap.Markers[IdMarker].Title;
+  SwitchToForm(tiMap, nil);
+
+  FMapLoaded := False;
+
+  FWebGMap := TTMSFMXWebGMaps.Create(Self);
+  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+  FWebGMap.Align := TAlignLayout.Client;
+  FWebGMap.MapOptions.ZoomMap := 18;
+  FWebGMap.Parent := tiMap;
 end;
 
 procedure TfrmMain.Wait(AWait: Boolean);
@@ -1208,18 +1109,6 @@ begin
 
   if tcMain.ActiveTab = tiRoutes then
     GetVistDays;
-
-  if tcMain.ActiveTab = tiPartnerInfo then
-    ShowPartnerInfo;
-
-  if tcMain.ActiveTab = tiMap then
-    ShowAllPartnersonMap;
-
-  if tcMain.ActiveTab = tiPriceList then
-    ShowPriceLists;
-
-  if tcMain.ActiveTab = tiPriceListItems then
-    ShowPriceListItems((lwPriceList.Selected as TListViewItem).Tag);
 
   if tcMain.ActiveTab = tiCamera then
     PrepareCamera;
@@ -1386,46 +1275,17 @@ begin
   ShowMessage('Test');
 end;
 
+procedure TfrmMain.iPartnerMapDblClick(Sender: TObject);
+begin
+  ShowBigMap;
+end;
+
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
-
-  {$IFDEF ANDROID}
-  LastLocation: JLocation;
-  LocManagerObj: JObject;
-  LocationManager: JLocationManager;
-  {$ENDIF}
 begin
-  {$IFDEF ANDROID}
-  //запрашиваем сервис Location
-  LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
-  if Assigned(LocManagerObj) then
-  begin
-    //получаем LocationManager
-    LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
-    if Assigned(LocationManager) then
-    begin
-      //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
-      LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
-      if Assigned(LastLocation) then
-      begin
-        FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-        FCurCoordinatesSet := true;
-      end;
-    end
-    else
-    begin
-      //raise Exception.Create('Could not access Location Manager');
-    end;
-  end
-  else
-  begin
-    //raise Exception.Create('Could not locate Location Service');
-  end;
-  {$ELSE}
-  FCurCoordinatesSet := true;
-  FCurCoordinates := TLocationCoord2D.Create(0, 0);
-  {$ENDIF}
+  FCurCoordinatesSet := GetCurrentCoordinates;
+
   lDayInfo.Text := 'МАРШРУТ: ' + Caption;
   DM.qryPartner.Close;
 
@@ -1453,52 +1313,70 @@ begin
   end;
 
   DM.qryPartner.Open(sQuery);
+
+  SwitchToForm(tiPartners, DM.qryPartner);
 end;
 
 procedure TfrmMain.ShowPartnerInfo;
 var
+  SetCordinate : boolean;
   Coordinates: TLocationCoord2D;
 begin
-  Coordinates := TLocationCoord2D.Create(DM.qryPartner.FieldByName('GPSN').AsFloat, DM.qryPartner.FieldByName('GPSE').AsFloat);
+  SwitchToForm(tiPartnerInfo, nil);
+  tcPartnerInfo.ActiveTab := tiInfo;
+
+  lPartnerName.Text := DM.qryPartnerName.AsString;
+  lPartnerAddress.Text := DM.qryPartnerAddress.AsString;
+
+  SetCordinate := true;
+  FMarkerList.Clear;
+
+  if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+  begin
+    Coordinates := TLocationCoord2D.Create(DM.qryPartnerGPSN.AsFloat, DM.qryPartnerGPSE.AsFloat);
+    FMarkerList.Add(Coordinates);
+  end
+  else
+  begin
+    FCurCoordinatesSet := GetCurrentCoordinates;
+    if FCurCoordinatesSet then
+      Coordinates := TLocationCoord2D.Create(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
+    else
+      SetCordinate := false;
+  end;
 
   FMapLoaded := False;
 
+  iPartnerMap.Visible := false;
   FWebGMap := TTMSFMXWebGMaps.Create(Self);
-  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-  FWebGMap.OnMarkerDragEnd := WebGMapMarkerDragEnd;
-  FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
-  FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
   FWebGMap.Align := TAlignLayout.Client;
   FWebGMap.MapOptions.ZoomMap := 18;
   FWebGMap.Parent := pMap;
+  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+  if SetCordinate then
+  begin
+    FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
+    FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
+  end;
 
-  tcPartnerInfo.ActiveTab := tiInfo;
-end;
-
-procedure TfrmMain.ShowAllPartnersOnMap;
-begin
-  FMapLoaded := False;
-
-  FWebGMap := TTMSFMXWebGMaps.Create(Self);
-  FWebGMap.OnDownloadFinish := WebGMapAllPartnerDownloadFinish;
-  FWebGMap.OnMarkerDragEnd := WebGMapMarkerDragEnd;
-  FWebGMap.Align := TAlignLayout.Client;
-  FWebGMap.MapOptions.ZoomMap := 18;
-  FWebGMap.Parent := tiMap;
 end;
 
 procedure TfrmMain.ShowPriceLists;
 begin
   DM.qryPriceList.Open('select ID, VALUEDATA from OBJECT_PRICELIST where ISERASED = 0');
+
+  SwitchToForm(tiPriceList, DM.qryPriceList);
 end;
 
-procedure TfrmMain.ShowPriceListItems(PriceListId : integer);
+procedure TfrmMain.ShowPriceListItems;
 begin
   DM.qryGoods.Open('select G.ID, G.VALUEDATA GoodsName, G.WEIGHT, G.OBJECTCODE, PLI.PRICE, PLI.ENDDATE, ' +
     'GG.VALUEDATA GroupName, M.VALUEDATA MeasureName from OBJECT_GOODS G ' +
     'JOIN OBJECT_PRICELISTITEMS PLI ON PLI.GOODSID = G.ID JOIN OBJECT_PRICELIST PL ON PL.ID = PLI.PRICELISTID ' +
     'LEFT JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
-    'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + IntToStr(PriceListId));
+    'LEFT JOIN OBJECT_GOODSGROUP GG ON GG.ID = G.GOODSGROUPID where G.ISERASED = 0 and PLI.PRICELISTID = ' + DM.qryPriceListId.AsString);
+
+  SwitchToForm(tiPriceListItems, DM.qryGoods);
 end;
 
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
@@ -1584,7 +1462,7 @@ begin
   if CameraComponent.HasFlash then
     CameraComponent.FlashMode := FMX.Media.TFlashMode.AutoFlash;
   CameraComponent.Active := false;
-  btnCaptureClick(btnCapture);
+  bCaptureClick(bCapture);
 end;
 
 procedure TfrmMain.CameraFree;
@@ -1647,6 +1525,45 @@ begin
   TThread.Synchronize(TThread.CurrentThread, GetImage);
   if (imgCameraPreview.Width = 0) or (imgCameraPreview.Height = 0) then
     Showmessage('Image is zero!');
+end;
+
+function TfrmMain.GetCurrentCoordinates : boolean;
+{$IFDEF ANDROID}
+var
+  LastLocation: JLocation;
+  LocManagerObj: JObject;
+  LocationManager: JLocationManager;
+{$ENDIF}
+begin
+  Result := false;
+
+  {$IFDEF ANDROID}
+  //запрашиваем сервис Location
+  LocManagerObj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.LOCATION_SERVICE);
+  if Assigned(LocManagerObj) then
+  begin
+    //получаем LocationManager
+    LocationManager := TJLocationManager.Wrap((LocManagerObj as ILocalObject).GetObjectID);
+    if Assigned(LocationManager) then
+    begin
+      //получаем последнее местоположение зафиксированное с помощью координат wi-fi и мобильных сетей
+      LastLocation := LocationManager.getLastKnownLocation(TJLocationManager.JavaClass.NETWORK_PROVIDER);
+      if Assigned(LastLocation) then
+      begin
+        FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
+        Result := true;
+      end;
+    end
+    else
+    begin
+      //raise Exception.Create('Could not access Location Manager');
+    end;
+  end
+  else
+  begin
+    //raise Exception.Create('Could not locate Location Service');
+  end;
+  {$ENDIF}
 end;
 
 end.

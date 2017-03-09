@@ -518,8 +518,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       'select * from Object_Partner')
-    Left = 40
-    Top = 280
+    Left = 32
+    Top = 408
     object qryPriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -532,8 +532,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       'select * from Object_Partner')
-    Left = 40
-    Top = 344
+    Left = 128
+    Top = 408
     object qryGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -564,6 +564,7 @@ object DM: TDM
   end
   object tblMovement_OrderExternal: TFDTable
     Connection = conMain
+    FetchOptions.AssignedValues = [evDetailCascade]
     UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
     TableName = 'Movement_OrderExternal'
     Left = 864
@@ -748,7 +749,7 @@ object DM: TDM
         'ISTID = :PRICELISTID'
       'WHERE G.ISERASED = 0 order by Name')
     Left = 40
-    Top = 408
+    Top = 288
     ParamData = <
       item
         Name = 'PRICELISTID'
@@ -868,8 +869,8 @@ object DM: TDM
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 232
-    Top = 408
+    Left = 128
+    Top = 288
     object cdsOrderItemsName: TStringField
       FieldName = 'Name'
       Size = 250
@@ -907,56 +908,35 @@ object DM: TDM
       FieldName = 'Weight'
     end
   end
-  object qryGoodsListSale: TFDQuery
-    FilterOptions = [foCaseInsensitive]
-    Connection = conMain
-    SQL.Strings = (
-      
-        'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA || '#39' ('#39' || GK.VAL' +
-        'UEDATA || '#39')'#39' Name, G.ID || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA |' +
-        '| '#39';'#39' || GK.VALUEDATA || '#39';'#39' || GLK.FORECAST || '#39';'#39' || GLK.REMAI' +
-        'NS || '#39';'#39' || PI.PRICE || '#39';'#39' || M.VALUEDATA || '#39';'#39' || G.WEIGHT F' +
-        'ullInfo '
-      'from OBJECT_GOODSLISTSALE GLS'
-      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID'
-      
-        'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERA' +
-        'SED = 0'
-      
-        'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.ID AND GLK' +
-        '.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0  '
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 '
-      
-        'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICEL' +
-        'ISTID = :PRICELISTID'
-      
-        'WHERE GLS.PARTNERID = :PARTNERID and GLS.ISERASED = 0 order by N' +
-        'ame')
-    Left = 136
-    Top = 408
-    ParamData = <
-      item
-        Name = 'PRICELISTID'
-        DataType = ftInteger
-        ParamType = ptInput
-      end
-      item
-        Name = 'PARTNERID'
-        ParamType = ptInput
-      end>
-    object IntegerField4: TIntegerField
-      FieldName = 'GoodsID'
+  object cdsOrderExternal: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 224
+    Top = 288
+    object cdsOrderExternalid: TIntegerField
+      FieldName = 'id'
     end
-    object IntegerField5: TIntegerField
-      FieldName = 'KindID'
-    end
-    object WideStringField1: TWideStringField
-      FieldName = 'FullInfo'
-      Size = 1000
-    end
-    object WideStringField2: TWideStringField
+    object cdsOrderExternalName: TStringField
       FieldName = 'Name'
-      Size = 500
+      Size = 255
+    end
+    object cdsOrderExternalPrice: TStringField
+      FieldName = 'Price'
+      Size = 100
+    end
+    object cdsOrderExternalWeigth: TStringField
+      FieldName = 'Weigth'
+      Size = 100
+    end
+    object cdsOrderExternalStatus: TStringField
+      FieldName = 'Status'
+      Size = 200
+    end
+    object cdsOrderExternalimageEdit: TBlobField
+      FieldName = 'imageEdit'
+    end
+    object cdsOrderExternalimageDelete: TBlobField
+      FieldName = 'imageDelete'
     end
   end
 end
