@@ -30,61 +30,28 @@ BEGIN
       -- Результат
       IF vbPersonalId IS NOT NULL 
       THEN
-           CREATE TEMP TABLE tmpJuridical ON COMMIT DROP
-           AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-               FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
-                    JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner_PersonalTrade.ObjectId
-                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                   AND ObjectLink_Partner_Juridical.ChildObjectId IS NOT NULL
-               WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
-                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-              );
-           
-           IF inSyncDateIn > zc_DateStart()
-           THEN
-                RETURN QUERY
-                  WITH tmpProtocol AS (SELECT ObjectProtocol.ObjectId AS JuridicalId, MAX(ObjectProtocol.OperDate) AS MaxOperDate
-                                       FROM ObjectProtocol
-                                            JOIN Object AS Object_Juridical
-                                                        ON Object_Juridical.Id = ObjectProtocol.ObjectId
-                                                       AND Object_Juridical.DescId = zc_Object_Juridical() 
-                                       WHERE ObjectProtocol.OperDate > inSyncDateIn
-                                       GROUP BY ObjectProtocol.ObjectId
-                                      )
-                  SELECT Object_Juridical.Id
-                       , Object_Juridical.ObjectCode
-                       , Object_Juridical.ValueData
-                       , CAST(0.0 AS TFloat) AS DebtSum
-                       , CAST(0.0 AS TFloat) AS OverSum
-                       , CAST(0 AS Integer) AS OverDays
-                       , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , Object_Juridical.isErased
-                       , EXISTS(SELECT 1 FROM tmpJuridical WHERE tmpJuridical.JuridicalId = Object_Juridical.Id) AS isSync
-                  FROM Object AS Object_Juridical
-                       JOIN tmpProtocol ON tmpProtocol.JuridicalId = Object_Juridical.Id
-                       JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                       ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
-                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                  WHERE Object_Juridical.DescId = zc_Object_Juridical();
-           ELSE
-                RETURN QUERY
-                  SELECT Object_Juridical.Id
-                       , Object_Juridical.ObjectCode
-                       , Object_Juridical.ValueData
-                       , CAST(0.0 AS TFloat) AS DebtSum
-                       , CAST(0.0 AS TFloat) AS OverSum
-                       , CAST(0 AS Integer) AS OverDays
-                       , ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                       , Object_Juridical.isErased
-                       , CAST(true AS Boolean) AS isSync
-                  FROM Object AS Object_Juridical
-                       JOIN ObjectLink AS ObjectLink_Contract_Juridical
-                                       ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
-                                      AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                  WHERE Object_Juridical.DescId = zc_Object_Juridical()
-                    AND EXISTS(SELECT 1 FROM tmpJuridical WHERE tmpJuridical.JuridicalId = Object_Juridical.Id);
-           END IF;  
+           RETURN QUERY
+             SELECT DISTINCT Object_Juridical.Id
+                  , Object_Juridical.ObjectCode
+                  , Object_Juridical.ValueData
+                  , CAST(0.0 AS TFloat) AS DebtSum
+                  , CAST(0.0 AS TFloat) AS OverSum
+                  , CAST(0 AS Integer) AS OverDays
+                  , ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                  , Object_Juridical.isErased
+                  , CAST(true AS Boolean) AS isSync
+             FROM Object AS Object_Juridical
+                  JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                  ON ObjectLink_Contract_Juridical.ChildObjectId = Object_Juridical.Id
+                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                  JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                  ON ObjectLink_Partner_Juridical.ChildObjectId = Object_Juridical.Id
+                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                  JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                 AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId 
+             WHERE Object_Juridical.DescId = zc_Object_Juridical();
       END IF;
 
 END; 
