@@ -24,15 +24,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Juridical_isCorporate() RETURNS Inte
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectBoolean_Juridical_isCorporate', 'Признак главное юридическое лицо' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Juridical_isCorporate');
 
-CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsItem_isErased() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsItem_isErased'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
-  SELECT zc_Object_GoodsItem(), 'zc_ObjectBoolean_GoodsItem_isErased', 'Удален (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsItem_isErased');
-
-CREATE OR REPLACE FUNCTION zc_ObjectBoolean_GoodsItem_isArc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsItem_isArc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
-  SELECT zc_Object_GoodsItem(), 'zc_ObjectBoolean_GoodsItem_isArc', 'Архивный (да/нет)' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_GoodsItem_isArc');
-
-
 
   
 /*-------------------------------------------------------------------------------

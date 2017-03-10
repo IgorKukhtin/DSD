@@ -10,14 +10,14 @@ RETURNS TABLE (
              Id                   Integer
            , Code                 Integer
            , Name                 TVarChar
-           , GoodsItemGroupId         Integer
-           , GoodsItemGroupName       TVarChar
+           , GoodsGroupName       TVarChar
            , MeasureName          TVarChar
            , CompositionName      TVarChar
-           , GoodsItemInfoName        TVarChar
+           , GoodsInfoName        TVarChar
            , LineFabricaName      TVarChar
            , LabelName            TVarChar
            , GroupNameFull        TVarChar
+           , GoodsSizeName        TVarChar
            , isErased             boolean
  ) 
 AS
@@ -30,60 +30,70 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      -- определяется - может ли пользовать видеть весь справочник
      -- vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
-
+/*
+select *
+from Object_GoodsItem
+left join  Object AS Object_Goods on Object_Goods.Id = GoodsId
+left join  Object AS Object_GoodsSize on GoodsSize.Id = GoodsSizeId
+*/
      -- Результат
      RETURN QUERY 
        SELECT 
-             Object_GoodsItem.Id                AS Id
-           , Object_GoodsItem.ObjectCode        AS Code
-           , Object_GoodsItem.ValueData         AS Name
-           , Object_GoodsItemGroup.Id           AS GoodsItemGroupId
-           , Object_GoodsItemGroup.ValueData    AS GoodsItemGroupName
+             Object_Goods.Id                AS Id
+           , Object_Goods.ObjectCode        AS Code
+           , Object_Goods.ValueData         AS Name
+           , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName    
            , Object_Composition.ValueData   AS CompositionName
-           , Object_GoodsItemInfo.ValueData     AS GoodsItemInfoName
+           , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
            , Object_Label.ValueData         AS LabelName
            , Object_GroupNameFull.ValueData As GroupNameFull
-           , Object_GoodsItem.isErased          AS isErased
+           , Object_GoodsSize.ValueData     AS GoodsSizeName
+           , Object_Goods.isErased          AS isErased
            
-       FROM Object AS Object_GoodsItem
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_GoodsItemGroup
-                                 ON ObjectLink_GoodsItem_GoodsItemGroup.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_GoodsItemGroup.DescId = zc_ObjectLink_GoodsItem_GoodsItemGroup()
-            LEFT JOIN Object AS Object_GoodsItemGroup ON Object_GoodsItemGroup.Id = ObjectLink_GoodsItem_GoodsItemGroup.ChildObjectId
+       FROM Object_GoodsItem
 
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_Measure
-                                 ON ObjectLink_GoodsItem_Measure.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_Measure.DescId = zc_ObjectLink_GoodsItem_Measure()
-            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_GoodsItem_Measure.ChildObjectId
+            LEFT JOIN left join  Object AS Object_Goods on Object_Goods.Id = Object_GoodsItem.GoodsId 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_Composition
-                                 ON ObjectLink_GoodsItem_Composition.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_Composition.DescId = zc_ObjectLink_GoodsItem_Composition()
-            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = ObjectLink_GoodsItem_Composition.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_GoodsItemInfo
-                                 ON ObjectLink_GoodsItem_GoodsItemInfo.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_GoodsItemInfo.DescId = zc_ObjectLink_GoodsItem_GoodsItemInfo()
-            LEFT JOIN Object AS Object_GoodsItemInfo ON Object_GoodsItemInfo.Id = ObjectLink_GoodsItem_GoodsItemInfo.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Composition
+                                 ON ObjectLink_Goods_Composition.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Composition.DescId = zc_ObjectLink_Goods_Composition()
+            LEFT JOIN Object AS Object_Composition ON Object_Composition.Id = ObjectLink_Goods_Composition.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_LineFabrica
-                                 ON ObjectLink_GoodsItem_LineFabrica.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_LineFabrica.DescId = zc_ObjectLink_GoodsItem_LineFabrica()
-            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = ObjectLink_GoodsItem_LineFabrica.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsInfo
+                                 ON ObjectLink_Goods_GoodsInfo.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_GoodsInfo.DescId = zc_ObjectLink_Goods_GoodsInfo()
+            LEFT JOIN Object AS Object_GoodsInfo ON Object_GoodsInfo.Id = ObjectLink_Goods_GoodsInfo.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_GoodsItem_Label
-                                 ON ObjectLink_GoodsItem_Label.ObjectId = Object_GoodsItem.Id
-                                AND ObjectLink_GoodsItem_Label.DescId = zc_ObjectLink_GoodsItem_Label()
-            LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_GoodsItem_Label.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_LineFabrica
+                                 ON ObjectLink_Goods_LineFabrica.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_LineFabrica.DescId = zc_ObjectLink_Goods_LineFabrica()
+            LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = ObjectLink_Goods_LineFabrica.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Label
+                                 ON ObjectLink_Goods_Label.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Label.DescId = zc_ObjectLink_Goods_Label()
+            LEFT JOIN Object AS Object_Label ON Object_Label.Id = ObjectLink_Goods_Label.ChildObjectId
 
            LEFT JOIN ObjectString AS Object_GroupNameFull
-                                  ON Object_GroupNameFull.ObjectId = Object_GoodsItem.Id
-                                 AND Object_GroupNameFull.DescId = zc_ObjectString_GoodsItem_GroupNameFull()
+                                  ON Object_GroupNameFull.ObjectId = Object_Goods.Id
+                                 AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-     WHERE Object_GoodsItem.DescId = zc_Object_GoodsItem()
-              AND (Object_GoodsItem.isErased = FALSE OR inIsShowAll = TRUE)
+           left join  Object AS Object_GoodsSize on GoodsSize.Id = Object_GoodsItem.GoodsSizeId
+
+
+
+     WHERE  (Object_GoodsItem.isErased = FALSE OR inIsShowAll = TRUE)
 
     ;
 
@@ -95,10 +105,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
-09.03.17                                                           *
-03.03.17                                                           *
-24.02.17                                                           *
+10.03.17                                                           *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsItem (TRUE, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Goods (TRUE, zfCalc_UserAdmin())

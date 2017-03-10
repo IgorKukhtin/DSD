@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- Единица измерения
+    IN inId          Integer,       -- Товары
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar, MeasureId Integer, MeasureName TVarChar, CompositionId Integer, CompositionName TVarChar, GoodsInfoId Integer, GoodsInfoName TVarChar, LineFabricaId Integer, LineFabricaName TVarChar, LabalId Integer, LabelName TVarChar) 
