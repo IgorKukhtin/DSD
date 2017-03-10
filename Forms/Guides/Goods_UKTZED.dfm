@@ -25,6 +25,8 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 256
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,8 +42,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderHeight = 60
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clGoodsPlatformName: TcxGridDBColumn
@@ -77,7 +78,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 117
+        Width = 86
       end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
@@ -85,14 +86,14 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 35
       end
       object clCodeUKTZED: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044
         DataBinding.FieldName = 'CodeUKTZED'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 50
       end
       object CodeUKTZED_calc: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1088#1072#1089#1095#1077#1090')'
@@ -100,7 +101,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
       object CodeUKTZED_group: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1087#1086' '#1059#1050#1058' '#1047#1045#1044' ('#1075#1088#1091#1087#1087#1072')'
@@ -108,7 +109,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -116,7 +117,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 155
+        Width = 152
       end
       object clMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -124,7 +125,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 44
+        Width = 43
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
@@ -132,7 +133,78 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 31
+        Width = 43
+      end
+      object clTaxImport: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090'. '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'TaxImport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090#1080#1088#1086#1074#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
+        Width = 57
+      end
+      object TaxImport_calc: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090'. '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'TaxImport_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 59
+      end
+      object TaxImport_group: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090'. '#1090#1086#1074#1072#1088#1072' ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'TaxImport_group'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 61
+      end
+      object clDKPP: TcxGridDBColumn
+        Caption = #1059#1089#1083#1091#1075#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1044#1050#1055#1055
+        DataBinding.FieldName = 'DKPP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 61
+      end
+      object DKPP_calc: TcxGridDBColumn
+        Caption = #1059#1089#1083#1091#1075#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1044#1050#1055#1055' ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'DKPP_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 59
+      end
+      object DKPP_group: TcxGridDBColumn
+        Caption = #1059#1089#1083#1091#1075#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1044#1050#1055#1055' ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'DKPP_group'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 58
+      end
+      object clTaxAction: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'. '#1089'.-'#1093'. '#1087#1088#1086#1080#1079#1074'.'
+        DataBinding.FieldName = 'TaxAction'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090#1077#1083#1100#1085#1086#1089#1090#1080' '#1089#1077#1083#1100#1089#1082#1086'-'#1093#1086#1079#1103#1081#1089#1090#1074'. '#1090#1086#1074#1072#1088#1086#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1103' '
+        Width = 60
+      end
+      object TaxAction_calc: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'. '#1089'.-'#1093'. '#1087#1088#1086#1080#1079#1074'. ('#1088#1072#1089#1095#1077#1090')'
+        DataBinding.FieldName = 'TaxAction_calc'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 75
+      end
+      object TaxAction_group: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'. '#1089'.-'#1093'. '#1087#1088#1086#1080#1079#1074'. ('#1075#1088#1091#1087#1087#1072')'
+        DataBinding.FieldName = 'TaxAction_group'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object clBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
@@ -149,7 +221,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 84
       end
       object clInfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -175,7 +247,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 100
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -215,8 +287,8 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 80
-    Top = 88
+    Left = 64
+    Top = 160
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -333,8 +405,8 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 136
-    Top = 96
+    Left = 208
+    Top = 288
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -465,10 +537,10 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateCodeUKTZED
+      StoredProc = spUpdateParams
       StoredProcList = <
         item
-          StoredProc = spUpdateCodeUKTZED
+          StoredProc = spUpdateParams
         end>
       Caption = 'actUpdateDataSource'
       DataSource = DataSource
@@ -540,7 +612,7 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
     Left = 232
     Top = 184
   end
-  object spUpdateCodeUKTZED: TdsdStoredProc
+  object spUpdateParams: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_Goods_UKTZED'
     DataSets = <>
     OutputType = otResult
@@ -558,6 +630,33 @@ object Goods_UKTZEDForm: TGoods_UKTZEDForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'CodeUKTZED'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxImport'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'TaxImport'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDKPP'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'DKPP'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxAction'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'TaxAction'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

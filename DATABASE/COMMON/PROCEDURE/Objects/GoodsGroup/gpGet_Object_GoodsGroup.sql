@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
+             , TaxImport TVarChar, DKPP TVarChar, TaxAction TVarChar
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -30,6 +31,10 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_GoodsGroup()) AS Code
            , CAST ('' as TVarChar)  AS CodeUKTZED
            , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS TaxImport
+           , CAST ('' as TVarChar)  AS DKPP
+           , CAST ('' as TVarChar)  AS TaxAction
+
            , CAST (0 as Integer)    AS ParentId
            , CAST ('' as TVarChar)  AS ParentName
            , CAST (0 as Integer)    AS GroupStatId
@@ -55,6 +60,11 @@ BEGIN
            , Object_GoodsGroup.ObjectCode    AS Code
            , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
            , Object_GoodsGroup.ValueData     AS Name
+
+           , COALESCE (ObjectString_GoodsGroup_TaxImport.ValueData,'') :: TVarChar AS TaxImport
+           , COALESCE (ObjectString_GoodsGroup_DKPP.ValueData,'')      :: TVarChar AS DKPP
+           , COALESCE (ObjectString_GoodsGroup_TaxAction.ValueData,'') :: TVarChar AS TaxAction
+
            , GoodsGroup.Id            AS ParentId
            , GoodsGroup.ValueData     AS ParentName
            , GoodsGroupStat.Id        AS GroupStatId
@@ -115,6 +125,17 @@ BEGIN
                                   ON ObjectString_GoodsGroup_UKTZED.ObjectId = Object_GoodsGroup.Id 
                                  AND ObjectString_GoodsGroup_UKTZED.DescId = zc_ObjectString_GoodsGroup_UKTZED()
 
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_TaxImport
+                                  ON ObjectString_GoodsGroup_TaxImport.ObjectId = Object_GoodsGroup.Id
+                                 AND ObjectString_GoodsGroup_TaxImport.DescId = zc_ObjectString_GoodsGroup_TaxImport()
+
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_DKPP
+                                  ON ObjectString_GoodsGroup_DKPP.ObjectId = Object_GoodsGroup.Id
+                                 AND ObjectString_GoodsGroup_DKPP.DescId = zc_ObjectString_GoodsGroup_DKPP()
+       
+           LEFT JOIN ObjectString AS ObjectString_GoodsGroup_TaxAction
+                                  ON ObjectString_GoodsGroup_TaxAction.ObjectId = Object_GoodsGroup.Id
+                                 AND ObjectString_GoodsGroup_TaxAction.DescId = zc_ObjectString_GoodsGroup_TaxAction()
            
        WHERE Object_GoodsGroup.Id = inId;
    END IF;
@@ -128,6 +149,7 @@ ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.03.17         * 
  24.11.14         * add GoodsGroupAnalyst
  15.09.14         * add GoodsTag
  11.09.14         * add TradeMark
