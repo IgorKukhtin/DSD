@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner_Mobile (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner_Mobile (
-     IN inPersonalTradeId   Integer  , -- физ.лицо
+     IN inMemberId   Integer  , -- физ.лицо
      IN inisShowAll         Boolean  , --
      IN inSession           TVarChar   -- сессия пользователя
 )
@@ -39,15 +39,15 @@ RETURNS TABLE (Id              Integer
 AS 
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPersonalTradeId Integer;
+   DECLARE vbMemberId Integer;
    DECLARE calcSession TVarChar;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
       vbUserId:= lpGetUserBySession (inSession);
 
-     vbPersonalTradeId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inPersonalTradeId,0) <> 0 AND COALESCE(vbPersonalTradeId,0) <> inPersonalTradeId)
+     vbMemberId:= (SELECT tmp.MemberId FROM gpGetMobile_Object_Const (inSession) AS tmp);
+     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
         THEN
             RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
      END IF;
@@ -55,7 +55,7 @@ BEGIN
      calcSession := (SELECT CAST (ObjectLink_User_Member.ObjectId AS TVarChar) 
                        FROM ObjectLink AS ObjectLink_User_Member
                        WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                         AND ObjectLink_User_Member.ChildObjectId = vbPersonalTradeId);
+                         AND ObjectLink_User_Member.ChildObjectId = vbMemberId);
 
       RETURN QUERY
           SELECT tmpMobilePartner.Id
@@ -114,4 +114,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Partner_Mobile(inSyncDateIn := zc_DateStart(), inSession := zfCalc_UserAdmin())
---select * from gpSelect_Object_Partner_Mobile(inPersonalTradeId := 149833 , inisShowAll := 'False' ,  inSession := '5');
+--select * from gpSelect_Object_Partner_Mobile(inMemberId := 149833 , inisShowAll := 'False' ,  inSession := '5');

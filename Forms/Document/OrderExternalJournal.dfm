@@ -811,7 +811,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalTradeId'
+        Name = 'inMemberId'
         Value = Null
         Component = PersonalTradeGuides
         ComponentItem = 'Key'
