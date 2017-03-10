@@ -159,8 +159,6 @@ type
     qryPartnerId: TIntegerField;
     qryPartnerCONTRACTID: TIntegerField;
     qryPartnerContractName: TWideStringField;
-    qryPartnerimAddress: TLargeintField;
-    qryPartnerimContract: TLargeintField;
     qryPartnerPRICELISTID: TIntegerField;
     qryPartnerGPSN: TFloatField;
     qryPartnerGPSE: TFloatField;
@@ -274,9 +272,16 @@ type
     cdsOrderExternalPrice: TStringField;
     cdsOrderExternalWeigth: TStringField;
     cdsOrderExternalStatus: TStringField;
-    cdsOrderExternalid: TIntegerField;
+    cdsOrderExternalId: TIntegerField;
     cdsOrderExternalimageEdit: TBlobField;
     cdsOrderExternalimageDelete: TBlobField;
+    cdsOrderExternalOperDate: TDateField;
+    cdsOrderItemsId: TIntegerField;
+    tblMovement_Path: TFDTable;
+    AutoIncField1: TAutoIncField;
+    tblMovement_PathGPSN: TFloatField;
+    tblMovement_PathGPSE: TFloatField;
+    tblMovement_PathDateInsert: TDateTimeField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -299,7 +304,10 @@ type
 
     procedure DefaultOrderExternal;
     procedure AddedGoodsToOrderExternal(AGoods : string);
-    function SaveOrderExternal(OperDate: TDate; ToralPrice, TotalWeight: Currency; var ErrorMessage : string) : boolean;
+    function SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
+      ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
+    procedure LoadOrderExternal(AId : string = '');
+    procedure LoadOrderExtrenalItems(AId : integer);
 
     property Connected: Boolean read FConnected;
   end;
@@ -683,7 +691,7 @@ begin
   FConnected := Connect;
 
   cdsOrderItems.CreateDataSet;
-  cdsOrderItems.Open;
+  cdsOrderExternal.CreateDataSet;
 end;
 
 function TDM.SynchronizeWithMainDatabase : string;
@@ -902,18 +910,21 @@ procedure TDM.DefaultOrderExternal;
 var
   qryGoodsListSale : TFDQuery;
 begin
+  cdsOrderItems.Open;
+  cdsOrderItems.EmptyDataSet;
+
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
-    qryGoodsListSale.SQL.Text := 'select G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT ' +
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
+      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'' ' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.ID AND GLK.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0 ' +
+      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.GOODSID AND GLK.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0 ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + DM.qryPartnerPRICELISTID.AsString + ' ' +
-      'WHERE GLS.PARTNERID = ' + DM.qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
+      'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
 
@@ -937,28 +948,30 @@ var
 begin
   ArrValue := AGoods.Split([';']);
 
-  DM.cdsOrderItems.Append;
-  DM.cdsOrderItemsGoodsId.AsString := ArrValue[0];   // GoodsId
-  DM.cdsOrderItemsKindId.AsString := ArrValue[1];    // KindId
-  DM.cdsOrderItemsName.AsString := ArrValue[2];      // название товара
-  DM.cdsOrderItemsType.AsString := ArrValue[3];      // вид товара
-  DM.cdsOrderItemsForecast.AsString := ArrValue[4];  // рекомендуемое количество
-  DM.cdsOrderItemsRemains.AsString := ArrValue[5];   // остаток товара
-  DM.cdsOrderItemsPrice.AsString := ArrValue[6];     // цена
-  DM.cdsOrderItemsMeasure.AsString := ' ' + ArrValue[7];   // единица измерения
-  DM.cdsOrderItemsWeight.AsString := ArrValue[8];         // вес
+  cdsOrderItems.Append;
+  cdsOrderItemsId.AsString := ArrValue[0];
+  cdsOrderItemsGoodsId.AsString := ArrValue[1];   // GoodsId
+  cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
+  cdsOrderItemsName.AsString := ArrValue[3];      // название товара
+  cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
+  cdsOrderItemsForecast.AsString := ArrValue[5];  // рекомендуемое количество
+  cdsOrderItemsRemains.AsString := ArrValue[6];   // остаток товара
+  cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
+  cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
+  cdsOrderItemsWeight.AsString := ArrValue[9];         // вес
 
-  DM.cdsOrderItemsCount.AsString := '0';             // количество по умолчанию
+  cdsOrderItemsCount.AsString := ArrValue[10];             // количество по умолчанию
   // кнопка удалить
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  DM.cdsOrderItemsDelImage.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
+  cdsOrderItemsDelImage.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
   {$ELSE}
-  DM.cdsOrderItemsDelImage.LoadFromFile('remove.png');
+  cdsOrderItemsDelImage.LoadFromFile('remove.png');
   {$ENDIF}
-  DM.cdsOrderItems.Post;
+  cdsOrderItems.Post;
 end;
 
-function TDM.SaveOrderExternal(OperDate: TDate; ToralPrice, TotalWeight: Currency; var ErrorMessage : string) : boolean;
+function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
+  ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
 var
   GlobalId : TGUID;
   i, MovementId, NewInvNumber : integer;
@@ -966,79 +979,244 @@ var
 begin
   Result := false;
 
-  qryMaxInvNumber := TFDQuery.Create(nil);
-  try
-    qryMaxInvNumber.Connection := DM.conMain;
-    qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
-    if qryMaxInvNumber.RecordCount > 0 then
-      NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1
-    else
-      NewInvNumber := 1;
-  finally
-    FreeAndNil(qryMaxInvNumber);
+  if OldOrderExternalId = '' then
+  begin
+    qryMaxInvNumber := TFDQuery.Create(nil);
+    try
+      qryMaxInvNumber.Connection := conMain;
+      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
+      if qryMaxInvNumber.RecordCount > 0 then
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1
+      else
+        NewInvNumber := 1;
+    finally
+      FreeAndNil(qryMaxInvNumber);
+    end;
   end;
 
-  DM.conMain.StartTransaction;
+  conMain.StartTransaction;
   try
-    DM.tblMovement_OrderExternal.Open;
+    tblMovement_OrderExternal.Open;
 
-    DM.tblMovement_OrderExternal.Append;
+    if OldOrderExternalId = '' then
+    begin
+      tblMovement_OrderExternal.Append;
 
-    CreateGUID(GlobalId);
-    DM.tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-    DM.tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
-    DM.tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
-    DM.tblMovement_OrderExternalStatusId.AsInteger := DM.tblObject_ConstStatusId_Complete.AsInteger;
-    DM.tblMovement_OrderExternalPartnerId.AsInteger := DM.qryPartnerId.AsInteger;
-    DM.tblMovement_OrderExternalPaidKindId.AsInteger := DM.qryPartnerPaidKindId.AsInteger;
-    DM.tblMovement_OrderExternalContractId.AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
-    DM.tblMovement_OrderExternalPriceListId.AsInteger := DM.qryPartnerPRICELISTID.AsInteger;
-    DM.tblMovement_OrderExternalPriceWithVAT.AsBoolean := DM.qryPartnerPriceWithVAT.AsBoolean;
-    DM.tblMovement_OrderExternalVATPercent.AsFloat := DM.qryPartnerVATPercent.AsFloat;
-    DM.tblMovement_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
-    DM.tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
-    DM.tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
-    DM.tblMovement_OrderExternalInsertDate.AsDateTime := Now();
-    DM.tblMovement_OrderExternalisSync.AsBoolean := false;
+      CreateGUID(GlobalId);
+      tblMovement_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+      tblMovement_OrderExternalInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
+      tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_OrderExternalPartnerId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_OrderExternalPaidKindId.AsInteger := qryPartnerPaidKindId.AsInteger;
+      tblMovement_OrderExternalContractId.AsInteger := qryPartnerCONTRACTID.AsInteger;
+      tblMovement_OrderExternalPriceListId.AsInteger := qryPartnerPRICELISTID.AsInteger;
+      tblMovement_OrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+      tblMovement_OrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+      tblMovement_OrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+      tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
+      tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
+      tblMovement_OrderExternalInsertDate.AsDateTime := Now();
+      tblMovement_OrderExternalisSync.AsBoolean := false;
 
-    DM.tblMovement_OrderExternal.Post;
+      tblMovement_OrderExternal.Post;
+      {??? Возможно есть лучший способ получения значения Id новой записи }
+      tblMovement_OrderExternal.Refresh;
+      tblMovement_OrderExternal.Last;
+      {???}
+      MovementId := tblMovement_OrderExternalId.AsInteger;
+    end
+    else
+    begin
+      if tblMovement_OrderExternal.Locate('Id', OldOrderExternalId) then
+      begin
+        tblMovement_OrderExternal.Edit;
 
-    DM.tblMovement_OrderExternal.Refresh;
-    MovementId := DM.tblMovement_OrderExternalId.AsInteger;
+        tblMovement_OrderExternalOperDate.AsDateTime := OperDate;
+        tblMovement_OrderExternalStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_OrderExternalPriceWithVAT.AsBoolean := qryPartnerPriceWithVAT.AsBoolean;
+        tblMovement_OrderExternalVATPercent.AsFloat := qryPartnerVATPercent.AsFloat;
+        tblMovement_OrderExternalChangePercent.AsFloat := qryPartnerChangePercent.AsFloat;
+        tblMovement_OrderExternalTotalCountKg.AsFloat := TotalWeight;
+        tblMovement_OrderExternalTotalSumm.AsFloat := ToralPrice;
 
-    DM.tblMovementItem_OrderExternal.Open;
+        tblMovement_OrderExternal.Post;
 
-    with DM.cdsOrderItems do
+        MovementId := StrToInt(OldOrderExternalId);
+      end
+      else
+      begin
+        ErrorMessage := 'Ошибка работы с БД: не найдена редактируемая заявка';
+        exit;
+      end;
+    end;
+
+    tblMovementItem_OrderExternal.Open;
+
+    with cdsOrderItems do
     begin
       First;
       while not EOF do
       begin
-        DM.tblMovementItem_OrderExternal.Append;
+        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        begin
+          tblMovementItem_OrderExternal.Append;
 
-        DM.tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
-        CreateGUID(GlobalId);
-        DM.tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
-        DM.tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
-        DM.tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
-        DM.tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
-        DM.tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
-        DM.tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
+          tblMovementItem_OrderExternalMovementId.AsInteger := MovementId;
+          CreateGUID(GlobalId);
+          tblMovementItem_OrderExternalGUID.AsString := GUIDToString(GlobalId);
+          tblMovementItem_OrderExternalGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+          tblMovementItem_OrderExternalGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
+          tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
 
-        DM.tblMovementItem_OrderExternal.Post;
+          tblMovementItem_OrderExternal.Post;
+        end
+        else
+        begin
+          if tblMovementItem_OrderExternal.Locate('Id', FieldbyName('Id').AsInteger) then
+          begin
+            tblMovementItem_OrderExternal.Edit;
+
+            tblMovementItem_OrderExternalChangePercent.AsFloat := DM.qryPartnerChangePercent.AsFloat;
+            tblMovementItem_OrderExternalAmount.AsFloat := FieldbyName('Count').AsFloat;
+            tblMovementItem_OrderExternalPrice.AsFloat := FieldbyName('Price').AsFloat;
+
+            tblMovementItem_OrderExternal.Post;
+          end;
+        end;
 
         Next;
       end;
     end;
 
-    DM.conMain.Commit;
+    if DelItems <> '' then
+      conMain.ExecSQL('delete from MOVEMENTITEM_ORDEREXTERNAL where ID in (' + DelItems + ')');
+
+    conMain.Commit;
+
+    if OldOrderExternalId = '' then
+      LoadOrderExternal(IntToStr(MovementId))
+    else
+    begin
+      cdsOrderExternal.Edit;
+
+      cdsOrderExternalOperDate.AsDateTime := OperDate;
+      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', OperDate);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', ToralPrice);
+      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', TotalWeight);
+      cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+
+      cdsOrderExternal.Post;
+    end;
 
     Result := true;
   except
     on E : Exception do
     begin
-      DM.conMain.Rollback;
+      conMain.Rollback;
       ErrorMessage := E.Message;
     end;
+  end;
+end;
+
+procedure TDM.LoadOrderExternal(AId : string = '');
+var
+  qryOrderExternal : TFDQuery;
+begin
+  if AId = '' then
+  begin
+    cdsOrderExternal.Open;
+    cdsOrderExternal.EmptyDataSet;
+  end;
+
+  qryOrderExternal := TFDQuery.Create(nil);
+  try
+    qryOrderExternal.Connection := conMain;
+    qryOrderExternal.SQL.Text := 'select ID, OPERDATE, TOTALCOUNTKG, TOTALSUMM, ISSYNC, STATUSID' +
+      ' from MOVEMENT_ORDEREXTERNAL' +
+      ' where PARTNERID = ' + qryPartnerId.AsString + ' and CONTRACTID = ' + qryPartnerCONTRACTID.AsString +
+      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
+    if AId <> '' then
+      qryOrderExternal.SQL.Text := qryOrderExternal.SQL.Text + ' and ID = ' + AId;
+
+    qryOrderExternal.Open;
+    cdsOrderExternal.Open;
+
+    qryOrderExternal.First;
+    while not qryOrderExternal.EOF do
+    begin
+      cdsOrderExternal.Append;
+      cdsOrderExternalid.AsInteger := qryOrderExternal.FieldByName('ID').AsInteger;
+      cdsOrderExternalOperDate.AsDateTime := qryOrderExternal.FieldByName('OPERDATE').AsDateTime;
+      cdsOrderExternalName.AsString := 'Заявка на ' + FormatDateTime('DD.MM.YYYY', qryOrderExternal.FieldByName('OPERDATE').AsDateTime);
+      cdsOrderExternalPrice.AsString :=  'Стоимость: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALSUMM').AsFloat);
+      cdsOrderExternalWeigth.AsString := 'Вес: ' + FormatFloat('0.00', qryOrderExternal.FieldByName('TOTALCOUNTKG').AsFloat);
+
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryOrderExternal.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsOrderExternalStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsOrderExternalStatus.AsString := 'Статус: Неизвестный';
+
+      // кнопки удалить и редактировать
+      {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+      cdsOrderExternalimageDelete.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
+      cdsOrderExternalimageEdit.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'edit.png'));
+      {$ELSE}
+      cdsOrderExternalimageDelete.LoadFromFile('remove.png');
+      cdsOrderExternalimageEdit.LoadFromFile('edit.png');
+      {$ENDIF}
+
+      cdsOrderExternal.Post;
+
+      qryOrderExternal.Next;
+    end;
+
+    qryOrderExternal.Close;
+  finally
+    qryOrderExternal.Free;
+  end;
+end;
+
+procedure TDM.LoadOrderExtrenalItems(AId : integer);
+var
+  qryGoodsListSale : TFDQuery;
+begin
+  cdsOrderItems.Open;
+  cdsOrderItems.EmptyDataSet;
+
+  qryGoodsListSale := TFDQuery.Create(nil);
+  try
+    qryGoodsListSale.Connection := conMain;
+    qryGoodsListSale.SQL.Text := 'select IEO.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
+      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IEO.AMOUNT ' +
+      'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
+      'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID AND GK.ISERASED = 0 ' +
+      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = IEO.GOODSID AND GLK.GOODSKINDID = IEO.GOODSKINDID AND GLK.ISERASED = 0 ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
+      'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
+
+    qryGoodsListSale.Open;
+
+    qryGoodsListSale.First;
+    while not qryGoodsListSale.EOF do
+    begin
+      AddedGoodsToOrderExternal(qryGoodsListSale.Fields[0].AsString);
+
+      qryGoodsListSale.Next;
+    end;
+
+    qryGoodsListSale.Close;
+  finally
+    qryGoodsListSale.Free;
   end;
 end;
 
