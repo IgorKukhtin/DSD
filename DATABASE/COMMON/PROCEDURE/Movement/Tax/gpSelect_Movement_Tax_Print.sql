@@ -487,8 +487,11 @@ BEGIN
           AND MovementItem.isErased   = FALSE
           AND MovementItem.Amount     <> 0
        )
-    , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-    , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
     , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
@@ -583,6 +586,24 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData
+                  WHEN tmpTaxImport.TaxImport <> '' THEN tmpTaxImport.TaxImport
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeTaxImport
+
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData
+                  WHEN tmpDKPP.DKPP <> '' THEN tmpDKPP.DKPP
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeDKPP
+
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData
+                  WHEN tmpTaxAction.TaxAction <> '' THEN tmpTaxAction.TaxAction
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeTaxAction
+
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
                         THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
@@ -665,12 +686,24 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpDKPP ON tmpDKPP.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = tmpMI.GoodsGroupId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
+                                   ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
+            LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
+                                   ON ObjectString_Goods_DKPP.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
+            LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
+                                   ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -796,6 +829,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.03.17         *
  06.01.17         * GoodsCodeUKTZED
  29.01.16         *
  21.04.15                        * add MovementDate_COMDOC
