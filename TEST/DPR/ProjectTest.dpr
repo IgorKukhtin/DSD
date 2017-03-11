@@ -907,7 +907,9 @@ uses
   OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   MemberEdit in '..\..\Forms\Guides\MemberEdit.pas' {MemberEditForm: TParentForm},
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
-  MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm};
+  MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm},
+  MobileGoodsByGoodsKind_Object in '..\..\Forms\Guides\MobileGoodsByGoodsKind_Object.pas' {MobileGoodsByGoodsKind_ObjectForm: TParentForm},
+  MobileGoodsListSale_Object in '..\..\Forms\Guides\MobileGoodsListSale_Object.pas' {MobileGoodsListSale_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

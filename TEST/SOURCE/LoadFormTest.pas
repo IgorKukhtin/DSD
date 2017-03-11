@@ -2289,6 +2289,12 @@ procedure TLoadFormTest.LoadMobileProjectFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobilePartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMobilePartner_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileGoodsByGoodsKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileGoodsByGoodsKind_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMobileGoodsListSale_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMobileGoodsListSale_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadModelServiceFormTest;

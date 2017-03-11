@@ -26,7 +26,8 @@ uses
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
   Androidapi.JNI.GraphicsContentViewText,
-  Androidapi.JNI.JavaTypes
+  Androidapi.JNI.JavaTypes,
+  AndroidApi.JNI.WebKit
   {$ENDIF};
 
 const
@@ -113,7 +114,7 @@ type
     bVisit: TButton;
     Image2: TImage;
     Label5: TLabel;
-    pMap: TPanel;
+    pMapScreen: TPanel;
     WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding;
     WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
     vsbMain: TVertScrollBox;
@@ -162,7 +163,6 @@ type
     tiPriceList: TTabItem;
     lwPriceList: TListView;
     ilOrder: TImageList;
-    bsPriceList: TBindSourceDB;
     Image9: TImage;
     tiPriceListItems: TTabItem;
     lwGoods: TListView;
@@ -185,7 +185,6 @@ type
     Label22: TLabel;
     lGoodsPrice: TLabel;
     pPartnerActions: TPanel;
-    bOrderExternal: TButton;
     bStartVisit: TButton;
     tiOrderExternal: TTabItem;
     VertScrollBox3: TVertScrollBox;
@@ -288,6 +287,18 @@ type
     iPartnerMap: TImage;
     lwOrderExternal: TListView;
     LinkListControlToField4: TLinkListControlToField;
+    bsPriceList: TBindSourceDB;
+    BindSourceDB1: TBindSourceDB;
+    LinkListControlToField5: TLinkListControlToField;
+    Panel7: TPanel;
+    bOrderExternal: TButton;
+    bSetPartnerCoordinate: TButton;
+    Image11: TImage;
+    pMap: TPanel;
+    bShowBigMap: TButton;
+    Image12: TImage;
+    bShowPath: TButton;
+    tPath: TTimer;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -344,7 +355,12 @@ type
       AValue: string; var Accept: Boolean);
     procedure bMinusAmountClick(Sender: TObject);
     procedure tMapToImageTimer(Sender: TObject);
-    procedure iPartnerMapDblClick(Sender: TObject);
+    procedure lwOrderExternalItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure bSetPartnerCoordinateClick(Sender: TObject);
+    procedure bShowBigMapClick(Sender: TObject);
+    procedure tPathTimer(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -358,7 +374,9 @@ type
     FKBBounds: TRectF;
     FNeedOffset: Boolean;
 
+    OldOrderExternalId : string;
     FCheckedOI: TList<String>;
+    FDeletedOI: TList<Integer>;
     FOrderTotalCountKg : Currency;
     FOrderTotalPrice : Currency;
 
@@ -366,6 +384,8 @@ type
     CameraComponent : TCameraComponent;
 
     procedure BackResult(const AResult: TModalResult);
+    procedure DeleteOrderExtrernal(const AResult: TModalResult);
+    procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     procedure UpdateKBBounds;
     procedure RestorePosition;
@@ -375,6 +395,7 @@ type
     //function GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
     procedure WebGMapDownloadFinish(Sender: TObject);
     procedure ShowBigMap;
+    procedure GetMapPartnerScreenshot(SetCordinate: boolean; Coordinates: TLocationCoord2D);
 
     procedure Wait(AWait: Boolean);
     procedure CheckDataBase;
@@ -395,7 +416,7 @@ type
     procedure PlayAudio;
     procedure CameraComponentSampleBufferReady(Sender: TObject; const ATime: TMediaTime);
 
-    function GetCurrentCoordinates : boolean;
+    procedure GetCurrentCoordinates;
   public
     { Public declarations }
   end;
@@ -429,10 +450,21 @@ begin
     ScreenService.SetScreenOrientation(OrientSet);
   end;
   {$ENDIF}
+
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  bAddedPhoto.Visible := true;
+  bSetPartnerCoordinate.Visible := true;
+  {$ELSE}
+  bAddedPhoto.Visible := false;
+  bSetPartnerCoordinate.Visible := false;
+  {$ENDIF}
+
   FFormsStack := TStack<TFormStackItem>.Create;
   FMarkerList := TList<TLocationCoord2D>.Create;
   FCheckedOI := TList<String>.Create;
+  FDeletedOI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
+
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(tcMain);
 end;
@@ -442,6 +474,7 @@ begin
   FFormsStack.Free;
   FMarkerList.Free;
   FCheckedOI.Free;
+  FDeletedOI.Free;
 end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
@@ -585,7 +618,11 @@ begin
 
   if ItemObject.Name = 'DeleteButton' then
   begin
+    if DM.cdsOrderItemsId.AsInteger <> -1 then
+
     DM.cdsOrderItems.Delete;
+
+
     RecalculateTotalPriceAndWeight;
   end;
 
@@ -595,6 +632,39 @@ begin
     lMeasure.Text := DM.cdsOrderItemsMeasure.AsString;
 
     ppEnterAmount.IsOpen := true;
+  end;
+end;
+
+procedure TfrmMain.lwOrderExternalItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if ItemObject = nil then
+    exit;
+
+  if ItemObject.Name = 'Delete' then
+  begin
+    MessageDlg('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
+               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
+               DeleteOrderExtrernal);
+  end;
+
+  if ItemObject.Name = 'Edit' then
+  begin
+    if DM.qryPartnerPriceWithVAT.AsBoolean then
+      lOrderPrice.Text := 'Цена (с НДС)'
+    else
+      lOrderPrice.Text := 'Цена (без НДС)';
+
+    DM.LoadOrderExtrenalItems(DM.cdsOrderExternalId.AsInteger);
+    FDeletedOI.Clear;
+
+    RecalculateTotalPriceAndWeight;
+
+    OldOrderExternalId := DM.cdsOrderExternalId.AsString;
+    deOperDate.Date := DM.cdsOrderExternalOperDate.AsDateTime;
+
+    SwitchToForm(tiOrderExternal, nil);
   end;
 end;
 
@@ -659,12 +729,58 @@ begin
     ReturnPriorForm;
 end;
 
+procedure TfrmMain.DeleteOrderExtrernal(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.conMain.ExecSQL('update MOVEMENT_ORDEREXTERNAL set STATUSID = ' + DM.tblObject_ConstStatusId_Erased.AsString +
+      ' where ID = ' + DM.cdsOrderExternalId.AsString);
+
+    DM.cdsOrderExternal.Delete;
+  end;
+end;
+
+procedure TfrmMain.SetPartnerCoordinates(const AResult: TModalResult);
+var
+  Id, ContractId : integer;
+begin
+  if AResult = mrYes then
+  begin
+    GetCurrentCoordinates;
+    if FCurCoordinatesSet then
+    begin
+      DM.conMain.ExecSQL('update OBJECT_PARTNER set GPSN = ' + FloatToStr(FCurCoordinates.Latitude) +
+        ', GPSE = ' + FloatToStr(FCurCoordinates.Longitude) +
+        ' where ID = ' + DM.qryPartnerId.AsString + ' and CONTRACTID = ' + DM.qryPartnerCONTRACTID.AsString);
+      Id := DM.qryPartnerId.AsInteger;
+      ContractId := DM.qryPartnerCONTRACTID.AsInteger;
+      DM.qryPartner.Refresh;
+      DM.qryPartner.Locate('Id;ContractId', VarArrayOf([Id, ContractId]), []);
+
+      FMarkerList.Clear;
+      FMarkerList.Add(FCurCoordinates);
+      GetMapPartnerScreenshot(true, FCurCoordinates);
+    end
+    else
+      ShowMessage('Не удалось получить текущие координаты');
+  end;
+end;
+
 procedure TfrmMain.sbBackClick(Sender: TObject);
+var
+  Mes : string;
 begin
   if tcMain.ActiveTab = tiOrderExternal then
-    MessageDlg('Удалить эту заявку?',
+  begin
+    if OldOrderExternalId = '' then
+      Mes := 'Удалить эту заявку?'
+    else
+      Mes := 'Выйти из редактирования без сохранения?';
+
+    MessageDlg(Mes,
                System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
-               BackResult)
+               BackResult);
+  end
   else
     ReturnPriorForm;
 end;
@@ -677,7 +793,7 @@ end;
 
 procedure TfrmMain.bAddedPhotoClick(Sender: TObject);
 begin
-  SwitchToForm(tiCamera, nil);
+  PrepareCamera;
 end;
 
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
@@ -751,7 +867,9 @@ begin
   else
     lOrderPrice.Text := 'Цена (без НДС)';
 
+  OldOrderExternalId := '';
   DM.DefaultOrderExternal;
+  FDeletedOI.Clear;
 
   RecalculateTotalPriceAndWeight;
 
@@ -781,7 +899,7 @@ end;
 
 procedure TfrmMain.bSaveOIClick(Sender: TObject);
 var
-  i : integer;
+  i: integer;
 begin
   for i := 0 to FCheckedOI.Count - 1 do
     DM.AddedGoodsToOrderExternal(FCheckedOI[i]);
@@ -794,9 +912,19 @@ end;
 
 procedure TfrmMain.bSaveOrderExternalClick(Sender: TObject);
 var
-  ErrMes : string;
+  i : integer;
+  ErrMes: string;
+  DelItems: string;
 begin
-   if DM.SaveOrderExternal(deOperDate.Date, FOrderTotalPrice, FOrderTotalCountKg, ErrMes) then
+   DelItems := '';
+   if FDeletedOI.Count > 0 then
+   begin
+     DelItems := IntToStr(FDeletedOI[0]);
+     for i := 1 to FDeletedOI.Count - 1 do
+       DelItems := ',' + IntToStr(FDeletedOI[i]);
+   end;
+
+   if DM.SaveOrderExternal(OldOrderExternalId, deOperDate.Date, FOrderTotalPrice, FOrderTotalCountKg, DelItems, ErrMes) then
    begin
      ShowMessage('Сохранение заявки прошло успешно.');
      ReturnPriorForm;
@@ -878,6 +1006,24 @@ begin
   ReturnPriorForm;
 end;
 
+procedure TfrmMain.bSetPartnerCoordinateClick(Sender: TObject);
+var
+  Mes : string;
+begin
+  if (DM.qryPartnerGPSN.AsFloat <> 0) and (DM.qryPartnerGPSE.AsFloat <> 0) then
+    Mes := 'Изменить прежние координаты ТТ на текущие?'
+  else
+    Mes := 'Назназить ТТ текущие координаты?';
+
+  MessageDlg(Mes, System.UITypes.TMsgDlgType.mtWarning,
+    [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0, SetPartnerCoordinates);
+end;
+
+procedure TfrmMain.bShowBigMapClick(Sender: TObject);
+begin
+  ShowBigMap;
+end;
+
 procedure TfrmMain.Button1Click(Sender: TObject);
 begin
   DM.qryPartnerPhotos.Close;
@@ -901,13 +1047,60 @@ begin
 end;
 
 procedure TfrmMain.tMapToImageTimer(Sender: TObject);
+{$IFDEF ANDROID}
+var
+  pic: JPicture;
+  bmp: JBitmap;
+  c: JCanvas;
+  fos: JFileOutputStream;
+  fn: string;
+{$ENDIF}
 begin
   tMapToImage.Enabled := false;
 
+  {$IFDEF ANDROID}
+  fn := TPath.GetDocumentsPath + PathDelim + 'mapscreen.jpg';
+  pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
+  bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
+  c := TJCanvas.JavaClass.init(bmp);
+  pic.draw(c);
+  fos := TJFileOutputStream.JavaClass.init(StringToJString(fn));
+  if Assigned(fos) then
+  begin
+    bmp.compress(TJBitmap_CompressFormat.JavaClass.JPEG, 100, fos);
+    fos.close;
+  end;
+  iPartnerMap.Bitmap.LoadFromFile(fn);
+  {$ELSE}
   iPartnerMap.Bitmap.Assign(FWebGMap.MakeScreenshot);
+  {$ENDIF}
+
+  pMap.Visible := false;
+  pMapScreen.Visible := true;
   FWebGMap.Visible := false;
   FreeAndNil(FWebGMap);
-  iPartnerMap.Visible := true;
+end;
+
+procedure TfrmMain.tPathTimer(Sender: TObject);
+begin
+  tPath.Enabled := false;
+  try
+    GetCurrentCoordinates;
+    if FCurCoordinatesSet then
+    begin
+      DM.tblMovement_Path.Open;
+
+      DM.tblMovement_Path.Append;
+      DM.tblMovement_PathGPSN.AsFloat := FCurCoordinates.Latitude;
+      DM.tblMovement_PathGPSE.AsFloat := FCurCoordinates.Longitude;
+      DM.tblMovement_PathDateInsert.AsDateTime := Now();
+      DM.tblMovement_Path.Post;
+
+      DM.tblMovement_Path.Close;
+    end;
+  finally
+    tPath.Enabled := true;
+  end;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
@@ -1045,6 +1238,24 @@ begin
   FWebGMap.Parent := tiMap;
 end;
 
+procedure TfrmMain.GetMapPartnerScreenshot(SetCordinate: boolean; Coordinates: TLocationCoord2D);
+begin
+  FMapLoaded := False;
+
+  pMapScreen.Visible := false;
+  pMap.Visible := true;
+  FWebGMap := TTMSFMXWebGMaps.Create(Self);
+  FWebGMap.Align := TAlignLayout.Client;
+  FWebGMap.MapOptions.ZoomMap := 18;
+  FWebGMap.Parent := pMap;
+  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+  if SetCordinate then
+  begin
+    FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
+    FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
+  end;
+end;
+
 procedure TfrmMain.Wait(AWait: Boolean);
 begin
   LogInButton.Enabled := not AWait;
@@ -1109,9 +1320,6 @@ begin
 
   if tcMain.ActiveTab = tiRoutes then
     GetVistDays;
-
-  if tcMain.ActiveTab = tiCamera then
-    PrepareCamera;
 end;
 
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
@@ -1169,8 +1377,8 @@ begin
   with DM.qryPartner do
   begin
     DM.qryPartner.Open('select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-      '0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
+      'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT ' +
+      'from OBJECT_PARTNER P ' +
       'JOIN OBJECT_JURIDICAL J ON J.ID = P.JURIDICALID and J.ISERASED = 0 ' +
       'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
       'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0');
@@ -1275,23 +1483,18 @@ begin
   ShowMessage('Test');
 end;
 
-procedure TfrmMain.iPartnerMapDblClick(Sender: TObject);
-begin
-  ShowBigMap;
-end;
-
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
 begin
-  FCurCoordinatesSet := GetCurrentCoordinates;
+  GetCurrentCoordinates;
 
   lDayInfo.Text := 'МАРШРУТ: ' + Caption;
   DM.qryPartner.Close;
 
   sQuery := 'select P.Id, P.CONTRACTID, J.VALUEDATA Name, C.CONTRACTTAGNAME || '' '' || C.VALUEDATA ContractName, ' +
-    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT, ' +
-    '0 imAddress, 1 imContract from OBJECT_PARTNER P ' +
+    'P.ADDRESS, P.GPSN, P.GPSE, P.SCHEDULE, P.PRICELISTID, C.PAIDKINDID, C.CHANGEPERCENT, PL.PRICEWITHVAT, PL.VATPERCENT ' +
+    'from OBJECT_PARTNER P ' +
     'JOIN OBJECT_JURIDICAL J ON J.ID=P.JURIDICALID and J.ISERASED = 0 ' +
     'JOIN Object_PriceList PL ON PL.ID = P.PRICELISTID and PL.ISERASED = 0 ' +
     'JOIN OBJECT_CONTRACT C ON C.ID = P.CONTRACTID and C.ISERASED = 0 where P.ISERASED = 0';
@@ -1338,27 +1541,16 @@ begin
   end
   else
   begin
-    FCurCoordinatesSet := GetCurrentCoordinates;
+    GetCurrentCoordinates;
     if FCurCoordinatesSet then
       Coordinates := TLocationCoord2D.Create(FCurCoordinates.Latitude, FCurCoordinates.Longitude)
     else
       SetCordinate := false;
   end;
 
-  FMapLoaded := False;
+  GetMapPartnerScreenshot(SetCordinate, Coordinates);
 
-  iPartnerMap.Visible := false;
-  FWebGMap := TTMSFMXWebGMaps.Create(Self);
-  FWebGMap.Align := TAlignLayout.Client;
-  FWebGMap.MapOptions.ZoomMap := 18;
-  FWebGMap.Parent := pMap;
-  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-  if SetCordinate then
-  begin
-    FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
-    FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
-  end;
-
+  DM.LoadOrderExternal;
 end;
 
 procedure TfrmMain.ShowPriceLists;
@@ -1431,6 +1623,12 @@ var
   Item: TFormStackItem;
   OnChange: TNotifyEvent;
 begin
+  if tcMain.ActiveTab = tiOrderExternal then
+  begin
+    DM.cdsOrderItems.EmptyDataSet;
+    DM.cdsOrderItems.Close;
+  end;
+
   if FFormsStack.Count > 0 then
     begin
       Item:= FFormsStack.Pop;
@@ -1455,6 +1653,8 @@ end;
 
 procedure TfrmMain.PrepareCamera;
 begin
+  SwitchToForm(tiCamera, nil);
+
   FCameraZoomDistance := 0;
 
   CameraComponent := TCameraComponent.Create(nil);
@@ -1527,7 +1727,7 @@ begin
     Showmessage('Image is zero!');
 end;
 
-function TfrmMain.GetCurrentCoordinates : boolean;
+procedure TfrmMain.GetCurrentCoordinates;
 {$IFDEF ANDROID}
 var
   LastLocation: JLocation;
@@ -1535,7 +1735,7 @@ var
   LocationManager: JLocationManager;
 {$ENDIF}
 begin
-  Result := false;
+  FCurCoordinatesSet := false;
 
   {$IFDEF ANDROID}
   //запрашиваем сервис Location
@@ -1551,7 +1751,7 @@ begin
       if Assigned(LastLocation) then
       begin
         FCurCoordinates := TLocationCoord2D.Create(LastLocation.getLatitude, LastLocation.getLongitude);
-        Result := true;
+        FCurCoordinatesSet := true;
       end;
     end
     else

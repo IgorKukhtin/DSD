@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 464
-  ClientWidth = 310
+  ClientWidth = 298
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -92,16 +92,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 273
+    Width = 135
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 277
+    Top = 234
     Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
   end
   object ceTradeMark: TcxButtonEdit
     Left = 8
-    Top = 295
+    Top = 252
     Properties.Buttons = <
       item
         Default = True
@@ -109,16 +109,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 273
+    Width = 135
   end
   object cxLabel5: TcxLabel
-    Left = 8
-    Top = 323
+    Left = 146
+    Top = 234
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsTag: TcxButtonEdit
-    Left = 8
-    Top = 342
+    Left = 146
+    Top = 252
     Properties.Buttons = <
       item
         Default = True
@@ -126,16 +126,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 273
+    Width = 135
   end
   object cxLabel6: TcxLabel
-    Left = 8
-    Top = 189
+    Left = 146
+    Top = 143
     Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
   end
   object ceGoodsGroupAnalyst: TcxButtonEdit
-    Left = 8
-    Top = 209
+    Left = 146
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -143,16 +143,16 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 15
-    Width = 273
+    Width = 135
   end
   object cxLabel7: TcxLabel
     Left = 8
-    Top = 369
+    Top = 285
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103' '#1087#1083#1086#1097#1072#1076#1082#1072
   end
   object ceGoodsPlatform: TcxButtonEdit
     Left = 8
-    Top = 390
+    Top = 304
     Properties.Buttons = <
       item
         Default = True
@@ -164,12 +164,12 @@
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 234
+    Top = 189
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit
     Left = 8
-    Top = 253
+    Top = 208
     Properties.Buttons = <
       item
         Default = True
@@ -188,6 +188,39 @@
     Top = 28
     TabOrder = 21
     Width = 137
+  end
+  object cxLabel10: TcxLabel
+    Left = 8
+    Top = 337
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1080#1084#1087#1086#1088#1090'.'#1090#1086#1074#1072#1088#1072
+  end
+  object ceTaxImport: TcxTextEdit
+    Left = 8
+    Top = 356
+    TabOrder = 23
+    Width = 135
+  end
+  object cxLabel11: TcxLabel
+    Left = 146
+    Top = 337
+    Caption = #1059#1089#1083#1091#1075#1080' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1044#1050#1055#1055
+  end
+  object ceDKPP: TcxTextEdit
+    Left = 146
+    Top = 356
+    TabOrder = 25
+    Width = 135
+  end
+  object cxLabel12: TcxLabel
+    Left = 8
+    Top = 382
+    Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1076#1077#1103#1090'. '#1089'.-'#1093'. '#1087#1088#1086#1080#1079#1074'.'
+  end
+  object ceTaxAction: TcxTextEdit
+    Left = 8
+    Top = 401
+    TabOrder = 27
+    Width = 273
   end
   object ActionList: TActionList
     Left = 112
@@ -248,6 +281,30 @@
         Name = 'inCodeUKTZED'
         Value = Null
         Component = ceCodeUKTZED
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxImport'
+        Value = Null
+        Component = ceTaxImport
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDKPP'
+        Value = Null
+        Component = ceDKPP
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxAction'
+        Value = Null
+        Component = ceTaxAction
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -467,10 +524,31 @@
         Component = ceCodeUKTZED
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DKPP'
+        Value = Null
+        Component = ceDKPP
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxAction'
+        Value = Null
+        Component = ceTaxAction
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxImport'
+        Value = Null
+        Component = ceTaxImport
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 272
-    Top = 128
+    Left = 192
+    Top = 24
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -542,7 +620,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
+    Left = 64
     Top = 160
   end
   object TradeMarkGuides: TdsdGuides
@@ -569,8 +647,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 286
+    Left = 72
+    Top = 246
   end
   object GoodsTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -611,8 +689,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 326
+    Left = 208
+    Top = 230
   end
   object GoodsGroupAnalystGuides: TdsdGuides
     KeyField = 'Id'
@@ -639,7 +717,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 200
-    Top = 192
+    Top = 160
   end
   object GoodsPlatformGuides: TdsdGuides
     KeyField = 'Id'
@@ -665,8 +743,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 390
+    Left = 184
+    Top = 278
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -692,7 +770,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 235
+    Left = 128
+    Top = 187
   end
 end

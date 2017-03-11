@@ -69,6 +69,12 @@ type
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    clMeasureName: TcxGridDBColumn;
+    clCompositionName: TcxGridDBColumn;
+    clGoodsInfoName: TcxGridDBColumn;
+    clLineFabricaName: TcxGridDBColumn;
+    clLabelName: TcxGridDBColumn;
+    clGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

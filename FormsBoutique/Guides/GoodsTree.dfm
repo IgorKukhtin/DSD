@@ -43,7 +43,6 @@ object GoodsTreeForm: TGoodsTreeForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -58,20 +57,56 @@ object GoodsTreeForm: TGoodsTreeForm
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
-        Width = 93
+        Width = 94
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 112
+      end
+      object clMeasureName: TcxGridDBColumn
+        Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentVert = vaCenter
+        Width = 72
+      end
+      object clCompositionName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'CompositionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 82
+      end
+      object clGoodsInfoName: TcxGridDBColumn
+        Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsInfoName'
+        HeaderAlignmentVert = vaCenter
+        Width = 109
+      end
+      object clLineFabricaName: TcxGridDBColumn
+        Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+        DataBinding.FieldName = 'LineFabricaName'
+        HeaderAlignmentVert = vaCenter
+        Width = 99
+      end
+      object clLabelName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+        DataBinding.FieldName = 'LabelName'
+        HeaderAlignmentVert = vaCenter
+        Width = 102
+      end
+      object clGroupNameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'GroupNameFull'
+        HeaderAlignmentVert = vaCenter
+        Width = 156
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -507,12 +507,6 @@ object DM: TDM
     object qryPartnerVATPercent: TFloatField
       FieldName = 'VATPercent'
     end
-    object qryPartnerimAddress: TLargeintField
-      FieldName = 'imAddress'
-    end
-    object qryPartnerimContract: TLargeintField
-      FieldName = 'imContract'
-    end
   end
   object qryPriceList: TFDQuery
     Connection = conMain
@@ -630,6 +624,7 @@ object DM: TDM
     Top = 184
     object tblMovementItem_OrderExternalId: TAutoIncField
       FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
       ReadOnly = True
     end
     object tblMovementItem_OrderExternalMovementId: TIntegerField
@@ -732,10 +727,10 @@ object DM: TDM
     SQL.Strings = (
       
         'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDAT' +
-        'A Kind, GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, G.ID || '#39';'#39' ' +
-        '|| GK.ID || '#39';'#39' || G.VALUEDATA || '#39';'#39' || GK.VALUEDATA || '#39';'#39' || ' +
-        'GLK.FORECAST || '#39';'#39' || GLK.REMAINS || '#39';'#39' || PI.PRICE || '#39';'#39' || ' +
-        'M.VALUEDATA || '#39';'#39' || G.WEIGHT FullInfo '
+        'A Kind, GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, '#39'-1;'#39' || G.I' +
+        'D || '#39';'#39' || GK.ID || '#39';'#39' || G.VALUEDATA || '#39';'#39' || GK.VALUEDATA |' +
+        '| '#39';'#39' || GLK.FORECAST || '#39';'#39' || GLK.REMAINS || '#39';'#39' || PI.PRICE |' +
+        '| '#39';'#39' || M.VALUEDATA || '#39';'#39' || G.WEIGHT || '#39';0'#39' FullInfo '
       'from OBJECT_GOODS G '
       
         'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.I' +
@@ -871,6 +866,9 @@ object DM: TDM
     StoreDefs = True
     Left = 128
     Top = 288
+    object cdsOrderItemsId: TIntegerField
+      FieldName = 'Id'
+    end
     object cdsOrderItemsName: TStringField
       FieldName = 'Name'
       Size = 250
@@ -881,6 +879,9 @@ object DM: TDM
     end
     object cdsOrderItemsPrice: TFloatField
       FieldName = 'Price'
+    end
+    object cdsOrderItemsWeight: TFloatField
+      FieldName = 'Weight'
     end
     object cdsOrderItemsRemains: TFloatField
       FieldName = 'Remains'
@@ -904,9 +905,6 @@ object DM: TDM
     object cdsOrderItemsDelImage: TBlobField
       FieldName = 'DelImage'
     end
-    object cdsOrderItemsWeight: TFloatField
-      FieldName = 'Weight'
-    end
   end
   object cdsOrderExternal: TClientDataSet
     Aggregates = <>
@@ -915,6 +913,9 @@ object DM: TDM
     Top = 288
     object cdsOrderExternalid: TIntegerField
       FieldName = 'id'
+    end
+    object cdsOrderExternalOperDate: TDateField
+      FieldName = 'OperDate'
     end
     object cdsOrderExternalName: TStringField
       FieldName = 'Name'
@@ -937,6 +938,28 @@ object DM: TDM
     end
     object cdsOrderExternalimageDelete: TBlobField
       FieldName = 'imageDelete'
+    end
+  end
+  object tblMovement_Path: TFDTable
+    Connection = conMain
+    FetchOptions.AssignedValues = [evDetailCascade]
+    UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
+    TableName = 'Movement_OrderExternal'
+    Left = 584
+    Top = 56
+    object AutoIncField1: TAutoIncField
+      FieldName = 'Id'
+      ProviderFlags = [pfInWhere]
+      ReadOnly = True
+    end
+    object tblMovement_PathGPSN: TFloatField
+      FieldName = 'GPSN'
+    end
+    object tblMovement_PathGPSE: TFloatField
+      FieldName = 'GPSE'
+    end
+    object tblMovement_PathDateInsert: TDateTimeField
+      FieldName = 'DateInsert'
     end
   end
 end

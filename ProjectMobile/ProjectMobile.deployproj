@@ -87,6 +87,15 @@
         </DeployFile>
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Win32'">
+        <DeployFile Include="img\remove.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>remove.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\</RemoteDir>
             <RemoteName>init.php</RemoteName>
@@ -115,9 +124,27 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="..\INIT\init.php" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="img\contract.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\</RemoteDir>
-            <RemoteName>init.php</RemoteName>
+            <RemoteName>contract.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\edit.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>edit.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\address.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>address.png</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -255,6 +282,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="img\contract.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>contract.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="CameraClick.3gp" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
             <RemoteName>CameraClick.3gp</RemoteName>
@@ -291,18 +327,18 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Release'">
-            <RemoteDir>ProjectMobile\</RemoteDir>
-            <RemoteName>init.php</RemoteName>
+        <DeployFile Include="img\address.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>address.png</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="img\remove.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
-            <RemoteName>remove.png</RemoteName>
+        <DeployFile Include="Android\Debug\init.php" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>init.php</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -336,19 +372,19 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="c:\program files\embarcadero\studio\15.0\lib\android\debug\mips\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\library\lib\mips\</RemoteDir>
-            <RemoteName>libProjectMobile.so</RemoteName>
-            <DeployClass>AndroidLibnativeMipsFile</DeployClass>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\res\drawable-xlarge\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage960</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>ProjectMobile\res\drawable-xlarge\</RemoteDir>
-            <RemoteName>splash_image.png</RemoteName>
-            <DeployClass>Android_SplashImage960</DeployClass>
+        <DeployFile Include="c:\program files\embarcadero\studio\15.0\lib\android\debug\mips\libnative-activity.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\library\lib\mips\</RemoteDir>
+            <RemoteName>libProjectMobile.so</RemoteName>
+            <DeployClass>AndroidLibnativeMipsFile</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -372,6 +408,24 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="img\edit.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>edit.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\contract.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>contract.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="..\BIN\Android\Debug\classes.dex" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\classes\</RemoteDir>
             <RemoteName>classes.dex</RemoteName>
@@ -381,11 +435,29 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="img\edit.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\assets\internal\</RemoteDir>
+            <RemoteName>edit.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\PlatformSDKs\android-ndk-r9c\prebuilt\android-arm\gdbserver\gdbserver" Condition="'$(Config)'=='Debug'">
             <RemoteDir>ProjectMobile\library\lib\armeabi-v7a\</RemoteDir>
             <RemoteName>gdbserver</RemoteName>
             <DeployClass>AndroidGDBServer</DeployClass>
             <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="img\address.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>ProjectMobile\</RemoteDir>
+            <RemoteName>address.png</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>

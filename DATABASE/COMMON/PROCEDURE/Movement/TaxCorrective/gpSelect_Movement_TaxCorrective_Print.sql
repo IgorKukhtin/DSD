@@ -181,9 +181,11 @@ BEGIN
                                   ON ObjectLink_GoodsGroup.ObjectId = MovementItem.ObjectId
                                  AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
        )
-    , tmpGoods AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-    , tmpUKTZED AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
-
+    , tmpGoods     AS (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+    , tmpUKTZED    AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (tmp.GoodsGroupId) AS CodeUKTZED FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpTaxImport AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport (tmp.GoodsGroupId) AS TaxImport FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpDKPP      AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_DKPP (tmp.GoodsGroupId) AS DKPP FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
+    , tmpTaxAction AS (SELECT tmp.GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction (tmp.GoodsGroupId) AS TaxAction FROM (SELECT DISTINCT tmpMI.GoodsGroupId FROM tmpMI) AS tmp)
 
     , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -427,6 +429,24 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData
+                  WHEN tmpTaxImport.TaxImport <> '' THEN tmpTaxImport.TaxImport
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeTaxImport
+
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData
+                  WHEN tmpDKPP.DKPP <> '' THEN tmpDKPP.DKPP
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeDKPP
+
+           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+                  WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData
+                  WHEN tmpTaxAction.TaxAction <> '' THEN tmpTaxAction.TaxAction
+                  ELSE '0'
+             END :: TVarChar AS GoodsCodeTaxAction
+
            , (CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'опеднокюрю гю йнка.хгдекхъ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END END) :: TVarChar AS GoodsName
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'опеднокюрю гю йнка.хгдекхъ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData                             AS GoodsKindName
@@ -483,6 +503,9 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpDKPP ON tmpDKPP.GoodsGroupId = tmpMI.GoodsGroupId
+            LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = tmpMI.GoodsGroupId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isCopy
                                       ON MovementBoolean_isCopy.MovementId = tmpMI.MovementId
@@ -510,6 +533,15 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                    ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                   AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
+            LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
+                                   ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
+            LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
+                                   ON ObjectString_Goods_DKPP.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
+            LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
+                                   ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
+                                  AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean ,
     IN inJuridicalBasisId  Integer ,
-    IN inPersonalTradeId   Integer ,   -- торговый агент
+    IN inMemberId   Integer ,   -- торговый агент
   
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -36,7 +36,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbPersonalTradeId Integer;
+   DECLARE vbMemberId Integer;
+   DECLARE vbPersonalId Integer;
    
    DECLARE vbIsUserOrder  Boolean;
 BEGIN
@@ -47,13 +48,16 @@ BEGIN
      -- определяется уровень доступа
      vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
 
-     vbPersonalTradeId:= (SELECT tmp.PersonalId FROM gpGetMobile_Object_Const (inSession) AS tmp);
-     IF (COALESCE(inPersonalTradeId,0) <> 0 AND COALESCE(vbPersonalTradeId,0) <> inPersonalTradeId)
+     SELECT tmp.MemberId, tmp.PersonalId
+     INTO vbMemberId, vbPersonalId     
+     FROM gpGetMobile_Object_Const (inSession) AS tmp;
+
+     IF (COALESCE(inMemberId,0) <> 0 AND COALESCE(vbMemberId,0) <> inMemberId)
         THEN
             RAISE EXCEPTION 'Ошибка.Не достаточно прав доступа.'; 
      END IF;
 
---inPersonalTradeId:=0;
+     --inMemberId:=0;
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -72,7 +76,7 @@ BEGIN
         , tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
                          FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
                          WHERE ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = inPersonalTradeId --301468 --
+                           AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId --301468 --
                          )
         , tmpMovement AS (SELECT tmp.Id, MovementLinkObject_From.ObjectId  AS FromId
                           FROM
@@ -85,7 +89,7 @@ BEGIN
                                        ON MovementLinkObject_From.MovementId = tmp.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                 LEFT JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_From.ObjectId
-                          WHERE (tmpPartner.PartnerId IS NOT NULL AND COALESCE(inPersonalTradeId,0) <> 0) OR COALESCE(inPersonalTradeId,0) = 0 
+                          WHERE (tmpPartner.PartnerId IS NOT NULL AND COALESCE(inMemberId,0) <> 0) OR COALESCE(inMemberId,0) = 0 
                           )
 
        SELECT
@@ -286,7 +290,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 07.03.17         * add inPersonalTradeId
+ 07.03.17         * add inMemberId
  05.10.16         * add inJuridicalBasisId
  25.11.15         * add isPromo
  26.05.15         * add Partner
