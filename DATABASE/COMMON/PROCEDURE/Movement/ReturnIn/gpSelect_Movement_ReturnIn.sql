@@ -29,6 +29,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, ParentId Inte
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , MemberId Integer, MemberName TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isError Boolean
              , isEDI Boolean
@@ -115,6 +117,10 @@ BEGIN
            , Object_PriceList.valuedata                 AS PriceListName
            , Object_TaxKind.Id                	        AS DocumentTaxKindId
            , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
+           , Object_Member.Id                           AS MemberId
+           , Object_Member.ValueData                    AS MemberName
+           , Object_ReestrKind.Id             	        AS ReestrKindId
+           , Object_ReestrKind.ValueData       	        AS ReestrKindName
            , MovementString_Comment.ValueData           AS Comment
            , MovementBoolean_Error.ValueData            AS isError
            , COALESCE (MovementLinkMovement_MasterEDI.MovementChildId, 0) <> 0 AS isEDI
@@ -255,6 +261,16 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind

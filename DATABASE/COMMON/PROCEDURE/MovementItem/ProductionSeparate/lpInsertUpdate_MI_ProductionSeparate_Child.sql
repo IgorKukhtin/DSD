@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionSeparate_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Главный элемент документа
     IN inGoodsId             Integer   , -- Товары
+    IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount              TFloat    , -- Количество
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов	           
@@ -34,6 +36,9 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_LiveWeight(), ioId, inLiveWeight);
    -- сохранили свойство <Количество голов>
    PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_HeadCount(), ioId, inHeadCount);
+
+   -- сохранили связь с <Виды товаров>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
    -- пересчитали Итоговые суммы по накладной
    PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

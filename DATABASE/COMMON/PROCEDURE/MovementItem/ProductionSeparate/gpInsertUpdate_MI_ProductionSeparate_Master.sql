@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Master (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Master (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionSeparate_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
+    IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount              TFloat    , -- Количество
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов	           
@@ -24,6 +26,7 @@ BEGIN
    ioId :=lpInsertUpdate_MI_ProductionSeparate_Master (ioId               := ioId
                                                      , inMovementId       := inMovementId
                                                      , inGoodsId          := inGoodsId
+                                                     , inGoodsKindId      := inGoodsKindId
                                                      , inAmount           := inAmount
                                                      , inLiveWeight       := inLiveWeight
                                                      , inHeadCount        := inHeadCount

@@ -1,25 +1,25 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1074#1089#1077')>'
   ClientHeight = 648
-  ClientWidth = 1244
-  ExplicitWidth = 1260
+  ClientWidth = 1252
+  ExplicitWidth = 1268
   ExplicitHeight = 686
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
-    Width = 1244
+    Width = 1252
     Height = 482
     ExplicitTop = 166
     ExplicitWidth = 1244
     ExplicitHeight = 482
     ClientRectBottom = 482
-    ClientRectRight = 1244
+    ClientRectRight = 1252
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1244
       ExplicitHeight = 458
       inherited cxGrid: TcxGrid
-        Width = 1244
+        Width = 1252
         Height = 342
         ExplicitWidth = 1244
         ExplicitHeight = 342
@@ -349,11 +349,12 @@ inherited ReturnInForm: TReturnInForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 350
-        Width = 1244
+        Width = 1252
         Height = 108
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1244
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -682,23 +683,26 @@ inherited ReturnInForm: TReturnInForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 342
-        Width = 1244
+        Width = 1252
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1244
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitWidth = 1244
       object l: TcxGrid
         Left = 0
         Top = 0
-        Width = 1244
+        Width = 1252
         Height = 458
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1244
         object lDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1048,7 +1052,7 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1244
+    Width = 1252
     Height = 140
     TabOrder = 3
     ExplicitWidth = 1244
@@ -1338,6 +1342,24 @@ inherited ReturnInForm: TReturnInForm
       Visible = False
       Width = 64
     end
+    object edReestrKind: TcxButtonEdit
+      Left = 1102
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 38
+      Width = 144
+    end
+    object cxLabel26: TcxLabel
+      Left = 1102
+      Top = 45
+      Caption = #1042#1080#1079#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 867
@@ -1444,6 +1466,24 @@ inherited ReturnInForm: TReturnInForm
     Caption = #1087#1088#1080#1074#1103#1079#1082#1072' '#1082' '#1054#1089#1085#1086#1074'. '#8470' ('#1076#1072'/'#1085#1077#1090')'
     TabOrder = 18
     Width = 204
+  end
+  object cxLabel23: TcxLabel [15]
+    Left = 1102
+    Top = 5
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+  end
+  object edMember: TcxButtonEdit [16]
+    Left = 1102
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 20
+    Width = 144
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 187
@@ -2114,7 +2154,21 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object macContractOpenForm: TMultiAction [22]
+    object macMemberOpenForm: TMultiAction [22]
+      Category = 'Member'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMemberOpenForm
+        end
+        item
+          Action = actUpdateMovementMember
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+      ImageIndex = 55
+    end
+    object macContractOpenForm: TMultiAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2128,7 +2182,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1090#1086#1083#1100#1082#1086' '#8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1074' '#1079#1072#1082#1088#1099#1090#1086#1084' '#1087#1077#1088#1080#1086#1076#1077')'
       ImageIndex = 43
     end
-    object actContractOpenForm: TOpenChoiceForm [23]
+    object actContractOpenForm: TOpenChoiceForm [24]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2185,7 +2239,19 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object actUpdateMovementContract: TdsdExecStoredProc [24]
+    object actUpdateMovementMember: TdsdExecStoredProc [25]
+      Category = 'Member'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementMember
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementMember
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+    end
+    object actUpdateMovementContract: TdsdExecStoredProc [26]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2197,7 +2263,7 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
     end
-    object mactPrintPriceCorr: TMultiAction [25]
+    object mactPrintPriceCorr: TMultiAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2211,7 +2277,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1050#1054#1056#1045#1043#1059#1070#1063#1040' '#1058#1054#1042#1040#1056#1053#1040' '#1053#1040#1050#1051#1040#1044#1053#1040
       ImageIndex = 16
     end
-    object mactPrint: TMultiAction [26]
+    object mactPrint: TMultiAction [28]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2226,7 +2292,7 @@ inherited ReturnInForm: TReturnInForm
       ImageIndex = 3
       ShortCut = 16464
     end
-    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [27]
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [29]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrintTaxCorrective_Client
@@ -2268,7 +2334,7 @@ inherited ReturnInForm: TReturnInForm
         item
         end>
     end
-    object actTaxJournalChoice: TOpenChoiceForm [31]
+    object actTaxJournalChoice: TOpenChoiceForm [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2337,7 +2403,7 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
-    object MIChildProtocolOpenForm: TdsdOpenForm [32]
+    object MIChildProtocolOpenForm: TdsdOpenForm [34]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2959,6 +3025,37 @@ inherited ReturnInForm: TReturnInForm
         end>
       isShowModal = True
     end
+    object actMemberOpenForm: TOpenChoiceForm
+      Category = 'Member'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+      ImageIndex = 55
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = ''
+          Component = GuidesMember
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = ''
+          Component = GuidesMember
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 24
@@ -3096,6 +3193,14 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbContractOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMemberOpenForm'
         end
         item
           Visible = True
@@ -3313,6 +3418,10 @@ inherited ReturnInForm: TReturnInForm
       Action = macContractOpenForm
       Category = 0
     end
+    object bbMemberOpenForm: TdxBarButton
+      Action = macMemberOpenForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -3424,8 +3533,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 16
-    Top = 72
+    Left = 24
+    Top = 48
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -3735,6 +3844,28 @@ inherited ReturnInForm: TReturnInForm
         Value = Null
         Component = JuridicalFromGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReestrKindName'
+        Value = Null
+        Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -4908,8 +5039,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1080
-    Top = 40
+    Left = 1024
+    Top = 72
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -4939,6 +5070,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 992
+    Top = 16
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>
@@ -5278,8 +5410,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 124
-    Top = 88
+    Left = 140
+    Top = 40
   end
   object spUpdate_MI_ReturnIn_Price: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementItem_ReturnIn_Price'
@@ -5550,5 +5682,64 @@ inherited ReturnInForm: TReturnInForm
     PackSize = 1
     Left = 330
     Top = 208
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMember_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
+      end>
+    Left = 1186
+    Top = 3
+  end
+  object spUpdateMovementMember: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Member'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 946
+    Top = 384
   end
 end
