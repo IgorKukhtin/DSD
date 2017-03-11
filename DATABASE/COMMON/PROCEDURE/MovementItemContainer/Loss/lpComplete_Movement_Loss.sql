@@ -21,6 +21,7 @@ $BODY$
   DECLARE vbBranchId_Unit Integer;
   DECLARE vbAccountDirectionId Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
+  DECLARE vbIsPartionGoodsKind_Unit Boolean;
   DECLARE vbInfoMoneyId_ArticleLoss Integer;
   DECLARE vbBranchId_Unit_ProfitLoss Integer;
   DECLARE vbProfitLossGroupId Integer;
@@ -41,13 +42,13 @@ BEGIN
      -- Эти параметры нужны для формирования Аналитик в проводках
      WITH tmpMember AS (SELECT View_Personal.MemberId, MAX (View_Personal.UnitId) AS UnitId FROM Object_Personal_View AS View_Personal GROUP BY View_Personal.MemberId)
      SELECT _tmp.MovementDescId, _tmp.OperDate
-          , _tmp.UnitId, _tmp.MemberId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit
+          , _tmp.UnitId, _tmp.MemberId, _tmp.BranchId_Unit, _tmp.AccountDirectionId, _tmp.isPartionDate_Unit, _tmp.isPartionGoodsKind_Unit
           , _tmp.InfoMoneyId_ArticleLoss, _tmp.BranchId_ProfitLoss
           , _tmp.ProfitLossGroupId, _tmp.ProfitLossDirectionId
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_ProfitLoss, _tmp.UnitId_ProfitLoss
           , _tmp.ObjectExtId_Analyzer, _tmp.AnalyzerId
             INTO vbMovementDescId, vbOperDate
-               , vbUnitId, vbMemberId, vbBranchId_Unit, vbAccountDirectionId, vbIsPartionDate_Unit
+               , vbUnitId, vbMemberId, vbBranchId_Unit, vbAccountDirectionId, vbIsPartionDate_Unit, vbIsPartionGoodsKind_Unit
                , vbInfoMoneyId_ArticleLoss, vbBranchId_Unit_ProfitLoss
                , vbProfitLossGroupId, vbProfitLossDirectionId
                , vbJuridicalId_Basis, vbBusinessId_ProfitLoss, vbUnitId_ProfitLoss
@@ -63,7 +64,8 @@ BEGIN
                                  WHEN Object_From.DescId = zc_Object_Member()
                                       THEN zc_Enum_AccountDirection_20500() -- Запасы + сотрудники (МО)
                             END, 0) AS AccountDirectionId -- Аналитики счетов - направления !!!нужны только для подразделения!!!
-                , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)  AS isPartionDate_Unit
+                , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)     AS isPartionDate_Unit
+                , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE) AS isPartionGoodsKind_Unit
 
                 , COALESCE (ObjectLink_ArticleLoss_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_ArticleLoss
                 , COALESCE (ObjectLink_Branch.ChildObjectId, 0)                AS BranchId_ProfitLoss -- по подразделению (у авто,!!!физ.лица!!!, кому, от кого)
@@ -122,6 +124,9 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_From
                                         ON ObjectBoolean_PartionDate_From.ObjectId = MovementLinkObject_From.ObjectId
                                        AND ObjectBoolean_PartionDate_From.DescId = zc_ObjectBoolean_Unit_PartionDate()
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_From
+                                        ON ObjectBoolean_PartionGoodsKind_From.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectBoolean_PartionGoodsKind_From.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
 
                 LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                      ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
@@ -198,7 +203,13 @@ BEGIN
                      MovementItem.Id AS MovementItemId
 
                    , MovementItem.ObjectId AS GoodsId
-                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция
+                   , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                          WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                           AND vbIsPartionGoodsKind_Unit = TRUE
+                               THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                          ELSE 0
+                     END AS GoodsKindId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
