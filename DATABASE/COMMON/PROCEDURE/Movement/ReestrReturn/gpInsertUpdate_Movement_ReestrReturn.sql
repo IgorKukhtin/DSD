@@ -15,7 +15,7 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReestrReturn());
-                                              
+   --  vbUserId:= lpGetUserBySession (inSession);                                              
 
      -- только в этом случае - ничего не делаем, т.к. из дельфи вызывается "лишний" раз
      IF ioId = 0 AND TRIM (inInvNumber) = ''
