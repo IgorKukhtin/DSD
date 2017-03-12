@@ -82,6 +82,8 @@ type
     N38: TMenuItem;
     actGoodsTree: TdsdOpenForm;
     N39: TMenuItem;
+    catGoodsItem: TdsdOpenForm;
+    N40: TMenuItem;
   private
     { Private declarations }
   public

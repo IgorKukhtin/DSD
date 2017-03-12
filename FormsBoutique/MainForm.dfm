@@ -352,6 +352,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object catGoodsItem: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1074#1072#1088#1099' '#1089' '#1088#1072#1079#1084#1077#1088#1072#1084#1080
+      FormName = 'TGoodsItemForm'
+      FormNameParam.Value = 'TGoodsItemForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 152
@@ -394,6 +405,9 @@ inherited MainForm: TMainForm
       end
       object N38: TMenuItem
         Action = actGoods
+      end
+      object N40: TMenuItem
+        Action = catGoodsItem
       end
       object N4: TMenuItem
         Action = actCompositionGroup

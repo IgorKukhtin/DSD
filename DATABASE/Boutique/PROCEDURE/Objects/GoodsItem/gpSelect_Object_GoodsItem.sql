@@ -54,7 +54,7 @@ left join  Object AS Object_GoodsSize on GoodsSize.Id = GoodsSizeId
            
        FROM Object_GoodsItem
 
-            LEFT JOIN left join  Object AS Object_Goods on Object_Goods.Id = Object_GoodsItem.GoodsId 
+            LEFT JOIN     Object AS Object_Goods on Object_Goods.Id = Object_GoodsItem.GoodsId 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -89,7 +89,7 @@ left join  Object AS Object_GoodsSize on GoodsSize.Id = GoodsSizeId
                                   ON Object_GroupNameFull.ObjectId = Object_Goods.Id
                                  AND Object_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-           left join  Object AS Object_GoodsSize on GoodsSize.Id = Object_GoodsItem.GoodsSizeId
+           left join  Object AS Object_GoodsSize on Object_GoodsSize.Id = Object_GoodsItem.GoodsSizeId
 
 
 
