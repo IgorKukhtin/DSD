@@ -62,7 +62,7 @@ type
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     clGoodsPlatformName: TcxGridDBColumn;
-    spUpdateCodeUKTZED: TdsdStoredProc;
+    spUpdateParams: TdsdStoredProc;
     clCodeUKTZED: TcxGridDBColumn;
     actUpdateDataSource: TdsdUpdateDataSet;
     CodeUKTZED_calc: TcxGridDBColumn;

@@ -29,6 +29,9 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
+           , 0                                      AS GoodsKindId
+           , CAST ('' AS TVarChar)                  AS GoodsKindName
+
            , CAST (NULL AS TFloat)                  AS Amount
            , CAST (NULL AS TFloat)                  AS LiveWeight
            , CAST (NULL AS TFloat)                  AS HeadCount
@@ -69,6 +72,9 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
+           , Object_GoodsKind.Id                    AS GoodsKindId
+           , Object_GoodsKind.ValueData             AS GoodsKindName
+
            , MovementItem.Amount                    AS Amount
            , MIFloat_LiveWeight.ValueData           AS LiveWeight
            , MIFloat_HeadCount.ValueData            AS HeadCount
@@ -96,6 +102,11 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
        ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -109,6 +120,9 @@ BEGIN
            , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
+
+           , Object_GoodsKind.Id                         AS GoodsKindId
+           , Object_GoodsKind.ValueData                  AS GoodsKindName
 
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
@@ -137,6 +151,11 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor1;
@@ -153,6 +172,9 @@ BEGIN
            , Object_Goods.ValueData   			 AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
+
+           , Object_GoodsKind.Id                         AS GoodsKindId
+           , Object_GoodsKind.ValueData                  AS GoodsKindName
 
            , MovementItem.Amount			 AS Amount
            , MIFloat_LiveWeight.ValueData                AS LiveWeight
@@ -181,6 +203,11 @@ BEGIN
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
        ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
@@ -193,6 +220,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.03.17         *
  31.03.15         * 
  02.06.14                                                       *
  27.05.14                                                       * ÔÓÏÂÌˇÎ ‚ÒÂ

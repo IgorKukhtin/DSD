@@ -25,6 +25,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNum
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , StartDateTax TDateTime
              , MovementId_Partion Integer, PartionMovementName TVarChar
+             , MemberId Integer, MemberName TVarChar
+             , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isPromo Boolean
              , isList Boolean
@@ -87,6 +89,10 @@ BEGIN
              , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , 0                     		        AS MovementId_Partion
              , CAST ('' as TVarChar) 		        AS PartionMovementName
+             , 0                                        AS MemberId
+             , CAST ('' AS TVarChar)                    AS MemberName
+             , 0                   		        AS ReestrKindId
+             , CAST ('' AS TVarChar)                    AS ReestrKindName 
              , CAST ('' as TVarChar) 		        AS Comment
              , CAST (FALSE AS Boolean)                  AS isPromo 
              , CAST (FALSE AS Boolean)                  AS isList
@@ -187,6 +193,12 @@ BEGIN
 
            , tmpMI.MovementId                       AS MovementId_Partion
            , zfCalc_PartionMovementName (Movement_PartionMovement.DescId, MovementDesc_PartionMovement.ItemName, Movement_PartionMovement.InvNumber, MovementDate_OperDatePartner_PartionMovement.ValueData) AS PartionMovementName
+
+           , Object_Member.Id                       AS MemberId
+           , Object_Member.ValueData                AS MemberName
+           , Object_ReestrKind.Id             	    AS ReestrKindId
+           , Object_ReestrKind.ValueData       	    AS ReestrKindName
+
            , MovementString_Comment.ValueData       AS Comment
 
            , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
@@ -300,6 +312,15 @@ BEGIN
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
 --add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind

@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, CodeUKTZED TVarChar, Name TVarChar
+             , TaxImport TVarChar, DKPP TVarChar, TaxAction TVarChar
              , isErased boolean
              , ParentId Integer, ParentName TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
@@ -28,6 +29,10 @@ BEGIN
          , lfGet_Object_GoodsGroup_CodeUKTZED (Object_GoodsGroup.Id) AS CodeUKTZED
          -- , COALESCE (ObjectString_GoodsGroup_UKTZED.ValueData,'') :: TVarChar AS CodeUKTZED
          , Object_GoodsGroup.ValueData         AS Name
+         , lfGet_Object_GoodsGroup_TaxImport (Object_GoodsGroup.Id) AS TaxImport
+         , lfGet_Object_GoodsGroup_DKPP (Object_GoodsGroup.Id)      AS DKPP
+         , lfGet_Object_GoodsGroup_TaxAction (Object_GoodsGroup.Id) AS TaxAction
+
          , Object_GoodsGroup.isErased          AS isErased
          
          , GoodsGroup.Id            AS ParentId

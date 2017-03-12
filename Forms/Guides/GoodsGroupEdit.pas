@@ -54,6 +54,12 @@ type
     InfoMoneyGuides: TdsdGuides;
     cxLabel9: TcxLabel;
     ceCodeUKTZED: TcxTextEdit;
+    cxLabel10: TcxLabel;
+    ceTaxImport: TcxTextEdit;
+    cxLabel11: TcxLabel;
+    ceDKPP: TcxTextEdit;
+    cxLabel12: TcxLabel;
+    ceTaxAction: TcxTextEdit;
   private
     { Private declarations }
   public

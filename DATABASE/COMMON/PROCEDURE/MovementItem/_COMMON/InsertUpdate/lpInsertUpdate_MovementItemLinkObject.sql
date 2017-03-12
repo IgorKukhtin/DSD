@@ -25,6 +25,12 @@ BEGIN
         -- вставить <свойство>
         INSERT INTO MovementItemLinkObject (DescId, MovementItemId, ObjectId)
                                     VALUES (inDescId, inMovementItemId, inObjectId);
+    ELSE
+        -- сохранили протокол - !!!ЛОВИМ ОШИБКУ!!!
+        IF inDescId = zc_MILinkObject_Receipt()
+        THEN
+            PERFORM lpInsert_MovementItemProtocol (inMovementItemId, zfCalc_UserAdmin() :: Integer, FALSE);
+        END IF;
     END IF;             
 
     RETURN TRUE;

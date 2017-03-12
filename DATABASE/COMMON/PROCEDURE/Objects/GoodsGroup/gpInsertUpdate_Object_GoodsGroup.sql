@@ -6,11 +6,15 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
  INOUT ioId                  Integer   ,    -- ключ объекта <Группа товаров>
     IN inCode                Integer   ,    -- Код объекта <Группа товаров>
     IN inCodeUKTZED          TVarChar  ,    -- Код товару згідно з УКТ ЗЕД
+    IN inTaxImport           TVarChar  ,    -- признак импортированного товара
+    IN inDKPP                TVarChar  ,    -- Послуги згідно з ДКПП
+    IN inTaxAction           TVarChar  ,    -- Код виду діяльності сільск-господар товаровиробника
     IN inName                TVarChar  ,    -- Название объекта <Группа товаров>
     IN inParentId            Integer   ,    -- ссылка на группу товаров
     IN inGroupStatId         Integer   ,    -- ссылка на группу товаров (статистика)
@@ -74,6 +78,12 @@ BEGIN
 
    -- сохранили свойство
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_UKTZED(), ioId, inCodeUKTZED);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_TaxImport(), ioId, inTaxImport);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_DKPP(), ioId, inDKPP);
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsGroup_TaxAction(), ioId, inTaxAction);
 
    -- Список
    CREATE TEMP TABLE _tmpList ON COMMIT DROP AS
@@ -540,6 +550,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.03.17         *
  18.11.15         * add zc_ObjectLink_GoodsGroup_InfoMoney
  14.04.15         * add GoodsPlatform
  24.11.14         * add GoodsGroupAnalyst             

@@ -35,6 +35,8 @@ type
     actPrint_Ceh: TdsdPrintAction;
     spSelectPrintCeh: TdsdStoredProc;
     bbPrint_Ceh: TdxBarButton;
+    actGoodsKindChoice: TOpenChoiceForm;
+    actGoodsKindChoiceChild: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -7,7 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_UKTZED(
     IN inShowAll     Boolean,   
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar, CodeUKTZED_group TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CodeUKTZED TVarChar, CodeUKTZED_Calc TVarChar, CodeUKTZED_group TVarChar
+             , TaxImport TVarChar, TaxImport_Calc TVarChar, TaxImport_Group TVarChar
+             , DKPP TVarChar, DKPP_Calc TVarChar, DKPP_Group TVarChar
+             , TaxAction TVarChar, TaxAction_Calc TVarChar, TaxAction_Group TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
@@ -33,8 +37,12 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
-          , tmpUKTZED AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (Object.Id) AS CodeUKTZED FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+       WITH tmpIsErased  AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+          , tmpUKTZED    AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_CodeUKTZED (Object.Id) AS CodeUKTZED FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+          , tmpTaxImport AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_TaxImport  (Object.Id) AS TaxImport  FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+          , tmpDKPP      AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_DKPP       (Object.Id) AS DKPP       FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+          , tmpTaxAction AS (SELECT Object.Id AS GoodsGroupId, lfGet_Object_GoodsGroup_TaxAction  (Object.Id) AS TaxAction  FROM Object WHERE Object.DescId = zc_Object_GoodsGroup())
+
        -- результат
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
@@ -42,6 +50,18 @@ BEGIN
             , ObjectString_Goods_UKTZED.ValueData AS CodeUKTZED
             , CASE WHEN ObjectString_Goods_UKTZED.ValueData <> '' THEN ObjectString_Goods_UKTZED.ValueData ELSE tmpUKTZED.CodeUKTZED END :: TVarChar AS CodeUKTZED_Calc
             , tmpUKTZED.CodeUKTZED        AS CodeUKTZED_group
+
+            , ObjectString_Goods_TaxImport.ValueData AS TaxImport
+            , CASE WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData ELSE tmpTaxImport.TaxImport END :: TVarChar AS TaxImport_Calc
+            , tmpTaxImport.TaxImport      AS TaxImport_Group
+
+            , ObjectString_Goods_DKPP.ValueData AS DKPP
+            , CASE WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData ELSE tmpDKPP.DKPP END :: TVarChar AS DKPP_Calc
+            , tmpDKPP.DKPP                AS DKPP_Group
+
+            , ObjectString_Goods_TaxAction.ValueData AS TaxAction
+            , CASE WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData ELSE tmpTaxAction.TaxAction END :: TVarChar AS TaxAction_Calc
+            , tmpTaxAction.TaxAction      AS TaxAction_Group
 
             , Object_GoodsGroup.Id        AS GoodsGroupId
             , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -151,6 +171,21 @@ BEGIN
                                     ON ObjectString_Goods_UKTZED.ObjectId = Object_Goods.Id
                                    AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
              LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_TaxImport
+                                    ON ObjectString_Goods_TaxImport.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_TaxImport.DescId = zc_ObjectString_Goods_TaxImport()
+             LEFT JOIN tmpTaxImport ON tmpTaxImport.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_DKPP
+                                    ON ObjectString_Goods_DKPP.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_DKPP.DescId = zc_ObjectString_Goods_DKPP()
+             LEFT JOIN tmpDKPP ON tmpDKPP.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+             LEFT JOIN ObjectString AS ObjectString_Goods_TaxAction
+                                    ON ObjectString_Goods_TaxAction.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_TaxAction.DescId = zc_ObjectString_Goods_TaxAction()
+             LEFT JOIN tmpTaxAction ON tmpTaxAction.GoodsGroupId = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
        WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_30200())
           OR Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101()

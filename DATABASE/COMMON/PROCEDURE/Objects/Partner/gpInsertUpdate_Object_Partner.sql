@@ -91,6 +91,7 @@ BEGIN
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
    vbSchedule:= (inValue1||';'||inValue2||';'||inValue3||';'||inValue4||';'||inValue5||';'||inValue6||';'||inValue7) :: TVarChar;
+   vbSchedule:= replace( replace (vbSchedule, 'true', 't'), 'false', 'f');
 
    -- сохранили
    ioId := lpInsertUpdate_Object_Partner (ioId              := ioId

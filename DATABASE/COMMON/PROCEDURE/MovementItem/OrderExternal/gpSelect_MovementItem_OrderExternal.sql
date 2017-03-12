@@ -275,11 +275,16 @@ BEGIN
                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Goods.GoodsId
                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                 ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
                             LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpMI_Goods.GoodsId
                                                 AND tmpRemains.GoodsKindId = CASE WHEN ObjectLink_Goods_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                                                   , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                                                                   , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                                                    )
+                                                                                       THEN tmpMI_Goods.GoodsKindId
+                                                                                  WHEN ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье                                                                                       THEN tmpMI_Goods.GoodsKindId
                                                                                        THEN tmpMI_Goods.GoodsKindId
                                                                                   ELSE 0
                                                                              END
@@ -444,6 +449,7 @@ BEGIN
                   , COALESCE (tmpGoodsByGoodsKind.GoodsKindId, 0)          AS GoodsKindId
                   , ObjectString_Goods_GoodsGroupFull.ValueData            AS GoodsGroupNameFull
                   , tmpInfoMoney.InfoMoneyId
+                  , tmpInfoMoney.InfoMoneyDestinationId
              FROM tmpInfoMoney
                   JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                   ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpInfoMoney.InfoMoneyId
@@ -481,9 +487,11 @@ BEGIN
                                                                                               , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                               , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                )
-                                                                                       THEN tmpGoods.GoodsKindId
-                                                                                  ELSE 0
-                                                                             END
+                                                                       THEN tmpGoods.GoodsKindId
+                                                                  WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                       THEN tmpGoods.GoodsKindId
+                                                                  ELSE 0
+                                                             END
             LEFT JOIN tmpMI_all AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                         AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
 

@@ -205,6 +205,16 @@ type
     actContractOpenForm: TOpenChoiceForm;
     macContractOpenForm: TMultiAction;
     actUpdateMovementContract: TdsdExecStoredProc;
+    cxLabel23: TcxLabel;
+    edMember: TcxButtonEdit;
+    cxLabel26: TcxLabel;
+    edReestrKind: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
+    spUpdateMovementMember: TdsdStoredProc;
+    actUpdateMovementMember: TdsdExecStoredProc;
+    actMemberOpenForm: TOpenChoiceForm;
+    macMemberOpenForm: TMultiAction;
+    bbMemberOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
