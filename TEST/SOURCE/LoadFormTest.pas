@@ -1287,9 +1287,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnStartMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReestrReturnStartMovementForm');
 
- { TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrUpdateMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReestrUpdateMovementForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReestrReturnUpdateMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReestrReturnUpdateMovementForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_ReestrJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_ReestrJournalForm');
 

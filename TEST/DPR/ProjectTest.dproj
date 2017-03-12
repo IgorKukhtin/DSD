@@ -3004,6 +3004,10 @@
 				<Form>ReestrReturnStartMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrReturnUpdateMovement.pas">
+				<Form>ReestrReturnUpdateMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

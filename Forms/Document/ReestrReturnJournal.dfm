@@ -244,7 +244,6 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -252,6 +251,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
           object ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -507,9 +507,9 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrReturn'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -915,7 +915,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     Top = 32
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

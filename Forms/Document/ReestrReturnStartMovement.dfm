@@ -13,19 +13,19 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     Height = 321
     ExplicitTop = 83
     ExplicitWidth = 927
-    ExplicitHeight = 302
+    ExplicitHeight = 321
     ClientRectBottom = 321
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 927
-      ExplicitHeight = 278
+      ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Top = 67
         Width = 927
         Height = 230
         ExplicitTop = 67
         ExplicitWidth = 927
-        ExplicitHeight = 211
+        ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -83,7 +83,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             Width = 80
           end
           object ReestrKindName: TcxGridDBColumn [2]
-            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Caption = #1042#1080#1079#1072' '#1074' '#1074#1086#1079#1074#1088#1072#1090#1077
             DataBinding.FieldName = 'ReestrKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -352,7 +352,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actSaleChoiceForm
+                Action = actReturnChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -525,9 +525,9 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Reestr'
-      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
-      ReportNameParam.Value = 'PrintMovement_Reestr'
+      ReportName = 'PrintMovement_ReestrReturn'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
+      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -607,13 +607,13 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
           MultiSelectSeparator = ','
         end>
     end
-    object actSaleChoiceForm: TOpenChoiceForm
+    object actReturnChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'SaleJournalChoice'
-      FormName = 'TSaleJournalChoiceForm'
-      FormNameParam.Value = 'TSaleJournalChoiceForm'
+      Caption = 'ReturnJournalChoice'
+      FormName = 'TReturnInJournalChoiceForm'
+      FormNameParam.Value = 'TReturnInJournalChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -665,7 +665,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         end
         item
           Name = 'ReestrKindName'
-          Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
+          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -812,9 +812,9 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrStartPeriod'
+      ReportName = 'PrintMovement_ReestrReturnStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrStartPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrReturnStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -884,14 +884,6 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         item
           Visible = True
           ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExecuteDialog'
         end
         item
           Visible = True
@@ -1175,7 +1167,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       item
       end>
     Left = 496
-    Top = 9
+    Top = 65
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
@@ -1333,7 +1325,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     Top = 4
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Reestr_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1431,11 +1423,11 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       end
       item
       end>
-    Left = 568
-    Top = 8
+    Left = 576
+    Top = 40
   end
   object spSelectPrintPeriod: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReestrStartPeriod_Print'
+    StoredProcName = 'gpSelect_Movement_ReestrReturnStartPeriod_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
