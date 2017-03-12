@@ -131,11 +131,11 @@ BEGIN
                                ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
                               AND Object_From.DescId = zc_Object_Unit()
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_From
                                   ON ObjectBoolean_PartionDate_From.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_PartionDate_From.DescId = zc_ObjectBoolean_Unit_PartionDate()
                                  AND Object_From.DescId = zc_Object_Unit()
-
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_From
                                   ON ObjectBoolean_PartionGoodsKind_From.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_PartionGoodsKind_From.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()
@@ -180,11 +180,11 @@ BEGIN
                                ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_UnitTo_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
                               AND Object_To.DescId = zc_Object_Unit()
+
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate_To
                                   ON ObjectBoolean_PartionDate_To.ObjectId = MovementLinkObject_To.ObjectId
                                  AND ObjectBoolean_PartionDate_To.DescId = zc_ObjectBoolean_Unit_PartionDate()
                                  AND Object_To.DescId = zc_Object_Unit()
-
           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoodsKind_To
                                   ON ObjectBoolean_PartionGoodsKind_To.ObjectId = MovementLinkObject_To.ObjectId
                                  AND ObjectBoolean_PartionGoodsKind_To.DescId = zc_ObjectBoolean_Unit_PartionGoodsKind()

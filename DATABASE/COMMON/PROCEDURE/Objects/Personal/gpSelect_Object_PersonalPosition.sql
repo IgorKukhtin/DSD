@@ -23,6 +23,8 @@ $BODY$
    DECLARE vbIsAllUnit Boolean;
    DECLARE vbObjectId_Constraint Integer;
 
+   DECLARE vbAll    Boolean;
+
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
    DECLARE vbInfoMoneyName_all TVarChar;
@@ -30,6 +32,9 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- User by RoleId
+   vbAll:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Role() AND Object.ObjectCode IN (3004, 4004, 5004, 6004, 7004, 8004, 8014, 9004)));
 
    -- Результат
    RETURN QUERY 
@@ -113,8 +118,8 @@ BEGIN
           LEFT JOIN Object AS Object_Unit_SheetWorkTime ON Object_Unit_SheetWorkTime.Id = ObjectLink_Unit_SheetWorkTime.ChildObjectId
 
      WHERE (Object_Personal_View.isErased = FALSE OR (Object_Personal_View.isErased = TRUE AND inIsShowAll = TRUE))
-       AND (Object_Personal_View.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/)
-         OR vbUserId = 10909 -- Сысоева Е.С.
+       AND (Object_Personal_View.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/ UNION SELECT 8466 WHERE inPositionId = 81178)
+         OR vbAll = TRUE
            )
 /*           
     UNION ALL

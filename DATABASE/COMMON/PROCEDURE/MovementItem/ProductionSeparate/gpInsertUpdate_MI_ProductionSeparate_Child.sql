@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionSeparate_Child (Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionSeparate_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ Производство - разделение>
     IN inParentId            Integer   , -- Главный элемент документа
     IN inGoodsId             Integer   , -- Товары
+    IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAmount              TFloat    , -- Количество
     IN inLiveWeight          TFloat    , -- Живой вес
     IN inHeadCount           TFloat    , -- Количество голов
@@ -26,6 +28,7 @@ BEGIN
                                                     , inMovementId       := inMovementId
                                                     , inParentId         := inParentId
                                                     , inGoodsId          := inGoodsId
+                                                    , inGoodsKindId      := inGoodsKindId
                                                     , inAmount           := inAmount
                                                     , inLiveWeight       := inLiveWeight
                                                     , inHeadCount        := inHeadCount
@@ -39,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.03.17         *
  11.06.15                                        *
 */
 

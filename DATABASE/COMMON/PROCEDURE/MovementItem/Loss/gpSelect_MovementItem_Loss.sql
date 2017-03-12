@@ -196,7 +196,9 @@ BEGIN
                                                                                               , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                               , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                 )
-                                                                  THEN tmpGoods.GoodsKindId
+                                                                       THEN tmpGoods.GoodsKindId
+                                                                  WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                       THEN tmpGoods.GoodsKindId
                                                                   ELSE 0
                                                               END
        WHERE tmpMI.GoodsId IS NULL
@@ -273,7 +275,9 @@ BEGIN
                                                                                                                   , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                                                   , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                                    )
-                                                                   THEN tmpMI.GoodsKindId
+                                                                        THEN tmpMI.GoodsKindId
+                                                                   WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                        THEN tmpMI.GoodsKindId
                                                                    ELSE 0
                                                               END
             ;
@@ -401,7 +405,9 @@ BEGIN
                                                                                                                   , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                                                   , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                                    )
-                                                                   THEN Object_GoodsKind.Id
+                                                                        THEN Object_GoodsKind.Id
+                                                                   WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                                                        THEN Object_GoodsKind.Id
                                                                    ELSE 0
                                                               END
             ;

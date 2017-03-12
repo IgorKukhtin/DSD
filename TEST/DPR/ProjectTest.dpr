@@ -909,7 +909,10 @@ uses
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   MobilePartner_Object in '..\..\Forms\Guides\MobilePartner_Object.pas' {MobilePartner_ObjectForm: TParentForm},
   MobileGoodsByGoodsKind_Object in '..\..\Forms\Guides\MobileGoodsByGoodsKind_Object.pas' {MobileGoodsByGoodsKind_ObjectForm: TParentForm},
-  MobileGoodsListSale_Object in '..\..\Forms\Guides\MobileGoodsListSale_Object.pas' {MobileGoodsListSale_ObjectForm: TParentForm};
+  MobileGoodsListSale_Object in '..\..\Forms\Guides\MobileGoodsListSale_Object.pas' {MobileGoodsListSale_ObjectForm: TParentForm},
+  ReestrReturnJournal in '..\..\Forms\Document\ReestrReturnJournal.pas' {ReestrReturnJournalForm: TParentForm},
+  ReestrReturnStartMovement in '..\..\Forms\Document\ReestrReturnStartMovement.pas' {ReestrReturnStartMovementForm: TParentForm},
+  ReestrReturnUpdateMovement in '..\..\Forms\Document\ReestrReturnUpdateMovement.pas' {ReestrReturnUpdateMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

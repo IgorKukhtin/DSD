@@ -81,7 +81,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           inherited colGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1072#1089#1093#1086#1076')'
           end
-          object clMeasureName: TcxGridDBColumn [3]
+          object colGoodsKindName: TcxGridDBColumn [3]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 122
+          end
+          object clMeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -89,7 +104,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 45
           end
-          object colAmount: TcxGridDBColumn [4]
+          object colAmount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -99,7 +114,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colLiveWeight: TcxGridDBColumn [5]
+          object colLiveWeight: TcxGridDBColumn [6]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -109,7 +124,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colHeadCount: TcxGridDBColumn [6]
+          object colHeadCount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -174,7 +189,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           inherited colChildGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
           end
-          object colCholdMeasureName: TcxGridDBColumn [3]
+          object colChildGoodsKindName: TcxGridDBColumn [3]
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKindChoiceChild
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 122
+          end
+          object colCholdMeasureName: TcxGridDBColumn [4]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -182,7 +212,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Options.Editing = False
             Width = 45
           end
-          object colChildAmount: TcxGridDBColumn [4]
+          object colChildAmount: TcxGridDBColumn [5]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -192,7 +222,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colChildLiveWeight: TcxGridDBColumn [5]
+          object colChildLiveWeight: TcxGridDBColumn [6]
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -203,7 +233,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colChildHeadCount: TcxGridDBColumn [6]
+          object colChildHeadCount: TcxGridDBColumn [7]
             Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -213,7 +243,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colChildPartionGoods: TcxGridDBColumn [7]
+          object colChildPartionGoods: TcxGridDBColumn [8]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             Visible = False
@@ -344,6 +374,60 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1101#1083#1077#1084#1077#1085#1090#1072' ('#1087#1088#1080#1093#1086#1076')>'
     end
+    object actGoodsKindChoiceChild: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterCDS: TClientDataSet
     Left = 656
@@ -470,6 +554,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited PopupMenu: TPopupMenu
     Left = 96
     Top = 272
+  end
+  inherited FormParams: TdsdFormParams
+    Left = 136
+    Top = 208
   end
   inherited StatusGuides: TdsdGuides
     Left = 144
@@ -654,12 +742,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       item
         Control = cePartionGoods
       end>
-    Left = 264
-    Top = 209
+    Left = 272
+    Top = 241
+  end
+  inherited RefreshAddOn: TRefreshAddOn
+    Left = 176
+    Top = 240
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'
-    Left = 454
+    Left = 478
+    Top = 248
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetUnErased'
@@ -694,6 +787,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmount'
         Value = Null
         Component = MasterCDS
@@ -720,6 +821,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
+    Left = 560
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Master'
@@ -743,6 +845,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -875,6 +985,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnIn(
    OUT outMessageText      Text                  ,
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
-)                              
+)
 RETURNS Text
 AS
 $BODY$
@@ -116,7 +116,7 @@ BEGIN
      END IF;
 
 
-     -- Эти параметры нужны для 
+     -- Эти параметры нужны для
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
             INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
      FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfObject_PriceList;
@@ -555,7 +555,7 @@ BEGIN
               -- Счет - долг Контрагента
             , 0 AS ContainerId_Partner
               -- Счет(справочника) Контрагента
-            , 0 AS AccountId_Partner 
+            , 0 AS AccountId_Partner
               -- Управленческие назначения
             , _tmp.InfoMoneyDestinationId
               -- Статьи назначения
@@ -565,7 +565,7 @@ BEGIN
             , CASE WHEN _tmp.BusinessId_To = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId_To END AS BusinessId_To
 
             , _tmp.isPartionCount
-            , _tmp.isPartionSumm 
+            , _tmp.isPartionSumm
 
               -- Возвратная ли это тара (если да, себестоимость остается на остатке)
             , CASE WHEN _tmp.Price = 0
@@ -587,12 +587,17 @@ BEGIN
             , _tmp.Price_original
             , _tmp.CountForPrice
 
-        FROM 
+        FROM
              (SELECT
                     tmpMI.MovementItemId
 
                   , tmpMI.GoodsId
-                  , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) THEN tmpMI.GoodsKindId ELSE 0 END AS GoodsKindId -- Ирна + Готовая продукция + Доходы Мясное сырье
+                  , CASE WHEN View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101(), zc_Enum_InfoMoney_30201()) -- Ирна + Готовая продукция + Доходы Мясное сырье
+                              THEN tmpMI.GoodsKindId
+                         WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                              THEN tmpMI.GoodsKindId
+                         ELSE 0
+                    END AS GoodsKindId
                   , tmpMI.AssetId
                   , tmpMI.PartionGoods
                   , tmpMI.PartionGoodsDate
@@ -730,7 +735,7 @@ BEGIN
         AND NOT EXISTS (SELECT MovementBoolean.MovementId FROM MovementBoolean WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.ValueData = TRUE AND MovementBoolean.DescId = zc_MovementBoolean_isPartner())
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе не установлено значение <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), CHR(13);
-     ELSE 
+     ELSE
          IF inUserId NOT IN (zc_Enum_Process_Auto_PrimeCost()) AND vbMovementId_parent = 0 AND NOT EXISTS (SELECT 1
                                                                                                            FROM MovementItem
                                                                                                                 INNER JOIN MovementItemFloat AS MIFloat_MovementId
@@ -753,7 +758,7 @@ BEGIN
      END IF;
      IF vbMovementId_parent <> 0
      THEN
-         -- проверка даты 
+         -- проверка даты
          IF vbOperDate <> (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent)
          THEN RAISE EXCEPTION 'Ошибка.%Значение <Дата (склад)> должно соответствовать значению <%>%из документа <Основание № (возврат проведен кладовщиком)>.%Проведение невозможно.', CHR(13), DATE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_parent)), CHR(13), CHR(13);
          END IF;
@@ -1401,7 +1406,7 @@ BEGIN
           -- данные
           FETCH curContainer INTO vbContainerId_Goods, vbContainerId_Summ_Alternative, vbContainerDescId, vbContainerObjectId;
           -- если данных нет, то мы выходим
-          IF NOT FOUND THEN 
+          IF NOT FOUND THEN
              EXIT;
           END IF;
           --
@@ -1497,8 +1502,8 @@ BEGIN
                                   AND vbOperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND vbIsHistoryCost= TRUE -- !!! только для Админа нужны проводки с/с (сделано для ускорения проведения)!!!
-          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!! 
-            OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- здесь нули !!!НЕ НУЖНЫ!!! 
+          AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- здесь нули !!!НЕ НУЖНЫ!!!
+            OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- здесь нули !!!НЕ НУЖНЫ!!!
           AND vbPartnerId_To = 0 -- !!!если НЕ продажа от Контрагента -> Контрагенту!!!
           AND AccountId_SummIn_60000  = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
           AND AccountId_SummOut_60000 = 0 -- !!!если НЕ "виртуальная" прибыль текущего периода!!!
@@ -1647,7 +1652,7 @@ BEGIN
             , tmp.isActive                             AS isActive
        FROM (SELECT 1 AS mySign, TRUE AS isActive UNION SELECT -1 AS mySign, FALSE AS isActive) AS tmp
              INNER JOIN _tmpItem ON AccountId_SummIn_60000 <> 0 OR AccountId_SummOut_60000 <> 0
-      ;      
+      ;
 
 
      -- 2.0. создаем контейнеры для Проводки - Прибыль
@@ -1915,7 +1920,7 @@ BEGIN
                   , _tmpItemSumm.ContainerId_Goods            AS ContainerId_Goods
                   , _tmpItem.GoodsId                          AS GoodsId
                   , _tmpItem.GoodsKindId                      AS GoodsKindId
-                  , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_ReturnInSumm_10800()       AS AnalyzerId --  Сумма с/с, возврат, у покупателя 
+                  , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_ReturnInSumm_10800()       AS AnalyzerId --  Сумма с/с, возврат, у покупателя
                   , 1 * SUM (_tmpItemSumm.OperSumm_Partner)   AS OperSumm
              FROM _tmpItemPartnerTo AS _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
@@ -1926,7 +1931,7 @@ BEGIN
                   , _tmpItemSumm.ContainerId_Goods            AS ContainerId_Goods
                   , _tmpItem.GoodsId                          AS GoodsId
                   , _tmpItem.GoodsKindId                      AS GoodsKindId
-                  , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_ReturnInSumm_10800()       AS AnalyzerId --  Сумма с/с, возврат, у покупателя 
+                  , 0                                         AS AnalyzerId -- zc_Enum_AnalyzerId_ReturnInSumm_10800()       AS AnalyzerId --  Сумма с/с, возврат, у покупателя
                   , -1 * SUM (_tmpItemSumm.OperSumm_Partner)  AS OperSumm
              FROM _tmpItemPartnerTo AS _tmpItemSumm
                   INNER JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
@@ -2307,7 +2312,7 @@ BEGIN
           LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
 
-     -- 5.2.1. формируются Проводки для отчета (Счета: Юр.лицо <-> ОПиУ(Сумма возврата)) !!!Товар здесь ЛЮБОЙ из с/с, а если его нет тогда количественный и еще inAccountId_1 НЕ ПРАВИЛЬНЫЙ!!! 
+     -- 5.2.1. формируются Проводки для отчета (Счета: Юр.лицо <-> ОПиУ(Сумма возврата)) !!!Товар здесь ЛЮБОЙ из с/с, а если его нет тогда количественный и еще inAccountId_1 НЕ ПРАВИЛЬНЫЙ!!!
      PERFORM lpInsertUpdate_MovementItemReport (inMovementDescId     := vbMovementDescId
                                               , inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem_byProfitLoss.MovementItemId
@@ -2465,8 +2470,8 @@ $BODY$
 /*
      UPDATE MovementItem SET ObjectId = tmp.ObjectId
                            , isErased = tmp.isErased
-     FROM (SELECT MI_Child.Id, MI_Master.ObjectId, MI_Master.isErased 
-           FROM Movement 
+     FROM (SELECT MI_Child.Id, MI_Master.ObjectId, MI_Master.isErased
+           FROM Movement
                 inner JOIN MovementItem AS MI_Child
                                         ON MI_Child.MovementId = Movement .Id
                                        AND MI_Child.DescId = zc_MI_Child()
