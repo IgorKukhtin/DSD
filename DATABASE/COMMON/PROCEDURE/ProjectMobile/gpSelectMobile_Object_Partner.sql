@@ -47,7 +47,7 @@ BEGIN
                   , ObjectString_Partner_Address.ValueData  AS Address
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
-                  , ObjectString_Partner_Schedule.ValueData AS Schedule
+                  , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
                   , CAST(0.0 AS TFloat)  AS DebtSum
                   , CAST(0.0 AS TFloat)  AS OverSum
                   , CAST(0 AS Integer)   AS OverDays
