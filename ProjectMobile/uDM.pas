@@ -277,11 +277,13 @@ type
     cdsOrderExternalimageDelete: TBlobField;
     cdsOrderExternalOperDate: TDateField;
     cdsOrderItemsId: TIntegerField;
-    tblMovement_Path: TFDTable;
+    tblMovement_RouteMember: TFDTable;
     AutoIncField1: TAutoIncField;
-    tblMovement_PathGPSN: TFloatField;
-    tblMovement_PathGPSE: TFloatField;
-    tblMovement_PathDateInsert: TDateTimeField;
+    tblMovement_RouteMemberGPSN: TFloatField;
+    tblMovement_RouteMemberGPSE: TFloatField;
+    tblMovement_RouteMemberInsertDate: TDateTimeField;
+    tblMovement_RouteMemberisSync: TBooleanField;
+    tblMovement_RouteMemberGUID: TStringField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
