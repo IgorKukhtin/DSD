@@ -137,8 +137,8 @@ type
     Image7: TImage;
     tcPartnerInfo: TTabControl;
     tiInfo: TTabItem;
-    tiDocuments: TTabItem;
-    tiCredit: TTabItem;
+    tiOrders: TTabItem;
+    tiStoreReals: TTabItem;
     aiWait: TAniIndicator;
     sbPartnerMenu: TSpeedButton;
     Image8: TImage;
@@ -184,8 +184,6 @@ type
     lGoodsDateEnd: TLabel;
     Label22: TLabel;
     lGoodsPrice: TLabel;
-    pPartnerActions: TPanel;
-    bStartVisit: TButton;
     tiOrderExternal: TTabItem;
     VertScrollBox3: TVertScrollBox;
     tiOrderItems: TTabItem;
@@ -290,15 +288,23 @@ type
     bsPriceList: TBindSourceDB;
     BindSourceDB1: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
-    Panel7: TPanel;
-    bOrderExternal: TButton;
+    pNewOrderExternal: TPanel;
+    bNewOrderExternal: TButton;
     bSetPartnerCoordinate: TButton;
     Image11: TImage;
     pMap: TPanel;
     bShowBigMap: TButton;
     Image12: TImage;
-    bShowPath: TButton;
-    tPath: TTimer;
+    tSavePath: TTimer;
+    bPathonMap: TButton;
+    tiPathOnMap: TTabItem;
+    Panel18: TPanel;
+    Label26: TLabel;
+    deDatePath: TDateEdit;
+    pPathOnMap: TPanel;
+    cbShowAllPath: TCheckBox;
+    bRefreshPathOnMap: TButton;
+    Image13: TImage;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -327,7 +333,7 @@ type
       const AItem: TListViewItem);
     procedure lwGoodsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure bOrderExternalClick(Sender: TObject);
+    procedure bNewOrderExternalClick(Sender: TObject);
     procedure ImageColumn1Tap(Sender: TObject; const Point: TPointF);
     procedure lwOrderItemsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
@@ -360,10 +366,15 @@ type
       const ItemObject: TListItemDrawable);
     procedure bSetPartnerCoordinateClick(Sender: TObject);
     procedure bShowBigMapClick(Sender: TObject);
-    procedure tPathTimer(Sender: TObject);
+    procedure tSavePathTimer(Sender: TObject);
+    procedure cbShowAllPathChange(Sender: TObject);
+    procedure bRefreshPathOnMapClick(Sender: TObject);
+    procedure bPathonMapClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
+
+    FCanEditPartner : boolean;
 
     FCurCoordinatesSet: boolean;
     FCurCoordinates: TLocationCoord2D;
@@ -404,6 +415,7 @@ type
     procedure ShowPartnerInfo;
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
+    procedure ShowPathOnmap;
     procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -471,6 +483,14 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  if Assigned(FWebGMap) then
+  try
+    FWebGMap.Visible := False;
+    FreeAndNil(FWebGMap);
+  except
+    // buggy piece of shit
+  end;
+
   FFormsStack.Free;
   FMarkerList.Free;
   FCheckedOI.Free;
@@ -851,7 +871,8 @@ end;
 
 procedure TfrmMain.bHandBookClick(Sender: TObject);
 begin
-  pPartnerActions.Visible := false;
+  FCanEditPartner := false;
+
   SwitchToForm(tiHandbook, nil);
 end;
 
@@ -860,7 +881,7 @@ begin
   ShowPartners(TButton(Sender).Tag, TButton(Sender).Text);
 end;
 
-procedure TfrmMain.bOrderExternalClick(Sender: TObject);
+procedure TfrmMain.bNewOrderExternalClick(Sender: TObject);
 begin
   if DM.qryPartnerPriceWithVAT.AsBoolean then
     lOrderPrice.Text := '÷ÂÌ‡ (Ò Õƒ—)'
@@ -868,6 +889,7 @@ begin
     lOrderPrice.Text := '÷ÂÌ‡ (·ÂÁ Õƒ—)';
 
   OldOrderExternalId := '';
+  deOperDate.Date := Date();
   DM.DefaultOrderExternal;
   FDeletedOI.Clear;
 
@@ -882,9 +904,60 @@ begin
   SwitchToForm(tiPartners, nil);
 end;
 
+procedure TfrmMain.bPathonMapClick(Sender: TObject);
+begin
+  ShowPathOnMap;
+end;
+
 procedure TfrmMain.bPriceListClick(Sender: TObject);
 begin
   ShowPriceLists;
+end;
+
+procedure TfrmMain.bRefreshPathOnMapClick(Sender: TObject);
+var
+ i : integer;
+begin
+  FMarkerList.Clear;
+
+  with DM.tblMovement_RouteMember do
+  begin
+    if not cbShowAllPath.IsChecked then
+    begin
+      Filter := 'date(InsertDate) = ' + QuotedStr(FormatDateTime('YYYY-MM-DD', deDatePath.Date));
+      Filtered := true;
+    end;
+    Open;
+    First;
+
+    while not EOF do
+    begin
+       if (DM.tblMovement_RouteMemberGPSN.AsFloat <> 0) and (DM.tblMovement_RouteMemberGPSE.AsFloat <> 0) then
+         FMarkerList.Add(TLocationCoord2D.Create(DM.tblMovement_RouteMemberGPSN.AsFloat, DM.tblMovement_RouteMemberGPSE.AsFloat));
+
+      Next;
+    end;
+
+    Close;
+    Filter := '';
+    Filtered := false;
+  end;
+
+  if Assigned(FWebGMap) then
+  try
+    FWebGMap.Visible := False;
+    FreeAndNil(FWebGMap);
+  except
+    // buggy piece of shit
+  end;
+
+  FMapLoaded := False;
+
+  FWebGMap := TTMSFMXWebGMaps.Create(Self);
+  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+  FWebGMap.Align := TAlignLayout.Client;
+  FWebGMap.MapOptions.ZoomMap := 14;
+  FWebGMap.Parent := pPathOnMap;
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -1042,7 +1115,8 @@ end;
 
 procedure TfrmMain.bVisitClick(Sender: TObject);
 begin
-  pPartnerActions.Visible := true;
+  FCanEditPartner := true;
+
   SwitchToForm(tiRoutes, nil);
 end;
 
@@ -1059,7 +1133,7 @@ begin
   tMapToImage.Enabled := false;
 
   {$IFDEF ANDROID}
-  fn := TPath.GetDocumentsPath + PathDelim + 'mapscreen.jpg';
+  fn := TPath.Combine(TPath.GetDocumentsPath, 'mapscreen.jpg');
   pic := TJWebView.Wrap(FWebGMap.NativeBrowser).capturePicture;
   bmp := TJBitmap.JavaClass.createBitmap(pic.getWidth, pic.getHeight, TJBitmap_Config.JavaClass.ARGB_8888);
   c := TJCanvas.JavaClass.init(bmp);
@@ -1081,25 +1155,30 @@ begin
   FreeAndNil(FWebGMap);
 end;
 
-procedure TfrmMain.tPathTimer(Sender: TObject);
+procedure TfrmMain.tSavePathTimer(Sender: TObject);
+var
+  GlobalId : TGUID;
 begin
-  tPath.Enabled := false;
+  tSavePath.Enabled := false;
   try
     GetCurrentCoordinates;
     if FCurCoordinatesSet then
     begin
-      DM.tblMovement_Path.Open;
+      DM.tblMovement_RouteMember.Open;
 
-      DM.tblMovement_Path.Append;
-      DM.tblMovement_PathGPSN.AsFloat := FCurCoordinates.Latitude;
-      DM.tblMovement_PathGPSE.AsFloat := FCurCoordinates.Longitude;
-      DM.tblMovement_PathDateInsert.AsDateTime := Now();
-      DM.tblMovement_Path.Post;
+      DM.tblMovement_RouteMember.Append;
+      CreateGUID(GlobalId);
+      DM.tblMovement_RouteMemberGUID.AsString := GUIDToString(GlobalId);
+      DM.tblMovement_RouteMemberGPSN.AsFloat := FCurCoordinates.Latitude;
+      DM.tblMovement_RouteMemberGPSE.AsFloat := FCurCoordinates.Longitude;
+      DM.tblMovement_RouteMemberInsertDate.AsDateTime := Now();
+      DM.tblMovement_RouteMemberisSync.AsBoolean := false;
+      DM.tblMovement_RouteMember.Post;
 
-      DM.tblMovement_Path.Close;
+      DM.tblMovement_RouteMember.Close;
     end;
   finally
-    tPath.Enabled := true;
+    tSavePath.Enabled := true;
   end;
 end;
 
@@ -1212,7 +1291,10 @@ begin
       for i := 0 to FMarkerList.Count - 1 do
       begin
         with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, GetAddress(FMarkerList[i].Latitude, FMarkerList[i].Longitude), '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
-          MapLabel.Text := Title;
+          if tcMain.ActiveTab = tiPathOnMap then
+            MapLabel.Text := IntToStr(i + 1)
+          else
+            MapLabel.Text := Title;
       end;
 
       FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
@@ -1571,6 +1653,15 @@ begin
   SwitchToForm(tiPriceListItems, DM.qryGoods);
 end;
 
+procedure TfrmMain.ShowPathOnmap;
+begin
+  deDatePath.Date := Date();
+
+  SwitchToForm(tiPathOnMap, nil);
+
+  bRefreshPathOnMapClick(nil);
+end;
+
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
@@ -1677,6 +1768,11 @@ begin
     On E: Exception do
       Showmessage(E.Message);
   end;
+end;
+
+procedure TfrmMain.cbShowAllPathChange(Sender: TObject);
+begin
+  deDatePath.Enabled := not cbShowAllPath.IsChecked;
 end;
 
 procedure TfrmMain.GetImage;
