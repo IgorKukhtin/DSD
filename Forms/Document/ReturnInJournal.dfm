@@ -4,9 +4,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   ClientWidth = 1114
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -341
   ExplicitWidth = 1130
-  ExplicitHeight = 570
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -181,6 +180,23 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 70
+          end
+          object clReestrKindName: TcxGridDBColumn
+            Caption = #1042#1080#1079#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            DataBinding.FieldName = 'ReestrKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
+            Options.Editing = False
+            Width = 74
+          end
+          object colMemberName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' / '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+            DataBinding.FieldName = 'MemberName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'

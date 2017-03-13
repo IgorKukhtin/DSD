@@ -444,6 +444,22 @@ object MainForm: TMainForm
       TabOrder = 21
       WordWrap = True
     end
+    object cbGoodsItem: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 339
+      Width = 178
+      Height = 24
+      Caption = '1.20. '#1058#1086#1074#1072#1088#1099' c '#1088#1072#1079#1084#1077#1088#1072#1084#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 22
+      WordWrap = True
+    end
   end
   object DocumentPanel: TPanel
     Left = 948
@@ -527,9 +543,7 @@ object MainForm: TMainForm
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
     AfterConnect = toZConnectionAfterConnect
     HostName = 'localhost'

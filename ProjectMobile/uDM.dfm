@@ -940,11 +940,11 @@ object DM: TDM
       FieldName = 'imageDelete'
     end
   end
-  object tblMovement_Path: TFDTable
+  object tblMovement_RouteMember: TFDTable
     Connection = conMain
     FetchOptions.AssignedValues = [evDetailCascade]
-    UpdateOptions.UpdateTableName = 'Movement_OrderExternal'
-    TableName = 'Movement_OrderExternal'
+    UpdateOptions.UpdateTableName = 'Movement_RouteMember'
+    TableName = 'Movement_RouteMember'
     Left = 584
     Top = 56
     object AutoIncField1: TAutoIncField
@@ -952,14 +952,21 @@ object DM: TDM
       ProviderFlags = [pfInWhere]
       ReadOnly = True
     end
-    object tblMovement_PathGPSN: TFloatField
+    object tblMovement_RouteMemberGUID: TStringField
+      FieldName = 'GUID'
+      Size = 255
+    end
+    object tblMovement_RouteMemberInsertDate: TDateTimeField
+      FieldName = 'InsertDate'
+    end
+    object tblMovement_RouteMemberGPSN: TFloatField
       FieldName = 'GPSN'
     end
-    object tblMovement_PathGPSE: TFloatField
+    object tblMovement_RouteMemberGPSE: TFloatField
       FieldName = 'GPSE'
     end
-    object tblMovement_PathDateInsert: TDateTimeField
-      FieldName = 'DateInsert'
+    object tblMovement_RouteMemberisSync: TBooleanField
+      FieldName = 'isSync'
     end
   end
 end

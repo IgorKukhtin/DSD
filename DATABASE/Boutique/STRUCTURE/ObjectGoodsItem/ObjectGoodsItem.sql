@@ -25,7 +25,6 @@ CREATE INDEX idx_Object_GoodsItem_GoodsId ON Object_GoodsItem(GoodsId);
 CREATE INDEX idx_Object_GoodsItem_GoodsSizeId ON Object_GoodsItem(GoodsSizeId);
 
 
-CLUSTER object_pkey ON Object_GoodsItem; 
 
 /*-------------------------------------------------------------------------------*/
 /*

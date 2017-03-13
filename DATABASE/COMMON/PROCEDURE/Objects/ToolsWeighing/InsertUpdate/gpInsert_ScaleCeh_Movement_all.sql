@@ -535,6 +535,7 @@ BEGIN
                                                          (ioId                  := tmp.MovementItemId_find
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmp.GoodsId
+                                                        , inGoodsKindId         := tmp.GoodsKindId
                                                         , inAmount              := tmp.Amount
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount
@@ -547,6 +548,7 @@ BEGIN
                                                         , inMovementId          := vbMovementId_begin
                                                         , inParentId            := NULL
                                                         , inGoodsId             := tmp.GoodsId
+                                                        , inGoodsKindId         := tmp.GoodsKindId                                                         
                                                         , inAmount              := tmp.Amount
                                                         , inLiveWeight          := tmp.LiveWeight
                                                         , inHeadCount           := tmp.HeadCount

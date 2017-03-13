@@ -74,6 +74,7 @@ type
     fromQueryDate: TQuery;
     fromQueryDate_recalc: TQuery;
     cbGoods: TCheckBox;
+    cbGoodsItem: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -146,6 +147,8 @@ type
     procedure pLoadGuide_Unit;
     procedure pLoadGuide_Label;
     procedure pLoadGuide_Goods;
+    procedure pLoadGuide_GoodsItem;
+
 
 
 
@@ -612,7 +615,7 @@ begin
      if not fStop then pLoadGuide_Unit;
      if not fStop then pLoadGuide_Label;
      if not fStop then pLoadGuide_Goods;
-
+     if not fStop then pLoadGuide_GoodsItem;
 
 
 
@@ -704,6 +707,9 @@ begin
       fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label = null');
       if cbGoods.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
+      if cbGoodsItem.Checked then
+      fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null');
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -1419,6 +1425,79 @@ begin
      end;
      //
      myDisabledCB(cbGoodsInfo);
+end;
+
+procedure TMainForm.pLoadGuide_GoodsItem;
+begin
+if (not cbGoodsItem.Checked)or(not cbGoodsItem.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.GoodsProperty add Id_Pg_goodsItem integer null;');
+    finally
+
+    end;
+     //
+     myEnabledCB(cbGoodsItem);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty.ID  as ObjectId');
+        Add('     , GoodsProperty.CashCode as ObjectCode');
+        Add('     , GoodsName.GoodsName as ObjectName');
+        Add('     , zc_erasedDel()         as zc_erasedDel');
+        Add('     , GoodsProperty.Erased   as Erased');
+        Add('     , GoodsProperty.Id_Pg_GoodsItem');
+        Add('     , GoodsProperty.Id_Pg_Goods');
+        Add('     , GoodsProperty_parent_GoodsSize.Id_Postgres as ParentId_Postgres_GoodsSize');
+        Add('from dba.GoodsProperty ');
+        Add(' left outer join dba.Goods as GoodsName  on GoodsName.Id = GoodsProperty.GoodsId');
+        Add(' left outer join dba.GoodsSize as GoodsProperty_parent_GoodsSize on GoodsProperty_parent_GoodsSize.Id =  GoodsProperty.GoodsSizeId');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_GoodsItem';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsSizeId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Pg_GoodsItem').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('Id_Pg_Goods').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsSizeId').Value:=FieldByName('ParentId_Postgres_GoodsSize').AsInteger;
+
+
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Pg_GoodsItem').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsItem);
+
 end;
 
 procedure TMainForm.pLoadGuide_GoodsSize;

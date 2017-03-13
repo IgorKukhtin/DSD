@@ -13,6 +13,7 @@ type
     procedure CreateDataBase;
     procedure CreateType;
     procedure CreateObject;
+    procedure CreateObjectGoodsItem;
     procedure CreateContainer;
     procedure CreateObjectCost;
     procedure CreateFunctionsForIndex;
@@ -172,6 +173,11 @@ begin
   ExecFile(StructurePath + 'ObjectCost\ContainerObjectCost.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectCost\HistoryCost.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectCost\ObjectCostSEQUENCE.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreateObjectGoodsItem;
+begin
+  ExecFile(StructurePath + 'ObjectGoodsItem\ObjectGoodsItem.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreatePeriodClose;

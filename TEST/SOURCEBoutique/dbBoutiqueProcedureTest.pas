@@ -75,6 +75,8 @@ type
     procedure CreateLabel;
     procedure CreateGoods;
     procedure CreateDiscountKind;
+    procedure CreateGoodsItem;
+
   end;
 
 implementation
@@ -214,9 +216,14 @@ begin
  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsInfo\');
 end;
 
+procedure TdbObjectProcedureTest.CreateGoodsItem;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsItem\');
+end;
+
 procedure TdbObjectProcedureTest.CreateGoodsSize;
 begin
- DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsSize\');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\GoodsSize\');
 end;
 
 procedure TdbObjectProcedureTest.CreateImportSettingsItems;

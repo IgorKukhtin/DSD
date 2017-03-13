@@ -202,6 +202,7 @@ BEGIN
                               LIMIT 1)
        SELECT
              Movement.Id                                AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber                         AS InvNumber
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate
            , Object_Status.ObjectCode          		    AS StatusCode

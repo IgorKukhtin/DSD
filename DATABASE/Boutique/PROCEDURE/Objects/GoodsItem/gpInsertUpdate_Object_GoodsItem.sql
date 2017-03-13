@@ -1,6 +1,6 @@
--- Function: gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, Boolean, Boolean, TVarChar)
+-- Function: gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsItem (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsItem(
  INOUT ioId           Integer,       -- Ключ объекта <Товары с размерами>            
@@ -18,8 +18,23 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsInfo());
    vbUserId:= lpGetUserBySession (inSession);
    
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsInfo(), 0, '');
+   IF COALESCE (ioId, 0) = 0 THEN
+      -- добавили новый элемент справочника и вернули значение <Ключ объекта>
+      INSERT INTO Object_GoodsItem (GoodsId, GoodsSizeId)
+                  VALUES (inGoodsId, inGoodsSizeId) RETURNING Id INTO ioId;
+   ELSE
+       -- изменили элемент справочника по значению <Ключ объекта>
+       UPDATE Object_GoodsItem SET GoodsId = inGoodsId, GoodsSizeId = inGoodsSizeId WHERE Id = ioId ;
+
+       -- если такой элемент не был найден
+       IF NOT FOUND THEN
+          -- добавили новый элемент справочника со значением <Ключ объекта>
+          INSERT INTO Object_GoodsItem (Id, GoodsId, GoodsSizeId)
+                     VALUES (ioId, inGoodsId, inGoodsSizeId);
+       END IF; -- if NOT FOUND
+
+   END IF; -- if COALESCE (ioId, 0) = 0  
+
 
 END;
 $BODY$
