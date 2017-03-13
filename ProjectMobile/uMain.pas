@@ -162,8 +162,6 @@ type
     bPartners: TButton;
     tiPriceList: TTabItem;
     lwPriceList: TListView;
-    ilOrder: TImageList;
-    Image9: TImage;
     tiPriceListItems: TTabItem;
     lwGoods: TListView;
     bsGoods: TBindSourceDB;
@@ -214,14 +212,11 @@ type
     tiPhotos: TTabItem;
     Panel12: TPanel;
     Panel13: TPanel;
-    bAddedPhoto: TButton;
+    bAddedPhotoGroup: TButton;
     bCapture: TButton;
     bSavePartnerPhoto: TButton;
     bClosePhoto: TButton;
-    lwPartnerPhotos: TListView;
-    Button1: TButton;
-    bsPhoto: TBindSourceDB;
-    LinkFillControlToField3: TLinkFillControlToField;
+    lwPartnerPhotoGroups: TListView;
     lwNewOrderExternal: TListView;
     bsSelectedOrderItems: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
@@ -286,7 +281,6 @@ type
     lwOrderExternal: TListView;
     LinkListControlToField4: TLinkListControlToField;
     bsPriceList: TBindSourceDB;
-    BindSourceDB1: TBindSourceDB;
     LinkListControlToField5: TLinkListControlToField;
     pNewOrderExternal: TPanel;
     bNewOrderExternal: TButton;
@@ -305,6 +299,28 @@ type
     cbShowAllPath: TCheckBox;
     bRefreshPathOnMap: TButton;
     Image13: TImage;
+    tiReturnIns: TTabItem;
+    tiPhotosList: TTabItem;
+    lwPhotos: TListView;
+    Panel7: TPanel;
+    bAddedPhoto: TButton;
+    pNewPhotoGroup: TPanel;
+    bSavePG: TButton;
+    bCanclePG: TButton;
+    ePhotoGroupName: TEdit;
+    Label29: TLabel;
+    bsPhotoGroups: TBindSourceDB;
+    LinkListControlToField6: TLinkListControlToField;
+    bsPhotos: TBindSourceDB;
+    LinkListControlToField7: TLinkListControlToField;
+    bsOrderExternal: TBindSourceDB;
+    tiPhotoEdit: TTabItem;
+    Panel19: TPanel;
+    bSavePhotoComment: TButton;
+    Panel20: TPanel;
+    Label30: TLabel;
+    ePhotoCommentEdit: TEdit;
+    imPhoto: TImage;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -334,7 +350,6 @@ type
     procedure lwGoodsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bNewOrderExternalClick(Sender: TObject);
-    procedure ImageColumn1Tap(Sender: TObject; const Point: TPointF);
     procedure lwOrderItemsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure lwOrderItemsUpdateObjects(const Sender: TObject;
@@ -344,7 +359,7 @@ type
     procedure bCancelOIClick(Sender: TObject);
     procedure bSaveOIClick(Sender: TObject);
     procedure bSaveOrderExternalClick(Sender: TObject);
-    procedure bAddedPhotoClick(Sender: TObject);
+    procedure bAddedPhotoGroupClick(Sender: TObject);
     procedure bCaptureClick(Sender: TObject);
     procedure bSavePartnerPhotoClick(Sender: TObject);
     procedure bClosePhotoClick(Sender: TObject);
@@ -370,6 +385,25 @@ type
     procedure cbShowAllPathChange(Sender: TObject);
     procedure bRefreshPathOnMapClick(Sender: TObject);
     procedure bPathonMapClick(Sender: TObject);
+    procedure bAddedPhotoClick(Sender: TObject);
+    procedure bCanclePGClick(Sender: TObject);
+    procedure bSavePGClick(Sender: TObject);
+    procedure lwPartnerPhotoGroupsItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure lwPhotosUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure LinkListControlToField6FilledListItem(Sender: TObject;
+      const AEditor: IBindListEditorItem);
+    procedure lwNewOrderExternalUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwOrderExternalUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwPartnerUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwPhotosItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure bSavePhotoCommentClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -416,6 +450,8 @@ type
     procedure ShowPriceLists;
     procedure ShowPriceListItems;
     procedure ShowPathOnmap;
+    procedure ShowPhotos;
+    procedure ShowPhoto;
     procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -464,11 +500,11 @@ begin
   {$ENDIF}
 
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  bAddedPhoto.Visible := true;
-  bSetPartnerCoordinate.Visible := true;
+  bAddedPhoto.Enabled := true;
+  bSetPartnerCoordinate.Enabled := true;
   {$ELSE}
-  bAddedPhoto.Visible := false;
-  bSetPartnerCoordinate.Visible := false;
+  bAddedPhoto.Enabled := false;
+  bSetPartnerCoordinate.Enabled := false;
   {$ENDIF}
 
   FFormsStack := TStack<TFormStackItem>.Create;
@@ -535,6 +571,12 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
+end;
+
+procedure TfrmMain.LinkListControlToField6FilledListItem(Sender: TObject;
+  const AEditor: IBindListEditorItem);
+begin
+  lwPartnerPhotoGroups.Items[AEditor.CurrentIndex].ImageIndex := 0;
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -639,7 +681,7 @@ begin
   if ItemObject.Name = 'DeleteButton' then
   begin
     if DM.cdsOrderItemsId.AsInteger <> -1 then
-
+      FDeletedOI.Add(DM.cdsOrderItemsId.AsInteger);
     DM.cdsOrderItems.Delete;
 
 
@@ -655,6 +697,12 @@ begin
   end;
 end;
 
+procedure TfrmMain.lwNewOrderExternalUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+end;
+
 procedure TfrmMain.lwOrderExternalItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
@@ -662,14 +710,14 @@ begin
   if ItemObject = nil then
     exit;
 
-  if ItemObject.Name = 'Delete' then
+  if ItemObject.Name = 'DeleteButton' then
   begin
     MessageDlg('Удалить заявку на ' + FormatDateTime('DD.MM.YYYY', DM.cdsOrderExternalOperDate.AsDateTime) + '?',
                System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
                DeleteOrderExtrernal);
   end;
 
-  if ItemObject.Name = 'Edit' then
+  if ItemObject.Name = 'EditButton' then
   begin
     if DM.qryPartnerPriceWithVAT.AsBoolean then
       lOrderPrice.Text := 'Цена (с НДС)'
@@ -686,6 +734,13 @@ begin
 
     SwitchToForm(tiOrderExternal, nil);
   end;
+end;
+
+procedure TfrmMain.lwOrderExternalUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
 procedure TfrmMain.lwOrderItemsFilter(Sender: TObject; const AFilter,
@@ -715,8 +770,6 @@ end;
 procedure TfrmMain.lwOrderItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  // Restore checked state when device is rotated.
-  // When listview is resized because of rotation, accessory properties will be reset to default values
   (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedOI.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
 end;
 
@@ -724,6 +777,52 @@ procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   ShowPartnerInfo;
+end;
+
+procedure TfrmMain.lwPartnerPhotoGroupsItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if (ItemObject <> nil) and (ItemObject.Name = 'I') then
+  begin
+    DM.qryPhotoGroups.Edit;
+    DM.qryPhotoGroupsStatusId.AsInteger := DM.tblObject_ConstStatusId_Erased.AsInteger;
+    DM.qryPhotoGroups.Post;
+
+    DM.qryPhotoGroups.Refresh;
+  end
+  else
+  begin
+    ShowPhotos;
+  end;
+end;
+
+procedure TfrmMain.lwPartnerUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('imAddress')).ImageIndex := 2;
+  TListItemImage(AItem.Objects.FindDrawable('imContact')).ImageIndex := 3;
+end;
+
+procedure TfrmMain.lwPhotosItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if (ItemObject <> nil) then
+  begin
+    if ItemObject.Name = 'DeleteButton' then
+      DM.qryPhotos.Delete;
+
+    if ItemObject.Name = 'EditButton' then
+      ShowPhoto;
+  end;
+end;
+
+procedure TfrmMain.lwPhotosUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
 procedure TfrmMain.lwPriceListItemClick(const Sender: TObject;
@@ -816,6 +915,13 @@ begin
   PrepareCamera;
 end;
 
+procedure TfrmMain.bAddedPhotoGroupClick(Sender: TObject);
+begin
+  vsbMain.Enabled := false;
+  pNewPhotoGroup.Visible := true;
+  ePhotoComment.SetFocus;
+end;
+
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
 begin
   DM.qryOrderItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
@@ -829,6 +935,12 @@ begin
   DM.qryOrderItems.Close;
 
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bCanclePGClick(Sender: TObject);
+begin
+  vsbMain.Enabled := true;
+  pNewPhotoGroup.Visible := false;
 end;
 
 procedure TfrmMain.bClearAmountClick(Sender: TObject);
@@ -1029,6 +1141,7 @@ var
   BlobStream : TMemoryStream;
   Surf : TBitmapSurface;
   qrySavePhoto : TFDQuery;
+  GlobalId : TGUID;
 begin
   // Save displayed photo
   try
@@ -1050,16 +1163,19 @@ begin
       try
         qrySavePhoto.Connection := DM.conMain;
 
-        qrySavePhoto.SQL.Text := 'Insert into Object_Partner_Photo (PartnerId, ContractId, Photo, Comment, isErased) Values (:PartnerId, :ContractId, :Photo, :Comment, :isErased)';
-        qrySavePhoto.Params[0].Value := DM.qryPartnerId.AsInteger;
-        qrySavePhoto.Params[1].Value := DM.qryPartnerCONTRACTID.AsInteger;
+        qrySavePhoto.SQL.Text := 'Insert into MovementItem_Visit (MovementId, GUID, Photo, Comment, InsertDate) Values (:MovementId, :GUID, :Photo, :Comment, :InsertDate)';
+        qrySavePhoto.Params[0].Value := DM.qryPhotoGroupsId.AsInteger;
+        CreateGUID(GlobalId);
+        qrySavePhoto.Params[1].Value := GUIDToString(GlobalId);
         qrySavePhoto.Params[2].LoadFromStream(BlobStream, ftBlob);
         qrySavePhoto.Params[3].Value := ePhotoComment.Text;
-        qrySavePhoto.Params[4].Value := 0;
+        qrySavePhoto.Params[4].Value := Now();
 
         qrySavePhoto.ExecSQL;
 
         ShowMessage('Фото успешно сохранено');
+
+        DM.qryPhotos.Refresh;
       finally
         FreeAndNil(qrySavePhoto);
       end;
@@ -1076,6 +1192,25 @@ begin
   end;
 
   CameraFree;
+  ReturnPriorForm;
+end;
+
+procedure TfrmMain.bSavePGClick(Sender: TObject);
+begin
+  DM.SavePhotoGroup(ePhotoGroupName.Text);
+
+  DM.qryPhotoGroups.Refresh;
+
+  vsbMain.Enabled := true;
+  pNewPhotoGroup.Visible := false;
+end;
+
+procedure TfrmMain.bSavePhotoCommentClick(Sender: TObject);
+begin
+  DM.qryPhotos.Edit;
+  DM.qryPhotosComment.AsString := ePhotoCommentEdit.Text;
+  DM.qryPhotos.Post;
+
   ReturnPriorForm;
 end;
 
@@ -1469,7 +1604,7 @@ begin
     while not EOF do
     begin
       Schedule := FieldbyName('Schedule').AsString;
-      if Schedule.Length <> 14 then
+      if Schedule.Length <> 13 then
       begin
         ShowMessage('Ошибка в структуре поля Schedule');
         exit;
@@ -1560,11 +1695,6 @@ begin
   lAllDaysCount.Text := IntToStr(DaysCount[8]);
 end;
 
-procedure TfrmMain.ImageColumn1Tap(Sender: TObject; const Point: TPointF);
-begin
-  ShowMessage('Test');
-end;
-
 procedure TfrmMain.ShowPartners(Day : integer; Caption : string);
 var
   sQuery, CurGPSN, CurGPSE : string;
@@ -1633,6 +1763,8 @@ begin
   GetMapPartnerScreenshot(SetCordinate, Coordinates);
 
   DM.LoadOrderExternal;
+
+  DM.LoadPhotoGroups;
 end;
 
 procedure TfrmMain.ShowPriceLists;
@@ -1660,6 +1792,29 @@ begin
   SwitchToForm(tiPathOnMap, nil);
 
   bRefreshPathOnMapClick(nil);
+end;
+
+procedure TfrmMain.ShowPhotos;
+begin
+  DM.qryPhotos.Open('select Id, Photo, Comment from MovementItem_Visit where MovementId = ' + DM.qryPhotoGroupsId.AsString);
+
+  SwitchToForm(tiPhotosList, DM.qryPhotos);
+end;
+
+procedure TfrmMain.ShowPhoto;
+var
+  BlobStream: TStream;
+begin
+  ePhotoCommentEdit.Text := DM.qryPhotosComment.AsString;
+
+  BlobStream := DM.qryPhotos.CreateBlobStream(DM.qryPhotosPhoto, TBlobStreamMode.bmRead);
+  try
+    imPhoto.Bitmap.LoadFromStream(BlobStream);
+  finally
+    BlobStream.Free;
+  end;
+
+  SwitchToForm(tiPhotoEdit, nil);
 end;
 
 procedure TfrmMain.RecalculateTotalPriceAndWeight;

@@ -231,13 +231,10 @@ type
     tblMovement_OrderExternalId: TAutoIncField;
     tblObject_PriceListVATPercent: TFloatField;
     tblMovementItem_OrderExternalId: TAutoIncField;
-    tblObject_Partner_Photo: TFDTable;
-    IntegerField7: TIntegerField;
-    BooleanField1: TBooleanField;
-    tblObject_Partner_PhotoPartnerId: TIntegerField;
-    tblObject_Partner_PhotoId: TAutoIncField;
-    tblObject_Partner_PhotoPhoto: TBlobField;
-    tblObject_Partner_PhotoComment: TStringField;
+    tblMovement_Visit: TFDTable;
+    tblMovement_VisitPartnerId: TIntegerField;
+    tblMovement_VisitId: TAutoIncField;
+    tblMovement_VisitComment: TStringField;
     qryPartnerPhotos: TFDQuery;
     qryPartnerPhotosPhoto: TBlobField;
     qryPartnerPhotosComment: TStringField;
@@ -260,7 +257,6 @@ type
     cdsOrderItemsMeasure: TStringField;
     cdsOrderItemsGoodsId: TIntegerField;
     cdsOrderItemsKindId: TIntegerField;
-    cdsOrderItemsDelImage: TBlobField;
     cdsOrderItemsWeight: TFloatField;
     qryOrderItemsKind: TStringField;
     qryOrderItemsMeasure: TStringField;
@@ -273,8 +269,6 @@ type
     cdsOrderExternalWeigth: TStringField;
     cdsOrderExternalStatus: TStringField;
     cdsOrderExternalId: TIntegerField;
-    cdsOrderExternalimageEdit: TBlobField;
-    cdsOrderExternalimageDelete: TBlobField;
     cdsOrderExternalOperDate: TDateField;
     cdsOrderItemsId: TIntegerField;
     tblMovement_RouteMember: TFDTable;
@@ -284,6 +278,27 @@ type
     tblMovement_RouteMemberInsertDate: TDateTimeField;
     tblMovement_RouteMemberisSync: TBooleanField;
     tblMovement_RouteMemberGUID: TStringField;
+    tblMovement_VisitGUID: TStringField;
+    tblMovement_VisitInvNumber: TStringField;
+    tblMovement_VisitOperDate: TDateTimeField;
+    tblMovement_VisitStatusId: TIntegerField;
+    tblMovement_VisitisSync: TBooleanField;
+    tblMovementItem_Visit: TFDTable;
+    tblMovementItem_VisitMovementId: TIntegerField;
+    tblMovementItem_VisitGUID: TStringField;
+    tblMovementItem_VisitPhoto: TBlobField;
+    tblMovementItem_VisitComment: TStringField;
+    tblMovementItem_VisitInsertDate: TDateTimeField;
+    tblMovementItem_VisitId: TAutoIncField;
+    qryPhotoGroups: TFDQuery;
+    qryPhotos: TFDQuery;
+    qryPhotoGroupsId: TIntegerField;
+    qryPhotoGroupsComment: TStringField;
+    qryPhotoGroupsStatusId: TIntegerField;
+    qryPhotosId: TIntegerField;
+    qryPhotosPhoto: TBlobField;
+    qryPhotosComment: TStringField;
+    tblObject_GoodsListSaleDaysCalc: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -308,8 +323,11 @@ type
     procedure AddedGoodsToOrderExternal(AGoods : string);
     function SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
       ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
-    procedure LoadOrderExternal(AId : string = '');
-    procedure LoadOrderExtrenalItems(AId : integer);
+    procedure LoadOrderExternal(AId: string = '');
+    procedure LoadOrderExtrenalItems(AId: integer);
+
+    procedure SavePhotoGroup(AGroupName: string);
+    procedure LoadPhotoGroups;
 
     property Connected: Boolean read FConnected;
   end;
@@ -961,14 +979,8 @@ begin
   cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
   cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
   cdsOrderItemsWeight.AsString := ArrValue[9];         // вес
-
   cdsOrderItemsCount.AsString := ArrValue[10];             // количество по умолчанию
-  // кнопка удалить
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  cdsOrderItemsDelImage.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
-  {$ELSE}
-  cdsOrderItemsDelImage.LoadFromFile('remove.png');
-  {$ENDIF}
+
   cdsOrderItems.Post;
 end;
 
@@ -983,14 +995,14 @@ begin
 
   if OldOrderExternalId = '' then
   begin
+    NewInvNumber := 1;
+
     qryMaxInvNumber := TFDQuery.Create(nil);
     try
       qryMaxInvNumber.Connection := conMain;
       qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
       if qryMaxInvNumber.RecordCount > 0 then
-        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1
-      else
-        NewInvNumber := 1;
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
     finally
       FreeAndNil(qryMaxInvNumber);
     end;
@@ -1166,15 +1178,6 @@ begin
       else
         cdsOrderExternalStatus.AsString := 'Статус: Неизвестный';
 
-      // кнопки удалить и редактировать
-      {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-      cdsOrderExternalimageDelete.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'remove.png'));
-      cdsOrderExternalimageEdit.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath, 'edit.png'));
-      {$ELSE}
-      cdsOrderExternalimageDelete.LoadFromFile('remove.png');
-      cdsOrderExternalimageEdit.LoadFromFile('edit.png');
-      {$ENDIF}
-
       cdsOrderExternal.Post;
 
       qryOrderExternal.Next;
@@ -1220,6 +1223,58 @@ begin
   finally
     qryGoodsListSale.Free;
   end;
+end;
+
+procedure TDM.SavePhotoGroup(AGroupName: string);
+var
+  GlobalId : TGUID;
+  i, MovementId, NewInvNumber : integer;
+  qryMaxInvNumber : TFDQuery;
+begin
+  NewInvNumber := 1;
+
+  qryMaxInvNumber := TFDQuery.Create(nil);
+  try
+    qryMaxInvNumber.Connection := conMain;
+    qryMaxInvNumber.Open('select Max(InvNumber) from Movement_OrderExternal');
+    if qryMaxInvNumber.RecordCount > 0 then
+      NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+  finally
+    FreeAndNil(qryMaxInvNumber);
+  end;
+
+  try
+    tblMovement_Visit.Open;
+
+    tblMovement_Visit.Append;
+
+    CreateGUID(GlobalId);
+    tblMovement_VisitGUID.AsString := GUIDToString(GlobalId);
+    tblMovement_VisitInvNumber.AsString := IntToStr(NewInvNumber);
+    tblMovement_VisitOperDate.AsDateTime := Now();
+    tblMovement_VisitPartnerId.AsInteger := qryPartnerId.AsInteger;
+    if Trim(AGroupName) <> '' then
+      tblMovement_VisitComment.AsString := AGroupName
+    else
+      tblMovement_VisitComment.AsString := 'Общая';
+    tblMovement_VisitStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+    tblMovement_VisitisSync.AsBoolean := false;
+
+    tblMovement_Visit.Post;
+
+    tblMovement_Visit.Close;
+  except
+    on E : Exception do
+    begin
+      ShowMessage(E.Message);
+    end;
+  end;
+end;
+
+procedure TDM.LoadPhotoGroups;
+begin
+  qryPhotoGroups.Open('select Id, Comment, StatusId from Movement_Visit where PartnerId = ' + qryPartnerId.AsString +
+    ' and StatusId <> ' + tblObject_ConstStatusId_Erased.AsString);
 end;
 
 initialization
