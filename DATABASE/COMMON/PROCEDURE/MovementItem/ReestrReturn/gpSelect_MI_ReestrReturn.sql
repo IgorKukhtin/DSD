@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrReturn(
 )
 RETURNS TABLE  (Id Integer, LineNum Integer
               , MemberId Integer, MemberCode Integer, MemberName TVarChar
-              , InsertName TVarChar, InsertDate TDateTime, UpdateDate TDateTime
+              , InsertDate TDateTime
               , isErased Boolean
               , MovementId_ReturnIn Integer, BarCode_ReturnIn TVarChar
               , InvNumber_ReturnIn TVarChar, OperDate_ReturnIn TDateTime
@@ -21,9 +21,8 @@ RETURNS TABLE  (Id Integer, LineNum Integer
               , PaidKindName TVarChar
               , ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
               , JuridicalName_To TVarChar, OKPO_To TVarChar 
-
               , ReestrKindName TVarChar
-               )
+              )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -31,7 +30,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Результат
+      -- Результат
      RETURN QUERY
        WITH -- строчная часть реестра
             tmpMI AS (SELECT MovementItem.Id            AS MovementItemId

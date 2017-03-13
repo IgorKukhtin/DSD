@@ -44,19 +44,26 @@ BEGIN
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT GENERATE_SERIES ( inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate;
 
-
+     CREATE TEMP TABLE tmpDatePromo ON COMMIT DROP AS
+        SELECT date_trunc('month', tmp.OperDate) AS OperDate
+             , count (date_trunc('month', tmp.OperDate)) :: Tfloat AS DayMonth
+        FROM (SELECT GENERATE_SERIES ( vbDateStartPromo, vbDatEndPromo - interval '1 day' , '1 DAY' :: INTERVAL) AS OperDate) AS tmp
+        GROUP BY date_trunc('month', tmp.OperDate);
+ 
  CREATE TEMP TABLE _tmpMovPromoUnit (GoodsId Integer, Amount Tfloat, AmountPlanMax Tfloat) ON COMMIT DROP;
     INSERT INTO _tmpMovPromoUnit (GoodsId, Amount, AmountPlanMax)
     WITH
         tmpKoef AS (SELECT tmp.OperDate
-                         , CAST (CountDays / date_part ('day', ((tmp.OperDate + interval '1 month') - tmp.OperDate)) AS NUMERIC (15,4)) AS Amount
+                         , CAST (tmp.CountDays / tmpDatePromo.DayMonth AS  NUMERIC (15,4)) AS Amount
                     FROM
                         (SELECT date_trunc('month', tmpOperDate.OperDate) AS OperDate
-                              , count (date_trunc('month', tmpOperDate.OperDate)) AS CountDays
+                              , count (date_trunc('month', tmpOperDate.OperDate)) :: Tfloat AS CountDays
                          FROM tmpOperDate
                          GROUP BY date_trunc('month', tmpOperDate.OperDate)
                         ) AS tmp
+                      LEFT JOIN tmpDatePromo ON tmpDatePromo.Operdate =  tmp.OperDate
                     )
+
     --  данные из "план по маркетингу для точек"
    , tmpMovPromoUnit AS (SELECT DATE_TRUNC ('month', Movement.OperDate) AS OperDate
                               , MovementItem.ObjectId                 AS GoodsId
