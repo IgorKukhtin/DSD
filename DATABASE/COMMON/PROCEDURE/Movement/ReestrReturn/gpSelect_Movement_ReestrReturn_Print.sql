@@ -32,16 +32,21 @@ BEGIN
            , Movement.InvNumber
            , Movement.OperDate
       
-           , Object_Update.ValueData           AS UpdateName
+           , Object_Insert.ValueData           AS InsertName
+           , MovementDate_Insert.ValueData     AS InsertDate
            , MovementDate_Update.ValueData     AS UpdateDate
        FROM Movement
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
-            LEFT JOIN MovementLinkObject AS MLO_Update
-                                         ON MLO_Update.MovementId = Movement.Id
-                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
+
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId  
     WHERE Movement.Id = inMovementId
       AND Movement.DescId = zc_Movement_ReestrReturn()
      ;

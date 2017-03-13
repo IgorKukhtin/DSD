@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrReturn(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , InsertName TVarChar, UpdateName TVarChar, UpdateDate TDateTime
+             , InsertName TVarChar, InsertDate TDateTime, UpdateDate TDateTime
             
              , ReestrKindId Integer, ReestrKindName TVarChar
              , InvNumber_ReturnIn TVarChar, OperDate_ReturnIn TDateTime
@@ -53,11 +53,11 @@ BEGIN
            , Object_Status.ValueData           AS StatusName
 
            , Object_Insert.ValueData           AS InsertName
-           , Object_Update.ValueData           AS UpdateName
+           , MovementDate_Insert.ValueData     AS InsertDate
            , MovementDate_Update.ValueData     AS UpdateDate
 
-           , Object_ReestrKind.Id            AS ReestrKindId
-           , Object_ReestrKind.ValueData     AS ReestrKindName
+           , Object_ReestrKind.Id                AS ReestrKindId
+           , Object_ReestrKind.ValueData         AS ReestrKindName
            , Movement_ReturnIn.InvNumber         AS InvNumber_ReturnIn
            , Movement_ReturnIn.OperDate          AS OperDate_ReturnIn
            , Object_Status_ReturnIn.ObjectCode   AS StatusCode_ReturnIn
@@ -93,13 +93,12 @@ BEGIN
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementDate AS MovementDate_Insert
+                                   ON MovementDate_Insert.MovementId = Movement.Id
+                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
             LEFT JOIN MovementDate AS MovementDate_Update
                                    ON MovementDate_Update.MovementId = Movement.Id
                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
-            LEFT JOIN MovementLinkObject AS MLO_Update
-                                         ON MLO_Update.MovementId = Movement.Id
-                                        AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-            LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId  
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id

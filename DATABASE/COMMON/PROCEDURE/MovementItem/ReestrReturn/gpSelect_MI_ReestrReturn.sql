@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_ReestrReturn(
 )
 RETURNS TABLE  (Id Integer, LineNum Integer
               , MemberId Integer, MemberCode Integer, MemberName TVarChar
-              , InsertDate TDateTime, isErased Boolean
+              , InsertName TVarChar, InsertDate TDateTime, UpdateDate TDateTime
+              , isErased Boolean
               , MovementId_ReturnIn Integer, BarCode_ReturnIn TVarChar
               , InvNumber_ReturnIn TVarChar, OperDate_ReturnIn TDateTime
               , StatusCode_ReturnIn Integer, StatusName_ReturnIn TVarChar
