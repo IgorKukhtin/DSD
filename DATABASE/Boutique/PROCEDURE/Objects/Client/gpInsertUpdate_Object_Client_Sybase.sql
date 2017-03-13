@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_Client (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar)
+-- Function: gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client_Sybase (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client_Sybase(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели> 
     IN inTotalCount               TFloat    ,    -- Итого количество
     IN inTotalSumm                TFloat    ,    -- Итого Сумма

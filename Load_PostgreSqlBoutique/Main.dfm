@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 435
+  ClientHeight = 511
   ClientWidth = 1172
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 683
-    Height = 379
+    Height = 455
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -31,12 +31,13 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 379
+    Top = 455
     Width = 1172
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 379
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -104,10 +105,11 @@ object MainForm: TMainForm
     Left = 683
     Top = 0
     Width = 265
-    Height = 379
+    Height = 455
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 379
     object cbAllGuide: TCheckBox
       Tag = 1
       Left = 15
@@ -460,16 +462,49 @@ object MainForm: TMainForm
       TabOrder = 22
       WordWrap = True
     end
+    object cbClient: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 379
+      Width = 178
+      Height = 24
+      Caption = '1.22. '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 23
+      WordWrap = True
+    end
+    object cbCity: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 359
+      Width = 178
+      Height = 24
+      Caption = '1.21. '#1043#1086#1088#1086#1076
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 24
+      WordWrap = True
+    end
   end
   object DocumentPanel: TPanel
     Left = 948
     Top = 0
     Width = 224
-    Height = 379
+    Height = 455
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
+    ExplicitHeight = 379
     object Label1: TLabel
       Left = 6
       Top = 22
