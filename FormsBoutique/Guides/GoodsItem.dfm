@@ -58,6 +58,13 @@ object GoodsItemForm: TGoodsItemForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 275
       end
+      object clGoodsSizeName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsSizeName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+      end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
         DataBinding.FieldName = 'GoodsGroupName'

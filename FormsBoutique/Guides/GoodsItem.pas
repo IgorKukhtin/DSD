@@ -67,6 +67,7 @@ type
     clLineFabricaName: TcxGridDBColumn;
     clLabelName: TcxGridDBColumn;
     clGroupNameFull: TcxGridDBColumn;
+    clGoodsSizeName: TcxGridDBColumn;
   private
     { Private declarations }
   public
