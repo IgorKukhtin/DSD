@@ -11,6 +11,7 @@ RETURNS TABLE (Id            Integer
              , GoodsKindId   Integer  -- Вид товара
              , PartnerId     Integer  -- Контрагент
              , AmountCalc    TFloat   -- Предварительное значение, потом используется для расчета на мобильном  устройстве "рекомендованного заказа", формируется в Главной БД = предыдущий остаток факт на ТТ + Реализация на ТТ - Возвраты с ТТ, причем все это за "определенный" период
+             , DaysCalc      TFloat   -- Количество дней, за которые было расчитано AmountCalc
              , isErased      Boolean  -- Удаленный ли элемент
              , isSync        Boolean  -- Синхронизируется (да/нет)
               )
@@ -144,6 +145,7 @@ BEGIN
                   , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
                   , ObjectLink_GoodsListSale_Partner.ChildObjectId                 AS PartnerId
                   , (COALESCE (tmpStoreRealItem.AmountStoreReal, 0.0) + COALESCE (tmpSaleItem.AmountSale, 0.0) - COALESCE (tmpReturnInItem.AmountReturnIn, 0.0))::TFloat AS AmountCalc
+                  , CASE WHEN tmpStoreRealItem.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealItem.OperDate)::TFloat END AS DaysCalc
                   , Object_GoodsListSale.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_GoodsListSale
