@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_GoodsItem (Bolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsItem (Bolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsItem (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsItem(
     IN inIsShowAll   Boolean,       --  признак показать удаленные да/нет
@@ -8,8 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsItem(
 )
 RETURNS TABLE (
              Id                   Integer
-           , Code                 Integer
-           , Name                 TVarChar
+           , GoodsId              Integer
+           , GoodsCode            Integer
+           , GoodsName            TVarChar
            , GoodsGroupName       TVarChar
            , MeasureName          TVarChar
            , CompositionName      TVarChar
@@ -39,9 +40,10 @@ left join  Object AS Object_GoodsSize on GoodsSize.Id = GoodsSizeId
      -- Результат
      RETURN QUERY 
        SELECT 
-             Object_Goods.Id                AS Id
-           , Object_Goods.ObjectCode        AS Code
-           , Object_Goods.ValueData         AS Name
+             Object_GoodsItem.Id            AS id
+           , Object_Goods.Id                AS GoodsId
+           , Object_Goods.ObjectCode        AS GoodsCode
+           , Object_Goods.ValueData         AS GoodsName
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
            , Object_Measure.ValueData       AS MeasureName    
            , Object_Composition.ValueData   AS CompositionName

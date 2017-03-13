@@ -50,8 +50,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    clGoodsCode: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
@@ -67,6 +67,7 @@ type
     clLineFabricaName: TcxGridDBColumn;
     clLabelName: TcxGridDBColumn;
     clGroupNameFull: TcxGridDBColumn;
+    clGoodsSizeName: TcxGridDBColumn;
   private
     { Private declarations }
   public
