@@ -156,7 +156,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.HeaderHeight = 50
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -321,31 +321,42 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
             Options.Editing = False
             Width = 60
           end
-          object UpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
-            DataBinding.FieldName = 'UpdateDate'
-            Visible = False
+          object InsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1076#1086#1073#1072#1074#1083#1077#1085' '#1087#1077#1088#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074' '#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072', '#1076#1086#1073#1072#1074#1083#1077#1085' '#1087#1077#1088#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074 +
+              ' '#1088#1077#1077#1089#1090#1088')'
             Width = 170
           end
-          object UpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
-            DataBinding.FieldName = 'UpdateName'
-            Visible = False
+          object UpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1076#1086#1073#1072#1074#1083#1077#1085' '#1087#1086#1089#1083#1077#1076#1085#1080#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1074' '#1088#1077#1077#1089#1090#1088')'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072', '#1076#1086#1073#1072#1074#1083#1077#1085' '#1087#1086#1089#1083#1077#1076#1085#1080#1081' '#1076#1086#1082#1091#1084#1077#1085 +
+              #1090' '#1074' '#1088#1077#1077#1089#1090#1088')'
+            Width = 170
+          end
+          object InsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 170
           end
           object Date_Insert: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'Date_Insert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
           object Member_Insert: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
             DataBinding.FieldName = 'Member_Insert'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

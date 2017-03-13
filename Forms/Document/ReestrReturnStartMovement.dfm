@@ -17,6 +17,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     ClientRectBottom = 321
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 927
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
@@ -368,7 +369,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 59
-        Width = 927
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
