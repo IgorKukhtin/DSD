@@ -17,7 +17,6 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     ClientRectBottom = 321
     ClientRectRight = 927
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 927
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
@@ -369,7 +368,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 59
-        Width = 8
+        Width = 927
         Height = 8
         HotZoneClassName = 'TcxSimpleStyle'
         HotZone.Visible = False
@@ -427,6 +426,24 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       ExplicitWidth = 180
       ExplicitHeight = 22
       Width = 180
+    end
+    object cxLabel5: TcxLabel
+      Left = 399
+      Top = 4
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+    end
+    object edInsertName: TcxButtonEdit
+      Left = 399
+      Top = 22
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 226
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1110,6 +1127,13 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         Component = FormParams
         ComponentItem = 'Id'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InsertName'
+        Value = Null
+        Component = edInsertName
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 352
     Top = 320
@@ -1469,5 +1493,40 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     PackSize = 1
     Left = 855
     Top = 16
+  end
+  object InsertGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInsertName
+    Key = '0'
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = InsertGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InsertGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
+      end>
+    Left = 506
+    Top = 65534
   end
 end

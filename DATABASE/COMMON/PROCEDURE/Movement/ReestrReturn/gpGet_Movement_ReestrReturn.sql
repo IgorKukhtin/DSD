@@ -43,8 +43,9 @@ BEGIN
              , Object_Status.Code      AS StatusCode
              , Object_Status.Name      AS StatusName
              , 0                       AS InsertId
-             ,CAST ('' AS TVarChar)    AS InsertName
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+             , Object_Insert.ValueData AS InsertName
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
      ELSE
        RETURN QUERY 
        
