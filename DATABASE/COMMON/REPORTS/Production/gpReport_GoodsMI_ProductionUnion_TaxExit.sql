@@ -117,7 +117,7 @@ BEGIN
                             , tmpMI_WorkProgress_in_group.PartionGoodsId
                      )
          -- подразделения из группы "Участок мясного сырья", но - !!!захардкодил!!!
-       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect WHERE inFromId <> 951601) -- ЦЕХ упаковки мясо
+       , tmpUnit_oth AS (SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect WHERE inFromId NOT IN (951601, 981821)) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
          -- расходы п/ф ГП в разрезе ParentId - если они ушли на "переработку"
        , tmpMI_WorkProgress_oth AS
                      (SELECT tmpMI_WorkProgress_out.ContainerId
@@ -301,7 +301,7 @@ BEGIN
 
          , tmpResult.Amount_WorkProgress_in :: TFloat   AS Amount_WorkProgress_in
          , tmpResult.CuterCount :: TFloat               AS CuterCount
-         , CASE WHEN inFromId = 951601 -- ЦЕХ упаковки мясо
+         , CASE WHEN inFromId IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
                      AND COALESCE (tmpResult.RealWeight, 0) = 0
                      THEN tmpResult.Amount_WorkProgress_in
                 ELSE tmpResult.RealWeight

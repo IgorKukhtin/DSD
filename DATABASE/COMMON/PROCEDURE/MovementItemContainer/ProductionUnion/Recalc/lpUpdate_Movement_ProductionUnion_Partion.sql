@@ -50,7 +50,8 @@ BEGIN
                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                            AND MovementLinkObject_From.ObjectId = inFromId
                                                            -- !!!захардкодил!!!
-                                                           AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                                           -- AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                                           AND inFromId = 981821 -- ЦЕХ шприц. мясо
                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                      AND MovementItem.isErased = FALSE
                                                      AND MovementItem.Amount <> 0
@@ -203,7 +204,8 @@ BEGIN
                                   AND MovementItem.isErased = FALSE
                                   AND MovementItem.Amount <> 0
                                   -- !!!захардкодил!!!
-                                  AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                  -- AND inFromId = 951601 -- ЦЕХ упаковки мясо
+                                  AND inFromId = 981821 -- ЦЕХ шприц. мясо
                                 GROUP BY MovementItem.ObjectId
                                        , MIDate_PartionGoods.ValueData
                                        , MILinkObject_GoodsKind.ObjectId
@@ -489,6 +491,8 @@ END;$BODY$
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8448,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов       + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ ЦЕХ упаковки мясо + Участок мясного сырья
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ упаковки мясо + Участок мясного сырья
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
+
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111

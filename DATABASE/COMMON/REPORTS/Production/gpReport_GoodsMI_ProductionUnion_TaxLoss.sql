@@ -29,6 +29,9 @@ BEGIN
     IF inToId = 8458 -- Склад База ГП
        AND inFromId = 951601 -- ЦЕХ упаковки мясо 
     THEN inToId:= 8439; --  Участок мясного сырья
+    ELSEIF inToId = 8458 -- Склад База ГП
+       AND inFromId = 981821 -- ЦЕХ шприц. мясо
+    THEN inToId:= 951601; -- ЦЕХ упаковки мясо 
     END IF;
 
 

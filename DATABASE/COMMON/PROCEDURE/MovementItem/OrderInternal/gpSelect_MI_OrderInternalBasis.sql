@@ -110,7 +110,12 @@ BEGIN
                                 , tmpMI.GoodsKindId                      AS GoodsKindId
                                 , SUM (tmpMI.Amount)                     AS Amount
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
-                                      , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
+                                      , CASE -- !!!временно захардкодил!!!
+                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                  THEN 8338 -- морож.
+                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                        END AS GoodsKindId
                                       , SUM (MIContainer.Amount)                       AS Amount
                                  FROM MovementItemContainer AS MIContainer
                                  WHERE MIContainer.OperDate   = vbOperDate
@@ -119,7 +124,12 @@ BEGIN
                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
                                    AND MIContainer.isActive = TRUE
                                  GROUP BY MIContainer.ObjectId_Analyzer
-                                        , MIContainer.ObjectIntId_Analyzer
+                                        , CASE -- !!!временно захардкодил!!!
+                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                    THEN 8338 -- морож.
+                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                          END
                                 ) AS tmpMI
                             GROUP BY tmpMI.GoodsId
                                    , tmpMI.GoodsKindId

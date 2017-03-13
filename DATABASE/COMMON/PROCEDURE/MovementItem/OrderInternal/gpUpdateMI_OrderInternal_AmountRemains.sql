@@ -51,6 +51,7 @@ BEGIN
                                                        LIMIT 1
                                                       )
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
+                                                        , Object_InfoMoney_View.InfoMoneyDestinationId
                                                    FROM Object_InfoMoney_View
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -71,7 +72,14 @@ BEGIN
                                                          AND vbIsPack = FALSE AND vbIsBasis = TRUE)
                                                   )
                                -- Ёлементы »нвентаризации - все (даже удаленные нужны) - и все это надо что б остатки разделить по видам, а в проводках этой инфы нет
-                             , tmpMI_Inventory_all AS (SELECT MovementItem.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId, SUM (MovementItem.Amount) AS Amount, MovementItem.isErased
+                             , tmpMI_Inventory_all AS (SELECT MovementItem.ObjectId AS GoodsId
+                                                            , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- ќсновное сырье
+                                                                    AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis()
+                                                                        THEN 0 
+                                                                   ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                              END AS GoodsKindId
+                                                            , SUM (MovementItem.Amount) AS Amount
+                                                            , MovementItem.isErased
                                                        FROM tmpInventory
                                                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpInventory.MovementId
                                                                                    AND MovementItem.DescId     = zc_MI_Master()
@@ -80,7 +88,7 @@ BEGIN
                                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                       GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MovementItem.isErased
+                                                       GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MovementItem.isErased, tmpGoods.InfoMoneyDestinationId
                                                       )
                                    -- Ёлементы »нвентаризации - Ќ≈ все
                                  , tmpMI_Inventory AS (SELECT tmp.GoodsId, tmp.GoodsKindId, SUM (tmp.Amount) AS Amount
@@ -191,12 +199,12 @@ BEGIN
                                   FROM tmpContainer_Count
                                        LEFT JOIN
                                       (SELECT MovementItem.ObjectId AS GoodsId
-                                            , CASE -- !!!только!!! если он в нашем списке, иначе свернем его движение в GoodsKindId = 0
-                                                   WHEN tmpContainer_Count.GoodsKindId > 0
-                                                        THEN tmpContainer_Count.GoodsKindId
-                                                   -- !!!все!!! приходы - захардкодил, Ќ≈ временно :)
+                                            , CASE -- !!!все!!! приходы - захардкодил, Ќ≈ временно :)
                                                    WHEN MLO_From.ObjectId = 8445 -- —клад ћ»Ќ”—ќ¬ ј
                                                         THEN 8338 -- морож.
+                                                   -- !!!только!!! если он в нашем списке, иначе свернем его движение в GoodsKindId = 0
+                                                   WHEN tmpContainer_Count.GoodsKindId > 0
+                                                        THEN tmpContainer_Count.GoodsKindId
                                                    ELSE 0
                                               END AS GoodsKindId
                                             , SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MLO_From.ObjectId = tmpInventory.UnitId AND MLO_To.ObjectId <> tmpInventory.UnitId
@@ -234,10 +242,10 @@ BEGIN
                                            OR (MovementItem.DescId = zc_MI_Child() AND MI_Master.Id > 0)
                                              )
                                        GROUP BY MovementItem.ObjectId
-                                              , CASE WHEN tmpContainer_Count.GoodsKindId > 0
-                                                          THEN tmpContainer_Count.GoodsKindId
-                                                     WHEN MLO_From.ObjectId = 8445 -- —клад ћ»Ќ”—ќ¬ ј
+                                              , CASE WHEN MLO_From.ObjectId = 8445 -- —клад ћ»Ќ”—ќ¬ ј
                                                           THEN 8338 -- морож.
+                                                     WHEN tmpContainer_Count.GoodsKindId > 0
+                                                          THEN tmpContainer_Count.GoodsKindId
                                                      ELSE 0
                                                 END
                                       ) AS tmpMIContainer ON tmpMIContainer.GoodsId     = tmpContainer_Count.GoodsId

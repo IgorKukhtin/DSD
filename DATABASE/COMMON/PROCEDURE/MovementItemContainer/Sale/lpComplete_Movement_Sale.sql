@@ -844,7 +844,7 @@ BEGIN
                    , tmpMI_all.OperCount
                    , tmpMI_all.OperCount_ChangePercent
                    , tmpMI_all.OperCount_Partner
-                   , CASE WHEN tmpChangePrice.isChangePrice = TRUE -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
+                   , CASE WHEN tmpChangePrice.isChangePrice = TRUE AND tmpMI_all.ChangePercent <> 0 -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
                                THEN CAST ( (1 + tmpMI_all.ChangePercent / 100) * tmpMI_all.Price_original AS NUMERIC (16, 2))
                           ELSE tmpMI_all.Price_original
                      END AS Price

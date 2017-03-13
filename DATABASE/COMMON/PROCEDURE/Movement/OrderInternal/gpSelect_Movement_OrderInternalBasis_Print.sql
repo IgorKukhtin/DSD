@@ -90,9 +90,9 @@ BEGIN
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                       , CASE -- !!!временно захардкодил!!!
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                              AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                   THEN 8338 -- морож.
-                                             ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
@@ -101,7 +101,7 @@ BEGIN
                                       INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.WhereObjectId_Analyzer
                                       LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                                                 ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                                AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                               AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                                  WHERE MIContainer.OperDate   = vbOperDate
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
                                    AND (MIContainer.MovementDescId = zc_Movement_Send()
@@ -111,9 +111,9 @@ BEGIN
                                  GROUP BY MIContainer.ObjectId_Analyzer
                                         , CASE -- !!!временно захардкодил!!!
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                     THEN 8338 -- морож.
-                                               ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
                                  HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) <> 0
                                      OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) <> 0

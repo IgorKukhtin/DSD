@@ -11,7 +11,8 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
--- if  inFromId =  951601 then return; end if;
+ if  inFromId = 951601 then return; end if; -- ЦЕХ упаковки мясо
+-- if  inFromId = 981821 then return; end if; -- ЦЕХ шприц. мясо
      -- таблица
      DELETE FROM _tmpItem_Partion;
      -- таблица
