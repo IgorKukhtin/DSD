@@ -49,6 +49,9 @@ type
     bbPrintPeriod: TdxBarButton;
     macPrintPeriod: TMultiAction;
     actDialog_Print: TExecuteDialog;
+    cxLabel5: TcxLabel;
+    edInsertName: TcxButtonEdit;
+    InsertGuides: TdsdGuides;
   private
     { Private declarations }
   public

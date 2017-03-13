@@ -75,6 +75,8 @@ type
     fromQueryDate_recalc: TQuery;
     cbGoods: TCheckBox;
     cbGoodsItem: TCheckBox;
+    cbClient: TCheckBox;
+    cbCity: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -148,10 +150,8 @@ type
     procedure pLoadGuide_Label;
     procedure pLoadGuide_Goods;
     procedure pLoadGuide_GoodsItem;
-
-
-
-
+    procedure pLoadGuide_City;
+    procedure pLoadGuide_Client;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -616,7 +616,8 @@ begin
      if not fStop then pLoadGuide_Label;
      if not fStop then pLoadGuide_Goods;
      if not fStop then pLoadGuide_GoodsItem;
-
+     if not fStop then pLoadGuide_City;
+     if not fStop then pLoadGuide_Client;
 
 
 
@@ -709,7 +710,8 @@ begin
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_Goods = null');
       if cbGoodsItem.Checked then
       fExecSqFromQuery('update dba.GoodsProperty set Id_Pg_GoodsItem = null');
-
+       if cbClient.Checked then
+      fExecSqFromQuery('update dba.Unit set Id_Postgres = null  where KindUnit = zc_kuClient()');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -785,6 +787,192 @@ begin
      end;
      //
      myDisabledCB(cbBrand);
+end;
+
+procedure TMainForm.pLoadGuide_City;
+begin
+   if (not cbCity.Checked)or(not cbCity.Enabled) then exit;
+     //
+     myEnabledCB(cbCity);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('   select distinct city as ObjectName ');
+        Add('  from DiscountKlient where city <>''''   ');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_City';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=0;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCity);
+end;
+
+procedure TMainForm.pLoadGuide_Client;
+begin
+if (not cbClient.Checked)or(not cbClient.Enabled) then exit;
+     try
+     if cbId_Postgres.Checked then
+      fExecSqFromQuery('alter table dba.Unit add Id_Postgres integer null;');
+    finally
+
+    end;
+     //
+     myEnabledCB(cbClient);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select');
+        Add('  Unit.Id as ObjectId');
+        Add(', 0 as ObjectCode');
+        Add(', Unit.UnitName as ObjectName');
+        Add(', zc_erasedDel() as zc_erasedDel');
+        Add(', Unit.Erased as Erased');
+        Add(', Unit.Id_Postgres');
+        Add(', DiscountKlient.kardnumber as  DiscountCard');
+        Add(', DiscountKlient.DiscountTax');
+        Add(', DiscountKlient.DiscountTaxTwo');
+        Add(', DiscountKlient.TotalCount');
+        Add(', DiscountKlient.TotalSumm');
+        Add(', DiscountKlient.TotalSummDiscount');
+        Add(', DiscountKlient.TotalSummPay');
+        Add(', DiscountKlient.LastCount');
+        Add(', DiscountKlient.LastSumm');
+        Add(', DiscountKlient.LastSummDiscount');
+        Add(', DiscountKlient.LastDate');
+        Add(', DiscountKlient.DiscountKlientAddress as  Address');
+        Add(', DiscountKlient.HappyDate');
+        Add(', DiscountKlient.PhoneMobile');
+        Add(', DiscountKlient.Phone');
+        Add(', DiscountKlient.Poshta as Mail');
+        Add(', DiscountKlient.CommentInfo as  Comments');
+        Add(', DiscountKlient.City as CityName');
+        Add(', DiscountKlient.KindDiscount as KindDiscount');
+        Add('from Unit inner join DiscountKlient on DiscountKlient.ClientId = Unit.id  where KindUnit = zc_kuClient()');
+        Add('order by  ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_Client';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inDiscountCard',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inDiscountTax',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiscountTaxTwo',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inHappyDate',ftDateTime,ptInput, '');
+        toStoredProc.Params.AddParam ('inPhoneMobile',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPhone',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inMail',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCityId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiscountKindId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Client_Sybase';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inTotalCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inTotalSumm',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inTotalSummDiscount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inTotalSummPay',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inLastCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inLastSumm',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inLastSummDiscount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inLastDate',ftDateTime,ptInput, '');
+        while not EOF do
+        begin
+
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inDiscountCard').Value:=FieldByName('DiscountCard').AsString;
+             toStoredProc.Params.ParamByName('inDiscountTax').Value:=FieldByName('DiscountTax').AsFloat;
+             toStoredProc.Params.ParamByName('inDiscountTaxTwo').Value:=FieldByName('DiscountTaxTwo').AsFloat;
+             toStoredProc.Params.ParamByName('inAddress').Value:=FieldByName('Address').AsString;
+             toStoredProc.Params.ParamByName('inHappyDate').Value:=FieldByName('HappyDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inPhoneMobile').Value:=FieldByName('PhoneMobile').AsString;
+             toStoredProc.Params.ParamByName('inPhone').Value:=FieldByName('Phone').AsString;
+             toStoredProc.Params.ParamByName('inMail').Value:=FieldByName('Mail').AsString;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('Comments').AsString;
+             //
+             fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_City()  '
+                           +' and ValueData = '''+FieldByName('CityName').AsString+'''');
+             toStoredProc.Params.ParamByName('inCityId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
+             //
+
+             //
+             fOpenSqToQuery (' SELECT ID  FROM Object WHERE Object.DescId = zc_Object_DiscountKind()  '
+                           +' and objectcode ='+inttostr(FieldByName('KindDiscount').AsInteger));
+             toStoredProc.Params.ParamByName('inDiscountKindId').Value:=toSqlQuery.FieldByName('Id').AsInteger;
+             //
+
+
+
+             if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             toStoredProc_two.Params.ParamByName('ioId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
+             toStoredProc_two.Params.ParamByName('inTotalCount').Value:=FieldByName('TotalCount').AsFloat;
+             toStoredProc_two.Params.ParamByName('inTotalSumm').Value:=FieldByName('TotalSumm').AsFloat;
+             toStoredProc_two.Params.ParamByName('inTotalSummDiscount').Value:=FieldByName('TotalSummDiscount').AsFloat;
+             toStoredProc_two.Params.ParamByName('inTotalSummPay').Value:=FieldByName('TotalSummPay').AsFloat;
+             toStoredProc_two.Params.ParamByName('inLastCount').Value:=FieldByName('LastCount').AsFloat;
+             toStoredProc_two.Params.ParamByName('inLastSumm').Value:=FieldByName('LastSumm').AsFloat;
+             toStoredProc_two.Params.ParamByName('inLastSummDiscount').Value:=FieldByName('LastSummDiscount').AsFloat;
+             toStoredProc_two.Params.ParamByName('inLastDate').Value:=FieldByName('LastDate').AsDateTime;
+
+             if not myExecToStoredProc_two then ;//exit;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbClient);
 end;
 
 procedure TMainForm.pLoadGuide_Composition;
@@ -1628,33 +1816,18 @@ end;
 
 procedure TMainForm.pLoadGuide_Label;
 begin
-      if (not cbLabel.Checked)or(not cbLabel.Enabled) then exit;
-     try
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.Goods add Id_Postgres integer null;');
-     if cbId_Postgres.Checked then
-      fExecSqFromQuery('alter table dba.GoodsProperty add Id_pg_label integer null;');
-
-    finally
-
-    end;
-
+    if (not cbLabel.Checked)or(not cbLabel.Enabled) then exit;
      //
      myEnabledCB(cbLabel);
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add(' select 0 as ObjectCode');
-        Add('    , goods_group.goodsName AS ObjectName');
-        Add('    , max (Id_pg_label) as id_pg');
-        Add('    , zc_erasedDel() as zc_erasedDel');
-        Add('    , 0 as Erased');
+        Add(' select goods_group.goodsName AS ObjectName');
         Add(' from GoodsProperty');
         Add(' join goods on goods.Id = GoodsProperty.goodsId');
         Add(' join goods as goods_group on goods_group.Id = goods.ParentId');
         Add(' group by  goods_group.goodsName');
-
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1669,23 +1842,16 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('id_pg').AsInteger;
-             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=0;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
-             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
-//             if (1=0)or(FieldByName('id_pg').AsInteger=0)
-//             then fExecSqFromQuery('update dba.GoodsProperty set Id_pg_label='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id in (select  GoodsProperty.Id from GoodsProperty join goods on goods.Id = GoodsProperty.goodsId join goods as goods_group on goods_group.Id = goods.ParentId where  goods_group.goodsName = '''+FieldByName('ObjectName').AsString+'''  )');
              //
              Next;
              Application.ProcessMessages;
@@ -1706,7 +1872,6 @@ begin
     finally
 
     end;
-
      //
      myEnabledCB(cbLineFabrica);
      //

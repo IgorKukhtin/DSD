@@ -323,6 +323,8 @@ procedure TLoadFormTest.LoadGoodsItemFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsItemEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsSizeFormTest;
