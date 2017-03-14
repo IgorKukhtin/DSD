@@ -21,7 +21,7 @@ uses
   FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
-  FMX.Grid.Style, FMX.Media, FMX.Surfaces
+  FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard
   {$IFDEF ANDROID}
   ,FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge,
@@ -184,7 +184,7 @@ type
     lGoodsPrice: TLabel;
     tiOrderExternal: TTabItem;
     VertScrollBox3: TVertScrollBox;
-    tiOrderItems: TTabItem;
+    tiGoodsItems: TTabItem;
     Panel3: TPanel;
     bCancelOI: TButton;
     bSaveOI: TButton;
@@ -245,7 +245,7 @@ type
     bAddAmount: TButton;
     bClearAmount: TButton;
     lMeasure: TLabel;
-    lwOrderItems: TListView;
+    lwGoodsItems: TListView;
     Popup1: TPopup;
     Panel15: TPanel;
     Label12: TLabel;
@@ -321,6 +321,23 @@ type
     Label30: TLabel;
     ePhotoCommentEdit: TEdit;
     imPhoto: TImage;
+    lwStoreRealList: TListView;
+    Panel21: TPanel;
+    bNewStoreReal: TButton;
+    tiStoreReal: TTabItem;
+    VertScrollBox5: TVertScrollBox;
+    Panel23: TPanel;
+    bSaveStoreReal: TButton;
+    lwStoreReal: TListView;
+    Panel24: TPanel;
+    Label33: TLabel;
+    eStoreRealComment: TEdit;
+    bsStoreReals: TBindSourceDB;
+    LinkListControlToField8: TLinkListControlToField;
+    bAddStoreRealItem: TButton;
+    Image14: TImage;
+    bsStoreRealItems: TBindSourceDB;
+    LinkListControlToField9: TLinkListControlToField;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bReloginClick(Sender: TObject);
@@ -350,11 +367,11 @@ type
     procedure lwGoodsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure bNewOrderExternalClick(Sender: TObject);
-    procedure lwOrderItemsItemClick(const Sender: TObject;
+    procedure lwGoodsItemsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure lwOrderItemsUpdateObjects(const Sender: TObject;
+    procedure lwGoodsItemsUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure lwOrderItemsFilter(Sender: TObject; const AFilter, AValue: string;
+    procedure lwGoodsItemsFilter(Sender: TObject; const AFilter, AValue: string;
       var Accept: Boolean);
     procedure bCancelOIClick(Sender: TObject);
     procedure bSaveOIClick(Sender: TObject);
@@ -363,7 +380,6 @@ type
     procedure bCaptureClick(Sender: TObject);
     procedure bSavePartnerPhotoClick(Sender: TObject);
     procedure bClosePhotoClick(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
     procedure bAddOrderItemClick(Sender: TObject);
     procedure lwNewOrderExternalItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
@@ -393,8 +409,6 @@ type
       const ItemObject: TListItemDrawable);
     procedure lwPhotosUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
-    procedure LinkListControlToField6FilledListItem(Sender: TObject;
-      const AEditor: IBindListEditorItem);
     procedure lwNewOrderExternalUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
     procedure lwOrderExternalUpdateObjects(const Sender: TObject;
@@ -404,6 +418,24 @@ type
     procedure lwPhotosItemClickEx(const Sender: TObject; ItemIndex: Integer;
       const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
     procedure bSavePhotoCommentClick(Sender: TObject);
+    procedure lwStoreRealListUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure lwStoreRealListItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure lwStoreRealFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure lwStoreRealItemClickEx(const Sender: TObject; ItemIndex: Integer;
+      const LocalClickPos: TPointF; const ItemObject: TListItemDrawable);
+    procedure lwStoreRealUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure bNewStoreRealClick(Sender: TObject);
+    procedure bSaveStoreRealClick(Sender: TObject);
+    procedure bAddStoreRealItemClick(Sender: TObject);
+    procedure lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
+      const AItem: TListViewItem);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -419,17 +451,22 @@ type
     FKBBounds: TRectF;
     FNeedOffset: Boolean;
 
+    FCheckedGooodsItems: TList<String>;
     OldOrderExternalId : string;
-    FCheckedOI: TList<String>;
     FDeletedOI: TList<Integer>;
+    OldStoreRealId : string;
+    FDeletedSRI: TList<Integer>;
     FOrderTotalCountKg : Currency;
     FOrderTotalPrice : Currency;
 
     FCameraZoomDistance: Integer;
     CameraComponent : TCameraComponent;
 
+    procedure OnCloseDialog(const AResult: TModalResult);
     procedure BackResult(const AResult: TModalResult);
     procedure DeleteOrderExtrernal(const AResult: TModalResult);
+    procedure DeleteStoreReal(const AResult: TModalResult);
+    procedure EditStoreReal(const AResult: TModalResult);
     procedure SetPartnerCoordinates(const AResult: TModalResult);
 
     procedure UpdateKBBounds;
@@ -452,6 +489,8 @@ type
     procedure ShowPathOnmap;
     procedure ShowPhotos;
     procedure ShowPhoto;
+    procedure AddedNewStoreRealItems;
+    procedure AddedNewOrderItems;
     procedure RecalculateTotalPriceAndWeight;
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -509,8 +548,9 @@ begin
 
   FFormsStack := TStack<TFormStackItem>.Create;
   FMarkerList := TList<TLocationCoord2D>.Create;
-  FCheckedOI := TList<String>.Create;
+  FCheckedGooodsItems := TList<String>.Create;
   FDeletedOI := TList<Integer>.Create;
+  FDeletedSRI := TList<Integer>.Create;
   FCurCoordinatesSet := false;
 
   SwitchToForm(tiStart, nil);
@@ -529,13 +569,56 @@ begin
 
   FFormsStack.Free;
   FMarkerList.Free;
-  FCheckedOI.Free;
+  FCheckedGooodsItems.Free;
+  FDeletedSRI.Free;
   FDeletedOI.Free;
 end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
 begin
   UpdateKBBounds;
+end;
+
+procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+var
+  FService : IFMXVirtualKeyboardService;
+begin
+  if Key = vkHardwareBack then
+  begin
+    TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(FService));
+    if (FService <> nil) and (TVirtualKeyboardState.Visible in FService.VirtualKeyBoardState) then
+    begin
+      // Back button pressed, keyboard visible, so do nothing...
+    end else
+    begin
+      Key := 0;
+
+      if tcMain.ActiveTab = tiStart then
+      begin
+        MessageDlg('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog);
+      end
+      else
+      if tcMain.ActiveTab = tiGoodsItems then
+      begin
+        bCancelOIClick(bCancelOI);
+      end
+      else
+      if tcMain.ActiveTab = tiCamera then
+      begin
+        bClosePhotoClick(bClosePhoto);
+      end
+      else
+      if tcMain.ActiveTab = tiMain then
+      begin
+        bReloginClick(bRelogin);
+      end
+      else
+      begin
+        sbBackClick(sbBack);
+      end;
+    end;
+  end;
 end;
 
 procedure TfrmMain.lbiShowAllOnMapClick(Sender: TObject);
@@ -571,12 +654,6 @@ begin
   lButton4.Width := frmMain.Width div 2;
   lButton5.Width := frmMain.Width div 2;
   lButton6.Width := frmMain.Width div 2;
-end;
-
-procedure TfrmMain.LinkListControlToField6FilledListItem(Sender: TObject;
-  const AEditor: IBindListEditorItem);
-begin
-  lwPartnerPhotoGroups.Items[AEditor.CurrentIndex].ImageIndex := 0;
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -743,7 +820,7 @@ begin
   TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
 end;
 
-procedure TfrmMain.lwOrderItemsFilter(Sender: TObject; const AFilter,
+procedure TfrmMain.lwGoodsItemsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
   if Trim(AFilter) <> '' then
@@ -752,25 +829,25 @@ begin
     Accept := true;
 end;
 
-procedure TfrmMain.lwOrderItemsItemClick(const Sender: TObject;
+procedure TfrmMain.lwGoodsItemsItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
   if (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible then
   begin
     (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := False;
-    FCheckedOI.Remove((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
+    FCheckedGooodsItems.Remove((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end
   else
   begin
     (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := True;
-    FCheckedOI.Add((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
+    FCheckedGooodsItems.Add((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
   end;
 end;
 
-procedure TfrmMain.lwOrderItemsUpdateObjects(const Sender: TObject;
+procedure TfrmMain.lwGoodsItemsUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 begin
-  (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedOI.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
+  (AItem.Objects.FindDrawable('IsSelected') as TListItemDrawable).Visible := FCheckedGooodsItems.Contains((AItem.Objects.FindDrawable('FullInfo') as TListItemDrawable).Data.AsString);
 end;
 
 procedure TfrmMain.lwPartnerItemClick(const Sender: TObject;
@@ -795,6 +872,12 @@ begin
   begin
     ShowPhotos;
   end;
+end;
+
+procedure TfrmMain.lwPartnerPhotoGroupsUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  AItem.ImageIndex := 0;
 end;
 
 procedure TfrmMain.lwPartnerUpdateObjects(const Sender: TObject;
@@ -831,6 +914,83 @@ begin
   ShowPriceListItems;
 end;
 
+procedure TfrmMain.lwStoreRealFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  if Trim(AFilter) <> '' then
+    Accept :=  AValue.ToUpper.Contains(AFilter.ToUpper)
+  else
+    Accept := true;
+end;
+
+procedure TfrmMain.lwStoreRealItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if ItemObject = nil then
+    exit;
+
+  if ItemObject.Name = 'DeleteButton' then
+  begin
+    if DM.cdsStoreRealItemsId.AsInteger <> -1 then
+      FDeletedSRI.Add(DM.cdsStoreRealItemsId.AsInteger);
+    DM.cdsStoreRealItems.Delete;
+
+
+    RecalculateTotalPriceAndWeight;
+  end;
+
+  if (ItemObject.Name = 'Count') or (ItemObject.Name = 'Measure') then
+  begin
+    lAmount.Text := '0';
+    lMeasure.Text := DM.cdsStoreRealItemsMeasure.AsString;
+
+    ppEnterAmount.IsOpen := true;
+  end;
+end;
+
+procedure TfrmMain.lwStoreRealListItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if ItemObject = nil then
+    exit;
+
+  if ItemObject.Name = 'DeleteButton' then
+  begin
+    MessageDlg('Удалить остатки на ' + FormatDateTime('DD.MM.YYYY', DM.cdsStoreRealsOperDate.AsDateTime) + '?',
+               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
+               DeleteStoreReal);
+  end;
+
+  if ItemObject.Name = 'EditButton' then
+  begin
+    FDeletedSRI.Clear;
+    FCheckedGooodsItems.Clear;
+
+    OldStoreRealId := DM.cdsStoreRealsId.AsString;
+    eStoreRealComment.Text := DM.cdsStoreRealsComment.AsString;
+
+    DM.LoadStoreRealItems(DM.cdsStoreRealsId.AsInteger);
+
+    SwitchToForm(tiStoreReal, nil);
+  end;
+end;
+
+procedure TfrmMain.lwStoreRealListUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  TListItemImage(AItem.Objects.FindDrawable('EditButton')).ImageIndex := 1;
+end;
+
+procedure TfrmMain.lwStoreRealUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+  TListItemImage(AItem.Objects.FindDrawable('DeleteButton')).ImageIndex := 0;
+  TListItemText(AItem.Objects.FindDrawable('Lable')).Text := 'Фактический остаток';
+end;
+
 procedure TfrmMain.b0Click(Sender: TObject);
 begin
   if lAmount.Text = '0' then
@@ -840,6 +1000,12 @@ begin
     lAmount.Text := '-';
 
   lAmount.Text := lAmount.Text + TButton(Sender).Text;
+end;
+
+procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
+begin
+  if AResult = mrOK then
+    Close;
 end;
 
 procedure TfrmMain.BackResult(const AResult: TModalResult);
@@ -856,6 +1022,45 @@ begin
       ' where ID = ' + DM.cdsOrderExternalId.AsString);
 
     DM.cdsOrderExternal.Delete;
+  end;
+end;
+
+procedure TfrmMain.DeleteStoreReal(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.conMain.ExecSQL('update Movement_StoreReal set STATUSID = ' + DM.tblObject_ConstStatusId_Erased.AsString +
+      ' where ID = ' + DM.cdsStoreRealsId.AsString);
+
+    DM.cdsStoreReals.Delete;
+  end;
+end;
+
+procedure TfrmMain.EditStoreReal(const AResult: TModalResult);
+begin
+  if AResult = mrNone then
+  begin
+    FDeletedSRI.Clear;
+    FCheckedGooodsItems.Clear;
+
+    OldStoreRealId := '';
+    eStoreRealComment.Text := '';
+    DM.DefaultStoreRealItems;
+
+    SwitchToForm(tiStoreReal, nil);
+  end
+  else
+  if AResult = mrYes then
+  begin
+    FDeletedSRI.Clear;
+    FCheckedGooodsItems.Clear;
+
+    OldStoreRealId := DM.cdsStoreRealsId.AsString;
+    eStoreRealComment.Text := DM.cdsStoreRealsComment.AsString;
+
+    DM.LoadStoreRealItems(DM.cdsStoreRealsId.AsInteger);
+
+    SwitchToForm(tiStoreReal, nil);
   end;
 end;
 
@@ -892,7 +1097,19 @@ begin
   if tcMain.ActiveTab = tiOrderExternal then
   begin
     if OldOrderExternalId = '' then
-      Mes := 'Удалить эту заявку?'
+      Mes := 'Выйти без сохранения заявки?'
+    else
+      Mes := 'Выйти из редактирования без сохранения?';
+
+    MessageDlg(Mes,
+               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
+               BackResult);
+  end
+  else
+  if tcMain.ActiveTab = tiStoreReal then
+  begin
+    if OldStoreRealId = '' then
+      Mes := 'Выйти без сохранения остатков?'
     else
       Mes := 'Выйти из редактирования без сохранения?';
 
@@ -924,15 +1141,42 @@ end;
 
 procedure TfrmMain.bAddOrderItemClick(Sender: TObject);
 begin
-  DM.qryOrderItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
-  DM.qryOrderItems.Open;
-  SwitchToForm(tiOrderItems, DM.qryOrderItems);
+  DM.qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+    'GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+    'GK.VALUEDATA || '';'' || GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || ' +
+    'M.VALUEDATA || '';'' || G.WEIGHT || '';0'' FullInfo ' +
+    'from OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by Name';
+
+  DM.qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
+  DM.qryGoodsItems.Open;
+  SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
+end;
+
+procedure TfrmMain.bAddStoreRealItemClick(Sender: TObject);
+begin
+  DM.qryGoodsItems.SQL.Text := 'select G.ID GoodsID, GK.ID KindID, G.VALUEDATA Name, GK.VALUEDATA Kind, ' +
+    'GLK.REMAINS, PI.PRICE, M.VALUEDATA MEASURE, ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || ' +
+    'GK.VALUEDATA || '';'' || M.VALUEDATA || '';0'' FullInfo ' +
+    'from OBJECT_GOODS G ' +
+    'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = G.ID AND GLK.ISERASED = 0 ' +
+    'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLK.GOODSKINDID AND GK.ISERASED = 0 ' +
+    'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+    'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = :PRICELISTID ' +
+    'WHERE G.ISERASED = 0 order by Name';
+
+  DM.qryGoodsItems.ParamByName('PRICELISTID').AsInteger := DM.qryPartner.FieldByName('PRICELISTID').AsInteger;
+  DM.qryGoodsItems.Open;
+  SwitchToForm(tiGoodsItems, DM.qryGoodsItems);
 end;
 
 procedure TfrmMain.bCancelOIClick(Sender: TObject);
 begin
-  FCheckedOI.Clear;
-  DM.qryOrderItems.Close;
+  FCheckedGooodsItems.Clear;
 
   ReturnPriorForm;
 end;
@@ -950,35 +1194,71 @@ end;
 
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
-  DM.cdsOrderItems.Edit;
-  DM.cdsOrderItemsCount.AsFloat := StrToFloatDef(lAmount.Text, 0);
-  DM.cdsOrderItems.Post;
+  if tcMain.ActiveTab = tiOrderExternal then
+  begin
+    DM.cdsOrderItems.Edit;
+    DM.cdsOrderItemsCount.AsFloat := StrToFloatDef(lAmount.Text, 0);
+    DM.cdsOrderItems.Post;
+
+    RecalculateTotalPriceAndWeight;
+  end
+  else
+  if tcMain.ActiveTab = tiStoreReal then
+  begin
+    DM.cdsStoreRealItems.Edit;
+    DM.cdsStoreRealItemsCount.AsFloat := StrToFloatDef(lAmount.Text, 0);
+    DM.cdsStoreRealItems.Post;
+  end;
 
   ppEnterAmount.IsOpen := false;
-  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
-  DM.cdsOrderItems.Edit;
-  DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
-  DM.cdsOrderItems.Post;
+  if tcMain.ActiveTab = tiOrderExternal then
+  begin
+    DM.cdsOrderItems.Edit;
+    DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
+    DM.cdsOrderItems.Post;
+
+    RecalculateTotalPriceAndWeight;
+  end
+  else
+  if tcMain.ActiveTab = tiStoreReal then
+  begin
+    DM.cdsStoreRealItems.Edit;
+    DM.cdsStoreRealItemsCount.AsFloat := DM.cdsStoreRealItemsCount.AsFloat + StrToFloatDef(lAmount.Text, 0);
+    DM.cdsStoreRealItems.Post;
+  end;
 
   ppEnterAmount.IsOpen := false;
-  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
 begin
-  DM.cdsOrderItems.Edit;
-  if DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
-    DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+  if tcMain.ActiveTab = tiOrderExternal then
+  begin
+    DM.cdsOrderItems.Edit;
+    if DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
+      DM.cdsOrderItemsCount.AsFloat := DM.cdsOrderItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    else
+      DM.cdsOrderItemsCount.AsFloat := 0;
+    DM.cdsOrderItems.Post;
+
+    RecalculateTotalPriceAndWeight;
+  end
   else
-    DM.cdsOrderItemsCount.AsFloat := 0;
-  DM.cdsOrderItems.Post;
+  if tcMain.ActiveTab = tiStoreReal then
+  begin
+    DM.cdsStoreRealItems.Edit;
+    if DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0) > 0 then
+      DM.cdsStoreRealItemsCount.AsFloat := DM.cdsStoreRealItemsCount.AsFloat - StrToFloatDef(lAmount.Text, 0)
+    else
+      DM.cdsStoreRealItemsCount.AsFloat := 0;
+    DM.cdsStoreRealItems.Post;
+  end;
 
   ppEnterAmount.IsOpen := false;
-  RecalculateTotalPriceAndWeight;
 end;
 
 procedure TfrmMain.bHandBookClick(Sender: TObject);
@@ -1001,13 +1281,29 @@ begin
     lOrderPrice.Text := 'Цена (без НДС)';
 
   OldOrderExternalId := '';
-  deOperDate.Date := Date();
-  DM.DefaultOrderExternal;
   FDeletedOI.Clear;
+  FCheckedGooodsItems.Clear;
 
-  RecalculateTotalPriceAndWeight;
+  deOperDate.Date := Date();
+  DM.DefaultOrderExternalItems;
 
   SwitchToForm(tiOrderExternal, nil);
+end;
+
+procedure TfrmMain.bNewStoreRealClick(Sender: TObject);
+var
+  FindRec : boolean;
+begin
+  FindRec := false;
+  if DM.cdsStoreReals.Locate('OperDate', Date(), []) then
+    FindRec := true;
+
+  if FindRec then
+    MessageDlg('Остатки на сегодняшнее число уже введены. Перейти к их редактированию?',
+               System.UITypes.TMsgDlgType.mtWarning, [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo], 0,
+               EditStoreReal)
+  else
+    EditStoreReal(mrNone);
 end;
 
 procedure TfrmMain.bPartnersClick(Sender: TObject);
@@ -1083,15 +1379,7 @@ begin
 end;
 
 procedure TfrmMain.bSaveOIClick(Sender: TObject);
-var
-  i: integer;
 begin
-  for i := 0 to FCheckedOI.Count - 1 do
-    DM.AddedGoodsToOrderExternal(FCheckedOI[i]);
-
-  RecalculateTotalPriceAndWeight;
-
-  FCheckedOI.Clear;
   ReturnPriorForm;
 end;
 
@@ -1214,6 +1502,29 @@ begin
   ReturnPriorForm;
 end;
 
+procedure TfrmMain.bSaveStoreRealClick(Sender: TObject);
+var
+  i : integer;
+  ErrMes: string;
+  DelItems: string;
+begin
+   DelItems := '';
+   if FDeletedSRI.Count > 0 then
+   begin
+     DelItems := IntToStr(FDeletedSRI[0]);
+     for i := 1 to FDeletedSRI.Count - 1 do
+       DelItems := ',' + IntToStr(FDeletedSRI[i]);
+   end;
+
+   if DM.SaveStoreReal(OldStoreRealId, eStoreRealComment.Text, DelItems, ErrMes) then
+   begin
+     ShowMessage('Сохранение остатков прошло успешно.');
+     ReturnPriorForm;
+   end
+   else
+     ShowMessage(ErrMes);
+end;
+
 procedure TfrmMain.bSetPartnerCoordinateClick(Sender: TObject);
 var
   Mes : string;
@@ -1230,16 +1541,6 @@ end;
 procedure TfrmMain.bShowBigMapClick(Sender: TObject);
 begin
   ShowBigMap;
-end;
-
-procedure TfrmMain.Button1Click(Sender: TObject);
-begin
-  DM.qryPartnerPhotos.Close;
-
-  DM.qryPartnerPhotos.ParamByName('PartnerId').AsInteger := DM.qryPartnerId.AsInteger;
-  DM.qryPartnerPhotos.ParamByName('ContractId').AsInteger := DM.qryPartnerCONTRACTID.AsInteger;
-
-  DM.qryPartnerPhotos.Open;
 end;
 
 procedure TfrmMain.bClosePhotoClick(Sender: TObject);
@@ -1320,18 +1621,18 @@ end;
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
-  FKBBounds.Create(0, 0, 0, 0);
+  {FKBBounds.Create(0, 0, 0, 0);
   FNeedOffset := False;
-  RestorePosition;
+  RestorePosition;}
 end;
 
 procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
-  FKBBounds := TRectF.Create(Bounds);
+  {FKBBounds := TRectF.Create(Bounds);
   FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
   FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
-  UpdateKBBounds;
+  UpdateKBBounds;}
 end;
 
 procedure TfrmMain.UpdateKBBounds;
@@ -1339,7 +1640,7 @@ var
   LFocused : TControl;
   LFocusRect: TRectF;
 begin
-  FNeedOffset := False;
+  {FNeedOffset := False;
   if Assigned(Focused) then
   begin
     LFocused := TControl(Focused.GetObject);
@@ -1358,14 +1659,14 @@ begin
     end;
   end;
   if not FNeedOffset then
-    RestorePosition;
+    RestorePosition;}
 end;
 
 procedure TfrmMain.RestorePosition;
 begin
-  vsbMain.ViewportPosition := PointF(vsbMain.ViewportPosition.X, 0);
+  {vsbMain.ViewportPosition := PointF(vsbMain.ViewportPosition.X, 0);
   tcMain.Align := TAlignLayout.Client;
-  vsbMain.RealignContent;
+  vsbMain.RealignContent;}
 end;
 
 function TfrmMain.PrependIfNotEmpty(const Prefix, Subject: string): string;
@@ -1500,7 +1801,7 @@ begin
   end;
 
   { настройка панели возврата }
-  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiOrderItems) or (tcMain.ActiveTab = tiCamera)  then
+  if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiGoodsItems) or (tcMain.ActiveTab = tiCamera)  then
     pBack.Visible := false
   else
   begin
@@ -1537,6 +1838,12 @@ begin
 
   if tcMain.ActiveTab = tiRoutes then
     GetVistDays;
+
+  if tcMain.ActiveTab = tiStoreReal then
+    AddedNewStoreRealItems;
+
+  if tcMain.ActiveTab = tiOrderExternal then
+    AddedNewOrderItems;
 end;
 
 procedure TfrmMain.ChangePartnerInfoLeftUpdate(Sender: TObject);
@@ -1762,6 +2069,8 @@ begin
 
   GetMapPartnerScreenshot(SetCordinate, Coordinates);
 
+  DM.LoadStoreReal;
+
   DM.LoadOrderExternal;
 
   DM.LoadPhotoGroups;
@@ -1817,6 +2126,28 @@ begin
   SwitchToForm(tiPhotoEdit, nil);
 end;
 
+procedure TfrmMain.AddedNewStoreRealItems;
+var
+  i: integer;
+begin
+  for i := 0 to FCheckedGooodsItems.Count - 1 do
+    DM.AddedGoodsToStoreReal(FCheckedGooodsItems[i]);
+
+  FCheckedGooodsItems.Clear;
+end;
+
+procedure TfrmMain.AddedNewOrderItems;
+var
+  i: integer;
+begin
+  for i := 0 to FCheckedGooodsItems.Count - 1 do
+    DM.AddedGoodsToOrderExternal(FCheckedGooodsItems[i]);
+
+  RecalculateTotalPriceAndWeight;
+
+  FCheckedGooodsItems.Clear;
+end;
+
 procedure TfrmMain.RecalculateTotalPriceAndWeight;
 var
  i : integer;
@@ -1852,7 +2183,6 @@ begin
 
   lTotalWeight.Text := 'Общий вес : ' + FormatFloat('0.00', FOrderTotalCountKg);
 end;
-
 
 procedure TfrmMain.SwitchToForm(const TabItem: TTabItem; const Data: TObject);
 var

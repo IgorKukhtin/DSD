@@ -402,6 +402,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Options.Editing = False
             Width = 155
           end
+          object License: TcxGridDBColumn
+            Caption = #8470' '#1083#1110#1094#1077#1085#1079#1110#1111' ('#1057#1043')'
+            DataBinding.FieldName = 'License'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082' ('#1057#1043')'
             DataBinding.FieldName = 'BankName'

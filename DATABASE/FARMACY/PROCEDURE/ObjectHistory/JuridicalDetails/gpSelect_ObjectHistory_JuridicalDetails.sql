@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
 RETURNS TABLE (Id Integer, StartDate TDateTime, 
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
                NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar, BankId Integer,
-               MainName TVarChar, Reestr TVarChar, Decision TVarChar, DecisionDate TDateTime
+               MainName TVarChar, Reestr TVarChar, Decision TVarChar, License TVarChar, 
+               DecisionDate TDateTime
 )
 AS
 $BODY$
@@ -39,6 +40,7 @@ BEGIN
            , ObjectHistoryString_JuridicalDetails_MainName.ValueData                        AS MainName
            , ObjectHistoryString_JuridicalDetails_Reestr.ValueData                          AS Reestr
            , ObjectHistoryString_JuridicalDetails_Decision.ValueData                        AS Decision
+           , ObjectHistoryString_JuridicalDetails_License.ValueData                         AS License
            , ObjectHistoryDate_JuridicalDetails_Decision.ValueData                          AS DecisionDate
 
        FROM ObjectHistory_JuridicalDetails
@@ -79,6 +81,10 @@ BEGIN
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Decision
          ON ObjectHistoryString_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
         AND ObjectHistoryString_JuridicalDetails_Decision.DescId = zc_ObjectHistoryString_JuridicalDetails_Decision()
+
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_License
+         ON ObjectHistoryString_JuridicalDetails_License.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_License.DescId = zc_ObjectHistoryString_JuridicalDetails_License()
 
   LEFT JOIN ObjectHistoryDate AS ObjectHistoryDate_JuridicalDetails_Decision
          ON ObjectHistoryDate_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id

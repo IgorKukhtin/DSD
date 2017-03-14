@@ -53,6 +53,7 @@ type
     Contract_StartDate: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     Unit_Address: TcxGridDBColumn;
+    License: TcxGridDBColumn;
   private
     { Private declarations }
   public

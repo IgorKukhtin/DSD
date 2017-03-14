@@ -42,6 +42,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_Decision() RE
 INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_Decision','№ рішення про видачу ліцензії' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_Decision());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_License() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryStringDesc WHERE Code = 'zc_ObjectHistoryString_JuridicalDetails_License'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
+SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_License','№ ліцензії' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_License());
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectHistoryString_JuridicalDetails_Reestr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryStringDesc WHERE Code = 'zc_ObjectHistoryString_JuridicalDetails_Reestr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectHistoryStringDesc (DescId, Code ,itemname)
 SELECT zc_ObjectHistory_JuridicalDetails(), 'zc_ObjectHistoryString_JuridicalDetails_Reestr','Витяг з реєстру платників ПДВ' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryStringDesc WHERE Id = zc_ObjectHistoryString_JuridicalDetails_Reestr());
