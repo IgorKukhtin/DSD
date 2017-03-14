@@ -64,7 +64,7 @@ object UnitEditForm: TUnitEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 104
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 8

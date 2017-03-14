@@ -50,9 +50,9 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -60,14 +60,14 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clCompositionName: TcxGridDBColumn;
-    clGoodsInfoName: TcxGridDBColumn;
-    clLineFabricaName: TcxGridDBColumn;
-    clLabelName: TcxGridDBColumn;
-    clGroupNameFull: TcxGridDBColumn;
-    clGoodsSizeName: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    CompositionName: TcxGridDBColumn;
+    GoodsInfoName: TcxGridDBColumn;
+    LineFabricaName: TcxGridDBColumn;
+    LabelName: TcxGridDBColumn;
+    GroupNameFull: TcxGridDBColumn;
+    GoodsSizeName: TcxGridDBColumn;
   private
     { Private declarations }
   public

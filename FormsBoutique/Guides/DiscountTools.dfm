@@ -69,7 +69,7 @@ object DiscountToolsForm: TDiscountToolsForm
         Width = 60
       end
       object dDiscountName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1099#1093' '#1089#1082#1080#1076#1086#1082
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'DiscountName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
