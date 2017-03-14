@@ -111,7 +111,7 @@ BEGIN
 
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
-           , COALESCE(ObjectBoolean_PartionGoodsKind.ValueData,FALSE) :: Boolean AS isPartionGoodsKind
+           , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, TRUE) :: Boolean AS isPartionGoodsKind
 
            , Object_Unit_View.isErased
 
@@ -240,9 +240,9 @@ BEGIN
            , CAST (0 as Integer)    AS SheetWorkTimeId 
            , CAST ('' as TVarChar)  AS SheetWorkTimeName
 
-           , TRUE AS isLeaf
+           , TRUE  AS isLeaf
            , FALSE AS isPartionDate
-           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
+           , FALSE AS isPartionGoodsKind
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
        FROM Object as Object_Partner
@@ -311,9 +311,9 @@ BEGIN
            , CAST (0 as Integer)    AS SheetWorkTimeId 
            , CAST ('' as TVarChar)  AS SheetWorkTimeName
 
-           , TRUE AS isLeaf
+           , TRUE  AS isLeaf
            , FALSE AS isPartionDate
-           , CAST (FALSE AS Boolean) AS isPartionGoodsKind
+           , FALSE AS isPartionGoodsKind
            , FALSE AS isErased
            , CAST ('' as TVarChar)  AS Address 
       ;

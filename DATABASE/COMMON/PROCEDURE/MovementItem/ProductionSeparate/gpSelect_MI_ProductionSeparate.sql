@@ -1,8 +1,5 @@
 -- Function: gpSelect_MI_ProductionSeparate()
 
---DROP FUNCTION gpSelect_MI_ProductionSeparate();
-DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate_Master (Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_ProductionSeparate(

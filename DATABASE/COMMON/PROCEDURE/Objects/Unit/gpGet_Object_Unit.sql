@@ -136,7 +136,7 @@ BEGIN
            , Object_Unit_View.isLeaf
 
            , ObjectBoolean_PartionDate.ValueData      AS isPartionDate
-           , COALESCE(ObjectBoolean_PartionGoodsKind.ValueData,FALSE) :: Boolean AS isPartionGoodsKind
+           , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, TRUE) :: Boolean AS isPartionGoodsKind
            , ObjectString_Unit_Address.ValueData      AS Address
 
        FROM Object_Unit_View
@@ -196,10 +196,7 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -218,4 +215,4 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Object_Unit (1, '2')
+-- SELECT * FROM gpGet_Object_Unit (1, zfCalc_UserAdmin())

@@ -235,7 +235,7 @@ object UnitForm: TUnitForm
         Width = 60
       end
       object isPartionGoodsKind: TcxGridDBColumn
-        Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082#1086#1074#1082#1080
+        Caption = #1055#1072#1088#1090#1080#1080' '#1087#1086' '#1074#1080#1076#1091' '#1091#1087#1072#1082'. '#1076#1083#1103' '#1089#1099#1088#1100#1103
         DataBinding.FieldName = 'isPartionGoodsKind'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
