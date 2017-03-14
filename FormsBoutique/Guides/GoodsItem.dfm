@@ -50,7 +50,7 @@ object GoodsItemForm: TGoodsItemForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object GoodsName: TcxGridDBColumn
+      object clGoodsName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
@@ -331,8 +331,8 @@ object GoodsItemForm: TGoodsItemForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TGoodsItemEditForm'
-      FormNameParam.Value = 'TGoodsItemEditForm'
+      FormName = 'TGoodsItemInsertForm'
+      FormNameParam.Value = 'TGoodsItemInsertForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

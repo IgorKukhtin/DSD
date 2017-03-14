@@ -51,7 +51,7 @@ type
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;

@@ -109,7 +109,8 @@ uses
   GoodsTree in '..\..\FormsBoutique\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
   DiscountKind in '..\..\FormsBoutique\Guides\DiscountKind.pas' {DiscountKindForm: TParentForm},
   GoodsItem in '..\..\FormsBoutique\Guides\GoodsItem.pas' {GoodsItemForm: TParentForm},
-  GoodsItemEdit in '..\..\FormsBoutique\Guides\GoodsItemEdit.pas' {GoodsItemForm: TParentForm},
+  GoodsItemEdit in '..\..\FormsBoutique\Guides\GoodsItemEdit.pas' {GoodsItemEditForm: TParentForm},
+  GoodsItemInsert in '..\..\FormsBoutique\Guides\GoodsItemInsert.pas' {GoodsItemInsertForm: TParentForm},
 
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
