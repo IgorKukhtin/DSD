@@ -23,7 +23,6 @@ uses
 
 type
   TGoodsItemEditForm = class(TParentForm)
-    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -53,6 +52,8 @@ type
     edGoodsInfoName: TcxTextEdit;
     edLineFabricaName: TcxTextEdit;
     edLabelName: TcxTextEdit;
+    ceGoodsName: TcxButtonEdit;
+    GoodsItemGoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public

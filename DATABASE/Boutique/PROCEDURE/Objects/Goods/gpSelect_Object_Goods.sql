@@ -12,10 +12,15 @@ RETURNS TABLE (
            , Name                 TVarChar
            , GoodsGroupId         Integer
            , GoodsGroupName       TVarChar
+           , MeasureId            Integer
            , MeasureName          TVarChar
+           , CompositionId        Integer
            , CompositionName      TVarChar
+           , GoodsInfoId          Integer
            , GoodsInfoName        TVarChar
+           , LineFabricaId        Integer
            , LineFabricaName      TVarChar
+           , LabelId              Integer
            , LabelName            TVarChar
            , GroupNameFull        TVarChar
            , isErased             boolean
@@ -39,10 +44,15 @@ BEGIN
            , Object_Goods.ValueData         AS Name
            , Object_GoodsGroup.Id           AS GoodsGroupId
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
+           , Object_Measure.Id              AS MeasureId    
            , Object_Measure.ValueData       AS MeasureName    
+           , Object_Composition.Id          AS CompositionId
            , Object_Composition.ValueData   AS CompositionName
+           , Object_GoodsInfo.Id            AS GoodsInfoId
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
+           , Object_LineFabrica.Id          AS LineFabricaId
            , Object_LineFabrica.ValueData   AS LineFabricaName
+           , Object_Label.Id                AS LabelId
            , Object_Label.ValueData         AS LabelName
            , Object_GroupNameFull.ValueData As GroupNameFull
            , Object_Goods.isErased          AS isErased

@@ -50,9 +50,9 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -60,13 +60,13 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clCompositionName: TcxGridDBColumn;
-    clGoodsInfoName: TcxGridDBColumn;
-    clLineFabricaName: TcxGridDBColumn;
-    clLabelName: TcxGridDBColumn;
-    clGroupNameFull: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    CompositionName: TcxGridDBColumn;
+    GoodsInfoName: TcxGridDBColumn;
+    LineFabricaName: TcxGridDBColumn;
+    LabelName: TcxGridDBColumn;
+    GroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

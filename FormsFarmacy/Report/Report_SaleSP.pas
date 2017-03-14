@@ -53,6 +53,9 @@ type
     Contract_StartDate: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     Unit_Address: TcxGridDBColumn;
+    License: TcxGridDBColumn;
+    actPrintInvoice: TdsdPrintAction;
+    bbPrintInvoice: TdxBarButton;
   private
     { Private declarations }
   public

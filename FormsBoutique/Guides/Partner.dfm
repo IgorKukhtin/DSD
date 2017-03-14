@@ -26,7 +26,6 @@ object PartnerForm: TPartnerForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 662
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,7 +44,7 @@ object PartnerForm: TPartnerForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
@@ -53,7 +52,7 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 105
       end
-      object clName: TcxGridDBColumn
+      object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
@@ -61,7 +60,7 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 249
       end
-      object clBrandName: TcxGridDBColumn
+      object BrandName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'BrandName'
         HeaderAlignmentHorz = taCenter
@@ -69,7 +68,7 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 92
       end
-      object clFabrikaName: TcxGridDBColumn
+      object FabrikaName: TcxGridDBColumn
         Caption = #1060#1072#1073#1088#1080#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'FabrikaName'
         HeaderAlignmentHorz = taCenter
@@ -77,7 +76,7 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 106
       end
-      object clPeriodName: TcxGridDBColumn
+      object PeriodName: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076
         DataBinding.FieldName = 'PeriodName'
         HeaderAlignmentHorz = taCenter
@@ -85,12 +84,15 @@ object PartnerForm: TPartnerForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 76
       end
-      object clPeriodYear: TcxGridDBColumn
+      object PeriodYear: TcxGridDBColumn
         Caption = #1043#1086#1076' '#1087#1077#1088#1080#1086#1076#1072
         DataBinding.FieldName = 'PeriodYear'
-        Width = 64
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 65
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'

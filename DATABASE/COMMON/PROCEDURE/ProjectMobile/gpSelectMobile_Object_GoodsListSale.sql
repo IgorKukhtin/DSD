@@ -11,7 +11,6 @@ RETURNS TABLE (Id            Integer
              , GoodsKindId   Integer  -- Вид товара
              , PartnerId     Integer  -- Контрагент
              , AmountCalc    TFloat   -- Предварительное значение, потом используется для расчета на мобильном  устройстве "рекомендованного заказа", формируется в Главной БД = предыдущий остаток факт на ТТ + Реализация на ТТ - Возвраты с ТТ, причем все это за "определенный" период
-             , DaysCalc      TFloat   -- Количество дней, за которые было расчитано AmountCalc
              , isErased      Boolean  -- Удаленный ли элемент
              , isSync        Boolean  -- Синхронизируется (да/нет)
               )
@@ -31,7 +30,12 @@ BEGIN
       IF vbPersonalId IS NOT NULL
       THEN
            RETURN QUERY
-             WITH tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
+             WITH tmpPartner AS (SELECT ObjectLink_Partner_PersonalTrade.ObjectId AS PartnerId
+                                 FROM ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                 WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                                   AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                                )
+                , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
                                                  , Movement_StoreReal.Id AS StoreRealId
                                                  , Movement_StoreReal.OperDate
@@ -40,10 +44,7 @@ BEGIN
                                                  JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                                          ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
                                                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-                                                 JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = MovementLinkObject_Partner.ObjectId
-                                                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                                                AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                                                 JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
                                             WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
                                               AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
                                            ) AS SR
@@ -145,7 +146,6 @@ BEGIN
                   , COALESCE (ObjectLink_GoodsListSale_GoodsKind.ChildObjectId, 0) AS GoodsKindId 
                   , ObjectLink_GoodsListSale_Partner.ChildObjectId                 AS PartnerId
                   , (COALESCE (tmpStoreRealItem.AmountStoreReal, 0.0) + COALESCE (tmpSaleItem.AmountSale, 0.0) - COALESCE (tmpReturnInItem.AmountReturnIn, 0.0))::TFloat AS AmountCalc
-                  , CASE WHEN tmpStoreRealItem.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealItem.OperDate)::TFloat END AS DaysCalc
                   , Object_GoodsListSale.isErased
                   , CAST(true AS Boolean) AS isSync
              FROM Object AS Object_GoodsListSale
@@ -153,10 +153,7 @@ BEGIN
                                   ON ObjectLink_GoodsListSale_Partner.ObjectId = Object_GoodsListSale.Id
                                  AND ObjectLink_GoodsListSale_Partner.DescId = zc_ObjectLink_GoodsListSale_Partner()
                                  AND ObjectLink_GoodsListSale_Partner.ChildObjectId > 0
-                  JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                  ON ObjectLink_Partner_PersonalTrade.ObjectId = ObjectLink_GoodsListSale_Partner.ChildObjectId
-                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
-                                 AND ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
+                  JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_GoodsListSale_Partner.ChildObjectId
                   JOIN ObjectLink AS ObjectLink_GoodsListSale_Goods
                                   ON ObjectLink_GoodsListSale_Goods.ObjectId = Object_GoodsListSale.Id
                                  AND ObjectLink_GoodsListSale_Goods.DescId = zc_ObjectLink_GoodsListSale_Goods()

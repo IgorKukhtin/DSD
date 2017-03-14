@@ -100,6 +100,8 @@ type
     edDecision: TcxDBTextEdit;
     cxLabel20: TcxLabel;
     edDecisionDate: TcxDBTextEdit;
+    cxLabel21: TcxLabel;
+    edLicense: TcxDBTextEdit;
   private
     { Private declarations }
   public
