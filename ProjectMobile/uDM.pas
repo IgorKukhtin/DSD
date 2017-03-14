@@ -290,7 +290,6 @@ type
     qryPhotosId: TIntegerField;
     qryPhotosPhoto: TBlobField;
     qryPhotosComment: TStringField;
-    tblObject_GoodsListSaleDaysCalc: TFloatField;
     cdsStoreReals: TClientDataSet;
     cdsStoreRealsComment: TStringField;
     cdsStoreRealsId: TIntegerField;
@@ -309,6 +308,11 @@ type
     tblMovement_StoreRealComment: TStringField;
     tblMovement_StoreRealId: TAutoIncField;
     tblMovementItem_StoreRealId: TAutoIncField;
+    tblObject_PartnerDocumentDayCount: TFloatField;
+    tblObject_PartnerCalcDayCount: TFloatField;
+    tblObject_PartnerOrderDayCount: TFloatField;
+    tblObject_PartnerisOperDateOrder: TBooleanField;
+    tblObject_PartnerisSync: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -821,6 +825,7 @@ var
   x : integer;
   GetStoredProc : TdsdStoredProc;
   CurDictTable : TFDTable;
+  FindRec : boolean;
 begin
   GetStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -906,7 +911,13 @@ begin
         First;
         while not Eof do
         begin
-          if CurDictTable.Locate('Id', FieldByName('Id').AsInteger) then
+          FindRec := false;
+          if AName = 'Partner' then
+            FindRec := CurDictTable.Locate('Id;ContractId', VarArrayOf([FieldByName('Id').AsInteger, FieldByName('Id').AsInteger]))
+          else
+            FindRec := CurDictTable.Locate('Id', FieldByName('Id').AsInteger);
+
+          if FindRec then
             CurDictTable.Edit
           else
           begin

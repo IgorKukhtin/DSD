@@ -44,7 +44,7 @@ object DM: TDM
     UpdateOptions.UpdateTableName = 'Object_Const'
     TableName = 'Object_Const'
     Left = 416
-    Top = 120
+    Top = 128
     object tblObject_ConstPaidKindId_First: TIntegerField
       FieldName = 'PaidKindId_First'
     end
@@ -136,8 +136,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Partner'
     TableName = 'Object_Partner'
-    Left = 528
-    Top = 120
+    Left = 416
+    Top = 200
     object tblObject_PartnerId: TIntegerField
       FieldName = 'Id'
     end
@@ -174,6 +174,18 @@ object DM: TDM
     object tblObject_PartnerPrepareDayCount: TIntegerField
       FieldName = 'PrepareDayCount'
     end
+    object tblObject_PartnerDocumentDayCount: TFloatField
+      FieldName = 'DocumentDayCount'
+    end
+    object tblObject_PartnerCalcDayCount: TFloatField
+      FieldName = 'CalcDayCount'
+    end
+    object tblObject_PartnerOrderDayCount: TFloatField
+      FieldName = 'OrderDayCount'
+    end
+    object tblObject_PartnerisOperDateOrder: TBooleanField
+      FieldName = 'isOperDateOrder'
+    end
     object tblObject_PartnerJuridicalId: TIntegerField
       FieldName = 'JuridicalId'
     end
@@ -192,13 +204,16 @@ object DM: TDM
     object tblObject_PartnerisErased: TBooleanField
       FieldName = 'isErased'
     end
+    object tblObject_PartnerisSync: TBooleanField
+      FieldName = 'isSync'
+    end
   end
   object tblObject_Juridical: TFDTable
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Juridical'
     TableName = 'Object_Juridical'
-    Left = 648
-    Top = 120
+    Left = 416
+    Top = 328
     object tblObject_JuridicalId: TIntegerField
       FieldName = 'Id'
     end
@@ -229,8 +244,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Route'
     TableName = 'Object_Route'
-    Left = 416
-    Top = 320
+    Left = 528
+    Top = 128
     object tblObject_RouteId: TIntegerField
       FieldName = 'Id'
     end
@@ -249,8 +264,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsGroup'
     TableName = 'Object_GoodsGroup'
-    Left = 528
-    Top = 184
+    Left = 648
+    Top = 128
     object tblObject_GoodsGroupId: TIntegerField
       FieldName = 'Id'
     end
@@ -270,7 +285,7 @@ object DM: TDM
     UpdateOptions.UpdateTableName = 'Object_Goods'
     TableName = 'Object_Goods'
     Left = 648
-    Top = 184
+    Top = 200
     object tblObject_GoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -298,8 +313,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsKind'
     TableName = 'Object_GoodsKind'
-    Left = 528
-    Top = 320
+    Left = 648
+    Top = 264
     object tblObject_GoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -318,7 +333,7 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_Measure'
     TableName = 'Object_Measure'
-    Left = 416
+    Left = 648
     Top = 392
     object tblObject_MeasureId: TIntegerField
       FieldName = 'Id'
@@ -338,8 +353,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsByGoodsKind'
     TableName = 'Object_GoodsByGoodsKind'
-    Left = 536
-    Top = 392
+    Left = 648
+    Top = 328
     object tblObject_GoodsByGoodsKindId: TIntegerField
       FieldName = 'Id'
     end
@@ -364,7 +379,7 @@ object DM: TDM
     UpdateOptions.UpdateTableName = 'Object_Contract'
     TableName = 'Object_Contract'
     Left = 416
-    Top = 184
+    Top = 264
     object tblObject_ContractId: TIntegerField
       FieldName = 'Id'
     end
@@ -414,7 +429,7 @@ object DM: TDM
     UpdateOptions.UpdateTableName = 'Object_PriceList'
     TableName = 'Object_PriceList'
     Left = 528
-    Top = 256
+    Top = 200
     object tblObject_PriceListId: TIntegerField
       FieldName = 'Id'
     end
@@ -425,22 +440,22 @@ object DM: TDM
       FieldName = 'ValueData'
       Size = 255
     end
-    object tblObject_PriceListisErased: TBooleanField
-      FieldName = 'isErased'
-    end
     object tblObject_PriceListPriceWithVAT: TBooleanField
       FieldName = 'PriceWithVAT'
     end
     object tblObject_PriceListVATPercent: TFloatField
       FieldName = 'VATPercent'
     end
+    object tblObject_PriceListisErased: TBooleanField
+      FieldName = 'isErased'
+    end
   end
   object tblObject_PriceListItems: TFDTable
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_PriceListItems'
     TableName = 'Object_PriceListItems'
-    Left = 648
-    Top = 256
+    Left = 528
+    Top = 264
     object tblObject_PriceListItemsId: TIntegerField
       FieldName = 'Id'
     end
@@ -816,8 +831,8 @@ object DM: TDM
     Connection = conMain
     UpdateOptions.UpdateTableName = 'Object_GoodsListSale'
     TableName = 'Object_GoodsListSale'
-    Left = 416
-    Top = 256
+    Left = 528
+    Top = 328
     object IntegerField1: TIntegerField
       FieldName = 'Id'
     end
@@ -833,9 +848,6 @@ object DM: TDM
     object tblObject_GoodsListSaleAmountCalc: TFloatField
       FieldName = 'AmountCalc'
     end
-    object tblObject_GoodsListSaleDaysCalc: TFloatField
-      FieldName = 'DaysCalc'
-    end
     object BooleanField2: TBooleanField
       FieldName = 'isErased'
     end
@@ -846,7 +858,7 @@ object DM: TDM
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 208
+    Left = 224
     Top = 288
     object cdsOrderItemsId: TIntegerField
       FieldName = 'Id'
@@ -888,7 +900,7 @@ object DM: TDM
   object cdsOrderExternal: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 112
+    Left = 128
     Top = 288
     object cdsOrderExternalid: TIntegerField
       FieldName = 'id'
@@ -1008,7 +1020,7 @@ object DM: TDM
   object cdsStoreReals: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 112
+    Left = 128
     Top = 344
     object cdsStoreRealsId: TIntegerField
       FieldName = 'Id'
@@ -1032,7 +1044,7 @@ object DM: TDM
   object cdsStoreRealItems: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 208
+    Left = 224
     Top = 344
     object cdsStoreRealItemsId: TIntegerField
       FieldName = 'Id'
