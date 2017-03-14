@@ -205,29 +205,21 @@ type
     tblMovementItem_OrderExternalAmount: TFloatField;
     tblMovementItem_OrderExternalPrice: TFloatField;
     tblMovement_StoreReal: TFDTable;
-    tblMovement_StoreRealId: TIntegerField;
     tblMovement_StoreRealGUID: TStringField;
     tblMovement_StoreRealInvNumber: TStringField;
     tblMovement_StoreRealOperDate: TDateTimeField;
     tblMovement_StoreRealStatusId: TIntegerField;
     tblMovement_StoreRealPartnerId: TIntegerField;
-    tblMovement_StoreRealPriceListId: TIntegerField;
-    tblMovement_StoreRealPriceWithVAT: TBooleanField;
-    tblMovement_StoreRealVATPercent: TFloatField;
-    tblMovement_StoreRealTotalCountKg: TFloatField;
-    tblMovement_StoreRealTotalSumm: TFloatField;
     tblMovementItem_StoreReal: TFDTable;
-    tblMovementItem_StoreRealId: TIntegerField;
     tblMovementItem_StoreRealMovementId: TIntegerField;
     tblMovementItem_StoreRealGUID: TStringField;
     tblMovementItem_StoreRealGoodsId: TIntegerField;
     tblMovementItem_StoreRealGoodsKindId: TIntegerField;
     tblMovementItem_StoreRealAmount: TFloatField;
-    tblMovementItem_StoreRealPrice: TFloatField;
-    qryOrderItems: TFDQuery;
-    qryOrderItemsGoodsID: TIntegerField;
-    qryOrderItemsKindID: TIntegerField;
-    qryOrderItemsFullInfo: TWideStringField;
+    qryGoodsItems: TFDQuery;
+    qryGoodsItemsGoodsID: TIntegerField;
+    qryGoodsItemsKindID: TIntegerField;
+    qryGoodsItemsFullInfo: TWideStringField;
     tblMovement_OrderExternalId: TAutoIncField;
     tblObject_PriceListVATPercent: TFloatField;
     tblMovementItem_OrderExternalId: TAutoIncField;
@@ -248,6 +240,7 @@ type
     tblObject_GoodsListSalePartnerId: TIntegerField;
     tblObject_GoodsListSaleAmountCalc: TFloatField;
     cdsOrderItems: TClientDataSet;
+    cdsOrderItemsId: TIntegerField;
     cdsOrderItemsName: TStringField;
     cdsOrderItemsType: TStringField;
     cdsOrderItemsPrice: TFloatField;
@@ -258,11 +251,11 @@ type
     cdsOrderItemsGoodsId: TIntegerField;
     cdsOrderItemsKindId: TIntegerField;
     cdsOrderItemsWeight: TFloatField;
-    qryOrderItemsKind: TStringField;
-    qryOrderItemsMeasure: TStringField;
-    qryOrderItemsPrice: TFloatField;
-    qryOrderItemsRemains: TFloatField;
-    qryOrderItemsName: TStringField;
+    qryGoodsItemsKind: TStringField;
+    qryGoodsItemsMeasure: TStringField;
+    qryGoodsItemsPrice: TFloatField;
+    qryGoodsItemsRemains: TFloatField;
+    qryGoodsItemsName: TStringField;
     cdsOrderExternal: TClientDataSet;
     cdsOrderExternalName: TStringField;
     cdsOrderExternalPrice: TStringField;
@@ -270,7 +263,6 @@ type
     cdsOrderExternalStatus: TStringField;
     cdsOrderExternalId: TIntegerField;
     cdsOrderExternalOperDate: TDateField;
-    cdsOrderItemsId: TIntegerField;
     tblMovement_RouteMember: TFDTable;
     AutoIncField1: TAutoIncField;
     tblMovement_RouteMemberGPSN: TFloatField;
@@ -299,6 +291,24 @@ type
     qryPhotosPhoto: TBlobField;
     qryPhotosComment: TStringField;
     tblObject_GoodsListSaleDaysCalc: TFloatField;
+    cdsStoreReals: TClientDataSet;
+    cdsStoreRealsComment: TStringField;
+    cdsStoreRealsId: TIntegerField;
+    cdsStoreRealsOperDate: TDateField;
+    cdsStoreRealsName: TStringField;
+    cdsStoreRealsStatus: TStringField;
+    cdsStoreRealItems: TClientDataSet;
+    cdsStoreRealItemsId: TIntegerField;
+    cdsStoreRealItemsName: TStringField;
+    cdsStoreRealItemsType: TStringField;
+    cdsStoreRealItemsCount: TFloatField;
+    cdsStoreRealItemsMeasure: TStringField;
+    cdsStoreRealItemsGoodsId: TIntegerField;
+    cdsStoreRealItemsKindId: TIntegerField;
+    tblMovement_StoreRealIsSync: TBooleanField;
+    tblMovement_StoreRealComment: TStringField;
+    tblMovement_StoreRealId: TAutoIncField;
+    tblMovementItem_StoreRealId: TAutoIncField;
     procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
@@ -319,11 +329,18 @@ type
     procedure GetConfigurationInfo;
     procedure GetDictionaries(AName : string);
 
-    procedure DefaultOrderExternal;
-    procedure AddedGoodsToOrderExternal(AGoods : string);
+    function SaveStoreReal(OldStoreRealId : string; Comment: string;
+      DelItems : string; var ErrorMessage : string) : boolean;
+    procedure LoadStoreReal(AId: string = '');
+    procedure AddedGoodsToStoreReal(AGoods : string);
+    procedure DefaultStoreRealItems;
+    procedure LoadStoreRealItems(AId: integer);
+
     function SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
       ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
     procedure LoadOrderExternal(AId: string = '');
+    procedure AddedGoodsToOrderExternal(AGoods : string);
+    procedure DefaultOrderExternalItems;
     procedure LoadOrderExtrenalItems(AId: integer);
 
     procedure SavePhotoGroup(AGroupName: string);
@@ -710,6 +727,8 @@ begin
   InitStructure;
   FConnected := Connect;
 
+  cdsStoreRealItems.CreateDataSet;
+  cdsStoreReals.CreateDataSet;
   cdsOrderItems.CreateDataSet;
   cdsOrderExternal.CreateDataSet;
 end;
@@ -926,24 +945,226 @@ begin
   end;
 end;
 
-procedure TDM.DefaultOrderExternal;
+function TDM.SaveStoreReal(OldStoreRealId : string; Comment: string;
+  DelItems : string; var ErrorMessage : string) : boolean;
+var
+  GlobalId : TGUID;
+  i, MovementId, NewInvNumber : integer;
+  qryMaxInvNumber : TFDQuery;
+begin
+  Result := false;
+
+  if OldStoreRealId = '' then
+  begin
+    NewInvNumber := 1;
+
+    qryMaxInvNumber := TFDQuery.Create(nil);
+    try
+      qryMaxInvNumber.Connection := conMain;
+      qryMaxInvNumber.Open('select Max(InvNumber) from Movement_StoreReal');
+      if qryMaxInvNumber.RecordCount > 0 then
+        NewInvNumber := StrToIntDef(qryMaxInvNumber.Fields[0].AsString, 0) + 1;
+    finally
+      FreeAndNil(qryMaxInvNumber);
+    end;
+  end;
+
+  conMain.StartTransaction;
+  try
+    tblMovement_StoreReal.Open;
+
+    if OldStoreRealId = '' then
+    begin
+      tblMovement_StoreReal.Append;
+
+      CreateGUID(GlobalId);
+      tblMovement_StoreRealGUID.AsString := GUIDToString(GlobalId);
+      tblMovement_StoreRealInvNumber.AsString := IntToStr(NewInvNumber);
+      tblMovement_StoreRealOperDate.AsDateTime := Date();
+      tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+      tblMovement_StoreRealPartnerId.AsInteger := qryPartnerId.AsInteger;
+      tblMovement_StoreRealComment.AsString := Comment;
+      tblMovement_StoreRealisSync.AsBoolean := false;
+
+      tblMovement_StoreReal.Post;
+      {??? Возможно есть лучший способ получения значения Id новой записи }
+      tblMovement_StoreReal.Refresh;
+      tblMovement_StoreReal.Last;
+      {???}
+      MovementId := tblMovement_StoreRealId.AsInteger;
+    end
+    else
+    begin
+      if tblMovement_StoreReal.Locate('Id', OldStoreRealId) then
+      begin
+        tblMovement_StoreReal.Edit;
+
+        tblMovement_StoreRealStatusId.AsInteger := tblObject_ConstStatusId_Complete.AsInteger;
+        tblMovement_StoreRealComment.AsString := Comment;
+
+        tblMovement_StoreReal.Post;
+
+        MovementId := StrToInt(OldStoreRealId);
+      end
+      else
+      begin
+        ErrorMessage := 'Ошибка работы с БД: не найдена редактируемая заявка';
+        exit;
+      end;
+    end;
+
+    tblMovementItem_StoreReal.Open;
+
+    with cdsStoreRealItems do
+    begin
+      First;
+      while not EOF do
+      begin
+        if FieldbyName('Id').AsInteger = -1 then // новая запись
+        begin
+          tblMovementItem_StoreReal.Append;
+
+          tblMovementItem_StoreRealMovementId.AsInteger := MovementId;
+          CreateGUID(GlobalId);
+          tblMovementItem_StoreRealGUID.AsString := GUIDToString(GlobalId);
+          tblMovementItem_StoreRealGoodsId.AsInteger := FieldbyName('GoodsId').AsInteger;
+          tblMovementItem_StoreRealGoodsKindId.AsInteger := FieldbyName('KindId').AsInteger;
+          tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
+
+          tblMovementItem_StoreReal.Post;
+        end
+        else
+        begin
+          if tblMovementItem_StoreReal.Locate('Id', FieldbyName('Id').AsInteger) then
+          begin
+            tblMovementItem_StoreReal.Edit;
+
+            tblMovementItem_StoreRealAmount.AsFloat := FieldbyName('Count').AsFloat;
+
+            tblMovementItem_StoreReal.Post;
+          end;
+        end;
+
+        Next;
+      end;
+    end;
+
+    if DelItems <> '' then
+      conMain.ExecSQL('delete from MovementItem_StoreReal where ID in (' + DelItems + ')');
+
+    conMain.Commit;
+
+    if OldStoreRealId = '' then
+      LoadStoreReal(IntToStr(MovementId))
+    else
+    begin
+      cdsStoreReals.Edit;
+
+      cdsStoreRealsComment.AsString := Comment;
+      cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString;
+
+      cdsStoreReals.Post;
+    end;
+
+    Result := true;
+  except
+    on E : Exception do
+    begin
+      conMain.Rollback;
+      ErrorMessage := E.Message;
+    end;
+  end;
+end;
+
+procedure TDM.LoadStoreReal(AId : string = '');
+var
+  qryStoreReals : TFDQuery;
+begin
+  if AId = '' then
+  begin
+    cdsStoreReals.Open;
+    cdsStoreReals.EmptyDataSet;
+  end;
+
+  qryStoreReals := TFDQuery.Create(nil);
+  try
+    qryStoreReals.Connection := conMain;
+    qryStoreReals.SQL.Text := 'select ID, OPERDATE, COMMENT, ISSYNC, STATUSID' +
+      ' from Movement_StoreReal' +
+      ' where PARTNERID = ' + qryPartnerId.AsString +
+      ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
+    if AId <> '' then
+      qryStoreReals.SQL.Text := qryStoreReals.SQL.Text + ' and ID = ' + AId;
+    qryStoreReals.SQL.Text := qryStoreReals.SQL.Text + ' order by OPERDATE desc';
+
+    qryStoreReals.Open;
+    cdsStoreReals.Open;
+
+    qryStoreReals.First;
+    while not qryStoreReals.EOF do
+    begin
+      cdsStoreReals.Append;
+      cdsStoreRealsId.AsInteger := qryStoreReals.FieldByName('ID').AsInteger;
+      cdsStoreRealsComment.AsString := qryStoreReals.FieldByName('COMMENT').AsString;
+      cdsStoreRealsOperDate.AsDateTime := qryStoreReals.FieldByName('OPERDATE').AsDateTime;
+      cdsStoreRealsName.AsString := 'Остатки на ' + FormatDateTime('DD.MM.YYYY', qryStoreReals.FieldByName('OPERDATE').AsDateTime);
+
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Complete.AsInteger then
+        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Complete.AsString
+      else
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_UnComplete.AsInteger then
+        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_UnComplete.AsString
+      else
+      if qryStoreReals.FieldByName('STATUSID').AsInteger = tblObject_ConstStatusId_Erased.AsInteger then
+        cdsStoreRealsStatus.AsString := 'Статус: ' + tblObject_ConstStatusName_Erased.AsString
+      else
+        cdsStoreRealsStatus.AsString := 'Статус: Неизвестный';
+
+      cdsStoreReals.Post;
+
+      qryStoreReals.Next;
+    end;
+
+    qryStoreReals.Close;
+  finally
+    qryStoreReals.Free;
+  end;
+end;
+
+procedure TDM.AddedGoodsToStoreReal(AGoods : string);
+var
+  ArrValue : TArray<string>;
+begin
+  ArrValue := AGoods.Split([';']);
+
+  cdsStoreRealItems.Append;
+  cdsStoreRealItemsId.AsString := ArrValue[0];
+  cdsStoreRealItemsGoodsId.AsString := ArrValue[1];   // GoodsId
+  cdsStoreRealItemsKindId.AsString := ArrValue[2];    // KindId
+  cdsStoreRealItemsName.AsString := ArrValue[3];      // название товара
+  cdsStoreRealItemsType.AsString := ArrValue[4];      // вид товара
+  cdsStoreRealItemsMeasure.AsString := ' ' + ArrValue[5];   // единица измерения
+  cdsStoreRealItemsCount.AsString := ArrValue[6];             // количество по умолчанию
+
+  cdsStoreRealItems.Post;
+end;
+
+procedure TDM.DefaultStoreRealItems;
 var
   qryGoodsListSale : TFDQuery;
 begin
-  cdsOrderItems.Open;
-  cdsOrderItems.EmptyDataSet;
+  cdsStoreRealItems.Open;
+  cdsStoreRealItems.EmptyDataSet;
 
   qryGoodsListSale := TFDQuery.Create(nil);
   try
     qryGoodsListSale.Connection := conMain;
     qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
-      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'' ' +
+      'M.VALUEDATA || '';0'' ' +
       'from OBJECT_GOODSLISTSALE GLS ' +
       'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
       'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.GOODSID AND GLK.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0 ' +
       'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
-      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
       'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
 
     qryGoodsListSale.Open;
@@ -951,7 +1172,7 @@ begin
     qryGoodsListSale.First;
     while not qryGoodsListSale.EOF do
     begin
-      AddedGoodsToOrderExternal(qryGoodsListSale.Fields[0].AsString);
+      AddedGoodsToStoreReal(qryGoodsListSale.Fields[0].AsString);
 
       qryGoodsListSale.Next;
     end;
@@ -962,27 +1183,40 @@ begin
   end;
 end;
 
-procedure TDM.AddedGoodsToOrderExternal(AGoods : string);
+procedure TDM.LoadStoreRealItems(AId : integer);
 var
-  ArrValue : TArray<string>;
+  qryGoodsListSale : TFDQuery;
 begin
-  ArrValue := AGoods.Split([';']);
+  cdsStoreRealItems.Open;
+  cdsStoreRealItems.EmptyDataSet;
 
-  cdsOrderItems.Append;
-  cdsOrderItemsId.AsString := ArrValue[0];
-  cdsOrderItemsGoodsId.AsString := ArrValue[1];   // GoodsId
-  cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
-  cdsOrderItemsName.AsString := ArrValue[3];      // название товара
-  cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
-  cdsOrderItemsForecast.AsString := ArrValue[5];  // рекомендуемое количество
-  cdsOrderItemsRemains.AsString := ArrValue[6];   // остаток товара
-  cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
-  cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
-  cdsOrderItemsWeight.AsString := ArrValue[9];         // вес
-  cdsOrderItemsCount.AsString := ArrValue[10];             // количество по умолчанию
+  qryGoodsListSale := TFDQuery.Create(nil);
+  try
+    qryGoodsListSale.Connection := conMain;
+    qryGoodsListSale.SQL.Text := 'select ISR.ID || '';'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
+      'M.VALUEDATA || '';'' || ISR.AMOUNT ' +
+      'from MOVEMENTITEM_STOREREAL ISR ' +
+      'JOIN OBJECT_GOODS G ON ISR.GOODSID = G.ID ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = ISR.GOODSKINDID ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'WHERE ISR.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
-  cdsOrderItems.Post;
+    qryGoodsListSale.Open;
+
+    qryGoodsListSale.First;
+    while not qryGoodsListSale.EOF do
+    begin
+      AddedGoodsToStoreReal(qryGoodsListSale.Fields[0].AsString);
+
+      qryGoodsListSale.Next;
+    end;
+
+    qryGoodsListSale.Close;
+  finally
+    qryGoodsListSale.Free;
+  end;
 end;
+
 
 function TDM.SaveOrderExternal(OldOrderExternalId : string; OperDate: TDate;
   ToralPrice, TotalWeight: Currency; DelItems : string; var ErrorMessage : string) : boolean;
@@ -1153,6 +1387,7 @@ begin
       ' and STATUSID <> ' + tblObject_ConstStatusId_Erased.AsString;
     if AId <> '' then
       qryOrderExternal.SQL.Text := qryOrderExternal.SQL.Text + ' and ID = ' + AId;
+    qryOrderExternal.SQL.Text := qryOrderExternal.SQL.Text + ' order by OPERDATE desc';
 
     qryOrderExternal.Open;
     cdsOrderExternal.Open;
@@ -1189,6 +1424,64 @@ begin
   end;
 end;
 
+procedure TDM.AddedGoodsToOrderExternal(AGoods : string);
+var
+  ArrValue : TArray<string>;
+begin
+  ArrValue := AGoods.Split([';']);
+
+  cdsOrderItems.Append;
+  cdsOrderItemsId.AsString := ArrValue[0];
+  cdsOrderItemsGoodsId.AsString := ArrValue[1];   // GoodsId
+  cdsOrderItemsKindId.AsString := ArrValue[2];    // KindId
+  cdsOrderItemsName.AsString := ArrValue[3];      // название товара
+  cdsOrderItemsType.AsString := ArrValue[4];      // вид товара
+  cdsOrderItemsForecast.AsString := ArrValue[5];  // рекомендуемое количество
+  cdsOrderItemsRemains.AsString := ArrValue[6];   // остаток товара
+  cdsOrderItemsPrice.AsString := ArrValue[7];     // цена
+  cdsOrderItemsMeasure.AsString := ' ' + ArrValue[8];   // единица измерения
+  cdsOrderItemsWeight.AsString := ArrValue[9];         // вес
+  cdsOrderItemsCount.AsString := ArrValue[10];             // количество по умолчанию
+
+  cdsOrderItems.Post;
+end;
+
+procedure TDM.DefaultOrderExternalItems;
+var
+  qryGoodsListSale : TFDQuery;
+begin
+  cdsOrderItems.Open;
+  cdsOrderItems.EmptyDataSet;
+
+  qryGoodsListSale := TFDQuery.Create(nil);
+  try
+    qryGoodsListSale.Connection := conMain;
+    qryGoodsListSale.SQL.Text := 'select ''-1;'' || G.ID || '';'' || GK.ID || '';'' || G.VALUEDATA || '';'' || GK.VALUEDATA || '';'' || ' +
+      'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';0'' ' +
+      'from OBJECT_GOODSLISTSALE GLS ' +
+      'JOIN OBJECT_GOODS G ON GLS.GOODSID = G.ID ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = GLS.GOODSKINDID AND GK.ISERASED = 0 ' +
+      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = GLS.GOODSID AND GLK.GOODSKINDID = GLS.GOODSKINDID AND GLK.ISERASED = 0 ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
+      'WHERE GLS.PARTNERID = ' + qryPartnerId.AsString + ' and GLS.ISERASED = 0 order by G.VALUEDATA ';
+
+    qryGoodsListSale.Open;
+
+    qryGoodsListSale.First;
+    while not qryGoodsListSale.EOF do
+    begin
+      AddedGoodsToOrderExternal(qryGoodsListSale.Fields[0].AsString);
+
+      qryGoodsListSale.Next;
+    end;
+
+    qryGoodsListSale.Close;
+  finally
+    qryGoodsListSale.Free;
+  end;
+end;
+
 procedure TDM.LoadOrderExtrenalItems(AId : integer);
 var
   qryGoodsListSale : TFDQuery;
@@ -1203,9 +1496,9 @@ begin
       'GLK.FORECAST || '';'' || GLK.REMAINS || '';'' || PI.PRICE || '';'' || M.VALUEDATA || '';'' || G.WEIGHT || '';'' || IEO.AMOUNT ' +
       'from MOVEMENTITEM_ORDEREXTERNAL IEO ' +
       'JOIN OBJECT_GOODS G ON IEO.GOODSID = G.ID ' +
-      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID AND GK.ISERASED = 0 ' +
-      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = IEO.GOODSID AND GLK.GOODSKINDID = IEO.GOODSKINDID AND GLK.ISERASED = 0 ' +
-      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID and M.ISERASED = 0 ' +
+      'JOIN OBJECT_GOODSKIND GK ON GK.ID = IEO.GOODSKINDID ' +
+      'JOIN OBJECT_GOODSBYGOODSKIND GLK ON GLK.GOODSID = IEO.GOODSID AND GLK.GOODSKINDID = IEO.GOODSKINDID ' +
+      'JOIN OBJECT_MEASURE M ON M.ID = G.MEASUREID ' +
       'JOIN OBJECT_PRICELISTITEMS PI ON PI.GOODSID = G.ID and PI.PRICELISTID = ' + qryPartnerPRICELISTID.AsString + ' ' +
       'WHERE IEO.MOVEMENTID = ' + IntToStr(AId) + ' order by G.VALUEDATA ';
 
