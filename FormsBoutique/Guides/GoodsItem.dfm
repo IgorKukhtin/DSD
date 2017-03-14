@@ -331,8 +331,8 @@ object GoodsItemForm: TGoodsItemForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TGoodsItemInsertForm'
-      FormNameParam.Value = 'TGoodsItemInsertForm'
+      FormName = 'TGoodsItemEditForm'
+      FormNameParam.Value = 'TGoodsItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

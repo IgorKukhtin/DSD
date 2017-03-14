@@ -415,6 +415,111 @@ object GoodsForm: TGoodsForm
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MeasureName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MeasureName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CompositionName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CompositionName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsInfoId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsInfoId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsInfoName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsInfoName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LineFabricaId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LineFabricaName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LineFabricaName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LabelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LabelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LabelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupNameFull'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GroupNameFull'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
