@@ -19,6 +19,7 @@ RETURNS TABLE (Id               Integer
              , PrepareDayCount  TFloat   -- За сколько дней принимается заказ
              , DocumentDayCount TFloat   -- Через сколько дней оформляется документально, возможно понадобится рассчитать дату когда приедет покупателю
              , CalcDayCount     TFloat   -- Расчетное кол-во дней, используется для расчета средней отгрузки за день
+             , OrderDayCount    TFloat   -- Кол-во дней для заказа, используется для расчета заказываемого количества товара в заказе
              , isOperDateOrder  Boolean  -- цена по дате заявки, в момент переоценки цены продажи - некоторым ТТ отгрузка происходит по дате заявки, т.е. по старым ценам, а некоторым ТТ на дату когда приедет к покупателю, т.е. по новым ценам
              , JuridicalId      Integer  -- Юридическое лицо
              , RouteId          Integer  -- Маршрут
@@ -97,6 +98,7 @@ BEGIN
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
+                  , 7.0::TFloat AS OrderDayCount
                   , true::Boolean AS isOperDateOrder
                   , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId     AS RouteId
