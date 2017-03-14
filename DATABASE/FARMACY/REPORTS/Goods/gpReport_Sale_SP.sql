@@ -48,6 +48,7 @@ RETURNS TABLE (UnitName       TVarChar
              , Reestr             TVarChar
              , Decision           TVarChar
              , DecisionDate       TDateTime
+             , License            TVarChar
              , BankName           TVarChar
              , MFO                TVarChar
 
@@ -285,6 +286,7 @@ BEGIN
                           , ObjectHistory_JuridicalDetails.Reestr
                           , ObjectHistory_JuridicalDetails.Decision
                           , ObjectHistory_JuridicalDetails.DecisionDate
+                          , ObjectHistory_JuridicalDetails.License
 
                           , tmpBankAccount.BankName ::TVarChar
                           , tmpBankAccount.MFO      ::TVarChar
@@ -365,7 +367,7 @@ BEGIN
            , tmpMovDetails.Reestr
            , tmpMovDetails.Decision
            , tmpMovDetails.DecisionDate
-
+           , tmpMovDetails.License
            , tmpMovDetails.BankName ::TVarChar
            , tmpMovDetails.MFO      ::TVarChar
  

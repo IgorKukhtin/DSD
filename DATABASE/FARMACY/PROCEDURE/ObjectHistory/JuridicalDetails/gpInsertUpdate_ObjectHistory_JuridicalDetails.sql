@@ -5,6 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails (Integer, 
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails 
     (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_JuridicalDetails 
+    (Integer, Integer,  TDateTime, TDateTime, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
@@ -23,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inMainName     	        TVarChar,   -- ФИО директора
     IN inReestr     	        TVarChar,   -- Витяг з реєстру платників ПДВ
     IN inDecision     	        TVarChar,   -- № рішення про видачу ліцензії
+    IN inLicense                TVarChar,   -- № ліцензії
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS integer AS
@@ -107,6 +110,8 @@ BEGIN
    -- 
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Decision(), ioId, inDecision);
    -- 
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_License(), ioId, inLicense);
+   -- 
    PERFORM lpInsertUpdate_ObjectHistoryDate(zc_ObjectHistoryDate_JuridicalDetails_Decision(), ioId, inDecisionDate);
 
 END;
@@ -117,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.03.17         *
  06.03.17         *
  04.07.14         *
 */
