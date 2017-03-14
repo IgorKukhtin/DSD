@@ -64,7 +64,7 @@ object GoodsGroupEditForm: TGoodsGroupEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 104
-    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+    Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsGroup: TcxButtonEdit
     Left = 8

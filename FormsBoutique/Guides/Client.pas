@@ -50,9 +50,9 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -60,25 +60,25 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clDiscountCard: TcxGridDBColumn;
-    clDiscountTax: TcxGridDBColumn;
-    clDiscountTaxTwo: TcxGridDBColumn;
-    clTotalCount: TcxGridDBColumn;
-    clTotalSumm: TcxGridDBColumn;
-    clTotalSummDiscount: TcxGridDBColumn;
-    clTotalSummPay: TcxGridDBColumn;
-    clLastCount: TcxGridDBColumn;
-    clLastSumm: TcxGridDBColumn;
-    clLastSummDiscount: TcxGridDBColumn;
-    clLastDate: TcxGridDBColumn;
-    clAddress: TcxGridDBColumn;
-    clHappyDate: TcxGridDBColumn;
+    DiscountCard: TcxGridDBColumn;
+    DiscountTax: TcxGridDBColumn;
+    DiscountTaxTwo: TcxGridDBColumn;
+    TotalCount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
+    TotalSummDiscount: TcxGridDBColumn;
+    TotalSummPay: TcxGridDBColumn;
+    LastCount: TcxGridDBColumn;
+    LastSumm: TcxGridDBColumn;
+    LastSummDiscount: TcxGridDBColumn;
+    LastDate: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
+    HappyDate: TcxGridDBColumn;
     clPhoneMobile: TcxGridDBColumn;
-    clPhone: TcxGridDBColumn;
-    clMail: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    clCityName: TcxGridDBColumn;
-    clDiscountKindName: TcxGridDBColumn;
+    Phone: TcxGridDBColumn;
+    Mail: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    DiscountKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

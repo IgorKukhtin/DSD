@@ -6,24 +6,28 @@ CREATE OR REPLACE FUNCTION gpSelectMobile_Object_Partner (
     IN inSyncDateIn TDateTime, -- Дата/время последней синхронизации - когда "успешно" загружалась входящая информация - актуальные справочники, цены, акции, долги, остатки и т.д
     IN inSession    TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id              Integer
-             , ObjectCode      Integer  -- Код
-             , ValueData       TVarChar -- Название
-             , Address         TVarChar -- Адрес точки доставки
-             , GPSN            TFloat   -- GPS координаты точки доставки (широта)
-             , GPSE            TFloat   -- GPS координаты точки доставки (долгота)
-             , Schedule        TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
-             , DebtSum         TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
-             , OverSum         TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
-             , OverDays        Integer  -- Кол-во дней просрочки (нам)
-             , PrepareDayCount TFloat   -- За сколько дней принимается заказ
-             , JuridicalId     Integer  -- Юридическое лицо
-             , RouteId         Integer  -- Маршрут
-             , ContractId      Integer  -- Договор - все возможные договора...
-             , PriceListId     Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
-             , PriceListId_ret Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
-             , isErased        Boolean  -- Удаленный ли элемент
-             , isSync          Boolean  -- Синхронизируется (да/нет)
+RETURNS TABLE (Id               Integer
+             , ObjectCode       Integer  -- Код
+             , ValueData        TVarChar -- Название
+             , Address          TVarChar -- Адрес точки доставки
+             , GPSN             TFloat   -- GPS координаты точки доставки (широта)
+             , GPSE             TFloat   -- GPS координаты точки доставки (долгота)
+             , Schedule         TVarChar -- График посещения ТТ - по каким дням недели - в строчке 7 символов разделенных ";" t значит true и f значит false
+             , DebtSum          TFloat   -- Сумма долга (нам) - НАЛ - т.к НАЛ долг формируется только в разрезе Контрагентов + договоров + для некоторых по № накладных
+             , OverSum          TFloat   -- Сумма просроченного долга (нам) - НАЛ - Просрочка наступает спустя определенное кол-во дней
+             , OverDays         Integer  -- Кол-во дней просрочки (нам)
+             , PrepareDayCount  TFloat   -- За сколько дней принимается заказ
+             , DocumentDayCount TFloat   -- Через сколько дней оформляется документально, возможно понадобится рассчитать дату когда приедет покупателю
+             , CalcDayCount     TFloat   -- Расчетное кол-во дней, используется для расчета средней отгрузки за день
+             , OrderDayCount    TFloat   -- Кол-во дней для заказа, используется для расчета заказываемого количества товара в заказе
+             , isOperDateOrder  Boolean  -- цена по дате заявки, в момент переоценки цены продажи - некоторым ТТ отгрузка происходит по дате заявки, т.е. по старым ценам, а некоторым ТТ на дату когда приедет к покупателю, т.е. по новым ценам
+             , JuridicalId      Integer  -- Юридическое лицо
+             , RouteId          Integer  -- Маршрут
+             , ContractId       Integer  -- Договор - все возможные договора...
+             , PriceListId      Integer  -- Прайс-лист - по каким ценам будет формироваться заказ
+             , PriceListId_ret  Integer  -- Прайс-лист Возврата - по каким ценам будет формироваться возврат
+             , isErased         Boolean  -- Удаленный ли элемент
+             , isSync           Boolean  -- Синхронизируется (да/нет)
               )
 AS 
 $BODY$
@@ -66,6 +70,21 @@ BEGIN
                               GROUP BY tmpPartner.PartnerId
                                      , ContainerLinkObject_Contract.ObjectId 
                              )
+                , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
+                                      FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
+                                                 , Movement_StoreReal.Id AS StoreRealId
+                                                 , Movement_StoreReal.OperDate
+                                                 , ROW_NUMBER () OVER (PARTITION BY MovementLinkObject_Partner.ObjectId ORDER BY Movement_StoreReal.OperDate DESC) AS RowNum
+                                            FROM Movement AS Movement_StoreReal
+                                                 JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                         ON MovementLinkObject_Partner.MovementId = Movement_StoreReal.Id
+                                                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                                 JOIN tmpPartner ON tmpPartner.PartnerId = MovementLinkObject_Partner.ObjectId
+                                            WHERE Movement_StoreReal.DescId = zc_Movement_StoreReal()
+                                              AND Movement_StoreReal.StatusId = zc_Enum_Status_Complete()
+                                           ) AS SR
+                                      WHERE SR.RowNum = 1
+                                     )
              SELECT Object_Partner.Id
                   , Object_Partner.ObjectCode
                   , Object_Partner.ValueData
@@ -76,7 +95,11 @@ BEGIN
                   , COALESCE (tmpDebt.Amount, 0.0)::TFloat  AS DebtSum
                   , CAST(0.0 AS TFloat)                     AS OverSum
                   , CAST(0 AS Integer)                      AS OverDays
-                  , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, CAST (0.0 AS TFloat)) AS PrepareDayCount
+                  , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
+                  , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
+                  , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
+                  , 7.0::TFloat AS OrderDayCount
+                  , true::Boolean AS isOperDateOrder
                   , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId     AS RouteId
                   , ObjectLink_Contract_Juridical.ObjectId     AS ContractId
@@ -94,6 +117,7 @@ BEGIN
                                  AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
                   LEFT JOIN tmpDebt ON tmpDebt.PartnerId = Object_Partner.Id
                                    AND tmpDebt.ContractId = ObjectLink_Contract_Juridical.ObjectId
+                  LEFT JOIN tmpStoreRealDoc ON tmpStoreRealDoc.PartnerId = Object_Partner.Id                
                   LEFT JOIN ObjectString AS ObjectString_Partner_Address
                                          ON ObjectString_Partner_Address.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_Address.DescId = zc_ObjectString_Partner_Address()
@@ -109,6 +133,9 @@ BEGIN
                   LEFT JOIN ObjectFloat AS ObjectFloat_Partner_PrepareDayCount
                                         ON ObjectFloat_Partner_PrepareDayCount.ObjectId = Object_Partner.Id
                                        AND ObjectFloat_Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount() 
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Partner_DocumentDayCount
+                                        ON ObjectFloat_Partner_DocumentDayCount.ObjectId = Object_Partner.Id
+                                       AND ObjectFloat_Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount() 
                   LEFT JOIN ObjectString AS ObjectString_Partner_Schedule
                                          ON ObjectString_Partner_Schedule.ObjectId = Object_Partner.Id
                                         AND ObjectString_Partner_Schedule.DescId = zc_ObjectString_Partner_Schedule() 

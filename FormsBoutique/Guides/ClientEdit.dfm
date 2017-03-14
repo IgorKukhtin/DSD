@@ -201,7 +201,7 @@ object ClientEditForm: TClientEditForm
   object cxLabel13: TcxLabel
     Left = 8
     Top = 359
-    Caption = #1042#1080#1076#1099' '#1089#1082#1080#1076#1086#1082
+    Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
   end
   object ActionList: TActionList
     Left = 166

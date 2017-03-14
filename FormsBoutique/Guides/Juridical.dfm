@@ -26,7 +26,6 @@ object JuridicalForm: TJuridicalForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 660
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -101,7 +100,7 @@ object JuridicalForm: TJuridicalForm
         Width = 100
       end
       object clJuridicalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+        Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
         DataBinding.FieldName = 'JuridicalGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

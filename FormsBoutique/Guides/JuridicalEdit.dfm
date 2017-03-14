@@ -113,7 +113,7 @@ object JuridicalEditForm: TJuridicalEditForm
     Caption = #1048#1053#1053
   end
   object ceJuridicalGroup: TcxButtonEdit
-    Left = 14
+    Left = 10
     Top = 314
     Properties.Buttons = <
       item
@@ -127,7 +127,7 @@ object JuridicalEditForm: TJuridicalEditForm
   object cxLabel7: TcxLabel
     Left = 10
     Top = 291
-    Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+    Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   end
   object ActionList: TActionList
     Left = 184

@@ -28,8 +28,8 @@ type
   TGoodsTreeForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -55,9 +55,9 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clGoodsTree: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;
     ceParentName: TcxDBTreeListColumn;
     TreeDS: TDataSource;
@@ -69,12 +69,12 @@ type
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    clMeasureName: TcxGridDBColumn;
-    clCompositionName: TcxGridDBColumn;
-    clGoodsInfoName: TcxGridDBColumn;
-    clLineFabricaName: TcxGridDBColumn;
-    clLabelName: TcxGridDBColumn;
-    clGroupNameFull: TcxGridDBColumn;
+    MeasureName: TcxGridDBColumn;
+    CompositionName: TcxGridDBColumn;
+    GoodsInfoName: TcxGridDBColumn;
+    LineFabricaName: TcxGridDBColumn;
+    LabelName: TcxGridDBColumn;
+    GroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

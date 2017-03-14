@@ -50,7 +50,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    clErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -58,12 +58,12 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    clPeriodName: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clBrandName: TcxGridDBColumn;
-    clFabrikaName: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    clPeriodYear: TcxGridDBColumn;
+    PeriodName: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    BrandName: TcxGridDBColumn;
+    FabrikaName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    PeriodYear: TcxGridDBColumn;
   private
     { Private declarations }
   public

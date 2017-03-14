@@ -1,9 +1,9 @@
-object GoodsEditForm: TGoodsEditForm
+object GoodsItemInsertForm: TGoodsItemInsertForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088#1099'>'
-  ClientHeight = 392
-  ClientWidth = 302
+  ClientHeight = 467
+  ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,8 @@ object GoodsEditForm: TGoodsEditForm
   object edName: TcxTextEdit
     Left = 10
     Top = 70
-    TabOrder = 0
+    Properties.ReadOnly = True
+    TabOrder = 11
     Width = 273
   end
   object cxLabel1: TcxLabel
@@ -28,23 +29,23 @@ object GoodsEditForm: TGoodsEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 36
-    Top = 349
+    Left = 38
+    Top = 429
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 7
+    TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 180
-    Top = 349
+    Left = 182
+    Top = 429
     Width = 75
     Height = 25
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 8
+    TabOrder = 3
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -58,7 +59,7 @@ object GoodsEditForm: TGoodsEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 20
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -66,9 +67,39 @@ object GoodsEditForm: TGoodsEditForm
     Top = 94
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
   end
-  object ceGoodsGroup: TcxButtonEdit
+  object cxLabel4: TcxLabel
     Left = 10
-    Top = 110
+    Top = 134
+    Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+  end
+  object cxLabel5: TcxLabel
+    Left = 10
+    Top = 174
+    Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel6: TcxLabel
+    Left = 10
+    Top = 214
+    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+  end
+  object cxLabel7: TcxLabel
+    Left = 10
+    Top = 254
+    Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
+  end
+  object cxLabel8: TcxLabel
+    Left = 10
+    Top = 294
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
+  end
+  object cxLabel9: TcxLabel
+    Left = 10
+    Top = 374
+    Caption = #1056#1072#1079#1084#1077#1088' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceGoodsSize: TcxButtonEdit
+    Left = 10
+    Top = 390
     Properties.Buttons = <
       item
         Default = True
@@ -78,89 +109,63 @@ object GoodsEditForm: TGoodsEditForm
     TabOrder = 1
     Width = 273
   end
-  object cxLabel4: TcxLabel
+  object edGoodsGroupName: TcxTextEdit
     Left = 10
-    Top = 134
-    Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Top = 110
+    Properties.ReadOnly = True
+    TabOrder = 12
+    Width = 273
   end
-  object ceMeasure: TcxButtonEdit
+  object edMeasureName: TcxTextEdit
     Left = 10
     Top = 150
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
     Properties.ReadOnly = True
-    TabOrder = 2
+    TabOrder = 13
     Width = 273
   end
-  object cxLabel5: TcxLabel
-    Left = 10
-    Top = 174
-    Caption = #1057#1086#1089#1090#1072#1074' '#1090#1086#1074#1072#1088#1072
-  end
-  object ceComposition: TcxButtonEdit
+  object edCompositionName: TcxTextEdit
     Left = 10
     Top = 190
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 14
     Width = 273
   end
-  object cxLabel6: TcxLabel
-    Left = 10
-    Top = 214
-    Caption = #1054#1087#1080#1089#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-  end
-  object ceGoodsInfo: TcxButtonEdit
+  object edGoodsInfoName: TcxTextEdit
     Left = 10
     Top = 230
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 15
     Width = 273
   end
-  object cxLabel7: TcxLabel
-    Left = 10
-    Top = 254
-    Caption = #1051#1080#1085#1080#1103' '#1082#1086#1083#1083#1077#1082#1094#1080#1080
-  end
-  object ceLineFabrica: TcxButtonEdit
+  object edLineFabricaName: TcxTextEdit
     Left = 10
     Top = 270
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
     Properties.ReadOnly = True
-    TabOrder = 5
+    TabOrder = 16
     Width = 273
   end
-  object cxLabel8: TcxLabel
-    Left = 10
-    Top = 294
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072
-  end
-  object ceLabel: TcxButtonEdit
+  object edLabelName: TcxTextEdit
     Left = 10
     Top = 310
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 273
+  end
+  object cxLabel10: TcxLabel
+    Left = 10
+    Top = 334
+    Caption = #1058#1086#1074#1072#1088
+  end
+  object ceGoods: TcxButtonEdit
+    Left = 10
+    Top = 350
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 0
     Width = 273
   end
   object ActionList: TActionList
@@ -196,7 +201,7 @@ object GoodsEditForm: TGoodsEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Goods'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsItem'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -209,64 +214,17 @@ object GoodsEditForm: TGoodsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
-        Value = Null
-        Component = edCode
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = ''
-        Component = edName
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsGroupId'
         Value = Null
-        Component = GoodsGroupGuides
+        Component = GoodsItemGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMeasureId'
+        Name = 'inGoodsSizeId'
         Value = Null
-        Component = MeasureGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCompositionId'
-        Value = Null
-        Component = CompositionGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsInfoId'
-        Value = Null
-        Component = GoodsInfoGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLineFabricaID'
-        Value = Null
-        Component = LineFabricaGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inLabelId'
-        Value = Null
-        Component = LabelGuides
+        Component = GoodsItemSizeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -287,7 +245,7 @@ object GoodsEditForm: TGoodsEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Goods'
+    StoredProcName = 'gpGet_Object_GoodsItem'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -300,106 +258,117 @@ object GoodsEditForm: TGoodsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name'
-        Value = ''
-        Component = edName
-        DataType = ftString
+        Name = 'GoodsId'
+        Value = Null
+        Component = GoodsItemGoodsGuides
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Code'
+        Name = 'GoodsCode'
         Value = 0.000000000000000000
         Component = edCode
-        DataType = ftUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = ''
+        Component = GoodsItemGoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
         Value = Null
-        Component = GoodsGroupGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
         Value = Null
-        Component = GoodsGroupGuides
-        ComponentItem = 'TextValue'
+        Component = edGoodsGroupName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureId'
         Value = Null
-        Component = MeasureGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MeasureName'
         Value = Null
-        Component = MeasureGuides
-        ComponentItem = 'TextValue'
+        Component = edMeasureName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'CompositionId'
         Value = Null
-        Component = CompositionGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CompositionName'
         Value = Null
-        Component = CompositionGuides
-        ComponentItem = 'TextValue'
+        Component = edCompositionName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsInfoId'
         Value = Null
-        Component = GoodsInfoGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsInfoName'
         Value = Null
-        Component = GoodsInfoGuides
-        ComponentItem = 'TextValue'
+        Component = edGoodsInfoName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'LineFabricaId'
         Value = Null
-        Component = LineFabricaGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'LineFabricaName'
         Value = Null
-        Component = LineFabricaGuides
-        ComponentItem = 'TextValue'
+        Component = edLineFabricaName
         DataType = ftString
         MultiSelectSeparator = ','
       end
       item
         Name = 'LabalId'
         Value = Null
-        Component = LabelGuides
-        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'LabelName'
         Value = Null
-        Component = LabelGuides
+        Component = edLabelName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = Null
+        Component = GoodsItemSizeGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = Null
+        Component = GoodsItemSizeGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsName'
+        Value = Null
+        Component = edName
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -426,19 +395,19 @@ object GoodsEditForm: TGoodsEditForm
     Left = 104
     Top = 104
   end
-  object GoodsGroupGuides: TdsdGuides
+  object GoodsItemSizeGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    LookupControl = ceGoodsSize
+    FormNameParam.Value = 'TGoodsSizeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsSizeForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = GoodsItemSizeGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -446,57 +415,28 @@ object GoodsEditForm: TGoodsEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GoodsGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 226
-    Top = 98
-  end
-  object MeasureGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceMeasure
-    FormNameParam.Value = 'TMeasureForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMeasureForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = MeasureGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = MeasureGuides
+        Component = GoodsItemSizeGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 225
-    Top = 145
+    Top = 406
   end
-  object CompositionGuides: TdsdGuides
+  object GoodsItemGoodsGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceComposition
-    FormNameParam.Value = 'TCompositionForm'
+    LookupControl = ceGoods
+    FormNameParam.Value = 'TGoodsForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TCompositionForm'
+    FormName = 'TGoodsForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = CompositionGuides
+        Component = GoodsItemGoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -504,100 +444,13 @@ object GoodsEditForm: TGoodsEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CompositionGuides
+        Component = GoodsItemGoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 227
-    Top = 189
-  end
-  object GoodsInfoGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoodsInfo
-    FormNameParam.Value = 'TGoodsInfoForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsInfoForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GoodsInfoGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GoodsInfoGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 228
-    Top = 229
-  end
-  object LineFabricaGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceLineFabrica
-    FormNameParam.Value = 'TLineFabricaForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TLineFabricaForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = LineFabricaGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = LineFabricaGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 226
-    Top = 273
-  end
-  object LabelGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceLabel
-    FormNameParam.Value = 'TLabelForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TLabelForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = LabelGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = LabelGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 225
-    Top = 318
+    Left = 217
+    Top = 358
   end
 end
