@@ -31,9 +31,11 @@ RETURNS TABLE (UnitName       TVarChar
              , Amount        TFloat 
              , PriceSP        TFloat 
              , PriceOriginal  TFloat 
+             , PriceComp      TFloat
 
              , SummaSP        TFloat
              , SummOriginal   TFloat
+             , SummaComp      TFloat
              , NumLine        Integer
 
              , JuridicalFullName  TVarChar
@@ -258,6 +260,7 @@ BEGIN
                          WHERE ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
                            AND ( (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = inGroupMemberSPId AND inisGroupMemberSP = FALSE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0/* <> inGroupMemberSPId*/ AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
+                              OR COALESCE(inGroupMemberSPId,0) = 0
                                )
                         )
 
@@ -317,7 +320,8 @@ BEGIN
                        LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
                                             AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
                                             AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
-
+                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 THEN COALESCE (tmpSale.GroupMemberSPId,0) ELSE 0 END 
+                                                                                                                                          --4063780;6;"ƒит€чий"
                        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSale.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
                        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
  
@@ -350,9 +354,12 @@ BEGIN
 
              , CAST ( (CASE WHEN tmpData.Amount <>0 THEN tmpData.SummSale/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) )     :: TFloat  AS PriceSP
              , CAST ( (CASE WHEN tmpData.Amount <>0 THEN tmpData.SummOriginal/tmpData.Amount ELSE 0 END)  AS NUMERIC (16,2) ) :: TFloat  AS PriceOriginal
+             , CAST ( (CASE WHEN tmpData.Amount <>0 THEN (tmpData.SummOriginal/tmpData.Amount - tmpData.SummSale/tmpData.Amount) ELSE 0 END)  AS NUMERIC (16,2) ) :: TFloat  AS PriceComp
              
              , tmpData.SummSale          :: TFloat  AS SummaSP
              , tmpData.SummOriginal      :: TFloat
+             , (tmpData.SummOriginal - tmpData.SummSale) :: TFloat  AS SummaComp
+
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,Object_Unit.ValueData, Object_Goods.ValueData ) AS Integer) AS NumLine
 
            , tmpMovDetails.JuridicalFullName
@@ -425,4 +432,5 @@ $BODY$
 */
 
 -- тест
---select * from gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 3690580 , inisGroupMemberSP := 'True'::Boolean ,  inSession := '3'::TVarChar);
+--select * from gpReport_Sale_SP(inStartDate := ('01.12.2016')::TDateTime , inEndDate := ('31.12.2016')::TDateTime , inJuridicalId := 0 , inUnitId := 0 , inHospitalId := 0 , inGroupMemberSPId := 0 , inisGroupMemberSP := 'True'::Boolean ,  inSession := '3'::TVarChar);
+

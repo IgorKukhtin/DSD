@@ -3,6 +3,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -22
   ExplicitWidth = 1093
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -65,6 +66,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummOriginal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaCompensation
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -110,6 +116,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
               Format = ',0.####'
               Kind = skSum
               Column = colSummOriginal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colSummaCompensation
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -255,6 +266,16 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object clPriceCompensation: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'PriceComp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object clPriceOriginal: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
@@ -552,6 +573,16 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Visible = False
             Width = 80
           end
+          object colSummaCompensation: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaComp'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
         end
       end
     end
@@ -835,6 +866,54 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrintInvoice: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1095#1077#1090#1072
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'HospitalName;'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GroupMemberSPName'
+          Value = ''
+          Component = GroupMemberSPGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGroupMemberSP'
+          Value = 'False'
+          Component = cbGroupMemberSP
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
+      ReportNameParam.Value = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -995,6 +1074,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1016,6 +1103,11 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+    end
+    object bbPrintInvoice: TdxBarButton
+      Action = actPrintInvoice
+      Category = 0
+      ImageIndex = 19
     end
   end
   inherited PeriodChoice: TPeriodChoice

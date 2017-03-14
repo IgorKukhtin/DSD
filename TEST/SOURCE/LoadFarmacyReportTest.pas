@@ -60,6 +60,7 @@ var
  i : integer;
 begin
 
+  LoadReportFromFile('Счет постановление 1303', ReportPath + '\Счет постановление 1303.fr3');
   LoadReportFromFile('Pеестр по постановлению 1303', ReportPath + '\Pеестр по постановлению 1303.fr3');
   LoadReportFromFile('Отчет по продажам Соц.проекта', ReportPath + '\Отчет по продажам Соц.проекта.fr3');
   exit;
