@@ -56,6 +56,11 @@ type
     License: TcxGridDBColumn;
     actPrintInvoice: TdsdPrintAction;
     bbPrintInvoice: TdxBarButton;
+    cxLabel7: TcxLabel;
+    edDateInvoice: TcxDateEdit;
+    cxLabel8: TcxLabel;
+    edInvoice: TcxTextEdit;
+    CountSP: TcxGridDBColumn;
   private
     { Private declarations }
   public
