@@ -15,7 +15,7 @@ BEGIN
 
      RETURN QUERY 
      WITH tmpUnit AS (SELECT tmp.UnitId,       TRUE AS isMain FROM lfSelect_Object_Unit_byGroup (8446) AS tmp -- ЦЕХ колбаса+дел-сы
-            UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 951601 -- ЦЕХ упаковки мясо
+            -- UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 951601 -- ЦЕХ упаковки мясо
             UNION ALL SELECT tmp.Id AS UnitId, TRUE AS isMain FROM Object AS tmp WHERE Id = 981821 -- ЦЕХ шприц. мясо
                )
      -- !!!Internal!!!
@@ -53,3 +53,5 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  04.11.14                                        *
 */
+
+-- SELECT * FROM gpComplete_SelectAll_Sybase_CEH (inStartDate:= '01.03.2017', inEndDate:= '15.03.2017', inIsBefoHistoryCost:= FALSE) WHERE MovementId = 5438021

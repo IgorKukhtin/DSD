@@ -63,7 +63,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 32
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -311,12 +310,12 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Width = 80
       end
       object PersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/ '#1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 100
       end
       object RouteGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090

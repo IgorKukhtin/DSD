@@ -203,17 +203,36 @@ BEGIN
                             FROM tmpMI_Order AS tmpMI
                            UNION ALL
                             SELECT tmp.GoodsId
-                                 , 0            AS GoodsKindId
+                                 , tmp.GoodsKindId
                                  , 0            AS Amount_Order
                                  , 0            AS Amount_Weighing
                                  , 0            AS MovementId_Promo
                                  , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
                                  , 1 AS CountForPrice -- плохое решение
                                  , FALSE AS isTare
-                            FROM (SELECT vbGoodsId AS GoodsId WHERE vbGoodsId <> 0) AS tmp
-                                 LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmp.GoodsId
-                                 LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId = tmp.GoodsId
+                            FROM (SELECT vbGoodsId AS GoodsId, zc_GoodsKind_Basis() AS GoodsKindId WHERE vbGoodsId <> 0
+                                 UNION ALL
+                                  SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                       , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                  FROM ObjectBoolean AS ObjectBoolean_ScaleCeh
+                                       INNER JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = ObjectBoolean_ScaleCeh.ObjectId AND Object_GoodsByGoodsKind.isErased = FALSE
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                             ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                            AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = vbGoodsId
+                                       INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectBoolean_ScaleCeh.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                  WHERE ObjectBoolean_ScaleCeh.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_ScaleCeh()
+                                    AND ObjectBoolean_ScaleCeh.ValueData = TRUE
+                                 ) AS tmp
+                                 LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmp.GoodsId
+                                                      AND tmpMI_Order.GoodsKindId = tmp.GoodsKindId
+                                 LEFT JOIN tmpMI_Weighing ON tmpMI_Weighing.GoodsId     = tmp.GoodsId
+                                                         AND tmpMI_Weighing.GoodsKindId = tmp.GoodsKindId
                             WHERE tmpMI_Order.GoodsId IS NULL AND tmpMI_Weighing.GoodsId IS NULL
+                              AND inIsGoodsComplete = FALSE
                            UNION ALL
                             SELECT tmpMI.GoodsId
                                  , tmpMI.GoodsKindId

@@ -27,7 +27,6 @@ object ArticleLossForm: TArticleLossForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 759
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,7 +45,6 @@ object ArticleLossForm: TArticleLossForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -56,14 +54,14 @@ object ArticleLossForm: TArticleLossForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 133
+        Width = 200
       end
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -310,10 +308,12 @@ object ArticleLossForm: TArticleLossForm
       FormName = 'TArticleLossEditForm'
       FormNameParam.Value = 'TArticleLossEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       DataSource = DataSource
@@ -329,6 +329,7 @@ object ArticleLossForm: TArticleLossForm
       FormName = 'TArticleLossEditForm'
       FormNameParam.Value = 'TArticleLossEditForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -336,6 +337,7 @@ object ArticleLossForm: TArticleLossForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -384,16 +386,17 @@ object ArticleLossForm: TArticleLossForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -433,6 +436,7 @@ object ArticleLossForm: TArticleLossForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288

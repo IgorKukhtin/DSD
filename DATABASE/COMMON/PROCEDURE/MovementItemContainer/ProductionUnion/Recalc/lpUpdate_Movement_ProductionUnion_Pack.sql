@@ -20,7 +20,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, isDel
 AS
 $BODY$
 BEGIN
-      if inUnitId <> 951601  then return; end if;
+     -- ЦЕХ упаковки мясо
+     -- if inUnitId <> 951601  then return; end if;
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpResult'))
      THEN
@@ -39,6 +40,9 @@ BEGIN
                               SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8460) AS lfSelect -- Возвраты общие
                              UNION
                               SELECT Object.Id AS UnitId FROM Object WHERE Object.Id = 8452 -- Склад ПЕРЕПАК
+                             UNION
+                              -- Участок мясного сырья
+                              SELECT lfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect WHERE inUnitId = 951601 -- ЦЕХ упаковки мясо
                              )
                 , tmpMI AS (-- получаем:
                             SELECT tmp.ContainerId
@@ -53,7 +57,7 @@ BEGIN
                                  , CASE WHEN MIContainer.isActive = FALSE THEN zc_MI_Master() ELSE zc_MI_Child() END   AS DescId_mi
                                  , SUM (MIContainer.Amount * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS OperCount
                             FROM MovementItemContainer AS MIContainer
-                                 INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.AnalyzerId
+                                 INNER JOIN tmpUnit ON tmpUnit.UnitId = MIContainer.ObjectExtId_Analyzer
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
@@ -71,7 +75,8 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId                 = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- От кого пришло
+                              -- AND MIContainer.ObjectExtId_Analyzer   <> inUnitId -- От кого пришло
+                              AND MIContainer.ObjectExtId_Analyzer   = 981821 -- ЦЕХ шприц. мясо
                               AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
                               AND MIContainer.isActive               = TRUE
                             GROUP BY MIContainer.ContainerId
@@ -762,8 +767,8 @@ BEGIN
                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                               INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                               AND Object_InfoMoney_View.InfoMoneyGroupId <> zc_Enum_InfoMoneyGroup_30000()             -- Доходы
+                                                              AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Общефирменные + Ирна
                                                               AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
-
      WHERE _tmpResult.DescId_mi   = zc_MI_Master()
        AND _tmpResult.isDelete    = FALSE;
 
@@ -872,7 +877,7 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки
@@ -880,4 +885,3 @@ END;$BODY$
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
 -- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate
-

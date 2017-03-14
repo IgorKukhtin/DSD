@@ -20,6 +20,20 @@ AS
 $BODY$
   DECLARE vbMovementId_inv Integer;
 BEGIN
+     -- !!!Временно!!!
+     IF inFromId = 951601 -- ЦЕХ упаковки мясо
+     THEN
+         RETURN;
+     END IF;
+
+     -- !!!Временно!!!
+     /*IF inFromId = 981821 -- ЦЕХ шприц. мясо
+     THEN
+         -- RAISE EXCEPTION '<%> <%>', inFromId, inToId;
+         inToId:= 951601; -- ЦЕХ упаковки мясо
+     END IF;*/
+
+
      -- определяется документ Инвентаризация, т.к. надо её учесть + распределить "Ковбаси сирокопчені"
      vbMovementId_inv:= (SELECT Movement.Id
                          FROM
@@ -492,7 +506,7 @@ END;$BODY$
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8448,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ деликатесов       + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.07.2017', inEndDate:= '20.07.2017', inFromId:=8447,   inToId:=8458, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ колбасный         + Склад База ГП
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=951601, inToId:=8439, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ упаковки мясо + Участок мясного сырья
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.02.2017', inEndDate:= '13.02.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Partion (inIsUpdate:= TRUE, inStartDate:= '01.03.2017', inEndDate:= '02.03.2017', inFromId:=981821, inToId:=951601, inUserId:= zfCalc_UserAdmin() :: Integer) -- ЦЕХ шприц. мясо + ЦЕХ упаковки мясо
 
 -- where ContainerId = 628180
 -- select * from MovementItemContainer where ContainerId = 568111
