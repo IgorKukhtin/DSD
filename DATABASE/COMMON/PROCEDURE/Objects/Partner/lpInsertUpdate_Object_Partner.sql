@@ -1,28 +1,5 @@
 -- Function: lpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, 
-                                                       TFloat, TFloat,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, 
-                                                       TFloat, TFloat,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, 
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer,   Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);                                                       
-
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);                                                       
-
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                       TFloat, TFloat, Boolean, Boolean, Boolean,
-                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
-                                                       TDateTime, TDateTime, Integer);                                                       
-
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                        TFloat, TFloat, Boolean, Boolean, Boolean,
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,

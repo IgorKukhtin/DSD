@@ -343,6 +343,12 @@ BEGIN
          ;
 
 
+     -- !!!Выход, т.к. иногда данных нет!!!
+     IF NOT EXISTS (SELECT 1 FROM _tmpResult)
+     THEN
+         RETURN;
+     END IF;
+
 
      -- данные
      INSERT INTO _tmpResult_child (MovementId, OperDate, MovementItemId_master, MovementItemId, ContainerId_master, ContainerId, GoodsId, OperCount, isDelete)

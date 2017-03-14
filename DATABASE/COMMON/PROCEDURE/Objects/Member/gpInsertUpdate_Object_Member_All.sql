@@ -1,7 +1,5 @@
 -- Function: gpInsertUpdate_Object_Member_All(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member_All(

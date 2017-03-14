@@ -403,6 +403,7 @@ BEGIN
                                                          (ioId                  := MovementItem.Id
                                                         , inMovementId          := vbMovementId_begin
                                                         , inGoodsId             := tmpIncome.GoodsId
+                                                        , inGoodsKindId         := NULL
                                                         , inAmount              := tmpIncome.Amount
                                                         , inLiveWeight          := tmpIncome.LiveWeight
                                                         , inHeadCount           := tmpIncome.HeadCount
@@ -428,6 +429,9 @@ BEGIN
                                                             ON MIString_PartionGoodsCalc.MovementItemId =  MovementItem.Id
                                                            AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
                                                            AND MIString_PartionGoodsCalc.ValueData = vbPartionGoods_partner
+                              /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()*/
                               LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                                           ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                                          AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
@@ -676,7 +680,7 @@ BEGIN
                                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                                        AND vbMovementDescId <> zc_Movement_ProductionSeparate() -- !!!надо убрать партии, т.к. в UNION их нет!!!
                                                        AND vbMovementDescId <> zc_Movement_ProductionUnion() -- !!!надо убрать партии, т.к. в UNION их нет!!!
-
+                                   
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

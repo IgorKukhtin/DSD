@@ -1,11 +1,5 @@
 -- Function: gpInsertUpdate_Object_GoodsGroup()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsGroup (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsGroup(
