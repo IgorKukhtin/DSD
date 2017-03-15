@@ -66,6 +66,9 @@ type
     edOperDate_Transport: TcxDateEdit;
     cxLabel14: TcxLabel;
     edPriceWithVAT: TcxCheckBox;
+    cxLabel23: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
     { Private declarations }
   public

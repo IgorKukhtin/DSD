@@ -11,17 +11,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 1252
     Height = 482
     ExplicitTop = 166
-    ExplicitWidth = 1244
+    ExplicitWidth = 1252
     ExplicitHeight = 482
     ClientRectBottom = 482
     ClientRectRight = 1252
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1244
+      ExplicitWidth = 1252
       ExplicitHeight = 458
       inherited cxGrid: TcxGrid
         Width = 1252
         Height = 342
-        ExplicitWidth = 1244
+        ExplicitWidth = 1252
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -354,7 +354,6 @@ inherited ReturnInForm: TReturnInForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 1244
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -688,13 +687,11 @@ inherited ReturnInForm: TReturnInForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitWidth = 1244
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitWidth = 1244
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -702,7 +699,6 @@ inherited ReturnInForm: TReturnInForm
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1244
         object lDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = TaxCorrectiveDS
@@ -1055,7 +1051,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1252
     Height = 140
     TabOrder = 3
-    ExplicitWidth = 1244
+    ExplicitWidth = 1252
     ExplicitHeight = 140
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -3032,8 +3028,8 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
       ImageIndex = 55
-      FormName = 'TMember_ObjectForm'
-      FormNameParam.Value = 'TMember_ObjectForm'
+      FormName = 'TMemberPosition_ObjectForm'
+      FormNameParam.Value = 'TMemberPosition_ObjectForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -3052,6 +3048,11 @@ inherited ReturnInForm: TReturnInForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterPositionId'
+          Value = '8466'
           MultiSelectSeparator = ','
         end>
       isShowModal = True

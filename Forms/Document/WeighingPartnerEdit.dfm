@@ -1,9 +1,9 @@
 ﻿inherited WeighingPartnerEditForm: TWeighingPartnerEditForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')> ('#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077')'
   ClientHeight = 295
-  ClientWidth = 573
+  ClientWidth = 570
   AddOnFormData.isSingle = False
-  ExplicitWidth = 579
+  ExplicitWidth = 576
   ExplicitHeight = 323
   PixelsPerInch = 96
   TextHeight = 13
@@ -181,7 +181,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 22
-    Width = 331
+    Width = 238
   end
   object edJuridical: TcxButtonEdit [23]
     Left = 73
@@ -214,12 +214,12 @@
     Width = 238
   end
   object cxLabel8: TcxLabel [26]
-    Left = 347
+    Left = 458
     Top = 100
     Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   end
   object edUser: TcxButtonEdit [27]
-    Left = 347
+    Left = 458
     Top = 117
     Enabled = False
     Properties.Buttons = <
@@ -230,7 +230,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 27
-    Width = 216
+    Width = 105
   end
   object cxLabel10: TcxLabel [28]
     Left = 252
@@ -365,6 +365,23 @@
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
     TabOrder = 43
     Width = 105
+  end
+  object cxLabel23: TcxLabel [44]
+    Left = 252
+    Top = 100
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
+  end
+  object edMember: TcxButtonEdit [45]
+    Left = 252
+    Top = 117
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 45
+    Width = 200
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 75
@@ -534,6 +551,14 @@
         Name = 'inParentId'
         Value = Null
         Component = ParentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = GuidesMember
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -800,6 +825,21 @@
         Value = 'NULL'
         Component = edOperDate_Transport
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 320
@@ -1275,5 +1315,39 @@
       end>
     Left = 59
     Top = 196
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 8466
+        MultiSelectSeparator = ','
+      end>
+    Left = 337
+    Top = 99
   end
 end

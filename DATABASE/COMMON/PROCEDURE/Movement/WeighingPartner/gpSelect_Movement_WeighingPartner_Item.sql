@@ -150,7 +150,7 @@ BEGIN
              , Movement_Transport.OperDate               AS OperDate_Transport
              , Object_Car.ValueData                      AS CarName
              , Object_CarModel.ValueData                 AS CarModelName
-             , View_PersonalDriver.PersonalName          AS PersonalDriverName
+             , COALESCE(Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
@@ -352,6 +352,10 @@ BEGIN
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
@@ -505,6 +509,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.17         * add zc_MovementLinkObject_Member
  05.10.16         * add inJuridicalBasisId
  04.10.16         * add AccessKey
  29.08.15         * add inGoodsGroupId, inGoodsId
