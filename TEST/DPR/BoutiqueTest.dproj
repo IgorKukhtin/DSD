@@ -376,6 +376,10 @@
 				<Form>GoodsItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Guides\PartionGoods.pas">
+				<Form>PartionGoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\ImportExportLinkType.pas">
 				<Form>ImportExportLinkTypeForm</Form>
 				<DesignClass>TParentForm</DesignClass>

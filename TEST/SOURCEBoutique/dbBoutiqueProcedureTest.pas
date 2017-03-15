@@ -76,6 +76,7 @@ type
     procedure CreateGoods;
     procedure CreateDiscountKind;
     procedure CreateGoodsItem;
+    procedure CreatePartionGoods;
 
   end;
 
@@ -279,6 +280,11 @@ end;
 procedure TdbObjectProcedureTest.CreateMember;
 begin
   DirectoryLoad(CommonProcedurePath + 'OBJECTS\Member\');
+end;
+
+procedure TdbObjectProcedureTest.CreatePartionGoods;
+begin
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\PartionGoods\');
 end;
 
 procedure TdbObjectProcedureTest.CreatePartner;

@@ -84,7 +84,7 @@ type
     procedure LoadGoodsFormTest;
     procedure LoadDiscountKindFormTest;
     procedure LoadGoodsItemFormTest;
-
+    procedure LoadPartionGoodsFormTest;
 
 
 
@@ -618,6 +618,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPartionGoodsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
