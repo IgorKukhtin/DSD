@@ -110,6 +110,7 @@ uses
   DiscountKind in '..\..\FormsBoutique\Guides\DiscountKind.pas' {DiscountKindForm: TParentForm},
   GoodsItem in '..\..\FormsBoutique\Guides\GoodsItem.pas' {GoodsItemForm: TParentForm},
   GoodsItemEdit in '..\..\FormsBoutique\Guides\GoodsItemEdit.pas' {GoodsItemEditForm: TParentForm},
+  PartionGoods in '..\..\FormsBoutique\Guides\PartionGoods.pas' {PartionGoodsForm: TParentForm},
 
   ImportExportLinkType in '..\..\Forms\Kind\ImportExportLinkType.pas' {ImportExportLinkTypeForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
