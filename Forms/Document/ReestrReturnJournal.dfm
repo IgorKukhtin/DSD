@@ -739,7 +739,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     Top = 152
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Reestr'
+    StoredProcName = 'gpComplete_Movement_ReestrReturn'
     Params = <
       item
         Name = 'inmovementid'
@@ -753,7 +753,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     Top = 282
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Reestr'
+    StoredProcName = 'gpUnComplete_Movement_ReestrReturn'
     Params = <
       item
         Name = 'inmovementid'
@@ -767,7 +767,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     Top = 322
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Reestr'
+    StoredProcName = 'gpSetErased_Movement_ReestrReturn'
     Params = <
       item
         Name = 'inmovementid'
@@ -841,7 +841,7 @@ inherited ReestrReturnJournalForm: TReestrReturnJournalForm
     Top = 200
   end
   inherited spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_Reestr'
+    StoredProcName = 'gpReComplete_Movement_ReestrReturn'
     Left = 128
     Top = 288
   end

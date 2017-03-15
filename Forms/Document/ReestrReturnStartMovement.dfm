@@ -1060,7 +1060,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     Top = 0
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Reestr'
+    StoredProcName = 'gpUpdate_Status_ReestrReturn'
     Left = 48
     Top = 0
   end
