@@ -590,22 +590,22 @@ BEGIN
                   ELSE '0'
               END :: TVarChar AS GoodsCodeUKTZED
 
-           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+           , CASE WHEN Movement.OperDate < '01.03.2017' THEN ''
                   WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData
                   WHEN tmpTaxImport.TaxImport <> '' THEN tmpTaxImport.TaxImport
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeTaxImport
 
-           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+           , CASE WHEN Movement.OperDate < '01.03.2017' THEN ''
                   WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData
                   WHEN tmpDKPP.DKPP <> '' THEN tmpDKPP.DKPP
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeDKPP
 
-           , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
+           , CASE WHEN Movement.OperDate < '01.03.2017' THEN ''
                   WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData
                   WHEN tmpTaxAction.TaxAction <> '' THEN tmpTaxAction.TaxAction
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
            , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()

@@ -27,8 +27,6 @@ object MemberPosition_ObjectForm: TMemberPosition_ObjectForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 777
-    ExplicitHeight = 494
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

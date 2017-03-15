@@ -121,7 +121,7 @@ BEGIN
              , Movement_Transport.OperDate               AS OperDate_Transport
              , Object_Car.ValueData                      AS CarName
              , Object_CarModel.ValueData                 AS CarModelName
-             , View_PersonalDriver.PersonalName          AS PersonalDriverName
+             , COALESCE (Object_Member.ValueData, View_PersonalDriver.PersonalName) AS PersonalDriverName
 
              , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData             AS VATPercent
@@ -288,11 +288,15 @@ BEGIN
                                         AND MovementLinkObject_Position4.DescId = zc_MovementLinkObject_PositionComplete4()
             LEFT JOIN Object AS Object_Position4 ON Object_Position4.Id = MovementLinkObject_Position4.ObjectId
 
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_User
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.ParentId

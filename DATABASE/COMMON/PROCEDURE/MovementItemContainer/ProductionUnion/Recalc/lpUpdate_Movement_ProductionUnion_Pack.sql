@@ -66,10 +66,10 @@ BEGIN
                                    , MIContainer.OperDate
                                    , MIContainer.isActive
                            UNION ALL
-                            -- плюс Производство как перемещение
+                            -- плюс Производство как перемещение - в zc_MI_Child
                             SELECT MIContainer.ContainerId
                                  , MIContainer.OperDate
-                                 , zc_MI_Master() AS DescId_mi
+                                 , zc_MI_Child() AS DescId_mi
                                  , SUM (MIContainer.Amount) AS OperCount
                             FROM MovementItemContainer AS MIContainer 
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -792,7 +792,7 @@ BEGIN
      END IF; -- if inIsUpdate = TRUE -- !!!т.е. не всегда!!!
 
 
-    IF 1=0 OR inUserId = zfCalc_UserAdmin() :: Integer
+    IF 1=1 OR inUserId = zfCalc_UserAdmin() :: Integer
     THEN
 
     -- Результат
@@ -883,7 +883,7 @@ END;$BODY$
 
 -- тест
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '24.03.2017', inEndDate:= '24.03.2017', inUnitId:= 8451,   inUserId:= zc_Enum_Process_Auto_Pack()) -- Цех Упаковки
--- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '01.03.2017', inEndDate:= '01.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
+-- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '02.03.2017', inEndDate:= '02.03.2017', inUnitId:= 951601, inUserId:= zc_Enum_Process_Auto_Pack()) -- ЦЕХ упаковки мясо
 
 -- where ContainerId = 568111
 -- SELECT * FROM lpUpdate_Movement_ProductionUnion_Pack (inIsUpdate:= FALSE, inStartDate:= '11.08.2016', inEndDate:= '11.08.2016', inUnitId:= 8451, inUserId:= zfCalc_UserAdmin() :: Integer) -- Цех Упаковки

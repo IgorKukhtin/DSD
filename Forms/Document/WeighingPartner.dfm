@@ -156,10 +156,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object cxLabel8: TcxLabel
       Left = 859
       Top = 4
-      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
     end
     object edUser: TcxButtonEdit
-      Left = 859
+      Left = 984
       Top = 22
       Properties.Buttons = <
         item
@@ -169,7 +169,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       Properties.ReadOnly = True
       TabOrder = 16
-      Width = 146
+      Width = 118
     end
     object cxLabel10: TcxLabel
       Left = 588
@@ -253,7 +253,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Top = 63
       Properties.ReadOnly = True
       TabOrder = 28
-      Width = 146
+      Width = 118
     end
     object edWeighingNumber: TcxCurrencyEdit
       Left = 115
@@ -280,29 +280,29 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Width = 97
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 1057
+      Left = 1160
       Top = 22
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 128
+      Width = 85
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 1011
+      Left = 984
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       Properties.ReadOnly = True
       TabOrder = 32
-      Width = 144
+      Width = 171
     end
     object cxLabel20: TcxLabel
-      Left = 1011
+      Left = 1115
       Top = 4
       Caption = '% '#1053#1044#1057
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 1011
+      Left = 1115
       Top = 22
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -877,7 +877,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
   end
   object cxLabel19: TcxLabel
-    Left = 1011
+    Left = 984
     Top = 45
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
@@ -898,16 +898,16 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 6
     Width = 104
   end
   object cxLabel13: TcxLabel
-    Left = 1191
+    Left = 1261
     Top = 5
     Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edMovementDescName: TcxButtonEdit
-    Left = 1191
+    Left = 1261
     Top = 22
     Properties.Buttons = <
       item
@@ -916,8 +916,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 168
+    TabOrder = 9
+    Width = 98
   end
   object cxLabel7: TcxLabel
     Left = 1261
@@ -930,6 +930,24 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Properties.ReadOnly = True
     TabOrder = 12
     Width = 98
+  end
+  object cxLabel21: TcxLabel
+    Left = 984
+    Top = 4
+    Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+  end
+  object edMember: TcxButtonEdit
+    Left = 859
+    Top = 22
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 118
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1805,6 +1823,21 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Value = Null
         Component = edMovementDescNumber
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberId'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MemberName'
+        Value = Null
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 216
@@ -1961,7 +1994,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 904
+    Left = 1040
     Top = 8
   end
   object PaidKindGuides: TdsdGuides
@@ -2227,5 +2260,39 @@ object WeighingPartnerForm: TWeighingPartnerForm
         MultiSelectSeparator = ','
       end>
     Left = 1280
+  end
+  object GuidesMember: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMember
+    FormNameParam.Value = 'TMemberPosition_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMemberPosition_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMember
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPositionId'
+        Value = 81178
+        MultiSelectSeparator = ','
+      end>
+    Left = 913
+    Top = 3
   end
 end

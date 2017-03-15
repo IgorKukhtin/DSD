@@ -162,6 +162,9 @@ type
     cxLabel7: TcxLabel;
     edMovementDescNumber: TcxTextEdit;
     MovementDescGuides: TdsdGuides;
+    cxLabel21: TcxLabel;
+    edMember: TcxButtonEdit;
+    GuidesMember: TdsdGuides;
   private
   public
   end;

@@ -167,6 +167,7 @@ begin
          ParamByName('TransportId').AsInteger        := DataSet.FieldByName('MovementId_Transport').asInteger;
          ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('Transport_BarCode').asString+CalcBarCode(DataSet.FieldByName('Transport_BarCode').asString);
          ParamByName('Transport_InvNumber').asString := DataSet.FieldByName('Transport_InvNumber').asString;
+         ParamByName('PersonalDriverId').AsInteger   := DataSet.FieldByName('PersonalDriverId').asInteger;
          ParamByName('PersonalDriverName').asString  := DataSet.FieldByName('PersonalDriverName').asString;
          ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;
          ParamByName('RouteName').asString           := DataSet.FieldByName('RouteName').asString;
@@ -1024,6 +1025,7 @@ begin
                ParamByName('TransportId').AsInteger        := 0;
                ParamByName('Transport_BarCode').asString   := '';
                ParamByName('Transport_InvNumber').asString := '';
+               ParamByName('PersonalDriverId').AsInteger   := 0;
                ParamByName('PersonalDriverName').asString  := '';
                ParamByName('CarName').asString             := '';
                ParamByName('RouteName').asString           := '';
@@ -1048,6 +1050,7 @@ begin
          ParamByName('TransportId').AsInteger        := DataSet.FieldByName('MovementId').asInteger;
          ParamByName('Transport_BarCode').asString   := DataSet.FieldByName('BarCode').asString;
          ParamByName('Transport_InvNumber').asString := DataSet.FieldByName('InvNumber').asString;
+         ParamByName('PersonalDriverId').AsInteger   := DataSet.FieldByName('PersonalDriverId').asInteger;
          ParamByName('PersonalDriverName').asString  := DataSet.FieldByName('PersonalDriverName').asString;
          ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;
          ParamByName('RouteName').asString           := DataSet.FieldByName('RouteName').asString;
