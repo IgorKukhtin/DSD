@@ -37,6 +37,7 @@ RETURNS TABLE (UnitName       TVarChar
              , SummOriginal   TFloat
              , SummaComp      TFloat
              , NumLine        Integer
+             , CountSP        Integer
 
              , JuridicalFullName  TVarChar
              , JuridicalAddress   TVarChar
@@ -332,9 +333,17 @@ BEGIN
                        LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
                               ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
                              AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
-       --where 1=0
                     )
 
+    , tmpCountR AS (SELECT  tmpMovDetails.JuridicalId
+                          , tmpMovDetails.HospitalId
+                          , tmpMovDetails.PartnerMedical_ContractId AS ContractId
+                          , COUNT ( DISTINCT tmpMovDetails.InvNumberSP) AS CountSP
+                    FROM tmpMovDetails
+                    GROUP BY tmpMovDetails.JuridicalId
+                           , tmpMovDetails.HospitalId
+                           , tmpMovDetails.PartnerMedical_ContractId
+                    )
 
         -- результат
         SELECT Object_Unit.ValueData               AS UnitName
@@ -361,6 +370,7 @@ BEGIN
              , (tmpData.SummOriginal - tmpData.SummSale) :: TFloat  AS SummaComp
 
              , CAST (ROW_NUMBER() OVER (PARTITION BY Object_PartnerMedical.ValueData ORDER BY Object_PartnerMedical.ValueData,Object_Unit.ValueData, Object_Goods.ValueData ) AS Integer) AS NumLine
+             , CAST (tmpCountR.CountSP AS Integer) AS CountSP
 
            , tmpMovDetails.JuridicalFullName
            , tmpMovDetails.JuridicalAddress
@@ -414,6 +424,10 @@ BEGIN
                                   ON ObjectLink_Goods_Measure.ObjectId = tmpData.GoodsId
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
+ 
+             LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpMovDetails.JuridicalId
+                                AND tmpCountR.HospitalId = tmpMovDetails.HospitalId
+                                AND tmpCountR.ContractId = tmpMovDetails.PartnerMedical_ContractId
 
          ORDER BY Object_Unit.ValueData
                 , Object_PartnerMedical.ValueData

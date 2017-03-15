@@ -3,7 +3,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   ClientHeight = 480
   ClientWidth = 1077
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -22
   ExplicitWidth = 1093
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -583,6 +582,13 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             HeaderAlignmentVert = vaCenter
             Width = 103
           end
+          object CountSP: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
+            DataBinding.FieldName = 'CountSP'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -590,6 +596,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   inherited Panel: TPanel
     Width = 1077
     Height = 65
+    ExplicitTop = 8
     ExplicitWidth = 1077
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
@@ -659,6 +666,30 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Action = actRefresh1
       TabOrder = 8
       Width = 169
+    end
+    object cxLabel7: TcxLabel
+      Left = 967
+      Top = 6
+      Caption = #1086#1090
+    end
+    object edDateInvoice: TcxDateEdit
+      Left = 983
+      Top = 5
+      EditValue = 42736d
+      Properties.ShowTime = False
+      TabOrder = 10
+      Width = 85
+    end
+    object cxLabel8: TcxLabel
+      Left = 846
+      Top = 6
+      Caption = #1057#1095#1077#1090' '#8470
+    end
+    object edInvoice: TcxTextEdit
+      Left = 893
+      Top = 5
+      TabOrder = 12
+      Width = 73
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -876,7 +907,7 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'HospitalName;'
+          IndexFieldNames = 'HospitalName;JuridicalName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -907,6 +938,20 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Value = 'False'
           Component = cbGroupMemberSP
           DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Invoice'
+          Value = Null
+          Component = edInvoice
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateInvoice'
+          Value = 42736d
+          Component = edDateInvoice
+          DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
       ReportName = #1057#1095#1077#1090' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 1303'

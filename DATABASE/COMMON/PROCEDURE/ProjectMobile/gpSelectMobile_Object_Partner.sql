@@ -99,7 +99,7 @@ BEGIN
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
                   , 7.0::TFloat AS OrderDayCount
-                  , true::Boolean AS isOperDateOrder
+                  , COALESCE (ObjectBoolean_Retail_OperDateOrder.ValueData, false)::Boolean AS isOperDateOrder
                   , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                   , ObjectLink_Partner_Route.ChildObjectId     AS RouteId
                   , ObjectLink_Contract_Juridical.ObjectId     AS ContractId
@@ -145,6 +145,12 @@ BEGIN
                   LEFT JOIN ObjectFloat AS ObjectFloat_Partner_GPSE
                                         ON ObjectFloat_Partner_GPSE.ObjectId = Object_Partner.Id
                                        AND ObjectFloat_Partner_GPSE.DescId = zc_ObjectFloat_Partner_GPSE()
+                  LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                       ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                      AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Retail_OperDateOrder
+                                          ON ObjectBoolean_Retail_OperDateOrder.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                         AND ObjectBoolean_Retail_OperDateOrder.DescId = zc_ObjectBoolean_Retail_OperDateOrder()                      
              WHERE Object_Partner.DescId = zc_Object_Partner();
       END IF;
 
