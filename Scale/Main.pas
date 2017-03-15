@@ -331,6 +331,15 @@ begin
          exit;
      end;
      //
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+         and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
+     then begin
+         err_count:=err_count+1;
+         ShowMessage('Ошибка.'+#10+#13+'Не определено значение <Штрих код Путевой лист.>.');
+         ActiveControl:=EditBarCodeTransport;
+         exit;
+     end;
+     //
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 

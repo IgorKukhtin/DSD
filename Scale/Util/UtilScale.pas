@@ -179,6 +179,7 @@ begin
      ParamAdd(Params,'TransportId',ftInteger);
      ParamAdd(Params,'Transport_BarCode',ftString);
      ParamAdd(Params,'Transport_InvNumber',ftString);
+     ParamAdd(Params,'PersonalDriverId',ftInteger);
      ParamAdd(Params,'PersonalDriverName',ftString);
      ParamAdd(Params,'CarName',ftString);
      ParamAdd(Params,'RouteName',ftString);

@@ -435,19 +435,19 @@ BEGIN
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
                   WHEN ObjectString_Goods_TaxImport.ValueData <> '' THEN ObjectString_Goods_TaxImport.ValueData
                   WHEN tmpTaxImport.TaxImport <> '' THEN tmpTaxImport.TaxImport
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeTaxImport
 
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
                   WHEN ObjectString_Goods_DKPP.ValueData <> '' THEN ObjectString_Goods_DKPP.ValueData
                   WHEN tmpDKPP.DKPP <> '' THEN tmpDKPP.DKPP
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeDKPP
 
            , CASE WHEN Movement.OperDate < '01.01.2017' THEN ''
                   WHEN ObjectString_Goods_TaxAction.ValueData <> '' THEN ObjectString_Goods_TaxAction.ValueData
                   WHEN tmpTaxAction.TaxAction <> '' THEN tmpTaxAction.TaxAction
-                  ELSE '0'
+                  ELSE ''
              END :: TVarChar AS GoodsCodeTaxAction
 
            , (CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'опеднокюрю гю йнка.хгдекхъ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END END) :: TVarChar AS GoodsName
