@@ -1,6 +1,7 @@
 -- Function: gpReport_Check_ReturnInToLink ()
 
 DROP FUNCTION IF EXISTS gpReport_Check_ReturnInToLink (TDateTime,TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Check_ReturnInToLink (TDateTime,TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Check_ReturnInToLink (
     IN inStartDate         TDateTime , --
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_ReturnInToLink (
     IN inJuridicalId       Integer   ,
     IN inPartnerId         Integer   , --
     IN inPaidKindId        Integer   , --
+    IN inisShowAll         Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Movement_ReturnId Integer, MovementDescName TVarChar, StatusCode Integer
@@ -113,7 +115,7 @@ BEGIN
                       , (tmpMI_Child.Amount * COALESCE (MIFloat_Price.ValueData, 0))              AS SummaChild
                  FROM tmpMI_Master
                    INNER JOIN tmpMI_Child ON tmpMI_Child.MI_Id = tmpMI_Master.MI_Id
-                                         AND tmpMI_Child.Amount <> tmpMI_Master.AmountPartner
+                                         AND (tmpMI_Child.Amount <> tmpMI_Master.AmountPartner OR inisShowAll = True)
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = tmpMI_Master.MI_Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -142,7 +144,7 @@ BEGIN
    , tmp_check AS (SELECT tmpMaster_check.MovementId, tmpMaster_check.GoodsId
                   FROM tmpMaster_check JOIN tmpChild_check ON tmpChild_check.MovementId = tmpMaster_check.MovementId
                                                          AND tmpChild_check.GoodsId     = tmpMaster_check.GoodsId
-                                                         AND tmpChild_check.AmountChild <> tmpMaster_check.Amount
+                                                         AND (tmpChild_check.AmountChild <> tmpMaster_check.Amount OR inisShowAll = True)
                  )
              -- результат
              SELECT Movement_Return.Id          AS Movement_ReturnId
@@ -187,6 +189,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.03.17         * add inisShowAll
  10.01.17         * 
 */
 
