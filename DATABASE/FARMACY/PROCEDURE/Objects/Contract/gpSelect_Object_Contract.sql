@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
                Percent_Juridical TFloat,
-               Deferment Integer, Percent TFloat, 
+               Deferment Integer, Percent TFloat, PercentSP TFloat, 
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isReport Boolean,
@@ -39,7 +39,7 @@ BEGIN
            , ObjectFloat_Percent.ValueData  AS Percent_Juridical
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
-
+           , Object_Contract_View.PercentSP
 
            , Object_Contract_View.Comment
 

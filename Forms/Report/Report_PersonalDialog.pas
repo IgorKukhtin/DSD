@@ -40,6 +40,12 @@ type
     GuidesInfoMoney: TdsdGuides;
     cbServiceDate: TcxCheckBox;
     deServiceDate: TcxDateEdit;
+    cxLabel1: TcxLabel;
+    cePersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    PersonalGuides: TdsdGuides;
   private
     { Private declarations }
   public

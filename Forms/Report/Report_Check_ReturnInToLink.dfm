@@ -477,6 +477,14 @@ inherited Report_Check_ReturnInToLinkForm: TReport_Check_ReturnInToLinkForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isShowAll'
+          Value = Null
+          Component = cbShowAll
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher

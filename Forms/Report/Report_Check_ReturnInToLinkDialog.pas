@@ -32,6 +32,7 @@ type
     cxLabel1: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    cbShowAll: TcxCheckBox;
   private
     { Private declarations }
   public
