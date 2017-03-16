@@ -81,10 +81,10 @@ BEGIN
                        , ObjectLink_PriceListItem_PriceList.ChildObjectId       AS PriceListId
                        , ObjectHistory_PriceListItem_Order.StartDate            AS OrderStartDate
                        , ObjectHistory_PriceListItem_Order.EndDate              AS OrderEndDate
-                       , ObjectHistoryFloat_PriceListItem_Value_Order.ValueData AS OrderPrice
+                       , COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)::TFloat AS OrderPrice
                        , ObjectHistory_PriceListItem_Sale.StartDate             AS SaleStartDate
                        , ObjectHistory_PriceListItem_Sale.EndDate               AS SaleEndDate
-                       , ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData  AS SalePrice
+                       , COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0)::TFloat  AS SalePrice
                        , tmpPriceList.PriceListId IS NOT NULL AND tmpPriceList.PriceListPriorId IS NOT NULL
                          AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                              + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0) AS isSync
