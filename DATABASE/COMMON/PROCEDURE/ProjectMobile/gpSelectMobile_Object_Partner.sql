@@ -50,25 +50,86 @@ BEGIN
                                  WHERE ObjectLink_Partner_PersonalTrade.ChildObjectId = vbPersonalId
                                    AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
                                 )
-                , tmpDebt AS (SELECT tmpPartner.PartnerId
-                                   , ContainerLinkObject_Contract.ObjectId AS ContractId 
-                                   , SUM (Container_Summ.Amount)::TFloat AS Amount
-                              FROM Container AS Container_Summ
-                                   JOIN ObjectLink AS ObjectLink_Account_AccountGroup
-                                                   ON ObjectLink_Account_AccountGroup.ObjectId = Container_Summ.ObjectId
-                                                  AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup() 
-                                                  AND ObjectLink_Account_AccountGroup.ChildObjectId = zc_Enum_AccountGroup_30000() -- Дебиторы
-                                   JOIN ContainerLinkObject AS ContainerLinkObject_Partner
-                                                            ON ContainerLinkObject_Partner.ContainerId = Container_Summ.Id
-                                                           AND ContainerLinkObject_Partner.DescId = zc_ContainerLinkObject_Partner()
-                                   JOIN ContainerLinkObject AS ContainerLinkObject_Contract
-                                                            ON ContainerLinkObject_Contract.ContainerId = Container_Summ.Id
-                                                           AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
-                                   JOIN tmpPartner ON tmpPartner.PartnerId = ContainerLinkObject_Partner.ObjectId
-                              WHERE Container_Summ.DescId = zc_Container_Summ()
-                                AND Container_Summ.Amount <> 0.0
-                              GROUP BY tmpPartner.PartnerId
-                                     , ContainerLinkObject_Contract.ObjectId 
+                , tmpDayInfo AS (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId              AS ContractId
+                                      , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
+                                      , ObjectLink_Partner_Juridical.ObjectId                            AS PartnerId
+                                      , zfCalc_DetermentPaymentDate (ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+                                                                   , MIN (ObjectFloat_ContractCondition_Value.ValueData)::Integer
+                                                                   , CURRENT_DATE)::Date AS ContractDate
+                                 FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                                      JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                                      ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                                     AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (zc_Enum_ContractConditionKind_DelayDayCalendar()
+                                                                                                                            , zc_Enum_ContractConditionKind_DelayDayBank()
+                                                                                                                             )
+                                      JOIN ObjectFloat AS ObjectFloat_ContractCondition_Value
+                                                       ON ObjectFloat_ContractCondition_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                                      AND ObjectFloat_ContractCondition_Value.DescId = zc_ObjectFloat_ContractCondition_Value() 
+                                                      AND ObjectFloat_ContractCondition_Value.ValueData <> 0.0
+                                      JOIN Object AS Object_ContractCondition
+                                                  ON Object_ContractCondition.Id = ObjectLink_ContractCondition_Contract.ObjectId
+                                                 AND NOT Object_ContractCondition.isErased 
+                                      JOIN Object AS Object_Contract
+                                                  ON Object_Contract.Id = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                 AND NOT Object_Contract.isErased 
+                                      JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                      ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                     AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
+                                      JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                      ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                      JOIN tmpPartner ON tmpPartner.PartnerId = ObjectLink_Partner_Juridical.ObjectId
+                                 WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                                 GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
+                                        , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+                                        , ObjectLink_Partner_Juridical.ObjectId
+                                )
+                , tmpContainer AS (SELECT Container_Summ.Id      AS ContainerId
+                                        , CLO_Partner.ObjectId   AS PartnerId
+                                        , CLO_Contract.ObjectId  AS ContractId
+                                        , Container_Summ.Amount
+                                        , COALESCE (tmpDayInfo.ContractDate, CURRENT_DATE)::Date AS ContractDate
+                                   FROM Container AS Container_Summ
+                                        JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                                        ON ObjectLink_Account_AccountGroup.ObjectId = Container_Summ.ObjectId
+                                                       AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup() 
+                                                       AND ObjectLink_Account_AccountGroup.ChildObjectId = zc_Enum_AccountGroup_30000() -- Дебиторы
+                                        JOIN ContainerLinkObject AS CLO_Partner
+                                                                 ON CLO_Partner.ContainerId = Container_Summ.Id
+                                                                AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                                        JOIN tmpPartner ON tmpPartner.PartnerId = CLO_Partner.ObjectId
+                                        JOIN ContainerLinkObject AS CLO_Contract
+                                                                 ON CLO_Contract.ContainerId = Container_Summ.Id
+                                                                AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                        JOIN ContainerLinkObject AS CLO_PaidKind
+                                                                 ON CLO_PaidKind.ContainerId = Container_Summ.Id
+                                                                AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
+                                                                AND CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() -- только Нал
+                                        LEFT JOIN tmpDayInfo ON tmpDayInfo.PartnerId = CLO_Partner.ObjectId
+                                                            AND tmpDayInfo.ContractId = CLO_Contract.ObjectId
+                                   WHERE Container_Summ.DescId = zc_Container_Summ()
+                                  )
+                , tmpMIContainer AS (SELECT MovementItemContainer.ContainerId
+                                          , SUM (MovementItemContainer.Amount)::TFloat AS Summ
+                                     FROM MovementItemContainer
+                                          JOIN tmpContainer ON tmpContainer.ContainerId = MovementItemContainer.ContainerId
+                                     WHERE MovementItemContainer.DescId = zc_MIContainer_Summ()
+                                       AND MovementItemContainer.MovementDescId = zc_Movement_Sale()
+                                       AND MovementItemContainer.OperDate > tmpContainer.ContractDate
+                                     GROUP BY MovementItemContainer.ContainerId  
+                                    )
+                , tmpDebt AS (SELECT tmpContainer.PartnerId
+                                   , tmpContainer.ContractId
+                                   , SUM (tmpContainer.Amount)::TFloat                                               AS DebtSum
+                                   , SUM (tmpContainer.Amount - COALESCE (tmpMIContainer.Summ, 0.0)::TFloat)::TFloat AS OverSum
+                                   , MAX (zfCalc_OverDayCount (tmpContainer.ContainerId, tmpContainer.ContractDate)) AS OverDays
+                              FROM tmpContainer
+                                   LEFT JOIN tmpMIContainer ON tmpContainer.ContainerId = tmpMIContainer.ContainerId
+                              WHERE tmpContainer.Amount <> 0.0
+                              GROUP BY tmpContainer.PartnerId
+                                     , tmpContainer.ContractId
+                              HAVING SUM (tmpContainer.Amount) > 0.0
                              )
                 , tmpStoreRealDoc AS (SELECT SR.PartnerId, SR.StoreRealId, SR.OperDate
                                       FROM (SELECT MovementLinkObject_Partner.ObjectId AS PartnerId
@@ -92,9 +153,9 @@ BEGIN
                   , ObjectFloat_Partner_GPSN.ValueData      AS GPSN
                   , ObjectFloat_Partner_GPSE.ValueData      AS GPSE
                   , REPLACE (REPLACE (LOWER (COALESCE (ObjectString_Partner_Schedule.ValueData, 't;t;t;t;t;t;t')), 'true', 't'), 'false', 'f')::TVarChar AS Schedule
-                  , COALESCE (tmpDebt.Amount, 0.0)::TFloat  AS DebtSum
-                  , CAST(0.0 AS TFloat)                     AS OverSum
-                  , CAST(0 AS Integer)                      AS OverDays
+                  , COALESCE (tmpDebt.DebtSum, 0.0)::TFloat AS DebtSum
+                  , COALESCE (tmpDebt.OverSum, 0.0)::TFloat AS OverSum
+                  , COALESCE (tmpDebt.OverDays, 0)::Integer AS OverDays
                   , COALESCE (ObjectFloat_Partner_PrepareDayCount.ValueData, 0.0)::TFloat  AS PrepareDayCount
                   , COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0.0)::TFloat AS DocumentDayCount
                   , CASE WHEN tmpStoreRealDoc.OperDate IS NULL THEN 0.0::TFloat ELSE DATE_PART ('day', CURRENT_DATE::TDateTime - tmpStoreRealDoc.OperDate)::TFloat END AS CalcDayCount
