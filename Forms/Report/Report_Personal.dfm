@@ -1,28 +1,28 @@
 inherited Report_PersonalForm: TReport_PersonalForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
   ClientHeight = 555
-  ClientWidth = 1028
+  ClientWidth = 901
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1044
-  ExplicitHeight = 590
+  ExplicitWidth = 917
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 1028
-    Height = 472
+    Top = 111
+    Width = 901
+    Height = 444
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1028
     ExplicitHeight = 472
-    ClientRectBottom = 472
-    ClientRectRight = 1028
+    ClientRectBottom = 444
+    ClientRectRight = 901
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1028
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1028
-        Height = 472
+        Width = 901
+        Height = 444
         ExplicitWidth = 1028
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -532,10 +532,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1028
-    Height = 57
-    ExplicitWidth = 1028
-    ExplicitHeight = 57
+    Width = 901
+    Height = 85
+    ExplicitWidth = 901
+    ExplicitHeight = 85
     inherited deStart: TcxDateEdit
       Left = 60
       EditValue = 42736d
@@ -565,13 +565,13 @@ inherited Report_PersonalForm: TReport_PersonalForm
       ExplicitWidth = 52
     end
     object cxLabel3: TcxLabel
-      Left = 601
+      Left = 492
       Top = 6
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 601
-      Top = 30
+      Left = 613
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -579,10 +579,10 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 130
+      Width = 162
     end
     object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 740
+      Left = 576
       Top = 30
       Properties.Buttons = <
         item
@@ -591,16 +591,16 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 115
+      Width = 199
     end
     object cxLabel4: TcxLabel
-      Left = 740
-      Top = 6
+      Left = 492
+      Top = 31
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 864
-      Top = 30
+      Left = 613
+      Top = 57
       Properties.Buttons = <
         item
           Default = True
@@ -608,20 +608,20 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 145
+      Width = 162
     end
     object cxLabel5: TcxLabel
-      Left = 864
-      Top = 6
+      Left = 492
+      Top = 58
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
-      Left = 457
-      Top = 6
+      Left = 280
+      Top = 31
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 457
+      Left = 363
       Top = 30
       Properties.Buttons = <
         item
@@ -630,11 +630,11 @@ inherited Report_PersonalForm: TReport_PersonalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 131
+      Width = 126
     end
     object ceBranch: TcxButtonEdit
-      Left = 285
-      Top = 30
+      Left = 329
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -645,7 +645,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
       Width = 160
     end
     object cxLabel7: TcxLabel
-      Left = 285
+      Left = 280
       Top = 6
       Caption = #1060#1080#1083#1080#1072#1083':'
     end
@@ -666,6 +666,40 @@ inherited Report_PersonalForm: TReport_PersonalForm
       TabOrder = 15
       Width = 118
     end
+  end
+  object cxLabel8: TcxLabel [2]
+    Left = 5
+    Top = 58
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
+  end
+  object cePersonalServiceList: TcxButtonEdit [3]
+    Left = 67
+    Top = 57
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 204
+  end
+  object cxLabel9: TcxLabel [4]
+    Left = 277
+    Top = 58
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
+  end
+  object cePersonal: TcxButtonEdit [5]
+    Left = 340
+    Top = 57
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 149
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 35
@@ -2154,6 +2188,40 @@ inherited Report_PersonalForm: TReport_PersonalForm
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalId'
+          Value = Null
+          Component = PersonalGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = PersonalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = PersonalServiceListGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = PersonalServiceListGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2288,7 +2356,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
   end
   inherited MasterCDS: TClientDataSet
     IndexFieldNames = 'PersonalName'
-    Top = 184
+    Left = 56
+    Top = 224
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Personal'
@@ -2364,9 +2433,25 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalServiceListId'
+        Value = Null
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 184
+    Left = 136
+    Top = 216
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -2485,8 +2570,15 @@ inherited Report_PersonalForm: TReport_PersonalForm
       end
       item
         Component = GuidesInfoMoney
+      end
+      item
+        Component = PersonalServiceListGuides
+      end
+      item
+        Component = PersonalGuides
       end>
-    Top = 236
+    Left = 416
+    Top = 212
   end
   object GuidesInfoMoneyGroup: TdsdGuides
     KeyField = 'Id'
@@ -2521,8 +2613,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 648
-    Top = 29
+    Left = 632
+    Top = 5
   end
   object GuidesInfoMoneyDestination: TdsdGuides
     KeyField = 'Id'
@@ -2557,7 +2649,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 776
+    Left = 704
     Top = 29
   end
   object GuidesInfoMoney: TdsdGuides
@@ -2590,8 +2682,8 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 920
-    Top = 29
+    Left = 664
+    Top = 21
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
@@ -2625,7 +2717,7 @@ inherited Report_PersonalForm: TReport_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 496
+    Left = 384
     Top = 24
   end
   object spGetDescSets: TdsdStoredProc
@@ -2823,7 +2915,67 @@ inherited Report_PersonalForm: TReport_PersonalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
-    Top = 21
+    Left = 440
+    Top = 5
+  end
+  object PersonalServiceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceList
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 152
+    Top = 37
+  end
+  object PersonalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 45
   end
 end

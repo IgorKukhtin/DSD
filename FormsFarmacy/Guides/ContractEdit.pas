@@ -36,6 +36,8 @@ type
     cxLabel10: TcxLabel;
     ceGroupMemberSP: TcxButtonEdit;
     GroupMemberSPGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    cePercentSP: TcxCurrencyEdit;
   private
     { Private declarations }
   public

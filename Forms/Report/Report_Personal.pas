@@ -85,6 +85,12 @@ type
     SummTransportTaxi: TcxGridDBColumn;
     SummPhone: TcxGridDBColumn;
     SummNalog: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    cePersonalServiceList: TcxButtonEdit;
+    PersonalServiceListGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    cePersonal: TcxButtonEdit;
+    PersonalGuides: TdsdGuides;
   private
     { Private declarations }
   public

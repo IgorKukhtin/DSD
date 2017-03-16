@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                GroupMemberSPId Integer, GroupMemberSPName TVarChar,
-               Deferment Integer, Percent TFloat,
+               Deferment Integer, Percent TFloat, PercentSP TFloat,
                Comment TVarChar,
                StartDate TDateTime, EndDate TDateTime,
                isErased boolean) AS
@@ -38,6 +38,7 @@ BEGIN
 
            , 0                     AS Deferment
            , CAST (0 AS TFloat)    AS Percent
+           , CAST (0 AS TFloat)    AS PercentSP
 
            , CAST (NULL AS TVarChar) AS Comment  
 
@@ -64,6 +65,7 @@ BEGIN
 
            , Object_Contract_View.Deferment
            , Object_Contract_View.Percent
+           , Object_Contract_View.PercentSP
 
            , Object_Contract_View.Comment
 
