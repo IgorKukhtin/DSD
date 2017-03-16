@@ -586,7 +586,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
             Caption = #1050#1086#1083'. '#1088#1077#1094#1077#1087#1090#1086#1074
             DataBinding.FieldName = 'CountSP'
             Visible = False
-            VisibleForCustomization = False
             Width = 70
           end
         end
@@ -596,7 +595,6 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
   inherited Panel: TPanel
     Width = 1077
     Height = 65
-    ExplicitTop = 8
     ExplicitWidth = 1077
     ExplicitHeight = 65
     inherited deStart: TcxDateEdit
@@ -668,28 +666,40 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       Width = 169
     end
     object cxLabel7: TcxLabel
-      Left = 967
-      Top = 6
+      Left = 973
+      Top = 33
       Caption = #1086#1090
     end
     object edDateInvoice: TcxDateEdit
-      Left = 983
-      Top = 5
+      Left = 989
+      Top = 32
       EditValue = 42736d
       Properties.ShowTime = False
       TabOrder = 10
-      Width = 85
+      Width = 79
     end
     object cxLabel8: TcxLabel
-      Left = 846
+      Left = 944
       Top = 6
       Caption = #1057#1095#1077#1090' '#8470
     end
     object edInvoice: TcxTextEdit
-      Left = 893
+      Left = 989
       Top = 5
       TabOrder = 12
-      Width = 73
+      Width = 79
+    end
+    object cxLabel11: TcxLabel
+      Left = 736
+      Top = 6
+      Caption = '% '#1089#1082#1080#1076#1082#1080':'
+    end
+    object cePercentSP: TcxCurrencyEdit
+      Left = 794
+      Top = 5
+      Properties.DisplayFormat = ',0.##'
+      TabOrder = 14
+      Width = 111
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -892,6 +902,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PercentSP'
+          Value = Null
+          Component = cePercentSP
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1069,6 +1087,14 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPercentSP'
+        Value = Null
+        Component = cePercentSP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisGroupMemberSP'
         Value = Null
         Component = cbGroupMemberSP
@@ -1175,6 +1201,9 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
       end
       item
         Component = GroupMemberSPGuides
+      end
+      item
+        Component = cePercentSP
       end>
     Left = 304
     Top = 168

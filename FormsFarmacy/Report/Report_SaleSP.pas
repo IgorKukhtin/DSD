@@ -61,6 +61,8 @@ type
     cxLabel8: TcxLabel;
     edInvoice: TcxTextEdit;
     CountSP: TcxGridDBColumn;
+    cxLabel11: TcxLabel;
+    cePercentSP: TcxCurrencyEdit;
   private
     { Private declarations }
   public
