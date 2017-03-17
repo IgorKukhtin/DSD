@@ -332,6 +332,14 @@ inherited Report_Check_ReturnInToLinkForm: TReport_Check_ReturnInToLinkForm
       TabOrder = 7
       Width = 255
     end
+    object cbShowAll: TcxCheckBox
+      Left = 551
+      Top = 34
+      Action = actisDataAll
+      Properties.ReadOnly = False
+      TabOrder = 8
+      Width = 153
+    end
   end
   object cxLabel6: TcxLabel [2]
     Left = 545
@@ -469,10 +477,31 @@ inherited Report_Check_ReturnInToLinkForm: TReport_Check_ReturnInToLinkForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isShowAll'
+          Value = Null
+          Component = cbShowAll
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actisDataAll: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1089#1077' '#1040#1074#1090#1086
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
   end
   inherited MasterDS: TDataSource
@@ -535,10 +564,11 @@ inherited Report_Check_ReturnInToLinkForm: TReport_Check_ReturnInToLinkForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'fff'
+        Name = 'inisShowAll'
         Value = 'False'
+        Component = cbShowAll
         DataType = ftBoolean
-        ParamType = ptResult
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 176
@@ -660,7 +690,7 @@ inherited Report_Check_ReturnInToLinkForm: TReport_Check_ReturnInToLinkForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 56
-    Top = 32
+    Top = 24
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

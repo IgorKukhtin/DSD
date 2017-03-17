@@ -3,7 +3,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1079'/'#1087'>'
-  ClientHeight = 268
+  ClientHeight = 303
   ClientWidth = 491
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 111
-    Top = 227
+    Left = 113
+    Top = 268
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 285
-    Top = 227
+    Left = 287
+    Top = 268
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -64,12 +64,12 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
   end
   object cxLabel8: TcxLabel
     Left = 8
-    Top = 159
+    Top = 208
     Caption = #1060#1080#1083#1080#1072#1083':'
   end
   object edBranch: TcxButtonEdit
     Left = 8
-    Top = 180
+    Top = 226
     Properties.Buttons = <
       item
         Default = True
@@ -164,6 +164,40 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     TabOrder = 17
     Width = 102
   end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 159
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
+  end
+  object cePersonalServiceList: TcxButtonEdit
+    Left = 8
+    Top = 177
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 19
+    Width = 220
+  end
+  object cxLabel2: TcxLabel
+    Left = 250
+    Top = 159
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
+  end
+  object cePersonal: TcxButtonEdit
+    Left = 250
+    Top = 177
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 220
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -171,8 +205,8 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 224
-    Top = 223
+    Left = 226
+    Top = 264
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -195,6 +229,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -202,6 +237,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchId'
@@ -209,6 +245,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'BranchName'
@@ -217,6 +254,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isServiceDate'
@@ -224,6 +262,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = cbServiceDate
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDateService'
@@ -231,6 +270,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = deServiceDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountId'
@@ -238,6 +278,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'AccountName'
@@ -246,6 +287,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationId'
@@ -253,6 +295,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesInfoMoneyDestination
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyDestinationName'
@@ -261,6 +304,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupId'
@@ -268,6 +312,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesInfoMoneyGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyGroupName'
@@ -276,6 +321,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyId'
@@ -283,6 +329,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InfoMoneyName'
@@ -291,15 +338,51 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListId'
+        Value = Null
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListName'
+        Value = Null
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalId'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalName'
+        Value = Null
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 40
-    Top = 208
+    Left = 32
+    Top = 248
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -310,6 +393,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -318,15 +402,17 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 96
-    Top = 159
+    Left = 128
+    Top = 215
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAccount_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -337,6 +423,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -345,6 +432,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 69
@@ -354,6 +442,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     LookupControl = edInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestination_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyDestination_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -364,6 +453,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -372,6 +462,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 110
     Top = 110
@@ -381,6 +472,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     LookupControl = edInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroup_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoneyGroup_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -391,6 +483,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -399,11 +492,13 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 336
     Top = 69
@@ -413,6 +508,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
     LookupControl = edInfoMoney
     FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TInfoMoney_ObjectDescForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -421,6 +517,7 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -428,13 +525,75 @@ object Report_PersonalDialogForm: TReport_PersonalDialogForm
         Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inDescCode'
         Value = 'zc_Object_Juridical'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 368
     Top = 117
+  end
+  object PersonalServiceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonalServiceList
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalServiceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 56
+    Top = 157
+  end
+  object PersonalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 165
   end
 end

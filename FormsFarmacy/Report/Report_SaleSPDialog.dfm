@@ -3,8 +3,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <P'#1077#1077#1089#1090#1088' '#1087#1086' '#1087#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1102' 1303>'
-  ClientHeight = 244
-  ClientWidth = 374
+  ClientHeight = 264
+  ClientWidth = 376
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 69
-    Top = 209
+    Left = 77
+    Top = 226
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cxButton2: TcxButton
     Left = 251
-    Top = 209
+    Top = 226
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -37,16 +37,16 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     TabOrder = 1
   end
   object deEnd: TcxDateEdit
-    Left = 258
-    Top = 15
+    Left = 131
+    Top = 37
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 90
   end
   object deStart: TcxDateEdit
-    Left = 77
-    Top = 15
+    Left = 28
+    Top = 37
     EditValue = 42005d
     Properties.ShowTime = False
     TabOrder = 3
@@ -58,23 +58,23 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel7: TcxLabel
-    Left = 203
+    Left = 131
     Top = 16
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cxLabel4: TcxLabel
     Left = 26
-    Top = 51
+    Top = 71
     Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
   end
   object cxLabel1: TcxLabel
     Left = 26
-    Top = 80
+    Top = 100
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
   end
   object edJuridical: TcxButtonEdit
     Left = 118
-    Top = 50
+    Top = 70
     Properties.Buttons = <
       item
         Default = True
@@ -86,7 +86,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object ceUnit: TcxButtonEdit
     Left = 118
-    Top = 79
+    Top = 99
     Properties.Buttons = <
       item
         Default = True
@@ -101,12 +101,12 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cxLabel5: TcxLabel
     Left = 26
-    Top = 111
+    Top = 131
     Caption = #1055#1088#1077#1076#1087#1088'-'#1090#1080#1077' '#1054#1047':'
   end
   object ceHospital: TcxButtonEdit
     Left = 118
-    Top = 110
+    Top = 130
     Properties.Buttons = <
       item
         Default = True
@@ -118,12 +118,12 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cxLabel2: TcxLabel
     Left = 26
-    Top = 145
+    Top = 165
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1087#1072#1094#1080#1077#1085#1090#1072':'
   end
   object edGroupMemberSP: TcxButtonEdit
     Left = 141
-    Top = 144
+    Top = 164
     Properties.Buttons = <
       item
         Default = True
@@ -135,10 +135,22 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
   end
   object cbGroupMemberSP: TcxCheckBox
     Left = 141
-    Top = 171
+    Top = 189
     Caption = #1082#1088#1086#1084#1077' '#1074#1099#1073#1088#1072#1085#1085#1086#1081' '#1082#1072#1090#1077#1075#1086#1088#1080#1080
     TabOrder = 14
     Width = 172
+  end
+  object cxLabel11: TcxLabel
+    Left = 243
+    Top = 17
+    Caption = '% '#1089#1082#1080#1076#1082#1080':'
+  end
+  object cePercentSP: TcxCurrencyEdit
+    Left = 243
+    Top = 37
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 16
+    Width = 105
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -160,8 +172,8 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 81
-    Top = 180
+    Left = 169
+    Top = 204
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -256,9 +268,17 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentSP'
+        Value = Null
+        Component = cePercentSP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 18
-    Top = 142
+    Left = 26
+    Top = 206
   end
   object JuridicalGuide: TdsdGuides
     KeyField = 'Id'
@@ -316,7 +336,7 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 275
-    Top = 75
+    Top = 107
   end
   object HospitalGuides: TdsdGuides
     KeyField = 'Id'
@@ -374,6 +394,6 @@ object Report_SaleSPDialogForm: TReport_SaleSPDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 240
-    Top = 144
+    Top = 136
   end
 end

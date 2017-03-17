@@ -10,6 +10,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract
      (Integer, Integer, TVarChar, Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
      (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract 
+     (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TDateTime, TDateTime, Tvarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Договор>
@@ -20,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inGroupMemberSPId         Integer   ,    -- ссылка на Категория пациента(Соц. проект)
     IN inDeferment               Integer   ,    -- Дней отсрочки
     IN inPercent                 TFloat    ,    -- % Корректировки наценки
+    IN inPercentSP               TFloat    ,    -- % cкидки Соц.проект
     IN inComment                 TVarChar  ,    -- примечание
     IN inStartDate               TDateTime,     -- Дата с которой действует договор
     IN inEndDate                 TDateTime,     -- Дата до которой действует договор    
@@ -58,6 +62,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_Deferment(), ioId, inDeferment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_Percent(), ioId, inPercent);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Contract_PercentSP(), ioId, inPercentSP);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Start(), ioId, inStartDate);
@@ -79,6 +85,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.03.17         * inPercentSP
  05.03.17         * inGroupMemberSPId
  08.12.16         * inPercent
  21.01.16         *

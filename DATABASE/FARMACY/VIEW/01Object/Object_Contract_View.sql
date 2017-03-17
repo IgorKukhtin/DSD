@@ -28,6 +28,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
 
            , ObjectFloat_Deferment.ValueData ::Integer AS Deferment
            , ObjectFloat_Percent.ValueData   ::Tfloat  AS Percent
+           , COALESCE (ObjectFloat_PercentSP.ValueData,0) ::Tfloat  AS PercentSP
 
            , ObjectString_Comment.ValueData AS Comment
            
@@ -63,6 +64,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                                  ON ObjectFloat_Percent.ObjectId = Object_Contract.Id
                                 AND ObjectFloat_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
+           LEFT JOIN ObjectFloat AS ObjectFloat_PercentSP
+                                 ON ObjectFloat_PercentSP.ObjectId = Object_Contract.Id
+                                AND ObjectFloat_PercentSP.DescId = zc_ObjectFloat_Contract_PercentSP()
+
        WHERE Object_Contract.DescId = zc_Object_Contract();
 
 ALTER TABLE Object_Contract_View
@@ -72,6 +77,7 @@ ALTER TABLE Object_Contract_View
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.03.17         * add PercentSP
  05.03.17         * GroupMemberSP
  08.12.16         * add PercentCorr
  25.12.14                        * 

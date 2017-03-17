@@ -1,6 +1,7 @@
 -- Function: gpUpdate_Movement_WeighingPartnerEdit()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_WeighingPartnerEdit (Integer, TDateTime, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inId                   Integer   , -- Ключ объекта <Документ>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_WeighingPartnerEdit(
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
     IN inMovementId_Transport Integer   , -- Документ путевой лист
     IN inParentId             Integer   , -- Главный Документ 
+    IN inMemberId             Integer   , -- водитель/экспедитор
     IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Void
@@ -74,6 +76,10 @@ BEGIN
      -- сохранили связь с <Форма оплаты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), inId, inPaidKindId);
 
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member(), inId, inMemberId);
+
+
      -- сохранили связь с документом <Заявки сторонние>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), inId, inMovementId_Order);
 
@@ -96,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.17         * add Member
  18.11.16         *
 */
 

@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Sale_SP (TDateTime, TDateTime, Integer,Integer,Integer, Integer, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inStartDate        TDateTime,  -- Дата начала
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Sale_SP(
     IN inUnitId           Integer  ,  -- Аптека
     IN inHospitalId       Integer  ,  -- Больница
     IN inGroupMemberSPId  Integer  ,  -- Категория пациента
+    IN inPercentSP        TFloat   ,  -- % скидки
     IN inisGroupMemberSP  Boolean  ,  -- кроме выбранной категории пациента
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -112,8 +114,8 @@ BEGIN
     -- Результат
     RETURN QUERY
           WITH
-            -- выбираем продажи по товарам соц.проекта
-             tmpSale AS (SELECT Movement_Sale.Id
+          -- выбираем продажи по товарам соц.проекта
+          tmpSaleAll AS (SELECT Movement_Sale.Id
                               , Movement_Sale.OperDate
                               , MovementLinkObject_Unit.ObjectId             AS UnitId
                               , tmpUnit.Address 
@@ -186,7 +188,7 @@ BEGIN
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount))  AS Amount
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_Price.ValueData, 0))     AS SummSale
                               , SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount) * COALESCE (MIFloat_PriceSale.ValueData, 0)) AS SummOriginal
-                         FROM tmpSale AS Movement_Sale
+                         FROM tmpSaleAll AS Movement_Sale
                               INNER JOIN MovementItem AS MI_Sale
                                                       ON MI_Sale.MovementId = Movement_Sale.Id
                                                      AND MI_Sale.DescId = zc_MI_Master()
@@ -195,20 +197,21 @@ BEGIN
                                       ON MIBoolean_SP.MovementItemId = MI_Sale.Id
                                      AND MIBoolean_SP.DescId = zc_MIBoolean_SP()
                                      AND MIBoolean_SP.ValueData = TRUE
-
+                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                      ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
+                                     AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+                                     
                               LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
                                      ON MIFloat_PriceSale.MovementItemId = MI_Sale.Id
                                     AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
                               LEFT JOIN MovementItemFloat AS MIFloat_Price
                                      ON MIFloat_Price.MovementItemId = MI_Sale.Id
                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                              LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                     ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
-                                    AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
 
                               LEFT JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.MovementItemId = MI_Sale.Id
                                                              AND MIContainer.DescId = zc_MIContainer_Count() 
+                         WHERE (MIFloat_ChangePercent.ValueData = inPercentSP OR COALESCE (inPercentSP,0) = 0)
                          GROUP BY Movement_Sale.Id
                                 , Movement_Sale.UnitId
                                 , Movement_Sale.JuridicalId
@@ -223,6 +226,15 @@ BEGIN
                                 , Movement_Sale.OperDate
                          HAVING SUM (COALESCE (-1 * MIContainer.Amount, MI_Sale.Amount)) <> 0
                         )
+
+            -- выбираем документы, прошедшие по условию % скидки
+           , tmpMov AS  (SELECT DISTINCT tmpMI.MovementId
+                          FROM tmpMI
+                          )
+           , tmpSale AS (SELECT tmpSaleAll.*
+                         FROM tmpSaleAll
+                              INNER JOIN tmpMov ON tmpMov.MovementId = tmpSaleAll.Id
+                         )
       , tmpBankAccount AS (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
                                 , Object_BankAccount.Id
                                 , Object_BankAccount.ValueData AS BankAccount
@@ -245,6 +257,7 @@ BEGIN
        , tmpContract AS (SELECT ObjectLink_PartnerMedical_Juridical.ObjectId        AS PartnerMedicalId
                               , ObjectLink_PartnerMedical_Juridical.ChildObjectId   AS PartnerMedical_JuridicalId
                               , COALESCE(ObjectLink_Contract_Juridical.ObjectId,0)            AS PartnerMedical_ContractId
+                              , COALESCE(ObjectFloat_PercentSP.ValueData,0) :: TFloat                   AS PercentSP
                               , COALESCE(ObjectLink_Contract_JuridicalBasis.ChildObjectId,0)  AS Contract_JuridicalBasisId
                               , COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0)   AS Contract_GroupMemberSPId
 
@@ -252,6 +265,10 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                      ON ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_PartnerMedical_Juridical.ChildObjectId
                                     AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                              LEFT JOIN ObjectFloat AS ObjectFloat_PercentSP
+                                     ON ObjectFloat_PercentSP.ObjectId = ObjectLink_Contract_Juridical.ObjectId
+                                    AND ObjectFloat_PercentSP.DescId = zc_ObjectFloat_Contract_PercentSP()
+                                    
                               LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                      ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Contract_Juridical.ObjectId
                                     AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
@@ -263,6 +280,7 @@ BEGIN
                               OR (COALESCE(ObjectLink_Contract_GroupMemberSP.ChildObjectId,0) = 0/* <> inGroupMemberSPId*/ AND inisGroupMemberSP = TRUE AND COALESCE(inGroupMemberSPId,0) <> 0)
                               OR COALESCE(inGroupMemberSPId,0) = 0
                                )
+                           AND (COALESCE (ObjectFloat_PercentSP.ValueData,0) = inPercentSP OR COALESCE (inPercentSP,0) = 0)
                         )
 
  , tmpMovDetails AS (SELECT tmpSale.Id   AS MovementId
@@ -308,6 +326,7 @@ BEGIN
                           , tmpPartnerMedicalBankAccount.MFO                      AS PartnerMedical_MFO
                           , ObjectString_PartnerMedical_FIO.ValueData             AS MedicFIO
                           , COALESCE(tmpContract.PartnerMedical_ContractId,0)     AS PartnerMedical_ContractId
+                          , tmpContract.PercentSP
 
                      FROM tmpSale
                        LEFT JOIN ObjectString AS ObjectString_PartnerMedical_FIO
@@ -318,11 +337,6 @@ BEGIN
                               ON ObjectLink_PartnerMedical_Juridical.ObjectId = tmpSale.HospitalId
                              AND ObjectLink_PartnerMedical_Juridical.DescId = zc_ObjectLink_PartnerMedical_Juridical()
 
-                       LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
-                                            AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
-                                            AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
-                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 THEN COALESCE (tmpSale.GroupMemberSPId,0) ELSE 0 END 
-                                                                                                                                          --4063780;6;"Дитячий"
                        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := tmpSale.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
                        LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(injuridicalid := ObjectLink_PartnerMedical_Juridical.ChildObjectId , inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_PartnerMedicalDetails ON 1=1
  
@@ -333,6 +347,14 @@ BEGIN
                        LEFT JOIN tmpBankAccount AS tmpPartnerMedicalBankAccount 
                               ON tmpPartnerMedicalBankAccount.JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId  --ObjectLink_PartnerMedical_Juridical.ChildObjectId
                              AND tmpPartnerMedicalBankAccount.BankAccount = ObjectHistory_PartnerMedicalDetails.BankAccount
+
+                       LEFT JOIN tmpContract ON tmpContract.PartnerMedicalId = tmpSale.HospitalId
+                                            AND tmpContract.PartnerMedical_JuridicalId = ObjectLink_PartnerMedical_Juridical.ChildObjectId 
+                                            AND tmpContract.Contract_JuridicalBasisId = tmpSale.JuridicalId
+                                            AND COALESCE (tmpContract.Contract_GroupMemberSPId,0) = CASE WHEN COALESCE (tmpSale.GroupMemberSPId,0) = 4063780 THEN COALESCE (tmpSale.GroupMemberSPId,0) ELSE 0 END 
+                                                                                                                                                   --4063780;6;"Дитячий"  -- test 3690580
+                  --                          AND COALESCE (tmpContract.PercentSP,0) = tmpSale.ChangePercent
+
                     )
 
     , tmpCountR AS (SELECT  tmpMovDetails.JuridicalId
@@ -350,12 +372,12 @@ BEGIN
              , tmpMovDetails.Address               AS Unit_Address
              , Object_Juridical.ValueData          AS JuridicalName
              , Object_PartnerMedical.ValueData     AS HospitalName
-             , tmpMovDetails.InvNumberSP
+             , tmpData.InvNumberSP
              , Object_MedicSP.ValueData            AS MedicSP
              , Object_MemberSP.ValueData           AS MemberSP
              , Object_GroupMemberSP.ValueData      AS GroupMemberSPName
-             , tmpMovDetails.OperDateSP        :: TDateTime
-             , tmpMovDetails.OperDate          :: TDateTime
+             , tmpData.OperDateSP        :: TDateTime
+             , tmpData.OperDate          :: TDateTime
              , Object_Goods.ValueData              AS GoodsName
              , Object_Measure.ValueData            AS MeasureName
              , tmpData.ChangePercent     :: TFloat 
@@ -403,21 +425,23 @@ BEGIN
            , Object_Contract.ValueData    AS ContractName
            , ObjectDate_Start.ValueData   AS Contract_StartDate 
 
-        FROM tmpMovDetails
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovDetails.UnitId AND Object_Unit.DescId = zc_Object_Unit()
-             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpMovDetails.JuridicalId AND Object_Juridical.DescId = zc_Object_Juridical()
-             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpMovDetails.HospitalId  AND Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
+        FROM tmpMI AS tmpData
+             LEFT JOIN tmpMovDetails ON tmpData.MovementId = tmpMovDetails.MovementId
+                                       AND tmpData.ChangePercent = tmpMovDetails.PercentSP
+
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpData.UnitId AND Object_Unit.DescId = zc_Object_Unit()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId AND Object_Juridical.DescId = zc_Object_Juridical()
+             LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = tmpData.HospitalId  AND Object_PartnerMedical.DescId = zc_Object_PartnerMedical()
              LEFT JOIN Object AS Object_PartnerMedicalJuridical ON Object_PartnerMedicalJuridical.Id = tmpMovDetails.PartnerMedical_JuridicalId  AND Object_PartnerMedicalJuridical.DescId = zc_Object_PartnerMedical()
-             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMovDetails.PartnerMedical_ContractId  AND Object_Contract.DescId = zc_Object_Contract()
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpMovDetails.PartnerMedical_ContractId 
+                                                AND Object_Contract.DescId = zc_Object_Contract()
              LEFT JOIN ObjectDate AS ObjectDate_Start
-                                     ON ObjectDate_Start.ObjectId = Object_Contract.Id
-                                    AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                  ON ObjectDate_Start.ObjectId = Object_Contract.Id
+                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
 
-             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = tmpMovDetails.GroupMemberSPId AND Object_GroupMemberSP.DescId = zc_Object_GroupMemberSP()
-             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpMovDetails.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
-             LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpMovDetails.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
-
-             LEFT JOIN tmpMI AS tmpData ON tmpData.MovementId = tmpMovDetails.MovementId
+             LEFT JOIN Object AS Object_GroupMemberSP ON Object_GroupMemberSP.Id = tmpData.GroupMemberSPId AND Object_GroupMemberSP.DescId = zc_Object_GroupMemberSP()
+             LEFT JOIN Object AS Object_MemberSP ON Object_MemberSP.Id = tmpData.MemberSPId AND Object_MemberSP.DescId = zc_Object_MemberSP()
+             LEFT JOIN Object AS Object_MedicSP ON Object_MedicSP.Id = tmpData.MedicSPId AND Object_MedicSP.DescId = zc_Object_MedicSP()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId AND Object_Goods.DescId = zc_Object_Goods()
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -425,8 +449,8 @@ BEGIN
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId 
  
-             LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpMovDetails.JuridicalId
-                                AND tmpCountR.HospitalId = tmpMovDetails.HospitalId
+             LEFT JOIN tmpCountR ON tmpCountR.JuridicalId = tmpData.JuridicalId
+                                AND tmpCountR.HospitalId = tmpData.HospitalId
                                 AND tmpCountR.ContractId = tmpMovDetails.PartnerMedical_ContractId
 
          ORDER BY Object_Unit.ValueData

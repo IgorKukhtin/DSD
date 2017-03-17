@@ -52,6 +52,8 @@ type
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
     PaidKindName: TcxGridDBColumn;
+    cbShowAll: TcxCheckBox;
+    actisDataAll: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

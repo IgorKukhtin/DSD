@@ -14,6 +14,7 @@ type
     procedure CreateType;
     procedure CreateObject;
     procedure CreateObjectGoodsItem;
+    procedure CreateObjectPartionGoods;
     procedure CreateContainer;
     procedure CreateObjectCost;
     procedure CreateFunctionsForIndex;
@@ -178,6 +179,11 @@ end;
 procedure TdbCreateStructureTest.CreateObjectGoodsItem;
 begin
   ExecFile(StructurePath + 'ObjectGoodsItem\ObjectGoodsItem.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreateObjectPartionGoods;
+begin
+ ExecFile(StructurePath + 'ObjectPartionGoods\ObjectPartionGoods.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreatePeriodClose;

@@ -1,6 +1,7 @@
 -- Function: gpReport_Personal
 
 DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Personal (TDateTime, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Personal(
     IN inStartDate        TDateTime , --
@@ -8,10 +9,12 @@ CREATE OR REPLACE FUNCTION gpReport_Personal(
     IN inServiceDate      TDateTime , --
     IN inIsServiceDate    Boolean , --
     IN inAccountId        Integer,    -- Счет
-    IN inBranchId         Integer,    -- Счет
+    IN inBranchId         Integer,    -- филиал
     IN inInfoMoneyId      Integer,    -- Управленческая статья
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
+    IN inPersonalServiceListId    Integer,    -- ведомость
+    IN inPersonalId       Integer,    -- Фио сотрудника
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
@@ -92,7 +95,9 @@ BEGIN
         Operation.ContainerId :: Integer                                                            AS ContainerId
 
      FROM
-         (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.PersonalServiceListId
+         (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId
+               , Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId
+               , Operation_all.PersonalServiceListId
                , Operation_all.BranchId, Operation_all.ServiceDate
                , SUM (Operation_all.StartAmount) AS StartAmount
                , SUM (Operation_all.DebetSumm)   AS DebetSumm
@@ -143,14 +148,17 @@ BEGIN
                        INNER JOIN Container ON Container.Id = CLO_Personal.ContainerId AND Container.DescId = zc_Container_Summ()
                        INNER JOIN ContainerLinkObject AS CLO_InfoMoney
                                                       ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                       INNER JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                      ON CLO_PersonalServiceList.ContainerId = Container.Id
+                                                     AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+                                                     AND (CLO_PersonalServiceList.ObjectId = inPersonalServiceListId OR COALESCE (inPersonalServiceListId,0) = 0)
                        LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                      ON CLO_Unit.ContainerId = Container.Id AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                        LEFT JOIN ContainerLinkObject AS CLO_Position
                                                      ON CLO_Position.ContainerId = Container.Id AND CLO_Position.DescId = zc_ContainerLinkObject_Position()
                        LEFT JOIN ContainerLinkObject AS CLO_Branch
                                                      ON CLO_Branch.ContainerId = Container.Id AND CLO_Branch.DescId = zc_ContainerLinkObject_Branch()
-                       LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
-                                                     ON CLO_PersonalServiceList.ContainerId = Container.Id AND CLO_PersonalServiceList.DescId = zc_ContainerLinkObject_PersonalServiceList()
+
                        LEFT JOIN ContainerLinkObject AS CLO_ServiceDate
                                                      ON CLO_ServiceDate.ContainerId = CLO_Personal.ContainerId
                                                     AND CLO_ServiceDate.DescId = zc_ContainerLinkObject_ServiceDate()
@@ -159,6 +167,7 @@ BEGIN
                                             ON ObjectDate_Service.ObjectId = CLO_ServiceDate.ObjectId
                                            AND ObjectDate_Service.DescId = zc_ObjectDate_ServiceDate_Value()
                   WHERE CLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+                    AND (CLO_Personal.ObjectId = inPersonalId OR inPersonalId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                     AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
@@ -176,7 +185,6 @@ BEGIN
 
           GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.PersonalId, Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.PositionId, Operation_all.BranchId, Operation_all.ServiceDate, Operation_all.PersonalServiceListId
          ) AS Operation
-
 
      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
      LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = Operation.PersonalServiceListId
@@ -198,6 +206,8 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.03.17         * add inPersonalId 
+                    add inPersonalServiceListId 
  07.04.15                                        * all
  04.09.14                                                        *
 */

@@ -1,18 +1,19 @@
 inherited ContractForm: TContractForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientWidth = 798
+  ClientWidth = 828
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 814
+  ExplicitWidth = 844
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 798
+    Width = 828
     ExplicitWidth = 798
-    ClientRectRight = 798
+    ClientRectRight = 828
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 798
       inherited cxGrid: TcxGrid
-        Width = 798
+        Width = 828
         ExplicitWidth = 798
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -101,17 +102,32 @@ inherited ContractForm: TContractForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 105
+          end
+          object colPercentSP: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            DataBinding.FieldName = 'PercentSP'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1089#1082#1080#1076#1082#1080' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+            Options.Editing = False
+            Width = 86
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 268
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
           end

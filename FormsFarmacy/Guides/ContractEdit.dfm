@@ -1,32 +1,32 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1044#1086#1075#1086#1074#1086#1088
-  ClientHeight = 248
+  ClientHeight = 294
   ClientWidth = 353
   ExplicitWidth = 359
-  ExplicitHeight = 276
+  ExplicitHeight = 322
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 60
-    Top = 208
+    Top = 257
     ExplicitLeft = 60
-    ExplicitTop = 208
+    ExplicitTop = 257
   end
   inherited bbCancel: TcxButton
     Left = 204
-    Top = 208
+    Top = 257
     ExplicitLeft = 204
-    ExplicitTop = 208
+    ExplicitTop = 257
   end
   object cxLabel2: TcxLabel [2]
     Left = 8
-    Top = 206
+    Top = 248
     Caption = #1050#1086#1076
     Visible = False
   end
   object edCode: TcxCurrencyEdit [3]
     Left = 8
-    Top = 222
+    Top = 264
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -63,15 +63,15 @@ inherited ContractEditForm: TContractEditForm
     Width = 168
   end
   object cxLabel3: TcxLabel [8]
-    Left = 182
-    Top = 159
+    Left = 8
+    Top = 203
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit [9]
-    Left = 182
-    Top = 179
+    Left = 8
+    Top = 222
     TabOrder = 7
-    Width = 165
+    Width = 339
   end
   object cxLabel5: TcxLabel [10]
     Left = 182
@@ -161,21 +161,33 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 21
     Width = 168
   end
+  object cxLabel11: TcxLabel [22]
+    Left = 184
+    Top = 159
+    Caption = '% '#1089#1082#1080#1076#1082#1080' ('#1057#1086#1094'. '#1087#1088#1086#1077#1082#1090')'
+  end
+  object cePercentSP: TcxCurrencyEdit [23]
+    Left = 182
+    Top = 179
+    Properties.DisplayFormat = ',0.##'
+    TabOrder = 23
+    Width = 165
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 291
     Top = 73
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 312
-    Top = 149
+    Left = 304
+    Top = 245
   end
   inherited ActionList: TActionList
     Left = 119
     Top = 8
   end
   inherited FormParams: TdsdFormParams
-    Left = 280
-    Top = 13
+    Left = 216
+    Top = 21
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -238,6 +250,14 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inPercent'
         Value = Null
         Component = cePercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentSP'
+        Value = Null
+        Component = cePercentSP
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -369,6 +389,13 @@ inherited ContractEditForm: TContractEditForm
         Name = 'Percent'
         Value = Null
         Component = cePercent
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentSP'
+        Value = Null
+        Component = cePercentSP
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

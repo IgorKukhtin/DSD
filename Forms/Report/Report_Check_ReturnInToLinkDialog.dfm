@@ -3,8 +3,8 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083'-'#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072'>'
-  ClientHeight = 203
-  ClientWidth = 491
+  ClientHeight = 198
+  ClientWidth = 500
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 114
+    Left = 249
     Top = 159
     Width = 75
     Height = 25
@@ -28,7 +28,7 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 288
+    Left = 390
     Top = 159
     Width = 75
     Height = 25
@@ -109,6 +109,14 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
       end>
     TabOrder = 11
     Width = 72
+  end
+  object cbShowAll: TcxCheckBox
+    Left = 35
+    Top = 145
+    Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1076#1072#1085#1085#1099#1077
+    Properties.ReadOnly = False
+    TabOrder = 12
+    Width = 134
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -203,8 +211,16 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isShowAll'
+        Value = Null
+        Component = cbShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 40
+    Left = 344
     Top = 141
   end
   object GuidesPartner: TdsdGuides
@@ -231,8 +247,8 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 141
-    Top = 116
+    Left = 165
+    Top = 108
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -301,7 +317,7 @@ object Report_Check_ReturnInToLinkDialogForm: TReport_Check_ReturnInToLinkDialog
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 421
-    Top = 12
+    Left = 445
+    Top = 4
   end
 end

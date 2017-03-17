@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
+             , MemberId Integer, MemberName TVarChar
              , isPromo Boolean
               )
 AS
@@ -99,6 +100,9 @@ BEGIN
 
              , Object_User.Id                     AS UserId
              , Object_User.ValueData              AS UserName
+
+             , Object_Member.Id                   AS MemberId
+             , Object_Member.ValueData            AS MemberName
             
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
 
@@ -181,6 +185,11 @@ BEGIN
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
+                                         ON MovementLinkObject_Member.MovementId = Movement.Id
+                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
@@ -206,6 +215,7 @@ ALTER FUNCTION gpGet_Movement_WeighingPartner (Integer, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.17         * add Member
  01.12.15         * add Promo
  11.10.14                                        * all
  11.03.14         *

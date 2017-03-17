@@ -280,7 +280,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 46
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -294,7 +294,7 @@ object GoodsGroup_ObjectForm: TGoodsGroup_ObjectForm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 32776
+      ShortCut = 8238
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
